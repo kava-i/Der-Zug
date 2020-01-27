@@ -10,7 +10,7 @@ spec: install
 spec_server: install
 	-rm build/CMakeCache.txt
 	mkdir -p build && cd build && cmake ../src -DMAKE_SERVER=1 && make txtadventure -j$(ok)
-unittest:
+unittesting:
 	-rm build/CMakeCache.txt
 	mkdir -p build && cd build && cmake ../src && make unittest -j$(ok)
 	bin/unittest
