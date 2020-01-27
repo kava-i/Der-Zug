@@ -33,7 +33,6 @@ endif()
 
 target_compile_definitions(unittest PRIVATE _COMPILE_UNIT_TEST_=1)
 target_link_libraries(unittest PRIVATE pthread ssl crypto stdc++fs)
-add_custom_command(TARGET unittest POST_BUILD COMMAND unittest)
 
 target_link_libraries(txtadventure
 	PRIVATE pthread ssl crypto stdc++fs
