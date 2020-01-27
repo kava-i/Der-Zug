@@ -2,6 +2,7 @@ whatever=`getconf _NPROCESSORS_ONLN`
 ok=$(whatever)
 
 allstar:
+	git config core.hooksPath .githooks
 	make --no-print-directory txtadventure || make --no-print-directory txtadventure_install
 
 txtadventure_install: install
