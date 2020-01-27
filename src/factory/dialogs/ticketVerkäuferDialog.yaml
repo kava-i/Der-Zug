@@ -1,0 +1,31 @@
+---
+
+- id: START
+  text: "YOU [räuspern]\nTICKETVERKÄUFER Und sie wollen...?"
+  options: 
+    1: "Sie sind der Ticketverkäufer, richtig?;{};beeindrucken"
+    2: "Über was denken sie nach?;{};denken"
+
+- id: beeindrucken
+  text: "TICKETVERKÄUFER Ja, das ist ganz richtig, ich bin der vielverehrte, der denkende, der wahrhaftig wahrhaftige, allen bekannte Ticketverkäufer. Der für die Strecke Petersburg - Moskau immer noch ein billiges Ticket zu verkaufen hat. Sie sind also ein Interessent?"
+  options:
+    1: "Ja, ganz richtig, wie viel?;{};verkauf1"
+    2: "Nein, ganz und gar nicht. Aber ich fragte mich, worüber sie nachdenken.;{};denken"
+    3: "[Dialog beenden];{};ende"
+
+- id: verkauf1
+  text: "TICKETVERKÄUFER 10 Schillinge und das Ticket ist dein."
+  options:
+    1: "Ich denke, ich bin doch nicht interessiert.;{};ende"
+    2: Ich nehme es!;{"gold":10};verkauf2
+    3: Ich habe leider nicht genug;{"gold":-10};ende
+
+- id: verkauf2
+  text: "TICKETVERKÄUFER Und es ist dein! Eine gute Fahrt wünsche ich dir! Und jetzt, lass mich denken!!"
+  function: ticket
+
+- id: denken
+  text: "TICKETVERKÄUFER Ich interessiere mich für einen ganz bestimmten Aspekt der Hegelschen Rechtsphilosophie, um den ich gerade einfach nicht meinen Kopf herumkriege, also dem englischen Sprich wort \"to get your head around something\" gemäß. Ach, wenn mir nur die Dialektik in der Schule beigebracht worden wäre...\nDir wird das zu philosophisch und du gehst."
+
+- id: ende
+  text: "DU wendest dich ab und überlässt dem Ticketverkäufer seinen Gedanken."

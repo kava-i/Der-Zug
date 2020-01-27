@@ -1,0 +1,47 @@
+---
+- id: START
+  text: "YOU may I introduce myself?\nParsen is looking up from is seet and stars you right in the eyes. He doesn't make a sound."
+  altTexts:
+  - "Parsen is looking up from is seet and stars you right in the eyes. He doesn't make a sound."
+  options:
+    1: Blick aufrechthalten und warten.;{};durstlöscher
+    2: Ist alles in Ordnung bei Ihnen?;{};stress
+    3: Blick ausweichen.;{};feigling
+    4: Ich find tu solltest tich mal nspannen!;{"highness":3};prügel
+    -1: Call I tell you about that dream I had recently?;{};dream
+
+- id: durstlöscher
+  text: "PARSEN wie scmhetk Eizthirone?"
+  options:
+    1: "Was sagst du?;{};durstlöscher2"
+
+- id: durstlöscher2
+  text: "PARSEN Ich sagte, wie schmeckt Zitrone. Der Durstlöscher.\n Du schaust in deine Hände, zwischen denen du einen Durstöschler, Sorte: Zitrone hälltst. Dir fällt ein, dass du ihn vor der Fahrt noch gekauft hattest."
+  options:
+    1: "Lecker. Echt ein leckerer Durstlöscher. Ich bin Anna. Sehr erfreut.;{};bekanntschaft"
+
+- id: bekanntschaft 
+  text: "PARSEN Mein Name ist Parsen. ebenfalls sehr erfreut. Noch eine gute Fahrt. Parsen läschelt dir freundlich zu und ließt dann weiter in seinem Buch."
+  function: parsen1
+
+- id: stress
+  text: "PARSEN Lass mich in Ruhe und kümmere dich um anderes!"
+  
+- id: feigling
+  text: "PARSEN Hahahahaha. You can't even bear a man looking at you fuck off and leave me alone."
+
+- id: prügel
+  text: "PARSEN Na dann komm mal her du kleiner!"
+  function: parsen2
+
+- id: dream
+  text: "Shure, go ahead, what to you want to tell me?"
+
+
+      
+
+
+
+
+
+

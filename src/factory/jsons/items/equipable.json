@@ -1,0 +1,1 @@
+[{"name": "Stick", "id": "basic_stick", "description": "A wooden stick hard enough to course some pain.", "type": "equipe_weapon", "attack": "stick_smack", "value": 5}, {"name": "Basic Sword", "id": "basic_sword", "description": "A basic sword, just what you would expect.", "type": "equipe_weapon", "value": 30}]

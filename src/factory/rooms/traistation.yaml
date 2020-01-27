@@ -1,0 +1,141 @@
+---
+
+- name: "Eingangshalle"
+  id: bahnhof_eingangshalle
+  description: "Die Eingangshalle des sog. \"Moskauer Bahnhofs\" in Sankt Petersburg ist ein eindrucksvolles Gebilde. Tausende Passanten wandern umher, es herscht Trubel und Lärm und dazu glänzt die architektonische Meisterleistung eines Konstantin Thron von allen Seiten auf einen herab. Nach Norden geht es zu den Gleisen, im Süden liegt der Ausgang und nach Osten geht es zu einer Nebenhalle."
+  exits:
+    bahnhof_gleise: Zu den Gleisen
+    bahnhof_nebenhalle: Nebenhalle
+    ausgang: Ausgang
+  characters:
+    - name: Passant1
+      id: passant1
+      description: "Drei Passanten stehen merkwürdig gekleidet in einer Ecke der Eingangshalle nahe den Gleisen und deuten wild umher."
+      dialog: strangeGuysDialog
+    - name: Passant2
+      id: passant2
+      dialog: strangeGuysDialog
+    - name: Passant3
+      id: passant3
+      dialog: strangeGuysDialog
+
+- name: Gleise
+  id: bahnhof_gleise
+  description: "Hier ist der Lärm Ohrenbetäubend, die Dampflokomotiven haben den ganzen bereich vernebelt. Schwitzige, ölbeschmierte Arbeiter reparieren notdürftig Züge, reiche Familien rennen in aufwändigen Gewändern ihren Packburschen davon, es herscht wildes Treiben. Richtung Noden liegen die Gleise des Bahnhofs, nach Süden geht es zurück zur Eingangshalle "
+  exits:
+    gleis1: "Gleis 1"
+    gleis2: "Gleis 2"
+    gleis3: "Gleis 3"
+    gleis4: "Gleis 4"
+    gleis5: "Gleis 5"
+    bahnhof_eingangshalle: Eingangshalle
+
+- name: Nebenhalle
+  id: bahnhof_nebenhalle 
+  description: "Hier ist es etwas ruhiger und leerer. Aber die Personen hier kommen dir unheimlicher und auch sonderbarer vor. Ah und hier sind auch die Toiletten."
+  exits:
+    bahnhof_eingangshalle: Eingangshalle
+    bahnhof_toiletten: Toiletten
+  characters:
+    - name: Konstantin Thron
+      id: konstantin_thron
+      dialog: konstantinDialog
+    - name: Passant1
+      id: passant4
+      description: "Wieder stehen drei Passanten merkwürdig gekleidet in einer Ecke im Norden-Westen und deuten wild umher."
+      dialog: strangeGuysDialog
+    - name: Passant2
+      id: passant5
+      dialog: strangeGuysDialog
+    - name: Passant3
+      id: passant6
+      dialog: strangeGuysDialog
+
+- name: Toiletten
+  id: bahnhof_toiletten 
+  description: "Versifte Toiletten, aber endlich Ruhe, hier scheint niemand zu sein. Zwei Türen führen zu den Männer- bzw. Frauentoiletten. Im Westen geht es zurück ins Nebengebäude."
+  exits:
+    bahnhof_maennerToilette: Männer-Toilette
+    bahnhof_frauenToilette: Frauen-Toilette
+    bahnhof_nebenhalle: Nebenhalle
+  characters:
+
+- name: Männer-Toilette
+  id: bahnhof_maennerToilette
+  description: "Die Männertoilette, sie ist erstaunlich sauber, in einer Ecke liegen einige zerdrückte Kippenstummel, aber es riecht nicht nach Rauch."
+  exits:
+    bahnhof_toiletten: Zurück in den Vorraum 
+  characters:
+    - name: Ticketverkäufer
+      id: ticketVerkäufer
+      description: "Ein Mann steht offensichtlich leicht betrunken mit hochgezogener Hose am Pissoir und tut nichts außer scheinbar nachzudenken. Du erkennst ihn als die Person, die dir als der Ticketverkäufer beschrieben wurde."
+      dialog: ticketVerkäuferDialog
+
+- name: Frauen-Toilette
+  id: bahnhof_frauenToilette
+  description: "Die Frauentoilette: es stinkt nach Alkohol, Kippen und Sex. Der Boden ist voller Alkohol und Glasscherben."
+  exits:
+    bahnhof_toiletten: Zurück in den Vorraum
+  characters:
+    - name: Besoffener Frau
+      id: besoffene_frau
+      description: "Eine besoffene Frau schnarcht laut auf der Toilette. Die Tür steht offen. Dich beschleicht der Gedanke, dass sie für das Chaos, den Geruch und die Scherben verantwortlich ist."
+      hp: 40
+      strength: 16
+      attacks:
+        kick: Normal Kick
+        punsch: Punsch
+      dialog: drunkWomanDialog
+
+
+- name: "Gleis 1"
+  id: gleis1
+  description: "Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst."
+  exits: 
+    bahnhof_gleise: Zurück zu den Gleisen
+  characters:
+
+- name: "Gleis 2"
+  id: gleis2
+  description: "Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst."
+  exits: 
+    bahnhof_gleise: Zurück zu den Gleisen
+  characters:
+
+- name: "Gleis 3"
+  id: gleis3
+  description: "Ah, Gleis 3. Hier fährt dein Zug nach Moskau. Es ist selbstsam leer."
+  exits: 
+    bahnhof_gleise: Zurück zu den Gleisen
+  characters:
+
+- name: "Gleis 4"
+  id: gleis4
+  description: "Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst."
+  exits: 
+    bahnhof_gleise: Zurück zu den Gleisen
+  characters:
+
+- name: "Gleis 5"
+  id: gleis5
+  description: "Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst."
+  exits: 
+    bahnhof_gleise: Zurück zu den Gleisen
+  characters:
+    - name: Passant1
+      id: passant7
+      description: "Wieder stehen drei Passanten merkwürdig gekleidet in einer Ecke und deuten wild umher."
+    - name: Passant2
+      id: passant8
+    - name: Passant3
+      id: passant9
+
+
+
+
+
+
+
+
+
+

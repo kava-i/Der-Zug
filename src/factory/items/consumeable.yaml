@@ -1,0 +1,17 @@
+---
+
+- name: Wine
+  id: basic_wine 
+  description: "A good dusty bottle of grandmas red wine"
+  type: consume_drug
+  effekt: 2
+  value: 20
+
+- name: Pack of old cigaretts
+  id: basic_cigaretts
+  description: "A pack of malboro gold, dusty and old, but they'll do when you're craving."
+  type: consume_drug
+  effekt: 0
+  value: 6
+
+

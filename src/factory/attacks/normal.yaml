@@ -1,0 +1,32 @@
+---
+
+- name: "Punsch"
+  id: punsch
+  description: "normal and simple punsch, amying for the face or what ever is in reach"
+  output: "You punsch your oppenent in the face"
+  power: 10
+
+- name: "Normal kick"
+  id: kick
+  description: "A hard and strong kick."
+  output: "You use all your force to kick your oppenent in his kidnies"
+  power: 12
+
+- name: "Kick between the legs"
+  id: between_the_legs_kick
+  description: "Yes, when you're despreate it's sometimes the only way to go!"
+  output: "You aim. You kick. It works."
+  power: 15
+
+- name: "Bite"
+  id: bite 
+  description: "A hard bite, that might rip out some flesch"
+  output: "The bite was successfull!"
+  power: 12
+
+- name: "Smack"
+  id: stick_smack
+  description: "The good old smack with a stick."
+  output: "You draw your stick and smack it on your apponents head!"
+  power: 14
+

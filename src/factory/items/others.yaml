@@ -1,0 +1,15 @@
+---
+
+- name: "Book"
+  id: basic_book
+  description: "Just a normal book, notjhing special"
+  type: others_book
+  effekt: 0
+  value: 10
+
+- name: "Ticket"
+  id: ticket
+  description: "Zugticket nach Moskau."
+  type: others_ticket
+  effekt: 0
+  value: 20

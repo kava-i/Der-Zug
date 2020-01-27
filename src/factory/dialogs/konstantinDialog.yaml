@@ -1,0 +1,29 @@
+---
+
+- id: START
+  text: "Dir wird bewusst, dass dieser Mann der berühmte Architekt dieses Bahnhofs ist. Du näherst dich im unterwürfig. Er beachtet dich noch nicht."
+  options: 
+    1: "Sehr geehrtet Herr Thron, dürfte ich mich ihnen vorstellen?;{};nein"
+    2: "Sie sind der Mann, der diesen...;{};redeschwall"
+
+- id: nein
+  text: "HERR THRON nein, entschuldigen Sie bitte, für so etwas habe ich nun wirklich keine Zeit. (Er dreht sich um und ignoriert dich weiter."
+
+- id: redeschwall
+  text: "HERR THRON Ja, genau, der bin ich. Ich habe diesen großartigen Bahnhof entworfen und beim Baum begleitet. er Bahnhof und das Empfangsgebäude entstanden im Jahre 1847 mit der Teileröffnung der Bahnstrecke Sankt Petersburg–Moskau (auch Nikolai-Bahn genannt; so hieß der Bahnhof bis 1917 Nikolai-Bahnhof, russ. Николаевский вокзал). Der durchgehende Verkehr bis Moskau wurde 1851 aufgenommen. ..."
+  options:
+    1: "[Weiter];{};redeschwall2"
+    2: "[Gehen];{};ende"
+
+- id: redeschwall2
+  text: "HERR REDESCHWALL Ah, es ist gerade etwas spannendes über mich in einer Zeitung erschienen. Ich zitiere: Erste Aufmerksamkeit als Architekt erlangte er mit der Gestaltung der Innenausstattung des Gebäudes der Petersburger Kunstakademie am Ufer der Newa. 1827 unterbreitete er dem Zaren sein Projekt der Sankt-Katharinenkirche am Obwodnij-Kanal;"
+  options:
+    1: "[Weiter];{};redeschwall3"
+    2: "[Gehen];{};ende"
+
+  
+- id: redeschwall3
+  text: "HERR THRON ... sie sollte das erste Bauwerk im Stil der Russischen Renaissance werden. Thons Gebäude wurde ein Prestigeprojekt für andere Kirchen in Sankt Petersburg und ganz Russland. 1830 beendete er sein ehrgeizigstes Projekt seiner Zeit, das der Christ-Erlöser-Kathedrale in Moskau. Dutzende weiterer Kirchen und Kathedralen entstanden daraufhin in verschiedenen russischen Städten, wie in Suomenlinna (heute Finnland), Jelez, Arsamas, Tomsk, Rostow am Don und Krasnojarsk im von ihm geprägten neobyzantinischen Baustil. Thon baute das prächtige Ipatios-Kloster in Kostroma um, errichtete hier eine Kirche und baute das Romanow-Palais um.\nDu wendest dich ab und gehst..."
+ 
+- id: ende
+  text: "Du wendest dich ab und gehst."
