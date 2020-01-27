@@ -21,8 +21,8 @@ add_executable(txtadventure_server ${SOURCES_PROGRAMM})
 
 target_compile_definitions(txtadventure_server PRIVATE _COMPILE_FOR_SERVER_=1)
 
-find_library(boost_sys boost_system)
-if(boost_sys)
+if(Boost_LIBRARIES)
+    message("Use boost linking")
     target_link_libraries(unittest PRIVATE ${Boost_LIBRARIES})
 target_link_libraries(txtadventure PRIVATE ${Boost_LIBRARIES})
 target_link_libraries(txtadventure_server
