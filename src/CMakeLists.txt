@@ -21,11 +21,20 @@ add_executable(txtadventure_server ${SOURCES_PROGRAMM})
 
 target_compile_definitions(txtadventure_server PRIVATE _COMPILE_FOR_SERVER_=1)
 
+find_library(boost_sys boost_system)
+if(boost_sys)
+    target_link_libraries(unittest PRIVATE ${Boost_LIBRARIES})
+target_link_libraries(txtadventure PRIVATE ${Boost_LIBRARIES})
+target_link_libraries(txtadventure_server
+    PRIVATE ${Boost_LIBRARIES})
+else()
+
+
 target_link_libraries(unittest PRIVATE boost_system)
 target_link_libraries(txtadventure PRIVATE boost_system)
 target_link_libraries(txtadventure_server
     PRIVATE boost_system)
-
+endif()
 
 target_compile_definitions(unittest PRIVATE _COMPILE_UNIT_TEST_=1)
 target_link_libraries(unittest PRIVATE pthread ssl crypto stdc++fs)
