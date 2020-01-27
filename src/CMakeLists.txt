@@ -21,17 +21,10 @@ add_executable(txtadventure_server ${SOURCES_PROGRAMM})
 
 target_compile_definitions(txtadventure_server PRIVATE _COMPILE_FOR_SERVER_=1)
 
-if(Boost_FOUND)
-message("Using native boost libraries")
-target_link_libraries(unittest PRIVATE ${Boost_LIBRARIES})
-target_link_libraries(txtadventure PRIVATE ${Boost_LIBRARIES})
-target_link_libraries(txtadventure_server PRIVATE ${Boost_LIBRARIES})
-else()
 target_link_libraries(unittest PRIVATE boost_system)
 target_link_libraries(txtadventure PRIVATE boost_system)
 target_link_libraries(txtadventure_server
     PRIVATE boost_system)
-endif()
 
 
 target_compile_definitions(unittest PRIVATE _COMPILE_UNIT_TEST_=1)
