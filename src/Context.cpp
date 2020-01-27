@@ -5,6 +5,10 @@
 bool CContext::getPermeable() { return m_permeable; }
 
 
+void CContext::setGame(CGame *)
+{
+}
+
 // **** FUNCTIONS ***** //
 void CContext::add_listener(string sEventType, void(CContext::*handler)(string&, CPlayer*)) {
     m_eventmanager[sEventType].push_back(handler);

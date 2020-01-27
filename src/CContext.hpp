@@ -67,10 +67,10 @@ public:
     virtual void h_startTutorial     (string&, CPlayer*) {}
 
     // *** GAME CONTEXT *** //
-    virtual void h_reloadGame(string&, CPlayer*);
-    virtual void h_reloadPlayer(string&, CPlayer*);
-    virtual void h_reloadWorld(string&, CPlayer*);
-    virtual void h_updatePlayers(string&, CPlayer*);
+    virtual void h_reloadGame(string&, CPlayer*) {}
+    virtual void h_reloadPlayer(string&, CPlayer*) {}
+    virtual void h_reloadWorld(string&, CPlayer*) {}
+    virtual void h_updatePlayers(string&, CPlayer*) {}
 
     // *** WORLD CONTEXT *** //
     virtual void h_deleteCharacter(string&, CPlayer*) {}

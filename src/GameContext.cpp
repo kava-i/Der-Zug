@@ -9,7 +9,7 @@ void CGameContext::setGame(CGame* game) {
 
 // ***** PARSER ***** //
 
-vector<event> CGameContext::parser(string sInput, CPlayer* p)
+vector<CContext::event> CGameContext::parser(string sInput, CPlayer* p)
 {
     std::regex reloadGame("game_reloadGame()");
     std::regex reloadPlayer("(game_reloadPlayers()) (.*)");
@@ -21,15 +21,13 @@ vector<event> CGameContext::parser(string sInput, CPlayer* p)
         return {std::make_pair("reloadGame", "")};
     else if(std::regex_match(sInput, m, reloadPlayer))
         return {std::make_pair("reloadPlayer", m[2])};
-    else if(std::regex_match(sInput, m, reloadWorld)
+    else if(std::regex_match(sInput, m, reloadWorld))
         return {std::make_pair("reloadWorld", m[2])};
     else if(std::regex_match(sInput, updatePlayers))
         return {std::make_pair("updatePlayers", "")};
     
-    else {
-        m_permeable = true;
-        return {}
-    }
+    m_permeable = true;
+    return {};
 }
 
 
@@ -54,5 +52,5 @@ void CGameContext::h_reloadWorld(string& sPlayer, CPlayer*)
 
 void CGameContext::h_updatePlayers(string&, CPlayer*)
 {
-    std::cout << "updating players... \n",
+    std::cout << "updating players... \n";
 }
