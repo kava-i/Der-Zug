@@ -11,6 +11,7 @@ void CGameContext::setGame(CGame* game) {
 
 vector<CContext::event> CGameContext::parser(string sInput, CPlayer* p)
 {
+    return {};
     std::regex reloadGame("game_reloadGame()");
     std::regex reloadPlayer("(game_reloadPlayers()) (.*)");
     std::regex reloadWorld("game_reloadWorld) (.*)");
