@@ -1,15 +1,21 @@
 whatever=`getconf _NPROCESSORS_ONLN`
 ok=$(whatever)
-server:
 
-txtadventure: install
-	cd build && cmake ../src && make txtadventure -j$(ok)
+allstar:
+	make --no-print-directory txtadventure || make --no-print-directory txtadventure_install
+
+txtadventure_install: install
+	cd build && make txtadventure -j$(ok)
+
+txtadventure:
+	cd build && make txtadventure -j$(ok)
+
 all: txtadventure server unittesting
 
 server: install
-	cd build && cmake ../src && make txtadventure_server -j$(ok)
+	cd build && make txtadventure_server -j$(ok)
 unittesting: install
-	cd build && cmake ../src && make unittest -j$(ok)
+	cd build && make unittest -j$(ok)
 	bin/unittest
 
 run_server:
@@ -20,3 +26,4 @@ run:
 install:
 	git submodule init
 	git submodule update
+	cd build && cmake ../src
