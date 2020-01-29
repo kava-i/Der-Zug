@@ -15,8 +15,6 @@
          kick: Normal Kick
          punsch: Punsch
        dialog: parsenDialog
-     - name: Lukas
-       id: lukas
 
  - name: "Compartment B"
    id: compartment-b

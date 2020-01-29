@@ -97,9 +97,7 @@ class WebserverGame
 		lk.push_back(it.second->GetID());
 	    }
 
-	    std::cout<<"Got input: "<<sInput<<"; With player id: "<<_id<<std::endl;
 	    std::string sOutput = game->play(sInput, _id,lk);
-	    std::cout<<"Received Output: "<<sOutput<<std::endl;
 	    _cout->write(sOutput);
 	    _cout->flush();
 	}

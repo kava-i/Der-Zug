@@ -29,6 +29,9 @@ void CContext::throw_event(std::string sInput, CPlayer* p)
 
     vector<event> events = parser(sInput, p);
 
+    if(events.size() == 0)
+        return;
+
     for(auto e : events)
     {
         std::cout << e.first << ", " << e.second << "\n";

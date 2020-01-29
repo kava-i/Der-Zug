@@ -12,6 +12,7 @@ vector<CContext::event> CWorldContext::parser(string sInput, CPlayer* p)
     std::regex newFight("(fight)_(.*)");
     std::regex endFight("endFight");
     std::regex endDialog("endDialog");
+    std::regex gameover("gameover");
     std::smatch m;
 
     vector<string> commands = func::split(sInput, "/");
@@ -29,6 +30,8 @@ vector<CContext::event> CWorldContext::parser(string sInput, CPlayer* p)
             events.push_back(std::make_pair("endFight", ""));
         else if(std::regex_match(commands[i], endDialog))
             events.push_back(std::make_pair("endDialog", ""));
+        else if(std::regex_match(commands[i], gameover))
+            events.push_back(std::make_pair("gameover", ""));
     }
 
     if(events.size()==0)
@@ -68,4 +71,9 @@ void CWorldContext::h_endDialog(string& sIdentifier, CPlayer* p) {
 
 void CWorldContext::h_newFight(string& sIdentifier, CPlayer* p) {
     p->setFight(new CFight(p, p->getWorld()->getCharacters()[sIdentifier]));
+}
+
+void CWorldContext::h_gameover(string& sIdentifier, CPlayer* p) {
+    p->setHp(0);
+    p->appendPrint("\nDu bist gestorben... \n\n Press Enter to continue....\n");
 }

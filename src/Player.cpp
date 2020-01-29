@@ -51,6 +51,7 @@ void CPlayer::setFirstLogin(bool val)       { m_firstLogin = val; }
 void CPlayer::setHighness(size_t highness)  { m_highness = highness; }
 void CPlayer::setPlayers(map<string, CPlayer*> players) { m_players = players; }
 void CPlayer::setWobconsole(Webconsole* webconsole) { _cout = webconsole; }
+void CPlayer::setWorld(CWorld* newWorld)    { m_world = newWorld; }
 
 
 

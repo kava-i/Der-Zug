@@ -11,21 +11,29 @@ void CGameContext::setGame(CGame* game) {
 
 vector<CContext::event> CGameContext::parser(string sInput, CPlayer* p)
 {
-    return {};
-    std::regex reloadGame("game_reloadGame()");
-    std::regex reloadPlayer("(game_reloadPlayers()) (.*)");
-    std::regex reloadWorld("game_reloadWorld) (.*)");
-    std::regex updatePlayers("game_updatePlayers()");
+    if(p->getID().find("programmer") == std::string::npos)
+        return {std::make_pair("access_error", "")};
+
+    std::cout << "gameParser: " << sInput << std::endl;
+    std::regex reloadGame("reloadgame");                //Reload all players and m_world of game
+    std::regex reloadPlayer("(reloadplayer) (.*)");     //Reload player (world + stats, iventory etc.)
+    std::regex reloadWorlds("reloadWorld");             //Reload all worlds, but not players
+    std::regex reloadWorld("(reloadworld) (.*)");       //Reload world of a player (not his stats)
+    std::regex updatePlayers("updateplayers");          //Adds new players
     std::smatch m;
-    
+
     if(std::regex_match(sInput, reloadGame))
         return {std::make_pair("reloadGame", "")};
     else if(std::regex_match(sInput, m, reloadPlayer))
         return {std::make_pair("reloadPlayer", m[2])};
+    else if(std::regex_match(sInput, reloadWorlds))
+        return {std::make_pair("reloadWorlds", "")};
     else if(std::regex_match(sInput, m, reloadWorld))
         return {std::make_pair("reloadWorld", m[2])};
     else if(std::regex_match(sInput, updatePlayers))
         return {std::make_pair("updatePlayers", "")};
+
+    std::cout << "Done.\n";
     
     m_permeable = true;
     return {};
@@ -36,22 +44,52 @@ vector<CContext::event> CGameContext::parser(string sInput, CPlayer* p)
      
 // ***** HANDLER ***** 
 
-void CGameContext::h_reloadGame(string&, CPlayer*)
+void CGameContext::h_reloadGame(string&, CPlayer* p)
 {
-    std::cout << "reloading game... \n";
+    p->appendPrint("reloading game... \n");
+    m_permeable = false;
 }
 
-void CGameContext::h_reloadPlayer(string& sPlayer, CPlayer*)
+void CGameContext::h_reloadPlayer(string& sPlayer, CPlayer*p)
 {
-    std::cout << "reloading Player: " << sPlayer << "... \n";
+    p->appendPrint("reloading Player: " + sPlayer + "... \n");
+    if(m_game->reloadPlayer(sPlayer) == false)
+        p->appendPrint("Player does not exist... reloading world failed.\n");
+    else
+        p->appendPrint("Done.\n");
+    m_permeable = false;
 }
 
-void CGameContext::h_reloadWorld(string& sPlayer, CPlayer*)
+void CGameContext::h_reloadWorlds(string& sPlayer, CPlayer*p)
 {
-    std::cout << "world from player \"" << sPlayer << "\"... \n";
+    p->appendPrint("reloading all worlds... \n");
+    if(m_game->reloadWorld() == true)
+        p->appendPrint("Reloading all worlds failed.\n");
+    else
+        p->appendPrint("Done.\n");
+    m_permeable = false;
 }
 
-void CGameContext::h_updatePlayers(string&, CPlayer*)
+void CGameContext::h_reloadWorld(string& sPlayer, CPlayer*p)
 {
-    std::cout << "updating players... \n";
+    p->appendPrint("reloading world of: " + sPlayer + "... \n");
+    if(m_game->reloadWorld(sPlayer) == false)
+        p->appendPrint("Player does not exist... reloading world failed.\n");
+    else
+        p->appendPrint("Done.\n"); 
+    m_permeable = false;
+}
+
+void CGameContext::h_updatePlayers(string&, CPlayer*p)
+{
+    p->appendPrint("updating players... \n");
+    m_game->playerFactory(true); 
+    p->appendPrint("done.\n");
+    m_permeable = false;
+}
+
+void CGameContext::h_accessError(string&, CPlayer*p)
+{
+    p->appendPrint("You have no permission to call these functions!!\n");
+    m_permeable = false;
 }

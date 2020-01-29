@@ -62,7 +62,6 @@ public:
     CPlayer() {};
     CPlayer(string sName,string password, string sID, int hp, size_t strength, int gold, CRoom* room, attacks newAttacks);
 
-
     // *** GETTER *** // 
     CRoom* getRoom();
     string getPrint();
@@ -83,6 +82,7 @@ public:
     void setHighness(size_t highness);
     void setPlayers(map<string, CPlayer*> players);
     void setWobconsole(Webconsole*);
+    void setWorld(CWorld* newWorld);
 
     //*** FUNCTIONS *** // 
 

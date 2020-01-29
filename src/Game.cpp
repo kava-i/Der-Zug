@@ -1,5 +1,13 @@
 #include "CGame.hpp" 
 
+// *** GETTER ***
+map<string, CPlayer*> CGame::getPlayers() {
+    return m_players;
+}
+map<string, nlohmann::json> CGame::getPlayerJsons() {
+    return m_playerJsons;
+}
+
 CGame::CGame() {
     m_world = new CWorld();
     
@@ -12,7 +20,7 @@ CGame::CGame() {
 }
     
 
-void CGame::playerFactory()
+void CGame::playerFactory(bool update)
 {
     std::cout << "Parsing players... \n";
 
@@ -24,12 +32,21 @@ void CGame::playerFactory()
 
     for(auto j_player : j_players) {
 
-        //Create attacks
-        map<string, CAttack*> attacks = m_world->parsePersonAttacks(j_player);
+        //Add json to list of player jsons
+        m_playerJsons[j_player["id"]] = j_player;
 
-        //Create player
-        m_players[j_player["id"]] = new CPlayer(j_player["name"], j_player["password"],j_player["id"], j_player.value("hp", 40), j_player.value("strength", 8), j_player.value("gold", 5), m_world->getRooms()[j_player["room"]], attacks);
+        //Create player (when only updating, skip, when player already exists)
+        if(update == false || m_players.count(j_player["id"]) == 0)
+            playerFactory(j_player);
     }
+}
+
+void CGame::playerFactory(nlohmann::json j_player)
+{
+    //Create attacks
+    map<string, CAttack*> attacks = m_world->parsePersonAttacks(j_player);
+
+    m_players[j_player["id"]] = new CPlayer(j_player["name"], j_player["password"],j_player["id"], j_player.value("hp", 40), j_player.value("strength", 8), j_player.value("gold", 5), m_world->getRooms()[j_player["room"]], attacks);
 }
 
 
@@ -61,19 +78,12 @@ string CGame::startGame(string sInput, string sPasswordID, Webconsole* _cout)
 
 string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePlayers)
 {
-    //Check for programmer commands
-    m_context->throw_event(sInput, NULL);
-    if(m_context->getPermeable() == false)
-        return "";
-
-    func::convertToLower(sInput);    
+        func::convertToLower(sInput);    
 
     std::map<string, string> mapOnlinePlayers;
     std::map<string, CPlayer*> mapOnlinePlayers2;
-    for(auto it : onlinePlayers)
-    {
-        if(it != m_players[sPlayerID]->getID())
-        {
+    for(auto it : onlinePlayers) {
+        if(it != m_players[sPlayerID]->getID()) {
             mapOnlinePlayers[m_players[it]->getName()] = m_players[it]->getRoom()->getID();
             mapOnlinePlayers2[m_players[it]->getID()] = m_players[it];
         }
@@ -85,13 +95,63 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePla
     m_curPlayer->getRoom()->setPlayers(mapOnlinePlayers);
     m_curPlayer->setPlayers(mapOnlinePlayers2);
 
-    //Throw event 
-    m_curPlayer->throw_event(sInput);
+    //Check whether player is dead
+    if(m_curPlayer->getHp() <= 0)
+    {
+        m_context->throw_event("reloadplayer " + m_curPlayer->getID(), m_players["programmer"]);
+        m_curPlayer->throw_event("startTutorial");
+    }
 
+    //Check for programmer commands
+    m_context->throw_event(sInput, m_curPlayer);
+    if(m_context->getPermeable() == false)
+        return m_curPlayer->getPrint();
+
+    //Throw event of player
+    m_curPlayer->throw_event(sInput);
+    
     return m_curPlayer->getPrint(); 
 }
 
     
+
+// ***** FUNCTIONS ***** //
+bool CGame::reloadPlayer(string sID)
+{
+
+    if(m_players.count(sID) == 0)
+        return false;
+
+    //Delete old player
+    delete m_players[sID];
+    m_players.erase(sID);
+
+    //Create new player
+    playerFactory(m_playerJsons[sID]);
+
+    return true;
+}
+
+bool CGame::reloadWorld()
+{
+    for(auto it : m_players)
+        reloadWorld(it.first);
+    return true;
+}
+
+bool CGame::reloadWorld(string sID)
+{
+    if(m_players.count(sID) == 0)
+        return false;
+
+    //Set new world
+    m_players[sID]->setWorld(new CWorld());
+
+    //Reload current room of player
+    m_players[sID]->setRoom(m_players[sID]->getWorld()->getRooms()[m_players[sID]->getRoom()->getID()]);
+
+    return true;
+}
 
 
 /*

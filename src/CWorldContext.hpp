@@ -17,6 +17,7 @@ public:
         add_listener("newFight", &CContext::h_newFight);
         add_listener("endFight", &CContext::h_endFight);
         add_listener("endDialog", &CContext::h_endDialog);
+        add_listener("gameover", &CContext::h_gameover);
     }
 
     //Parser
@@ -28,6 +29,7 @@ public:
     void h_newFight(string&, CPlayer*);
     void h_endFight(string&, CPlayer*);
     void h_endDialog(string&, CPlayer*);
+    void h_gameover(string&, CPlayer*);
 };
 
 #endif

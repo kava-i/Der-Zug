@@ -69,8 +69,10 @@ public:
     // *** GAME CONTEXT *** //
     virtual void h_reloadGame(string&, CPlayer*) {}
     virtual void h_reloadPlayer(string&, CPlayer*) {}
+    virtual void h_reloadWorlds(string&, CPlayer*) {}
     virtual void h_reloadWorld(string&, CPlayer*) {}
     virtual void h_updatePlayers(string&, CPlayer*) {}
+    virtual void h_accessError(string&, CPlayer*) {}
 
     // *** WORLD CONTEXT *** //
     virtual void h_deleteCharacter(string&, CPlayer*) {}
@@ -78,6 +80,7 @@ public:
     virtual void h_newFight(string&, CPlayer*) {}
     virtual void h_endFight(string&, CPlayer*) {}
     virtual void h_endDialog(string&, CPlayer*) {}
+    virtual void h_gameover(string&, CPlayer*) {}
 
     // *** FIGHT CONTEXT *** //
     virtual void h_choose(string&, CPlayer*) {}

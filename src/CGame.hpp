@@ -34,6 +34,7 @@ class CGame
 private:
 
     map<string, CPlayer*> m_players;
+    map<string, nlohmann::json> m_playerJsons;
     CPlayer* m_curPlayer;
     CWorld* m_world;
 
@@ -45,13 +46,23 @@ private:
 public: 
     CGame();
    
-    // *** FACTORYS *** // 
-    void playerFactory();
+    // *** GETTER *** //
+    map<string, CPlayer*> getPlayers();
+    map<string, nlohmann::json> getPlayerJsons();
 
+    // *** FACTORYS *** // 
+    void playerFactory(bool update=false);
+    void playerFactory(nlohmann::json j_player);
+
+    // *** INPUT HANDLERS *** //
     string startGame(string sInput, string sPasswordID, Webconsole* _cout);
     string play(string sInput, string sPlayerID, std::list<string>& onlinePlayers);
 
-    string checkLogin(string sName, string sPassword);
+    // *** FUNCTIONS *** //
+    string checkLogin(string sName, string sPassword);  
+    bool reloadPlayer(string sPlayerID);
+    bool reloadWorld();
+    bool reloadWorld(string sPlayerID);
 
     /*
     //Convert yaml to json
