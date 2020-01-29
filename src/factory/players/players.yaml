@@ -2,7 +2,7 @@
 
 - name: "anna"
   password: password
-  id: anna-bronec
+  id: programmer_anna 
   room: compartment-a
   hp: 50
   strength: 10
@@ -12,7 +12,7 @@
 
 - name: "jan"
   password: password
-  id: jan-van-dick
+  id: programmer_jan
   room: trainCorridor
   hp: 55
   strength: 8
@@ -21,7 +21,7 @@
 
 - name: "jonny"
   password: password
-  id: jonny-maria_murdo-gonzales
+  id: programmer_jonny
   room: bahnhof_eingangshalle
   strength: 8
   gold: 11
@@ -30,8 +30,28 @@
     punsch: "Punsch"
 
 - name: "programmer"
-  password: password
   id: programmer
-  room: train
+  password: password
+  room: trainCorridor
+
+- name: "alex schwebel"
+  password: password
+  id: alex_schwebel
+  room: compartment-a
+  hp: 50
+  strength: 10
   attacks:
+    kick: Kick
+    punsch: "Punsch" 
+
+- name: "anna bronec"
+  password: password
+  id: anna_bronec 
+  room: compartment-a
+  hp: 50
+  strength: 10
+  attacks: 
+    kick: Kick
+    between_the_legs_kick: "Kick between the legs"
+
 
