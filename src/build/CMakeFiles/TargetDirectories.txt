@@ -1,0 +1,5 @@
+/home/alexander/Documents/Der-Zug/src/build/CMakeFiles/edit_cache.dir
+/home/alexander/Documents/Der-Zug/src/build/CMakeFiles/txtadventure_server.dir
+/home/alexander/Documents/Der-Zug/src/build/CMakeFiles/txtadventure.dir
+/home/alexander/Documents/Der-Zug/src/build/CMakeFiles/rebuild_cache.dir
+/home/alexander/Documents/Der-Zug/src/build/CMakeFiles/unittest.dir

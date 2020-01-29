@@ -11,8 +11,6 @@ txtadventure_install: install
 txtadventure:
 	cd build && make txtadventure -j$(ok)
 
-all: txtadventure server unittesting
-
 server: install
 	cd build && make txtadventure_server -j$(ok)
 unittesting: install
