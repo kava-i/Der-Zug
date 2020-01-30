@@ -1,8 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
-include(Ciavelli/ciavelli.cmake)
 
 # set the project name and version
 project(bebarengan-sepur VERSION 1.0)
+if(EXISTS $ENV{HOME}/ciavelli_packages/ciavelli.cmake)
+    include($ENV{HOME}/ciavelli_packages/ciavelli.cmake)
+else()
+    file(WRITE ${CMAKE_CACHEFILE_DIR}/CMakeLists.txt "cmake_minimum_required(VERSION 3.10)\nproject(Ciavelli)\ninclude(${CMAKE_ROOT}/Modules/ExternalProject.cmake)\n ExternalProject_Add(Ciavelli GIT_REPOSITORY \"https://github.com/ShadowItaly/Ciavelli\")")
+    execute_process(COMMAND mkdir -p ciavelli_tmp && cd ciavelli_tmp && ${CMAKE_COMMAND} .. && ${CMAKE_COMMAND} --build . WORKING_DIRECTORY ${CMAKE_CACHEFILE_DIR})
+endif()
+
 find_package(Boost)
 enable_testing()
 
