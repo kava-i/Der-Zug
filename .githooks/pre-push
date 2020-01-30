@@ -18,4 +18,4 @@
 #
 # This sample shows how to prevent push of commits where the log message starts
 # with "WIP" (work in progress).
-make unittesting
+bin/txtadventure -d true

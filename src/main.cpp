@@ -13,7 +13,7 @@ CGame *game;
 class WebserverGame
 {
     private:
-        Webconsole *_cout;
+	Webconsole *_cout;
 	std::string _name;
 	std::string _password;
 	std::string _id;
@@ -32,18 +32,18 @@ class WebserverGame
 	{
 	    return _name;
 	}
-	
+
 	const std::string &GetID()
 	{
 	    return _id;
 	}
 
 	void onmessage(std::string sInput,std::map<decltype(websocketpp::lib::weak_ptr<void>().lock().get()),WebserverGame*> *ptr)
-        {
+	{
 	    if(_name=="")
 	    {
 		_name=sInput;
-	        if(_name=="")
+		if(_name=="")
 		{
 		    _cout->write("\nName: ");
 		    _cout->flush();
@@ -78,7 +78,7 @@ class WebserverGame
 		return;
 	    } 
 
-	    
+
 
 	    if(sInput == ":q")
 	    {
@@ -87,7 +87,7 @@ class WebserverGame
 	    }
 	    else if(sInput == "change character")
 	    {
-	        _cout->write("Who do you want to play? (Anna, Jan)");
+		_cout->write("Who do you want to play? (Anna, Jan)");
 		return;
 	    }
 
@@ -102,23 +102,27 @@ class WebserverGame
 	    _cout->flush();
 	}
 };
-#ifdef _COMPILE_UNIT_TEST_
-int main(int argc, char **argv)
+
+int main(int x, char **argc)
 {
-    int result = Catch::Session().run( argc, argv );
-    if(result!=0)
+    if(x>=2)
     {
-	std::cout<<"Some tests failed can not proceed with the programm!"<<std::endl;
-	return result;
+	std::string wt = argc[1];
+	if(wt=="-d")
+	{
+	    int result = Catch::Session().run( x, argc );
+	    if(result!=0)
+	    {
+		std::cout<<"Some tests failed can not proceed with the programm!"<<std::endl;
+		return result;
+	    }
+	    return 0;
+	}
     }
-    return result;
-}
-#else
-int main(int, char **)
-{
+
     CGame currentGame;
     game = &currentGame;
     Webgame<WebserverGame> gl;
     gl.run();
 }
-#endif
+
