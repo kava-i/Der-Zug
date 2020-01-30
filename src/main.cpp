@@ -1,6 +1,6 @@
 #include <iostream>
 #define CATCH_CONFIG_RUNNER
-#include "Catch2/single_include/catch2/catch.hpp"
+#include <catch2/catch.hpp>
 
 #include "CGame.hpp"
 #include "JanGeschenk/Webconsole.hpp"

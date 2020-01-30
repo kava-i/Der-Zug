@@ -1,5 +1,5 @@
 #include "func.hpp"
-#include "Catch2/single_include/catch2/catch.hpp"
+#include <catch2/catch.hpp>
 
 /**
 * @param[in] str string to be splitet

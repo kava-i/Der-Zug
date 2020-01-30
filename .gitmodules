@@ -1,9 +1,3 @@
-[submodule "src/Catch2"]
-	path = src/Catch2
-	url = https://github.com/catchorg/Catch2
-[submodule "src/websocketpp"]
-	path = src/websocketpp
-	url = https://github.com/zaphoyd/websocketpp
-[submodule "src/JanGeschenk"]
-	path = src/JanGeschenk
-	url = https://github.com/ShadowItaly/JanGeschenk
+[submodule "Ciavelli"]
+	path = Ciavelli
+	url = git@github.com:ShadowItaly/Ciavelli.git
