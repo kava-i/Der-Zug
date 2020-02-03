@@ -1,0 +1,26 @@
+---
+
+- name: "Zug nach Moskau"
+  id: zug_nach_moskau
+  description: "Du musst dringend nach Moskau. Etwas zieht dich dorthin, du weißt nicht genau, was es ist. Kaufe ein Ticket und finde den Zug nach Moskau, dann sehen wir weiter."
+  steps:
+  - name: "Finde den Ticketverkäufer"
+    id: ticketverkäufer
+    description: "Tickets sind teuer. Du hast von einem Mann, der viel denkt und an komischen Orten abhängt gehört, der wohl immer noch ein günstigeres Ticket zu verkaufen hat."
+    linkedSteps:
+    - zum_gleis
+  - name: "Zum Gleis"
+    id: zum_gleis
+    description: "Du hast das Ticket. Jetzt auf zum Gleis!"
+
+- name: "Die komische Gruppe"
+  id: komische_gruppe
+  description: "Dir ist diese komische Gruppe an Passanten aufgefallen. Keine Ahnung, was die wollen."
+  steps:
+  - name: "Rede mit allen Passanten"
+    id: reden
+    description: "Finde alle Passanten Gruppen und rede mit ihnen."
+  - name: "Um Hilfe beten"
+    id: hilfe
+    description: "Seltsame Menschen, haben of seltsame Ansprüche, aber bieten seltene Hilfe."
+

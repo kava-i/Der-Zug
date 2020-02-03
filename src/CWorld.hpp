@@ -12,6 +12,7 @@
 #include "CDetail.hpp"
 #include "CPerson.hpp"
 #include "CCharacter.hpp"
+#include "CQuest.hpp"
 #include "CAttack.hpp"
 #include "CFight.hpp"
 #include "CDialog.hpp"
@@ -31,6 +32,7 @@ private:
     map<string, CRoom*>      m_rooms;
     map<string, CCharacter*> m_characters;
     map<string, CAttack*>    m_attacks;
+    map<string, CQuest*>     m_quests;
     map<string, nlohmann::json> m_items;
 
 public:
@@ -40,7 +42,8 @@ public:
     // *** GETTER *** //
     map<string, CRoom*>& getRooms() { return m_rooms; }
     map<string, CCharacter*>& getCharacters() { return m_characters; }
-    map<string, CAttack*>& getAttacks() {return m_attacks; }
+    map<string, CAttack*>& getAttacks() { return m_attacks; }
+    map<string, CQuest*>& getQuests() { return m_quests; }
     CItem* getItem(string sID) { return new CItem(m_items[sID]); }
 
     // *** FACTORYS *** // 
@@ -55,6 +58,10 @@ public:
     void attackFactory();
     void attackFactory(std::string sPath);
     map<string, CAttack*> parsePersonAttacks(nlohmann::json j_person);
+    
+    //Quests
+    void questFactory();
+    void questFactory(std::string sPath);
 
     //Items
     void itemFactory();

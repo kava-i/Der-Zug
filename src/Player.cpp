@@ -220,6 +220,18 @@ void CPlayer::dequipeItem(string sType) {
     }
 }
 
+// *** QUESTS *** //
+
+void CPlayer::showQuests()
+{
+    m_sPrint += "Active questst: \n";
+    std::cout << "Quests: " << m_world->getQuests().size() << "\n";
+    for(auto it : m_world->getQuests())
+    {
+        if(it.second->getActive() == true)
+            m_sPrint += "\n" + it.second->printQuest();
+    }
+}
 
 // *** Stats *** //
 string CPlayer::showStats() {

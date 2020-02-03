@@ -81,10 +81,14 @@ void CStandardContext::h_show(string& sIdentifier, CPlayer* p) {
         p->printInventory();
     else if(sIdentifier == "equiped")
         p->printEquiped();
+    else if(sIdentifier == "quests")
+        p->showQuests();
     else if(sIdentifier == "stats")
         p->appendPrint(p->showStats());
     else if(sIdentifier == "all")
         p->appendPrint(p->getRoom()->showAll());
+    else
+        p->appendPrint("Unkown \"show-function\"\n"); 
 }
 
 void CStandardContext::h_examine(string& sIdentifier, CPlayer* p) {

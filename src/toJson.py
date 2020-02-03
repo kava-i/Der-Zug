@@ -1,7 +1,7 @@
 import yaml, json
 import os
 
-folders = ["rooms", "items", "dialogs", "players", "attacks"]
+folders = ["rooms", "items", "dialogs", "players", "attacks", "quests"]
 
 for folder in folders: 
     for filename in os.listdir("factory/"+folder):

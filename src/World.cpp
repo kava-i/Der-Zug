@@ -15,6 +15,9 @@ void CWorld::worldFactory()
     //Create attacks
     attackFactory();
 
+    //Create quests
+    questFactory();
+
     //Create items
     itemFactory();
 
@@ -202,3 +205,35 @@ SDialog* CWorld::dialogFactory(string sPath)
     newDialog->states= mapStates;
     return newDialog;
 }
+
+void CWorld::questFactory()
+{
+    for(auto& p : fs::directory_iterator("factory/jsons/quests"))
+        questFactory(p.path());
+}
+
+void CWorld::questFactory(std::string sPath)
+{
+    //Read json creating all rooms
+    std::ifstream read(sPath);
+    nlohmann::json j_quests;
+    read >> j_quests;
+    read.close();
+
+    for(auto j_quest : j_quests)
+    {
+        //Create new Quest
+        std::map<std::string, CQuestStep*> mapSteps;
+        CQuest* newQuest = new CQuest(j_quest);
+
+        //Create steps
+        for(auto j_step : j_quest["steps"])
+            mapSteps[j_step["id"]] = new CQuestStep(j_step, newQuest);
+
+        //Update quest info
+        newQuest->setSteps(mapSteps);
+        m_quests[j_quest["id"]] = newQuest;
+    }
+}
+
+

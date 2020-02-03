@@ -113,6 +113,9 @@ public:
     void equipeItem(CItem*, string sType);
     void dequipeItem(string sType);
 
+    //Quests
+    void showQuests();
+
     //Stats
     string showStats();
 
