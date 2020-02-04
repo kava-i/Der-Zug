@@ -31,7 +31,7 @@ public:
     bool getPermeable();
 
     // *** Setter *** //
-    virtual void setGame(CGame*);
+    virtual void setGame(CGame*) {}
 
     void add_listener(string sEventType, void(CContext::*)(string&, CPlayer*));
     void add_listener(string sEventType, void(CContext::*)(string&, CPlayer*), size_t pos);
@@ -40,7 +40,7 @@ public:
     void throw_event(string, CPlayer* p);
 
     // *** PARSER *** //
-    virtual vector<event> parser(string, CPlayer*) { return {}; }
+    virtual vector<event> parser(string, CPlayer*);
 
 
     // *** EVENTHANDLERS *** // 

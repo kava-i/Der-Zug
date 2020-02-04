@@ -8,20 +8,7 @@ class CDialogContext : public CContext
 private: 
     string m_curState;
 public:
-    CDialogContext()
-    {
-        //Set permeability
-        m_permeable = false;
-
-        //Set first state
-        m_curState="START";
-
-        //Add listeners
-        add_listener("call", &CContext::h_call); 
-        add_listener("error", &CContext::h_error);
-        add_listener("choose", &CContext::h_call);
-        add_listener("help", &CContext::h_help);
-    }
+    CDialogContext();
 
     //Parser 
     vector<event> parser(string, CPlayer*);

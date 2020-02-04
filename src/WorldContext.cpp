@@ -1,6 +1,19 @@
 #include "CWorldContext.hpp"
 #include "CPlayer.hpp"
 
+CWorldContext::CWorldContext() 
+{
+    //Set permeability
+    m_permeable = true;
+
+    //Set jandlers
+    add_listener("deleteCharacter", &CContext::h_deleteCharacter);
+    add_listener("addItem", &CContext::h_addItem);
+    add_listener("newFight", &CContext::h_newFight);
+    add_listener("endFight", &CContext::h_endFight);
+    add_listener("endDialog", &CContext::h_endDialog);
+    add_listener("gameover", &CContext::h_gameover);
+}
 
 // ***** PARSER ***** //
 

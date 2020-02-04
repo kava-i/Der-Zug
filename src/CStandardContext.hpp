@@ -8,38 +8,7 @@
 class CStandardContext : public CContext
 {
 public:
-    CStandardContext() : CContext()
-    {
-        //Set permeability
-        m_permeable = true;
-
-        //Add listeners
-        add_listener("show", &CContext::h_show);
-        add_listener("examine", &CContext::h_examine);
-        add_listener("lookIn", &CContext::h_lookIn);
-        add_listener("goTo", &CContext::h_goTo);
-        add_listener("talkTo", &CContext::h_startDialog);
-        add_listener("take", &CContext::h_take);
-        add_listener("consume", &CContext::h_consume);
-        add_listener("equipe", &CContext::h_equipe);
-        add_listener("dequipe", &CContext::h_dequipe);
-        add_listener("help", &CContext::h_help);
-        add_listener("error", &CContext::h_error);
-
-        //Rooms
-        add_listener("goTo", &CContext::h_firstZombieAttack);
-        add_listener("goTo", &CContext::h_moveToHospital, 0);
-        add_listener("goTo", &CContext::h_endTutorial);
-
-        //Tutorial
-        add_listener("startTutorial", &CContext::h_startTutorial);
-
-        //Developer
-        add_listener("try", &CContext::h_try, 0);
-    }
-
-    //parser
-    vector<event> parser(string, CPlayer*);
+    CStandardContext();
 
     //Handler
     void h_show             (string& sIdentiier, CPlayer* p);

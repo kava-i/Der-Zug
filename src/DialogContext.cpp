@@ -1,6 +1,22 @@
 #include "CDialogContext.hpp"
 #include "CPlayer.hpp"
 
+CDialogContext::CDialogContext()
+{
+    //Set permeability
+    m_permeable = false;
+
+    //Set first state
+    m_curState="START";
+
+    //Add listeners
+    add_listener("call", &CContext::h_call); 
+    add_listener("error", &CContext::h_error);
+    add_listener("choose", &CContext::h_call);
+    add_listener("help", &CContext::h_help);
+}
+
+
 // ***** PARSER ***** //
 vector<CContext::event> CDialogContext::parser(string sInput, CPlayer* p)
 {

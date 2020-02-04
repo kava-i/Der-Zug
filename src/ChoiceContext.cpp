@@ -1,6 +1,15 @@
 #include "CChoiceContext.hpp"
 #include "CPlayer.hpp"
 
+CChoiceContext::CChoiceContext(string obj)
+{
+    //Set permeability
+    m_permeable = false;
+
+    //Set object
+    m_sObject=obj;
+}
+
 
 
 // ***** PARSER ***** //
