@@ -6,6 +6,7 @@
 #include "JanGeschenk/Webconsole.hpp"
 #include "JanGeschenk/Webgame.hpp"
 #include "SortedContext.hpp"
+#include "Webcmd.hpp"
 
 
 CGame *game;
@@ -45,11 +46,11 @@ class WebserverGame
 		_name=sInput;
 		if(_name=="")
 		{
-		    _cout->write("\nName: ");
+		    _cout->write(Webcmd::set_color(Webcmd::color::RED),"\nName: ");
 		    _cout->flush();
 		    return;
 		}
-		_cout->write("\nPassword: ");
+		_cout->write(Webcmd::set_color(Webcmd::color::ORANGE),"\nPassword: ");
 		_cout->flush();
 		return;
 	    }
@@ -68,7 +69,7 @@ class WebserverGame
 		{
 		    _name = "";
 		    _password = "";
-		    _cout->write(color::red, "Invalid Login please try again!",color::white, "\n\nName: ");
+		    _cout->write(Webcmd::set_color(Webcmd::color::RED), "Invalid Login please try again!",color::white, "\n\nName: ");
 		    _cout->flush();
 		    return;
 		}
@@ -82,12 +83,14 @@ class WebserverGame
 
 	    if(sInput == ":q")
 	    {
-		_cout->write("Thanks for playing\n");
+		_cout->write(Webcmd::set_sound("sounds/fight.mp3"),Webcmd::set_color(Webcmd::color::GREEN),"Thanks for playing\n");
+		_cout->flush();
 		return;
 	    }
 	    else if(sInput == "change character")
 	    {
 		_cout->write("Who do you want to play? (Anna, Jan)");
+		_cout->flush();
 		return;
 	    }
 
