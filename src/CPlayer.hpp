@@ -19,10 +19,12 @@
 #include "CFightContext.hpp"
 #include "CDialogContext.hpp"
 #include "CChoiceContext.hpp"
+#include "CQuestContext.hpp"
 #include "CChatContext.hpp"
 #include "CRoom.hpp"
 #include "CFight.hpp"
 #include "func.hpp"
+
 
 #include "JanGeschenk/Webconsole.hpp"
 #include "JanGeschenk/Webgame.hpp"
@@ -117,7 +119,7 @@ public:
     void dequipeItem(string sType);
 
     //Quests
-    void showQuests();
+    void showQuests(bool solved);
 
     //Stats
     string showStats();

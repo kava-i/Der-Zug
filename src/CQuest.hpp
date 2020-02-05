@@ -6,6 +6,7 @@
 #include <map>
 #include <vector>
 #include "json.hpp"
+#include "Webcmd.hpp"
 
 class CQuestStep;
 
@@ -17,19 +18,25 @@ private:
     bool m_solved;
     bool m_active;
     std::map<std::string, CQuestStep*> m_questSteps;
+    std::map<std::string, std::string> m_handler;
 
 public:
     CQuest(nlohmann::json jAttributes);
 
     //Getter 
+    std::string getID();
     bool getActive();
     std::map<std::string, CQuestStep*> getSteps();
+    std::map<std::string, std::string> getHandler();
 
     //Setter
+    void setActive(bool active);
     void setSteps(std::map<std::string, CQuestStep*> steps);
+    void setHandler(std::map<std::string, std::string> handlers);
 
     //Functions
-    std::string printQuest();
+    std::string printQuest(bool solved);
+    void checkSolved();
 };
 
 class CQuestStep
@@ -50,12 +57,13 @@ public:
     std::string getName();
     std::string getDescription();
     bool getActive();
+    bool getSolved();
 
     //Setter
     void setActive(bool);
 
     //Functions
-    void solved();
+    std::string solved();
 };
 
 #endif

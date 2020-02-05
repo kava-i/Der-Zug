@@ -21,7 +21,6 @@ CStandardContext::CStandardContext()
     //Rooms
     add_listener("go", &CContext::h_firstZombieAttack);
     add_listener("go", &CContext::h_moveToHospital, 0);
-    add_listener("go", &CContext::h_endTutorial);
 
     //Tutorial
     add_listener("startTutorial", &CContext::h_startTutorial);
@@ -50,7 +49,9 @@ void CStandardContext::h_show(string& sIdentifier, CPlayer* p) {
     else if(sIdentifier == "equiped")
         p->printEquiped();
     else if(sIdentifier == "quests")
-        p->showQuests();
+        p->showQuests(false);
+    else if(sIdentifier == "solved quests")
+        p->showQuests(true);
     else if(sIdentifier == "stats")
         p->appendPrint(p->showStats());
     else if(sIdentifier == "all")
@@ -78,6 +79,8 @@ void CStandardContext::h_look(string& sIdentifier, CPlayer* p) {
 }
 
 void CStandardContext::h_goTo(std::string& sIdentifier, CPlayer* p) {
+    if(sIdentifier == "")
+        return;
     if(sIdentifier.find("to ") == 0)
         sIdentifier.erase(0, 3);
     p->changeRoom(sIdentifier);
@@ -149,29 +152,15 @@ void CStandardContext::h_firstZombieAttack(string& sIdentifier, CPlayer* p)
 
 void CStandardContext::h_moveToHospital(string& sIdentifier, CPlayer* p)
 {
+    if(sIdentifier.find("to ") == 0)
+        sIdentifier.erase(0, 3);
+
     //Get selected room
-    if(p->getRoom()->getID().find("compartment") == std::string::npos)
+    if(p->getRoom()->getID().find("compartment") == std::string::npos || fuzzy::fuzzy_cmp("corridor", sIdentifier) > 0.2)
         return;
 
     sIdentifier = "Foyer";
     p->setRoom(p->getWorld()->getRooms()["hospital_stairs"]);
-}
-
-void CStandardContext::h_endTutorial(string& sIdentifier, CPlayer* p)
-{
-    std::cout << "h_endTutorial: " << sIdentifier << std::endl;
-    if(p->getRoom()->getID().find("gleis3") == std::string::npos)
-        return;
-    if(p->getItem_byID("ticket") == NULL)
-    {
-        std::cout << "Couldn't find ticket.\n";
-        return;
-    }
-
-    p->appendPrint("Du siehst deinen Zug einfahren. Du bewegst dich auf ihn zu, zeigst dein Ticket, der Schaffner musstert dich kurz und lässt dich dann eintreten. Du suchst dir einen freien Platz, legst dein Bündel auf den sitz neben dich und schläfst ein...\n $ Nach einem scheinbar endlos langem schlaf wachst du wieder in deinem Abteil auf. Das Abteil ist leer. Leer bist auf einen geheimnisvollen Begleiter: Parsen.");
-
-    p->setRoom(p->getWorld()->getRooms()["compartment-a"]);
-
 }
 
 void CStandardContext::h_startTutorial(string&, CPlayer* p)
@@ -179,6 +168,7 @@ void CStandardContext::h_startTutorial(string&, CPlayer* p)
     p->appendPrint("Willkommen bei \"DER ZUG\"! Du befindest dich auf dem Weg nach Moskau. Dir fehlt dein Ticket. Tickets sind teuer. Glücklicherweise kennst du einen leicht verrückten, viel denkenden Mann, der sich \"Der Ticketverkäufer\" nennt. Suche ihn, er hat immer noch ein günsttiges Ticket für dich. Benutze die Befhelte \"go to [name des Ausgangs]\", um den Raum zu wechseln, um dir Personen und Ausgänge anzeigen zu lassen, nutze \"show people\", bzw. \"show exits\" oder auch \"show all\". Eine Liste mit allen Befhelen und zusätzlichen Hilfestellungen erhältst du, indem du \"help\" eingibst.\n $\n");
 
     p->appendPrint(p->getRoom()->getDescription());
+    p->getWorld()->getQuests()["zug_nach_moskau"]->setActive(true);
 }
 
 void CStandardContext::h_try(string& sIdentifier, CPlayer* p)

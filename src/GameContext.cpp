@@ -7,12 +7,11 @@ CGameContext::CGameContext()
     m_permeable = true;
     
     //Set handlers
-    add_listener("reloadGame", &CContext::h_reloadGame);
-    add_listener("reloadPlayer", &CContext::h_reloadPlayer);
-    add_listener("reloadWorlds", &CContext::h_reloadWorlds);
-    add_listener("reloadWorld", &CContext::h_reloadWorld);
-    add_listener("updatePlayers", &CContext::h_updatePlayers);
-    add_listener("access_error", &CContext::h_accessError);
+    add_listener("reload_game", &CContext::h_reloadGame);
+    add_listener("reload_player", &CContext::h_reloadPlayer);
+    add_listener("reload_worlds", &CContext::h_reloadWorlds);
+    add_listener("reload_world", &CContext::h_reloadWorld);
+    add_listener("update_players", &CContext::h_updatePlayers);
 }
  
 // ***** SETTER ***** //
@@ -63,12 +62,6 @@ void CGameContext::h_updatePlayers(string&, CPlayer*p)
     p->appendPrint("updating players... \n");
     m_game->playerFactory(true); 
     p->appendPrint("done.\n");
-    m_permeable = false;
-}
-
-void CGameContext::h_accessError(string&, CPlayer*p)
-{
-    p->appendPrint("You have no permission to call these functions!!\n");
     m_permeable = false;
 }
 

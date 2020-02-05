@@ -57,7 +57,6 @@ public:
     //Rooms
     virtual void h_firstZombieAttack (string&, CPlayer*) {}
     virtual void h_moveToHospital    (string&, CPlayer*) {}
-    virtual void h_endTutorial       (string&, CPlayer*) {}
 
     //Tuturial
     virtual void h_startTutorial     (string&, CPlayer*) {}
@@ -68,7 +67,6 @@ public:
     virtual void h_reloadWorlds(string&, CPlayer*) {}
     virtual void h_reloadWorld(string&, CPlayer*) {}
     virtual void h_updatePlayers(string&, CPlayer*) {}
-    virtual void h_accessError(string&, CPlayer*) {}
 
     // *** WORLD CONTEXT *** //
     virtual void h_deleteCharacter(string&, CPlayer*) {}
@@ -90,6 +88,11 @@ public:
 
     // *** CHOICE CONTEXT *** //
     virtual void h_choose_equipe(string&, CPlayer*) {}
+
+    // *** QUESTS *** //
+    virtual void h_ticketverkaeufer(string&, CPlayer*) {}
+    virtual void h_ticketverkauf(string&, CPlayer*) {}
+    virtual void h_zum_gleis(string&, CPlayer*) {}
 
     // *** PROGRAMMER *** //
     virtual void h_try(string&, CPlayer*) {}

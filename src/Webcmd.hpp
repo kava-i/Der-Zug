@@ -1,4 +1,5 @@
 #pragma once
+
 #include <iostream>
 #include <string>
 
@@ -14,15 +15,17 @@ namespace Webcmd
 	ORANGE
     };
 
-    std::string set_color(color cl)
+    std::string set_color(color cl);
+/*
     {
 	char ch = cl;
 	std::string x;
 	x.push_back(ch);
 	return x;
-    }
+    }*/
 
-    std::string set_sound(std::string filename)
+    std::string set_sound(std::string filename);
+    /*
     {
 	char ch = 7;
 	std::string ret;
@@ -31,4 +34,6 @@ namespace Webcmd
 	ret.push_back(ch);
 	return ret;
     }
+*/
 };
+

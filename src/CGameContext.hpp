@@ -21,7 +21,6 @@ public:
     void h_reloadWorlds(string&, CPlayer*);
     void h_reloadWorld(string&, CPlayer*);
     void h_updatePlayers(string&, CPlayer*);
-    void h_accessError(string&, CPlayer*);
 
     void error(CPlayer*);
 };

@@ -34,10 +34,7 @@ void CContext::throw_event(std::vector<event> events, CPlayer* p)
     }
     
     if(thrown == false && m_permeable == false)
-    {
-        std::cout << "Nothing thrown." << std::endl;
         error(p);
-    }
 }
 
 // ***** EVENTHANDLER ***** //

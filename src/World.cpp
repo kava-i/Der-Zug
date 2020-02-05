@@ -11,6 +11,7 @@ void CWorld::worldFactory()
     //Initialize functions
     CDState::initializeFunctions();
     CItem::initializeFunctions();
+    CQuestContext::initializeFunctions();
 
     //Create attacks
     attackFactory();
@@ -224,14 +225,19 @@ void CWorld::questFactory(std::string sPath)
     {
         //Create new Quest
         std::map<std::string, CQuestStep*> mapSteps;
+        std::map<std::string, std::string> mapHandler;
         CQuest* newQuest = new CQuest(j_quest);
-
+    
         //Create steps
-        for(auto j_step : j_quest["steps"])
+        for(auto j_step : j_quest["steps"]) {
             mapSteps[j_step["id"]] = new CQuestStep(j_step, newQuest);
+            if(j_step.count("handler") > 0)
+                mapHandler[j_step["id"]] = j_step["handler"];
+        }
 
         //Update quest info
         newQuest->setSteps(mapSteps);
+        newQuest->setHandler(mapHandler);
         m_quests[j_quest["id"]] = newQuest;
     }
 }

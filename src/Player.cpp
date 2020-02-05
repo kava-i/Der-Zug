@@ -20,6 +20,9 @@ CPlayer::CPlayer(string sName,string sPassword, string sID, int hp, size_t stren
     //Initiazize world
     m_world = new CWorld();
 
+    for(auto it : m_world->getQuests())
+        m_contextStack.insert(new CQuestContext(it.second), 3, it.first);
+
     //Add eventhandler to eventmanager
     m_contextStack.insert(new CWorldContext(), 2, "world");
     m_contextStack.insert(new CStandardContext(), 0, "standard");
@@ -235,14 +238,18 @@ void CPlayer::dequipeItem(string sType) {
 
 // *** QUESTS *** //
 
-void CPlayer::showQuests()
+void CPlayer::showQuests(bool solved)
 {
-    m_sPrint += "Active questst: \n";
+
+    if(solved == false)
+        m_sPrint += "Active quests: \n";
+    else
+        m_sPrint += "Solved quests: \n";
     std::cout << "Quests: " << m_world->getQuests().size() << "\n";
     for(auto it : m_world->getQuests())
     {
         if(it.second->getActive() == true)
-            m_sPrint += "\n" + it.second->printQuest();
+            m_sPrint += "\n" + it.second->printQuest(solved);
     }
 }
 

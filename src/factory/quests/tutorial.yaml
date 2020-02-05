@@ -5,13 +5,22 @@
   description: "Du musst dringend nach Moskau. Etwas zieht dich dorthin, du weißt nicht genau, was es ist. Kaufe ein Ticket und finde den Zug nach Moskau, dann sehen wir weiter."
   steps:
   - name: "Finde den Ticketverkäufer"
-    id: ticketverkäufer
+    id: 1ticketverkaeufer
     description: "Tickets sind teuer. Du hast von einem Mann, der viel denkt und an komischen Orten abhängt gehört, der wohl immer noch ein günstigeres Ticket zu verkaufen hat."
+    active: true
     linkedSteps:
-    - zum_gleis
+    - 2ticketkauf
+    handler: go
+  - name: "Ticketkauf"
+    id: 2ticketkauf
+    description: "Okay, jetzt geschickt anstellen, dich nicht vollquatschen lassen und einfach schnell das Ticket bekommen..."
+    linkedSteps:
+    - 3zum_gleis  
+    handler: addItem
   - name: "Zum Gleis"
-    id: zum_gleis
+    id: 3zum_gleis
     description: "Du hast das Ticket. Jetzt auf zum Gleis!"
+    handler: go
 
 - name: "Die komische Gruppe"
   id: komische_gruppe

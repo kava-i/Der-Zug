@@ -78,7 +78,7 @@ string CGame::startGame(string sInput, string sPasswordID, Webconsole* _cout)
 
 string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePlayers)
 {
-        func::convertToLower(sInput);    
+    func::convertToLower(sInput);    
 
     std::map<string, string> mapOnlinePlayers;
     std::map<string, CPlayer*> mapOnlinePlayers2;

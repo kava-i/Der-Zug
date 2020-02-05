@@ -14,6 +14,7 @@
 #include "CCharacter.hpp"
 #include "CQuest.hpp"
 #include "CAttack.hpp"
+#include "CQuestContext.hpp"
 #include "CFight.hpp"
 #include "CDialog.hpp"
 #include "json.hpp"
