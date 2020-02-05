@@ -9,20 +9,19 @@ CStandardContext::CStandardContext()
     //Add listeners
     add_listener("show", &CContext::h_show);
     add_listener("examine", &CContext::h_examine);
-    add_listener("lookIn", &CContext::h_lookIn);
-    add_listener("goTo", &CContext::h_goTo);
-    add_listener("talkTo", &CContext::h_startDialog);
-    add_listener("take", &CContext::h_take);
+    add_listener("look", &CContext::h_look);
+    add_listener("go", &CContext::h_goTo);
+    add_listener("talk", &CContext::h_startDialog);
+    add_listener("pick", &CContext::h_take);
     add_listener("consume", &CContext::h_consume);
     add_listener("equipe", &CContext::h_equipe);
     add_listener("dequipe", &CContext::h_dequipe);
     add_listener("help", &CContext::h_help);
-    add_listener("error", &CContext::h_error);
 
     //Rooms
-    add_listener("goTo", &CContext::h_firstZombieAttack);
-    add_listener("goTo", &CContext::h_moveToHospital, 0);
-    add_listener("goTo", &CContext::h_endTutorial);
+    add_listener("go", &CContext::h_firstZombieAttack);
+    add_listener("go", &CContext::h_moveToHospital, 0);
+    add_listener("go", &CContext::h_endTutorial);
 
     //Tutorial
     add_listener("startTutorial", &CContext::h_startTutorial);
@@ -30,6 +29,7 @@ CStandardContext::CStandardContext()
     //Developer
     add_listener("try", &CContext::h_try, 0);
 }
+
 
 
 // **** HANDLER **** //
@@ -63,8 +63,14 @@ void CStandardContext::h_examine(string& sIdentifier, CPlayer* p) {
     p->appendPrint(p->getRoom()->showAll());
 }
 
-void CStandardContext::h_lookIn(string& sIdentifier, CPlayer* p) {
-    string sOutput = p->getRoom()->look("in", sIdentifier);
+void CStandardContext::h_look(string& sIdentifier, CPlayer* p) {
+    size_t pos=sIdentifier.find(" ");
+    if(pos == std::string::npos) {
+        p->appendPrint("Soll ich in, auf oder unter der box schauen?\n");
+        return;
+    }
+
+    string sOutput = p->getRoom()->look(sIdentifier.substr(0, pos), sIdentifier.substr(pos+1));
     if(sOutput == "")
         p->appendPrint("Nothing found. \n");
     else
@@ -72,11 +78,16 @@ void CStandardContext::h_lookIn(string& sIdentifier, CPlayer* p) {
 }
 
 void CStandardContext::h_goTo(std::string& sIdentifier, CPlayer* p) {
+    if(sIdentifier.find("to ") == 0)
+        sIdentifier.erase(0, 3);
     p->changeRoom(sIdentifier);
 }
 
 void CStandardContext::h_startDialog(string& sIdentifier, CPlayer* p)
 {
+    if(sIdentifier.find("to ") == 0)
+        sIdentifier.erase(0, 3);
+
     //Get selected character
     string character = p->getObject(p->getRoom()->getCharacters(), sIdentifier);
     CPlayer* player = p->getPlayer(sIdentifier);
@@ -91,6 +102,8 @@ void CStandardContext::h_startDialog(string& sIdentifier, CPlayer* p)
 }
 
 void CStandardContext::h_take(string& sIdentifier, CPlayer* p) {
+    if(sIdentifier.find("up ") == 0)
+        sIdentifier.erase(0, 3);
     if(p->getRoom()->getItem(sIdentifier) == NULL)
         p->appendPrint("Item not found.\n");
     else
@@ -115,8 +128,8 @@ void CStandardContext::h_dequipe(string& sIdentifier, CPlayer* p) {
     p->dequipeItem(sIdentifier);
 }
 
-void CStandardContext::h_error(string& sIdentifier, CPlayer* p) {
-    p->appendPrint("This command is unkown. Type \"help\" to see possible command.\n");
+void CStandardContext::error(CPlayer* p) {
+    p->appendPrint("Standard: This command is unkown. Type \"help\" to see possible command.\n");
 }
 
 
@@ -131,12 +144,11 @@ void CStandardContext::h_firstZombieAttack(string& sIdentifier, CPlayer* p)
 
     //Create fight
     p->setFight(new CFight(p, p->getWorld()->getCharacters()["hospital_zombie1"]));
-    delete_listener("goTo", 2);
+    delete_listener("go", 2);
 }
 
 void CStandardContext::h_moveToHospital(string& sIdentifier, CPlayer* p)
 {
-    std::cout << "h_moveToHospital: " << sIdentifier << std::endl;
     //Get selected room
     if(p->getRoom()->getID().find("compartment") == std::string::npos)
         return;

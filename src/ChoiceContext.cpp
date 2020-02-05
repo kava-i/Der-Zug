@@ -10,15 +10,6 @@ CChoiceContext::CChoiceContext(string obj)
     m_sObject=obj;
 }
 
-
-
-// ***** PARSER ***** //
-
-vector<CContext::event> CChoiceContext::parser(string sInput, CPlayer* p) {
-    return {std::make_pair("choose", sInput)};
-}
-
-
 // ***** Handlers ***** //
 
 void CChoiceContext::h_choose_equipe(string& sIdentifier, CPlayer* p)
@@ -42,5 +33,4 @@ void CChoiceContext::h_choose_equipe(string& sIdentifier, CPlayer* p)
 
     else
         p->appendPrint("Worng input. Use \"help\" if you're unsure what to do.\n");
-
 }

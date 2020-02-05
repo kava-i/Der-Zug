@@ -18,6 +18,8 @@ public:
     void h_endFight(string&, CPlayer*);
     void h_endDialog(string&, CPlayer*);
     void h_gameover(string&, CPlayer*);
+
+    void error(CPlayer*);
 };
 
 #endif

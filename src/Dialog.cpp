@@ -55,24 +55,28 @@ string CDState::standard(CPlayer* p)
         return "endDialog";
     }
 
-    size_t numOpts = numOptions();
-    bool options = false;
-    for(size_t i=1; i<numOpts+1; i++)
-    {
-        if(checkDependencys(m_options[i], p) == true)
-        {
-            options = true;
-            sOutput += std::to_string(i) + ": " + m_options[i].sText + "\n";
-        }
-    }
-
-    if(options == false){
+    std::vector<size_t> activeOptions = getActiveOptions(p);
+    for(auto opt : activeOptions)
+        sOutput += std::to_string(opt) + ": " + m_options[opt].sText + "\n";
+        
+    if(activeOptions.size() == 0){
         p->appendPrint(sOutput + "Dialog ended.\n");
         return "endDialog";
      }
 
     p->appendPrint(sOutput);
     return "";
+}
+
+std::vector<size_t> CDState::getActiveOptions(CPlayer* p)
+{
+    std::vector<size_t> activeOptions;
+    size_t numOpts = numOptions();
+    for(size_t i=1; i<numOpts+1; i++) {
+        if(checkDependencys(m_options[i], p) == true)
+            activeOptions.push_back(i);
+    }
+    return activeOptions;
 }
 
 string CDState::parsen1(CPlayer* p)
@@ -89,7 +93,7 @@ string CDState::parsen2(CPlayer* p)
 {
     string sOutput = standard(p);
     p->appendPrint("$");
-    sOutput+="/fight_parsen";
+    sOutput+=";fight parsen";
     return sOutput;
 }
 
@@ -103,14 +107,14 @@ string CDState::pissingman1(CPlayer* p)
 string CDState::ticket(CPlayer* p)
 {
     string sOutput = standard(p); 
-    return sOutput+"/addItem_ticket";
+    return sOutput+";addItem ticket";
 }
 
 string CDState::betrunkene(CPlayer* p)
 {
     string sOutput = standard(p);
     p->appendPrint("$");
-    sOutput+="/fight_besoffene_frau";
+    sOutput+=";fight besoffene_frau";
     return sOutput;
 }
 

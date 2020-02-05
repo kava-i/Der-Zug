@@ -37,11 +37,8 @@ public:
     void add_listener(string sEventType, void(CContext::*)(string&, CPlayer*), size_t pos);
     void delete_listener(string sEventType, int num);
 
-    void throw_event(string, CPlayer* p);
-
-    // *** PARSER *** //
-    virtual vector<event> parser(string, CPlayer*);
-
+    void throw_event(std::vector<event> events, CPlayer* p);
+    virtual void error(CPlayer* p) {}
 
     // *** EVENTHANDLERS *** // 
     void h_help(string&, CPlayer*);
@@ -49,14 +46,13 @@ public:
     // *** STANDARD CONTEXT *** //
     virtual void h_show             (string&, CPlayer*) {} 
     virtual void h_examine          (string&, CPlayer*) {} 
-    virtual void h_lookIn           (string&, CPlayer*) {}
+    virtual void h_look             (string&, CPlayer*) {}
     virtual void h_take             (string&, CPlayer*) {}
     virtual void h_consume          (string&, CPlayer*) {}
     virtual void h_equipe           (string&, CPlayer*) {}
     virtual void h_dequipe          (string&, CPlayer*) {}
     virtual void h_goTo             (string&, CPlayer*) {}
     virtual void h_startDialog      (string&, CPlayer*) {}
-    virtual void h_error            (string&, CPlayer*) {}
 
     //Rooms
     virtual void h_firstZombieAttack (string&, CPlayer*) {}
@@ -83,7 +79,7 @@ public:
     virtual void h_gameover(string&, CPlayer*) {}
 
     // *** FIGHT CONTEXT *** //
-    virtual void h_choose(string&, CPlayer*) {}
+    virtual void h_fight(string&, CPlayer*) {}
 
     // *** DIALOG CONTEXT *** //
     virtual void h_call(string&, CPlayer*) {}

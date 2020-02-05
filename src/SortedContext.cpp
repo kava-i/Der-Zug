@@ -51,7 +51,7 @@ bool CContextStack::nonPermeableContextInList()
 TEST_CASE("Testing permeable context stacks","[CContextStack]")
 {
     CContextStack st;
-    CDialogContext cdiag;
+    CDialogContext cdiag(NULL);
     CWorldContext cworld;
     st.insert((CContext*)&cdiag,10,"diag");
     st.insert((CContext*)&cworld,11,"world");

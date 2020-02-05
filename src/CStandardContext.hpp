@@ -13,14 +13,13 @@ public:
     //Handler
     void h_show             (string& sIdentiier, CPlayer* p);
     void h_examine          (string& sIdentiier, CPlayer* p);
-    void h_lookIn           (string& sIdentiier, CPlayer* p);
+    void h_look             (string& sIdentiier, CPlayer* p);
     void h_take             (string& sIdentiier, CPlayer* p);
     void h_consume          (string& sIdentiier, CPlayer* p);
     void h_equipe           (string& sIdentiier, CPlayer* p);
     void h_dequipe          (string& sIdentiier, CPlayer* p);
     void h_goTo             (string& sIdentiier, CPlayer* p);
     void h_startDialog      (string& sIdentiier, CPlayer* p);
-    void h_error            (string& sIdentiier, CPlayer* p);
 
     //Rooms
     void h_firstZombieAttack (string& sIdentiier, CPlayer* p);
@@ -36,6 +35,8 @@ public:
     void h_try2(string& sIdentiier, CPlayer* p);
     void h_try3(string& sIdentiier, CPlayer* p);
     void h_try4(string& sIdentiier, CPlayer* p);
+
+    void error(CPlayer* p);
 };
 
 #endif

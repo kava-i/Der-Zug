@@ -8,14 +8,15 @@ class CDialogContext : public CContext
 private: 
     string m_curState;
 public:
-    CDialogContext();
+    CDialogContext(CPlayer* p);
 
-    //Parser 
-    vector<event> parser(string, CPlayer*);
+    //Addhandlers
+    void setCurState(std::string, CPlayer*);;
 
     //Handlers
     void h_call(string&, CPlayer*);
-    void h_error(string&, CPlayer*);
+
+    void error(CPlayer*);
 };
 
 #endif

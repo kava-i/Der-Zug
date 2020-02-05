@@ -1,11 +1,11 @@
 Commands
 show [inventory, people, items, details, ...]   f.e. "show people"
 look [in, under, above, ....] [name of detail]  f.e. "look in small box"
-go to [name of exit]                            f.e. "go to Corridor"
-talk to [name of person]                        f.e. "talk to parsen"
-pick up [name of item]                          f.e. "pick up wine"
+go to [name of exit]                            f.e. "go to Corridor" or "go Corridor"
+talk to [name of person]                        f.e. "talk to parsen" or "talk parsen"
+pick up [name of item]                          f.e. "pick up wine" or "pick wine"
 drink [name of item in inventory]               f.e. "drink wine" 
-eat [name of item in inventory]                 f.e. "eat cake"
+consume [name of item in inventory]             f.e. "consume cake"
 equipe [name of item inventory]                 f.e. "equipe sword"
 
 All command igonore case. In addition partial matching words. So instead of writing "pick up pack of cigaretts" you may enter "pick up cigaretts" or even "pick up cig". This only works for people, exits, items etc. not for commands. So "show invent" does not work, "show inventory" is neccesarry.

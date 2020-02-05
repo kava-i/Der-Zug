@@ -2,43 +2,22 @@
 #include "CPlayer.hpp"
 
 
-CFightContext::CFightContext()
+void CFightContext::addHandlers(std::map<std::string, CAttack*> attacks)
 {
-    //Set permeability
-    m_permeable = false;
-
-    //Add listeners
-    add_listener("choose", &CContext::h_choose);
-    add_listener("show", &CContext::h_show);
-    add_listener("attackNotFound", &CContext::h_error);
-    add_listener("help", &CContext::h_help);
-}
-
-
-// ***** PARSER ***** //
-vector<CContext::event> CFightContext::parser(string sInput, CPlayer* p)
-{
-    std::cout << "fightParser: " << sInput << std::endl;
-
-    std::regex help("help");
-    std::regex show("(show) (.*)");
-    std::smatch m;
-    if(std::regex_match(sInput, help))
-        return {std::make_pair("help", "fight.txt")};
-    else if(std::regex_search(sInput, m, show))
-        return {std::make_pair("show", m[2])};
-    
-    string selectedAttack = p->getAttack(sInput);
-    if(selectedAttack == "")
-        return {std::make_pair("attackNotFound", "")};
-    else
-        return {std::make_pair("choose", sInput)};
+    size_t counter=1;
+    for(auto it : attacks) {
+        add_listener(std::to_string(counter), &CContext::h_fight);
+        counter++;
+    }
 }
 
 
 // ***** HANDLERS ***** //
-void CFightContext::h_choose(string& sIdentifier, CPlayer* p) {
-    p->throw_event(p->getFight()->fightRound((sIdentifier))); 
+void CFightContext::h_fight(string& sIdentifier, CPlayer* p) {
+    std::cout << "h_fight " << sIdentifier << std::endl;
+    std::string newCommand = p->getFight()->fightRound((sIdentifier));
+    if(newCommand != "")    
+        p->throw_event(newCommand);
 }
 
 void CFightContext::h_show(string& sIdentifier, CPlayer* p) {
@@ -48,6 +27,6 @@ void CFightContext::h_show(string& sIdentifier, CPlayer* p) {
         p->appendPrint(p->getFight()->printStats(p->getFight()->getOpponent()));
 }
 
-void CFightContext::h_error(string&, CPlayer* p) {
-    p->appendPrint("I can't do this. Please choose an attack, or use help.\n");
+void CFightContext::error(CPlayer* p) {
+    p->appendPrint("Fight: I can't do this. Please choose an attack, or use help.\n");
 }

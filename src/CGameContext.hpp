@@ -15,9 +15,6 @@ public:
     //Set Game
     void setGame(CGame* game);
 
-    //Parser
-    vector<event> parser(string, CPlayer* p);
-
     //Handlers
     void h_reloadGame(string&, CPlayer*);
     void h_reloadPlayer(string&, CPlayer*);
@@ -25,6 +22,8 @@ public:
     void h_reloadWorld(string&, CPlayer*);
     void h_updatePlayers(string&, CPlayer*);
     void h_accessError(string&, CPlayer*);
+
+    void error(CPlayer*);
 };
 
 #endif

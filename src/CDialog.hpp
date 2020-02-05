@@ -69,6 +69,7 @@ public:
     void changeDialog(string sOld, string sNew, CPlayer* p);
 
 
+    std::vector<size_t> getActiveOptions(CPlayer*);
     int numOptions();
     bool checkDependencys(SDOption& option, CPlayer* p);
 };

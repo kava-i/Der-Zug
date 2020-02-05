@@ -8,11 +8,7 @@ class CChoiceContext : public CContext
 private:
     string m_sObject;
 public:
-
     CChoiceContext(string obj);
-
-    //Parser
-    vector<event> parser(string, CPlayer*);
 
     void h_choose_equipe(string&, CPlayer*);
 };

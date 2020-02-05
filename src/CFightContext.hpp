@@ -3,19 +3,21 @@
 
 #include "CContext.hpp"
 
+class CAttack;
+
 class CFightContext : public CContext
 {
 public: 
     CFightContext();
 
-    //Parser
-    vector<event> parser(string, CPlayer*);
+    //Addhandlers
+    void addHandlers(std::map<string, CAttack*> attacks);
 
     //Handlers
-    void h_choose(string&, CPlayer*);
+    void h_fight(string&, CPlayer*);
     void h_show(string&, CPlayer*);
-    void h_error(string&, CPlayer*);
 
+    void error(CPlayer* p);
 };
 
 #endif
