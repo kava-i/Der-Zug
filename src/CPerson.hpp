@@ -49,6 +49,7 @@ public:
     string getAttack(string sPlayerChoice);
 
     // *** Functions needed in CPlayer *** //
+    virtual void throw_event(std::string) {}
     virtual void addItem(CItem*)     { std::cout << "FATAL!!!\n"; }
     virtual void setStatus(string)   { std::cout << "FATAL!!!\n"; }
     virtual void appendPrint(string) { std::cout << "FATAL!!!\n"; }

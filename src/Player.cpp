@@ -61,7 +61,7 @@ void CPlayer::setWorld(CWorld* newWorld)    { m_world = newWorld; }
 // *** Fight *** //
 void CPlayer::setFight(CFight* newFight) { 
     m_curFight = newFight;
-    m_contextStack.insert(new CFightContext(), 1, "fight");
+    m_contextStack.insert(new CFightContext(m_attacks), 1, "fight");
     m_curFight->initializeFight();
 }
 
@@ -74,8 +74,8 @@ void CPlayer::endFight() {
 // *** Dialog *** //
 void CPlayer::startDialog(string sCharacter)
 {
-    m_contextStack.insert(new CDialogContext(), 1, "dialog");
     m_dialog = m_world->getCharacters()[sCharacter]->getDialog();
+    m_contextStack.insert(new CDialogContext(this), 1, "dialog");
     throw_event(m_dialog->states["START"]->callState(this));
 }
 
@@ -201,7 +201,8 @@ void CPlayer::equipeItem(CItem* item, string sType)
 
         //Create Choice-Context
         CChoiceContext* context = new CChoiceContext(item->getID());
-        context->add_listener("choose", &CContext::h_choose_equipe);
+        context->add_listener("yes", &CContext::h_choose_equipe);
+        context->add_listener("no", &CContext::h_choose_equipe);
         m_contextStack.insert(context, 1, "choice");
     }
 }
@@ -317,10 +318,12 @@ CPlayer* CPlayer::getPlayer(string sIdentifier)
 void CPlayer::throw_event(string sInput)
 {
     checkTimeEvents();
+    CParser parser;
+    std::vector<event> events = parser.parse(sInput);
     std::deque<CContext*> sortedCtxList= m_contextStack.getSortedCtxList();
     for(size_t i=0; i<sortedCtxList.size(); i++)
     {
-        sortedCtxList[i]->throw_event(sInput, this);
+        sortedCtxList[i]->throw_event(events, this);
         if(sortedCtxList[i]->getPermeable() == false)
             break;
     }

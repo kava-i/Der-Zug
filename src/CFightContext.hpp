@@ -3,29 +3,31 @@
 
 #include "CContext.hpp"
 
+class CAttack;
+
 class CFightContext : public CContext
 {
 public: 
-    CFightContext()
+    CFightContext(std::map<std::string, CAttack*> attacks)
     {
         //Set permeability
         m_permeable = false;
 
         //Add listeners
-        add_listener("choose", &CContext::h_choose);
         add_listener("show", &CContext::h_show);
-        add_listener("attackNotFound", &CContext::h_error);
         add_listener("help", &CContext::h_help);
+        
+        addHandlers(attacks);
     }
 
-    //Parser
-    vector<event> parser(string, CPlayer*);
+    //Addhandlers
+    void addHandlers(std::map<string, CAttack*> attacks);
 
     //Handlers
-    void h_choose(string&, CPlayer*);
+    void h_fight(string&, CPlayer*);
     void h_show(string&, CPlayer*);
-    void h_error(string&, CPlayer*);
 
+    void error(CPlayer* p);
 };
 
 #endif

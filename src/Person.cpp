@@ -17,30 +17,25 @@ void CPerson::setDialog(SDialog* newDialog) { m_dialog = newDialog; }
 string CPerson::printAttacks()
 {
     string sOutput = "Attacks: \n";
-    for(auto attack : m_attacks)
-        sOutput += "-> \"" + attack.second->getName() + "\": " + attack.second->getDescription() + "\n";
+    size_t counter = 1;
+    for(auto attack : m_attacks) {
+        sOutput += std::to_string(counter) + ". \"" + attack.second->getName() + "\": " + attack.second->getDescription() + "\n";
+        counter++;
+    }
 
     return sOutput;
 }
 
 string CPerson::getAttack(string sPlayerChoice)
 {
-    if(std::isdigit(sPlayerChoice[0]) == true)
-    {
-        int counter=1;
-        for(auto it : m_attacks) {
-            if(counter == stoi(sPlayerChoice))
-                return it.first;
-             counter++;
-        }
-    }
+    if(std::isdigit(sPlayerChoice[0]) == false)
+        return "";
 
-    else if(sPlayerChoice.size() > 2)
-    {
-        for(auto it : m_attacks) {
-            if(fuzzy::fuzzy_cmp(it.second->getName(), sPlayerChoice) <= 0.2) 
-                return it.first;
-         }
+    int counter=1;
+    for(auto it : m_attacks) {
+        if(counter == stoi(sPlayerChoice))
+            return it.first;
+         counter++;
     }
 
     return "";
