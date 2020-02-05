@@ -43,7 +43,7 @@ CWorld* CPlayer::getWorld() { return m_world; }
 CContextStack& CPlayer::getContexts()   { return m_contextStack; }
 
 // *** SETTER *** // 
-void CPlayer::setRoom(CRoom* room)          { m_room = room; }
+void CPlayer::setRoom(CRoom* room)          { m_lastRoom = m_room; m_room = room; }
 void CPlayer::setPrint(string newPrint)     { m_sPrint = newPrint; }
 void CPlayer::appendPrint(string newPrint)  { m_sPrint.append(newPrint); }
 void CPlayer::setStatus(string status)      { m_status = status; }
@@ -61,7 +61,7 @@ void CPlayer::setWorld(CWorld* newWorld)    { m_world = newWorld; }
 // *** Fight *** //
 void CPlayer::setFight(CFight* newFight) { 
     m_curFight = newFight;
-    m_contextStack.insert(new CFightContext(), 1, "fight");
+    m_contextStack.insert(new CFightContext(m_attacks), 1, "fight");
     m_curFight->initializeFight();
 }
 
@@ -74,8 +74,8 @@ void CPlayer::endFight() {
 // *** Dialog *** //
 void CPlayer::startDialog(string sCharacter)
 {
-    m_contextStack.insert(new CDialogContext(), 1, "dialog");
     m_dialog = m_world->getCharacters()[sCharacter]->getDialog();
+    m_contextStack.insert(new CDialogContext(this), 1, "dialog");
     throw_event(m_dialog->states["START"]->callState(this));
 }
 
@@ -104,6 +104,12 @@ void CPlayer::send(string sMessage)
 // *** Room *** 
 void CPlayer::changeRoom(string sIdentifier)
 {
+    //Check if player wants to go back
+    if(sIdentifier == "back") {
+        changeRoom(m_lastRoom);
+        return;
+    }
+
     //Get selected room
     string room = getObject(getRoom()->getExtits(), sIdentifier);
 
@@ -114,8 +120,14 @@ void CPlayer::changeRoom(string sIdentifier)
     }
 
     //Print description and change players current room
-    m_sPrint += getWorld()->getRooms()[room]->showEntryDescription(getWorld()->getCharacters());
-    setRoom((getWorld()->getRooms()[room]));
+    changeRoom(getWorld()->getRooms()[room]);
+}
+
+void CPlayer::changeRoom(CRoom* newRoom)
+{
+    m_sPrint += newRoom->showEntryDescription(getWorld()->getCharacters());
+    m_lastRoom = m_room; 
+    m_room = newRoom;
 }
 
 
@@ -201,7 +213,8 @@ void CPlayer::equipeItem(CItem* item, string sType)
 
         //Create Choice-Context
         CChoiceContext* context = new CChoiceContext(item->getID());
-        context->add_listener("choose", &CContext::h_choose_equipe);
+        context->add_listener("yes", &CContext::h_choose_equipe);
+        context->add_listener("no", &CContext::h_choose_equipe);
         m_contextStack.insert(context, 1, "choice");
     }
 }
@@ -317,10 +330,12 @@ CPlayer* CPlayer::getPlayer(string sIdentifier)
 void CPlayer::throw_event(string sInput)
 {
     checkTimeEvents();
+    CParser parser;
+    std::vector<event> events = parser.parse(sInput);
     std::deque<CContext*> sortedCtxList= m_contextStack.getSortedCtxList();
     for(size_t i=0; i<sortedCtxList.size(); i++)
     {
-        sortedCtxList[i]->throw_event(sInput, this);
+        sortedCtxList[i]->throw_event(events, this);
         if(sortedCtxList[i]->getPermeable() == false)
             break;
     }

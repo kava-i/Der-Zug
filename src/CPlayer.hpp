@@ -9,6 +9,7 @@
 #include <chrono> 
 #include <time.h>
 #include <ctime>
+#include "CParser.hpp"
 #include "CWorld.hpp"
 #include "CPerson.hpp"
 #include "SortedContext.hpp"
@@ -34,6 +35,7 @@ class CPlayer : public CPerson
 {
 private:
     CRoom* m_room;
+    CRoom* m_lastRoom;
     CWorld* m_world;
 
     size_t m_highness;
@@ -102,6 +104,7 @@ public:
 
     //Room
     void changeRoom(string sIdentifier);
+    void changeRoom(CRoom* newRoom);
 
     //Item and inventory
     void printInventory();
@@ -125,7 +128,7 @@ public:
     string getObject(objectmap& mapObjects, string sIdentifier);    
     CPlayer* getPlayer(string sIdentifier);
 
-
+    typedef std::pair<std::string, std::string> event;
     void throw_event(string sInput);
     
     // *** Time events *** //

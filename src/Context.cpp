@@ -5,10 +5,6 @@
 bool CContext::getPermeable() { return m_permeable; }
 
 
-void CContext::setGame(CGame *)
-{
-}
-
 // **** FUNCTIONS ***** //
 void CContext::add_listener(string sEventType, void(CContext::*handler)(string&, CPlayer*)) {
     m_eventmanager[sEventType].push_back(handler);
@@ -22,29 +18,27 @@ void CContext::delete_listener(string sEventType, int index) {
     m_eventmanager[sEventType].erase(m_eventmanager[sEventType].begin()+index);
 }
 
-void CContext::throw_event(std::string sInput, CPlayer* p)
+void CContext::throw_event(std::vector<event> events, CPlayer* p)
 {
-    if(sInput == "")
-        return; 
-
-    vector<event> events = parser(sInput, p);
-
-    if(events.size() == 0)
-        return;
-
+    bool thrown = false;
     for(auto e : events)
     {
         std::cout << e.first << ", " << e.second << "\n";
 
         if(m_eventmanager.count(e.first) == 0) 
-            return;
+            continue;
             
+        thrown = true;
         for(auto it : m_eventmanager[e.first])
             (this->*it)(e.second, p);
     }
+    
+    if(thrown == false && m_permeable == false)
+    {
+        std::cout << "Nothing thrown." << std::endl;
+        error(p);
+    }
 }
-
-
 
 // ***** EVENTHANDLER ***** //
 void CContext::h_help(string& sIdentifier, CPlayer* p) {

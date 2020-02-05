@@ -15,7 +15,7 @@ void CFight::initializeFight()
     m_player->appendPrint(m_sDescription + createFightingAgainst());
 }
 
-std::string CFight::fightRound(string sPlayerChoice)
+string CFight::fightRound(string sPlayerChoice)
 {
     string sOutput;
     //Execute players turn
@@ -25,7 +25,7 @@ std::string CFight::fightRound(string sPlayerChoice)
     if(m_opponent->getHp() <= 0) {
         sOutput += "You defeted " + m_opponent->getName() + "!\n";
         m_player->appendPrint(sOutput);
-        return "endFight/deleteCharacter_" + m_opponent->getID();
+        return "endFight;deleteCharacter " + m_opponent->getID();
     }
 
     //Execute opponents turn
@@ -36,7 +36,7 @@ std::string CFight::fightRound(string sPlayerChoice)
     if(m_player->getHp() <= 0) {
         sOutput += "You were killed! by " + m_opponent->getName() + "!\n";
         m_player->appendPrint(sOutput);
-        return "endFight/gameover";
+        return "endFight;gameover" + m_opponent->getID();
     }
 
     //Add output for next round
@@ -46,7 +46,6 @@ std::string CFight::fightRound(string sPlayerChoice)
     //Update player print
     m_player->appendPrint(sOutput);
 
-    //Create event
     return "";
 }
 

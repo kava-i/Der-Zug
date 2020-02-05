@@ -1,14 +1,14 @@
 #include "CChoiceContext.hpp"
 #include "CPlayer.hpp"
 
+CChoiceContext::CChoiceContext(string obj)
+{
+    //Set permeability
+    m_permeable = false;
 
-
-// ***** PARSER ***** //
-
-vector<CContext::event> CChoiceContext::parser(string sInput, CPlayer* p) {
-    return {std::make_pair("choose", sInput)};
+    //Set object
+    m_sObject=obj;
 }
-
 
 // ***** Handlers ***** //
 
@@ -33,5 +33,4 @@ void CChoiceContext::h_choose_equipe(string& sIdentifier, CPlayer* p)
 
     else
         p->appendPrint("Worng input. Use \"help\" if you're unsure what to do.\n");
-
 }

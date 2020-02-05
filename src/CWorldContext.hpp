@@ -6,19 +6,7 @@
 class CWorldContext : public CContext
 {
 public:
-    CWorldContext() 
-    {
-        //Set permeability
-        m_permeable = true;
-
-        //Set jandlers
-        add_listener("deleteCharacter", &CContext::h_deleteCharacter);
-        add_listener("addItem", &CContext::h_addItem);
-        add_listener("newFight", &CContext::h_newFight);
-        add_listener("endFight", &CContext::h_endFight);
-        add_listener("endDialog", &CContext::h_endDialog);
-        add_listener("gameover", &CContext::h_gameover);
-    }
+    CWorldContext();
 
     //Parser
     vector<event> parser(string, CPlayer*);
@@ -30,6 +18,8 @@ public:
     void h_endFight(string&, CPlayer*);
     void h_endDialog(string&, CPlayer*);
     void h_gameover(string&, CPlayer*);
+
+    void error(CPlayer*);
 };
 
 #endif
