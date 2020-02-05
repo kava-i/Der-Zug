@@ -35,6 +35,7 @@ class CPlayer : public CPerson
 {
 private:
     CRoom* m_room;
+    CRoom* m_lastRoom;
     CWorld* m_world;
 
     size_t m_highness;
@@ -103,6 +104,7 @@ public:
 
     //Room
     void changeRoom(string sIdentifier);
+    void changeRoom(CRoom* newRoom);
 
     //Item and inventory
     void printInventory();

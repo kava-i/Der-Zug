@@ -8,7 +8,7 @@ class CAttack;
 class CFightContext : public CContext
 {
 public: 
-    CFightContext();
+    CFightContext(std::map<std::string, CAttack*> attacks);
 
     //Addhandlers
     void addHandlers(std::map<string, CAttack*> attacks);

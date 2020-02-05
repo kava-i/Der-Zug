@@ -43,7 +43,7 @@ CWorld* CPlayer::getWorld() { return m_world; }
 CContextStack& CPlayer::getContexts()   { return m_contextStack; }
 
 // *** SETTER *** // 
-void CPlayer::setRoom(CRoom* room)          { m_room = room; }
+void CPlayer::setRoom(CRoom* room)          { m_lastRoom = m_room; m_room = room; }
 void CPlayer::setPrint(string newPrint)     { m_sPrint = newPrint; }
 void CPlayer::appendPrint(string newPrint)  { m_sPrint.append(newPrint); }
 void CPlayer::setStatus(string status)      { m_status = status; }
@@ -104,6 +104,12 @@ void CPlayer::send(string sMessage)
 // *** Room *** 
 void CPlayer::changeRoom(string sIdentifier)
 {
+    //Check if player wants to go back
+    if(sIdentifier == "back") {
+        changeRoom(m_lastRoom);
+        return;
+    }
+
     //Get selected room
     string room = getObject(getRoom()->getExtits(), sIdentifier);
 
@@ -114,8 +120,14 @@ void CPlayer::changeRoom(string sIdentifier)
     }
 
     //Print description and change players current room
-    m_sPrint += getWorld()->getRooms()[room]->showEntryDescription(getWorld()->getCharacters());
-    setRoom((getWorld()->getRooms()[room]));
+    changeRoom(getWorld()->getRooms()[room]);
+}
+
+void CPlayer::changeRoom(CRoom* newRoom)
+{
+    m_sPrint += newRoom->showEntryDescription(getWorld()->getCharacters());
+    m_lastRoom = m_room; 
+    m_room = newRoom;
 }
 
 

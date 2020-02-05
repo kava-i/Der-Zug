@@ -10,6 +10,8 @@ private:
     CQuest* m_quest;
     
 public:
-    
+    CQuestContext();
+
+        
 }; 
      

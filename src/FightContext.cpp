@@ -1,6 +1,17 @@
 #include "CFightContext.hpp"
 #include "CPlayer.hpp"
 
+CFightContext::CFightContext(std::map<std::string, CAttack*> attacks)
+{
+    //Set permeability
+    m_permeable = false;
+
+    //Add listeners
+    add_listener("show", &CContext::h_show);
+    add_listener("help", &CContext::h_help);
+
+    addHandlers(attacks);
+}
 
 void CFightContext::addHandlers(std::map<std::string, CAttack*> attacks)
 {
