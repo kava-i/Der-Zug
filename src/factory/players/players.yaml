@@ -47,7 +47,7 @@
 - name: "anna"
   password: password
   id: annas_friends 
-  room: compartment-a
+  room: bahnhof_eingangshalle
   hp: 50
   strength: 10
   attacks: 
@@ -57,7 +57,7 @@
 - name: "leon"
   password: password
   id: annas_friends 
-  room: compartment-a
+  room: bahnhof_eingangshalle
   hp: 50
   strength: 10
   attacks: 
@@ -67,7 +67,7 @@
 - name: "lukas"
   password: password
   id: annas_friends 
-  room: compartment-a
+  room: bahnhof_eingangshalle
   hp: 50
   strength: 10
   attacks: 
@@ -77,7 +77,7 @@
 - name: "lukas"
   password: password
   id: annas_friends 
-  room: compartment-a
+  room: bahnhof_eingangshalle
   hp: 50
   strength: 10
   attacks: 
