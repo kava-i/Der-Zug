@@ -7,5 +7,6 @@ pick up [name of item]                          f.e. "pick up wine" or "pick win
 drink [name of item in inventory]               f.e. "drink wine" 
 consume [name of item in inventory]             f.e. "consume cake"
 equipe [name of item inventory]                 f.e. "equipe sword"
+show (solved) quests                            f.e. "show quests" or "show solved quests"
 
-All command igonore case. In addition partial matching words. So instead of writing "pick up pack of cigaretts" you may enter "pick up cigaretts" or even "pick up cig". This only works for people, exits, items etc. not for commands. So "show invent" does not work, "show inventory" is neccesarry.
+All command igonore case. In addition partial matching works. So instead of writing "pick up pack of cigaretts" you may enter "pick up cigaretts" or even "pick up cig". This only works for people, exits, items etc. not for commands. So "show invent" does not work, "show inventory" is neccesarry. However instead of writing "go to", "talk to", "pick up" etc. you may simply write "go", "talk", "pick" etc.  
