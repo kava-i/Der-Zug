@@ -1,6 +1,6 @@
 ---
 
-- name: "anna"
+- name: "sophia"
   password: password
   id: programmer_anna 
   room: compartment-a
@@ -19,7 +19,7 @@
   attacks:
     punsch: "Punsch"
 
-- name: "jonny"
+- name: "alex"
   password: password
   id: programmer_jonny
   room: bahnhof_eingangshalle
@@ -44,9 +44,39 @@
     kick: Kick
     punsch: "Punsch" 
 
-- name: "anna bronec"
+- name: "anna"
   password: password
-  id: anna_bronec 
+  id: annas_friends 
+  room: compartment-a
+  hp: 50
+  strength: 10
+  attacks: 
+    kick: Kick
+    between_the_legs_kick: "Kick between the legs"
+
+- name: "leon"
+  password: password
+  id: annas_friends 
+  room: compartment-a
+  hp: 50
+  strength: 10
+  attacks: 
+    kick: Kick
+    between_the_legs_kick: "Kick between the legs"
+
+- name: "lukas"
+  password: password
+  id: annas_friends 
+  room: compartment-a
+  hp: 50
+  strength: 10
+  attacks: 
+    kick: Kick
+    between_the_legs_kick: "Kick between the legs"
+
+- name: "lukas"
+  password: password
+  id: annas_friends 
   room: compartment-a
   hp: 50
   strength: 10
