@@ -26,9 +26,6 @@ std::map<std::string, std::string> CQuest::getHandler() {
 }
 
 // *** SETTER *** //
-void CQuest::setActive(bool active) {
-    m_active = active;
-}
 void CQuest::setSteps(std::map<std::string, CQuestStep*> steps) {
     m_questSteps = steps;
 }
@@ -38,6 +35,20 @@ void CQuest::setHandler(std::map<std::string, std::string> handlers) {
 
 
 // *** FUNCTIONS *** //
+
+std::string CQuest::setActive() {
+    m_active = true;
+    std::string sOutput = Webcmd::set_color(Webcmd::color::GREEN) + "New Quest: <b>" + m_sName + "</b>: <i>" + m_sDescription + "</i>" + Webcmd::set_color(Webcmd::color::WHITE) + "\n";
+
+    for(auto it : m_questSteps)
+    {
+        if(it.second->getSolved() == true)
+            sOutput += it.second->handleSolved();
+    }
+    return sOutput;
+}
+
+
 std::string CQuest::printQuest(bool solved)
 {
     if(m_solved != solved)
@@ -104,16 +115,20 @@ void CQuestStep::setActive(bool active) {
     m_active = active;
 }
 
-
 std::string CQuestStep::solved()
 {
     m_solved = true;
     m_quest->checkSolved();
     if(m_active == true)
-    {
-        for(auto step : m_linkedSteps)
-            m_quest->getSteps()[step]->setActive(true);
-        return Webcmd::set_color(Webcmd::color::GREEN) + m_sName + " Erfolgreich!\n" + Webcmd::set_color(Webcmd::color::WHITE);
-    }
+        return handleSolved();
+
     return "";
 }
+
+std::string CQuestStep::handleSolved()
+{
+    for(auto step : m_linkedSteps)
+        m_quest->getSteps()[step]->setActive(true);
+    return Webcmd::set_color(Webcmd::color::GREEN) + m_sName + " Erfolgreich!\n" + Webcmd::set_color(Webcmd::color::WHITE);
+}
+

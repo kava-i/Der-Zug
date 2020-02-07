@@ -18,10 +18,17 @@ public:
     static void initializeFunctions();
 
     //Handler
+
+    // *** zug nach Moskau *** //
     void h_ticketverkaeufer(std::string&, CPlayer*);
     void h_ticketverkauf(std::string&, CPlayer*);
     void h_zum_gleis(std::string&, CPlayer*);
 
+    // *** besoffene frau *** //
+    void h_besiege_besoffene_frau(std::string&, CPlayer*);
+    
+    // *** Geld auftreiben *** //
+    void h_geldauftreiben(string&, CPlayer*);
 }; 
      
 #endif

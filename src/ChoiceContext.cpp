@@ -5,6 +5,7 @@ CChoiceContext::CChoiceContext(string obj)
 {
     //Set permeability
     m_permeable = false;
+    m_curPermeable = m_permeable;
 
     //Set object
     m_sObject=obj;

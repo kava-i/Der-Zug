@@ -24,6 +24,7 @@ public:
     //Rooms
     void h_firstZombieAttack (string& sIdentiier, CPlayer* p);
     void h_moveToHospital    (string& sIdentiier, CPlayer* p);
+    void h_exitTrainstation  (string& sIdentiier, CPlayer* p);
 
     //Tuturials
     void h_startTutorial     (string&, CPlayer* p);

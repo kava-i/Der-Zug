@@ -61,6 +61,7 @@ public:
     string parsen2(CPlayer*);
     string pissingman1(CPlayer*);
     string ticket(CPlayer*);
+    string keinTicket(CPlayer*);
     string betrunkene(CPlayer*);
 
     void changeStateText(string sStateID, size_t text);

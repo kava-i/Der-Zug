@@ -19,6 +19,7 @@
     1: "Ich denke, ich bin doch nicht interessiert.;{};ende"
     2: Ich nehme es!;{"gold":10};verkauf2
     3: Ich habe leider nicht genug;{"gold":-10};ende
+  function: keinTicket
 
 - id: verkauf2
   text: "TICKETVERKÄUFER Und es ist dein! Eine gute Fahrt wünsche ich dir! Und jetzt, lass mich denken!!"

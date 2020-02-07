@@ -120,6 +120,7 @@ public:
 
     //Quests
     void showQuests(bool solved);
+    void setNewQuest(std::string sQuestID);
 
     //Stats
     string showStats();

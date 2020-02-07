@@ -27,6 +27,7 @@ void CDState::initializeFunctions()
     m_functions["parsen2"]      = &CDState::parsen2;
     m_functions["pissingman1"]  = &CDState::pissingman1;
     m_functions["ticket"]       = &CDState::ticket;
+    m_functions["keinTicket"]   = &CDState::keinTicket;
     m_functions["betrunkene"]   = &CDState::betrunkene;
 }
 
@@ -106,8 +107,17 @@ string CDState::pissingman1(CPlayer* p)
 
 string CDState::ticket(CPlayer* p)
 {
+    deleteDialogOption("START", 1);
     string sOutput = standard(p); 
     return sOutput+";addItem ticket";
+}
+
+string CDState::keinTicket(CPlayer* p)
+{
+    string sOutput=standard(p);
+    if(p->getGold() < 10)
+        p->setNewQuest("geld_fuer_ticket");
+    return sOutput;
 }
 
 string CDState::betrunkene(CPlayer* p)
@@ -115,6 +125,7 @@ string CDState::betrunkene(CPlayer* p)
     string sOutput = standard(p);
     p->appendPrint("$");
     sOutput+=";fight besoffene_frau";
+    p->setNewQuest("besoffene_frau");
     return sOutput;
 }
 

@@ -5,6 +5,7 @@ CDialogContext::CDialogContext(CPlayer* p)
 {
     //Set permeability
     m_permeable = false;
+    m_curPermeable = m_permeable;
 
     //Set first state
     setCurState("START", p);

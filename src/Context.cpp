@@ -2,7 +2,9 @@
 #include "CPlayer.hpp"
 
 // ***** GETTER ***** // 
-bool CContext::getPermeable() { return m_permeable; }
+bool CContext::getPermeable() { 
+    return m_curPermeable; 
+}
 
 
 // **** FUNCTIONS ***** //
@@ -20,6 +22,9 @@ void CContext::delete_listener(string sEventType, int index) {
 
 void CContext::throw_event(std::vector<event> events, CPlayer* p)
 {
+    m_curPermeable = m_permeable;
+    m_block = false;
+
     bool thrown = false;
     for(auto e : events)
     {
@@ -29,8 +34,11 @@ void CContext::throw_event(std::vector<event> events, CPlayer* p)
             continue;
             
         thrown = true;
-        for(auto it : m_eventmanager[e.first])
+        for(auto it : m_eventmanager[e.first]) {
+            if(m_block ==true)
+                break;
             (this->*it)(e.second, p);
+        }
     }
     
     if(thrown == false && m_permeable == false)

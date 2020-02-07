@@ -96,9 +96,8 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePla
     m_curPlayer->setPlayers(mapOnlinePlayers2);
 
     //Check whether player is dead
-    if(m_curPlayer->getHp() <= 0)
-    {
-        m_context->throw_event({std::make_pair("reloadplayer", m_curPlayer->getID())}, m_players["programmer"]);
+    if(m_curPlayer->getHp() <= 0) {
+        m_context->throw_event({std::make_pair("reload_player", m_curPlayer->getID())}, m_players["programmer"]);
         m_curPlayer->throw_event("startTutorial");
     }
 

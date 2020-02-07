@@ -24,7 +24,7 @@
   id: programmer_jonny
   room: bahnhof_eingangshalle
   strength: 8
-  gold: 11
+  gold: 8
   attacks:
     kick: "Kick"
     punsch: "Punsch"

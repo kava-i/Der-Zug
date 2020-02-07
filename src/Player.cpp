@@ -115,6 +115,7 @@ void CPlayer::changeRoom(string sIdentifier)
 
     //Get selected room
     string room = getObject(getRoom()->getExtits(), sIdentifier);
+    std::cout << "room: " << room << std::endl;
 
     //Check if room was found
     if(room == "") {
@@ -253,6 +254,11 @@ void CPlayer::showQuests(bool solved)
     }
 }
 
+void CPlayer::setNewQuest(std::string sQuestID)
+{
+    m_sPrint += m_world->getQuests()[sQuestID]->setActive();
+}
+
 // *** Stats *** //
 string CPlayer::showStats() {
     string stats = "Name: " + m_sName 
@@ -314,11 +320,27 @@ string CPlayer::doLogin(string sName, string sPassword)
 
 string CPlayer::getObject(objectmap& mapObjects, string sIdentifier)
 {
+    std::vector<std::pair<std::string, double>> matches;
+
+    //Find all matches
     for(auto it : mapObjects) {
-        if(fuzzy::fuzzy_cmp(it.second, sIdentifier) <= 0.2) 
-            return it.first;
+        double match = fuzzy::fuzzy_cmp(it.second, sIdentifier);
+        if(match <= 0.2) 
+            matches.push_back(std::make_pair(it.first, match));
     }
-    return "";
+    if(matches.size() == 0)
+        return "";
+
+    //Find best match.
+    size_t pos=0;
+    double max=0.3;
+    for(unsigned int i=0; i<matches.size(); i++) {
+        if(matches[i].second < max) {
+            pos=i;
+            max=matches[i].second;
+        }
+    }
+    return matches[pos].first;
 }
 
 CPlayer* CPlayer::getPlayer(string sIdentifier)

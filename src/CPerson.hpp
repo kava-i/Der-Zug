@@ -44,6 +44,7 @@ public:
     // *** SETTER *** //
     void setDialog(SDialog* newDialog);
     void setHp(int hp);
+    void setGold(int gold);
 
     string printAttacks();
     string getAttack(string sPlayerChoice);

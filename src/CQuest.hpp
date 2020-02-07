@@ -30,9 +30,10 @@ public:
     std::map<std::string, std::string> getHandler();
 
     //Setter
-    void setActive(bool active);
     void setSteps(std::map<std::string, CQuestStep*> steps);
     void setHandler(std::map<std::string, std::string> handlers);
+
+    std::string setActive();
 
     //Functions
     std::string printQuest(bool solved);
@@ -64,6 +65,7 @@ public:
 
     //Functions
     std::string solved();
+    std::string handleSolved();
 };
 
 #endif

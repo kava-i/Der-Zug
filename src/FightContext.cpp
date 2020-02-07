@@ -5,6 +5,7 @@ CFightContext::CFightContext(std::map<std::string, CAttack*> attacks)
 {
     //Set permeability
     m_permeable = false;
+    m_curPermeable = m_permeable;
 
     //Add listeners
     add_listener("show", &CContext::h_show);

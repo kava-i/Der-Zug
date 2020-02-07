@@ -13,6 +13,7 @@ CPerson::attacks& CPerson::getAttacks() { return m_attacks; }
 // *** SETTER *** //
 void CPerson::setHp(int hp) { m_hp = hp; }
 void CPerson::setDialog(SDialog* newDialog) { m_dialog = newDialog; }
+void CPerson::setGold(int gold) { m_gold = gold; }
 
 string CPerson::printAttacks()
 {

@@ -33,3 +33,23 @@
     id: hilfe
     description: "Seltsame Menschen, haben of seltsame Ansprüche, aber bieten seltene Hilfe."
 
+- name: "Die besoffene Frau"
+  id: besoffene_frau
+  description: "Eine besoffene Frau auf der Toilette, die dich plötzlich angreift."
+  steps:
+  - name: "Die besoffene Frau besiegen"
+    id: 1besiege_besoffene_frau
+    description: "Oh, die wurde wohl agressiv. Jetzt heißt anwenden, was du in deinen Jahren auf der Straße gelernt hast."
+    handler: deleteCharacter 
+    active: true
+
+- name: "Geld Auftreiben"
+  id: geld_fuer_ticket
+  description: "Okay, auch 10 Schillinge ist noch mehr als gedacht. Heißt also Geld auftreiben."
+  steps:
+  - name: "Geld Auftreiben"
+    id: 1geldauftreiben
+    description: "Dann muss ich wohl mal suchen, wo ich etwas herbekomme, oder wer mir helfen kann."
+    handler: recieveMoney
+    active: true
+    

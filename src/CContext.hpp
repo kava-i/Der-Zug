@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 #include "func.hpp"
+#include "Webcmd.hpp"
 
 using std::string;
 using std::map;
@@ -21,6 +22,8 @@ protected:
 
     eventmanager m_eventmanager;
     bool m_permeable;
+    bool m_curPermeable;
+    bool m_block;
 
 public: 
     
@@ -57,6 +60,7 @@ public:
     //Rooms
     virtual void h_firstZombieAttack (string&, CPlayer*) {}
     virtual void h_moveToHospital    (string&, CPlayer*) {}
+    virtual void h_exitTrainstation  (string&, CPlayer*) {}
 
     //Tuturial
     virtual void h_startTutorial     (string&, CPlayer*) {}
@@ -71,6 +75,7 @@ public:
     // *** WORLD CONTEXT *** //
     virtual void h_deleteCharacter(string&, CPlayer*) {}
     virtual void h_addItem(string&, CPlayer*) {}
+    virtual void h_recieveMoney(string&, CPlayer*) {}
     virtual void h_newFight(string&, CPlayer*) {}
     virtual void h_endFight(string&, CPlayer*) {}
     virtual void h_endDialog(string&, CPlayer*) {}
@@ -93,6 +98,8 @@ public:
     virtual void h_ticketverkaeufer(string&, CPlayer*) {}
     virtual void h_ticketverkauf(string&, CPlayer*) {}
     virtual void h_zum_gleis(string&, CPlayer*) {}
+    virtual void h_besiege_besoffene_frau(string&, CPlayer*) {}
+    virtual void h_geldauftreiben(string&, CPlayer*) {}
 
     // *** PROGRAMMER *** //
     virtual void h_try(string&, CPlayer*) {}

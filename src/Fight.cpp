@@ -36,7 +36,7 @@ string CFight::fightRound(string sPlayerChoice)
     if(m_player->getHp() <= 0) {
         sOutput += "You were killed! by " + m_opponent->getName() + "!\n";
         m_player->appendPrint(sOutput);
-        return "endFight;gameover" + m_opponent->getID();
+        return "endFight;gameover";
     }
 
     //Add output for next round

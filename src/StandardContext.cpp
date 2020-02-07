@@ -4,7 +4,8 @@
 CStandardContext::CStandardContext()
 {
     //Set permeability
-    m_permeable = true;
+    m_permeable = false;
+    m_curPermeable = m_permeable;
 
     //Add listeners
     add_listener("show", &CContext::h_show);
@@ -21,6 +22,7 @@ CStandardContext::CStandardContext()
     //Rooms
     add_listener("go", &CContext::h_firstZombieAttack);
     add_listener("go", &CContext::h_moveToHospital, 0);
+    add_listener("go", &CContext::h_exitTrainstation, 0);
 
     //Tutorial
     add_listener("startTutorial", &CContext::h_startTutorial);
@@ -79,18 +81,14 @@ void CStandardContext::h_look(string& sIdentifier, CPlayer* p) {
 }
 
 void CStandardContext::h_goTo(std::string& sIdentifier, CPlayer* p) {
+    std::cout << "goTo" << std::endl;
     if(sIdentifier == "")
         return;
-    if(sIdentifier.find("to ") == 0)
-        sIdentifier.erase(0, 3);
     p->changeRoom(sIdentifier);
 }
 
 void CStandardContext::h_startDialog(string& sIdentifier, CPlayer* p)
 {
-    if(sIdentifier.find("to ") == 0)
-        sIdentifier.erase(0, 3);
-
     //Get selected character
     string character = p->getObject(p->getRoom()->getCharacters(), sIdentifier);
     CPlayer* player = p->getPlayer(sIdentifier);
@@ -105,8 +103,6 @@ void CStandardContext::h_startDialog(string& sIdentifier, CPlayer* p)
 }
 
 void CStandardContext::h_take(string& sIdentifier, CPlayer* p) {
-    if(sIdentifier.find("up ") == 0)
-        sIdentifier.erase(0, 3);
     if(p->getRoom()->getItem(sIdentifier) == NULL)
         p->appendPrint("Item not found.\n");
     else
@@ -152,23 +148,36 @@ void CStandardContext::h_firstZombieAttack(string& sIdentifier, CPlayer* p)
 
 void CStandardContext::h_moveToHospital(string& sIdentifier, CPlayer* p)
 {
-    if(sIdentifier.find("to ") == 0)
-        sIdentifier.erase(0, 3);
+    std::cout << "moveToHospital" << std::endl;
 
     //Get selected room
     if(p->getRoom()->getID().find("compartment") == std::string::npos || fuzzy::fuzzy_cmp("corridor", sIdentifier) > 0.2)
         return;
 
-    sIdentifier = "Foyer";
-    p->setRoom(p->getWorld()->getRooms()["hospital_stairs"]);
+    p->changeRoom(p->getWorld()->getRooms()["hospital_foyer"]);
+    m_block = true;
 }
 
+void CStandardContext::h_exitTrainstation(string& sIdentifier, CPlayer* p)
+{
+    std::cout << "h_exitTrainstation\n";
+    
+    std::cout << p->getRoom()->getID() << " | bahnhof_eingangshalle" << std::endl;
+    std::cout << p->getObject(p->getRoom()->getExtits(), sIdentifier) << " | ausgang" << std::endl;
+
+    if(p->getRoom()->getID() != "bahnhof_eingangshalle" || p->getObject(p->getRoom()->getExtits(), sIdentifier) != "ausgang")
+        return;
+
+    p->appendPrint("Du drehst dich zum dem großen, offen stehenden Eingangstor der Bahnhofshalle. Und kurz kommt dir der Gedanke doch den Zug nicht zu nehmen, doch alles beim Alten zu belassen. Doch etwas sagt dir, dass es einen guten Grund gab das nicht zu tun, einen guten Grund nach Moskau zu fahren. Und auch, wenn du ihn gerade nicht mehr erkennst. Vielleicht ist gerade das der beste Grund: rausfinden, was dich dazu getrieben hat, diesen termin in Moskau zu vereinbaren.\n Du guckst dich wieder in der Halle um, und überlegst, wo du anfängst zu suchen.\n");
+    
+    m_block=true;
+}
 void CStandardContext::h_startTutorial(string&, CPlayer* p)
 {
     p->appendPrint("Willkommen bei \"DER ZUG\"! Du befindest dich auf dem Weg nach Moskau. Dir fehlt dein Ticket. Tickets sind teuer. Glücklicherweise kennst du einen leicht verrückten, viel denkenden Mann, der sich \"Der Ticketverkäufer\" nennt. Suche ihn, er hat immer noch ein günsttiges Ticket für dich. Benutze die Befhelte \"go to [name des Ausgangs]\", um den Raum zu wechseln, um dir Personen und Ausgänge anzeigen zu lassen, nutze \"show people\", bzw. \"show exits\" oder auch \"show all\". Eine Liste mit allen Befhelen und zusätzlichen Hilfestellungen erhältst du, indem du \"help\" eingibst.\n $\n");
 
-    p->appendPrint(p->getRoom()->getDescription());
-    p->getWorld()->getQuests()["zug_nach_moskau"]->setActive(true);
+    p->appendPrint(p->getRoom()->getDescription() + "\n");
+    p->setNewQuest("zug_nach_moskau");
 }
 
 void CStandardContext::h_try(string& sIdentifier, CPlayer* p)
