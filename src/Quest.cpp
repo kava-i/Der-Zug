@@ -5,6 +5,7 @@ CQuest::CQuest(nlohmann::json jAttributes)
     m_sName = jAttributes["name"];
     m_sID = jAttributes["id"];
     m_sDescription = jAttributes["description"];
+    m_EP = jAttributes.value("ep", 5);
     m_solved=false;
     m_active=false;
 }
@@ -38,6 +39,8 @@ void CQuest::setHandler(std::map<std::string, std::string> handlers) {
 
 std::string CQuest::setActive() {
     m_active = true;
+    m_questSteps.begin()->second->setActive(true);
+
     std::string sOutput = Webcmd::set_color(Webcmd::color::GREEN) + "New Quest: <b>" + m_sName + "</b>: <i>" + m_sDescription + "</i>" + Webcmd::set_color(Webcmd::color::WHITE) + "\n";
 
     for(auto it : m_questSteps)
@@ -45,6 +48,7 @@ std::string CQuest::setActive() {
         if(it.second->getSolved() == true)
             sOutput += it.second->handleSolved();
     }
+    sOutput += checkSolved();
     return sOutput;
 }
 
@@ -61,22 +65,31 @@ std::string CQuest::printQuest(bool solved)
         if(it.second->getActive() == true)  {
             if(it.second->getSolved() == true)
                 sOutput+=Webcmd::set_color(Webcmd::color::GREEN);
-            sOutput += std::to_string(counter) + ". " + it.second->getName() + " [<i>" + it.second->getDescription() + "</i>]\n";
+
+            sOutput += std::to_string(counter) + ". " + it.second->getName() + " [<i>" + it.second->getDescription() + "</i>]";
+            
+            if(it.second->getSucc() > 0)
+                sOutput += " [" + std::to_string(it.second->getCurSucc()) + "/" + std::to_string(it.second->getSucc()) + "]";
+
             counter++;
-            sOutput+=Webcmd::set_color(Webcmd::color::WHITE);
+            sOutput += "\n" + Webcmd::set_color(Webcmd::color::WHITE);
         }
     }
     std::cout << sOutput << std::endl;
     return sOutput;    
 }
  
-void CQuest::checkSolved()
+std::string CQuest::checkSolved()
 {
     for(auto it : m_questSteps) {
         if(it.second->getSolved() == false)
-            return;
+            return "";
     }
     m_solved=true;
+    if(m_active == true)
+        return Webcmd::set_color(Webcmd::color::GREEN) + "Quest "+ m_sName + " solved! + " + std::to_string(m_EP) + " EP\n" + Webcmd::set_color(Webcmd::color::WHITE);
+    else
+        return "";
 }
 
 // ***** ***** CQUESTSTEP ***** ***** //
@@ -87,7 +100,11 @@ CQuestStep::CQuestStep(nlohmann::json jAttributes, CQuest* quest)
     m_sID = jAttributes["id"];
     m_sDescription = jAttributes["description"];
     m_solved = false;
-    m_active = jAttributes.value("active", false);
+    m_active = false;
+
+    m_succ = jAttributes.value("list", 0);
+    m_curSucc = 0;
+    
     std::vector<std::string> linkedSteps;
     if(jAttributes.count("linkedSteps") != 0)
         linkedSteps = jAttributes["linkedSteps"].get<std::vector<std::string>>();
@@ -109,20 +126,41 @@ bool CQuestStep::getActive() {
 bool CQuestStep::getSolved() {
     return m_solved;
 }
+int CQuestStep::getSucc() {
+    return m_succ;
+}
+int CQuestStep::getCurSucc() {
+    return m_curSucc;
+}
+std::vector<std::string>& CQuestStep::getWhich() {
+    return m_which;
+}
 
 // *** SETTER *** //
 void CQuestStep::setActive(bool active) {
     m_active = active;
 }
+void CQuestStep::setCurSucc(int x) {
+    m_curSucc = x;
+}
+void CQuestStep::incSucc(int x) {
+    std::cout << "Succ before: " << m_curSucc << std::endl;
+    m_curSucc += x;
+    std::cout << "Succ after: " << m_curSucc << std::endl;
+}
 
 std::string CQuestStep::solved()
 {
-    m_solved = true;
-    m_quest->checkSolved();
-    if(m_active == true)
-        return handleSolved();
+    std::string sOutput = "";
+    if(m_succ != m_curSucc)
+        return sOutput;
 
-    return "";
+    m_solved = true;
+    if(m_active == true)
+        sOutput += handleSolved();
+    sOutput += m_quest->checkSolved();
+
+    return sOutput;
 }
 
 std::string CQuestStep::handleSolved()

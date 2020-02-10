@@ -362,11 +362,16 @@ void CPlayer::throw_event(string sInput)
     CParser parser;
     std::vector<event> events = parser.parse(sInput);
     std::deque<CContext*> sortedCtxList= m_contextStack.getSortedCtxList();
-    for(size_t i=0; i<sortedCtxList.size(); i++)
+
+    for(size_t i=0; i<events.size(); i++)
     {
-        sortedCtxList[i]->throw_event(events, this);
-        if(sortedCtxList[i]->getPermeable() == false)
-            break;
+        std::cout << events[i].first << ", " << events[i].second << "\n";
+
+        for(size_t j=0; j<sortedCtxList.size(); j++) {
+            sortedCtxList[j]->throw_event(events[i], this);
+            if(sortedCtxList[j]->getPermeable() == false)
+                break;
+        }
     }
 }
 

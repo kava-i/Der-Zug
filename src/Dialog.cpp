@@ -29,6 +29,8 @@ void CDState::initializeFunctions()
     m_functions["ticket"]       = &CDState::ticket;
     m_functions["keinTicket"]   = &CDState::keinTicket;
     m_functions["betrunkene"]   = &CDState::betrunkene;
+    m_functions["strangeGuy1"]   = &CDState::strangeGuy1;
+    m_functions["strangeGuy2"]   = &CDState::strangeGuy2;
 }
 
 
@@ -126,6 +128,25 @@ string CDState::betrunkene(CPlayer* p)
     p->appendPrint("$");
     sOutput+=";fight besoffene_frau";
     p->setNewQuest("besoffene_frau");
+    return sOutput;
+}
+
+string CDState::strangeGuy1(CPlayer* p)
+{
+    string sOutput = standard(p);
+    if(p->getWorld()->getQuests()["komische_gruppe"]->getActive() == false)
+        p->setNewQuest("komische_gruppe");
+    return sOutput;
+}
+
+string CDState::strangeGuy2(CPlayer* p)
+{
+    string sOutput = standard(p);
+    p->throw_event("recieveMoney 3");
+    std::cout << "1.\n";
+    p->appendPrint(p->getWorld()->getQuests()["komische_gruppe"]->getSteps()["2hilfe"]->solved());
+    std::cout << "2.\n";
+    deleteDialogOption("die_gruppe", 1);  
     return sOutput;
 }
 

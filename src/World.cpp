@@ -32,7 +32,6 @@ void CWorld::roomFactory()
         roomFactory(p.path());
 }
 
-
 void CWorld::roomFactory(string sPath)
 {
     //Read json creating all rooms
@@ -182,8 +181,7 @@ SDialog* CWorld::dialogFactory(string sPath)
         if(j_state.count("options") != 0)
         {
             std::map<string, string> mapOptions = j_state["options"].get<std::map<string, string>>(); 
-            for(auto it : mapOptions)
-            {
+            for(auto it : mapOptions) {
                 std::vector<string> vAtts = func::split(it.second, ";");
                 nlohmann::json jDeps = nlohmann::json::parse(vAtts[1]);
                 options[stoi(it.first)] = {vAtts[0], jDeps, vAtts[2]};

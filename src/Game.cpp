@@ -97,7 +97,7 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePla
 
     //Check whether player is dead
     if(m_curPlayer->getHp() <= 0) {
-        m_context->throw_event({std::make_pair("reload_player", m_curPlayer->getID())}, m_players["programmer"]);
+        m_context->throw_event(std::make_pair("reload_player", m_curPlayer->getID()), m_players["programmer"]);
         m_curPlayer->throw_event("startTutorial");
     }
 
@@ -106,8 +106,10 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePla
     std::vector<event> events = parser.parse(sInput);
 
     //Check for programmer commands
-    if(m_curPlayer->getID().find("programmer") != std::string::npos)
-        m_context->throw_event(events, m_curPlayer);
+    if(m_curPlayer->getID().find("programmer") != std::string::npos) {
+        for(size_t i=0; i<events.size(); i++)
+            m_context->throw_event(events[i], m_curPlayer);
+    }
     if(m_context->getPermeable() == false)
         return m_curPlayer->getPrint();
 

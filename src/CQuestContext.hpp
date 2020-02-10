@@ -24,6 +24,9 @@ public:
     void h_ticketverkauf(std::string&, CPlayer*);
     void h_zum_gleis(std::string&, CPlayer*);
 
+    // *** die komische Gruppe *** //
+    void h_reden(std::string&, CPlayer*);
+
     // *** besoffene frau *** //
     void h_besiege_besoffene_frau(std::string&, CPlayer*);
     

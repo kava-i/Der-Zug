@@ -125,10 +125,13 @@
     - name: Passant1
       id: passant7
       description: "Wieder stehen drei Passanten merkwürdig gekleidet in einer Ecke und deuten wild umher."
+      dialog: strangeGuysDialog
     - name: Passant2
       id: passant8
+      dialog: strangeGuysDialog
     - name: Passant3
       id: passant9
+      dialog: strangeGuysDialog
 
 
 

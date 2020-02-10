@@ -20,29 +20,23 @@ void CContext::delete_listener(string sEventType, int index) {
     m_eventmanager[sEventType].erase(m_eventmanager[sEventType].begin()+index);
 }
 
-void CContext::throw_event(std::vector<event> events, CPlayer* p)
+void CContext::throw_event(event e, CPlayer* p)
 {
     m_curPermeable = m_permeable;
     m_block = false;
 
-    bool thrown = false;
-    for(auto e : events)
-    {
-        std::cout << e.first << ", " << e.second << "\n";
 
-        if(m_eventmanager.count(e.first) == 0) 
-            continue;
-            
-        thrown = true;
-        for(auto it : m_eventmanager[e.first]) {
-            if(m_block ==true)
-                break;
-            (this->*it)(e.second, p);
-        }
+    if(m_eventmanager.count(e.first) == 0) {
+        if(m_permeable == false)
+            error(p);
+        return;
     }
-    
-    if(thrown == false && m_permeable == false)
-        error(p);
+        
+    for(auto it : m_eventmanager[e.first]) {
+        if(m_block ==true)
+            break;
+        (this->*it)(e.second, p);
+    }
 }
 
 // ***** EVENTHANDLER ***** //

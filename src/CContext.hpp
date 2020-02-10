@@ -40,7 +40,7 @@ public:
     void add_listener(string sEventType, void(CContext::*)(string&, CPlayer*), size_t pos);
     void delete_listener(string sEventType, int num);
 
-    void throw_event(std::vector<event> events, CPlayer* p);
+    void throw_event(event newEvent, CPlayer* p);
     virtual void error(CPlayer* p) {}
 
     // *** EVENTHANDLERS *** // 
@@ -98,6 +98,7 @@ public:
     virtual void h_ticketverkaeufer(string&, CPlayer*) {}
     virtual void h_ticketverkauf(string&, CPlayer*) {}
     virtual void h_zum_gleis(string&, CPlayer*) {}
+    virtual void h_reden(string&, CPlayer*) {}
     virtual void h_besiege_besoffene_frau(string&, CPlayer*) {}
     virtual void h_geldauftreiben(string&, CPlayer*) {}
 

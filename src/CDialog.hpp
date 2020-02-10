@@ -63,6 +63,8 @@ public:
     string ticket(CPlayer*);
     string keinTicket(CPlayer*);
     string betrunkene(CPlayer*);
+    string strangeGuy1(CPlayer*); 
+    string strangeGuy2(CPlayer*); 
 
     void changeStateText(string sStateID, size_t text);
     void addDialogOption(string sStateID, size_t optID);

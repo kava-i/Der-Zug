@@ -15,6 +15,7 @@ private:
     std::string m_sName;
     std::string m_sID;
     std::string m_sDescription;
+    int m_EP;
     bool m_solved;
     bool m_active;
     std::map<std::string, CQuestStep*> m_questSteps;
@@ -37,7 +38,7 @@ public:
 
     //Functions
     std::string printQuest(bool solved);
-    void checkSolved();
+    std::string checkSolved();
 };
 
 class CQuestStep
@@ -45,6 +46,10 @@ class CQuestStep
 private:
     std::string m_sName, m_sID, m_sDescription;
     bool m_solved, m_active;
+
+    int m_succ;
+    int m_curSucc;
+    std::vector<std::string> m_which;
     
     std::vector<std::string> m_linkedSteps;
 
@@ -59,9 +64,14 @@ public:
     std::string getDescription();
     bool getActive();
     bool getSolved();
+    int getSucc();
+    int getCurSucc();
+    std::vector<std::string>& getWhich();
 
     //Setter
     void setActive(bool);
+    void setCurSucc(int x);
+    void incSucc(int x);
 
     //Functions
     std::string solved();

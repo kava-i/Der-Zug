@@ -7,7 +7,6 @@
   - name: "Finde den Ticketverkäufer"
     id: 1ticketverkaeufer
     description: "Tickets sind teuer. Du hast von einem Mann, der viel denkt und an komischen Orten abhängt gehört, der wohl immer noch ein günstigeres Ticket zu verkaufen hat."
-    active: true
     linkedSteps:
     - 2ticketkauf
     handler: go
@@ -27,10 +26,14 @@
   description: "Dir ist diese komische Gruppe an Passanten aufgefallen. Keine Ahnung, was die wollen."
   steps:
   - name: "Rede mit allen Passanten"
-    id: reden
+    id: 1reden
     description: "Finde alle Passanten Gruppen und rede mit ihnen."
+    list: 3
+    linkedSteps:
+    - 2hilfe 
+    handler: talk
   - name: "Um Hilfe beten"
-    id: hilfe
+    id: 2hilfe
     description: "Seltsame Menschen, haben of seltsame Ansprüche, aber bieten seltene Hilfe."
 
 - name: "Die besoffene Frau"
@@ -41,7 +44,6 @@
     id: 1besiege_besoffene_frau
     description: "Oh, die wurde wohl agressiv. Jetzt heißt anwenden, was du in deinen Jahren auf der Straße gelernt hast."
     handler: deleteCharacter 
-    active: true
 
 - name: "Geld Auftreiben"
   id: geld_fuer_ticket
@@ -51,5 +53,4 @@
     id: 1geldauftreiben
     description: "Dann muss ich wohl mal suchen, wo ich etwas herbekomme, oder wer mir helfen kann."
     handler: recieveMoney
-    active: true
     

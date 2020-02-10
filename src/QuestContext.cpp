@@ -31,6 +31,8 @@ void CQuestContext::initializeFunctions()
     m_functions["2ticketkauf"]       = &CContext::h_ticketverkauf;
     m_functions["3zum_gleis"]        = &CContext::h_zum_gleis;
 
+    // *** Die komische Gruppe *** // 
+    m_functions["1reden"] = &CContext::h_reden;
     // *** Besoffene Frau *** //
     m_functions["1besiege_besoffene_frau"] = &CContext::h_besiege_besoffene_frau;
 
@@ -65,8 +67,10 @@ void CQuestContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
     if(p->getRoom()->getID() != "bahnhof_gleise" || p->getItem_byID("ticket") == NULL)
         return;
 
-    if(fuzzy::fuzzy_cmp("gleis 3", sIdentifier) <= 0.2)
-        p->appendPrint(m_quest->getSteps()["3zum_gleis"]->solved());
+    if(fuzzy::fuzzy_cmp("gleis 3", sIdentifier) > 0.2)
+        return;
+
+    p->appendPrint(m_quest->getSteps()["3zum_gleis"]->solved());
 
     p->appendPrint("Du siehst deinen Zug einfahren. Du bewegst dich auf ihn zu, zeigst dein Ticket, der Schaffner musstert dich kurz und lässt dich dann eintreten. Du suchst dir einen freien Platz, legst dein Bündel auf den sitz neben dich und schläfst ein...\n $ Nach einem scheinbar endlos langem schlaf wachst du wieder in deinem Abteil auf. Das Abteil ist leer. Leer bist auf einen geheimnisvollen Begleiter: Parsen.");
 
@@ -74,6 +78,41 @@ void CQuestContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
     m_curPermeable = false;
     m_block = true;
     p->getContexts().erase(m_quest->getID());
+}
+
+// *** *** Die komische Gruppe *** *** //
+void CQuestContext::h_reden(std::string& sIdentifier, CPlayer* p)
+{
+    std::string character = p->getObject(p->getRoom()->getCharacters(),sIdentifier);
+    if(character == "" || character.find("passant") == std::string::npos)
+        return;
+
+    CQuestStep* step = m_quest->getSteps()["1reden"];
+    for(size_t i=0; i<step->getWhich().size(); i++) {
+        std::cout << "Element in which: " << step->getWhich()[i] << std::endl;
+        if(step->getWhich()[i] == p->getWorld()->getCharacters()[character]->getID())
+            return;
+    }
+
+    int num = (((int)character.back()-48)-1)/3;
+    step->getWhich().push_back("passant" + std::to_string(num*3+1));
+    step->getWhich().push_back("passant" + std::to_string(num*3+2));
+    step->getWhich().push_back("passant" + std::to_string(num*3+3));
+    step->incSucc(1);
+    std::cout << "Calling solved... \n";
+    p->appendPrint(step->solved());
+    std::cout << "Done. \n";
+
+    //Change dialog of all "Passanten"
+    if(step->getSolved() == true)
+    {
+        for(size_t i=1; i<=9; i++)
+        {
+            std::cout << "Changing dialog for: passant" << i << std::endl;
+            p->getWorld()->getCharacters()["passant"+std::to_string(i)]->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2"));
+        }
+        p->getContexts().erase(m_quest->getID());
+    }
 }
     
 // *** *** Besoffene Frau *** *** //
@@ -98,6 +137,7 @@ void CQuestContext::h_geldauftreiben(std::string& sIdentifier, CPlayer* p)
     if(m_quest->getActive() == true)
         p->appendPrint("Wundervoll, genug Geld, um das Ticket zu kaufen!\n");
 
+    std::cout << "in h_geldauftreiben() \n";
     p->appendPrint(m_quest->getSteps()["1geldauftreiben"]->solved());
     p->getContexts().erase(m_quest->getID());
 }
