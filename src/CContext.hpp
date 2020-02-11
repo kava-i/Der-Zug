@@ -93,6 +93,7 @@ public:
 
     // *** CHOICE CONTEXT *** //
     virtual void h_choose_equipe(string&, CPlayer*) {}
+    virtual void h_updateMind(string&, CPlayer*) {}
 
     // *** QUESTS *** //
     virtual void h_ticketverkaeufer(string&, CPlayer*) {}

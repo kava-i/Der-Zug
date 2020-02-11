@@ -34,11 +34,11 @@ public:
     void setSteps(std::map<std::string, CQuestStep*> steps);
     void setHandler(std::map<std::string, std::string> handlers);
 
-    std::string setActive();
+    std::string setActive(int& ep);
 
     //Functions
     std::string printQuest(bool solved);
-    std::string checkSolved();
+    std::string checkSolved(int& ep);
 };
 
 class CQuestStep
@@ -74,7 +74,7 @@ public:
     void incSucc(int x);
 
     //Functions
-    std::string solved();
+    std::string solved(int& ep);
     std::string handleSolved();
 };
 

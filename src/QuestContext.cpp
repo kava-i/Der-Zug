@@ -50,7 +50,7 @@ void CQuestContext::h_ticketverkaeufer(std::string& sIdentifier, CPlayer* p)
         return;
 
     if(fuzzy::fuzzy_cmp("männer-toilette", sIdentifier) <= 0.2)
-        p->appendPrint(m_quest->getSteps()["1ticketverkaeufer"]->solved());
+        p->questSolved(m_quest->getID(), "1ticketverkaeufer");
 
     delete_listener("go", 0);
 }
@@ -59,7 +59,7 @@ void CQuestContext::h_ticketverkaeufer(std::string& sIdentifier, CPlayer* p)
 void CQuestContext::h_ticketverkauf(std::string& sIdentifier, CPlayer* p)
 {
     if(sIdentifier == "ticket")
-        p->appendPrint(m_quest->getSteps()["2ticketkauf"]->solved());
+        p->questSolved(m_quest->getID(), "2ticketkauf");
 }
 
 void CQuestContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
@@ -70,14 +70,15 @@ void CQuestContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
     if(fuzzy::fuzzy_cmp("gleis 3", sIdentifier) > 0.2)
         return;
 
-    p->appendPrint(m_quest->getSteps()["3zum_gleis"]->solved());
+    p->questSolved(m_quest->getID(), "3zum_gleis");
 
-    p->appendPrint("Du siehst deinen Zug einfahren. Du bewegst dich auf ihn zu, zeigst dein Ticket, der Schaffner musstert dich kurz und lässt dich dann eintreten. Du suchst dir einen freien Platz, legst dein Bündel auf den sitz neben dich und schläfst ein...\n $ Nach einem scheinbar endlos langem schlaf wachst du wieder in deinem Abteil auf. Das Abteil ist leer. Leer bist auf einen geheimnisvollen Begleiter: Parsen.");
+    p->appendPrint("Du siehst deinen Zug einfahren. Du bewegst dich auf ihn zu, zeigst dein Ticket, der Schaffner musstert dich kurz und lässt dich dann eintreten. Du suchst dir einen freien Platz, legst dein Bündel auf den sitz neben dich und schläfst ein...\n $ Nach einem scheinbar endlos langem schlaf wachst du wieder in deinem Abteil auf. Das Abteil ist leer. Leer bist auf einen geheimnisvollen Begleiter: Parsen.\n");
 
     p->setRoom(p->getWorld()->getRooms()["compartment-a"]);
     m_curPermeable = false;
     m_block = true;
     p->getContexts().erase(m_quest->getID());
+    p->questSolved("tutorial", "1tutorial");
 }
 
 // *** *** Die komische Gruppe *** *** //
@@ -100,7 +101,7 @@ void CQuestContext::h_reden(std::string& sIdentifier, CPlayer* p)
     step->getWhich().push_back("passant" + std::to_string(num*3+3));
     step->incSucc(1);
     std::cout << "Calling solved... \n";
-    p->appendPrint(step->solved());
+    p->questSolved(m_quest->getID(), "1reden");
     std::cout << "Done. \n";
 
     //Change dialog of all "Passanten"
@@ -121,8 +122,7 @@ void CQuestContext::h_besiege_besoffene_frau(std::string& sIdentifier, CPlayer* 
     if(sIdentifier != "besoffene_frau")
         return;
 
-    p->appendPrint(m_quest->getSteps()["1besiege_besoffene_frau"]->solved());
-    
+    p->questSolved(m_quest->getID(), "1besiege_besoffene_frau");
     p->appendPrint("Du suchst in den Taschen der Frau und findest drei Schillinge.\n");
     p->throw_event("recieveMoney 3");
     p->getContexts().erase(m_quest->getID());
@@ -138,6 +138,6 @@ void CQuestContext::h_geldauftreiben(std::string& sIdentifier, CPlayer* p)
         p->appendPrint("Wundervoll, genug Geld, um das Ticket zu kaufen!\n");
 
     std::cout << "in h_geldauftreiben() \n";
-    p->appendPrint(m_quest->getSteps()["1geldauftreiben"]->solved());
+    p->questSolved(m_quest->getID(), "1geldauftreiben");
     p->getContexts().erase(m_quest->getID());
 }

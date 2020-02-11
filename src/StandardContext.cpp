@@ -56,6 +56,8 @@ void CStandardContext::h_show(string& sIdentifier, CPlayer* p) {
         p->showQuests(true);
     else if(sIdentifier == "stats")
         p->appendPrint(p->showStats());
+    else if(sIdentifier == "mind")
+        p->showMinds();
     else if(sIdentifier == "all")
         p->appendPrint(p->getRoom()->showAll());
     else
@@ -178,6 +180,7 @@ void CStandardContext::h_startTutorial(string&, CPlayer* p)
 
     p->appendPrint(p->getRoom()->getDescription() + "\n");
     p->setNewQuest("zug_nach_moskau");
+    p->setNewQuest("tutorial");
 }
 
 void CStandardContext::h_try(string& sIdentifier, CPlayer* p)

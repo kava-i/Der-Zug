@@ -1,7 +1,7 @@
 #include "CChoiceContext.hpp"
 #include "CPlayer.hpp"
 
-CChoiceContext::CChoiceContext(string obj)
+CChoiceContext::CChoiceContext(string obj, std::string sError="Wrong Input\n")
 {
     //Set permeability
     m_permeable = false;
@@ -9,9 +9,15 @@ CChoiceContext::CChoiceContext(string obj)
 
     //Set object
     m_sObject=obj;
+    m_sError = sError;
 }
 
 // ***** Handlers ***** //
+
+void CChoiceContext::error(CPlayer* p)
+{
+    p->appendPrint(m_sError);
+}
 
 void CChoiceContext::h_choose_equipe(string& sIdentifier, CPlayer* p)
 {
@@ -25,13 +31,34 @@ void CChoiceContext::h_choose_equipe(string& sIdentifier, CPlayer* p)
 
     else if(sIdentifier == "no")
     {
-        std::cout << "1." << std::endl;
         p->appendPrint("You chose not to equipe " + p->getItem_byID(m_sObject)->getName() + ".\n");
-        std::cout << "2." << std::endl;
         p->getContexts().erase("choice");
-        std::cout << "3." << std::endl;
     }
 
     else
         p->appendPrint("Worng input. Use \"help\" if you're unsure what to do.\n");
+}
+
+void CChoiceContext::h_updateMind(string& sIdentifier, CPlayer* p)
+{
+    std::string mind="";
+    for(auto it : p->getMinds())
+    {
+        if(fuzzy::fuzzy_cmp(func::returnToLower(it.first), sIdentifier) <= 0.2)
+            mind = it.first;
+    }
+
+    if(mind == "")
+        p->appendPrint("Falsche Eingabe!\n");
+
+    else
+    {
+        p->getMinds()[mind]++;
+        p->appendPrint(sIdentifier + " updated by 1\n");
+        int num = stoi(m_sObject)-1;
+        std::cout << "Object: " << m_sObject << "\nNum: " << num << std::endl;
+        p->getContexts().erase("choice");
+        if(num>0)
+            p->updateMinds(num);
+    }
 }

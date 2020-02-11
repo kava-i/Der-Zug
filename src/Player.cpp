@@ -1,5 +1,8 @@
 #include "CPlayer.hpp"
 
+#define GREEN Webcmd::set_color(Webcmd::color::GREEN)
+#define WHITE Webcmd::set_color(Webcmd::color::WHITE)
+
 CPlayer::CPlayer(string sName,string sPassword, string sID, int hp, size_t strength, int gold, CRoom* room, attacks newAttacks)
 {
     m_sName = sName;
@@ -10,6 +13,15 @@ CPlayer::CPlayer(string sName,string sPassword, string sID, int hp, size_t stren
     m_gold = gold;
     m_strength = strength;
     m_highness = 0;
+
+    //Character and Level
+    m_level = 0;
+    m_ep = 0;
+    m_minds["Die Perzeption"] = 0;
+    m_minds["Der Krämer"] = 0;
+    m_minds["Die Kraft"]  = 0;
+    m_minds["Die Logik"]  = 0;
+
     m_room = room;
     m_status = "standard";
     m_attacks = newAttacks;
@@ -41,6 +53,7 @@ string CPlayer::getStatus() { return m_status; };
 bool CPlayer::getFirstLogin() { return m_firstLogin; };
 CFight* CPlayer::getFight() { return m_curFight; };
 size_t CPlayer::getHighness() { return m_highness; };
+CPlayer::minds& CPlayer::getMinds() { return m_minds; }
 CPlayer::equipment& CPlayer::getEquipment()  { return m_equipment; }
 CWorld* CPlayer::getWorld() { return m_world; }
 CContextStack& CPlayer::getContexts()   { return m_contextStack; }
@@ -115,7 +128,6 @@ void CPlayer::changeRoom(string sIdentifier)
 
     //Get selected room
     string room = getObject(getRoom()->getExtits(), sIdentifier);
-    std::cout << "room: " << room << std::endl;
 
     //Check if room was found
     if(room == "") {
@@ -216,7 +228,7 @@ void CPlayer::equipeItem(CItem* item, string sType)
         m_sPrint+="Already a " + sType + " equipt. Want to change? (yes/no)\n";
 
         //Create Choice-Context
-        CChoiceContext* context = new CChoiceContext(item->getID());
+        CChoiceContext* context = new CChoiceContext(item->getID(), "Choose only yes or no\n");
         context->add_listener("yes", &CContext::h_choose_equipe);
         context->add_listener("no", &CContext::h_choose_equipe);
         m_contextStack.insert(context, 1, "choice");
@@ -246,9 +258,8 @@ void CPlayer::showQuests(bool solved)
         m_sPrint += "Active quests: \n";
     else
         m_sPrint += "Solved quests: \n";
-    std::cout << "Quests: " << m_world->getQuests().size() << "\n";
-    for(auto it : m_world->getQuests())
-    {
+
+    for(auto it : m_world->getQuests()) {
         if(it.second->getActive() == true)
             m_sPrint += "\n" + it.second->printQuest(solved);
     }
@@ -256,8 +267,55 @@ void CPlayer::showQuests(bool solved)
 
 void CPlayer::setNewQuest(std::string sQuestID)
 {
-    m_sPrint += m_world->getQuests()[sQuestID]->setActive();
+    std::cout << sQuestID << std::endl;
+    int ep=0;
+    m_sPrint += m_world->getQuests()[sQuestID]->setActive(ep);
+    addEP(ep);
 }
+
+void CPlayer::questSolved(std::string sQuestID, std::string sStepID)
+{
+    int ep=0;
+    m_sPrint+=m_world->getQuests()[sQuestID]->getSteps()[sStepID]->solved(ep);
+    addEP(ep);
+}
+
+//Minds and Level
+void CPlayer::addEP(int ep)
+{
+    m_ep+=ep;
+    size_t counter=0;
+    for(;m_ep>=20; m_ep-=20, counter++){
+        m_level++;
+        m_sPrint+= GREEN + "Level Up!" + WHITE + "\n";
+    }
+    if(counter > 0)
+        updateMinds(counter);
+}
+
+void CPlayer::updateMinds(int numPoints)
+{
+    m_sPrint+= "Du hast " + std::to_string(numPoints) + " Punkte zu vergeben.\n";
+    std::string sError = "Nummer auswählen, oder \"mind\" (ohne Artikel!)\n";
+    CChoiceContext* context = new CChoiceContext(std::to_string(numPoints), sError);
+    for(auto it : m_minds){
+        m_sPrint += it.first + ": level(" + std::to_string(it.second) + ")\n";
+        context->add_listener(func::returnToLower(it.first).substr(4), &CContext::h_updateMind);
+    }
+    m_sPrint += sError;
+    m_contextStack.insert(context, 1, "choice");
+}
+
+void CPlayer::showMinds()
+{
+    m_sPrint += " --- " + m_sName + " --- \n"
+            += "Level: " + std::to_string(m_level) + "\n"
+            += "Ep: " + std::to_string(m_ep) + "/20.\n";
+    for(auto it : m_minds)
+        m_sPrint += it.first + ": level(" + std::to_string(it.second) + ")\n";
+    m_sPrint+="\n";
+}
+    
 
 // *** Stats *** //
 string CPlayer::showStats() {

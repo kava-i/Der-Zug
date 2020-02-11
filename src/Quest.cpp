@@ -37,7 +37,7 @@ void CQuest::setHandler(std::map<std::string, std::string> handlers) {
 
 // *** FUNCTIONS *** //
 
-std::string CQuest::setActive() {
+std::string CQuest::setActive(int& ep) {
     m_active = true;
     m_questSteps.begin()->second->setActive(true);
 
@@ -48,7 +48,7 @@ std::string CQuest::setActive() {
         if(it.second->getSolved() == true)
             sOutput += it.second->handleSolved();
     }
-    sOutput += checkSolved();
+    sOutput += checkSolved(ep);
     return sOutput;
 }
 
@@ -79,7 +79,7 @@ std::string CQuest::printQuest(bool solved)
     return sOutput;    
 }
  
-std::string CQuest::checkSolved()
+std::string CQuest::checkSolved(int& ep)
 {
     for(auto it : m_questSteps) {
         if(it.second->getSolved() == false)
@@ -87,7 +87,11 @@ std::string CQuest::checkSolved()
     }
     m_solved=true;
     if(m_active == true)
+    {
+        ep=m_EP;
+        std::cout << "EP (checkSolved): " << ep << std::endl;
         return Webcmd::set_color(Webcmd::color::GREEN) + "Quest "+ m_sName + " solved! + " + std::to_string(m_EP) + " EP\n" + Webcmd::set_color(Webcmd::color::WHITE);
+    }
     else
         return "";
 }
@@ -149,7 +153,7 @@ void CQuestStep::incSucc(int x) {
     std::cout << "Succ after: " << m_curSucc << std::endl;
 }
 
-std::string CQuestStep::solved()
+std::string CQuestStep::solved(int& ep)
 {
     std::string sOutput = "";
     if(m_succ != m_curSucc)
@@ -158,7 +162,7 @@ std::string CQuestStep::solved()
     m_solved = true;
     if(m_active == true)
         sOutput += handleSolved();
-    sOutput += m_quest->checkSolved();
+    sOutput += m_quest->checkSolved(ep);
 
     return sOutput;
 }

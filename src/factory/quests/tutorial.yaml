@@ -1,5 +1,14 @@
 ---
 
+- name: "Tutorial"
+  id: tutorial
+  description: "Beende das Tutorial um die grundlegenden Aspekte des Textadventures und deren Funktionsweisen kennen zu lernen."
+  ep: 35
+  steps:
+  - name: "Erstmal lernen"
+    id: 1tutorial
+    description: "Das Hervortreiben der Allgemeinheit des Denkens ist der absolute Wert der Bildung..."
+
 - name: "Zug nach Moskau"
   id: zug_nach_moskau
   description: "Du musst dringend nach Moskau. Etwas zieht dich dorthin, du weißt nicht genau, was es ist. Kaufe ein Ticket und finde den Zug nach Moskau, dann sehen wir weiter."

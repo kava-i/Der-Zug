@@ -42,6 +42,9 @@ private:
 
     size_t m_highness;
 
+    int m_ep;
+    int m_level;
+
     string m_sPrint;
     string m_status;
     string m_sPassword;
@@ -53,6 +56,8 @@ private:
     inventory m_inventory;
     typedef map<string, CItem*> equipment;
     equipment m_equipment;
+    typedef map<string, int> minds;
+    minds m_minds;
 
 
     map<string, CPlayer*> m_players;
@@ -74,6 +79,7 @@ public:
     bool getFirstLogin();
     CFight* getFight();
     size_t getHighness();
+    minds& getMinds();
     equipment& getEquipment();
     CWorld* getWorld();
     CContextStack& getContexts();
@@ -121,6 +127,12 @@ public:
     //Quests
     void showQuests(bool solved);
     void setNewQuest(std::string sQuestID);
+    void questSolved(std::string sQuestID, std::string sStepID);
+
+    //Minds and level
+    void addEP(int ep);
+    void updateMinds(int numPoints); 
+    void showMinds();
 
     //Stats
     string showStats();

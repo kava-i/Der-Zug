@@ -21,5 +21,7 @@ namespace func
     * @param[in, out] str string to be modified
     */
     void convertToLower(std::string &str);
+
+    std::string returnToLower(std::string str);
 }
 

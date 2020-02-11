@@ -143,9 +143,7 @@ string CDState::strangeGuy2(CPlayer* p)
 {
     string sOutput = standard(p);
     p->throw_event("recieveMoney 3");
-    std::cout << "1.\n";
-    p->appendPrint(p->getWorld()->getQuests()["komische_gruppe"]->getSteps()["2hilfe"]->solved());
-    std::cout << "2.\n";
+    p->questSolved("komische_gruppe", "2hilfe");
     deleteDialogOption("die_gruppe", 1);  
     return sOutput;
 }
