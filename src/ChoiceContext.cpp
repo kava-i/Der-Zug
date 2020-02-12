@@ -1,7 +1,7 @@
 #include "CChoiceContext.hpp"
 #include "CPlayer.hpp"
 
-CChoiceContext::CChoiceContext(string obj, std::string sError="Wrong Input\n")
+CChoiceContext::CChoiceContext(string obj, std::string sError)
 {
     //Set permeability
     m_permeable = false;
@@ -12,11 +12,38 @@ CChoiceContext::CChoiceContext(string obj, std::string sError="Wrong Input\n")
     m_sError = sError;
 }
 
-// ***** Handlers ***** //
+CChoiceContext::CChoiceContext(std::string obj, objectmap& mapObjects)
+{
+    m_permeable=true;
+    m_curPermeable=m_permeable;
+    m_sObject = obj;
+    m_objectMap = mapObjects;
+} 
+    
 
+// ***** Functions ***** //
 void CChoiceContext::error(CPlayer* p)
 {
     p->appendPrint(m_sError);
+}
+
+
+// ***** Handlers ***** //
+
+void CChoiceContext::h_select(string& sIdentifier, CPlayer* p)
+{
+    std::cout << "h_select: " << sIdentifier << ", " << m_sObject << ", " << std::endl;
+    std::string obj = p->getObject(m_objectMap, sIdentifier);
+    if(obj == "")
+        p->appendPrint("Choose an number or a new Command\n");
+
+    else
+    {
+        std::cout << "Found Object: " << obj << std::endl;
+        p->throw_event(m_sObject + " " + obj);
+        m_permeable=false;
+        p->getContexts().erase("choice"); 
+    }
 }
 
 void CChoiceContext::h_choose_equipe(string& sIdentifier, CPlayer* p)

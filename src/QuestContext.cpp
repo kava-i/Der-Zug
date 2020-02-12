@@ -46,13 +46,14 @@ void CQuestContext::initializeFunctions()
 // *** *** Zug nach Moskau *** *** //
 void CQuestContext::h_ticketverkaeufer(std::string& sIdentifier, CPlayer* p)
 {
+    std::cout << "h_ticketverkaeufer: " << p->getRoom()->getID() << ", " << sIdentifier << std::endl;
     if(p->getRoom()->getID() != "bahnhof_toiletten")
         return;
 
-    if(fuzzy::fuzzy_cmp("männer-toilette", sIdentifier) <= 0.2)
+    if(fuzzy::fuzzy_cmp("männer-toilette", sIdentifier) <= 0.2) {
         p->questSolved(m_quest->getID(), "1ticketverkaeufer");
-
-    delete_listener("go", 0);
+        delete_listener("go", 0);
+    }
 }
 
 
@@ -90,7 +91,6 @@ void CQuestContext::h_reden(std::string& sIdentifier, CPlayer* p)
 
     CQuestStep* step = m_quest->getSteps()["1reden"];
     for(size_t i=0; i<step->getWhich().size(); i++) {
-        std::cout << "Element in which: " << step->getWhich()[i] << std::endl;
         if(step->getWhich()[i] == p->getWorld()->getCharacters()[character]->getID())
             return;
     }
@@ -100,9 +100,7 @@ void CQuestContext::h_reden(std::string& sIdentifier, CPlayer* p)
     step->getWhich().push_back("passant" + std::to_string(num*3+2));
     step->getWhich().push_back("passant" + std::to_string(num*3+3));
     step->incSucc(1);
-    std::cout << "Calling solved... \n";
     p->questSolved(m_quest->getID(), "1reden");
-    std::cout << "Done. \n";
 
     //Change dialog of all "Passanten"
     if(step->getSolved() == true)

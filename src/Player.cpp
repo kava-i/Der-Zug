@@ -131,7 +131,7 @@ void CPlayer::changeRoom(string sIdentifier)
 
     //Check if room was found
     if(room == "") {
-        m_sPrint += "Room/ exit not found";
+        m_sPrint += "Room/ exit not found\n";
         return;
     }
 
@@ -378,21 +378,25 @@ string CPlayer::doLogin(string sName, string sPassword)
 
 string CPlayer::getObject(objectmap& mapObjects, string sIdentifier)
 {
-    std::vector<std::pair<std::string, double>> matches;
+    if(mapObjects.count(sIdentifier) > 0)
+        return sIdentifier;
 
-    //Find all matches
-    for(auto it : mapObjects) {
-        double match = fuzzy::fuzzy_cmp(it.second, sIdentifier);
+    std::vector<std::pair<std::string, double>> matches;
+    
+    for(auto[i, it] = std::tuple{1, mapObjects.begin()}; it!=mapObjects.end(); i++, it++) {
+        if(std::isdigit(sIdentifier[0]) && (i==stoi(sIdentifier)))
+            return it->first;
+        double match = fuzzy::fuzzy_cmp(it->second, sIdentifier);
         if(match <= 0.2) 
-            matches.push_back(std::make_pair(it.first, match));
+            matches.push_back(std::make_pair(it->first, match));
     }
+
     if(matches.size() == 0)
         return "";
 
     //Find best match.
     size_t pos=0;
-    double max=0.3;
-    for(unsigned int i=0; i<matches.size(); i++) {
+    for(auto[i, max] = std::tuple{size_t{0}, 0.3}; i<matches.size(); i++) {
         if(matches[i].second < max) {
             pos=i;
             max=matches[i].second;
@@ -409,6 +413,16 @@ CPlayer* CPlayer::getPlayer(string sIdentifier)
             return it.second;
     }
     return NULL;
+}
+
+void CPlayer::addSelectContest(objectmap& mapObjects, std::string sEventType)
+{
+    CContext* context = new CChoiceContext(sEventType, mapObjects);
+    
+    for(size_t i=1; i<=mapObjects.size();i++)
+        context->add_listener(std::to_string(i), &CContext::h_select);
+
+    m_contextStack.insert(context, 1, "choice");
 }
 
 

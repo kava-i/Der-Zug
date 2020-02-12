@@ -142,6 +142,7 @@ public:
     typedef std::map<string, string> objectmap;
     string getObject(objectmap& mapObjects, string sIdentifier);    
     CPlayer* getPlayer(string sIdentifier);
+    void addSelectContest(objectmap& mapObjects, std::string sEventType);
 
     typedef std::pair<std::string, std::string> event;
     void throw_event(string sInput);

@@ -29,16 +29,10 @@ string CPerson::printAttacks()
 
 string CPerson::getAttack(string sPlayerChoice)
 {
-    if(std::isdigit(sPlayerChoice[0]) == false)
-        return "";
-
-    int counter=1;
-    for(auto it : m_attacks) {
-        if(counter == stoi(sPlayerChoice))
-            return it.first;
-         counter++;
+    for(auto[i, it] = std::tuple{1, m_attacks.begin()};it!=m_attacks.end();i++, it++) {
+        if(std::isdigit(sPlayerChoice[0]) && i==stoi(sPlayerChoice))
+            return it->first;
     }
-
     return "";
 }
     

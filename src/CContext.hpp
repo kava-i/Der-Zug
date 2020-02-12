@@ -92,6 +92,7 @@ public:
     virtual void h_end(string&, CPlayer*) {}
 
     // *** CHOICE CONTEXT *** //
+    virtual void h_select(string&, CPlayer*) {}
     virtual void h_choose_equipe(string&, CPlayer*) {}
     virtual void h_updateMind(string&, CPlayer*) {}
 

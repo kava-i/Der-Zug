@@ -4,6 +4,7 @@
 #include <iostream>
 #include <queue> 
 #include <map>
+#include <tuple>
 #include "CDialog.hpp"
 #include "CAttack.hpp"
 #include "CItem.hpp"

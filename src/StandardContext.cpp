@@ -37,9 +37,15 @@ CStandardContext::CStandardContext()
 
 void CStandardContext::h_show(string& sIdentifier, CPlayer* p) {
     if(sIdentifier == "exits")
+    {
         p->appendPrint(p->getRoom()->showExits());
+        p->addSelectContest(p->getRoom()->getExtits(), "go");
+    }
     else if(sIdentifier == "people")
+    {
         p->appendPrint(p->getRoom()->showCharacters());
+        p->addSelectContest(p->getRoom()->getCharacters(), "talk");
+    }
     else if(sIdentifier == "room")
         p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
     else if(sIdentifier == "items")
@@ -84,8 +90,6 @@ void CStandardContext::h_look(string& sIdentifier, CPlayer* p) {
 
 void CStandardContext::h_goTo(std::string& sIdentifier, CPlayer* p) {
     std::cout << "goTo" << std::endl;
-    if(sIdentifier == "")
-        return;
     p->changeRoom(sIdentifier);
 }
 
