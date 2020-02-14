@@ -2,7 +2,8 @@
 
  - name: "Compartment A"
    id: compartment-a
-   description: "The compartment is empty. Empty, but one mysterious passenger: Parsen."  
+   description: 
+    - "PERZEPTION;The compartment is empty. Empty, but one mysterious passenger: Parsen."
    entry: "You enter your appartment.\n"
    exits:
      trainCorridor: Corridor
@@ -18,7 +19,8 @@
 
  - name: "Compartment B"
    id: compartment-b
-   description: "Another compartment. Two grumpy women are sitting together, playing cards."  
+   description: 
+    - PERZEPTION;Another compartment. Two grumpy women are sitting together, playing cards.
    exits:
      trainCorridor: Corridor
    characters:
@@ -29,21 +31,24 @@
 
  - name: "Compartment C"
    id: compartment-c
-   description: "An empty compartment."
+   description: 
+    - PERZEPTION;An empty compartment.
    exits:
      trainCorridor: Corridor
    characters:
 
  - name: "Compartment D"
    id: Compartment-d
-   description: "An empty compartment. Its cold here "  
+   description: 
+    - PERZEPTION;An empty compartment. Its cold here
    exits:
      trainCorridor: Corridor
    characters:
 
  - name: "Corridor"
    id: trainCorridor
-   description: "The corridor feels empty and silent. Red carbet is flushing the floor. And the other compartments are wispering in their oldfashioned skin."
+   description: 
+    - PERZEPTION;The corridor feels empty and silent. Red carbet is flushing the floor. And the other compartments are wispering in their oldfashioned skin.
    entry: "You leave the compartment and enter the corridor of the train.\n"
    exits: 
      compartment-a: Compartment A
@@ -52,7 +57,8 @@
      compartment-d: Compartment D
    characters:
      - name: "Pissing man"
-       description: "A man is standing shy between compartment B and C and seems to be having a piss.\n"
+       description: 
+       - "PERZEPTION;A man is standing shy between compartment B and C and seems to be having a piss.\n"
        id: pissing_man
        dialog: pissingManDialog
    

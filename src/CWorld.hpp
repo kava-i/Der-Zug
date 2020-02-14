@@ -27,6 +27,8 @@ using std::string;
 using std::map;
 using std::vector;
 
+class CPlayer;
+
 class CWorld
 {
 private:
@@ -38,7 +40,7 @@ private:
 
 public:
 
-    CWorld();
+    CWorld(CPlayer*);
     
     // *** GETTER *** //
     map<string, CRoom*>& getRooms() { return m_rooms; }
@@ -49,11 +51,11 @@ public:
 
     // *** FACTORYS *** // 
     typedef map<string, string> objectmap;
-    void worldFactory();
+    void worldFactory(CPlayer* p);
 
     //Room
-    void roomFactory();
-    void roomFactory(string sPath);
+    void roomFactory(CPlayer* p);
+    void roomFactory(string sPath, CPlayer* p);
 
     //Attacks
     void attackFactory();
@@ -71,6 +73,6 @@ public:
 
     //Character, Dialog, Details
     map<string, CDetail*>  detailFactory(nlohmann::json j_room);
-    objectmap characterFactory(nlohmann::json j_characters);
-    SDialog* dialogFactory(string sPath); 
+    objectmap characterFactory(nlohmann::json j_characters, CPlayer* p);
+    SDialog* dialogFactory(string sPath, CPlayer* p); 
 };

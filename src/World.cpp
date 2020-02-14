@@ -2,11 +2,11 @@
 
 namespace fs = std::experimental::filesystem;
 
-CWorld::CWorld() {
-    worldFactory();
+CWorld::CWorld(CPlayer* p) {
+    worldFactory(p);
 }
 
-void CWorld::worldFactory() 
+void CWorld::worldFactory(CPlayer* p) 
 {
     //Initialize functions
     CDState::initializeFunctions();
@@ -23,16 +23,16 @@ void CWorld::worldFactory()
     itemFactory();
 
     //Create rooms
-    roomFactory();
+    roomFactory(p);
 }
 
-void CWorld::roomFactory()
+void CWorld::roomFactory(CPlayer* player)
 {
     for(auto& p : fs::directory_iterator("factory/jsons/rooms"))
-        roomFactory(p.path());
+        roomFactory(p.path(), player);
 }
 
-void CWorld::roomFactory(string sPath)
+void CWorld::roomFactory(string sPath, CPlayer* p)
 {
     //Read json creating all rooms
     std::ifstream read(sPath);
@@ -43,16 +43,16 @@ void CWorld::roomFactory(string sPath)
     for(auto j_room : j_rooms )
     {
         //Parse characters 
-        objectmap mapChars = characterFactory(j_room["characters"]);
+        objectmap mapChars = characterFactory(j_room["characters"], p);
 
         //Parse items
         map<string, CItem*> mapItems = parseRoomItems(j_room);
 
         //Parse details
         map<string, CDetail*> mapDetails = detailFactory(j_room);
-
+        
         //Create new room
-        m_rooms[j_room["id"]] = new CRoom(j_room["name"], j_room["id"], j_room["description"], j_room.value("entry", ""), j_room["exits"], mapChars, mapItems, mapDetails);
+        m_rooms[j_room["id"]] = new CRoom(j_room["name"], j_room["id"], new CText(j_room["description"], p), j_room.value("entry", ""), j_room["exits"], mapChars, mapItems, mapDetails);
     }
 }
 
@@ -107,24 +107,24 @@ map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room)
     return mapItems;
 } 
 
-CWorld::objectmap CWorld::characterFactory(nlohmann::json j_characters)
+CWorld::objectmap CWorld::characterFactory(nlohmann::json j_characters, CPlayer* p)
 {
     objectmap mapChars;
     for(auto j_char : j_characters)
     {
-
         //Create dialog 
         SDialog* newDialog = new SDialog;
         if(j_char.count("dialog") > 0)
-            newDialog = dialogFactory(j_char["dialog"]); 
+            newDialog = dialogFactory(j_char["dialog"], p); 
         else
-            newDialog = dialogFactory("defaultDialog");
+            newDialog = dialogFactory("defaultDialog", p);
 
         //Create attacks
         map<string, CAttack*> attacks = parsePersonAttacks(j_char);
 
+        std::cout << "creating character...\n";
         //Create character and add to maps
-        m_characters[j_char["id"]] = new CCharacter(j_char["name"], j_char["id"], j_char.value("description",""), j_char.value("hp", 30), j_char.value("strength", 7), newDialog, attacks);
+        m_characters[j_char["id"]] = new CCharacter(j_char, newDialog, attacks, p);
         mapChars[j_char["id"]] = j_char["name"];
     }
 
@@ -162,7 +162,7 @@ map<string, CAttack*> CWorld::parsePersonAttacks(nlohmann::json j_person)
 }
 
 
-SDialog* CWorld::dialogFactory(string sPath)
+SDialog* CWorld::dialogFactory(string sPath, CPlayer* p)
 {
     //Read json creating all rooms
     std::ifstream read("factory/jsons/dialogs/"+sPath+".json");
@@ -190,13 +190,8 @@ SDialog* CWorld::dialogFactory(string sPath)
 
         // *** parse state *** //
 
-        //Parse alternative texts
-        vector<string> altTexts;
-        if(j_state.count("altTexts") > 0) 
-            altTexts = j_state["altTexts"].get<vector<string>>();
-
         //Create state
-        mapStates[j_state["id"]] = new CDState(j_state["text"], j_state.value("function", "standard"), altTexts, options, newDialog);
+        mapStates[j_state["id"]] = new CDState(j_state, options, newDialog, p);
     }
 
     //Update dialog values and return

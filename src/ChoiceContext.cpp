@@ -80,7 +80,7 @@ void CChoiceContext::h_updateMind(string& sIdentifier, CPlayer* p)
 
     else
     {
-        p->getMinds()[mind]++;
+        p->getMinds()[mind].level++;
         p->appendPrint(sIdentifier + " updated by 1\n");
         int num = stoi(m_sObject)-1;
         std::cout << "Object: " << m_sObject << "\nNum: " << num << std::endl;

@@ -41,7 +41,7 @@ std::string CQuest::setActive(int& ep) {
     m_active = true;
     m_questSteps.begin()->second->setActive(true);
 
-    std::string sOutput = Webcmd::set_color(Webcmd::color::GREEN) + "New Quest: <b>" + m_sName + "</b>: <i>" + m_sDescription + "</i>" + Webcmd::set_color(Webcmd::color::WHITE) + "\n";
+    std::string sOutput = Webcmd::set_color(Webcmd::color::GREEN)+ "New Quest: <b>" + m_sName + "</b>: <i>" + m_sDescription + "</i>" + Webcmd::set_color(Webcmd::color::WHITE) + "\n";
 
     for(auto it : m_questSteps)
     {

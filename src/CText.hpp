@@ -3,16 +3,20 @@
 
 #include <iostream>
 #include "json.hpp"
+#include "func.hpp"
+#include "Webcmd.hpp"
 
+class CPlayer;
 class COutput;
 
 class CText
 {
 private:
+    CPlayer* m_player;
     std::vector<COutput*> m_texts;
 
 public:
-    CText(std::vector<COutput*> texts);
+    CText(nlohmann::json jAttributes, CPlayer*);
 
     std::string print();
 };
@@ -20,10 +24,18 @@ public:
 class COutput
 {
 private:
-    std::string sText;
-    std::string sSpeacker;
+    std::string m_sSpeaker;
+    std::string m_sText;
+    nlohmann::json m_jDeps;
 public:
-    COutput(nlohmann::json jAttributes);
+    COutput(std::string sAtts);
+
+    // *** getter *** //
+    std::string getText();
+    std::string getSpeaker();
+    nlohmann::json getDeps();
+
+    std::string print(CPlayer* p);
 };
 
 #endif

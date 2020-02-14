@@ -34,7 +34,7 @@ void CWorldContext::h_addItem(string& sIdentifier, CPlayer* p) {
 }
 
 void CWorldContext::h_recieveMoney(string& sIdentifier, CPlayer* p) {
-    p->setGold(p->getGold() + stoi(sIdentifier));
+    p->setStat("gold", p->getStat("gold") + stoi(sIdentifier));
     p->appendPrint(Webcmd::set_color(Webcmd::color::GREEN) + "+3 Schilling" + Webcmd::set_color(Webcmd::color::WHITE) + "\n");
 }
 
@@ -55,6 +55,6 @@ void CWorldContext::h_newFight(string& sIdentifier, CPlayer* p) {
 }
 
 void CWorldContext::h_gameover(string& sIdentifier, CPlayer* p) {
-    p->setHp(0);
+    p->setStat("hp", 0);
     p->appendPrint("\nDu bist gestorben... \n\n Press Enter to continue....\n");
 }

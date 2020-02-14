@@ -1,21 +1,28 @@
 #include "CDialog.hpp"
 #include "CPlayer.hpp"
 
-CDState::CDState(string sText, string func, vector<string> alternativeTexts, dialogoptions opts, SDialog* dia)
+CDState::CDState(nlohmann::json jAtts, dialogoptions opts, SDialog* dia, CPlayer* p)
 {
-    m_sText = sText;
-    m_sFunction = func;
-    m_alternativeTexts = alternativeTexts;
+    m_text = new CText(jAtts.value("text", nlohmann::json::array()), p);
+    m_sFunction = jAtts.value("function", "standard");
+
+    //Parse alternative texts
+    std::vector<CText*> altTexts;
+    if(jAtts.count("altTexts") > 0) {
+        for(auto text : jAtts["altTexts"])
+            altTexts.push_back(new CText(text, p));
+    }
+    m_alternativeTexts = altTexts;
     m_options = opts;
     m_dialog = dia;
 }
 
 // *** GETTER *** //
-string CDState::getText() { return m_sText; }
+string CDState::getText() { return m_text->print(); }
 CDState::dialogoptions& CDState::getOptions() { return m_options; }
 
 // *** SETTER *** //
-void CDState::setText(size_t text) { m_sText = m_alternativeTexts[text]; }
+void CDState::setText(size_t text) { m_text = m_alternativeTexts[text]; }
 
 // *** FUNCTIONS *** // 
 
@@ -42,7 +49,7 @@ string CDState::getNextState(string sPlayerChoice, CPlayer* p)
 {
     if(numOptions() < stoi(sPlayerChoice))
         return "";
-    else if(checkDependencys(m_options[stoi(sPlayerChoice)], p) == false)
+    else if(p->checkDependencies(m_options[stoi(sPlayerChoice)].jDependencys) == false)
         return "";
     else
         return m_options[stoi(sPlayerChoice)].sTarget;
@@ -51,7 +58,7 @@ string CDState::getNextState(string sPlayerChoice, CPlayer* p)
 // *** FUNCTION POINTER *** //
 string CDState::standard(CPlayer* p)
 {
-    string sOutput = m_sText + "\n";
+    string sOutput = m_text->print() + "\n";
 
     if(numOptions() == 0) {
         p->appendPrint(sOutput + "Dialog ended. \n");
@@ -76,7 +83,7 @@ std::vector<size_t> CDState::getActiveOptions(CPlayer* p)
     std::vector<size_t> activeOptions;
     size_t numOpts = numOptions();
     for(size_t i=1; i<numOpts+1; i++) {
-        if(checkDependencys(m_options[i], p) == true)
+        if(p->checkDependencies(m_options[i].jDependencys) == true)
             activeOptions.push_back(i);
     }
     return activeOptions;
@@ -117,7 +124,7 @@ string CDState::ticket(CPlayer* p)
 string CDState::keinTicket(CPlayer* p)
 {
     string sOutput=standard(p);
-    if(p->getGold() < 10)
+    if(p->getStat("gold") < 10)
         p->setNewQuest("geld_fuer_ticket");
     return sOutput;
 }
@@ -169,7 +176,7 @@ void CDState::deleteDialogOption(string sStateID, size_t optID) {
 
 void CDState::changeDialog(string sCharacter, string sDialog, CPlayer* p)
 {
-    p->getWorld()->getCharacters()[sCharacter]->setDialog(p->getWorld()->dialogFactory(sDialog));
+    p->getWorld()->getCharacters()[sCharacter]->setDialog(p->getWorld()->dialogFactory(sDialog, p));
 }
 
 int CDState::numOptions()
@@ -180,29 +187,4 @@ int CDState::numOptions()
             counter++;
     }
     return counter;
-}
-
-bool CDState::checkDependencys(SDOption& option, CPlayer* p)
-{
-    if(option.jDependencys.size() == 0)
-        return true;
-    for(auto it=option.jDependencys.begin(); it!=option.jDependencys.end(); ++it)
-    {
-        if(it.key() == "highness" && p->getHighness() < it.value())
-            return false;
-        if(it.key() == "gold")
-        {
-            int gold = it.value();
-            std::cout << "GOLD: " << gold << std::endl;
-            if(gold < 0 && gold*(-1) < p->getGold())
-            {
-                std::cout << "GOLD: " << gold*(-1) << " - "  << p->getGold() << std::endl;
-                return false;
-            }
-            else if(gold > 0 && gold > p->getGold())
-                return false;
-       }
-    }
-
-    return true;
 }

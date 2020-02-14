@@ -65,11 +65,10 @@ void CQuestContext::h_ticketverkauf(std::string& sIdentifier, CPlayer* p)
 
 void CQuestContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
 {    
-    if(p->getRoom()->getID() != "bahnhof_gleise" || p->getItem_byID("ticket") == NULL)
-        return;
+    std::string room = p->getObject(p->getRoom()->getExtits(), sIdentifier);
 
-    if(fuzzy::fuzzy_cmp("gleis 3", sIdentifier) > 0.2)
-        return;
+    if(room != "gleis3")
+        return; 
 
     p->questSolved(m_quest->getID(), "3zum_gleis");
 
@@ -108,7 +107,7 @@ void CQuestContext::h_reden(std::string& sIdentifier, CPlayer* p)
         for(size_t i=1; i<=9; i++)
         {
             std::cout << "Changing dialog for: passant" << i << std::endl;
-            p->getWorld()->getCharacters()["passant"+std::to_string(i)]->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2"));
+            p->getWorld()->getCharacters()["passant"+std::to_string(i)]->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2", p));
         }
         p->getContexts().erase(m_quest->getID());
     }
@@ -129,7 +128,7 @@ void CQuestContext::h_besiege_besoffene_frau(std::string& sIdentifier, CPlayer* 
 // *** *** GELD AUFTREIBEN *** *** //
 void CQuestContext::h_geldauftreiben(std::string& sIdentifier, CPlayer* p)
 {
-    if(p->getGold() + stoi(sIdentifier) < 10)
+    if(p->getStat("gold") + stoi(sIdentifier) < 10)
         return;
 
     if(m_quest->getActive() == true)

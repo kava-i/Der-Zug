@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include "CText.hpp"
 #include "CCharacter.hpp"
 #include "CItem.hpp"
 #include "CDetail.hpp"
@@ -16,7 +17,7 @@ class CRoom
 private:
     string m_sName;
     string m_sID;
-    string m_sDescription;
+    CText* m_text;
     string m_sEntry;
     
     typedef std::map<string, std::string> objectmap;
@@ -28,7 +29,7 @@ private:
     std::map<string, CDetail*> m_details;
 
 public:
-    CRoom(string sName, string sID, string sDescription, string sEntry, objectmap exits, objectmap characters, std::map<string, CItem*> items, std::map<string, CDetail*> details);
+    CRoom(string sName, string sID, CText* text, string sEntry, objectmap exits, objectmap characters, std::map<string, CItem*> items, std::map<string, CDetail*> details);
 
     // *** getter *** // 
     string getName();

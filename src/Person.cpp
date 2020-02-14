@@ -4,16 +4,17 @@
 
 string CPerson::getName()       { return m_sName; }
 string CPerson::getID()         { return m_sID; }
-int CPerson::getHp()            { return m_hp; }
-size_t CPerson::getStrength()   { return m_strength; }
-int CPerson::getGold()       { return m_gold; }
+int CPerson::getStat(std::string id)     { return m_stats[id]; }
 SDialog* CPerson::getDialog()   { return m_dialog; }
 CPerson::attacks& CPerson::getAttacks() { return m_attacks; }
 
 // *** SETTER *** //
-void CPerson::setHp(int hp) { m_hp = hp; }
-void CPerson::setDialog(SDialog* newDialog) { m_dialog = newDialog; }
-void CPerson::setGold(int gold) { m_gold = gold; }
+void CPerson::setStat(std::string id, int stat) {
+    m_stats[id] = stat;
+}
+void CPerson::setDialog(SDialog* newDialog) { 
+    m_dialog = newDialog; 
+}
 
 string CPerson::printAttacks()
 {

@@ -22,7 +22,7 @@ string CFight::fightRound(string sPlayerChoice)
     sOutput += turn(m_player->getAttack(sPlayerChoice), m_player, m_opponent) + "$";
 
     //Check wether opponent is dead
-    if(m_opponent->getHp() <= 0) {
+    if(m_opponent->getStat("hp") <= 0) {
         sOutput += "You defeted " + m_opponent->getName() + "!\n";
         m_player->appendPrint(sOutput);
         return "endFight;deleteCharacter " + m_opponent->getID();
@@ -33,7 +33,7 @@ string CFight::fightRound(string sPlayerChoice)
     sOutput += turn(sAttack, m_opponent, m_player) + "$";
 
     //Check wether player is dead
-    if(m_player->getHp() <= 0) {
+    if(m_player->getStat("hp") <= 0) {
         sOutput += "You were killed! by " + m_opponent->getName() + "!\n";
         m_player->appendPrint(sOutput);
         return "endFight;gameover";
@@ -59,9 +59,9 @@ string CFight::turn(string selectedAttack, CPerson* attacker, CPerson* defender)
     sOutput += attacker->getName() + " uses " + attack->getName() + "\n";
     sOutput += attack->getOutput() + "\n";
 
-    int damage = attack->getPower() + attacker->getStrength();
+    int damage = attack->getPower() + attacker->getStat("strength");
     sOutput += "Damage delt: " + std::to_string(damage) + "\n\n";
-    defender->setHp(defender->getHp() - damage);
+    defender->setStat("hp", defender->getStat("hp") - damage);
 
     return sOutput;
 }
@@ -70,8 +70,8 @@ string CFight::turn(string selectedAttack, CPerson* attacker, CPerson* defender)
 string CFight::printStats(CPerson* person)
 {
     string sOutput = person->getName() + "\n";
-    sOutput += "--- HP:       " + std::to_string(person->getHp()) + "\n";
-    sOutput += "--- Strength: " + std::to_string(person->getStrength()) + "\n";
+    sOutput += "--- HP:       " + std::to_string(person->getStat("hp")) + "\n";
+    sOutput += "--- Strength: " + std::to_string(person->getStat("strength")) + "\n";
     return sOutput;
 }
 

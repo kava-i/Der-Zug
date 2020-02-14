@@ -50,7 +50,7 @@ bool CItem::callFunction(CPlayer* p) {
 // ***** CONSUME FUNCTIONS ***** //
 void CItem::consumeDrug(CPlayer* p)
 {
-    p->setHighness(p->getHighness() + getEffekt());
+    p->setStat("highness", p->getStat("highness") + getEffekt());
     if(!p->checkEventExists("highness"))
         p->addTimeEvent("highness", 2, &CPlayer::t_highness);
     p->removeItem(m_jAtts["name"]);

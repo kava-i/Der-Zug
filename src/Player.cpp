@@ -1,36 +1,40 @@
 #include "CPlayer.hpp"
 
 #define GREEN Webcmd::set_color(Webcmd::color::GREEN)
+#define RED Webcmd::set_color(Webcmd::color::RED)
+#define BLUE Webcmd::set_color(Webcmd::color::BLUE)
+#define PURPLE Webcmd::set_color(Webcmd::color::PURPLE)
 #define WHITE Webcmd::set_color(Webcmd::color::WHITE)
 
-CPlayer::CPlayer(string sName,string sPassword, string sID, int hp, size_t strength, int gold, CRoom* room, attacks newAttacks)
+CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks newAttacks)
 {
-    m_sName = sName;
-    m_sPassword = sPassword;
+    m_sName = jAtts["name"];
+    m_sPassword = jAtts["password"];
     m_firstLogin = true;
-    m_sID = sID;
-    m_hp = hp;
-    m_gold = gold;
-    m_strength = strength;
-    m_highness = 0;
+    m_sID = jAtts["id"];
+
+    //Stats
+    m_stats["highness"] = 0;
+    m_stats["strength"] = jAtts.value("strength", 8);
+    m_stats["hp"]       = jAtts.value("hp", 40);
+    m_stats["gold"]     = jAtts.value("gold", 5);
 
     //Character and Level
     m_level = 0;
     m_ep = 0;
-    m_minds["Die Perzeption"] = 0;
-    m_minds["Der Krämer"] = 0;
-    m_minds["Die Kraft"]  = 0;
-    m_minds["Die Logik"]  = 0;
+    m_minds["perzeption"] = {"perzeption", BLUE, 0};
+    m_minds["peddler"] = {"peddler", RED, 0};
+    m_minds["drama"]  = {"drama", RED, 0};
+    m_minds["logik"]  = {"logik", RED, 0};
 
     m_room = room;
-    m_status = "standard";
     m_attacks = newAttacks;
 
     m_equipment["weapon"] = NULL;
     m_equipment["armor"]  = NULL;
     
     //Initiazize world
-    m_world = new CWorld();
+    m_world = new CWorld(this);
 
     for(auto it : m_world->getQuests())
         m_contextStack.insert(new CQuestContext(it.second), 3, it.first);
@@ -49,10 +53,8 @@ string CPlayer::getPrint()  {
     return m_sPrint; 
 }
 
-string CPlayer::getStatus() { return m_status; };
 bool CPlayer::getFirstLogin() { return m_firstLogin; };
 CFight* CPlayer::getFight() { return m_curFight; };
-size_t CPlayer::getHighness() { return m_highness; };
 CPlayer::minds& CPlayer::getMinds() { return m_minds; }
 CPlayer::equipment& CPlayer::getEquipment()  { return m_equipment; }
 CWorld* CPlayer::getWorld() { return m_world; }
@@ -62,9 +64,7 @@ CContextStack& CPlayer::getContexts()   { return m_contextStack; }
 void CPlayer::setRoom(CRoom* room)          { m_lastRoom = m_room; m_room = room; }
 void CPlayer::setPrint(string newPrint)     { m_sPrint = newPrint; }
 void CPlayer::appendPrint(string newPrint)  { m_sPrint.append(newPrint); }
-void CPlayer::setStatus(string status)      { m_status = status; }
 void CPlayer::setFirstLogin(bool val)       { m_firstLogin = val; }
-void CPlayer::setHighness(size_t highness)  { m_highness = highness; }
 void CPlayer::setPlayers(map<string, CPlayer*> players) { m_players = players; }
 void CPlayer::setWobconsole(Webconsole* webconsole) { _cout = webconsole; }
 void CPlayer::setWorld(CWorld* newWorld)    { m_world = newWorld; }
@@ -299,8 +299,8 @@ void CPlayer::updateMinds(int numPoints)
     std::string sError = "Nummer auswählen, oder \"mind\" (ohne Artikel!)\n";
     CChoiceContext* context = new CChoiceContext(std::to_string(numPoints), sError);
     for(auto it : m_minds){
-        m_sPrint += it.first + ": level(" + std::to_string(it.second) + ")\n";
-        context->add_listener(func::returnToLower(it.first).substr(4), &CContext::h_updateMind);
+        m_sPrint += it.first + ": level(" + std::to_string(it.second.level) + ")\n";
+        context->add_listener(func::returnToLower(it.first), &CContext::h_updateMind);
     }
     m_sPrint += sError;
     m_contextStack.insert(context, 1, "choice");
@@ -312,17 +312,46 @@ void CPlayer::showMinds()
             += "Level: " + std::to_string(m_level) + "\n"
             += "Ep: " + std::to_string(m_ep) + "/20.\n";
     for(auto it : m_minds)
-        m_sPrint += it.first + ": level(" + std::to_string(it.second) + ")\n";
+        m_sPrint += it.first + ": level(" + std::to_string(it.second.level) + ")\n";
     m_sPrint+="\n";
+}
+
+bool CPlayer::checkDependencies(nlohmann::json jDeps)
+{
+    if(jDeps.size() == 0)
+        return true;
+    for(auto it=jDeps.begin(); it!=jDeps.end(); it++)
+    {
+        //Check dependecy in mind
+        if(m_minds.count(it.key()) > 0) {
+            int val = it.value();
+            if(val < 0 && val*(-1) < m_minds[it.key()].level)
+                return false;
+            else if(val > 0 && val > m_minds[it.key()].level)
+                return false;
+        }
+
+        //Check dependecy in stats
+        else if(m_stats.count(it.key()) > 0) {
+            int val = it.value();
+            if(val < 0 && val*(-1) < m_stats[it.key()])
+                return false;
+            else if(val > 0 && val > m_stats[it.key()])
+                return false;
+        }
+        else
+            std::cout << "Error in document: " << it.key() << std::endl;
+    } 
+    return true;
 }
     
 
 // *** Stats *** //
 string CPlayer::showStats() {
     string stats = "Name: " + m_sName 
-        + "\nHP: " + std::to_string(m_hp) 
-        + "\nStrength: " + std::to_string(m_strength)
-        + "\nHighness: " + std::to_string(m_highness) 
+        + "\nHP: " + std::to_string(m_stats["hp"]) 
+        + "\nStrength: " + std::to_string(m_stats["strength"])
+        + "\nHighness: " + std::to_string(m_stats["highness"]) 
         + "\n" 
         + printAttacks();
 
@@ -333,13 +362,13 @@ string CPlayer::showStats() {
 // *** Others *** // 
 void CPlayer::checkHighness()
 {
-    if(m_highness==0)
+    if(m_stats["highness"]==0)
         return; 
 
     srand(time(NULL));
     std::vector<string> words = func::split(m_sPrint, " ");
 
-    size_t limit = (11-m_highness)/2;
+    size_t limit = (11-m_stats["highness"])/2;
 
     size_t counter = 0;
     for(auto& word : words)
@@ -426,6 +455,7 @@ void CPlayer::addSelectContest(objectmap& mapObjects, std::string sEventType)
 }
 
 
+
 // ***** ***** EVENTMANAGER FUNCTIONS ***** *****
 
 void CPlayer::throw_event(string sInput)
@@ -492,12 +522,12 @@ void CPlayer::checkTimeEvents()
 // Time handler
 void CPlayer::t_highness()
 {
-    if(m_highness==0)
+    if(m_stats["highness"]==0)
         return;
     m_sPrint += "Time always comes to give you a hand; Things begin to become clearer again. Highness decreased by 1.\n";
-    m_highness--;
+    m_stats["highness"]--;
 
-    if(m_highness>0)
-        addTimeEvent("highness", 0.25, &CPlayer::t_highness);
+    if(m_stats["highness"]>0)
+        addTimeEvent("highness", 2, &CPlayer::t_highness);
 }
 

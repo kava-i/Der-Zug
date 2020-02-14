@@ -185,6 +185,7 @@ void CStandardContext::h_startTutorial(string&, CPlayer* p)
     p->appendPrint(p->getRoom()->getDescription() + "\n");
     p->setNewQuest("zug_nach_moskau");
     p->setNewQuest("tutorial");
+    p->updateMinds(3);
 }
 
 void CStandardContext::h_try(string& sIdentifier, CPlayer* p)

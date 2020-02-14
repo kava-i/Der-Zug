@@ -1,10 +1,10 @@
 #include "CRoom.hpp" 
 
-CRoom::CRoom(string sName, string sID, string sDescription, string sEntry, objectmap exits, objectmap characters, std::map<string, CItem*> items, std::map<string, CDetail*> details)
+CRoom::CRoom(string sName, string sID, CText* text, string sEntry, objectmap exits, objectmap characters, std::map<string, CItem*> items, std::map<string, CDetail*> details)
 {
     m_sName = sName;
     m_sID = sID;
-    m_sDescription = sDescription;
+    m_text = text;
     m_sEntry = sEntry;
     m_exists = exits;
     m_characters = characters;
@@ -17,7 +17,7 @@ CRoom::CRoom(string sName, string sID, string sDescription, string sEntry, objec
 
 string CRoom::getName()         { return m_sName; }
 string CRoom::getID()           { return m_sID; }
-string CRoom::getDescription()  { return m_sDescription; }
+string CRoom::getDescription()  { return m_text->print(); }
 string CRoom::getEntry()        { return m_sEntry; }
 CRoom::objectmap& CRoom::getExtits()        { return m_exists; }
 CRoom::objectmap& CRoom::getCharacters()    { return m_characters; }
@@ -31,16 +31,17 @@ void CRoom::setPlayers(objectmap& onlinePlayers) { m_players = onlinePlayers; }
 
 string CRoom::showEntryDescription(std::map<std::string, CCharacter*>& mapChars)
 {
-    string sDesc = m_sEntry + m_sDescription + "\n";
-    for(auto it : m_characters)
+    string sDesc = m_sEntry + m_text->print() + "\n";
+    for(auto it : m_characters) {
+        std::cout << it.first << "\n";
         sDesc.append(mapChars[it.first]->getDescription());
-
+    }
     return sDesc;
 }
 
 string CRoom::showDescription(std::map<std::string, CCharacter*>& mapChars)
 {
-    string sDesc = m_sDescription;
+    string sDesc = m_text->print();
     for(auto it : m_characters) 
         sDesc.append("\n" + mapChars[it.first]->getDescription());
     return sDesc;
@@ -48,7 +49,7 @@ string CRoom::showDescription(std::map<std::string, CCharacter*>& mapChars)
 
 string CRoom::showAll()
 {
-    string sDesc = m_sDescription + "\n";
+    string sDesc = m_text->print()+ "\n";
     sDesc+=showDetails();
     sDesc+=showExits();
     sDesc+=showCharacters();

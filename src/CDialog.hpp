@@ -6,6 +6,7 @@
 #include <map>
 #include <vector>
 #include "json.hpp"
+#include "CText.hpp"
 
 using std::string;
 using std::map;
@@ -27,9 +28,9 @@ struct SDOption {
 
 class CDState {
 private:
-    string m_sText;
+    CText* m_text;
     string m_sFunction;
-    vector<string> m_alternativeTexts;    
+    vector<CText*> m_alternativeTexts;    
 
     //Map of options 
     typedef std::map<int, SDOption> dialogoptions;
@@ -42,7 +43,7 @@ private:
     static std::map<string, string (CDState::*)(CPlayer*)> m_functions;
 
 public:
-    CDState(string sText, string function, vector<string> altTexts, dialogoptions states, SDialog* dia);
+    CDState(nlohmann::json jAtts, dialogoptions states, SDialog* dia, CPlayer* p);
 
     // *** GETTER *** // 
     string getText();
@@ -74,6 +75,5 @@ public:
 
     std::vector<size_t> getActiveOptions(CPlayer*);
     int numOptions();
-    bool checkDependencys(SDOption& option, CPlayer* p);
 };
 #endif 

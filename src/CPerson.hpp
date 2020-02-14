@@ -19,9 +19,8 @@ protected:
     string m_sID;
 
     //Stats
-    int m_hp;
-    size_t m_strength;
-    int m_gold;
+    typedef map<string, int> stats;
+    stats m_stats;
 
     typedef std::map<string, CAttack*> attacks;
     attacks m_attacks;
@@ -36,16 +35,13 @@ public:
     // *** GETTER *** // 
     string getName();
     string getID();
-    int getHp();
-    size_t getStrength();
-    int getGold();
+    int getStat(std::string id);
     SDialog* getDialog();
     attacks& getAttacks();
 
     // *** SETTER *** //
     void setDialog(SDialog* newDialog);
-    void setHp(int hp);
-    void setGold(int gold);
+    void setStat(std::string, int stat);
 
     string printAttacks();
     string getAttack(string sPlayerChoice);

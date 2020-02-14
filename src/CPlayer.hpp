@@ -23,6 +23,7 @@
 #include "CChatContext.hpp"
 #include "CRoom.hpp"
 #include "CFight.hpp"
+#include "CMind.hpp"
 #include "func.hpp"
 
 
@@ -40,25 +41,21 @@ private:
     CRoom* m_lastRoom;
     CWorld* m_world;
 
-    size_t m_highness;
-
     int m_ep;
     int m_level;
 
     string m_sPrint;
-    string m_status;
     string m_sPassword;
     bool m_firstLogin;
 
     CFight* m_curFight;
 
+    typedef map<string, SMind> minds;
     typedef map<string, vector<CItem*>> inventory;
-    inventory m_inventory;
     typedef map<string, CItem*> equipment;
-    equipment m_equipment;
-    typedef map<string, int> minds;
     minds m_minds;
-
+    inventory m_inventory;
+    equipment m_equipment;
 
     map<string, CPlayer*> m_players;
 
@@ -70,15 +67,13 @@ private:
 
 public:
     CPlayer() {};
-    CPlayer(string sName,string password, string sID, int hp, size_t strength, int gold, CRoom* room, attacks newAttacks);
+    CPlayer(nlohmann::json jAttributes, CRoom* room, attacks newAttacks);
 
     // *** GETTER *** // 
     CRoom* getRoom();
     string getPrint();
-    string getStatus();
     bool getFirstLogin();
     CFight* getFight();
-    size_t getHighness();
     minds& getMinds();
     equipment& getEquipment();
     CWorld* getWorld();
@@ -88,9 +83,7 @@ public:
     void setRoom(CRoom* room);
     void setPrint(string);
     void appendPrint(string);
-    void setStatus(string);
     void setFirstLogin(bool val);
-    void setHighness(size_t highness);
     void setPlayers(map<string, CPlayer*> players);
     void setWobconsole(Webconsole*);
     void setWorld(CWorld* newWorld);
@@ -133,6 +126,7 @@ public:
     void addEP(int ep);
     void updateMinds(int numPoints); 
     void showMinds();
+    bool checkDependencies(nlohmann::json);
 
     //Stats
     string showStats();

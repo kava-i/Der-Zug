@@ -9,7 +9,7 @@ map<string, nlohmann::json> CGame::getPlayerJsons() {
 }
 
 CGame::CGame() {
-    m_world = new CWorld();
+    m_world = new CWorld(NULL);
     
     m_context = new CGameContext();
     m_context->setGame(this);
@@ -45,8 +45,7 @@ void CGame::playerFactory(nlohmann::json j_player)
 {
     //Create attacks
     map<string, CAttack*> attacks = m_world->parsePersonAttacks(j_player);
-
-    m_players[j_player["id"]] = new CPlayer(j_player["name"], j_player["password"],j_player["id"], j_player.value("hp", 40), j_player.value("strength", 8), j_player.value("gold", 5), m_world->getRooms()[j_player["room"]], attacks);
+    m_players[j_player["id"]] = new CPlayer(j_player, m_world->getRooms()[j_player["room"]], attacks);
 }
 
 
@@ -96,7 +95,7 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePla
     m_curPlayer->setPlayers(mapOnlinePlayers2);
 
     //Check whether player is dead
-    if(m_curPlayer->getHp() <= 0) {
+    if(m_curPlayer->getStat("hp") <= 0) {
         m_context->throw_event(std::make_pair("reload_player", m_curPlayer->getID()), m_players["programmer"]);
         m_curPlayer->throw_event("startTutorial");
     }
@@ -151,7 +150,7 @@ bool CGame::reloadWorld(string sID)
         return false;
 
     //Set new world
-    m_players[sID]->setWorld(new CWorld());
+    m_players[sID]->setWorld(new CWorld(m_players[sID]));
 
     //Reload current room of player
     m_players[sID]->setRoom(m_players[sID]->getWorld()->getRooms()[m_players[sID]->getRoom()->getID()]);
