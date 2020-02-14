@@ -2,7 +2,7 @@
 
 - id: START
   text: 
-  - "LOGIK;Dieser Mann ist der berühmte Architekt dieses Bahnhofs." 
+  - "LOGIK_1;Dieser Mann ist der berühmte Architekt dieses Bahnhofs." 
   - "PERZEPTION;Du näherst dich ihm unterwürfig. Er beachtet dich noch nicht."
   options: 
     1: "Sehr geehrtet Herr Thron, dürfte ich mich ihnen vorstellen?;{};nein"

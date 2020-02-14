@@ -23,5 +23,6 @@ namespace func
     void convertToLower(std::string &str);
 
     std::string returnToLower(std::string str);
+    std::string returnToUpper(std::string str);
 }
 

@@ -27,8 +27,11 @@ private:
     std::string m_sSpeaker;
     std::string m_sText;
     nlohmann::json m_jDeps;
+
+    std::pair<std::string, int> m_mind;
+
 public:
-    COutput(std::string sAtts);
+    COutput(std::string sAtts, CPlayer*);
 
     // *** getter *** //
     std::string getText();

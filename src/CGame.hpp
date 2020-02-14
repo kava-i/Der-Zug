@@ -33,10 +33,10 @@ class CGame
 {
 private:
 
+    CWorld* m_world;
     map<string, CPlayer*> m_players;
     map<string, nlohmann::json> m_playerJsons;
     CPlayer* m_curPlayer;
-    CWorld* m_world;
 
     CGameContext* m_context;
 

@@ -180,12 +180,15 @@ void CStandardContext::h_exitTrainstation(string& sIdentifier, CPlayer* p)
 }
 void CStandardContext::h_startTutorial(string&, CPlayer* p)
 {
+    std::cout << "1.\n";
     p->appendPrint("Willkommen bei \"DER ZUG\"! Du befindest dich auf dem Weg nach Moskau. Dir fehlt dein Ticket. Tickets sind teuer. Glücklicherweise kennst du einen leicht verrückten, viel denkenden Mann, der sich \"Der Ticketverkäufer\" nennt. Suche ihn, er hat immer noch ein günsttiges Ticket für dich. Benutze die Befhelte \"go to [name des Ausgangs]\", um den Raum zu wechseln, um dir Personen und Ausgänge anzeigen zu lassen, nutze \"show people\", bzw. \"show exits\" oder auch \"show all\". Eine Liste mit allen Befhelen und zusätzlichen Hilfestellungen erhältst du, indem du \"help\" eingibst.\n $\n");
 
+    std::cout << p->getRoom()->getName() << std::endl; 
     p->appendPrint(p->getRoom()->getDescription() + "\n");
+    std::cout << "3.\n";
     p->setNewQuest("zug_nach_moskau");
     p->setNewQuest("tutorial");
-    p->updateMinds(3);
+    p->updateMinds(1);
 }
 
 void CStandardContext::h_try(string& sIdentifier, CPlayer* p)

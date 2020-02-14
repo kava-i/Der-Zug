@@ -40,6 +40,7 @@ private:
 
 public:
 
+    CWorld();
     CWorld(CPlayer*);
     
     // *** GETTER *** //

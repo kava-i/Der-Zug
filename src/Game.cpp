@@ -9,11 +9,10 @@ map<string, nlohmann::json> CGame::getPlayerJsons() {
 }
 
 CGame::CGame() {
-    m_world = new CWorld(NULL);
-    
     m_context = new CGameContext();
     m_context->setGame(this);
 
+    m_world = new CWorld(NULL);
     //Create players
     playerFactory();
     std::cout << "Finished parsing!\n";
@@ -51,11 +50,11 @@ void CGame::playerFactory(nlohmann::json j_player)
 
 string CGame::checkLogin(string sName, string sPassword)
 {
-    for(auto &it : m_players)
-    {
-	string tmp = it.second->doLogin(sName,sPassword);
-	if(tmp != "")
-	    return tmp;
+    std::cout << "checkLogin\n";
+    for(auto &it : m_players) {
+	    string tmp = it.second->doLogin(sName,sPassword);
+	    if(tmp != "")
+	        return tmp;
     }
     return "";
 }

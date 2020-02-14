@@ -21,6 +21,8 @@ class WebserverGame
     public:
 	WebserverGame(Webconsole *cout)
 	{
+        std::cout << "Starting....\n";
+
 	    _name = "";
 	    _password = "";
 	    _id = "";

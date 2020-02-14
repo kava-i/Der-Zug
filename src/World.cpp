@@ -2,6 +2,7 @@
 
 namespace fs = std::experimental::filesystem;
 
+CWorld::CWorld() {}
 CWorld::CWorld(CPlayer* p) {
     worldFactory(p);
 }
@@ -122,7 +123,6 @@ CWorld::objectmap CWorld::characterFactory(nlohmann::json j_characters, CPlayer*
         //Create attacks
         map<string, CAttack*> attacks = parsePersonAttacks(j_char);
 
-        std::cout << "creating character...\n";
         //Create character and add to maps
         m_characters[j_char["id"]] = new CCharacter(j_char, newDialog, attacks, p);
         mapChars[j_char["id"]] = j_char["name"];

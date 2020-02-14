@@ -39,6 +39,14 @@ std::string func::returnToLower(std::string str)
         str2 += tolower(str[i], loc1);
     return str2;
 }
+std::string func::returnToUpper(std::string str)
+{
+    std::locale loc1;
+    std::string str2;
+    for(unsigned int i=0; i<str.length(); i++)
+        str2 += toupper(str[i], loc1);
+    return str2;
+}
 
 TEST_CASE("Testing func::split functionality","[func::split]")
 {
