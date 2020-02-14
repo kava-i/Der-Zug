@@ -43,7 +43,7 @@ const std::deque<CContext*> &CContextStack::getSortedCtxList()
 
 bool CContextStack::nonPermeableContextInList()
 {
-    return std::accumulate(m_sortedContexts.begin(),m_sortedContexts.end(),false,[](bool b,std::pair<CContext*,int> &k){return b|!k.first->getPermeable();});
+    return std::accumulate(m_sortedContexts.begin(),std::prev(m_sortedContexts.end()),false,[](bool b,std::pair<CContext*,int> &k){return b|!k.first->getPermeable();});
 }
 
 #include "CWorldContext.hpp"
