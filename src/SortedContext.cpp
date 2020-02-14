@@ -43,19 +43,19 @@ const std::deque<CContext*> &CContextStack::getSortedCtxList()
 
 bool CContextStack::nonPermeableContextInList()
 {
-    return std::accumulate(m_sortedContexts.begin(),m_sortedContexts.end(),false,[](bool b,std::pair<CContext*,int> &k){return b|!k.first->getPermeable();});
+    return std::accumulate(m_sortedContexts.begin(),m_sortedContexts.end(),0,[](int b,std::pair<CContext*,int> &k){if(k.first->getPermeable())return b;else return b+1;}) > 1;
 }
 
 #include "CWorldContext.hpp"
-#include "CDialogContext.hpp"
+#include "CFightContext.hpp"
 TEST_CASE("Testing permeable context stacks","[CContextStack]")
 {
     CContextStack st;
-    CDialogContext cdiag(NULL);
+    CFightContext cdiag({});
     CWorldContext cworld;
     st.insert((CContext*)&cdiag,10,"diag");
     st.insert((CContext*)&cworld,11,"world");
-    REQUIRE(st.nonPermeableContextInList());
+    REQUIRE(st.nonPermeableContextInList()==false);
     st.erase("diag");
     REQUIRE(st.getSortedCtxList().size() == 1);
     REQUIRE(st.nonPermeableContextInList()==false);
