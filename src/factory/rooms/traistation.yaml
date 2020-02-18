@@ -12,7 +12,7 @@
     - name: Passant1
       id: passant1
       description: 
-        - 'PERZEPTION_1;Drei Passanten stehen merkwürdig gekleidet in einer Ecke der Eingangshalle nahe den Gleisen und deuten wild umher.'
+        - 'PERZEPTION_1;Drei Passanten stehen merkwürdig gekleidet in einer Ecke der Eingangshalle nahe den Gleisen und deuten wild umher.;{};{"perzeption":1}'
       dialog: strangeGuysDialog
     - name: Passant2
       id: passant2

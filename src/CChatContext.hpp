@@ -13,6 +13,7 @@ public:
     {
         //Set permeability
         m_permeable = false;
+        m_curPermeable = m_permeable;
         
         //Set dialog partner
         m_chatPartner = chatPartner;
@@ -23,9 +24,9 @@ public:
         add_listener("endChat", &CContext::h_end);
     }
 
-    //Parser
-    vector<event> parser(string, CPlayer*);
-
+    //Alternate throw_event
+    void throw_event(event newEvent, CPlayer* p);
+     
     //Handler
     void h_send(string&, CPlayer*);
     void h_end(string&, CPlayer*);

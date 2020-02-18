@@ -21,7 +21,9 @@ string CPerson::printAttacks()
     string sOutput = "Attacks: \n";
     size_t counter = 1;
     for(auto attack : m_attacks) {
-        sOutput += std::to_string(counter) + ". \"" + attack.second->getName() + "\": " + attack.second->getDescription() + "\n";
+        sOutput += std::to_string(counter) + ". \"" + attack.second->getName() + "\"\n"
+                    + "--- Strength: " + std::to_string(attack.second->getPower()) + "\n"
+                    + "--- " + attack.second->getDescription() + "\n";
         counter++;
     }
 

@@ -27,6 +27,7 @@ private:
     std::string m_sSpeaker;
     std::string m_sText;
     nlohmann::json m_jDeps;
+    std::map<std::string, int> mUpdates;
 
     std::pair<std::string, int> m_mind;
 

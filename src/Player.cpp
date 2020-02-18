@@ -15,9 +15,12 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks newAttacks)
 
     //Stats
     m_stats["highness"] = 0;
-    m_stats["strength"] = jAtts.value("strength", 8);
     m_stats["hp"]       = jAtts.value("hp", 40);
     m_stats["gold"]     = jAtts.value("gold", 5);
+    m_stats["strength"] = jAtts.value("strength", 8);
+    m_stats["skill"]    = jAtts.value("skill", 8);
+    
+    m_abbilities = {"strength", "skill"};
 
     //Character and Level
     m_level = 0;
@@ -56,6 +59,7 @@ string CPlayer::getPrint()  {
 bool CPlayer::getFirstLogin() { return m_firstLogin; };
 CFight* CPlayer::getFight() { return m_curFight; };
 CPlayer::minds& CPlayer::getMinds() { return m_minds; }
+std::vector<std::string> CPlayer::getAbbilities() { return m_abbilities; }
 CPlayer::equipment& CPlayer::getEquipment()  { return m_equipment; }
 CWorld* CPlayer::getWorld() { return m_world; }
 CContextStack& CPlayer::getContexts()   { return m_contextStack; }
@@ -113,6 +117,7 @@ void CPlayer::startChat(CPlayer* player)
 
 void CPlayer::send(string sMessage)
 {
+    std::cout << "Sending message... \n";
     _cout->write(sMessage);
     _cout->flush(); 
 }
@@ -290,18 +295,22 @@ void CPlayer::addEP(int ep)
         m_sPrint+= GREEN + "Level Up!" + WHITE + "\n";
     }
     if(counter > 0)
-        updateMinds(counter);
+        updateStats(counter);
 }
 
-void CPlayer::updateMinds(int numPoints)
+void CPlayer::updateStats(int numPoints)
 {
     m_sPrint+= "Du hast " + std::to_string(numPoints) + " Punkte zu vergeben.\n";
+
     std::string sError = "Nummer auswählen, oder \"mind\" (ohne Artikel!)\n";
     CChoiceContext* context = new CChoiceContext(std::to_string(numPoints), sError);
-    for(auto it : m_minds){
-        m_sPrint += it.first + ": level(" + std::to_string(it.second.level) + ")\n";
-        context->add_listener(func::returnToLower(it.first), &CContext::h_updateMind);
+    for(size_t i=0; i<m_abbilities.size(); i++)
+    {
+        m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" + std::to_string(getStat(m_abbilities[i])) + ")\n";
+        context->add_listener(func::returnToLower(m_abbilities[i]), &CContext::h_updateStats);
+        context->add_listener(std::to_string(i+1), &CContext::h_updateStats);
     }
+
     m_sPrint += sError;
     m_contextStack.insert(context, 1, "choice");
 }
@@ -314,6 +323,15 @@ void CPlayer::showMinds()
     for(auto it : m_minds)
         m_sPrint += it.first + ": level(" + std::to_string(it.second.level) + ")\n";
     m_sPrint+="\n";
+}
+
+void CPlayer::showStats() {
+    m_sPrint += "Name: " + m_sName + "\n";
+
+    std::string max = std::max_element(m_stats.begin(), m_stats.end(), [](const auto& it1, const auto& it2) {return it1.first.size() < it2.first.size();})->first;
+
+    for(const auto& it : m_stats)
+        m_sPrint += it.first + ": " + (*[](size_t x){std::string s=" "; for(size_t i=0; i<x;i++) s+="-"; return s+" ";})(max.size()-it.first.size()) + std::to_string(it.second) + "\n";
 }
 
 bool CPlayer::checkDependencies(nlohmann::json jDeps)
@@ -345,19 +363,6 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps)
     return true;
 }
     
-
-// *** Stats *** //
-string CPlayer::showStats() {
-    string stats = "Name: " + m_sName 
-        + "\nHP: " + std::to_string(m_stats["hp"]) 
-        + "\nStrength: " + std::to_string(m_stats["strength"])
-        + "\nHighness: " + std::to_string(m_stats["highness"]) 
-        + "\n" 
-        + printAttacks();
-
-    return stats;
-}
-
 
 // *** Others *** // 
 void CPlayer::checkHighness()
@@ -404,6 +409,8 @@ string CPlayer::doLogin(string sName, string sPassword)
     if(sName == m_sName && sPassword == m_sPassword) return m_sID;
     else return "";
 }
+
+
 
 string CPlayer::getObject(objectmap& mapObjects, string sIdentifier)
 {

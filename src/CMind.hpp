@@ -7,7 +7,7 @@
 struct SMind
 {
     std::string sID;
-    std::string sColor;
+    std::string color;
     int level;
 };
 

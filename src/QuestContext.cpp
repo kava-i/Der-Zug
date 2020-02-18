@@ -11,8 +11,6 @@ CQuestContext::CQuestContext(CQuest* quest)
     m_quest = quest;
     for(auto it : m_quest->getHandler())
     {
-        std::cout << "Adding listener for \"" << it.second << "\": " << it.first << std::endl;
-
         if(m_functions.count(it.first) == 0)
             std::cout << "FATAL ERROR, Quest-handler does not exits!!\n";
         else

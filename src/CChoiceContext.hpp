@@ -18,7 +18,7 @@ public:
 
     void h_select(string&, CPlayer*);
     void h_choose_equipe(string&, CPlayer*);
-    void h_updateMind(string&, CPlayer*);
+    void h_updateStats(string&, CPlayer*);
     void error(CPlayer*); 
 };
 

@@ -40,7 +40,7 @@ public:
     void add_listener(string sEventType, void(CContext::*)(string&, CPlayer*), size_t pos);
     void delete_listener(string sEventType, int num);
 
-    void throw_event(event newEvent, CPlayer* p);
+    virtual void throw_event(event newEvent, CPlayer* p);
     virtual void error(CPlayer* p) {}
 
     // *** EVENTHANDLERS *** // 
@@ -94,7 +94,7 @@ public:
     // *** CHOICE CONTEXT *** //
     virtual void h_select(string&, CPlayer*) {}
     virtual void h_choose_equipe(string&, CPlayer*) {}
-    virtual void h_updateMind(string&, CPlayer*) {}
+    virtual void h_updateStats(string&, CPlayer*) {}
 
     // *** QUESTS *** //
     virtual void h_ticketverkaeufer(string&, CPlayer*) {}

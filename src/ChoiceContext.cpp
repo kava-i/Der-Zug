@@ -37,9 +37,7 @@ void CChoiceContext::h_select(string& sIdentifier, CPlayer* p)
     if(obj == "")
         p->appendPrint("Choose an number or a new Command\n");
 
-    else
-    {
-        std::cout << "Found Object: " << obj << std::endl;
+    else {
         p->throw_event(m_sObject + " " + obj);
         m_permeable=false;
         p->getContexts().erase("choice"); 
@@ -49,15 +47,13 @@ void CChoiceContext::h_select(string& sIdentifier, CPlayer* p)
 void CChoiceContext::h_choose_equipe(string& sIdentifier, CPlayer* p)
 {
     std::cout << "h_choose_equipe: " << sIdentifier << " " << m_sObject << std::endl;
-    if(sIdentifier == "yes")
-    {
+    if(sIdentifier == "yes") {
         p->dequipeItem("weapon");
         p->equipeItem(p->getItem_byID(m_sObject), "weapon");
         p->getContexts().erase("choice");
     }
 
-    else if(sIdentifier == "no")
-    {
+    else if(sIdentifier == "no") {
         p->appendPrint("You chose not to equipe " + p->getItem_byID(m_sObject)->getName() + ".\n");
         p->getContexts().erase("choice");
     }
@@ -66,26 +62,27 @@ void CChoiceContext::h_choose_equipe(string& sIdentifier, CPlayer* p)
         p->appendPrint("Worng input. Use \"help\" if you're unsure what to do.\n");
 }
 
-void CChoiceContext::h_updateMind(string& sIdentifier, CPlayer* p)
+void CChoiceContext::h_updateStats(string& sIdentifier, CPlayer* p)
 {
-    std::string mind="";
-    for(auto it : p->getMinds())
+    std::string ability="";
+    for(size_t i=0; i<p->getAbbilities().size(); i++)
     {
-        if(fuzzy::fuzzy_cmp(func::returnToLower(it.first), sIdentifier) <= 0.2)
-            mind = it.first;
+        if(fuzzy::fuzzy_cmp(func::returnToLower(p->getAbbilities()[i]), sIdentifier) <= 0.2)
+            ability = p->getAbbilities()[i];
+        if(std::isdigit(sIdentifier[0]) && i == stoul(sIdentifier, nullptr, 0)-1)
+            ability = p->getAbbilities()[i];
     }
 
-    if(mind == "")
+    if(ability == "")
         p->appendPrint("Falsche Eingabe!\n");
 
     else
     {
-        p->getMinds()[mind].level++;
-        p->appendPrint(sIdentifier + " updated by 1\n");
+        p->setStat(ability, p->getStat(ability)+1);
+        p->appendPrint(ability + " updated by 1\n");
         int num = stoi(m_sObject)-1;
-        std::cout << "Object: " << m_sObject << "\nNum: " << num << std::endl;
         p->getContexts().erase("choice");
         if(num>0)
-            p->updateMinds(num);
+            p->updateStats(num);
     }
 }

@@ -38,12 +38,15 @@ COutput::COutput(std::string sAtts, CPlayer* p)
 
     if(atts.size()>2)
         m_jDeps = nlohmann::json::parse(atts[2]);
+    if(atts.size()>3) {
+        nlohmann::json j = nlohmann::json::parse(atts[3]);
+        mUpdates = j.get<std::map<std::string, int>>();
+    }
 
     if(p == NULL)
         return;
 
     //check for "_" in speaker -> speaker is mind and has a depenency
-    std::cout << m_sSpeaker << ": ";
     std::vector<std::string> mind_val = func::split(m_sSpeaker, "_");
     if(mind_val.size() > 1)
     {
@@ -55,8 +58,6 @@ COutput::COutput(std::string sAtts, CPlayer* p)
         m_mind = std::make_pair(func::returnToLower(m_sSpeaker), 0);
     else
         m_mind = std::make_pair("", 0);
-
-    std::cout << m_mind.first << " -> " << m_mind.second << std::endl;
 }
 
 std::string COutput::getSpeaker() {
@@ -71,9 +72,16 @@ nlohmann::json COutput::getDeps() {
 
 std::string COutput::print(CPlayer* p)
 {
+    std::string sOutput = "";
+    for(auto it=mUpdates.begin(); it!=mUpdates.end(); it++) {
+        p->getMinds()[it->first].level += it->second;
+        sOutput += p->getMinds()[it->first].color + it->first + " updated!\n" + WHITE;
+    }
+    mUpdates.clear();
+
     //No dependencies -> simple print
     if(m_jDeps.size() == 0 && m_mind.first=="")
-        return m_sSpeaker + " " + m_sText + "\n";
+        return m_sSpeaker + " " + m_sText + "\n" + sOutput;
     
     //Normal dependencies don't match -> return nothing
     if(p->checkDependencies(m_jDeps) == false)
@@ -82,10 +90,10 @@ std::string COutput::print(CPlayer* p)
     //Mind dependencies -> check if they math -> print with "success" || return nothing
     if(m_mind.second != 0) {
         if(p->getMinds()[m_mind.first].level >= m_mind.second)
-            return p->getMinds()[m_mind.first].sColor + m_sSpeaker + " (level " + std::to_string(m_mind.second) + ": Erfolg) " + WHITE + m_sText + "\n";
+            return p->getMinds()[m_mind.first].color + m_sSpeaker + " (level " + std::to_string(m_mind.second) + ": Erfolg) " + WHITE + m_sText + "\n" + sOutput;
         else
             return "";
     }
 
-    return m_sSpeaker + " " + m_sText + "\n";
-} 
+    return m_sSpeaker + " " + m_sText + "\n" + sOutput;
+}

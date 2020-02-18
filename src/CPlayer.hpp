@@ -56,6 +56,8 @@ private:
     minds m_minds;
     inventory m_inventory;
     equipment m_equipment;
+    
+    std::vector<std::string> m_abbilities;
 
     map<string, CPlayer*> m_players;
 
@@ -75,6 +77,7 @@ public:
     bool getFirstLogin();
     CFight* getFight();
     minds& getMinds();
+    std::vector<std::string> getAbbilities();
     equipment& getEquipment();
     CWorld* getWorld();
     CContextStack& getContexts();
@@ -124,12 +127,10 @@ public:
 
     //Minds and level
     void addEP(int ep);
-    void updateMinds(int numPoints); 
+    void updateStats(int numPoints); 
     void showMinds();
+    void showStats();
     bool checkDependencies(nlohmann::json);
-
-    //Stats
-    string showStats();
 
     //Others
     void checkHighness();

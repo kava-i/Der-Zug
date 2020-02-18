@@ -117,8 +117,6 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePla
     return m_curPlayer->getPrint(); 
 }
 
-    
-
 // ***** FUNCTIONS ***** //
 bool CGame::reloadPlayer(string sID)
 {

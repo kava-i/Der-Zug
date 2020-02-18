@@ -61,9 +61,11 @@ void CStandardContext::h_show(string& sIdentifier, CPlayer* p) {
     else if(sIdentifier == "solved quests")
         p->showQuests(true);
     else if(sIdentifier == "stats")
-        p->appendPrint(p->showStats());
+        p->showStats();
     else if(sIdentifier == "mind")
         p->showMinds();
+    else if(sIdentifier == "attacks")
+        p->appendPrint(p->printAttacks());
     else if(sIdentifier == "all")
         p->appendPrint(p->getRoom()->showAll());
     else
@@ -188,7 +190,7 @@ void CStandardContext::h_startTutorial(string&, CPlayer* p)
     std::cout << "3.\n";
     p->setNewQuest("zug_nach_moskau");
     p->setNewQuest("tutorial");
-    p->updateMinds(1);
+    p->updateStats(1);
 }
 
 void CStandardContext::h_try(string& sIdentifier, CPlayer* p)
