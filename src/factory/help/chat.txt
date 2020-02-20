@@ -1,1 +1,1 @@
-Tippe "end" um das Gespräch zu benden. Alternativ, kann auch eine Nachricht hinzugefügt werden. "end bis bald" wird bei deinem gesprächspartnet [Dein Name]: "bis bald" [Gespräch beendet] ausgeben.
+Tippe "[end]" um das Gespräch zu benden. Alternativ, kann auch eine Nachricht hinzugefügt werden. "[end] bis bald" wird bei deinem gesprächspartnet [Dein Name]: "bis bald" [Gespräch beendet] ausgeben.

@@ -331,7 +331,7 @@ void CPlayer::showStats() {
     std::string max = std::max_element(m_stats.begin(), m_stats.end(), [](const auto& it1, const auto& it2) {return it1.first.size() < it2.first.size();})->first;
 
     for(const auto& it : m_stats)
-        m_sPrint += it.first + ": " + (*[](size_t x){std::string s=" "; for(size_t i=0; i<x;i++) s+="-"; return s+" ";})(max.size()-it.first.size()) + std::to_string(it.second) + "\n";
+        m_sPrint += it.first + ": " + (*[](size_t x){std::string s=" "; for(size_t i=0; i<x;i++) {s+="\t";std::cout<<"ADEED\n";} return s+" ";})(max.size()/it.first.size()) + std::to_string(it.second) + "\n";
 }
 
 bool CPlayer::checkDependencies(nlohmann::json jDeps)

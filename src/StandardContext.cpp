@@ -190,7 +190,6 @@ void CStandardContext::h_startTutorial(string&, CPlayer* p)
     std::cout << "3.\n";
     p->setNewQuest("zug_nach_moskau");
     p->setNewQuest("tutorial");
-    p->updateStats(1);
 }
 
 void CStandardContext::h_try(string& sIdentifier, CPlayer* p)
