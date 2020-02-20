@@ -41,7 +41,7 @@ void CContext::throw_event(event e, CPlayer* p)
 
 // ***** EVENTHANDLER ***** //
 void CContext::h_help(string& sIdentifier, CPlayer* p) {
-    std::ifstream read("factory/help/standard.txt");
+    std::ifstream read("factory/help/"+m_sHelp);
 
     string str((std::istreambuf_iterator<char>(read)),
                  std::istreambuf_iterator<char>());

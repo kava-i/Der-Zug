@@ -5,6 +5,7 @@ CGameContext::CGameContext()
 {
     //set permeable
     m_permeable = true;
+    m_curPermeable = m_permeable;
     
     //Set handlers
     add_listener("reload_game", &CContext::h_reloadGame);

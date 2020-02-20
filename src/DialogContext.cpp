@@ -7,8 +7,14 @@ CDialogContext::CDialogContext(CPlayer* p)
     m_permeable = false;
     m_curPermeable = m_permeable;
 
+    //Set help
+    m_sHelp = "dialog.txt";
+
     //Set first state
     setCurState("START", p);
+
+    //Add handlers
+    add_listener("help", &CContext::h_help);
 }
 
 //Modify handlers

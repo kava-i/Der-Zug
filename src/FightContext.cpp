@@ -7,6 +7,9 @@ CFightContext::CFightContext(std::map<std::string, CAttack*> attacks)
     m_permeable = false;
     m_curPermeable = m_permeable;
 
+    //Set Help
+    m_sHelp = "fight.txt"; 
+
     //Add listeners
     add_listener("show", &CContext::h_show);
     add_listener("help", &CContext::h_help);

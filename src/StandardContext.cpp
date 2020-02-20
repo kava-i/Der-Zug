@@ -7,6 +7,9 @@ CStandardContext::CStandardContext()
     m_permeable = false;
     m_curPermeable = m_permeable;
 
+    //Set help
+    m_sHelp = "standard.txt";
+
     //Add listeners
     add_listener("show", &CContext::h_show);
     add_listener("examine", &CContext::h_examine);

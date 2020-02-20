@@ -25,6 +25,8 @@ protected:
     bool m_curPermeable;
     bool m_block;
 
+    std::string m_sHelp;
+
 public: 
     
     CContext() {}
