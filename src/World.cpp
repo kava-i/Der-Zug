@@ -120,11 +120,12 @@ CWorld::objectmap CWorld::characterFactory(nlohmann::json j_characters, CPlayer*
         else
             newDialog = dialogFactory("defaultDialog", p);
 
-        //Create attacks
+        //Create items and attacks
+        map<string, CItem*> items = parseRoomItems(j_char);
         map<string, CAttack*> attacks = parsePersonAttacks(j_char);
 
         //Create character and add to maps
-        m_characters[j_char["id"]] = new CCharacter(j_char, newDialog, attacks, p);
+        m_characters[j_char["id"]] = new CCharacter(j_char, newDialog, items, attacks, p);
         mapChars[j_char["id"]] = j_char["name"];
     }
 

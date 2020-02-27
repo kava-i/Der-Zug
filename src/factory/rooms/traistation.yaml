@@ -44,6 +44,9 @@
     - name: Konstantin Thron
       id: konstantin_thron
       dialog: konstantinDialog
+      items:
+      - from: basic_cigaretts
+        id: konstantin_cigaretts
     - name: Passant1
       id: passant4
       description: 

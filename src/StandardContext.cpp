@@ -56,7 +56,7 @@ void CStandardContext::h_show(string& sIdentifier, CPlayer* p) {
     else if(sIdentifier == "details")
         p->appendPrint(p->getRoom()->showDetails());
     else if(sIdentifier == "inventory")
-        p->printInventory();
+        p->appendPrint(p->printInventory("", 1));
     else if(sIdentifier == "equiped")
         p->printEquiped();
     else if(sIdentifier == "quests")
@@ -114,7 +114,9 @@ void CStandardContext::h_startDialog(string& sIdentifier, CPlayer* p)
 }
 
 void CStandardContext::h_take(string& sIdentifier, CPlayer* p) {
-    if(p->getRoom()->getItem(sIdentifier) == NULL)
+    if(sIdentifier.find("all") == 0)
+        p->addAll();
+    else if(p->getRoom()->getItem(sIdentifier) == NULL)
         p->appendPrint("Item not found.\n");
     else
         p->addItem(p->getRoom()->getItem(sIdentifier));
@@ -125,6 +127,8 @@ void CStandardContext::h_consume(string& sIdentifier, CPlayer* p) {
         if(p->getItem(sIdentifier)->callFunction(p) == false)
             p->appendPrint("This item is not consumeable.\n");
     }
+    else
+        p->appendPrint("Item not in inventory! (use \"show inventory\" to see your items.)\n");
 }
 
 void CStandardContext::h_equipe(string& sIdentifier, CPlayer* p) {

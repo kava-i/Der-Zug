@@ -7,6 +7,7 @@
   options: 
     1: "Sehr geehrtet Herr Thron, dürfte ich mich ihnen vorstellen?;{};nein"
     2: "Sie sind der Mann, der diesen...;{};redeschwall"
+    3: "Zeig mir deine Ware.;{};trade"
 
 - id: nein
   text: 
@@ -30,6 +31,10 @@
 - id: redeschwall3
   text: 
   - "HERR REDESCHWALL;... sie sollte das erste Bauwerk im Stil der Russischen Renaissance werden. Thons Gebäude wurde ein Prestigeprojekt für andere Kirchen in Sankt Petersburg und ganz Russland. 1830 beendete er sein ehrgeizigstes Projekt seiner Zeit, das der Christ-Erlöser-Kathedrale in Moskau. Dutzende weiterer Kirchen und Kathedralen entstanden daraufhin in verschiedenen russischen Städten, wie in Suomenlinna (heute Finnland), Jelez, Arsamas, Tomsk, Rostow am Don und Krasnojarsk im von ihm geprägten neobyzantinischen Baustil. Thon baute das prächtige Ipatios-Kloster in Kostroma um, errichtete hier eine Kirche und baute das Romanow-Palais um.\nDu wendest dich ab und gehst..."
+
+- id: trade 
+  text:
+  - "HERR THRON; Klaromatikus! Schau dir an, was ich leckeres habe!"
  
 - id: ende
   text: 

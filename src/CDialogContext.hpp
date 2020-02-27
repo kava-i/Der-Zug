@@ -7,8 +7,9 @@ class CDialogContext : public CContext
 {
 private: 
     string m_curState;
+    std::string m_dialogPartner;
 public:
-    CDialogContext(CPlayer* p);
+    CDialogContext(CPlayer* p, std::string partner);
 
     //Addhandlers
     void setCurState(std::string, CPlayer*);;

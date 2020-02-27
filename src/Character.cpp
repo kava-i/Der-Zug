@@ -1,6 +1,6 @@
 #include "CCharacter.hpp"
 
-CCharacter::CCharacter(nlohmann::json jAtts, SDialog* newDialog, attacks newAttacks, CPlayer* p) {
+CCharacter::CCharacter(nlohmann::json jAtts, SDialog* newDialog, std::map<std::string, CItem*> mapItems, attacks newAttacks, CPlayer* p) {
 
     m_sName = jAtts["name"];
     m_sID = jAtts["id"];
@@ -13,6 +13,8 @@ CCharacter::CCharacter(nlohmann::json jAtts, SDialog* newDialog, attacks newAtta
     m_dialog = newDialog;
     m_attacks = newAttacks;
 
+    for(auto &item : mapItems)
+        addItem(item.second);
 }
 
 // *** GETTER *** //

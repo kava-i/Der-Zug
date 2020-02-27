@@ -36,6 +36,7 @@ public:
     string getName();
     string getFunction();
     size_t getEffekt();
+    int getValue();
     
     // *** SETTER *** //
     template <typename T> void setAttribute(std::string sName, T t1)

@@ -51,10 +51,8 @@ private:
     CFight* m_curFight;
 
     typedef map<string, SMind> minds;
-    typedef map<string, vector<CItem*>> inventory;
     typedef map<string, CItem*> equipment;
     minds m_minds;
-    inventory m_inventory;
     equipment m_equipment;
     
     std::vector<std::string> m_abbilities;
@@ -110,15 +108,13 @@ public:
     void changeRoom(string sIdentifier);
     void changeRoom(CRoom* newRoom);
 
-    //Item and inventory
-    void printInventory();
+    //Equiping items
     void printEquiped();
-    void addItem(CItem* item);
-    void removeItem(string sItemName);
-    CItem* getItem(string sName); 
-    CItem* getItem_byID(string sID);
     void equipeItem(CItem*, string sType);
     void dequipeItem(string sType);
+
+    void addAll();
+    void addItem(CItem* item);
 
     //Quests
     void showQuests(bool solved);

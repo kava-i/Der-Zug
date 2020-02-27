@@ -1,7 +1,7 @@
 #include "CDialogContext.hpp"
 #include "CPlayer.hpp"
 
-CDialogContext::CDialogContext(CPlayer* p)
+CDialogContext::CDialogContext(CPlayer* p, std::string partner)
 {
     //Set permeability
     m_permeable = false;
@@ -12,6 +12,7 @@ CDialogContext::CDialogContext(CPlayer* p)
 
     //Set first state
     setCurState("START", p);
+    m_dialogPartner = partner;
 
     //Add handlers
     add_listener("help", &CContext::h_help);
@@ -37,6 +38,8 @@ void CDialogContext::h_call(string& sIdentifier, CPlayer* p)
     string nextState = p->getDialog()->states[m_curState]->getNextState(sIdentifier, p);
     if(nextState == "")
         p->appendPrint("No valid option.\n");
+    else if(nextState == "trade")
+        p->appendPrint("Started trading!\n");
     else
     {
         setCurState(nextState, p);

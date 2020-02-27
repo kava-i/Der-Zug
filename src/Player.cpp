@@ -95,7 +95,7 @@ void CPlayer::endFight() {
 void CPlayer::startDialog(string sCharacter)
 {
     m_dialog = m_world->getCharacters()[sCharacter]->getDialog();
-    m_contextStack.insert(new CDialogContext(this), 1, "dialog");
+    m_contextStack.insert(new CDialogContext(this, sCharacter), 1, "dialog");
     throw_event(m_dialog->states["START"]->callState(this));
 }
 
@@ -153,65 +153,34 @@ void CPlayer::changeRoom(CRoom* newRoom)
 
 
 // *** Item and inventory *** //
-void CPlayer::printInventory() {
-    m_sPrint += m_sName + "'s Inventory: \n";
-
-    string sEquipment = "Equipment: ";
-    string sConsume = "Food and Drinks: ";
-    string sOthers = "Others: ";
-    for(auto it : m_inventory) {
-        if(it.second[0]->getAttribute<string>("type").find("equipe") != string::npos)
-            sEquipment += std::to_string(it.second.size()) + "x " + it.second[0]->getName() + ", ";
-
-        else if(it.second[0]->getAttribute<string>("type").find("consume") != string::npos)
-            sConsume += std::to_string(it.second.size()) + "x " + it.second[0]->getName() + ", ";
-
-        else 
-            sOthers += std::to_string(it.second.size()) + "x " + it.second[0]->getName() + ", ";
+void CPlayer::addAll()
+{
+    for(auto it : m_room->getItems()) {
+        if(it.second->getAttribute<bool>("hidden") == false)
+            addItem(it.second);
     }
-    m_sPrint += sEquipment +"\n"+ sConsume +"\n" + sOthers + "\n";
 }
 
+void CPlayer::addItem(CItem* item)
+{
+    std::string sType = item->getAttribute<string>("type");
+    sType.erase(sType.find("_"));
+    m_inventory[sType][item->getName()].push_back(item); 
+    m_sPrint += item->getName() + " added to " + m_sName + "'s inventory.\n";
+    m_room->getItems().erase(item->getID());
+}
 
 void CPlayer::printEquiped() {
-    for(auto it : m_equipment) {
-        if(it.second != NULL)
-            m_sPrint += it.first + ": " + it.second->getName() + "\n"; 
-        else
-            m_sPrint += it.first + ": empty handed as it seems.\n";
-    }
+
+    auto getElem = [](CItem* item){ 
+        std::string str; 
+        if(item) str = item->getName(); 
+        else str="empty handed as it seems.";
+        return str;
+    };
+    m_sPrint += table(m_equipment, getElem, "width:20%");
 }
 
-void CPlayer::addItem(CItem* item) {
-    m_inventory[item->getAttribute<string>("name")].push_back(item);
-    m_sPrint += item->getAttribute<string>("name") + " added to " + m_sName + "'s inventory.\n";
-    m_room->getItems().erase(item->getAttribute<string>("id"));
-}
-
-void CPlayer::removeItem(string sItemName) {
-    m_inventory[sItemName].pop_back();
-    if(m_inventory[sItemName].size() == 0)
-        m_inventory.erase(sItemName);
-}
-
-CItem* CPlayer::getItem(string sName)
-{
-    for(auto it : m_inventory) {
-        if(fuzzy::fuzzy_cmp(it.second[0]->getName(), sName) <= 0.2) 
-            return it.second[0];
-    }
-    m_sPrint += "Item not in inventory! (use \"show inventory\" to see your items.)\n";
-    return NULL;
-}
-
-CItem* CPlayer::getItem_byID(string id)
-{
-    for(auto it : m_inventory) {
-        if(it.second[0]->getID() == id)
-            return it.second[0];
-    }
-    return NULL;
-}
 
 void CPlayer::equipeItem(CItem* item, string sType)
 {
@@ -320,18 +289,16 @@ void CPlayer::showMinds()
     m_sPrint += " --- " + m_sName + " --- \n"
             += "Level: " + std::to_string(m_level) + "\n"
             += "Ep: " + std::to_string(m_ep) + "/20.\n";
-    for(auto it : m_minds)
-        m_sPrint += it.first + ": level(" + std::to_string(it.second.level) + ")\n";
-    m_sPrint+="\n";
+
+    auto lamda = [](SMind mind) { return std::to_string(mind.level);};
+    m_sPrint += table(m_minds, lamda);
 }
 
 void CPlayer::showStats() {
+
     m_sPrint += "Name: " + m_sName + "\n";
-
-    std::string max = std::max_element(m_stats.begin(), m_stats.end(), [](const auto& it1, const auto& it2) {return it1.first.size() < it2.first.size();})->first;
-
-    for(const auto& it : m_stats)
-        m_sPrint += it.first + ": " + (*[](size_t x){std::string s=" "; for(size_t i=0; i<x;i++) {s+="\t";std::cout<<"ADEED\n";} return s+" ";})(max.size()/it.first.size()) + std::to_string(it.second) + "\n";
+    auto getElem = [](int x){return std::to_string(x);};
+    m_sPrint += table(m_stats, getElem);
 }
 
 bool CPlayer::checkDependencies(nlohmann::json jDeps)

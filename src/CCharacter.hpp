@@ -20,7 +20,7 @@ private:
     string m_sDescription;
 
 public:
-    CCharacter(nlohmann::json jAtts, SDialog* newDialog, attacks newAttacks, CPlayer* p);
+    CCharacter(nlohmann::json jAtts, SDialog* newDialog, std::map<std::string, CItem*> items, attacks newAttacks, CPlayer* p);
 
     // *** GETTER *** // 
     string getDescription();
