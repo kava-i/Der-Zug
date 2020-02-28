@@ -56,7 +56,7 @@ void CStandardContext::h_show(string& sIdentifier, CPlayer* p) {
     else if(sIdentifier == "details")
         p->appendPrint(p->getRoom()->showDetails());
     else if(sIdentifier == "inventory")
-        p->appendPrint(p->printInventory("", 1));
+        p->appendPrint(p->getInventory().printInventory("", 1));
     else if(sIdentifier == "equiped")
         p->printEquiped();
     else if(sIdentifier == "quests")
@@ -123,8 +123,8 @@ void CStandardContext::h_take(string& sIdentifier, CPlayer* p) {
 }
 
 void CStandardContext::h_consume(string& sIdentifier, CPlayer* p) {
-    if(p->getItem(sIdentifier) != NULL) {
-        if(p->getItem(sIdentifier)->callFunction(p) == false)
+    if(p->getInventory().getItem(sIdentifier) != NULL) {
+        if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
             p->appendPrint("This item is not consumeable.\n");
     }
     else
@@ -132,8 +132,8 @@ void CStandardContext::h_consume(string& sIdentifier, CPlayer* p) {
 }
 
 void CStandardContext::h_equipe(string& sIdentifier, CPlayer* p) {
-    if(p->getItem(sIdentifier) != NULL) {
-        if(p->getItem(sIdentifier)->callFunction(p) == false)
+    if(p->getInventory().getItem(sIdentifier) != NULL) {
+        if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
             p->appendPrint("This item is not equipable.\n");
     }
 }

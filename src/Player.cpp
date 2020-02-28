@@ -163,9 +163,7 @@ void CPlayer::addAll()
 
 void CPlayer::addItem(CItem* item)
 {
-    std::string sType = item->getAttribute<string>("type");
-    sType.erase(sType.find("_"));
-    m_inventory[sType][item->getName()].push_back(item); 
+    m_inventory.addItem(item);
     m_sPrint += item->getName() + " added to " + m_sName + "'s inventory.\n";
     m_room->getItems().erase(item->getID());
 }
@@ -178,7 +176,7 @@ void CPlayer::printEquiped() {
         else str="empty handed as it seems.";
         return str;
     };
-    m_sPrint += table(m_equipment, getElem, "width:20%");
+    m_sPrint += func::table(m_equipment, getElem, "width:20%");
 }
 
 
@@ -291,14 +289,14 @@ void CPlayer::showMinds()
             += "Ep: " + std::to_string(m_ep) + "/20.\n";
 
     auto lamda = [](SMind mind) { return std::to_string(mind.level);};
-    m_sPrint += table(m_minds, lamda);
+    m_sPrint += func::table(m_minds, lamda);
 }
 
 void CPlayer::showStats() {
 
     m_sPrint += "Name: " + m_sName + "\n";
     auto getElem = [](int x){return std::to_string(x);};
-    m_sPrint += table(m_stats, getElem);
+    m_sPrint += func::table(m_stats, getElem);
 }
 
 bool CPlayer::checkDependencies(nlohmann::json jDeps)

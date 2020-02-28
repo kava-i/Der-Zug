@@ -14,7 +14,7 @@ CCharacter::CCharacter(nlohmann::json jAtts, SDialog* newDialog, std::map<std::s
     m_attacks = newAttacks;
 
     for(auto &item : mapItems)
-        addItem(item.second);
+        m_inventory.addItem(item.second);
 }
 
 // *** GETTER *** //

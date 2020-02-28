@@ -49,12 +49,12 @@ void CChoiceContext::h_choose_equipe(string& sIdentifier, CPlayer* p)
     std::cout << "h_choose_equipe: " << sIdentifier << " " << m_sObject << std::endl;
     if(sIdentifier == "yes") {
         p->dequipeItem("weapon");
-        p->equipeItem(p->getItem_byID(m_sObject), "weapon");
+        p->equipeItem(p->getInventory().getItem_byID(m_sObject), "weapon");
         p->getContexts().erase("choice");
     }
 
     else if(sIdentifier == "no") {
-        p->appendPrint("You chose not to equipe " + p->getItem_byID(m_sObject)->getName() + ".\n");
+        p->appendPrint("You chose not to equipe " + p->getInventory().getItem_byID(m_sObject)->getName() + ".\n");
         p->getContexts().erase("choice");
     }
 
