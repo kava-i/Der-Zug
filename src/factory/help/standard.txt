@@ -2,8 +2,9 @@ Commands
 show [inventory, people, items, details, ...]   f.e. "show people"
 look [in, under, above, ....] [name of detail]  f.e. "look in small box"
 go to [name of exit]                            f.e. "go to Corridor" or "go Corridor" or "go back"
+go to [name of room, you already visited]       
 talk to [name of person]                        f.e. "talk to parsen" or "talk parsen"
-pick up [name of item]                          f.e. "pick up wine" or "pick wine"
+pick up [name of item]                          f.e. "pick up wine" or "pick wine" or "pick up all"
 drink [name of item in inventory]               f.e. "drink wine" 
 consume [name of item in inventory]             f.e. "consume cake"
 equipe [name of item inventory]                 f.e. "equipe sword"

@@ -20,6 +20,44 @@
     - name: Passant3
       id: passant3
       dialog: strangeGuysDialog
+  items:
+    - from: basic_book
+      id: hegel_book
+      description: Hegel, Phänemenologie des Geistes
+      hidden: true
+    - from: basic_stick
+      id: station_stick 
+      hidden: true
+    - from: basic_sword
+      id: station_sword
+      hidden: true
+    - from: basic_wine
+      id: station_wine
+      hidden: true
+    - from: basic_wine
+      id: station_wine2
+      hidden: true
+    - from: basic_cigaretts
+      id: station_cigaretts
+      hidden: true
+    - from: basic_cigaretts
+      id: station_cigaretts2
+      hidden: true
+
+  details:
+    - name: Small box
+      id: trainstation_small-box
+      description: A small wooden box stands in the left corner of the room.
+      look: in
+      items:
+        station_wine: Wine
+        station_wine2: Wine
+        station_cigaretts: A pack of Cigaretts
+        station_cigaretts2: A pack of Cigaretts
+        station_sword: Basic Sword
+        station_stick: Stick
+        hegel_book: Book
+
 
 - name: Gleise
   id: bahnhof_gleise
@@ -58,6 +96,14 @@
     - name: Passant3
       id: passant6
       dialog: strangeGuysDialog
+
+- name: Ausgang
+  id: ausgang
+  description:
+  - PERZEPTION;You have left this world
+  exits:
+    bahnhof_eingangshalle: Eingangshalle
+  characters:
 
 - name: Toiletten
   id: bahnhof_toiletten 
@@ -151,13 +197,4 @@
     - name: Passant3
       id: passant9
       dialog: strangeGuysDialog
-
-
-
-
-
-
-
-
-
 

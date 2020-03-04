@@ -25,7 +25,6 @@ void CContext::throw_event(event e, CPlayer* p)
     m_curPermeable = m_permeable;
     m_block = false;
 
-
     if(m_eventmanager.count(e.first) == 0) {
         if(m_permeable == false)
             error(p);
@@ -33,7 +32,7 @@ void CContext::throw_event(event e, CPlayer* p)
     }
         
     for(auto it : m_eventmanager[e.first]) {
-        if(m_block ==true)
+        if(m_block == true)
             break;
         (this->*it)(e.second, p);
     }

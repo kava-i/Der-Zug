@@ -49,6 +49,7 @@ public:
     void h_help(string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
+    virtual void h_find(string&, CPlayer*) {}
     virtual void h_show             (string&, CPlayer*) {} 
     virtual void h_examine          (string&, CPlayer*) {} 
     virtual void h_look             (string&, CPlayer*) {}
@@ -88,6 +89,18 @@ public:
 
     // *** DIALOG CONTEXT *** //
     virtual void h_call(string&, CPlayer*) {}
+
+    // *** TRADECONTEXT *** //
+    virtual void h_chooseSell(string&, CPlayer*) {}
+    virtual void h_chooseBuy(string&, CPlayer*) {}
+    virtual void h_decideSell(string&, CPlayer*) {}
+    virtual void h_decideBuy(string&, CPlayer*) {}
+    virtual void h_sell(string&, CPlayer*) {}
+    virtual void h_buy(string&, CPlayer*) {}
+    virtual void h_switchLeft(string&, CPlayer*) {}
+    virtual void h_switchRight(string&, CPlayer*) {}
+    virtual void h_switchInventory(string&, CPlayer*) {}
+    virtual void h_exit(string&, CPlayer*) {}
 
     // *** CHATCONTEXT *** //
     virtual void h_send(string&, CPlayer*) {}

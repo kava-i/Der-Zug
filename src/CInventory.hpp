@@ -7,6 +7,7 @@
 #include <string>
 #include "CItem.hpp"
 #include "func.hpp"
+#include "fuzzy.hpp"
 
 class CInventory
 {
@@ -24,7 +25,8 @@ public:
     CItem* getItem(std::string sName); 
     CItem* getItem(int a, int b);
     CItem* getItem_byID(std::string sID);
-
+    size_t getNumRomsInColum(size_t collum);
+    bool empty();
 };
 
 #endif

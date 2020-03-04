@@ -38,7 +38,7 @@
    characters:
 
  - name: "Compartment D"
-   id: Compartment-d
+   id: compartment-d
    description: 
     - PERZEPTION;An empty compartment. Its cold here
    exits:

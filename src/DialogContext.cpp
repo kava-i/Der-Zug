@@ -39,7 +39,7 @@ void CDialogContext::h_call(string& sIdentifier, CPlayer* p)
     if(nextState == "")
         p->appendPrint("No valid option.\n");
     else if(nextState == "trade")
-        p->appendPrint("Started trading!\n");
+        p->startTrade(m_dialogPartner);
     else
     {
         setCurState(nextState, p);

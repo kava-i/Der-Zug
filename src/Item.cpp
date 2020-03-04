@@ -18,6 +18,7 @@ CItem::CItem(nlohmann::json jBasic, nlohmann::json jItem)
 }
 
 // *** GETTTER *** //
+nlohmann::json CItem::getAttributes() { return m_jAtts; }
 string CItem::getID()      { return getAttribute<string>("id"); }
 string CItem::getName()    { return getAttribute<string>("name"); }
 string CItem::getFunction(){ return m_jAtts.value("function", m_jAtts["type"]); } 
@@ -54,7 +55,7 @@ void CItem::consumeDrug(CPlayer* p)
     p->setStat("highness", p->getStat("highness") + getEffekt());
     if(!p->checkEventExists("highness"))
         p->addTimeEvent("highness", 2, &CPlayer::t_highness);
-    p->getInventory().removeItem(m_jAtts["name"]);
+    p->getInventory().removeItem(getName());
     p->appendPrint("You consume drug: " + getName() + ". Highness inceased by " + std::to_string(getEffekt()) + ".\n");
 }
 

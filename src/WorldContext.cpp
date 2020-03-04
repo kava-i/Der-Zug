@@ -35,7 +35,9 @@ void CWorldContext::h_addItem(string& sIdentifier, CPlayer* p) {
 
 void CWorldContext::h_recieveMoney(string& sIdentifier, CPlayer* p) {
     p->setStat("gold", p->getStat("gold") + stoi(sIdentifier));
-    p->appendPrint(Webcmd::set_color(Webcmd::color::GREEN) + "+3 Schilling" + Webcmd::set_color(Webcmd::color::WHITE) + "\n");
+    p->appendPrint(Webcmd::set_color(Webcmd::color::GREEN) + "+" + sIdentifier + " Schiling" + Webcmd::set_color(Webcmd::color::WHITE) + "\n");
+
+   m_curPermeable = false; 
 }
 
 void CWorldContext::h_endFight(string& sIdentifier, CPlayer* p) {

@@ -18,6 +18,7 @@
 #include "CStandardContext.hpp"
 #include "CFightContext.hpp"
 #include "CDialogContext.hpp"
+#include "CTradeContext.hpp"
 #include "CChoiceContext.hpp"
 #include "CQuestContext.hpp"
 #include "CChatContext.hpp"
@@ -58,6 +59,8 @@ private:
     std::vector<std::string> m_abbilities;
 
     map<string, CPlayer*> m_players;
+
+    std::map<std::string, bool> m_vistited;
 
     CContextStack m_contextStack;
     Webconsole* _cout;
@@ -107,6 +110,7 @@ public:
     //Room
     void changeRoom(string sIdentifier);
     void changeRoom(CRoom* newRoom);
+    std::vector<std::string> findWay(CRoom* room, std::string sRoomdID);
 
     //Equiping items
     void printEquiped();
@@ -115,6 +119,8 @@ public:
 
     void addAll();
     void addItem(CItem* item);
+
+    void startTrade(std::string partner);
 
     //Quests
     void showQuests(bool solved);
@@ -134,6 +140,36 @@ public:
     string getObject(objectmap& mapObjects, string sIdentifier);    
     CPlayer* getPlayer(string sIdentifier);
     void addSelectContest(objectmap& mapObjects, std::string sEventType);
+
+    template<typename T1, typename T2> 
+    std::string getObject2(std::map<std::string, T1>& mapObjects, std::string sName, T2& lamda)
+    {
+        if(mapObjects.count(sName) > 0)
+            return sName;
+
+        std::vector<std::pair<std::string, double>> matches;
+        
+        for(auto[i, it] = std::tuple{1, mapObjects.begin()}; it!=mapObjects.end(); i++, it++) {
+            if(std::isdigit(sName[0]) && (i==stoi(sName)))
+                return it->first;
+            double match = fuzzy::fuzzy_cmp(lamda(it->second), sName);
+            if(match <= 0.2) 
+                matches.push_back(std::make_pair(it->first, match));
+        }
+
+        if(matches.size() == 0)
+            return "";
+
+        //Find best match.
+        size_t pos=0;
+        for(auto[i, max] = std::tuple{size_t{0}, 0.3}; i<matches.size(); i++) {
+            if(matches[i].second < max) {
+                pos=i;
+                max=matches[i].second;
+            }
+        }
+        return matches[pos].first;
+    }
 
     typedef std::pair<std::string, std::string> event;
     void throw_event(string sInput);

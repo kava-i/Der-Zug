@@ -32,6 +32,7 @@ public:
         return m_jAtts[sName].get<T>();
     }
 
+    nlohmann::json getAttributes();
     string getID();
     string getName();
     string getFunction();

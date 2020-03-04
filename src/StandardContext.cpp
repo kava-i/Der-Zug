@@ -22,6 +22,8 @@ CStandardContext::CStandardContext()
     add_listener("dequipe", &CContext::h_dequipe);
     add_listener("help", &CContext::h_help);
 
+    add_listener("find", &CContext::h_find);
+
     //Rooms
     add_listener("go", &CContext::h_firstZombieAttack);
     add_listener("go", &CContext::h_moveToHospital, 0);
@@ -34,7 +36,20 @@ CStandardContext::CStandardContext()
     add_listener("try", &CContext::h_try, 0);
 }
 
+void CStandardContext::h_find(string& sIdentifier, CPlayer*p) {
 
+    auto lamda = [](CRoom* room) { return room->getName(); }; 
+    std::string roomID = p->getObject2(p->getWorld()->getRooms(), sIdentifier, lamda);
+
+    std::vector<std::string> path = p->findWay(p->getRoom(), roomID);
+    if(path.size() > 0) {
+        p->appendPrint("Path to " + sIdentifier + ": \n");
+        for(const auto& it : path)
+            p->appendPrint(it + "\n");
+    }
+    else
+        p->appendPrint("Room not found.\n");
+}
 
 // **** HANDLER **** //
 
@@ -56,7 +71,7 @@ void CStandardContext::h_show(string& sIdentifier, CPlayer* p) {
     else if(sIdentifier == "details")
         p->appendPrint(p->getRoom()->showDetails());
     else if(sIdentifier == "inventory")
-        p->appendPrint(p->getInventory().printInventory("", 1));
+        p->appendPrint(p->getInventory().printInventory());
     else if(sIdentifier == "equiped")
         p->printEquiped();
     else if(sIdentifier == "quests")

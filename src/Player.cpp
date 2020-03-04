@@ -39,6 +39,11 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks newAttacks)
     //Initiazize world
     m_world = new CWorld(this);
 
+    //Initialize all rooms as not visited
+    for(const auto& it : m_world->getRooms())
+        m_vistited[it.second->getID()] = false;
+    m_vistited[m_room->getID()] = true;
+
     for(auto it : m_world->getQuests())
         m_contextStack.insert(new CQuestContext(it.second), 3, it.first);
 
@@ -134,14 +139,26 @@ void CPlayer::changeRoom(string sIdentifier)
     //Get selected room
     string room = getObject(getRoom()->getExtits(), sIdentifier);
 
-    //Check if room was found
-    if(room == "") {
-        m_sPrint += "Room/ exit not found\n";
+    if(room != "") {
+        changeRoom(getWorld()->getRooms()[room]);
         return;
     }
 
-    //Print description and change players current room
-    changeRoom(getWorld()->getRooms()[room]);
+    auto lamda = [](CRoom* room) { return room->getName(); };
+    room = getObject2(m_world->getRooms(), sIdentifier, lamda);
+    std::vector<std::string> path = findWay(m_room, room);
+
+    if(path.size() > 0)
+    {
+        std::string events;
+        for(const auto& it : path)
+            events += "go " + it + ";";
+        std::cout << "GENERATED EVENTS: " << events << std::endl;
+        throw_event(events);
+    }
+    
+    else
+        m_sPrint += "Room not found.\n";
 }
 
 void CPlayer::changeRoom(CRoom* newRoom)
@@ -149,6 +166,52 @@ void CPlayer::changeRoom(CRoom* newRoom)
     m_sPrint += newRoom->showEntryDescription(getWorld()->getCharacters());
     m_lastRoom = m_room; 
     m_room = newRoom;
+    m_vistited[m_room->getID()] = true;
+}
+
+std::vector<std::string> CPlayer::findWay(CRoom* room, std::string roomID)
+{
+    if(room->getID() == roomID)
+        return {};
+
+    std::queue<CRoom*> q;
+    std::map<std::string, std::string> parents;
+
+    for(auto it : m_world->getRooms())
+        parents[it.second->getID()] = "";
+
+    std::cout << "Started searching.\n";
+    q.push(room);
+    parents[room->getID()] = room->getID();
+    while(!q.empty())
+    {
+        CRoom* node = q.front(); 
+        q.pop();
+        if(node->getID() == roomID)
+            break;
+        for(auto& it : node->getExtits())
+        {
+            if(parents[it.first] == "" && m_vistited[it.first] == true)
+            {
+                q.push(m_world->getRooms()[it.first]);
+                parents[it.first] = node->getID();
+            }
+        } 
+    }
+
+    if(parents[roomID] == "") {
+        std::cout << "Room not found.\n";
+        return {};
+    }
+    else
+        std::cout << "Room found... converting\n";
+
+    std::vector<std::string> path = { roomID };
+    while(path.back() != room->getID())
+        path.push_back(parents[path.back()]);
+    path.pop_back();
+    std::reverse(std::begin(path), std::end(path));
+    return path;
 }
 
 
@@ -177,6 +240,13 @@ void CPlayer::printEquiped() {
         return str;
     };
     m_sPrint += func::table(m_equipment, getElem, "width:20%");
+}
+
+void CPlayer::startTrade(std::string partner)
+{
+    m_sPrint += "Started to trade with " + partner + ".\n";
+
+    m_contextStack.insert(new CTradeContext(this, partner), 1, "trade");
 }
 
 
@@ -374,7 +444,6 @@ string CPlayer::doLogin(string sName, string sPassword)
     if(sName == m_sName && sPassword == m_sPassword) return m_sID;
     else return "";
 }
-
 
 
 string CPlayer::getObject(objectmap& mapObjects, string sIdentifier)

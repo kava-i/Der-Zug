@@ -10,6 +10,8 @@ class CStandardContext : public CContext
 public:
     CStandardContext();
 
+    void h_find(string&, CPlayer*);
+
     //Handler
     void h_show             (string& sIdentiier, CPlayer* p);
     void h_examine          (string& sIdentiier, CPlayer* p);
