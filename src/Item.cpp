@@ -17,8 +17,6 @@ CItem::CItem(nlohmann::json jBasic, nlohmann::json jItem, std::string sID)
     }
 
     m_jAtts["id"] = sID;
-
-    std::cout << "in constructor: " << m_jAtts["id"] << std::endl;
 }
 
 // *** GETTTER *** //

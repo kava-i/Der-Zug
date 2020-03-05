@@ -72,12 +72,15 @@ nlohmann::json COutput::getDeps() {
 
 std::string COutput::print(CPlayer* p)
 {
+    //Update mind attributes
     std::string sOutput = "";
     for(auto it=mUpdates.begin(); it!=mUpdates.end(); it++) {
         p->getMinds()[it->first].level += it->second;
         sOutput += p->getMinds()[it->first].color + it->first + " updated!\n" + WHITE;
     }
     mUpdates.clear();
+
+    // *** Print text *** // 
 
     //No dependencies -> simple print
     if(m_jDeps.size() == 0 && m_mind.first=="")
@@ -90,7 +93,7 @@ std::string COutput::print(CPlayer* p)
     //Mind dependencies -> check if they math -> print with "success" || return nothing
     if(m_mind.second != 0) {
         if(p->getMinds()[m_mind.first].level >= m_mind.second)
-            return p->getMinds()[m_mind.first].color + m_sSpeaker + " (level " + std::to_string(m_mind.second) + ": Erfolg) " + WHITE + m_sText + "\n" + sOutput;
+            return "\n" + p->getMinds()[m_mind.first].color + m_sSpeaker + " (level " + std::to_string(m_mind.second) + ": Erfolg) " + WHITE + m_sText + "\n" + sOutput;
         else
             return "";
     }
