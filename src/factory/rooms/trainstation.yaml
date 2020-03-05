@@ -21,42 +21,22 @@
       id: passant3
       dialog: strangeGuysDialog
   items:
-    - from: basic_book
-      id: hegel_book
-      description: Hegel, Phänemenologie des Geistes
-      hidden: true
-    - from: basic_stick
-      id: station_stick 
-      hidden: true
-    - from: basic_sword
-      id: station_sword
-      hidden: true
-    - from: basic_wine
-      id: station_wine
-      hidden: true
-    - from: basic_wine
-      id: station_wine2
-      hidden: true
-    - from: basic_cigaretts
-      id: station_cigaretts
-      hidden: true
-    - from: basic_cigaretts
-      id: station_cigaretts2
-      hidden: true
-
+    basic_book: { id: hegel_book, description: Phänemenologie des Geistes, hidden: true }
+    basic_stick: { hidden: true }
+    basic_sword: { hidden: true }
+    basic_wine: { hidden: true, amount: 2 }
+    basic_cigaretts: { hidden: true, amount: 2 }
   details:
     - name: Small box
       id: trainstation_small-box
       description: A small wooden box stands in the left corner of the room.
       look: in
       items:
-        station_wine: Wine
-        station_wine2: Wine
-        station_cigaretts: A pack of Cigaretts
-        station_cigaretts2: A pack of Cigaretts
-        station_sword: Basic Sword
-        station_stick: Stick
-        hegel_book: Book
+        trainstation_wine: Wine
+        trainstation_cigaretts: A pack of Cigaretts
+        trainstation_sword: Basic Sword
+        trainstation_stick: Stick
+        trainstation_hegel_book: Book
 
 
 - name: Gleise
@@ -83,8 +63,8 @@
       id: konstantin_thron
       dialog: konstantinDialog
       items:
-      - from: basic_cigaretts
-        id: konstantin_cigaretts
+        basic_cigaretts: { }
+        basic_wine: { }
     - name: Passant1
       id: passant4
       description: 

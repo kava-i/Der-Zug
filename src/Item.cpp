@@ -6,15 +6,19 @@ CItem::CItem(nlohmann::json jBasic)
     m_jAtts = jBasic;
 }
 
-CItem::CItem(nlohmann::json jBasic, nlohmann::json jItem)
+CItem::CItem(nlohmann::json jBasic, nlohmann::json jItem, std::string sID)
 {
     m_jAtts = jBasic;
 
     for(auto it=jItem.begin(); it!=jItem.end(); ++it) {
-        if(it.key() == "from")
+        if(it.key() == "from" && it.key() == "amount")
             continue;
         m_jAtts[it.key()] = it.value();
     }
+
+    m_jAtts["id"] = sID;
+
+    std::cout << "in constructor: " << m_jAtts["id"] << std::endl;
 }
 
 // *** GETTTER *** //

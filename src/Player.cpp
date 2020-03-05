@@ -345,7 +345,7 @@ void CPlayer::updateStats(int numPoints)
 {
     m_sPrint+= "Du hast " + std::to_string(numPoints) + " Punkte zu vergeben.\n";
 
-    std::string sError = "Nummer auswählen, oder \"mind\" (ohne Artikel!)\n";
+    std::string sError = "Nummer, oder Attribut wählen.\n";
     CChoiceContext* context = new CChoiceContext(std::to_string(numPoints), sError);
     for(size_t i=0; i<m_abbilities.size(); i++)
     {
