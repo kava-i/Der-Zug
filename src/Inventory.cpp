@@ -37,13 +37,6 @@ void CInventory::removeItem(std::string sItemName)
                 it.second.erase(sItemName);
         }
     }
-
-    for(auto it : m_inventory) {
-        std::cout << it.first << ": ";
-        for(auto jt : it.second)
-            std::cout << jt.first << ", ";
-        std::cout << std::endl;
-    }
 }
 
 CItem* CInventory::getItem(std::string sName)
@@ -71,11 +64,10 @@ CItem* CInventory::getItem_byID(string sID)
 {
     for(auto it : m_inventory) {
         for(auto jt : it.second) {
-	    for(auto kl : jt.second )
-	    {
-		if(kl->getID() == sID)
-		    return kl;
-	    }
+	        for(auto kl : jt.second ) {
+		        if(kl->getID() == sID)
+		            return kl;
+	        }
         }
     }
     return NULL;

@@ -57,8 +57,8 @@ void CItem::consumeDrug(CPlayer* p)
     p->setStat("highness", p->getStat("highness") + getEffekt());
     if(!p->checkEventExists("highness"))
         p->addTimeEvent("highness", 2, &CPlayer::t_highness);
-    p->getInventory().removeItem(getName());
     p->appendPrint("You consume drug: " + getName() + ". Highness inceased by " + std::to_string(getEffekt()) + ".\n");
+    p->getInventory().removeItem(getID());
 }
 
 

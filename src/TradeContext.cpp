@@ -42,9 +42,7 @@ void CTradeContext::h_decideSell(std::string& sIdentifier, CPlayer* p)
         CItem* item = new CItem(m_curItem->getAttributes());
         std::cout << "VALUE: " << item->getValue() << std::endl;
         m_tradingPartner->getInventory().addItem(item);
-        p->getInventory().removeItem(m_curItem->getName());
-        std::cout << "VALUE: " << p->getInventory().getItem(item->getName()) << std::endl;
-        delete m_curItem; 
+        p->getInventory().removeItem(m_curItem->getID());
     }
 
     else
@@ -60,8 +58,7 @@ void CTradeContext::h_decideBuy(std::string& sIdentifier, CPlayer* p)
         p->appendPrint("PERZEPTION: Du hast " + m_curItem->getName() + " gekauft.\n\n");
         p->setStat("gold", p->getStat("gold") - m_curItem->getValue());
         p->getInventory().addItem(new CItem(m_curItem->getAttributes()));
-        m_tradingPartner->getInventory().removeItem(m_curItem->getName());
-        delete m_curItem; 
+        m_tradingPartner->getInventory().removeItem(m_curItem->getID());
     }
 
     else
