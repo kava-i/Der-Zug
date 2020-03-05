@@ -218,10 +218,16 @@ std::vector<std::string> CPlayer::findWay(CRoom* room, std::string roomID)
 // *** Item and inventory *** //
 void CPlayer::addAll()
 {
-    for(auto it : m_room->getItems()) {
-        if(it.second->getAttribute<bool>("hidden") == false)
-            addItem(it.second);
+    for(auto it = m_room->getItems().begin(); it != m_room->getItems().end();)
+    {
+        if((*it).second->getAttribute<bool>("hidden") == false) 
+	{
+            addItem((*(it++)).second);
+	    continue;
+	}
+	++it;
     }
+	
 }
 
 void CPlayer::addItem(CItem* item)
