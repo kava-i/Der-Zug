@@ -28,8 +28,8 @@
 #include "func.hpp"
 
 
-#include "JanGeschenk/Webconsole.hpp"
-#include "JanGeschenk/Webgame.hpp"
+#include <JanGeschenk/Webconsole.hpp>
+#include <JanGeschenk/Webgame.hpp>
  
 using std::string;
 using std::map;

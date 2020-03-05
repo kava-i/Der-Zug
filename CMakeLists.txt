@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 3.10)
 
 # set the project name and version
 project(bebarengan-sepur VERSION 1.0)
-if(NOT EXISTS $ENV{HOME}/ciavelli_packages/ciavelli.cmake)
-    execute_process(COMMAND pip --user install ciavelli)
-endif()
-include($ENV{HOME}/ciavelli_packages/ciavelli.cmake)
 
 find_package(Boost)
 enable_testing()
@@ -14,7 +10,7 @@ enable_testing()
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 SET(CMAKE_CXX_FLAGS "-Wall -Werror -O3")
-set(EXECUTABLE_OUTPUT_PATH ../bin)
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 INCLUDE_DIRECTORIES(websocketpp ${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 file(GLOB SOURCES_PROGRAMM
@@ -25,13 +21,6 @@ file(GLOB SOURCES_PROGRAMM
 add_executable(txtadventure ${SOURCES_PROGRAMM})
 
 add_executable(txtadventure_server EXCLUDE_FROM_ALL ${SOURCES_PROGRAMM})
-add_git_cmake_project(NAME Catch2 USEDBY txtadventure
-    URL "https://github.com/catchorg/Catch2")
-add_git_cmake_project(NAME websocketpp USEDBY txtadventure
-    URL "https://github.com/zaphoyd/websocketpp" 
-    BRANCH "develop")
-add_git_cmake_project(NAME JanGeschenk USEDBY txtadventure
-    URL "https://github.com/ShadowItaly/JanGeschenk")
 
 target_compile_definitions(txtadventure_server PRIVATE _COMPILE_FOR_SERVER_=1)
 add_test(MainTest ../bin/txtadventure -d true)
