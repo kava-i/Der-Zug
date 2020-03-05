@@ -84,7 +84,10 @@ std::string COutput::print(CPlayer* p)
 
     //No dependencies -> simple print
     if(m_jDeps.size() == 0 && m_mind.first=="")
+    {
+        std::cout << m_sSpeaker + " " + m_sText + "\n" + sOutput << std::endl;
         return m_sSpeaker + " " + m_sText + "\n" + sOutput;
+    }
     
     //Normal dependencies don't match -> return nothing
     if(p->checkDependencies(m_jDeps) == false)
