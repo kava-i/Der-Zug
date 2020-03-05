@@ -71,8 +71,11 @@ CItem* CInventory::getItem_byID(string sID)
 {
     for(auto it : m_inventory) {
         for(auto jt : it.second) {
-            if(jt.second[0]->getID() == sID)
-                return jt.second.back();
+	    for(auto kl : jt.second )
+	    {
+		if(kl->getID() == sID)
+		    return kl;
+	    }
         }
     }
     return NULL;
