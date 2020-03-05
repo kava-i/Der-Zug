@@ -22,7 +22,7 @@ protected:
 public:
 
     CItem(nlohmann::json jBasic);
-    CItem(nlohmann::json jBasic, nlohmann::json jItem);
+    CItem(nlohmann::json jBasic, nlohmann::json jItem, std::string sID="");
 
     // *** GETTER *** // 
     template <typename T> T getAttribute(std::string sName)

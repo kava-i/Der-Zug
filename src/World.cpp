@@ -40,6 +40,8 @@ void CWorld::roomFactory(string sPath, CPlayer* p)
     nlohmann::json j_rooms;
     read >> j_rooms;
     read.close();
+
+    std::string sArea = sPath.substr(sPath.rfind("/")+1, sPath.find(".")-(sPath.rfind("/")+1));
     
     for(auto j_room : j_rooms )
     {
@@ -47,7 +49,7 @@ void CWorld::roomFactory(string sPath, CPlayer* p)
         objectmap mapChars = characterFactory(j_room["characters"], p);
 
         //Parse items
-        map<string, CItem*> mapItems = parseRoomItems(j_room);
+        map<string, CItem*> mapItems = parseRoomItems(j_room, sArea);
 
         //Parse details
         map<string, CDetail*> mapDetails = detailFactory(j_room);
@@ -96,14 +98,24 @@ void CWorld::itemFactory(std::string sPath) {
 }
 
 
-map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room)
+map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, std::string id)
 {
     map<string, CItem*> mapItems;
     if(j_room.count("items") == 0)
         return mapItems;
 
-    for(auto j_item : j_room["items"])
-        mapItems[j_item["id"]] = new CItem(m_items[j_item["from"]], j_item);
+    map<string, nlohmann::json> items = j_room["items"].get<map<string, nlohmann::json>>();
+    for(auto it : items) 
+    {
+        std::string sID = id + "_" + it.second.value("id", it.first.substr(it.first.find("_")+1));
+
+        mapItems[sID] = new CItem(m_items[it.first], it.second, sID);
+
+        for(size_t i=2; i<=it.second.value("amount", 0u); i++) {
+            std::string newID = sID + std::to_string(i);
+            mapItems[newID] = new CItem(m_items[it.first], it.second, newID);
+        }
+    }
 
     return mapItems;
 } 
@@ -121,7 +133,7 @@ CWorld::objectmap CWorld::characterFactory(nlohmann::json j_characters, CPlayer*
             newDialog = dialogFactory("defaultDialog", p);
 
         //Create items and attacks
-        map<string, CItem*> items = parseRoomItems(j_char);
+        map<string, CItem*> items = parseRoomItems(j_char, j_char["id"]);
         map<string, CAttack*> attacks = parsePersonAttacks(j_char);
 
         //Create character and add to maps

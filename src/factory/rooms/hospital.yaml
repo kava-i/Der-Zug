@@ -8,22 +8,11 @@
     hospital_stairs: Stairs
   characters:
   items:
-    - from: basic_book
-      id: hegel_book
-      description: Hegel, Phänemenologie des Geistes
-    - from: basic_stick
-      id: hospital_stick 
-    - from: basic_sword
-      id: hospital_sword
-    - from: basic_wine
-      id: hospital_wine
-      hidden: true
-    - from: basic_wine
-      id: hospital_wine2
-      hidden: true
-    - from: basic_cigaretts
-      id: hospital_cigaretts
-      hidden: true
+    basic_book: { id: hegel_book, description: Hegel, Phänemenologie des Geistes }
+    basic_stick: { }
+    basic_sword: { }
+    basic_wine: { hidden: true, amount: 2}
+    basic_cigaretts: { hidden: true}
   details:
     - name: Small box
       id: hospital_small-box
@@ -31,7 +20,6 @@
       look: in
       items:
         hospital_wine: Wine
-        hospital_wine2: Wine
         hospital_cigaretts: A pack of Cigaretts
 
 - name: Stairs

@@ -111,6 +111,8 @@ string CRoom::look(string sWhere, string sWhat)
     string sOutput = "";
     for(auto detail : m_details)
     {
+        std::cout << "Detail: " << detail.first << std::endl;
+
         if(detail.second->getLook() == sWhere && fuzzy::fuzzy_cmp(detail.second->getName(), sWhat) <= 0.2)
         {
             size_t counter = 1;
@@ -123,6 +125,7 @@ string CRoom::look(string sWhere, string sWhat)
             sOutput += "You found ";
             for(auto it : detail.second->getItems()) {
                 
+                std::cout << "Item: " << it.first << std::endl;
                 sOutput += "a " + it.second + " (" + m_items[it.first]->getAttribute<string>("description") + ")";
                 if(counter == numItems-1) 
                     sOutput+= " and ";

@@ -70,7 +70,7 @@ public:
     //Items
     void itemFactory();
     void itemFactory(std::string sPath);
-    map<string, CItem*> parseRoomItems(nlohmann::json j_room);
+    map<string, CItem*> parseRoomItems(nlohmann::json j_room, std::string id);
 
     //Character, Dialog, Details
     map<string, CDetail*>  detailFactory(nlohmann::json j_room);
