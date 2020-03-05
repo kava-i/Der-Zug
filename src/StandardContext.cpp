@@ -202,6 +202,7 @@ void CStandardContext::h_exitTrainstation(string& sIdentifier, CPlayer* p)
     
     m_block=true;
 }
+
 void CStandardContext::h_startTutorial(string&, CPlayer* p)
 {
     std::cout << "1.\n";
