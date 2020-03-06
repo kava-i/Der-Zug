@@ -17,8 +17,8 @@ std::string CText::print()
     for(size_t i=0; i<m_texts.size(); i++)
         sOutput += m_texts[i]->print(m_player);
 
-    if(sOutput != "")
-        sOutput.erase(sOutput.end()-3,sOutput.end());
+   // if(sOutput != "")
+   //     sOutput.erase(sOutput.end()-3,sOutput.end());
     return sOutput;
 }
 
@@ -84,10 +84,7 @@ std::string COutput::print(CPlayer* p)
 
     //No dependencies -> simple print
     if(m_jDeps.size() == 0 && m_mind.first=="")
-    {
-        std::cout << m_sSpeaker + " " + m_sText + "\n" + sOutput << std::endl;
         return m_sSpeaker + " " + m_sText + "\n" + sOutput;
-    }
     
     //Normal dependencies don't match -> return nothing
     if(p->checkDependencies(m_jDeps) == false)

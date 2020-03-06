@@ -44,6 +44,6 @@ void CContext::h_help(string& sIdentifier, CPlayer* p) {
 
     string str((std::istreambuf_iterator<char>(read)),
                  std::istreambuf_iterator<char>());
-    p->appendPrint(str);
+    p->appendPrint("\nHELP: \n" + str);
 }
 

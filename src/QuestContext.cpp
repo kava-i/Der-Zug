@@ -44,7 +44,6 @@ void CQuestContext::initializeFunctions()
 // *** *** Zug nach Moskau *** *** //
 void CQuestContext::h_ticketverkaeufer(std::string& sIdentifier, CPlayer* p)
 {
-    std::cout << "h_ticketverkaeufer: " << p->getRoom()->getID() << ", " << sIdentifier << std::endl;
     if(p->getRoom()->getID() != "bahnhof_toiletten")
         return;
 
@@ -103,10 +102,7 @@ void CQuestContext::h_reden(std::string& sIdentifier, CPlayer* p)
     if(step->getSolved() == true)
     {
         for(size_t i=1; i<=9; i++)
-        {
-            std::cout << "Changing dialog for: passant" << i << std::endl;
             p->getWorld()->getCharacters()["passant"+std::to_string(i)]->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2", p));
-        }
         p->getContexts().erase(m_quest->getID());
     }
 }
@@ -132,7 +128,6 @@ void CQuestContext::h_geldauftreiben(std::string& sIdentifier, CPlayer* p)
     if(m_quest->getActive() == true)
         p->appendPrint("Wundervoll, genug Geld, um das Ticket zu kaufen!\n");
 
-    std::cout << "in h_geldauftreiben() \n";
     p->questSolved(m_quest->getID(), "1geldauftreiben");
     p->getContexts().erase(m_quest->getID());
 }

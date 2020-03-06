@@ -32,17 +32,17 @@ void CInventory::removeItemByID(std::string sItemID)
 {
     for(auto it : m_inventory) {
         for(auto jt : it.second) {
-	    for(auto it2 = jt.second.begin(); it2 != jt.second.end(); ++it2)
-	    {
-		if((*it2)->getID() == sItemID)
-		{
-		    if(jt.second.size() == 1)
-			jt.second.clear();
-		    else
-			it2 = jt.second.erase(it2);
-		    return;
-		}
-	    }
+            for(auto it2 = jt.second.begin(); it2 != jt.second.end(); ++it2)
+            {
+                if((*it2)->getID() == sItemID)
+                {
+                    if(jt.second.size() == 1)
+                        jt.second.clear();
+                    else
+                        it2 = jt.second.erase(it2);
+                    return;
+                }
+            }
         }
     }
 }
