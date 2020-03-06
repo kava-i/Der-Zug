@@ -13,8 +13,8 @@ CTradeContext::CTradeContext(CPlayer* p, std::string partner)
 
     m_sHelp = "trade.txt";
 
-    print(p);
     h_help(m_sHelp, p); 
+    print(p);
 }
 
 
