@@ -135,6 +135,7 @@ public:
     bool checkDependencies(nlohmann::json);
 
     //Others
+    void checkCommands();
     void checkHighness();
     typedef std::map<string, string> objectmap;
     string getObject(objectmap& mapObjects, string sIdentifier);    

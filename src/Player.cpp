@@ -56,6 +56,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks newAttacks)
 CRoom* CPlayer::getRoom()   { return m_room; }
 
 string CPlayer::getPrint()  { 
+    checkCommands();
     checkHighness();
     m_sPrint+="\n\n";
     return m_sPrint; 
@@ -407,6 +408,19 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps)
     
 
 // *** Others *** // 
+void CPlayer::checkCommands()
+{
+    while(m_sPrint.find("{") != std::string::npos)
+    {
+        size_t pos  = m_sPrint.find("{");
+        size_t pos2 = m_sPrint.find("}"); 
+        std::string cmd = m_sPrint.substr(pos+1, pos2-(pos+1));
+        std::string replace = "";
+        if(cmd.find("name") != std::string::npos)
+            replace = getName();
+        m_sPrint = m_sPrint.substr(0, pos) + replace + m_sPrint.substr(pos2+1);
+    }
+}
 void CPlayer::checkHighness()
 {
     if(m_stats["highness"]==0)

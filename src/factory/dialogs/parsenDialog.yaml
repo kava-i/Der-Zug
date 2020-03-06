@@ -23,7 +23,7 @@
   - "PARSEN;Ich sagte, wie schmeckt Zitrone. Der Durstlöscher." 
   - "PERZEPTION;Du schaust in deine Hände, zwischen denen du einen Durstöschler, Sorte: Zitrone hälltst. Dir fällt ein, dass du ihn vor der Fahrt noch gekauft hattest."
   options:
-    1: "Lecker. Echt ein leckerer Durstlöscher. Ich bin Anna. Sehr erfreut.;{};bekanntschaft"
+    1: "Lecker. Echt ein leckerer Durstlöscher. Ich bin {name}. Sehr erfreut.;{};bekanntschaft"
 
 - id: bekanntschaft 
   text: 

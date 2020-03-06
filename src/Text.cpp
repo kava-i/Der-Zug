@@ -17,8 +17,9 @@ std::string CText::print()
     for(size_t i=0; i<m_texts.size(); i++)
         sOutput += m_texts[i]->print(m_player);
 
-   // if(sOutput != "")
-   //     sOutput.erase(sOutput.end()-3,sOutput.end());
+    if(sOutput != "")
+        sOutput.pop_back();
+
     return sOutput;
 }
 
@@ -93,7 +94,7 @@ std::string COutput::print(CPlayer* p)
     //Mind dependencies -> check if they math -> print with "success" || return nothing
     if(m_mind.second != 0) {
         if(p->getMinds()[m_mind.first].level >= m_mind.second)
-            return "\n" + p->getMinds()[m_mind.first].color + m_sSpeaker + " (level " + std::to_string(m_mind.second) + ": Erfolg) " + WHITE + m_sText + "\n" + sOutput;
+            return p->getMinds()[m_mind.first].color + m_sSpeaker + " (level " + std::to_string(m_mind.second) + ": Erfolg) " + WHITE + m_sText + "\n" + sOutput;
         else
             return "";
     }
