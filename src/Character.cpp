@@ -18,6 +18,10 @@ CCharacter::CCharacter(nlohmann::json jAtts, SDialog* newDialog, std::map<std::s
 }
 
 // *** GETTER *** //
-string CCharacter::getDescription() {return m_text->print(); }
-
+string CCharacter::getDescription() 
+{
+    std::string str = m_text->print();
+    std::cout << "IN GETTER: " << str << std::endl; 
+    return str; 
+}
 

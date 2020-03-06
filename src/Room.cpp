@@ -32,10 +32,8 @@ void CRoom::setPlayers(objectmap& onlinePlayers) { m_players = onlinePlayers; }
 string CRoom::showEntryDescription(std::map<std::string, CCharacter*>& mapChars)
 {
     string sDesc = m_sEntry + m_text->print() + "\n";
-    for(auto it : m_characters) {
-        std::cout << it.first << "\n";
+    for(auto it : m_characters)
         sDesc.append(mapChars[it.first]->getDescription());
-    }
     return sDesc;
 }
 

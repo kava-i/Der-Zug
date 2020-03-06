@@ -17,8 +17,8 @@ std::string CText::print()
     for(size_t i=0; i<m_texts.size(); i++)
         sOutput += m_texts[i]->print(m_player);
 
-    if(sOutput != "")
-        sOutput.erase(sOutput.end()-3,sOutput.end());
+   // if(sOutput != "")
+   //     sOutput.erase(sOutput.end()-3,sOutput.end());
     return sOutput;
 }
 
