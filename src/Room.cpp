@@ -1,15 +1,19 @@
 #include "CRoom.hpp" 
 
-CRoom::CRoom(string sName, string sID, CText* text, string sEntry, objectmap exits, objectmap characters, std::map<string, CItem*> items, std::map<string, CDetail*> details)
+CRoom::CRoom(std::string sArea, nlohmann::json jAtts, CText* text, objectmap characters, std::map<string, CItem*> items, std::map<string, CDetail*> details)
 {
-    m_sName = sName;
-    m_sID = sID;
+    m_sArea = sArea;
+    m_sName = jAtts["name"];
+    m_sID = jAtts["id"];
+    m_sEntry = jAtts.value("entry", "");
+
+    objectmap mapExits;
+    m_exists = jAtts.value("exits", mapExits); 
+
     m_text = text;
-    m_sEntry = sEntry;
-    m_exists = exits;
     m_characters = characters;
     m_items = items;
-    m_details = details;
+    m_details = details; 
 }
 
 
@@ -19,6 +23,7 @@ string CRoom::getName()         { return m_sName; }
 string CRoom::getID()           { return m_sID; }
 string CRoom::getDescription()  { return m_text->print(); }
 string CRoom::getEntry()        { return m_sEntry; }
+string CRoom::getArea()         { return m_sArea; }
 CRoom::objectmap& CRoom::getExtits()        { return m_exists; }
 CRoom::objectmap& CRoom::getCharacters()    { return m_characters; }
 std::map<string, CItem*>& CRoom::getItems()  { return m_items; }

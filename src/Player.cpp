@@ -154,7 +154,6 @@ void CPlayer::changeRoom(string sIdentifier)
         std::string events;
         for(const auto& it : path)
             events += "go " + it + ";";
-        std::cout << "GENERATED EVENTS: " << events << std::endl;
         events.pop_back();
         throw_event(events);
     }
@@ -182,7 +181,6 @@ std::vector<std::string> CPlayer::findWay(CRoom* room, std::string roomID)
     for(auto it : m_world->getRooms())
         parents[it.second->getID()] = "";
 
-    std::cout << "Started searching.\n";
     q.push(room);
     parents[room->getID()] = room->getID();
     while(!q.empty())
@@ -193,7 +191,7 @@ std::vector<std::string> CPlayer::findWay(CRoom* room, std::string roomID)
             break;
         for(auto& it : node->getExtits())
         {
-            if(parents[it.first] == "" && m_vistited[it.first] == true)
+            if(parents[it.first] == "" && m_vistited[it.first] == true && node->getArea() == m_room->getArea())
             {
                 q.push(m_world->getRooms()[it.first]);
                 parents[it.first] = node->getID();

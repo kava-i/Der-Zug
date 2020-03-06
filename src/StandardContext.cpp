@@ -172,7 +172,7 @@ void CStandardContext::h_firstZombieAttack(string& sIdentifier, CPlayer* p)
 
     //Create fight
     p->setFight(new CFight(p, p->getWorld()->getCharacters()["hospital_zombie1"]));
-    delete_listener("go", 2);
+    delete_listener("go", 3);
 }
 
 void CStandardContext::h_moveToHospital(string& sIdentifier, CPlayer* p)

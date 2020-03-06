@@ -19,6 +19,7 @@ private:
     string m_sID;
     CText* m_text;
     string m_sEntry;
+    string m_sArea;
     
     typedef std::map<string, std::string> objectmap;
     objectmap m_exists;
@@ -29,13 +30,14 @@ private:
     std::map<string, CDetail*> m_details;
 
 public:
-    CRoom(string sName, string sID, CText* text, string sEntry, objectmap exits, objectmap characters, std::map<string, CItem*> items, std::map<string, CDetail*> details);
+    CRoom(string sArea, nlohmann::json jAtts, CText* text, objectmap characters, std::map<string, CItem*> items, std::map<string, CDetail*> details);
 
     // *** getter *** // 
     string getName();
     string getID();
     string getDescription();
     string getEntry();
+    string getArea(); 
     objectmap& getExtits();
     objectmap& getCharacters();
     std::map<string, CItem*>& getItems();

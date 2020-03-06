@@ -46,7 +46,9 @@ void CWorld::roomFactory(string sPath, CPlayer* p)
     for(auto j_room : j_rooms )
     {
         //Parse characters 
-        objectmap mapChars = characterFactory(j_room["characters"], p);
+        objectmap mapChars;
+        if(j_room.count("characters") > 0)
+            mapChars = characterFactory(j_room["characters"], p);
 
         //Parse items
         map<string, CItem*> mapItems = parseRoomItems(j_room, sArea);
@@ -55,7 +57,7 @@ void CWorld::roomFactory(string sPath, CPlayer* p)
         map<string, CDetail*> mapDetails = detailFactory(j_room);
         
         //Create new room
-        m_rooms[j_room["id"]] = new CRoom(j_room["name"], j_room["id"], new CText(j_room["description"], p), j_room.value("entry", ""), j_room["exits"], mapChars, mapItems, mapDetails);
+        m_rooms[j_room["id"]] = new CRoom(sArea, j_room, new CText(j_room["description"], p), mapChars, mapItems, mapDetails);
     }
 }
 
