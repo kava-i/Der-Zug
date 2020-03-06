@@ -30,16 +30,22 @@ void CInventory::addItem(CItem* item)
 
 void CInventory::removeItemByID(std::string sItemID)
 {
-    for(auto it : m_inventory) {
-        for(auto jt : it.second) {
-	    for(auto it2 = jt.second.begin(); it2 != jt.second.end(); ++it2)
+    for(auto &it : m_inventory) {
+        for(auto jt = it.second.begin(); jt != it.second.end(); ++jt) {
+	    for(auto it2 = (*jt).second.begin(); it2 != (*jt).second.end(); ++it2)
 	    {
 		if((*it2)->getID() == sItemID)
 		{
-		    if(jt.second.size() == 1)
-			jt.second.clear();
+		    std::cout<<"Perfect erase now!!!!"<<std::endl;
+
+		    if((*jt).second.size() == 1)
+		    {
+			std::cout<<"right case"<<std::endl;
+			(*jt).second.clear();
+			it.second.erase(jt);
+		    }
 		    else
-			it2 = jt.second.erase(it2);
+			it2 = (*jt).second.erase(it2);
 		    return;
 		}
 	    }
