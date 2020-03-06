@@ -42,6 +42,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks newAttacks)
     //Initialize all rooms as not visited
     for(const auto& it : m_world->getRooms())
         m_vistited[it.second->getID()] = false;
+    m_room = m_world->getRooms()[m_room->getID()];
     m_vistited[m_room->getID()] = true;
 
     for(auto it : m_world->getQuests())
