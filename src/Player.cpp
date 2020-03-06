@@ -154,6 +154,7 @@ void CPlayer::changeRoom(string sIdentifier)
         for(const auto& it : path)
             events += "go " + it + ";";
         std::cout << "GENERATED EVENTS: " << events << std::endl;
+        events.pop_back();
         throw_event(events);
     }
     
