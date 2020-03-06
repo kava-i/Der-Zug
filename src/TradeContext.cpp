@@ -56,6 +56,11 @@ void CTradeContext::h_decideBuy(std::string& sIdentifier, CPlayer* p)
 {
     if(sIdentifier == "yes")
     {
+	if(p->getStat("gold") < m_curItem->getValue())
+	{
+	    p->appendPrint("PERZEPTION: Du hast nicht genuegend Geld um "+m_curItem->getName()+" zu kaufen");
+	    return;
+	}
         p->appendPrint("PERZEPTION: Du hast " + m_curItem->getName() + " gekauft.\n\n");
         p->setStat("gold", p->getStat("gold") - m_curItem->getValue());
         p->getInventory().addItem(new CItem(m_curItem->getAttributes()));
@@ -82,7 +87,7 @@ void CTradeContext::h_sell(std::string& sIdentifier, CPlayer* p)
 
 void CTradeContext::h_buy(std::string& sIdentifier, CPlayer* p)
 {
-    m_curItem = p->getInventory().getItem(sIdentifier);
+    m_curItem = m_tradingPartner->getInventory().getItem(sIdentifier);
     if(m_curItem == NULL)
         p->appendPrint("LOGIK: Dieser Gegenstand befindet sich nicht in dem Inventar des Händlers, du kannst ihn logischerwiese dehalb nicht kaufen!\n");
     else
