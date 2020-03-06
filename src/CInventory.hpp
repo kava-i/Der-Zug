@@ -21,7 +21,7 @@ public:
 
     std::string printInventory(std::string color="", int highlight=-1);
     void addItem(CItem* item);
-    void removeItem(std::string sItemName);
+    void removeItemByID(std::string sItemName);
     CItem* getItem(std::string sName); 
     CItem* getItem(int a, int b);
     CItem* getItem_byID(std::string sID);

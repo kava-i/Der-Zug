@@ -28,17 +28,6 @@ void CInventory::addItem(CItem* item)
     m_inventory[sType][item->getName()].push_back(item); 
 }
 
-void CInventory::removeItem(std::string sItemName)
-{
-    for(auto& it : m_inventory) {
-        if(it.second.count(sItemName) > 0) {
-            it.second[sItemName].pop_back();
-            if(it.second[sItemName].size() == 0)
-                it.second.erase(sItemName);
-        }
-    }
-}
-
 void CInventory::removeItemByID(std::string sItemID)
 {
     for(auto it : m_inventory) {
