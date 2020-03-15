@@ -5,6 +5,7 @@
 #include "json.hpp"
 #include "func.hpp"
 #include "Webcmd.hpp"
+#include "CMind.hpp"
 
 class CPlayer;
 class COutput;
@@ -29,7 +30,7 @@ private:
     nlohmann::json m_jDeps;
     std::map<std::string, int> mUpdates;
 
-    std::pair<std::string, int> m_mind;
+    std::pair<SMind*, int> m_mind;
 
 public:
     COutput(std::string sAtts, CPlayer*);

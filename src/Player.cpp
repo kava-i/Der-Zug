@@ -28,7 +28,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks newAttacks)
     m_minds["perzeption"] = {"perzeption", BLUE, 0};
     m_minds["peddler"] = {"peddler", RED, 0};
     m_minds["drama"]  = {"drama", RED, 0};
-    m_minds["logik"]  = {"logik", RED, 0};
+    m_minds["logik"]  = {"logik", RED, 1};
 
     m_room = room;
     m_attacks = newAttacks;
@@ -59,7 +59,7 @@ CRoom* CPlayer::getRoom()   { return m_room; }
 string CPlayer::getPrint()  { 
     checkCommands();
     checkHighness();
-    m_sPrint+="\n\n";
+    m_sPrint+="\n...\n\n";
     return m_sPrint; 
 }
 

@@ -2,6 +2,7 @@
 #include "CPlayer.hpp"
 
 #define WHITE Webcmd::set_color(Webcmd::color::WHITE)
+#define DARK Webcmd::set_color(Webcmd::color::DARK)
 
 CText::CText(nlohmann::json jAttributes, CPlayer* p)
 {
@@ -35,7 +36,7 @@ COutput::COutput(std::string sAtts, CPlayer* p)
 
     std::vector<std::string> atts = func::split(sAtts, ";");
     m_sSpeaker = atts[0];
-    m_sText = atts[1];
+    m_sText = atts[1] + "$";
 
     if(atts.size()>2)
         m_jDeps = nlohmann::json::parse(atts[2]);
@@ -52,13 +53,16 @@ COutput::COutput(std::string sAtts, CPlayer* p)
     if(mind_val.size() > 1)
     {
         m_sSpeaker = mind_val[0];
-        m_mind = std::make_pair(func::returnToLower(m_sSpeaker), (int)mind_val[1][0] - 48);
+        m_mind = std::make_pair(&p->getMinds()[func::returnToLower(m_sSpeaker)], (int)mind_val[1][0] - 48);
     }
     //Check if speaker is mind
     else if(p->getMinds().count(func::returnToLower(m_sSpeaker)) > 0)
-        m_mind = std::make_pair(func::returnToLower(m_sSpeaker), 0);
+        m_mind = std::make_pair(&p->getMinds()[func::returnToLower(m_sSpeaker)], 0);
     else
-        m_mind = std::make_pair("", 0);
+        m_mind = std::make_pair(nullptr, 0);
+
+    if(m_mind.first != nullptr)
+        m_sSpeaker = m_mind.first->color + m_sSpeaker + WHITE;
 }
 
 std::string COutput::getSpeaker() {
@@ -84,8 +88,8 @@ std::string COutput::print(CPlayer* p)
     // *** Print text *** // 
 
     //No dependencies -> simple print
-    if(m_jDeps.size() == 0 && m_mind.first=="")
-        return m_sSpeaker + " " + m_sText + "\n" + sOutput;
+    if(m_jDeps.size() == 0 && m_mind.first==nullptr)
+        return m_sSpeaker + " -  " + m_sText + "\n" + sOutput;
     
     //Normal dependencies don't match -> return nothing
     if(p->checkDependencies(m_jDeps) == false)
@@ -93,11 +97,11 @@ std::string COutput::print(CPlayer* p)
 
     //Mind dependencies -> check if they math -> print with "success" || return nothing
     if(m_mind.second != 0) {
-        if(p->getMinds()[m_mind.first].level >= m_mind.second)
-            return p->getMinds()[m_mind.first].color + m_sSpeaker + " (level " + std::to_string(m_mind.second) + ": Erfolg) " + WHITE + m_sText + "\n" + sOutput;
+        if(m_mind.first->level >= m_mind.second)
+            return m_sSpeaker + DARK + " (level " + std::to_string(m_mind.second) + ": Erfolg) - " + WHITE + m_sText + "\n" + sOutput;
         else
             return "";
     }
 
-    return m_sSpeaker + " " + m_sText + "\n" + sOutput;
+    return m_sSpeaker + " - " + m_sText + "\n" + sOutput;
 }
