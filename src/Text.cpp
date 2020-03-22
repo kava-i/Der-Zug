@@ -16,7 +16,7 @@ std::string CText::print()
     std::string sOutput = "";
     
     for(size_t i=0; i<m_texts.size(); i++)
-        sOutput += m_texts[i]->print(m_player);
+        sOutput += func::returnSwapedString(m_texts[i]->print(m_player), m_player->getStat("highness"));
 
     if(sOutput != "")
         sOutput.pop_back();

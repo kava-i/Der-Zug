@@ -14,7 +14,6 @@ public:
 
     //Handler
     void h_show             (string& sIdentiier, CPlayer* p);
-    void h_examine          (string& sIdentiier, CPlayer* p);
     void h_look             (string& sIdentiier, CPlayer* p);
     void h_take             (string& sIdentiier, CPlayer* p);
     void h_consume          (string& sIdentiier, CPlayer* p);
@@ -22,6 +21,7 @@ public:
     void h_dequipe          (string& sIdentiier, CPlayer* p);
     void h_goTo             (string& sIdentiier, CPlayer* p);
     void h_startDialog      (string& sIdentiier, CPlayer* p);
+    void h_changeMode       (string& sIdentiier, CPlayer* p);
 
     //Rooms
     void h_firstZombieAttack (string& sIdentiier, CPlayer* p);

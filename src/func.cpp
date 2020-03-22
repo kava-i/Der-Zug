@@ -39,12 +39,52 @@ std::string func::returnToLower(std::string str)
         str2 += tolower(str[i], loc1);
     return str2;
 }
+
 std::string func::returnToUpper(std::string str)
 {
     std::locale loc1;
     std::string str2;
     for(unsigned int i=0; i<str.length(); i++)
         str2 += toupper(str[i], loc1);
+    return str2;
+}
+
+std::string func::returnSwapedString(std::string str, int val)
+{
+    if(val==0)
+        return str; 
+
+    srand(time(NULL));
+    std::vector<std::string> words = func::split(str, " ");
+
+    size_t limit = (11-val)/2;
+
+    size_t counter = 0;
+    for(auto& word : words)
+    {
+        if(counter%(limit)!= 0) {
+            counter++;
+            continue;
+        }
+
+        for(size_t i=0; i<word.size(); i++) {
+
+            if(i%(limit) != 0 || isalpha(word[i]) == false)
+                continue;
+            size_t num = rand() % word.size()-1;
+            if(!isalpha(word[num]))
+                continue;
+
+            char x = word[i];
+            word[i] = word[num];
+            word[num] = x;
+        }
+        counter++;
+    }
+
+    std::string str2 ="";
+    for(auto word : words)
+        str2+=word + " ";
     return str2;
 }
 

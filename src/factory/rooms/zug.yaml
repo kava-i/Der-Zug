@@ -6,7 +6,7 @@
     - "PERZEPTION;The compartment is empty. Empty, but one mysterious passenger: Parsen."
    entry: "You enter your appartment.\n"
    exits:
-     trainCorridor: Corridor
+     trainCorridor: { name: Korridor, prep: zum}
    characters:
      - name: "Parsen"
        id: parsen
@@ -22,7 +22,7 @@
    description: 
     - PERZEPTION;Another compartment. Two grumpy women are sitting together, playing cards.
    exits:
-     trainCorridor: Corridor
+     trainCorridor: { name: Korridor, prep: zum}
    characters:
      - name: "Old woman in pink"
        id: pink_woman
@@ -34,7 +34,7 @@
    description: 
     - PERZEPTION;An empty compartment.
    exits:
-     trainCorridor: Corridor
+     trainCorridor: { name: Korridor, prep: zum}
    characters:
 
  - name: "Compartment D"
@@ -42,7 +42,7 @@
    description: 
     - PERZEPTION;An empty compartment. Its cold here
    exits:
-     trainCorridor: Corridor
+     trainCorridor: { name: Korridor, prep: zum }
    characters:
 
  - name: "Corridor"
@@ -51,10 +51,10 @@
     - PERZEPTION;The corridor feels empty and silent. Red carbet is flushing the floor. And the other compartments are wispering in their oldfashioned skin.
    entry: "You leave the compartment and enter the corridor of the train.\n"
    exits: 
-     compartment-a: Compartment A
-     compartment-b: Compartment B
-     compartment-c: Compartment C
-     compartment-d: Compartment D
+     compartment-a: { name: Compartment A, prep: zum }
+     compartment-b: { name: Compartment B, prep: zum }
+     compartment-c: { name: Compartment C, prep: zum }
+     compartment-d: { name: Compartment D, prep: zum }
    characters:
      - name: "Pissing man"
        description: 

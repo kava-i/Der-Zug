@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include "CExit.hpp"
 #include "CText.hpp"
 #include "CCharacter.hpp"
 #include "CItem.hpp"
@@ -22,10 +23,11 @@ private:
     string m_sArea;
     
     typedef std::map<string, std::string> objectmap;
-    objectmap m_exists;
     objectmap m_characters;
+    objectmap m_exits_objectMap;
     objectmap m_players;
 
+    std::map<string, CExit*> m_exits;
     std::map<string, CItem*> m_items;
     std::map<string, CDetail*> m_details;
 
@@ -38,8 +40,9 @@ public:
     string getDescription();
     string getEntry();
     string getArea(); 
-    objectmap& getExtits();
     objectmap& getCharacters();
+    objectmap& getExtits2();
+    std::map<string, CExit*>& getExtits();
     std::map<string, CItem*>& getItems();
 
     // *** setter *** //
@@ -48,12 +51,12 @@ public:
     // *** various functions *** //
     string showEntryDescription(std::map<string, CCharacter*>& mapChars);
     string showDescription(std::map<string, CCharacter*>& mapChars); 
-    string showAll();
-    string showExits();
-    string showCharacters();
-    string showItems();
-    string showDetails();
-    string look(string sWhere, string sWhat);
+    string showAll(std::string sMode);
+    string showExits(std::string sMode);
+    string showCharacters(std::string sMode);
+    string showItems(std::string sMode);
+    string showDetails(std::string sMode);
+    string look(string sWhere, string sWhat, std::string sMode);
     CItem* getItem(string sPlayerChoice);
 };
     

@@ -51,7 +51,6 @@ public:
     // *** STANDARD CONTEXT *** //
     virtual void h_find(string&, CPlayer*) {}
     virtual void h_show             (string&, CPlayer*) {} 
-    virtual void h_examine          (string&, CPlayer*) {} 
     virtual void h_look             (string&, CPlayer*) {}
     virtual void h_take             (string&, CPlayer*) {}
     virtual void h_consume          (string&, CPlayer*) {}
@@ -59,6 +58,7 @@ public:
     virtual void h_dequipe          (string&, CPlayer*) {}
     virtual void h_goTo             (string&, CPlayer*) {}
     virtual void h_startDialog      (string&, CPlayer*) {}
+    virtual void h_changeMode       (string&, CPlayer*) {}
 
     //Rooms
     virtual void h_firstZombieAttack (string&, CPlayer*) {}

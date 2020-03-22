@@ -11,6 +11,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks newAttacks)
     m_sName = jAtts["name"];
     m_sPassword = jAtts["password"];
     m_firstLogin = true;
+    m_sMode = jAtts.value("mode", "prosa");
     m_sID = jAtts["id"];
 
     //Stats
@@ -58,13 +59,12 @@ CRoom* CPlayer::getRoom()   { return m_room; }
 
 string CPlayer::getPrint()  { 
     checkCommands();
-    checkHighness();
-    m_sPrint+="\n...\n\n";
-    return m_sPrint; 
+    return m_sPrint + "\n";
 }
 
-bool CPlayer::getFirstLogin() { return m_firstLogin; };
-CFight* CPlayer::getFight() { return m_curFight; };
+std::string CPlayer::getMode() { return m_sMode; }
+bool CPlayer::getFirstLogin() { return m_firstLogin; }
+CFight* CPlayer::getFight() { return m_curFight; }
 CPlayer::minds& CPlayer::getMinds() { return m_minds; }
 std::vector<std::string> CPlayer::getAbbilities() { return m_abbilities; }
 CPlayer::equipment& CPlayer::getEquipment()  { return m_equipment; }
@@ -84,7 +84,14 @@ void CPlayer::setWorld(CWorld* newWorld)    { m_world = newWorld; }
 
 // *** *** FUNCTIONS *** *** // 
 
-
+void CPlayer::changeMode()
+{
+    if(m_sMode == "prosa")
+        m_sMode = "list";
+    else
+        m_sMode = "prosa";
+    m_sPrint = "TECH GUY - Mode auf '" + m_sMode + "' gesetzt.\n";
+}
 // *** Fight *** //
 void CPlayer::setFight(CFight* newFight) { 
     m_curFight = newFight;
@@ -139,15 +146,16 @@ void CPlayer::changeRoom(string sIdentifier)
     }
 
     //Get selected room
-    string room = getObject(getRoom()->getExtits(), sIdentifier);
+    auto lamda1= [](CExit* exit) { return exit->getName(); };
+    string room = func::getObjectId(getRoom()->getExtits(), sIdentifier, lamda1);
 
     if(room != "") {
         changeRoom(getWorld()->getRooms()[room]);
         return;
     }
 
-    auto lamda = [](CRoom* room) { return room->getName(); };
-    room = getObject2(m_world->getRooms(), sIdentifier, lamda);
+    auto lamda2 = [](CRoom* room) { return room->getName(); };
+    room = func::getObjectId(m_world->getRooms(), sIdentifier, lamda2);
     std::vector<std::string> path = findWay(m_room, room);
 
     if(path.size() > 0)
@@ -420,79 +428,11 @@ void CPlayer::checkCommands()
         m_sPrint = m_sPrint.substr(0, pos) + replace + m_sPrint.substr(pos2+1);
     }
 }
-void CPlayer::checkHighness()
-{
-    if(m_stats["highness"]==0)
-        return; 
-
-    srand(time(NULL));
-    std::vector<string> words = func::split(m_sPrint, " ");
-
-    size_t limit = (11-m_stats["highness"])/2;
-
-    size_t counter = 0;
-    for(auto& word : words)
-    {
-        if(counter%(limit)!= 0) {
-            counter++;
-            continue;
-        }
-
-        for(size_t i=0; i<word.size(); i++) {
-
-            if(i%(limit) != 0 || isalpha(word[i]) == false)
-                continue;
-            size_t num = rand() % word.size()-1;
-            if(!isalpha(word[num]))
-                continue;
-
-            char x = word[i];
-            word[i] = word[num];
-            word[num] = x;
-        }
-        counter++;
-    }
-
-    m_sPrint="";
-    for(auto word : words)
-        m_sPrint+=word + " ";
-}
-
 
 string CPlayer::doLogin(string sName, string sPassword)
 {
     if(sName == m_sName && sPassword == m_sPassword) return m_sID;
     else return "";
-}
-
-
-string CPlayer::getObject(objectmap& mapObjects, string sIdentifier)
-{
-    if(mapObjects.count(sIdentifier) > 0)
-        return sIdentifier;
-
-    std::vector<std::pair<std::string, double>> matches;
-    
-    for(auto[i, it] = std::tuple{1, mapObjects.begin()}; it!=mapObjects.end(); i++, it++) {
-        if(std::isdigit(sIdentifier[0]) && (i==stoi(sIdentifier)))
-            return it->first;
-        double match = fuzzy::fuzzy_cmp(it->second, sIdentifier);
-        if(match <= 0.2) 
-            matches.push_back(std::make_pair(it->first, match));
-    }
-
-    if(matches.size() == 0)
-        return "";
-
-    //Find best match.
-    size_t pos=0;
-    for(auto[i, max] = std::tuple{size_t{0}, 0.3}; i<matches.size(); i++) {
-        if(matches[i].second < max) {
-            pos=i;
-            max=matches[i].second;
-        }
-    }
-    return matches[pos].first;
 }
 
 CPlayer* CPlayer::getPlayer(string sIdentifier)

@@ -48,6 +48,7 @@ private:
     string m_sPrint;
     string m_sPassword;
     bool m_firstLogin;
+    std::string m_sMode;
 
     CFight* m_curFight;
 
@@ -75,6 +76,7 @@ public:
     // *** GETTER *** // 
     CRoom* getRoom();
     string getPrint();
+    string getMode();
     bool getFirstLogin();
     CFight* getFight();
     minds& getMinds();
@@ -93,6 +95,8 @@ public:
     void setWorld(CWorld* newWorld);
 
     //*** FUNCTIONS *** // 
+
+    void changeMode();
 
     //Fight
     void setFight(CFight* fight);
@@ -136,41 +140,9 @@ public:
 
     //Others
     void checkCommands();
-    void checkHighness();
     typedef std::map<string, string> objectmap;
-    string getObject(objectmap& mapObjects, string sIdentifier);    
     CPlayer* getPlayer(string sIdentifier);
     void addSelectContest(objectmap& mapObjects, std::string sEventType);
-
-    template<typename T1, typename T2> 
-    std::string getObject2(std::map<std::string, T1>& mapObjects, std::string sName, T2& lamda)
-    {
-        if(mapObjects.count(sName) > 0)
-            return sName;
-
-        std::vector<std::pair<std::string, double>> matches;
-        
-        for(auto[i, it] = std::tuple{1, mapObjects.begin()}; it!=mapObjects.end(); i++, it++) {
-            if(std::isdigit(sName[0]) && (i==stoi(sName)))
-                return it->first;
-            double match = fuzzy::fuzzy_cmp(lamda(it->second), sName);
-            if(match <= 0.2) 
-                matches.push_back(std::make_pair(it->first, match));
-        }
-
-        if(matches.size() == 0)
-            return "";
-
-        //Find best match.
-        size_t pos=0;
-        for(auto[i, max] = std::tuple{size_t{0}, 0.3}; i<matches.size(); i++) {
-            if(matches[i].second < max) {
-                pos=i;
-                max=matches[i].second;
-            }
-        }
-        return matches[pos].first;
-    }
 
     typedef std::pair<std::string, std::string> event;
     void throw_event(string sInput);

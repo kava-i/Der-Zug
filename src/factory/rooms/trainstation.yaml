@@ -5,9 +5,9 @@
   description: 
     - PERZEPTION;Die Eingangshalle des sog. \"Moskauer Bahnhofs\" in Sankt Petersburg ist ein eindrucksvolles Gebilde. Tausende Passanten wandern umher, es herscht Trubel und Lärm und dazu glänzt die architektonische Meisterleistung eines Konstantin Thron von allen Seiten auf einen herab. Nach Norden geht es zu den Gleisen, im Süden liegt der Ausgang und nach Osten geht es zu einer Nebenhalle.
   exits:
-    bahnhof_gleise: Zu den Gleisen
-    bahnhof_nebenhalle: Nebenhalle
-    ausgang: Ausgang
+    bahnhof_gleise: {name: Fernzügen, prep: zu den}
+    bahnhof_nebenhalle: {name: Nebenhalle, prep: zur }
+    ausgang: { name: Ausgang, prep: zum }
   characters:
     - name: Passant1
       id: passant1
@@ -44,20 +44,20 @@
   description: 
     - PERZEPTION;Hier ist der Lärm Ohrenbetäubend, die Dampflokomotiven haben den ganzen bereich vernebelt. Schwitzige, ölbeschmierte Arbeiter reparieren notdürftig Züge, reiche Familien rennen in aufwändigen Gewändern ihren Packburschen davon, es herscht wildes Treiben. Richtung Noden liegen die Gleise des Bahnhofs, nach Süden geht es zurück zur Eingangshalle
   exits:
-    gleis1: "Gleis 1"
-    gleis2: "Gleis 2"
-    gleis3: "Gleis 3"
-    gleis4: "Gleis 4"
-    gleis5: "Gleis 5"
-    bahnhof_eingangshalle: Eingangshalle
+    gleis1: { name: "Gleis 1", prep: zu}
+    gleis2: { name: "Gleis 2", prep: zu}
+    gleis3: { name: "Gleis 3", prep: zu}
+    gleis4: { name: "Gleis 4", prep: zu}
+    gleis5: { name: "Gleis 5", prep: zu}
+    bahnhof_eingangshalle: { name: Eingangshalle, prep: zur }
 
 - name: Nebenhalle
   id: bahnhof_nebenhalle 
   description: 
     - PERZEPTION;Hier ist es etwas ruhiger und leerer. Aber die Personen hier kommen dir unheimlicher und auch sonderbarer vor. Ah und hier sind auch die Toiletten.
   exits:
-    bahnhof_eingangshalle: Eingangshalle
-    bahnhof_toiletten: Toiletten
+    bahnhof_eingangshalle: { name: Eingangshalle, prep: zur}
+    bahnhof_toiletten: { name: Toiletten, prep: zu den}
   characters:
     - name: Konstantin Thron
       id: konstantin_thron
@@ -82,7 +82,7 @@
   description:
   - PERZEPTION;You have left this world
   exits:
-    bahnhof_eingangshalle: Eingangshalle
+    bahnhof_eingangshalle: { name: Eingangshalle }
   characters:
 
 - name: Toiletten
@@ -90,9 +90,9 @@
   description: 
     - PERZEPTION;Versifte Toiletten, aber endlich Ruhe, hier scheint niemand zu sein. Zwei Türen führen zu den Männer- bzw. Frauentoiletten. Im Westen geht es zurück ins Nebengebäude.
   exits:
-    bahnhof_maennerToilette: Männer-Toilette
-    bahnhof_frauenToilette: Frauen-Toilette
-    bahnhof_nebenhalle: Nebenhalle
+    bahnhof_maennerToilette: { name: Männer-Toilette, prep: zur}
+    bahnhof_frauenToilette: { name: Frauen-Toilette, prep: zur}
+    bahnhof_nebenhalle: { name: Nebenhalle, prep: zur}
   characters:
 
 - name: Männer-Toilette
@@ -100,7 +100,7 @@
   description: 
     - PERZEPTION;Die Männertoilette, sie ist erstaunlich sauber, in einer Ecke liegen einige zerdrückte Kippenstummel, aber es riecht nicht nach Rauch.
   exits:
-    bahnhof_toiletten: Zurück in den Vorraum 
+    bahnhof_toiletten: { name: Vorraum, prep: zurück zum }
   characters:
     - name: Ticketverkäufer
       id: ticketVerkäufer
@@ -113,7 +113,7 @@
   description: 
     - "PERZEPTION;Die Frauentoilette:  es stinkt nach Alkohol, Kippen und Sex. Der Boden ist voller Alkohol und Glasscherben."
   exits:
-    bahnhof_toiletten: Zurück in den Vorraum
+    bahnhof_toiletten: { name: Vorraum, prep: zurück zum }
   characters:
     - name: Besoffener Frau
       id: besoffene_frau
@@ -132,7 +132,7 @@
   description: 
     - PERZEPTION;Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst.
   exits: 
-    bahnhof_gleise: Zurück zu den Gleisen
+    bahnhof_gleise: { name: Zurück zu den Gleisen }
   characters:
 
 - name: "Gleis 2"
@@ -140,7 +140,7 @@
   description: 
     - PERZEPTION;Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst.
   exits: 
-    bahnhof_gleise: Zurück zu den Gleisen
+    bahnhof_gleise: { name: Zurück zu den Gleisen }
   characters:
 
 - name: "Gleis 3"
@@ -148,7 +148,7 @@
   description: 
     - PERZEPTION;Ah, Gleis 3. Hier fährt dein Zug nach Moskau. Es ist selbstsam leer.
   exits: 
-    bahnhof_gleise: Zurück zu den Gleisen
+    bahnhof_gleise: { name: Zurück zu den Gleisen }
   characters:
 
 - name: "Gleis 4"
@@ -156,7 +156,7 @@
   description: 
     - PERZEPTION;Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst.
   exits: 
-    bahnhof_gleise: Zurück zu den Gleisen
+    bahnhof_gleise: { name: Zurück zu den Gleisen }
   characters:
 
 - name: "Gleis 5"
@@ -164,7 +164,7 @@
   description: 
     - PERZEPTION;Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst.
   exits: 
-    bahnhof_gleise: Zurück zu den Gleisen
+    bahnhof_gleise: { name: Zurück zu den Gleisen }
   characters:
     - name: Passant1
       id: passant7

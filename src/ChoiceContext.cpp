@@ -33,7 +33,7 @@ void CChoiceContext::error(CPlayer* p)
 void CChoiceContext::h_select(string& sIdentifier, CPlayer* p)
 {
     std::cout << "h_select: " << sIdentifier << ", " << m_sObject << ", " << std::endl;
-    std::string obj = p->getObject(m_objectMap, sIdentifier);
+    std::string obj = func::getObjectId(m_objectMap, sIdentifier);
     if(obj == "")
         p->appendPrint("Choose an number or a new Command\n");
 

@@ -23,6 +23,7 @@ CItem::CItem(nlohmann::json jBasic, nlohmann::json jItem, std::string sID)
 nlohmann::json CItem::getAttributes() { return m_jAtts; }
 string CItem::getID()      { return getAttribute<string>("id"); }
 string CItem::getName()    { return getAttribute<string>("name"); }
+string CItem::getDescription() { return getAttribute<string>("description"); }
 string CItem::getFunction(){ return m_jAtts.value("function", m_jAtts["type"]); } 
 size_t CItem::getEffekt()  { return getAttribute<size_t>("effekt"); }
 int CItem::getValue()      { return getAttribute<int>("value"); }

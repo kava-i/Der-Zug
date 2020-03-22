@@ -35,6 +35,7 @@ public:
     nlohmann::json getAttributes();
     string getID();
     string getName();
+    string getDescription();
     string getFunction();
     size_t getEffekt();
     int getValue();

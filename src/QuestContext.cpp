@@ -62,7 +62,8 @@ void CQuestContext::h_ticketverkauf(std::string& sIdentifier, CPlayer* p)
 
 void CQuestContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
 {    
-    std::string room = p->getObject(p->getRoom()->getExtits(), sIdentifier);
+    auto lamda= [](CExit* exit) {return exit->getName();};
+    std::string room = func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lamda);
 
     if(room != "gleis3")
         return; 
@@ -81,7 +82,7 @@ void CQuestContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
 // *** *** Die komische Gruppe *** *** //
 void CQuestContext::h_reden(std::string& sIdentifier, CPlayer* p)
 {
-    std::string character = p->getObject(p->getRoom()->getCharacters(),sIdentifier);
+    std::string character = func::getObjectId(p->getRoom()->getCharacters(),sIdentifier);
     if(character == "" || character.find("passant") == std::string::npos)
         return;
 

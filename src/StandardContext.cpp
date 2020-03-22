@@ -12,7 +12,6 @@ CStandardContext::CStandardContext()
 
     //Add listeners
     add_listener("show", &CContext::h_show);
-    add_listener("examine", &CContext::h_examine);
     add_listener("look", &CContext::h_look);
     add_listener("go", &CContext::h_goTo);
     add_listener("talk", &CContext::h_startDialog);
@@ -20,6 +19,7 @@ CStandardContext::CStandardContext()
     add_listener("consume", &CContext::h_consume);
     add_listener("equipe", &CContext::h_equipe);
     add_listener("dequipe", &CContext::h_dequipe);
+    add_listener("mode", &CContext::h_changeMode);
     add_listener("help", &CContext::h_help);
 
     add_listener("find", &CContext::h_find);
@@ -39,7 +39,7 @@ CStandardContext::CStandardContext()
 void CStandardContext::h_find(string& sIdentifier, CPlayer*p) {
 
     auto lamda = [](CRoom* room) { return room->getName(); }; 
-    std::string roomID = p->getObject2(p->getWorld()->getRooms(), sIdentifier, lamda);
+    std::string roomID = func::getObjectId(p->getWorld()->getRooms(), sIdentifier, lamda);
 
     std::vector<std::string> path = p->findWay(p->getRoom(), roomID);
     if(path.size() > 0) {
@@ -56,20 +56,20 @@ void CStandardContext::h_find(string& sIdentifier, CPlayer*p) {
 void CStandardContext::h_show(string& sIdentifier, CPlayer* p) {
     if(sIdentifier == "exits")
     {
-        p->appendPrint(p->getRoom()->showExits());
-        p->addSelectContest(p->getRoom()->getExtits(), "go");
+        p->appendPrint(p->getRoom()->showExits(p->getMode()));
+        p->addSelectContest(p->getRoom()->getExtits2(), "go");
     }
     else if(sIdentifier == "people")
     {
-        p->appendPrint(p->getRoom()->showCharacters());
+        p->appendPrint(p->getRoom()->showCharacters(p->getMode()));
         p->addSelectContest(p->getRoom()->getCharacters(), "talk");
     }
     else if(sIdentifier == "room")
         p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
     else if(sIdentifier == "items")
-        p->appendPrint(p->getRoom()->showItems());
+        p->appendPrint(p->getRoom()->showItems(p->getMode()));
     else if(sIdentifier == "details")
-        p->appendPrint(p->getRoom()->showDetails());
+        p->appendPrint(p->getRoom()->showDetails(p->getMode()));
     else if(sIdentifier == "inventory")
         p->appendPrint(p->getInventory().printInventory());
     else if(sIdentifier == "equiped")
@@ -85,13 +85,9 @@ void CStandardContext::h_show(string& sIdentifier, CPlayer* p) {
     else if(sIdentifier == "attacks")
         p->appendPrint(p->printAttacks());
     else if(sIdentifier == "all")
-        p->appendPrint(p->getRoom()->showAll());
+        p->appendPrint(p->getRoom()->showAll(p->getMode()));
     else
         p->appendPrint("Unkown \"show-function\"\n"); 
-}
-
-void CStandardContext::h_examine(string& sIdentifier, CPlayer* p) {
-    p->appendPrint(p->getRoom()->showAll());
 }
 
 void CStandardContext::h_look(string& sIdentifier, CPlayer* p) {
@@ -101,7 +97,7 @@ void CStandardContext::h_look(string& sIdentifier, CPlayer* p) {
         return;
     }
 
-    string sOutput = p->getRoom()->look(sIdentifier.substr(0, pos), sIdentifier.substr(pos+1));
+    string sOutput=p->getRoom()->look(sIdentifier.substr(0,pos),sIdentifier.substr(pos+1),p->getMode());
     if(sOutput == "")
         p->appendPrint("Nothing found. \n");
     else
@@ -115,7 +111,7 @@ void CStandardContext::h_goTo(std::string& sIdentifier, CPlayer* p) {
 void CStandardContext::h_startDialog(string& sIdentifier, CPlayer* p)
 {
     //Get selected character
-    string character = p->getObject(p->getRoom()->getCharacters(), sIdentifier);
+    string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier);
     CPlayer* player = p->getPlayer(sIdentifier);
 
     //Check if character was found
@@ -156,6 +152,10 @@ void CStandardContext::h_dequipe(string& sIdentifier, CPlayer* p) {
     p->dequipeItem(sIdentifier);
 }
 
+void CStandardContext::h_changeMode(string& sIdentifier, CPlayer* p) {
+    p->changeMode();
+}
+
 void CStandardContext::error(CPlayer* p) {
     p->appendPrint("Standard: This command is unkown. Type \"help\" to see possible command.\n");
 }
@@ -187,7 +187,7 @@ void CStandardContext::h_moveToHospital(string& sIdentifier, CPlayer* p)
 
 void CStandardContext::h_exitTrainstation(string& sIdentifier, CPlayer* p)
 {
-    if(p->getRoom()->getID() != "bahnhof_eingangshalle" || p->getObject(p->getRoom()->getExtits(), sIdentifier) != "ausgang")
+    if(p->getRoom()->getID() != "bahnhof_eingangshalle" || func::getObjectId(p->getRoom()->getExtits2(), sIdentifier) != "ausgang")
         return;
 
     p->appendPrint("Du drehst dich zum dem großen, offen stehenden Eingangstor der Bahnhofshalle. Und kurz kommt dir der Gedanke doch den Zug nicht zu nehmen, doch alles beim Alten zu belassen. Doch etwas sagt dir, dass es einen guten Grund gab das nicht zu tun, einen guten Grund nach Moskau zu fahren. Und auch, wenn du ihn gerade nicht mehr erkennst. Vielleicht ist gerade das der beste Grund: rausfinden, was dich dazu getrieben hat, diesen termin in Moskau zu vereinbaren.\n Du guckst dich wieder in der Halle um, und überlegst, wo du anfängst zu suchen.\n");

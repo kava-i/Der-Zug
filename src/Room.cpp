@@ -7,8 +7,11 @@ CRoom::CRoom(std::string sArea, nlohmann::json jAtts, CText* text, objectmap cha
     m_sID = jAtts["id"];
     m_sEntry = jAtts.value("entry", "");
 
-    objectmap mapExits;
-    m_exists = jAtts.value("exits", mapExits); 
+    std::map<std::string, nlohmann::json> mapExits = jAtts["exits"].get<std::map<std::string, nlohmann::json>>();
+    for(const auto &it : mapExits) 
+        m_exits[it.first] = new CExit(it.first, it.second);
+    auto lamda = [](CExit* exit) { return exit->getName(); };
+    m_exits_objectMap = func::convertToObjectmap(m_exits, lamda);
 
     m_text = text;
     m_characters = characters;
@@ -24,8 +27,9 @@ string CRoom::getID()           { return m_sID; }
 string CRoom::getDescription()  { return m_text->print(); }
 string CRoom::getEntry()        { return m_sEntry; }
 string CRoom::getArea()         { return m_sArea; }
-CRoom::objectmap& CRoom::getExtits()        { return m_exists; }
 CRoom::objectmap& CRoom::getCharacters()    { return m_characters; }
+CRoom::objectmap& CRoom::getExtits2()       { return m_exits_objectMap; }
+std::map<string, CExit*>& CRoom::getExtits() { return m_exits; }
 std::map<string, CItem*>& CRoom::getItems()  { return m_items; }
 
 // *** SETTER *** //
@@ -46,70 +50,75 @@ string CRoom::showDescription(std::map<std::string, CCharacter*>& mapChars)
 {
     string sDesc = m_text->print();
     for(auto it : m_characters) 
-        sDesc.append("\n" + mapChars[it.first]->getDescription());
+        sDesc.append(mapChars[it.first]->getDescription());
     return sDesc;
 }
 
-string CRoom::showAll()
+string CRoom::showAll(std::string sMode)
 {
     string sDesc = m_text->print()+ "\n";
-    sDesc+=showDetails();
-    sDesc+=showExits();
-    sDesc+=showCharacters();
-    sDesc+=showItems();
+    sDesc+=showDetails(sMode);
+    sDesc+=showExits(sMode);
+    sDesc+=showCharacters(sMode);
+    sDesc+=showItems(sMode);
     return sDesc;
 }
 
-string CRoom::showExits()
+string CRoom::showExits(std::string sMode)
 {
-    string exits = "Exits: \n";
-    size_t counter=1;
-    for(auto it : m_exists) {
-        exits += std::to_string(counter) + ": " + it.second + "\n";
-        counter++;
+    if(sMode == "prosa")
+    {
+        auto lamda = [](CExit* exit) {return exit->getPrep() + " " + exit->getName();};
+        return "PERZEPTION - Ah, hier geht es " + func::printProsa(m_exits,lamda) + ".\n";
     }
-    return exits;
+    else
+    {
+        auto lamda = [](CExit* exit) {return exit->getName(); };
+        return "Exits: \n" + func::printList(m_exits, lamda);
+    }
 }
 
-string CRoom::showCharacters()
+string CRoom::showCharacters(std::string sMode)
 {
-    string characters = "Characters: \n";
-    size_t counter=1;
-    for(auto it : m_characters) {
-        characters += std::to_string(counter) + ": " + it.second + "\n";
-        counter++;
+    std::string sOutput = "";
+    if(sMode == "prosa")
+    {
+        sOutput = "PERZEPTION - Hier sind " + func::printProsa(m_characters) + "\n";
+        if(func::printProsa(m_players) != "")
+            sOutput += "Und außerdem noch "+ func::printProsa(m_players) + "\n";
     }
-    for(auto it : m_players) {
-        if(it.second == m_sID)
-        {
-            characters += std::to_string(counter) + ": " + it.first + "\n";
-            counter++;
-        }
-    }
-    return characters;
+    else
+        sOutput = "Characters: \n" + func::printList(m_characters) + func::printList(m_players);
+    return sOutput;
 }       
 
-string CRoom::showItems()
+string CRoom::showItems(std::string sMode)
 {
-    string items = "Items: \n";
-    size_t counter=1;
-    for(auto it : m_items) {
-        if(it.second->getAttribute<bool>("hidden") == true) continue;
-        items += std::to_string(counter) + ": " + it.second->getAttribute<string>("name")+" - "+it.second->getAttribute<string>("description") + "\n";
-        counter++;
-    }
-    return items;
+    string sOutput = "";
+    auto printing = [](CItem* item) { return item->getName() + " (" + item->getDescription() + ")"; };
+    auto condition = [](CItem* item) { return item->getAttribute<bool>("hidden") != true; };
+
+    if(sMode == "prosa")
+        return "PERZEPTION - Ah, hier sind folgende Gegenstände: " + func::printProsa(m_items, printing, condition);
+    else
+        return "Items: \n" + func::printList(m_items, printing, condition);
 } 
 
-string CRoom::showDetails()
+string CRoom::showDetails(std::string sMode)
 {
-    string details;
-    for(auto it : m_details)
-        details += it.second->getDescription() + "\n";
+    std::string details = "";
+    auto lamda = [](CDetail* detail) { return detail->getDescription(); };
+    if(sMode == "prosa") 
+        details += "PERZEPTION - " + func::printProsa(m_details, lamda) + "\n";
+    else 
+        details += "Details:\n" + func::printList(m_details, lamda);
+
+    if(details == "")
+        details = "Keine Details zu finden.\n";
     return details;
 }
 
-string CRoom::look(string sWhere, string sWhat)
+string CRoom::look(string sWhere, string sWhat, std::string sMode)
 {
     string sOutput = "";
     for(auto detail : m_details)
@@ -118,26 +127,13 @@ string CRoom::look(string sWhere, string sWhat)
 
         if(detail.second->getLook() == sWhere && fuzzy::fuzzy_cmp(detail.second->getName(), sWhat) <= 0.2)
         {
-            size_t counter = 1;
-            size_t numItems = detail.second->getItems().size();
-            if(numItems == 0) {
-                sOutput += detail.second->getName() + " is empty. \n";
-                continue;
-            }
-
-            sOutput += "You found ";
-            for(auto it : detail.second->getItems()) {
-                
-                std::cout << "Item: " << it.first << std::endl;
-                sOutput += "a " + it.second + " (" + m_items[it.first]->getAttribute<string>("description") + ")";
-                if(counter == numItems-1) 
-                    sOutput+= " and ";
-                else if( counter < numItems-1)
-                    sOutput += ", ";
-                counter++;
+            //Print output
+            sOutput += detail.second->getName() + "\n";
+            sOutput += func::printList(detail.second->getItems());
+    
+            //Change from hidden to visible and "empty" detail
+            for(auto it : detail.second->getItems()) 
                 m_items[it.first]->setAttribute<bool>("hidden", false);
-            }
-            sOutput += " in a " + detail.second->getName() + ".\n";
             detail.second->getItems().clear();
         }
     }
