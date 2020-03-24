@@ -6,6 +6,12 @@
 #define PURPLE Webcmd::set_color(Webcmd::color::PURPLE)
 #define WHITE Webcmd::set_color(Webcmd::color::WHITE)
 
+/**
+* Full constructor for player
+* @param jAtts json with all attributes
+* @param room current room of payer
+* @param newAttacks attacks of player
+*/
 CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks newAttacks)
 {
     m_sName = jAtts["name"];
@@ -55,50 +61,126 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks newAttacks)
 }
 
 // *** GETTER *** // 
-CRoom* CPlayer::getRoom()   { return m_room; }
 
+///Return first login (yes, no)
+bool CPlayer::getFirstLogin() { 
+    return m_firstLogin; 
+}
+
+///Return mode (Prosa or List) 
+std::string CPlayer::getMode() { 
+    return m_sMode; 
+}
+
+///Return output for player (Append newline)
 string CPlayer::getPrint()  { 
     checkCommands();
     return m_sPrint + "\n";
 }
 
-std::string CPlayer::getMode() { return m_sMode; }
-bool CPlayer::getFirstLogin() { return m_firstLogin; }
-CFight* CPlayer::getFight() { return m_curFight; }
-CPlayer::minds& CPlayer::getMinds() { return m_minds; }
-std::vector<std::string> CPlayer::getAbbilities() { return m_abbilities; }
-CPlayer::equipment& CPlayer::getEquipment()  { return m_equipment; }
-CWorld* CPlayer::getWorld() { return m_world; }
-CContextStack& CPlayer::getContexts()   { return m_contextStack; }
+///Return pointer to players world (all rooms, chars, etc.)
+CWorld* CPlayer::getWorld() { 
+    return m_world; 
+}
+
+///Return current room.
+CRoom* CPlayer::getRoom() { 
+    return m_room; 
+}
+
+///Return dictionary of player's minds.
+std::map<std::string, SMind>& CPlayer::getMinds() { 
+    return m_minds; 
+}
+
+///Return players abilities (strength, moral, etc.)
+std::vector<std::string> CPlayer::getAbbilities() { 
+    return m_abbilities; 
+}
+
+///Return players equipment (weapons, clothing etc.)
+std::map<std::string, CItem*>& CPlayer::getEquipment() { 
+    return m_equipment; 
+}
+
+///Return current fight.
+CFight* CPlayer::getFight() { 
+    return m_curFight; 
+}
+
+//Return players context-stack 
+CContextStack& CPlayer::getContexts() { 
+    return m_contextStack; 
+}
 
 // *** SETTER *** // 
-void CPlayer::setRoom(CRoom* room)          { m_lastRoom = m_room; m_room = room; }
-void CPlayer::setPrint(string newPrint)     { m_sPrint = newPrint; }
-void CPlayer::appendPrint(string newPrint)  { m_sPrint.append(newPrint); }
-void CPlayer::setFirstLogin(bool val)       { m_firstLogin = val; }
-void CPlayer::setPlayers(map<string, CPlayer*> players) { m_players = players; }
-void CPlayer::setWobconsole(Webconsole* webconsole) { _cout = webconsole; }
-void CPlayer::setWorld(CWorld* newWorld)    { m_world = newWorld; }
+
+///Set first login.
+void CPlayer::setFirstLogin(bool val) { 
+    m_firstLogin = val; 
+}
+
+///Set new output for player.
+void CPlayer::setPrint(string newPrint) { 
+    m_sPrint = newPrint; 
+}
+
+///Append to current player output.
+void CPlayer::appendPrint(string newPrint) { 
+    m_sPrint.append(newPrint); 
+}
+
+///Set player's world.
+void CPlayer::setWorld(CWorld* newWorld) { 
+    m_world = newWorld; 
+}
+
+///Set last room to current room and current room to new room.
+void CPlayer::setRoom(CRoom* room) { 
+    m_lastRoom = m_room; m_room = room; 
+}
+
+///Set map of all online players.
+void CPlayer::setPlayers(map<string, CPlayer*> players) { 
+    m_players = players; 
+}
+
+///Set webconsole.
+void CPlayer::setWobconsole(Webconsole* webconsole) { 
+    _cout = webconsole; 
+}
 
 
 
 // *** *** FUNCTIONS *** *** // 
 
+/**
+* Change mode to 'prosa' or 'list' mode and print change
+*/
 void CPlayer::changeMode()
 {
     if(m_sMode == "prosa")
         m_sMode = "list";
     else
         m_sMode = "prosa";
-    m_sPrint = "TECH GUY - Mode auf '" + m_sMode + "' gesetzt.\n";
+    m_sPrint = "TECH GUY - \"Mode\" wurde auf '" + m_sMode + "' gesetzt.\n";
 }
+
 // *** Fight *** //
+
+/**
+* Set current fight of player and add a fight-context to context-stack
+* @param newFight new fight
+*/
 void CPlayer::setFight(CFight* newFight) { 
     m_curFight = newFight;
     m_contextStack.insert(new CFightContext(m_attacks), 1, "fight");
     m_curFight->initializeFight();
 }
 
+/**
+* Delete the current fight and erase fight-context from context-stack
+*/
 void CPlayer::endFight() {
     delete m_curFight;
     m_contextStack.erase("fight");
@@ -106,6 +188,12 @@ void CPlayer::endFight() {
 }
 
 // *** Dialog *** //
+
+
+/**
+* Set current (new) Dialog player and add a Dialog-context to context-stack.
+* @param sCharacter id of dialogpartner and throw event to start Dialog.
+*/
 void CPlayer::startDialog(string sCharacter)
 {
     m_dialog = m_world->getCharacters()[sCharacter]->getDialog();
@@ -113,6 +201,10 @@ void CPlayer::startDialog(string sCharacter)
     throw_event(m_dialog->states["START"]->callState(this));
 }
 
+/**
+* Try to start chatting. If player is busy, print error message, else add chat-context to 
+* context-stack and throw event 'Hey + player-name'.
+*/
 void CPlayer::startChat(CPlayer* player)
 {
     m_sPrint += "Du gehst auf " + player->getName() + " zu und räusperst dich... \n";
@@ -129,6 +221,11 @@ void CPlayer::startChat(CPlayer* player)
     }
 }
 
+/**
+* Direct print of message to web-console. Used when chatting and usually call in chat-context
+* of the Dialog partner, printing, what he said.
+* @param sMessage message to print to console
+*/
 void CPlayer::send(string sMessage)
 {
     std::cout << "Sending message... \n";
@@ -137,15 +234,21 @@ void CPlayer::send(string sMessage)
 }
 
 // *** Room *** 
+
+/**
+* Check player input, whether 1. player wants to go back, 2. player wants to use an exit in current
+* room, or 3. player wants to go to a room already visited.
+* @param sIdentifier player input (room id, exit of current room, or room already visited)
+*/
 void CPlayer::changeRoom(string sIdentifier)
 {
-    //Check if player wants to go back
+    //Check if player wants to go back.
     if(sIdentifier == "back") {
         changeRoom(m_lastRoom);
         return;
     }
 
-    //Get selected room
+    //Get selected room, checking exits in current room.
     auto lamda1= [](CExit* exit) { return exit->getName(); };
     string room = func::getObjectId(getRoom()->getExtits(), sIdentifier, lamda1);
 
@@ -154,6 +257,7 @@ void CPlayer::changeRoom(string sIdentifier)
         return;
     }
 
+    //Check all rooms already visited.
     auto lamda2 = [](CRoom* room) { return room->getName(); };
     room = func::getObjectId(m_world->getRooms(), sIdentifier, lamda2);
     std::vector<std::string> path = findWay(m_room, room);
@@ -167,10 +271,15 @@ void CPlayer::changeRoom(string sIdentifier)
         throw_event(events);
     }
     
+    //Print error message.
     else
         m_sPrint += "Room not found.\n";
 }
 
+/**
+* Change room to given room and print entry description. Set last room to current room.
+* @param newRoom new room the player changes to
+*/
 void CPlayer::changeRoom(CRoom* newRoom)
 {
     m_sPrint += newRoom->showEntryDescription(getWorld()->getCharacters());
@@ -179,17 +288,27 @@ void CPlayer::changeRoom(CRoom* newRoom)
     m_vistited[m_room->getID()] = true;
 }
 
+/**
+* Look for shortes way (if exists) to given room. And return way as vector, or empty array.
+* @param room players room
+* @param roomID id of desired target-room
+* @return vector with way to target.
+*/
 std::vector<std::string> CPlayer::findWay(CRoom* room, std::string roomID)
 {
+    //Check whether current room is target room
     if(room->getID() == roomID)
         return {};
 
+    //Set variables
     std::queue<CRoom*> q;
     std::map<std::string, std::string> parents;
 
+    //Set parent of every room to ""
     for(auto it : m_world->getRooms())
         parents[it.second->getID()] = "";
 
+    //Normal breadth-first search
     q.push(room);
     parents[room->getID()] = room->getID();
     while(!q.empty())
@@ -200,6 +319,7 @@ std::vector<std::string> CPlayer::findWay(CRoom* room, std::string roomID)
             break;
         for(auto& it : node->getExtits())
         {
+            //Also check, that target-room is visited and in the same area as current room.
             if(parents[it.first] == "" && m_vistited[it.first] == true && node->getArea() == m_room->getArea())
             {
                 q.push(m_world->getRooms()[it.first]);
@@ -208,37 +328,44 @@ std::vector<std::string> CPlayer::findWay(CRoom* room, std::string roomID)
         } 
     }
 
-    if(parents[roomID] == "") {
-        std::cout << "Room not found.\n";
+    //Check whether rooom has been found, if not, return empty array.
+    if(parents[roomID] == "") 
         return {};
-    }
-    else
-        std::cout << "Room found... converting\n";
 
+    //Create path from parents.  
     std::vector<std::string> path = { roomID };
     while(path.back() != room->getID())
         path.push_back(parents[path.back()]);
     path.pop_back();
+
+    //Reverse path and return.
     std::reverse(std::begin(path), std::end(path));
     return path;
 }
 
 
-// *** Item and inventory *** //
+// *** Item and Inventory *** //
+
+/**
+* Adding all (non-hidden) items in room to players inventory.
+*/
 void CPlayer::addAll()
 {
     for(auto it = m_room->getItems().begin(); it != m_room->getItems().end();)
     {
         if((*it).second->getAttribute<bool>("hidden") == false) 
-	{
+	    {
             addItem((*(it++)).second);
-	    continue;
-	}
-	++it;
+	        continue;
+	    }
+	    ++it;
     }
-	
 }
 
+/**
+* Add given item to player's inventory and print message.
+* @param item given item/ item to add to inventory.
+*/
 void CPlayer::addItem(CItem* item)
 {
     m_inventory.addItem(item);
@@ -246,6 +373,20 @@ void CPlayer::addItem(CItem* item)
     m_room->getItems().erase(item->getID());
 }
 
+/**
+* Start a trade. Add a trade-context to player's context stack.
+* @param partner Player's trading partner add to context-information.
+*/
+void CPlayer::startTrade(std::string partner)
+{
+    m_sPrint += "Started to trade with " + partner + ".\n";
+
+    m_contextStack.insert(new CTradeContext(this, partner), 1, "trade");
+}
+
+/**
+* Add all equipped items to player's output.
+*/
 void CPlayer::printEquiped() {
 
     auto getElem = [](CItem* item){ 
@@ -257,20 +398,21 @@ void CPlayer::printEquiped() {
     m_sPrint += func::table(m_equipment, getElem, "width:20%");
 }
 
-void CPlayer::startTrade(std::string partner)
-{
-    m_sPrint += "Started to trade with " + partner + ".\n";
-
-    m_contextStack.insert(new CTradeContext(this, partner), 1, "trade");
-}
-
-
+/**
+* Equipe given item into given category (sType). If there is already an item equipped in this 
+* category, add choice-context to context-stack.
+* @param item given item.
+* @param sType type of item indicating category.
+*/
 void CPlayer::equipeItem(CItem* item, string sType)
 {
+    //If nothing is equipped in this category -> equip.
     if(m_equipment[sType] == NULL)
     {
-        m_sPrint += "You equiped " + sType + ": " + item->getName() + ".\n";
+        m_sPrint += "PERZEPTION: Du hast " + item->getName() + " als " + sType + " ausgerüstet.\n";
         string sAttack = item->getAttribute<string>("attack");
+
+        //Check for new attack
         if(sAttack != "") {
             m_attacks[sAttack] = m_world->getAttacks()[sAttack];
             m_sPrint += "New attack: \"" + m_attacks[sAttack]->getName() + "\" added to arracks.\n";
@@ -278,8 +420,11 @@ void CPlayer::equipeItem(CItem* item, string sType)
         m_equipment[sType] = item;
     }
 
+    //If this item is already equipped -> print error message.
     else if(m_equipment[sType]->getID() == item->getID())
-        m_sPrint+=sType + " already equiped.\n";
+        m_sPrint+=sType + " bereits ausgerüstet.\n";
+
+    //If another item is equipped in this category -> add choice-context
     else
     {
         m_sPrint+="Already a " + sType + " equipt. Want to change? (yes/no)\n";
@@ -292,6 +437,10 @@ void CPlayer::equipeItem(CItem* item, string sType)
     }
 }
 
+/**
+* Dequipe an item. Erase attack from list of attacks if it depended on equipped item.
+* @param sType item type (weapon, clothing etc.)
+*/
 void CPlayer::dequipeItem(string sType) {
     if(m_equipment.count(sType) == 0)
         m_sPrint += "Nothing to dequipe.\n";
@@ -299,15 +448,20 @@ void CPlayer::dequipeItem(string sType) {
         m_sPrint += "Nothing to dequipe.\n";
     else {
         m_sPrint += "Dequiped " + sType + " " + m_equipment[sType]->getName() + ".\n";
-        string sAttack = m_equipment[sType]->getAttribute<string>("attack");
-        if(sAttack != "")
-            m_attacks.erase(sAttack);
+
+        //Erase attack
+        if(m_equipment[sType]->getAttribute<string>("attack") != "")
+            m_attacks.erase(m_equipment[sType]->getAttribute<string>("attack"));
         m_equipment[sType] = NULL;
     }
 }
 
 // *** QUESTS *** //
 
+/**
+* show all active or solved quest depending on 'solved'
+* @param solved indicating, whether to show solved or active quests.
+*/
 void CPlayer::showQuests(bool solved)
 {
 
@@ -322,6 +476,10 @@ void CPlayer::showQuests(bool solved)
     }
 }
 
+/**
+* Add new quest by setting quest active.
+* @param sQuestID id to given quest.
+*/
 void CPlayer::setNewQuest(std::string sQuestID)
 {
     std::cout << sQuestID << std::endl;
@@ -330,6 +488,11 @@ void CPlayer::setNewQuest(std::string sQuestID)
     addEP(ep);
 }
 
+/**
+* Set a quest-step as solved and add received ep (experience points) to players ep.
+* @param sQuestID identifier to quest.
+* @param sStepID identifier to quest-step.
+*/
 void CPlayer::questSolved(std::string sQuestID, std::string sStepID)
 {
     int ep=0;
@@ -337,7 +500,13 @@ void CPlayer::questSolved(std::string sQuestID, std::string sStepID)
     addEP(ep);
 }
 
-//Minds and Level
+
+// *** Minds and Level *** //
+
+/**
+* Add experience points and call update-stats function if a new level is reached.
+* @param ep experience points to be added.
+*/
 void CPlayer::addEP(int ep)
 {
     m_ep+=ep;
@@ -350,10 +519,15 @@ void CPlayer::addEP(int ep)
         updateStats(counter);
 }
 
+/**
+* Let player know how many learning points player can assign and add choice context.
+* @param numPoints experience points player can assign.
+*/
 void CPlayer::updateStats(int numPoints)
 {
     m_sPrint+= "Du hast " + std::to_string(numPoints) + " Punkte zu vergeben.\n";
 
+    //Print attributes and level of each attribute and add choice-context.
     std::string sError = "Nummer, oder Attribut wählen.\n";
     CChoiceContext* context = new CChoiceContext(std::to_string(numPoints), sError);
     for(size_t i=0; i<m_abbilities.size(); i++)
@@ -367,6 +541,9 @@ void CPlayer::updateStats(int numPoints)
     m_contextStack.insert(context, 1, "choice");
 }
 
+/**
+* Print minds of player by using table function.
+*/
 void CPlayer::showMinds()
 {
     m_sPrint += " --- " + m_sName + " --- \n"
@@ -377,6 +554,9 @@ void CPlayer::showMinds()
     m_sPrint += func::table(m_minds, lamda);
 }
 
+/**
+* Print player's stats by using table function.
+*/
 void CPlayer::showStats() {
 
     m_sPrint += "Name: " + m_sName + "\n";
@@ -384,13 +564,18 @@ void CPlayer::showStats() {
     m_sPrint += func::table(m_stats, getElem);
 }
 
+/**
+* Check given dependencies. Receive a json and check whether this matches player's 
+* minds or stats.
+* @param jDeps json with dependencies
+*/
 bool CPlayer::checkDependencies(nlohmann::json jDeps)
 {
     if(jDeps.size() == 0)
         return true;
     for(auto it=jDeps.begin(); it!=jDeps.end(); it++)
     {
-        //Check dependecy in mind
+        //Check dependency in mind
         if(m_minds.count(it.key()) > 0) {
             int val = it.value();
             if(val < 0 && val*(-1) < m_minds[it.key()].level)
@@ -399,7 +584,7 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps)
                 return false;
         }
 
-        //Check dependecy in stats
+        //Check dependency in stats
         else if(m_stats.count(it.key()) > 0) {
             int val = it.value();
             if(val < 0 && val*(-1) < m_stats[it.key()])
@@ -415,6 +600,10 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps)
     
 
 // *** Others *** // 
+
+/**
+* Check if player's output contains special commands such as printing player name or else.
+*/ 
 void CPlayer::checkCommands()
 {
     while(m_sPrint.find("{") != std::string::npos)
@@ -429,12 +618,23 @@ void CPlayer::checkCommands()
     }
 }
 
+/**
+* Check whether given password and name matches this player.
+* @param sName name to compare to player's name.
+* @param sPassword password to compare to player's password.
+*/
 string CPlayer::doLogin(string sName, string sPassword)
 {
-    if(sName == m_sName && sPassword == m_sPassword) return m_sID;
-    else return "";
+    if(sName == m_sName && sPassword == m_sPassword) 
+        return m_sID;
+    else 
+        return "";
 }
 
+/**
+* Get a player from currently online player's by their name using fuzzy comparison. 
+* @param sIdentifier identifier (player's name)
+*/
 CPlayer* CPlayer::getPlayer(string sIdentifier)
 {
     for(auto it : m_players)
@@ -445,25 +645,42 @@ CPlayer* CPlayer::getPlayer(string sIdentifier)
     return NULL;
 }
 
-void CPlayer::addSelectContest(objectmap& mapObjects, std::string sEventType)
+/**
+* Add a select-context to context-stack.
+* @param mapObjects map of objects from which to select.
+* @param sEventType type of event.
+*/
+void CPlayer::addSelectContest(std::map<std::string, std::string>& mapObjects, std::string sEventType)
 {
+    //Add context.
     CContext* context = new CChoiceContext(sEventType, mapObjects);
     
+    //Add listeners
     for(size_t i=1; i<=mapObjects.size();i++)
         context->add_listener(std::to_string(i), &CContext::h_select);
 
+    //Insert context into context-stack.
     m_contextStack.insert(context, 1, "choice");
 }
 
 
+// *** Eventmanager functions *** //
 
-// ***** ***** EVENTMANAGER FUNCTIONS ***** *****
-
+/**
+* Throw event. This is the key function in the program. The parser first parses the command
+* into an event which will then be thrown. An event consists of and event type 
+* and an identifier indicating what will happen. For example "show people", where "show"
+* is the event type and "people" tells the event handler what to do. (similar: "go to foyer").
+* this event will be send through all contexts. Each context has a list of handlers. If the 
+* event type matches with a handler a function is triggered. If a context is not permeable the 
+* loop breaks.
+* @param sInput
+*/
 void CPlayer::throw_event(string sInput)
 {
     checkTimeEvents();
     CParser parser;
-    std::vector<event> events = parser.parse(sInput);
+    std::vector<std::pair<std::string, std::string>> events = parser.parse(sInput);
     std::deque<CContext*> sortedCtxList= m_contextStack.getSortedCtxList();
 
     for(size_t i=0; i<events.size(); i++)
@@ -480,16 +697,31 @@ void CPlayer::throw_event(string sInput)
 
 
 // ***** ***** TIME EVENTS ****** *****
+
+/**
+* Check if a time-bound event exists.
+* @param sType event type.
+*/
 bool CPlayer::checkEventExists(string sType)
 {
     return m_timeEventes.count(sType) > 0;
 }
+
+/**
+* Add new time-bound event.
+* @param sType event type 
+* @param duration how long it takes till event will be triggered.
+* @param func function called when event is triggered.
+*/
 void CPlayer::addTimeEvent(string sType, double duration, void (CPlayer::*func)())
 {
     auto start = std::chrono::system_clock::now();
     m_timeEventes[sType].push_back(std::make_tuple(start, duration*60, func));
 }
 
+/**
+* check if a time event is triggered.
+*/
 void CPlayer::checkTimeEvents()
 {
     std::list<std::pair<std::string, size_t>> lExecute;
@@ -498,7 +730,6 @@ void CPlayer::checkTimeEvents()
     auto end = std::chrono::system_clock::now();
     for(auto it : m_timeEventes)
     {
-        std::cout << "ititializing... \n";
         size_t counter=0;
         for(auto jt : m_timeEventes[it.first]) {
             std::chrono::duration<double> diff = end - std::get<0>(jt);
@@ -507,20 +738,21 @@ void CPlayer::checkTimeEvents()
         }
     }
 
-    std::cout << "initializes execute. \n";
-
     //Execute events and delete afterwards
-    for(auto it : lExecute) {
-        std::cout << "Calling and deleting: " << it.first << "/" << it.second << std::endl;
+    for(auto it : lExecute) 
+    {
         (this->*std::get<2>(m_timeEventes[it.first][it.second]))();
         m_timeEventes[it.first].erase(m_timeEventes[it.first].begin() + it.second);
         if(m_timeEventes[it.first].size() == 0)
             m_timeEventes.erase(it.first);
     }
-
 }
 
-// Time handler
+// *** Time handler *** //
+
+/**
+* Event triggered when highness decreases.
+*/
 void CPlayer::t_highness()
 {
     if(m_stats["highness"]==0)

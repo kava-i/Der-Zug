@@ -38,122 +38,333 @@ using std::vector;
 class CPlayer : public CPerson
 {
 private:
-    CRoom* m_room;
-    CRoom* m_lastRoom;
-    CWorld* m_world;
-
-    int m_ep;
-    int m_level;
-
-    string m_sPrint;
-    string m_sPassword;
-    bool m_firstLogin;
-    std::string m_sMode;
-
-    CFight* m_curFight;
-
-    typedef map<string, SMind> minds;
-    typedef map<string, CItem*> equipment;
-    minds m_minds;
-    equipment m_equipment;
     
-    std::vector<std::string> m_abbilities;
+    // *** General attributes *** //
+    // m_sName, m_sID (from CPerson)
+    std::string m_sPassword;                    ///< Password for login
+    bool m_firstLogin;                          ///< Indicate whether this is the players first login.
+    std::string m_sMode;                        ///< Print modes: "Prosa", "List" 
+    string m_sPrint;
 
-    map<string, CPlayer*> m_players;
+    // *** Attributes concerning game world *** //
+    CWorld* m_world;                            ///< Pointer to players world (all rooms, chars, etc.)
+    CRoom* m_room;                              ///< Pointer to current room
+    CRoom* m_lastRoom;                          ///< Pointer to last room visited
 
-    std::map<std::string, bool> m_vistited;
+    // *** Levels & Ep, Items, Equipment etc. *** //
+    int m_ep;                                   ///< Current experience points
+    int m_level;                                ///< Current level
+    std::map<std::string, SMind> m_minds;       ///< Characters in unconsciousness (auto skilled)
+    std::vector<std::string> m_abbilities;      ///< Skillable abilities, like strength etc.
+    std::map<std::string, CItem*> m_equipment;  ///< Equipped weapons, clothing etc.
+    //m_inventory, m_attacks (from CPerson)
 
-    CContextStack m_contextStack;
-    Webconsole* _cout;
+
+    // *** States, like current fight *** //
+    CFight* m_curFight;                         ///< Current fight player is engaged in (maybe NULL)
+
+    // *** Others *** //
+    map<string, CPlayer*> m_players;            ///< List of all online players in game
+    std::map<std::string, bool> m_vistited;     ///< List of all visited rooms
+    CContextStack m_contextStack;               ///< List of all current contexts
+    Webconsole* _cout;                          ///< Pointer to the console
 
     typedef map<string, vector<std::tuple<std::chrono::system_clock::time_point, double, void(CPlayer::*)()>> > timeEvents;
-    timeEvents m_timeEventes;
+    timeEvents m_timeEventes;                   ///< List of all events triggered by time
 
 public:
+
+    // ** Constructors ** //
+
+    /// Default destructor
     CPlayer() {};
+
+    /**
+    * Full constructor for player
+    * @param jAtts json with all attributes
+    * @param room current room of payer
+    * @param newAttacks attacks of player
+    */
     CPlayer(nlohmann::json jAttributes, CRoom* room, attacks newAttacks);
 
     // *** GETTER *** // 
-    CRoom* getRoom();
-    string getPrint();
-    string getMode();
+    ///Return first login (yes, no)
     bool getFirstLogin();
-    CFight* getFight();
-    minds& getMinds();
-    std::vector<std::string> getAbbilities();
-    equipment& getEquipment();
+
+    ///Return mode (Prosa or List) 
+    std::string getMode(); 
+
+    ///Return output for player (Append newline)
+    string getPrint();
+
+    ///Return pointer to players world (all rooms, chars, etc.)
     CWorld* getWorld();
+
+    ///Return current room.
+    CRoom* getRoom();
+
+    ///Return dictionary of player's minds.
+    std::map<std::string, SMind>& getMinds();
+
+    ///Return players abilities (strength, moral, etc.)
+    std::vector<std::string> getAbbilities();
+
+    ///Return players equipment (weapons, clothing etc.)
+    std::map<std::string, CItem*>& getEquipment();
+
+    ///Return current fight.
+    CFight* getFight();
+
+    //Return players context-stack 
     CContextStack& getContexts();
+ 
 
     // *** SETTER *** //
-    void setRoom(CRoom* room);
-    void setPrint(string);
-    void appendPrint(string);
-    void setFirstLogin(bool val);
-    void setPlayers(map<string, CPlayer*> players);
-    void setWobconsole(Webconsole*);
+    ///Set first login.
+    void setFirstLogin(bool val); 
+
+    ///Set new output for player.
+    void setPrint(string newPrint);
+
+    ///Append to current player output.
+    void appendPrint(string newPrint);
+
+    ///Set player's world.
     void setWorld(CWorld* newWorld);
 
-    //*** FUNCTIONS *** // 
+    ///Set last room to current room and current room to new room.
+    void setRoom(CRoom* room);
 
+    ///Set map of all online players.
+    void setPlayers(map<string, CPlayer*> players);
+
+    ///Set webconsole.
+    void setWobconsole(Webconsole* webconsole);
+
+    // *** FUNCTIONS *** // 
+
+    ///Change mode to 'prosa' or 'list' mode and print change
     void changeMode();
+    
 
-    //Fight
+    // ** Fight ** //
+
+    /**
+    * Set current fight of player and add a fight-context to context-stack
+    * @param newFight new fight
+    */
     void setFight(CFight* fight);
+
+    /**
+    * Delete the current fight and erase fight-context from context-stack
+    */
     void endFight();
 
-    //Dialog + Chat
+
+    // ** Dialog + Chat ** //
+
+    /**
+    * Set current (new) Dialog player and add a Dialog-context to context-stack.
+    * @param sCharacter id of dialogpartner and throw event to start Dialog.
+    */
     void startDialog(string sCharacter);
+
+    /**
+    * Try to start chatting. If player is busy, print error message, else add chat-context to 
+    * context-stack and throw event 'Hey + player-name'.
+    */
     void startChat(CPlayer* sPlayer);
 
+    /**
+    * Direct print of message to web-console. Used when chatting and usually call in chat-context
+    * of the Dialog partner, printing, what he said.
+    * @param sMessage message to print to console
+    */
     void send(string sMessage);
 
-    //Login
-    string doLogin(string sName, string sPassword);
 
-    //Room
+    // ** Room ** //
+
+    /**
+    * Check player input, whether 1. player wants to go back, 2. player wants to use an exit in current
+    * room, or 3. player wants to go to a room already visited.
+    * @param sIdentifier player input (room id, exit of current room, or room already visited)
+    */
     void changeRoom(string sIdentifier);
+
+    /**
+    * Change room to given room and print entry description. Set last room to current room.
+    * @param newRoom new room the player changes to
+    */
     void changeRoom(CRoom* newRoom);
+
+    /**
+    * Look for shortes way (if exists) to given room. And return way as vector, or empty array.
+    * @param room players room
+    * @param roomID id of desired target-room
+    * @return vector with way to target.
+    */
     std::vector<std::string> findWay(CRoom* room, std::string sRoomdID);
 
-    //Equiping items
-    void printEquiped();
-    void equipeItem(CItem*, string sType);
-    void dequipeItem(string sType);
+    // ** Item and Inventory** //
 
+    /**
+    * Adding all (non-hidden) items in room to players inventory.
+    */
     void addAll();
+
+    /**
+    * Add given item to player's inventory and print message.
+    * @param item given item/ item to add to inventory.
+    */
     void addItem(CItem* item);
 
+    /**
+    * Start a trade. Add a trade-context to player's context stack.
+    * @param partner Player's trading partner add to context-information.
+    */
     void startTrade(std::string partner);
 
-    //Quests
+    /**
+    * Add all equipped items to player's output.
+    */
+    void printEquiped();
+
+    /**
+    * Equipe given item into given category (sType). If there is already an item equipped in this 
+    * category, add choice-context to context-stack.
+    * @param item given item.
+    * @param sType type of item indicating category.
+    */
+    void equipeItem(CItem*, string sType);
+
+    /**
+    * Dequipe an item. Erase attack from list of attacks if it depended on equipped item.
+    */
+    void dequipeItem(string sType);
+
+
+    // ** Quests ** //
+
+    /**
+    * show all active or solved quest depending on 'solved'
+    * @param solved indicating, whether to show solved or active quests.
+    */
     void showQuests(bool solved);
+
+    /**
+    * Add new quest by setting quest active.
+    * @param sQuestID id to given quest.
+    */
     void setNewQuest(std::string sQuestID);
+
+    /**
+    * Set a quest-step as solved and add received ep (experience points) to players ep.
+    * @param sQuestID identifier to quest.
+    * @param sStepID identifier to quest-step.
+    */
     void questSolved(std::string sQuestID, std::string sStepID);
 
     //Minds and level
+
+    /**
+    * Add experience points and call update-stats function if a new level is reached.
+    * @param ep experience points to be added.
+    */
     void addEP(int ep);
+
+    /**
+    * Let player know how many learning points player can assign and add choice context.
+    * @param numPoints experience points player can assign.
+    */
     void updateStats(int numPoints); 
+
+    /**
+    * Print minds of player by using table function.
+    */
     void showMinds();
+
+    /**
+    * Print player's stats by using table function.
+    */
     void showStats();
+
+    /**
+    * Check given dependencies. Receive a json and check whether this matches player's 
+    * minds or stats.
+    * @param jDeps json with dependencies
+    */
     bool checkDependencies(nlohmann::json);
 
-    //Others
-    void checkCommands();
-    typedef std::map<string, string> objectmap;
-    CPlayer* getPlayer(string sIdentifier);
-    void addSelectContest(objectmap& mapObjects, std::string sEventType);
 
-    typedef std::pair<std::string, std::string> event;
+    // ** Others ** //
+
+    /**
+    * Check if player's output contains special commands such as printing player name or else.
+    */
+    void checkCommands();
+
+    /**
+    * Check whether given password and name matches this player.
+    * @param sName name to compare to player's name.
+    * @param sPassword password to compare to player's password.
+    */
+    std::string doLogin(string sName, string sPassword);
+
+    /**
+    * Get a player from currently online player's by their name using fuzzy comparison. 
+    * @param sIdentifier identifier (player's name)
+    */
+    CPlayer* getPlayer(string sIdentifier);
+
+    /**
+    * Add a select-context to context-stack.
+    * @param mapObjects map of objects from which to select.
+    * @param sEventType type of event.
+    */
+    void addSelectContest(std::map<std::string, std::string>& mapObjects, std::string sEventType);
+
+
+    // ** Eventmanager functions ** // 
+
+    /**
+    * Throw event. This is the key function in the program. The parser first parses the command
+    * into an event which will then be thrown. An event consists of and event type 
+    * and an identifier indicating what will happen. For example "show people", where "show"
+    * is the event type and "people" tells the event handler what to do. (similar: "go to foyer").
+    * this event will be send through all contexts. Each context has a list of handlers. If the 
+    * event type matches with a handler a function is triggered. If a context is not permeable the 
+    * loop breaks.
+    * @param sInput
+    */
     void throw_event(string sInput);
     
     // *** Time events *** //
 
-    void addTimeEvent(string sType, double duration, void(CPlayer::*func)());
+    /**
+    * Check if a time-bound event exists.
+    * @param sType event type.
+    */
     bool checkEventExists(string sType);
+
+    /**
+    * Add new time-bound event.
+    * @param sType event type 
+    * @param duration how long it takes till event will be triggered.
+    * @param func function called when event is triggered.
+    */
+    void addTimeEvent(string sType, double duration, void(CPlayer::*func)());
+
+    /**
+    * check if a time event is triggered.
+    */
     void checkTimeEvents();
 
-    // Time handler
+    // ** Time handler ** //
+
+    /**
+    * Event triggered when highness decreases.
+    */
     void t_highness();
 };
 

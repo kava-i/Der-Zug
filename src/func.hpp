@@ -23,33 +23,59 @@ namespace func
     std::vector<std::string> split(std::string str, std::string delimiter);
 
     /**
+    * Convert a given string to only contain lower case characters.
     * @param[in, out] str string to be modified
     */
     void convertToLower(std::string &str);
 
+    /**
+    * Return the given string to only contain lower case characters.
+    * @param str string to be converted.
+    * @return converted string in lower case.
+    */
     std::string returnToLower(std::string str);
+
+    /**
+    * Return the given string to only contain upper-case characters.
+    * @param str string to be converted.
+    * @return converted string in upper-case.
+    */
     std::string returnToUpper(std::string str);
 
+
+    /**
+    *                   *** returnSwapedString  ***
+    * Randomly swap a certain amount of characters in every nth word of a given string. 
+    * Number of characters to be swapped depends on given number ("num"). Higher number
+    * results in more characters being swapped in more words.
+    * @param str string in which characters will be swapped.
+    * @param num number indicating how many characters will be swapped in how many words.
+    */
     std::string returnSwapedString(std::string str, int num);
 
     /**
-    * Print all elements from a directory with any type. Pass lamda function to specify 
-    * out put for type apartfrom string, interger etc. It is also possible to pass a 
-    * lamda function, as a condition, return either true or false, depending of whether
+    *                   ***     printList       ***
+    * Print all elements from a directory with any type. Pass lambda function to specify 
+    * out put for type apart from string, integer etc. It is also possible to pass a 
+    * lambda function, as a condition, return either true or false, depending of whether
     * the objects meets certain criteria.
     * The objects will be printed as a list.
-    * @param[in] std::map<std::string T1> map of elememts
-    * @param[in] std::function<T1(T1)> (optional lamda function - for printing custom objects)
-    * @param[in] std::function<bool(T1)> (optional lamda function - condition)
+    * @param[in] std::map<std::string T1> map of elements
+    * @param[in] std::function<T1(T1)> (optional lambda function - for printing custom objects)
+    * @param[in] std::function<bool(T1)> (optional lambda function - condition)
+    * @return list of elements as a list.
     */
     template <typename T1, typename T2=std::function<T1(T1)>, typename T3=std::function<bool(T1)>> 
-        std::string printList(  std::map<std::string, T1> &list, 
+    std::string printList(  std::map<std::string, T1> &list, 
                                 T2 print = [](T1 t) -> T1 { return t; },
                                 T3 condition = [](T1 t) -> bool { return true; }    )
     {
         std::string sOutput = "";
+
+        //Iterate over map. When condition is met add word to output.
         for(auto [i, it] = std::tuple{1, list.begin()}; it!=list.end(); i++, it++)
         {
+            //Check whether condition is met.
             if(condition(it->second) == true)
                 sOutput += std::to_string(i) + ": " + print(it->second) + "\n";
             else
@@ -59,12 +85,14 @@ namespace func
     }
 
     /**
-    * Tries to print objects of any type from a dictionary as a text. Optionall extra 
-    * lamdafuntions can be added, to changed what is printed for each objects, or only
+    *                   ***     printProsa      ***
+    * Tries to print objects of any type from a dictionary as a text. Optional extra 
+    * lambda functions can be added, to changed what is printed for each objects, or only
     * print an object on certain conditions.
-    * @param[in] std::map<std::string T1> map of elememts
-    * @param[in] std::function<T1(T1)> (optional lamda function - for printing custom objects)
-    * @param[in] std::function<bool(T1)> (optional lamda function - condition)
+    * @param[in] std::map<std::string T1> map of elements
+    * @param[in] std::function<T1(T1)> (optional lambda function - for printing custom objects)
+    * @param[in] std::function<bool(T1)> (optional lambda function - condition)
+    * @return List of elements in map as a text.
     */
     template<typename T1, typename T2=std::function<T1(T1)>, typename T3=std::function<bool(T1)>> 
         std::string printProsa( std::map<std::string, T1> &list,
@@ -72,35 +100,50 @@ namespace func
                                 T3 condition = [](T1 t) -> bool {return true; } )
     {
         std::string sOutput = "";
+        //Iterate over map. When condition is met, add "[word], " to output.
         for(auto [i, it] = std::tuple(0, list.begin()); it!=list.end(); i+=2, it++)
         {
             if(condition(it->second) == true)
                 sOutput += print(it->second) + ", ";
         }
+
+        //Erase last comma. 
         if(sOutput.rfind(",") != std::string::npos)
             sOutput.erase(sOutput.end()-2);
+
+        //Replace last comma with "und"
         if(sOutput.rfind(",") != std::string::npos)
             sOutput.replace(sOutput.rfind(","), 2, " und ");
+
+        //Erase last element (I don't now why this is necessary actually :D
         if(sOutput.back() == ' ')
             sOutput.pop_back();
+
+        //Return string
         return sOutput;
     }
 
     
     /**
-    * check whether a given word matches any object of a map by value. If The value is a custom
-    * object, use a lamda, to access the variable you want to check with. Comparrison is done withe
+    *                   ***     getObjectId         ***
+    * Check whether a given word matches any object of a map by value. If The value is a custom
+    * object, use a lambda, to access the variable you want to check with. Comparison is done with
     * fuzzy search. Best match  or empty string is returned.
+    * @param[in] mapObjects map of objects to be printed.
+    * @param[in] sName name of searched object.
+    * @return Return id of found object or empty string.
     */
     template<typename T1, typename T2=std::function<std::string(T1)>> 
     std::string getObjectId( std::map<std::string, T1>& mapObjects, std::string sName, 
                                T2 getName = [](T1 t) -> std::string { return t; } )
     {
+        //Check if name is an id and thus can be directly accessed and returned.
         if(mapObjects.count(sName) > 0)
             return sName;
 
+        //Iterate over map and use fuzzy comparison to find matching name. Add all matches
+        // to array of matches including the exact score.
         std::vector<std::pair<std::string, double>> matches;
-        
         for(auto[i, it] = std::tuple{1, mapObjects.begin()}; it!=mapObjects.end(); i++, it++) {
             if(std::isdigit(sName[0]) && (i==stoi(sName)))
                 return it->first;
@@ -109,6 +152,7 @@ namespace func
                 matches.push_back(std::make_pair(it->first, match));
         }
 
+        //If no matches where found, return empty string.
         if(matches.size() == 0)
             return "";
 
@@ -123,35 +167,63 @@ namespace func
         return matches[pos].first;
     }
 
-    typedef std::map<std::string, std::string> objectmap;
+    /**
+    * Convert a map of objects to a map containing the id of the object as key 
+    * and the attribute selected by the lambda-function as value.
+    * @param[in] in map to convert.
+    * @param[in] lambda expression to generate value.
+    * @return converted map.
+    */
     template<typename T1, typename T2> 
-    objectmap convertToObjectmap(std::map<std::string, T1> in, T2 &lamda)
+    std::map<std::string, std::string> convertToObjectmap(std::map<std::string, T1> in, T2 &lambda)
     {
-        objectmap out;
+        std::map<std::string, std::string> out;
         for(const auto &it : in)
-            out[it.first] = lamda(it.second);
+            out[it.first] = lambda(it.second);
         return out;
     }
     
 
-    template <typename T1, typename T2> std::string table(std::map<std::string, T1> t, T2 &lamda, std::string style="width:10%")
+    /**
+    * Print a given dictionary as html table.
+    * @param[in] in dictionary to print as html table.
+    * @param[in] lambda function to indicate, which attribute to print.
+    * @param[in] style optional css styling.
+    * @return html table as string.
+    */
+    template <typename T1, typename T2> 
+    std::string table(std::map<std::string, T1> in, T2 &lambda, std::string style="width:10%")
     {
+        //Generate html table.
         std::string str ="<table style='"+style+"'>";
-        for(auto it : t) {
+        for(auto it : in) {
             str += "<tr><td>" + it.first + ":</td><td>";
-            str += lamda(it.second);
+            str += lambda(it.second);
             str += "</td></tr>";
         }
         str+="</table>";
         return str; 
     }
 
-    template <typename T1, typename T2, typename T3> std::string table(std::map<std::string, std::map<std::string, T1>> t, T2 &lamda1, T3 &lamda2, std::string style="width:10%", int highlight=-1)
+    /**
+    * Print a given dictionary of dictionaries  as a table. With the option to highlight a certain
+    * column in the table.
+    * @param[in] in dictionary to print as html table.
+    * @param[in] lambda1 function to indicate, which attribute to print.
+    * @param[in] lambda2 function to indicate, which attribute to print.
+    * @param[in] style optional css styling.
+    * @param[in] highlight integer saying, which column to highlight.
+    * @return html table as string.
+    */
+    template <typename T1, typename T2, typename T3> 
+    std::string table(std::map<std::string, std::map<std::string, T1>> in, T2 &lamda1, T3 &lamda2, std::string style="width:10%", int highlight=-1)
     {
+        //Generate table
         std::string str = "<table style='"+style+"'<tr>", color = "", white = Webcmd::set_color(Webcmd::color::WHITE);
 
+        //Generate first row
         int counter = 0; size_t max = 0;
-        for(auto& it : t){
+        for(auto& it : in){
             color = ""; 
             if(it.second.size() > max)
                 max = it.second.size();
@@ -163,13 +235,15 @@ namespace func
         }
         str += "</tr>";
 
+        //Generate other rows
         for(size_t i=0; i<max; i++)
         {
             counter = 0; str += "<tr>";
-            for(auto it : t) {
+            for(auto it : in) {
                 if(counter == highlight) color = Webcmd::set_color(Webcmd::color::GREEN);
                 else color = "";
 
+                //Check if current column is empty
                 if(it.second.size() <= i)
                     str +="<td></td><td></td>";
                 else {

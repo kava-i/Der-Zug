@@ -9,19 +9,21 @@
 std::vector<std::string> func::split(std::string str, std::string delimiter)
 { 
     std::vector<std::string> vStr;
-
     size_t pos=0;
     while ((pos = str.find(delimiter)) != std::string::npos) {
         if(pos!=0)
             vStr.push_back(str.substr(0, pos));
         str.erase(0, pos + delimiter.length());
     }
+
+    //Push ending of the string.
     vStr.push_back(str);
 
     return vStr;
 }
 
 /**
+* Convert a given string to only contain lower case characters.
 * @param[in, out] str string to be modified
 */
 void func::convertToLower(std::string &str)
@@ -31,6 +33,11 @@ void func::convertToLower(std::string &str)
         str[i] = tolower(str[i], loc1);
 }
 
+/**
+* Return the given string to only contain lower case characters.
+* @param str str to be converted.
+* @return converted string in lower case.
+*/
 std::string func::returnToLower(std::string str)
 {
     std::locale loc1;
@@ -40,6 +47,11 @@ std::string func::returnToLower(std::string str)
     return str2;
 }
 
+/**
+* Return the given string to only contain upper-case characters.
+* @param str string to be converted.
+* @return converted string in upper-case.
+*/
 std::string func::returnToUpper(std::string str)
 {
     std::locale loc1;
@@ -49,39 +61,49 @@ std::string func::returnToUpper(std::string str)
     return str2;
 }
 
+/**
+* Randomly swap a certain amount of characters in every nth word of a given string. 
+* Number of characters to be swapped depends on given number ("num"). Higher number
+* results in more characters being swapped in more words.
+* @param str string in which characters will be swapped.
+* @param num number indicating how many characters will be swapped in how many words.
+*/
 std::string func::returnSwapedString(std::string str, int val)
 {
+    //If val is 0 simply return str without any changes.
     if(val==0)
         return str; 
 
+    //Set up random number generation and split string into separated words.
     srand(time(NULL));
     std::vector<std::string> words = func::split(str, " ");
 
+    //Set limit
     size_t limit = (11-val)/2;
 
+    //Iterate over all words
     size_t counter = 0;
     for(auto& word : words)
     {
+        //Skip every nth word, where n=limit.
         if(counter%(limit)!= 0) {
             counter++;
             continue;
         }
 
-        for(size_t i=0; i<word.size(); i++) {
-
-            if(i%(limit) != 0 || isalpha(word[i]) == false)
-                continue;
+        //Randomly swap characters from word.
+        for(size_t i=0; i<word.size(); i++)
+        {
             size_t num = rand() % word.size()-1;
-            if(!isalpha(word[num]))
+            if(i%(limit) != 0 || isalpha(word[i]) == false || isalpha(word[num]) == false)
                 continue;
 
-            char x = word[i];
-            word[i] = word[num];
-            word[num] = x;
+            char x = word[i]; word[i] = word[num]; word[num] = x;
         }
         counter++;
     }
 
+    //Generate string to return
     std::string str2 ="";
     for(auto word : words)
         str2+=word + " ";
