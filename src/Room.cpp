@@ -1,29 +1,7 @@
 #include "CRoom.hpp" 
 
-CRoom::CRoom(std::string sArea, nlohmann::json jAtts, CText* text, objectmap characters, std::map<string, CItem*> items, std::map<string, CDetail*> details)
-{
-    m_sArea = sArea;
-    m_sName = jAtts["name"];
-    m_sID = jAtts["id"];
-    m_sEntry = jAtts.value("entry", "");
-
-    std::map<std::string, nlohmann::json> mapExits = jAtts["exits"].get<std::map<std::string, nlohmann::json>>();
-    for(const auto &it : mapExits) 
-        m_exits[it.first] = new CExit(it.first, it.second);
-    auto lamda = [](CExit* exit) { return exit->getName(); };
-    m_exits_objectMap = func::convertToObjectmap(m_exits, lamda);
-
-    m_text = text;
-    m_characters = characters;
-    m_items = items;
-    m_details = details; 
-}
-
-
 // *** GETTER *** // 
 
-string CRoom::getName()         { return m_sName; }
-string CRoom::getID()           { return m_sID; }
 string CRoom::getDescription()  { return m_text->print(); }
 string CRoom::getEntry()        { return m_sEntry; }
 string CRoom::getArea()         { return m_sArea; }
@@ -128,8 +106,10 @@ string CRoom::look(string sWhere, string sWhat, std::string sMode)
         if(detail.second->getLook() == sWhere && fuzzy::fuzzy_cmp(detail.second->getName(), sWhat) <= 0.2)
         {
             //Print output
-            sOutput += detail.second->getName() + "\n";
-            sOutput += func::printList(detail.second->getItems());
+            if(sMode == "prosa")
+                sOutput += "PERZEPTION - In " + detail.second->getName() + " sind " + func::printProsa(detail.second->getItems()) + ".\n";
+            else
+                sOutput += detail.second->getName() + "\n" + func::printList(detail.second->getItems());
     
             //Change from hidden to visible and "empty" detail
             for(auto it : detail.second->getItems()) 

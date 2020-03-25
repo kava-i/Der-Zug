@@ -1,28 +1,8 @@
 #include "CItem.hpp"
 #include "CPlayer.hpp"
 
-CItem::CItem(nlohmann::json jBasic)
-{
-    m_jAtts = jBasic;
-}
-
-CItem::CItem(nlohmann::json jBasic, nlohmann::json jItem, std::string sID)
-{
-    m_jAtts = jBasic;
-
-    for(auto it=jItem.begin(); it!=jItem.end(); ++it) {
-        if(it.key() == "from" && it.key() == "amount")
-            continue;
-        m_jAtts[it.key()] = it.value();
-    }
-
-    m_jAtts["id"] = sID;
-}
-
 // *** GETTTER *** //
 nlohmann::json CItem::getAttributes() { return m_jAtts; }
-string CItem::getID()      { return getAttribute<string>("id"); }
-string CItem::getName()    { return getAttribute<string>("name"); }
 string CItem::getDescription() { return getAttribute<string>("description"); }
 string CItem::getFunction(){ return m_jAtts.value("function", m_jAtts["type"]); } 
 size_t CItem::getEffekt()  { return getAttribute<size_t>("effekt"); }

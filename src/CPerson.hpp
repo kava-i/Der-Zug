@@ -5,6 +5,7 @@
 #include <queue> 
 #include <map>
 #include <tuple>
+#include "CObject.hpp"
 #include "CInventory.hpp"
 #include "CItem.hpp"
 #include "CDialog.hpp"

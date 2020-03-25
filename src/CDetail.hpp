@@ -7,7 +7,6 @@
 
 using std::string;
 
-
 class CDetail
 {
 private: 
