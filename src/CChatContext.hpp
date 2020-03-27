@@ -25,7 +25,7 @@ public:
     }
 
     //Alternate throw_event
-    void throw_event(event newEvent, CPlayer* p);
+    bool throw_event(event newEvent, CPlayer* p);
      
     //Handler
     void h_send(string&, CPlayer*);

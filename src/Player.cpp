@@ -198,7 +198,10 @@ void CPlayer::startDialog(string sCharacter)
 {
     m_dialog = m_world->getCharacters()[sCharacter]->getDialog();
     m_contextStack.insert(new CDialogContext(this, sCharacter), 1, "dialog");
-    throw_event(m_dialog->states["START"]->callState(this));
+
+    std::string newCommand = m_dialog->states["START"]->callState(this);
+    if(newCommand != "")
+        throw_event(newCommand);
 }
 
 /**
@@ -207,9 +210,9 @@ void CPlayer::startDialog(string sCharacter)
 */
 void CPlayer::startChat(CPlayer* player)
 {
-    m_sPrint += "Du gehst auf " + player->getName() + " zu und räusperst dich... \n";
+    m_sPrint += "DRAMA - Du gehst auf " + player->getName() + " zu und räusperst dich... \n";
     if(player->getContexts().nonPermeableContextInList() == true)
-        m_sPrint += "\n" + player->getName() + " ist zur Zeit beschäftigt.\n"; 
+        m_sPrint += "\nTECH GUY - " + player->getName() + " ist zur Zeit beschäftigt.\n"; 
     else
     {
         //Add Chat context for both players
@@ -228,7 +231,6 @@ void CPlayer::startChat(CPlayer* player)
 */
 void CPlayer::send(string sMessage)
 {
-    std::cout << "Sending message... \n";
     _cout->write(sMessage);
     _cout->flush(); 
 }
@@ -356,7 +358,6 @@ void CPlayer::addAll()
     {
         if((*it).second->getHidden() == false) 
 	    {
-            //addItem((*(it++)).second);
             m_inventory.addItem((*it).second);
             sOutput += (*it).second->getName() + ", ";
             m_room->getItems().erase((*(it++)).second->getID());
@@ -493,7 +494,6 @@ void CPlayer::showQuests(bool solved)
 */
 void CPlayer::setNewQuest(std::string sQuestID)
 {
-    std::cout << sQuestID << std::endl;
     int ep=0;
     m_sPrint += m_world->getQuests()[sQuestID]->setActive(ep);
     addEP(ep);
@@ -640,7 +640,6 @@ void CPlayer::checkCommands()
             m_sPrint.insert(pos + it.first.length()+1, WHITE);
             pos+=it.first.length();
         }
-        std::cout << "Finished checking commands.\n";
     }
 }
 
@@ -718,8 +717,7 @@ void CPlayer::throw_event(string sInput)
         std::cout << events[i].first << ", " << events[i].second << "\n";
 
         for(size_t j=0; j<sortedCtxList.size(); j++) {
-            sortedCtxList[j]->throw_event(events[i], this);
-            if(sortedCtxList[j]->getPermeable() == false)
+            if(sortedCtxList[j]->throw_event(events[i], this) == false)
                 break;
         }
     }

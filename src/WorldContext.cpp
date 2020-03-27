@@ -47,6 +47,7 @@ void CWorldContext::h_endFight(string& sIdentifier, CPlayer* p) {
 }
 
 void CWorldContext::h_endDialog(string& sIdentifier, CPlayer* p) {
+    std::cout << "Hey " << std::endl;
     p->getContexts().erase("dialog");
     m_curPermeable=false;
 }

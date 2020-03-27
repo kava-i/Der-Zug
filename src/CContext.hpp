@@ -25,6 +25,8 @@ protected:
     bool m_curPermeable;
     bool m_block;
 
+    std::string m_sName;
+
     std::string m_sHelp;
 
 public: 
@@ -32,17 +34,19 @@ public:
     CContext() {}
     virtual ~CContext() {}
 
-    // *** Setter *** //
+    // *** Getter *** //
     bool getPermeable();
+    std::string getName() { return m_sName; }
 
     // *** Setter *** //
     virtual void setGame(CGame*) {}
+    void setName(std::string sName) { m_sName = sName; }
 
     void add_listener(string sEventType, void(CContext::*)(string&, CPlayer*));
     void add_listener(string sEventType, void(CContext::*)(string&, CPlayer*), size_t pos);
     void delete_listener(string sEventType, int num);
 
-    virtual void throw_event(event newEvent, CPlayer* p);
+    virtual bool throw_event(event newEvent, CPlayer* p);
     virtual void error(CPlayer* p) {}
 
     // *** EVENTHANDLERS *** // 

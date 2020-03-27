@@ -8,6 +8,7 @@ CContextStack::CContextStack()
 void CContextStack::insert(CContext *ctx, int priority, std::string name)
 {
     m_contextStack[name] = ctx;
+    ctx->setName(name);
     m_sortedContexts.push_back(std::pair<CContext*,int>{ctx,priority});
     std::sort(m_sortedContexts.begin(),m_sortedContexts.end(),[](std::pair<CContext*,int>& a,std::pair<CContext*,int>& b){return a.second<b.second;});
     m_reloadQueue = true;

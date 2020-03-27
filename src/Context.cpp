@@ -20,14 +20,14 @@ void CContext::delete_listener(string sEventType, int index) {
     m_eventmanager[sEventType].erase(m_eventmanager[sEventType].begin()+index);
 }
 
-void CContext::throw_event(event e, CPlayer* p)
-{
+bool CContext::throw_event(event e, CPlayer* p)
+{    
     m_curPermeable = m_permeable;
     m_block = false;
 
     if(m_eventmanager.count(e.first) == 0) {
         error(p);
-        return;
+        return m_permeable;
     }
         
     for(auto it : m_eventmanager[e.first]) {
@@ -35,6 +35,8 @@ void CContext::throw_event(event e, CPlayer* p)
             break;
         (this->*it)(e.second, p);
     }
+
+    return m_curPermeable;
 }
 
 // ***** EVENTHANDLER ***** //

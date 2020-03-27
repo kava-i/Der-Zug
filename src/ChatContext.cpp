@@ -3,10 +3,8 @@
 
 //Alternate throwing events
 
-void CChatContext::throw_event(event newEvent, CPlayer* p)
+bool CChatContext::throw_event(event newEvent, CPlayer* p)
 {
-    std::cout << "Halllo!!\n";
-
     if(newEvent.first.find("[end]") != std::string::npos)
         h_end(newEvent.second, p);
     else if(newEvent.first == newEvent.second)
@@ -16,6 +14,8 @@ void CChatContext::throw_event(event newEvent, CPlayer* p)
         std::string msg = newEvent.first + " " + newEvent.second;
         h_send(msg, p);
     }
+
+    return m_permeable;
 }
 
 void CChatContext::h_send(string& sInput, CPlayer* p)

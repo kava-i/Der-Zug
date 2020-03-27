@@ -148,9 +148,7 @@ void CQuestStep::setCurSucc(int x) {
     m_curSucc = x;
 }
 void CQuestStep::incSucc(int x) {
-    std::cout << "Succ before: " << m_curSucc << std::endl;
     m_curSucc += x;
-    std::cout << "Succ after: " << m_curSucc << std::endl;
 }
 
 std::string CQuestStep::solved(int& ep)
