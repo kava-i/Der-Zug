@@ -41,7 +41,6 @@ void CTradeContext::h_decideSell(std::string& sIdentifier, CPlayer* p)
         p->appendPrint("PERZEPTION: Du hast " + m_curItem->getName() + " verkauft.\n\n");
         p->throw_event("recieveMoney " + std::to_string(m_curItem->getValue()));
         CItem* item = new CItem(m_curItem->getAttributes(), p);
-        std::cout << "VALUE: " << item->getValue() << std::endl;
         m_tradingPartner->getInventory().addItem(item);
         p->getInventory().removeItemByID(m_curItem->getID());
     }
@@ -162,7 +161,6 @@ void CTradeContext::updateListeners(CPlayer* p)
     add_listener("exit", &CContext::h_exit);
 }
 
-void CTradeContext::error(CPlayer* p)
-{
+void CTradeContext::error(CPlayer* p) {
     h_help(m_sHelp, p);
 }

@@ -139,6 +139,7 @@ void CStandardContext::h_consume(string& sIdentifier, CPlayer* p) {
 
 void CStandardContext::h_equipe(string& sIdentifier, CPlayer* p) {
     if(p->getInventory().getItem(sIdentifier) != NULL) {
+        std::cout << "Function: " << p->getInventory().getItem(sIdentifier)->getFunction() << std::endl;
         if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
             p->appendPrint("This item is not equipable.\n");
     }

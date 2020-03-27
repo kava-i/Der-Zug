@@ -351,14 +351,25 @@ std::vector<std::string> CPlayer::findWay(CRoom* room, std::string roomID)
 */
 void CPlayer::addAll()
 {
+    std::string sOutput = "";
     for(auto it = m_room->getItems().begin(); it != m_room->getItems().end();)
     {
         if((*it).second->getHidden() == false) 
 	    {
-            addItem((*(it++)).second);
+            //addItem((*(it++)).second);
+            m_inventory.addItem((*it).second);
+            sOutput += (*it).second->getName() + ", ";
+            m_room->getItems().erase((*(it++)).second->getID());
 	        continue;
 	    }
 	    ++it;
+    }
+    if(sOutput == "")
+        m_sPrint += "PERZEPTION - Keine Items im Raum.\n";
+    else
+    {
+        sOutput.erase(sOutput.end() -2);
+        m_sPrint += "PERZEPTION - " + sOutput + " zu {name}'s Inventar hinzugefügt.\n";
     }
 }
 
@@ -409,25 +420,25 @@ void CPlayer::equipeItem(CItem* item, string sType)
     //If nothing is equipped in this category -> equip.
     if(m_equipment[sType] == NULL)
     {
-        m_sPrint += "PERZEPTION: Du hast " + item->getName() + " als " + sType + " ausgerüstet.\n";
+        m_sPrint += "PERZEPTION - Du hast " + item->getName() + " als " + sType + " ausgerüstet.\n";
         string sAttack = item->getAttack();
 
         //Check for new attack
         if(sAttack != "") {
             m_attacks[sAttack] = m_world->getAttacks()[sAttack];
-            m_sPrint += "New attack: \"" + m_attacks[sAttack]->getName() + "\" added to arracks.\n";
+            m_sPrint += "PERZEPTION - Neue Attacke: \"" + m_attacks[sAttack]->getName() + "\".\n";
         }
         m_equipment[sType] = item;
     }
 
     //If this item is already equipped -> print error message.
     else if(m_equipment[sType]->getID() == item->getID())
-        m_sPrint+=sType + " bereits ausgerüstet.\n";
+        m_sPrint+= "PERZEPTION - " + sType + " bereits ausgerüstet.\n";
 
     //If another item is equipped in this category -> add choice-context
     else
     {
-        m_sPrint+="Already a " + sType + " equipt. Want to change? (yes/no)\n";
+        m_sPrint+="PERZEPTION - Bereits ein " + sType + " ausgerüstet. Austauschen? (yes/no)\n";
 
         //Create Choice-Context
         CChoiceContext* context = new CChoiceContext(item->getID(), "Choose only yes or no\n");
@@ -447,7 +458,7 @@ void CPlayer::dequipeItem(string sType) {
     else if(m_equipment[sType] == NULL)
         m_sPrint += "Nothing to dequipe.\n";
     else {
-        m_sPrint += "Dequiped " + sType + " " + m_equipment[sType]->getName() + ".\n";
+        m_sPrint += "PERZEPTION - " + sType + " " + m_equipment[sType]->getName() + " abgelegt.\n";
 
         //Erase attack
         if(m_equipment[sType]->getAttack() != "")
@@ -693,11 +704,15 @@ void CPlayer::addSelectContest(std::map<std::string, std::string>& mapObjects, s
 */
 void CPlayer::throw_event(string sInput)
 {
+    //Check for time triggered events
     checkTimeEvents();
+
+    //Parse command
     CParser parser;
     std::vector<std::pair<std::string, std::string>> events = parser.parse(sInput);
-    std::deque<CContext*> sortedCtxList= m_contextStack.getSortedCtxList();
 
+    //Iterate over parsed events and call throw_event for each context and each event
+    std::deque<CContext*> sortedCtxList = m_contextStack.getSortedCtxList();
     for(size_t i=0; i<events.size(); i++)
     {
         std::cout << events[i].first << ", " << events[i].second << "\n";

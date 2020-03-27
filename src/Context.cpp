@@ -26,8 +26,7 @@ void CContext::throw_event(event e, CPlayer* p)
     m_block = false;
 
     if(m_eventmanager.count(e.first) == 0) {
-        if(m_permeable == false)
-            error(p);
+        error(p);
         return;
     }
         

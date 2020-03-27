@@ -23,9 +23,7 @@ std::string CInventory::printInventory(std::string color, int highlight)
 
 void CInventory::addItem(CItem* item)
 {
-    std::string sType = item->getType();
-    sType.erase(sType.find("_"));
-    m_inventory[sType][item->getName()].push_back(item); 
+    m_inventory[item->getCategory()][item->getName()].push_back(item); 
 }
 
 void CInventory::removeItemByID(std::string sItemID)

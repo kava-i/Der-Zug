@@ -14,6 +14,7 @@ class CItem : public CObject
 protected:
 
     nlohmann::json m_jAttributes;
+    std::string m_sCategory;
     std::string m_sType;
     std::string m_sFunction;
     std::string m_sAttack;
@@ -30,16 +31,7 @@ public:
     * Constructor for non-derived items simply placing the passed json as items attributes.
     * @param[in] basic attributes from base item.
     */
-    CItem(nlohmann::json jBasic, CPlayer* p) : CObject{jBasic, p}
-    {
-        m_jAttributes = jBasic;
-        m_sType = jBasic.value("type", "");
-        m_sAttack = jBasic.value("attack", "");
-        m_sFunction = jBasic.value("function", "");
-        m_effekt = jBasic.value("effekt", 0);
-        m_value = jBasic.value("value", 1);
-        m_hidden = jBasic.value("value", false);
-    }
+    CItem(nlohmann::json jBasic, CPlayer* p);
 
     /**
     * Constructor for derived items. The basic json usually supplies basic attributes. Which 
@@ -48,25 +40,11 @@ public:
     * @param[in] jBasic basic attributes from base item.
     * @param[in] jItem extra attributes from specific individual item.
     */
-    CItem(nlohmann::json jBasic, nlohmann::json jItem, CPlayer* p, std::string sID="") : CObject {jBasic, p} 
-    {
-        m_sID = sID;
-        m_sType = jItem.value("type", jBasic.value("type", ""));
-        m_sAttack = jItem.value("attack", jBasic.value("attack", ""));
-        m_sFunction = jItem.value("function", jBasic.value("function", ""));
-        m_effekt = jItem.value("effekt", jBasic.value("effekt", 0));
-        m_value = jItem.value("value", jBasic.value("value", 1));
-        m_hidden = jItem.value("hidden", false);
-
-        m_jAttributes = jBasic;
-        jItem.erase("amount");
-        for(auto it=jItem.begin(); it!=jItem.end(); ++it)
-            m_jAttributes[it.key()] = it.value();
-        m_jAttributes["id"] = m_sID;
-    }
+    CItem(nlohmann::json jBasic, nlohmann::json jItem, CPlayer* p, std::string sID="");
 
     // *** GETTER *** // 
     nlohmann::json getAttributes();
+    std::string getCategory();
     std::string getType();
     std::string getAttack();
     std::string getFunction();
@@ -75,6 +53,7 @@ public:
     bool getHidden();
     
     // *** SETTER *** //
+    void setCategory(std::string sCategory);
     void setType(std::string sType);
     void setFunction(std::string sFunction);
     void setAttack(std::string sAttack);
@@ -86,8 +65,8 @@ public:
     bool callFunction(CPlayer* p);
 
     // *** FUNCTIONS *** //
-    void equipeWeapon(CPlayer*);
-    void consumeDrug(CPlayer*);
+    void equipe(CPlayer*);
+    void consume(CPlayer*);
 };
 
 #endif

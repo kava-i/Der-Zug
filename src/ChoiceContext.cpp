@@ -24,6 +24,8 @@ CChoiceContext::CChoiceContext(std::string obj, objectmap& mapObjects)
 // ***** Functions ***** //
 void CChoiceContext::error(CPlayer* p)
 {
+    if(m_permeable == true)
+        p->getContexts().erase("choice");
     p->appendPrint(m_sError);
 }
 
@@ -34,14 +36,10 @@ void CChoiceContext::h_select(string& sIdentifier, CPlayer* p)
 {
     std::cout << "h_select: " << sIdentifier << ", " << m_sObject << ", " << std::endl;
     std::string obj = func::getObjectId(m_objectMap, sIdentifier);
-    if(obj == "")
-        p->appendPrint("Choose an number or a new Command\n");
 
-    else {
-        p->throw_event(m_sObject + " " + obj);
-        m_permeable=false;
-        p->getContexts().erase("choice"); 
-    }
+    p->throw_event(m_sObject + " " + obj);
+    m_permeable=false;
+    p->getContexts().erase("choice"); 
 }
 
 void CChoiceContext::h_choose_equipe(string& sIdentifier, CPlayer* p)

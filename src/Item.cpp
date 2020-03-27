@@ -1,9 +1,59 @@
 #include "CItem.hpp"
 #include "CPlayer.hpp"
 
+/**
+* Constructor for non-derived items simply placing the passed json as items attributes.
+* @param[in] basic attributes from base item.
+*/
+CItem::CItem(nlohmann::json jBasic, CPlayer* p) : CObject{jBasic, p}
+{
+    m_jAttributes = jBasic;
+
+    std::string sType = jBasic.value("type", "");
+    m_sCategory = func::split(sType, "_")[0];
+    m_sType = func::split(sType, "_")[1];
+
+    m_sAttack = jBasic.value("attack", "");
+    m_sFunction = jBasic.value("function", m_sCategory);
+    m_effekt = jBasic.value("effekt", 0);
+    m_value = jBasic.value("value", 1);
+    m_hidden = jBasic.value("value", false);
+}
+
+/**
+* Constructor for derived items. The basic json usually supplies basic attributes. Which 
+* might get overridden, by specific attributes, which otherwise only supply extra item
+* specific attributes.
+* @param[in] jBasic basic attributes from base item.
+* @param[in] jItem extra attributes from specific individual item.
+*/
+CItem::CItem(nlohmann::json jBasic, nlohmann::json jItem, CPlayer* p, std::string sID) : CObject {jBasic, p} 
+{
+    m_sID = sID;
+    
+    std::string sType = jItem.value("type", jBasic.value("type", ""));
+    m_sCategory = func::split(sType, "_")[0];
+    m_sType = func::split(sType, "_")[1];
+
+    m_sAttack = jItem.value("attack", jBasic.value("attack", ""));
+    m_sFunction = jItem.value("function", jBasic.value("function", m_sCategory));
+    m_effekt = jItem.value("effekt", jBasic.value("effekt", 0));
+    m_value = jItem.value("value", jBasic.value("value", 1));
+    m_hidden = jItem.value("hidden", false);
+
+    m_jAttributes = jBasic;
+    jItem.erase("amount");
+    for(auto it=jItem.begin(); it!=jItem.end(); ++it)
+        m_jAttributes[it.key()] = it.value();
+    m_jAttributes["id"] = m_sID;
+}
+
 // *** GETTTER *** //
 nlohmann::json CItem::getAttributes() {
     return m_jAttributes;
+}
+std::string CItem::getCategory() {
+    return m_sCategory;
 }
 std::string CItem::getType() {
     return m_sType;
@@ -25,6 +75,9 @@ bool CItem::getHidden() {
 }
 
 // *** SETTER *** //
+void CItem::setCategory(std::string sCategory) {
+    m_sCategory = sCategory;
+}
 void CItem::setType(std::string sType) {
     m_sType = sType;
 }
@@ -50,10 +103,10 @@ std::map<std::string, void (CItem::*)(CPlayer* p)> CItem::m_functions= {};
 void CItem::initializeFunctions()
 {
     //Consume-functions
-    m_functions["consume_drug"] = &CItem::consumeDrug;
+    m_functions["consume"] = &CItem::consume;
 
     //Equipe-functions
-    m_functions["equipe_weapon"] = &CItem::equipeWeapon;
+    m_functions["equipe"] = &CItem::equipe;
 }
 
 // ***** FUNCTION-CALLER ***** // 
@@ -69,20 +122,23 @@ bool CItem::callFunction(CPlayer* p) {
 
 
 // ***** CONSUME FUNCTIONS ***** //
-void CItem::consumeDrug(CPlayer* p)
+void CItem::consume(CPlayer* p)
 {
-    p->setStat("highness", p->getStat("highness") + getEffekt());
-    if(!p->checkEventExists("highness"))
-        p->addTimeEvent("highness", 2, &CPlayer::t_highness);
-    p->appendPrint("You consume drug: " + getName() + ". Highness inceased by " + std::to_string(getEffekt()) + ".\n");
-    p->getInventory().removeItemByID(getID());
+    if(m_sType == "drug")
+    {
+        p->setStat("highness", p->getStat("highness") + getEffekt());
+        if(!p->checkEventExists("highness"))
+            p->addTimeEvent("highness", 2, &CPlayer::t_highness);
+        p->appendPrint("You consume drug: " + getName() + ". Highness inceased by " + std::to_string(getEffekt()) + ".\n");
+        p->getInventory().removeItemByID(getID());
+    }
 }
 
 
 // ***** EQUIPE-FUNCTIONS ***** //
-void CItem::equipeWeapon(CPlayer* p)
+void CItem::equipe(CPlayer* p)
 {
-    p->equipeItem(this, func::split(m_sType, "_")[1]);
+    p->equipeItem(this, m_sType);
 }
 
 
