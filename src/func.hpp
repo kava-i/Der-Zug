@@ -116,8 +116,8 @@ namespace func
             sOutput.replace(sOutput.rfind(","), 2, " und ");
 
         //Erase last element (I don't now why this is necessary actually :D
-        if(sOutput.back() == ' ')
-            sOutput.pop_back();
+        //if(sOutput.back() == ' ')
+        //    sOutput.pop_back();
 
         //Return string
         return sOutput;

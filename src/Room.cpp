@@ -2,7 +2,6 @@
 
 // *** GETTER *** // 
 
-string CRoom::getDescription()  { return m_text->print(); }
 string CRoom::getEntry()        { return m_sEntry; }
 string CRoom::getArea()         { return m_sArea; }
 CRoom::objectmap& CRoom::getCharacters()    { return m_characters; }
@@ -61,9 +60,9 @@ string CRoom::showCharacters(std::string sMode)
     std::string sOutput = "";
     if(sMode == "prosa")
     {
-        sOutput = "PERZEPTION - Hier sind " + func::printProsa(m_characters) + "\n";
+        sOutput = "PERZEPTION - Hier sind " + func::printProsa(m_characters) + ".\n";
         if(func::printProsa(m_players) != "")
-            sOutput += "Und außerdem noch "+ func::printProsa(m_players) + "\n";
+            sOutput += "Und außerdem noch "+ func::printProsa(m_players) + ".\n";
     }
     else
         sOutput = "Characters: \n" + func::printList(m_characters) + func::printList(m_players);
@@ -73,11 +72,11 @@ string CRoom::showCharacters(std::string sMode)
 string CRoom::showItems(std::string sMode)
 {
     string sOutput = "";
-    auto printing = [](CItem* item) { return item->getName() + " (" + item->getDescription() + ")"; };
-    auto condition = [](CItem* item) { return item->getAttribute<bool>("hidden") != true; };
+    auto printing = [](CItem* item) { return item->getName(); };
+    auto condition = [](CItem* item) { return item->getHidden() != true; };
 
     if(sMode == "prosa")
-        return "PERZEPTION - Ah, hier sind folgende Gegenstände: " + func::printProsa(m_items, printing, condition);
+        return "PERZEPTION - Ah, hier sind folgende Gegenstände: " + func::printProsa(m_items, printing, condition) + ".\n";
     else
         return "Items: \n" + func::printList(m_items, printing, condition);
 } 
@@ -85,9 +84,9 @@ string CRoom::showItems(std::string sMode)
 string CRoom::showDetails(std::string sMode)
 {
     std::string details = "";
-    auto lamda = [](CDetail* detail) { return detail->getDescription(); };
+    auto lamda = [](CDetail* detail) { return detail->getName(); };
     if(sMode == "prosa") 
-        details += "PERZEPTION - " + func::printProsa(m_details, lamda) + "\n";
+        details += "PERZEPTION - Hier sind " + func::printProsa(m_details, lamda) + "\n";
     else 
         details += "Details:\n" + func::printList(m_details, lamda);
 
@@ -107,16 +106,23 @@ string CRoom::look(string sWhere, string sWhat, std::string sMode)
         {
             //Print output
             if(sMode == "prosa")
-                sOutput += "PERZEPTION - In " + detail.second->getName() + " sind " + func::printProsa(detail.second->getItems()) + ".\n";
+            {
+                std::string sItems = func::printProsa(detail.second->getItems());
+                if(sItems != "")
+                    sOutput += "PERZEPTION - In " + detail.second->getName() + " sind " + sItems + ".\n";
+                else
+                    sOutput = "PERZEPTION - Nichts gefunden.\n";
+            }
             else
                 sOutput += detail.second->getName() + "\n" + func::printList(detail.second->getItems());
     
             //Change from hidden to visible and "empty" detail
             for(auto it : detail.second->getItems()) 
-                m_items[it.first]->setAttribute<bool>("hidden", false);
+                m_items[it.first]->setHidden(false);
             detail.second->getItems().clear();
         }
     }
+    if(sMode=="list"  && sOutput == "") sOutput = "Nichts gefunden.\n";
     return sOutput;
 }
 
@@ -124,9 +130,9 @@ CItem* CRoom::getItem(std::string sPlayerChoice)
 {
     for(auto it : m_items)
     {
-        if(it.second->getAttribute<bool>("hidden") == true) 
+        if(it.second->getHidden() == true) 
             continue;
-        if(fuzzy::fuzzy_cmp(it.second->getAttribute<string>("name"), sPlayerChoice) <= 0.2)
+        if(fuzzy::fuzzy_cmp(it.second->getName(), sPlayerChoice) <= 0.2)
             return it.second;
     }
     return NULL;

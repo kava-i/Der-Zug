@@ -17,7 +17,6 @@ using std::string;
 class CRoom : public CObject
 { 
 private:
-    CText* m_text;
     string m_sEntry;
     string m_sArea;
     
@@ -31,25 +30,23 @@ private:
     std::map<string, CDetail*> m_details;
 
 public:
-    CRoom(string sArea, nlohmann::json jAtts, CText* text, objectmap characters, std::map<string, CItem*> items, std::map<string, CDetail*> details) : CObject{jAtts}
+    CRoom(string sArea, nlohmann::json jAtts, objectmap characters, std::map<string, CItem*> items, std::map<string, CDetail*> details, CPlayer* p) : CObject{jAtts, p}
     {
         m_sArea = sArea;
         m_sEntry = jAtts.value("entry", "");
 
         std::map<std::string, nlohmann::json> mapExits = jAtts["exits"].get<std::map<std::string, nlohmann::json>>();
         for(const auto &it : mapExits) 
-            m_exits[it.first] = new CExit(it.first, it.second);
+            m_exits[it.first] = new CExit(it.first, it.second, p);
         auto lamda = [](CExit* exit) { return exit->getName(); };
         m_exits_objectMap = func::convertToObjectmap(m_exits, lamda);
 
-        m_text = text;
         m_characters = characters;
         m_items = items;
         m_details = details; 
     }
 
     // *** getter *** // 
-    string getDescription();
     string getEntry();
     string getArea(); 
     objectmap& getCharacters();

@@ -8,7 +8,7 @@
     hospital_stairs: { name: Treppe, prep: zur}
   characters:
   items:
-    basic_book: { id: hegel_book, description: Hegel, Phänemenologie des Geistes }
+    buch_PdG: { }
     basic_stick: { }
     basic_sword: { }
     basic_wine: { hidden: true, amount: 2}
@@ -16,11 +16,12 @@
   details:
     - name: Small box
       id: hospital_small-box
-      description: A small wooden box stands in the left corner of the room.
+      description: 
+        - "PERZEPTION;A small wooden box stands in the left corner of the room."
       look: in
       items:
-        hospital_wine: Wine
-        hospital_cigaretts: A pack of Cigaretts
+        basic_wine: Wine
+        basic_cigaretts: A pack of Cigaretts
 
 - name: Stairs
   id: hospital_stairs

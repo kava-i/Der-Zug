@@ -2,14 +2,22 @@
 
 - name: "Book"
   id: basic_book
-  description: "Just a normal book, notjhing special"
   type: others_book
-  effekt: 0
   value: 10
+  description: 
+    - "PERZEPTION;Just a normal book, notjhing special"
 
 - name: "Ticket"
   id: ticket
-  description: "Zugticket nach Moskau."
   type: others_ticket
-  effekt: 0
   value: 20
+  description: 
+    - "PERZEPTION;Zugticket nach Moskau."
+
+- name: "G.F.W. Hegel, <i>Phänemenologie des Geistes<i>"
+  id: buch_PdG
+  type: others_book
+  value: 20
+  description: 
+    - "PERZEPTION;Eins der spannendsten und bedeutesten Bücher der Geschichte der Philosophie"
+ 

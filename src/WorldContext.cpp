@@ -29,7 +29,7 @@ void CWorldContext::h_deleteCharacter(string& sIdentifier, CPlayer* p) {
 }
 
 void CWorldContext::h_addItem(string& sIdentifier, CPlayer* p) {
-    p->addItem(p->getWorld()->getItem(sIdentifier));
+    p->addItem(p->getWorld()->getItem(sIdentifier, p));
     m_curPermeable=false;
 }
 

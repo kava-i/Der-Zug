@@ -13,7 +13,7 @@ class CInventory
 {
 private:     
 
-    typedef std::map<std::string, std::map<string, std::vector<CItem*>> > inventory;
+    typedef std::map<std::string, std::map<std::string, std::vector<CItem*>> > inventory;
     inventory m_inventory;
 
 public:

@@ -51,33 +51,24 @@ void CWorld::roomFactory(string sPath, CPlayer* p)
             mapChars = characterFactory(j_room["characters"], p);
 
         //Parse items
-        map<string, CItem*> mapItems = parseRoomItems(j_room, sArea);
+        map<string, CItem*> mapItems = parseRoomItems(j_room, sArea, p);
 
         //Parse details
-        map<string, CDetail*> mapDetails = detailFactory(j_room);
+        map<string, CDetail*> mapDetails = detailFactory(j_room, p, sArea);
         
         //Create new room
-        m_rooms[j_room["id"]] = new CRoom(sArea, j_room, new CText(j_room["description"], p), mapChars, mapItems, mapDetails);
+        m_rooms[j_room["id"]] = new CRoom(sArea, j_room, mapChars, mapItems, mapDetails, p);
     }
 }
 
-map<string, CDetail*> CWorld::detailFactory(nlohmann::json j_room)
+map<string, CDetail*> CWorld::detailFactory(nlohmann::json j_room, CPlayer* p, std::string sArea)
 {
     map<string, CDetail*> mapDetails;
     if(j_room.count("details") == 0)
         return mapDetails;
 
     for(auto j_detail : j_room["details"])
-    {
-        objectmap characters;
-        if(j_detail.count("characters") > 0) 
-            characters = j_detail["characters"].get<objectmap>();
-        objectmap items;
-        if(j_detail.count("items") > 0) 
-            items = j_detail["items"].get<objectmap>();
-
-        mapDetails[j_detail["id"]] = new CDetail(j_detail["name"], j_detail["id"], j_detail["description"], j_detail["look"], characters, items);
-    }
+        mapDetails[j_detail["id"]] = new CDetail(j_detail, p, sArea);
 
     return mapDetails;
 }
@@ -100,7 +91,7 @@ void CWorld::itemFactory(std::string sPath) {
 }
 
 
-map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, std::string id)
+map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, std::string sArea, CPlayer* p)
 {
     map<string, CItem*> mapItems;
     if(j_room.count("items") == 0)
@@ -109,13 +100,20 @@ map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, std::string id
     map<string, nlohmann::json> items = j_room["items"].get<map<string, nlohmann::json>>();
     for(auto it : items) 
     {
-        std::string sID = id + "_" + it.second.value("id", it.first.substr(it.first.find("_")+1));
+        std::string sID = sArea + "_" + it.first; 
 
-        mapItems[sID] = new CItem(m_items[it.first], it.second, sID);
+        nlohmann::json jBasic;
+        if(m_items.count(it.first) > 0)
+            jBasic = m_items[it.first];
+        else
+            jBasic = {};
 
+        mapItems[sID] = new CItem(jBasic, it.second, p, sID);
+
+        //Add [amount] items with "id = id + num" if amount is set.
         for(size_t i=2; i<=it.second.value("amount", 0u); i++) {
-            std::string newID = sID + std::to_string(i);
-            mapItems[newID] = new CItem(m_items[it.first], it.second, newID);
+            std::string newID =  sID +std::to_string(i);
+            mapItems[newID] = new CItem(jBasic, it.second, p, newID);
         }
     }
 
@@ -135,7 +133,7 @@ CWorld::objectmap CWorld::characterFactory(nlohmann::json j_characters, CPlayer*
             newDialog = dialogFactory("defaultDialog", p);
 
         //Create items and attacks
-        map<string, CItem*> items = parseRoomItems(j_char, j_char["id"]);
+        map<std::string, CItem*> items = parseRoomItems(j_char, j_char["id"], p);
         map<string, CAttack*> attacks = parsePersonAttacks(j_char);
 
         //Create character and add to maps

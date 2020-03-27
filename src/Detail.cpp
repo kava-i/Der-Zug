@@ -1,28 +1,21 @@
 #include "CDetail.hpp"
 
-CDetail::CDetail(string sName, string sID, string sDescription, string sLook, objectmap characters, objectmap items)
+
+CDetail::CDetail(nlohmann::json jAttributes, CPlayer* p, std::string sArea) : CObject{jAttributes, p}
 {
-    m_sName = sName;
-    m_sID = sID;
-    m_sDescription = sDescription;
-    m_sLook = sLook;
-    m_characters = characters;
-    m_items = items;
+    m_sLook = jAttributes.value("look", "in");
+
+    if(jAttributes.count("characters") > 0)
+        m_characters = jAttributes["characters"].get<objectmap>();
+
+    if(jAttributes.count("items") > 0)
+    {
+        for(const auto &it : jAttributes["items"].get<objectmap>())
+            m_items[sArea + "_" + it.first] = it.second;
+    }
 }
 
 // *** GETTER *** //
-string CDetail::getName() {
-    return m_sName;
-}
-
-string CDetail::getID() {
-    return m_sID;
-}
-
-string CDetail::getDescription() {
-    return m_sDescription;
-}
-
 string CDetail::getLook() { 
     return m_sLook; 
 }

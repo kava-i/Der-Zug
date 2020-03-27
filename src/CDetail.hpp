@@ -4,16 +4,14 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include "CObject.hpp"
+#include "json.hpp"
 
 using std::string;
 
-class CDetail
+class CDetail : public CObject
 {
 private: 
-    string m_sName;
-    string m_sID;
-    string m_sDescription;
-
     string m_sLook;
 
     typedef std::map<string, string> objectmap;
@@ -23,19 +21,15 @@ private:
 public:
 
     //Constructor 
-    CDetail(string sName, string sID, string sDescription, string look, objectmap characters, objectmap items);
+    CDetail(nlohmann::json jAttributes, CPlayer* p, std::string sArea);
 
     // *** GETTER *** //
-    string getName();
-    string getID();
-    string getDescription();
     string getLook();
     objectmap& getCharacters();
     objectmap& getItems();
 
     // *** FUNCTIONS *** //
     string look(string sWhere, string sWhat);
-
 };
 
 #endif

@@ -2,15 +2,51 @@
 #include "CPlayer.hpp"
 
 // *** GETTTER *** //
-nlohmann::json CItem::getAttributes() { return m_jAtts; }
-string CItem::getDescription() { return getAttribute<string>("description"); }
-string CItem::getFunction(){ return m_jAtts.value("function", m_jAtts["type"]); } 
-size_t CItem::getEffekt()  { return getAttribute<size_t>("effekt"); }
-int CItem::getValue()      { return getAttribute<int>("value"); }
+nlohmann::json CItem::getAttributes() {
+    return m_jAttributes;
+}
+std::string CItem::getType() {
+    return m_sType;
+}
+std::string CItem::getAttack() {
+    return m_sAttack;
+}
+std::string CItem::getFunction() { 
+    return m_sFunction;
+} 
+size_t CItem::getEffekt() { 
+    return m_effekt;
+}
+int CItem::getValue() { 
+    return m_value;
+}
+bool CItem::getHidden() {
+    return m_hidden;
+}
+
+// *** SETTER *** //
+void CItem::setType(std::string sType) {
+    m_sType = sType;
+}
+void CItem::setFunction(std::string sFunction) {
+    m_sFunction = sFunction;
+}
+void CItem::setAttack(std::string sAttack) {
+    m_sAttack = sAttack;
+}
+void CItem::setEffekt(size_t effekt) {
+    m_effekt = effekt;
+}
+void CItem::setValue(int value) {
+    m_value = value;
+}
+void CItem::setHidden(bool hidden) {
+    m_hidden = hidden;
+}
 
 
 // Initialize Functions 
-std::map<string, void (CItem::*)(CPlayer* p)> CItem::m_functions= {};
+std::map<std::string, void (CItem::*)(CPlayer* p)> CItem::m_functions= {};
 void CItem::initializeFunctions()
 {
     //Consume-functions
@@ -46,8 +82,7 @@ void CItem::consumeDrug(CPlayer* p)
 // ***** EQUIPE-FUNCTIONS ***** //
 void CItem::equipeWeapon(CPlayer* p)
 {
-    string sType = func::split(m_jAtts["type"], "_")[1];
-    p->equipeItem(this, sType);
+    p->equipeItem(this, func::split(m_sType, "_")[1]);
 }
 
 

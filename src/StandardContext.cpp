@@ -97,11 +97,7 @@ void CStandardContext::h_look(string& sIdentifier, CPlayer* p) {
         return;
     }
 
-    string sOutput=p->getRoom()->look(sIdentifier.substr(0,pos),sIdentifier.substr(pos+1),p->getMode());
-    if(sOutput == "")
-        p->appendPrint("Nothing found. \n");
-    else
-        p->appendPrint(sOutput);
+    p->appendPrint(p->getRoom()->look(sIdentifier.substr(0,pos),sIdentifier.substr(pos+1),p->getMode()));
 }
 
 void CStandardContext::h_goTo(std::string& sIdentifier, CPlayer* p) {

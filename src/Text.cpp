@@ -7,7 +7,8 @@
 CText::CText(nlohmann::json jAttributes, CPlayer* p)
 {
     m_player = p;
-    for(auto atts : jAttributes)
+
+    for(auto atts : jAttributes) 
         m_texts.push_back(new COutput(atts, p));
 }
 
@@ -95,7 +96,7 @@ std::string COutput::print(CPlayer* p)
     if(p->checkDependencies(m_jDeps) == false)
         return "";
 
-    //Mind dependencies -> check if they math -> print with "success" || return nothing
+    //Mind dependencies -> check if they match -> print with "success" || return nothing
     if(m_mind.second != 0) {
         if(m_mind.first->level >= m_mind.second)
             return m_sSpeaker + DARK + " (level " + std::to_string(m_mind.second) + ": Erfolg) - " + WHITE + m_sText + "\n" + sOutput;

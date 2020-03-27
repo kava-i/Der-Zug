@@ -21,7 +21,7 @@
       id: passant3
       dialog: strangeGuysDialog
   items:
-    basic_book: { id: hegel_book, description: Phänemenologie des Geistes, hidden: true }
+    buch_PdG: { }
     basic_stick: { hidden: true }
     basic_sword: { hidden: true }
     basic_wine: { hidden: true, amount: 2 }
@@ -29,14 +29,15 @@
   details:
     - name: Small box
       id: trainstation_small-box
-      description: A small wooden box stands in the left corner of the room.
+      description: 
+        - "PERZEPTION;A small wooden box stands in the left corner of the room."
       look: in
       items:
-        trainstation_wine: Wine
-        trainstation_cigaretts: A pack of Cigaretts
-        trainstation_sword: Basic Sword
-        trainstation_stick: Stick
-        trainstation_hegel_book: Book
+        basic_wine: Wine
+        basic_cigaretts: A pack of Cigaretts
+        basic_sword: Basic Sword
+        basic_stick: Stick
+        buch_PdG: Book
 
 
 - name: Gleise

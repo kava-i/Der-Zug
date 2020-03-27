@@ -36,7 +36,7 @@ private:
     typedef std::map<int, SDOption> dialogoptions;
     dialogoptions m_options;
 
-    //Referenc to the complete dialog
+    //Reference to the complete Dialoge
     SDialog* m_dialog;
 
     //Static map f all state-functions

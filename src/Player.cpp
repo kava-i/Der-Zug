@@ -353,7 +353,7 @@ void CPlayer::addAll()
 {
     for(auto it = m_room->getItems().begin(); it != m_room->getItems().end();)
     {
-        if((*it).second->getAttribute<bool>("hidden") == false) 
+        if((*it).second->getHidden() == false) 
 	    {
             addItem((*(it++)).second);
 	        continue;
@@ -410,7 +410,7 @@ void CPlayer::equipeItem(CItem* item, string sType)
     if(m_equipment[sType] == NULL)
     {
         m_sPrint += "PERZEPTION: Du hast " + item->getName() + " als " + sType + " ausgerüstet.\n";
-        string sAttack = item->getAttribute<string>("attack");
+        string sAttack = item->getAttack();
 
         //Check for new attack
         if(sAttack != "") {
@@ -450,8 +450,8 @@ void CPlayer::dequipeItem(string sType) {
         m_sPrint += "Dequiped " + sType + " " + m_equipment[sType]->getName() + ".\n";
 
         //Erase attack
-        if(m_equipment[sType]->getAttribute<string>("attack") != "")
-            m_attacks.erase(m_equipment[sType]->getAttribute<string>("attack"));
+        if(m_equipment[sType]->getAttack() != "")
+            m_attacks.erase(m_equipment[sType]->getAttack());
         m_equipment[sType] = NULL;
     }
 }
@@ -615,6 +615,21 @@ void CPlayer::checkCommands()
         if(cmd.find("name") != std::string::npos)
             replace = getName();
         m_sPrint = m_sPrint.substr(0, pos) + replace + m_sPrint.substr(pos2+1);
+    }
+
+    for(const auto& it : m_minds) 
+    {
+        size_t pos=0;
+        for(;;)
+        {
+            if(m_sPrint.find(func::returnToUpper(it.first), pos) == std::string::npos)
+                break;
+            pos=m_sPrint.find(func::returnToUpper(it.first), pos);
+            m_sPrint.insert(pos, it.second.color);
+            m_sPrint.insert(pos + it.first.length()+1, WHITE);
+            pos+=it.first.length();
+        }
+        std::cout << "Finished checking commands.\n";
     }
 }
 

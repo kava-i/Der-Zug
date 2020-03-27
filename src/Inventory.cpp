@@ -23,7 +23,7 @@ std::string CInventory::printInventory(std::string color, int highlight)
 
 void CInventory::addItem(CItem* item)
 {
-    std::string sType = item->getAttribute<string>("type");
+    std::string sType = item->getType();
     sType.erase(sType.find("_"));
     m_inventory[sType][item->getName()].push_back(item); 
 }
@@ -74,7 +74,7 @@ CItem* CInventory::getItem(int a, int b)
     return jt->second.back();
 }
 
-CItem* CInventory::getItem_byID(string sID)
+CItem* CInventory::getItem_byID(std::string sID)
 {
     for(auto it : m_inventory) {
         for(auto jt : it.second) {

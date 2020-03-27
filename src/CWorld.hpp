@@ -48,7 +48,7 @@ public:
     map<string, CCharacter*>& getCharacters() { return m_characters; }
     map<string, CAttack*>& getAttacks() { return m_attacks; }
     map<string, CQuest*>& getQuests() { return m_quests; }
-    CItem* getItem(string sID) { return new CItem(m_items[sID]); }
+    CItem* getItem(string sID, CPlayer* p) { return new CItem(m_items[sID], p); }
 
     // *** FACTORYS *** // 
     typedef map<string, string> objectmap;
@@ -70,10 +70,10 @@ public:
     //Items
     void itemFactory();
     void itemFactory(std::string sPath);
-    map<string, CItem*> parseRoomItems(nlohmann::json j_room, std::string id);
+    map<string, CItem*> parseRoomItems(nlohmann::json j_room, std::string sArea, CPlayer* p);
 
     //Character, Dialog, Details
-    map<string, CDetail*>  detailFactory(nlohmann::json j_room);
+    map<string, CDetail*> detailFactory(nlohmann::json j_room, CPlayer* p, std::string sArea);
     objectmap characterFactory(nlohmann::json j_characters, CPlayer* p);
     SDialog* dialogFactory(string sPath, CPlayer* p); 
 };

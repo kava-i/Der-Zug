@@ -9,21 +9,20 @@
 
 class CPlayer;
 
-using std::string;
-
 class CItem : public CObject
 {
 protected:
 
-    /**
-    * Json with all attributes of player. This allows the item to have additional 
-    * attributes, only one particular item has. Also it allows creating items
-    * from basic-items, as seen in the constructor.
-    */
-    nlohmann::json m_jAtts; 
+    nlohmann::json m_jAttributes;
+    std::string m_sType;
+    std::string m_sFunction;
+    std::string m_sAttack;
+    size_t m_effekt;
+    int m_value;
+    bool m_hidden;
 
     ///Static map f all state-functions
-    static std::map<string, void (CItem::*)(CPlayer*)> m_functions;
+    static std::map<std::string, void (CItem::*)(CPlayer*)> m_functions;
 
 public:
 
@@ -31,7 +30,16 @@ public:
     * Constructor for non-derived items simply placing the passed json as items attributes.
     * @param[in] basic attributes from base item.
     */
-    CItem(nlohmann::json jBasic) : CObject{jBasic}, m_jAtts{jBasic} {}
+    CItem(nlohmann::json jBasic, CPlayer* p) : CObject{jBasic, p}
+    {
+        m_jAttributes = jBasic;
+        m_sType = jBasic.value("type", "");
+        m_sAttack = jBasic.value("attack", "");
+        m_sFunction = jBasic.value("function", "");
+        m_effekt = jBasic.value("effekt", 0);
+        m_value = jBasic.value("value", 1);
+        m_hidden = jBasic.value("value", false);
+    }
 
     /**
     * Constructor for derived items. The basic json usually supplies basic attributes. Which 
@@ -40,40 +48,39 @@ public:
     * @param[in] jBasic basic attributes from base item.
     * @param[in] jItem extra attributes from specific individual item.
     */
-    CItem(nlohmann::json jBasic, nlohmann::json jItem, std::string sID="") : CObject {jBasic} 
+    CItem(nlohmann::json jBasic, nlohmann::json jItem, CPlayer* p, std::string sID="") : CObject {jBasic, p} 
     {
-        m_jAtts = jBasic;
-
-        for(auto it=jItem.begin(); it!=jItem.end(); ++it) {
-            if(it.key() == "from" && it.key() == "amount")
-                continue;
-            m_jAtts[it.key()] = it.value();
-        }
-
-        m_jAtts["id"] = sID;
         m_sID = sID;
-        m_sName = m_jAtts.value("name", "");
+        m_sType = jItem.value("type", jBasic.value("type", ""));
+        m_sAttack = jItem.value("attack", jBasic.value("attack", ""));
+        m_sFunction = jItem.value("function", jBasic.value("function", ""));
+        m_effekt = jItem.value("effekt", jBasic.value("effekt", 0));
+        m_value = jItem.value("value", jBasic.value("value", 1));
+        m_hidden = jItem.value("hidden", false);
+
+        m_jAttributes = jBasic;
+        jItem.erase("amount");
+        for(auto it=jItem.begin(); it!=jItem.end(); ++it)
+            m_jAttributes[it.key()] = it.value();
+        m_jAttributes["id"] = m_sID;
     }
 
     // *** GETTER *** // 
-    template <typename T> T getAttribute(std::string sName)
-    {
-        if(m_jAtts.count(sName) == 0)
-            return T();
-        return m_jAtts[sName].get<T>();
-    }
-
     nlohmann::json getAttributes();
-    string getDescription();
-    string getFunction();
+    std::string getType();
+    std::string getAttack();
+    std::string getFunction();
     size_t getEffekt();
     int getValue();
+    bool getHidden();
     
     // *** SETTER *** //
-    template <typename T> void setAttribute(std::string sName, T t1)
-    {
-        m_jAtts[sName] = t1;
-    }
+    void setType(std::string sType);
+    void setFunction(std::string sFunction);
+    void setAttack(std::string sAttack);
+    void setEffekt(size_t effekt);
+    void setValue(int value);
+    void setHidden(bool hidden); 
 
     static void initializeFunctions();
     bool callFunction(CPlayer* p);
