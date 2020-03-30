@@ -27,7 +27,7 @@ bool CContext::throw_event(event e, CPlayer* p)
 
     if(m_eventmanager.count(e.first) == 0) {
         error(p);
-        return m_permeable;
+        return m_curPermeable;
     }
         
     for(auto it : m_eventmanager[e.first]) {
@@ -36,6 +36,7 @@ bool CContext::throw_event(event e, CPlayer* p)
         (this->*it)(e.second, p);
     }
 
+    std::cout << m_sName << ": " << m_curPermeable << std::endl;
     return m_curPermeable;
 }
 

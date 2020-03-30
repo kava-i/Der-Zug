@@ -38,7 +38,7 @@ void CChoiceContext::h_select(string& sIdentifier, CPlayer* p)
     std::string obj = func::getObjectId(m_objectMap, sIdentifier);
 
     p->throw_event(m_sObject + " " + obj);
-    m_permeable=false;
+    m_curPermeable=false;
     p->getContexts().erase("choice"); 
 }
 
