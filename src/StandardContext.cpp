@@ -19,6 +19,7 @@ CStandardContext::CStandardContext()
     add_listener("consume", &CContext::h_consume);
     add_listener("equipe", &CContext::h_equipe);
     add_listener("dequipe", &CContext::h_dequipe);
+    add_listener("examine", &CContext::h_examine);
     add_listener("mode", &CContext::h_changeMode);
     add_listener("help", &CContext::h_help);
 
@@ -147,6 +148,26 @@ void CStandardContext::h_equipe(string& sIdentifier, CPlayer* p) {
 
 void CStandardContext::h_dequipe(string& sIdentifier, CPlayer* p) {
     p->dequipeItem(sIdentifier);
+}
+
+void CStandardContext::h_examine(string &sIdentifier, CPlayer*p) {
+    //Check for detail
+    auto lambda1 = [](CDetail* detail) { return detail->getName(); };
+    std::string sObject = func::getObjectId(p->getRoom()->getDetails(), sIdentifier, lambda1);
+    if(sObject != "")
+        p->appendPrint(p->getRoom()->getDetails()[sObject]->getDescription());
+
+    auto lambda2 = [](CItem* item) { return item->getName(); };
+    sObject = func::getObjectId(p->getRoom()->getItems(), sIdentifier, lambda2);
+    //Check for item
+    if(sObject != "")
+        p->appendPrint(p->getRoom()->getItems()[sObject]->getDescription());
+
+    //Check for person
+    sObject = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier);
+    //Check for item
+    if(sObject != "")
+        p->appendPrint(p->getWorld()->getCharacters()[sObject]->getDescription());
 }
 
 void CStandardContext::h_changeMode(string& sIdentifier, CPlayer* p) {

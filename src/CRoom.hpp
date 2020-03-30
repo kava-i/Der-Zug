@@ -53,6 +53,7 @@ public:
     objectmap& getExtits2();
     std::map<string, CExit*>& getExtits();
     std::map<string, CItem*>& getItems();
+    std::map<string, CDetail*>& getDetails();
 
     // *** setter *** //
     void setPlayers(objectmap& m_players);

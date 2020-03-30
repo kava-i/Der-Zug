@@ -60,6 +60,7 @@ public:
     virtual void h_consume          (string&, CPlayer*) {}
     virtual void h_equipe           (string&, CPlayer*) {}
     virtual void h_dequipe          (string&, CPlayer*) {}
+    virtual void h_examine          (string&, CPlayer*) {}
     virtual void h_goTo             (string&, CPlayer*) {}
     virtual void h_startDialog      (string&, CPlayer*) {}
     virtual void h_changeMode       (string&, CPlayer*) {}

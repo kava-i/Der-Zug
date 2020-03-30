@@ -8,6 +8,7 @@ CRoom::objectmap& CRoom::getCharacters()    { return m_characters; }
 CRoom::objectmap& CRoom::getExtits2()       { return m_exits_objectMap; }
 std::map<string, CExit*>& CRoom::getExtits() { return m_exits; }
 std::map<string, CItem*>& CRoom::getItems()  { return m_items; }
+std::map<string, CDetail*>& CRoom::getDetails()  { return m_details; }
 
 // *** SETTER *** //
 void CRoom::setPlayers(objectmap& onlinePlayers) { m_players = onlinePlayers; }
@@ -18,16 +19,12 @@ void CRoom::setPlayers(objectmap& onlinePlayers) { m_players = onlinePlayers; }
 string CRoom::showEntryDescription(std::map<std::string, CCharacter*>& mapChars)
 {
     string sDesc = m_sEntry + m_text->print() + "\n";
-    for(auto it : m_characters)
-        sDesc.append(mapChars[it.first]->getDescription());
     return sDesc;
 }
 
 string CRoom::showDescription(std::map<std::string, CCharacter*>& mapChars)
 {
     string sDesc = m_text->print();
-    for(auto it : m_characters) 
-        sDesc.append(mapChars[it.first]->getDescription());
     return sDesc;
 }
 

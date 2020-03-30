@@ -19,6 +19,7 @@ public:
     void h_consume          (string& sIdentiier, CPlayer* p);
     void h_equipe           (string& sIdentiier, CPlayer* p);
     void h_dequipe          (string& sIdentiier, CPlayer* p);
+    void h_examine          (string& sIdentiier, CPlayer* p);
     void h_goTo             (string& sIdentiier, CPlayer* p);
     void h_startDialog      (string& sIdentiier, CPlayer* p);
     void h_changeMode       (string& sIdentiier, CPlayer* p);
