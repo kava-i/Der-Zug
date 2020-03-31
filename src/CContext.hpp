@@ -7,8 +7,7 @@
 #include "func.hpp"
 #include "Webcmd.hpp"
 
-using std::string;
-using std::map;
+using std::string; using std::map;
 using std::vector;
 class CPlayer; 
 class CGame;
