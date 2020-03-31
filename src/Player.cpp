@@ -12,21 +12,13 @@
 * @param room current room of payer
 * @param newAttacks attacks of player
 */
-CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks newAttacks)
+CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks) : CPerson(jAtts, nullptr, lAttacks, this)
 {
-    m_sName = jAtts["name"];
+    //Set login data and player information
     m_sPassword = jAtts["password"];
     m_firstLogin = true;
     m_sMode = jAtts.value("mode", "prosa");
-    m_sID = jAtts["id"];
 
-    //Stats
-    m_stats["highness"] = 0;
-    m_stats["hp"]       = jAtts.value("hp", 40);
-    m_stats["gold"]     = jAtts.value("gold", 5);
-    m_stats["strength"] = jAtts.value("strength", 8);
-    m_stats["skill"]    = jAtts.value("skill", 8);
-    
     m_abbilities = {"strength", "skill"};
 
     //Character and Level
@@ -37,9 +29,10 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks newAttacks)
     m_minds["drama"]  = {"drama", RED, 0};
     m_minds["logik"]  = {"logik", RED, 1};
 
+    //Set current room
     m_room = room;
-    m_attacks = newAttacks;
 
+    //Set player's equipment (no equipment at the beginning)
     m_equipment["weapon"] = NULL;
     m_equipment["armor"]  = NULL;
     
@@ -59,6 +52,11 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks newAttacks)
     m_contextStack.insert(new CWorldContext(), 2, "world");
     m_contextStack.insert(new CStandardContext(), 0, "standard");
 }
+
+CPlayer::~CPlayer()
+{
+    delete m_world;
+} 
 
 // *** GETTER *** // 
 
@@ -264,6 +262,7 @@ void CPlayer::changeRoom(string sIdentifier)
     room = func::getObjectId(m_world->getRooms(), sIdentifier, lamda2);
     std::vector<std::string> path = findWay(m_room, room);
 
+    //If a path was found, add events to go to each room in path.
     if(path.size() > 0)
     {
         std::string events;
@@ -284,7 +283,7 @@ void CPlayer::changeRoom(string sIdentifier)
 */
 void CPlayer::changeRoom(CRoom* newRoom)
 {
-    m_sPrint += newRoom->showEntryDescription(getWorld()->getCharacters());
+    m_sPrint += newRoom->showEntryDescription();
     m_lastRoom = m_room; 
     m_room = newRoom;
     m_vistited[m_room->getID()] = true;
@@ -380,6 +379,7 @@ void CPlayer::addAll()
 */
 void CPlayer::addItem(CItem* item)
 {
+    std::cout << "Adding item....\n";
     m_inventory.addItem(item);
     m_sPrint += item->getName() + " added to " + m_sName + "'s inventory.\n";
     m_room->getItems().erase(item->getID());

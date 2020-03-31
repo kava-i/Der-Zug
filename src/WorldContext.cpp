@@ -29,7 +29,11 @@ void CWorldContext::h_deleteCharacter(string& sIdentifier, CPlayer* p) {
 }
 
 void CWorldContext::h_addItem(string& sIdentifier, CPlayer* p) {
-    p->addItem(p->getWorld()->getItem(sIdentifier, p));
+    CItem* item = p->getWorld()->getItem(sIdentifier, p);
+    if(item != nullptr)
+        p->addItem(item);
+    else
+        p->appendPrint("TECH GUY - Something went wrong, we're sorry\n");
     m_curPermeable=false;
 }
 
@@ -47,7 +51,6 @@ void CWorldContext::h_endFight(string& sIdentifier, CPlayer* p) {
 }
 
 void CWorldContext::h_endDialog(string& sIdentifier, CPlayer* p) {
-    std::cout << "Hey " << std::endl;
     p->getContexts().erase("dialog");
     m_curPermeable=false;
 }

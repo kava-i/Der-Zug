@@ -7,7 +7,6 @@
 #include "CObject.hpp"
 #include "CExit.hpp"
 #include "CText.hpp"
-#include "CCharacter.hpp"
 #include "CItem.hpp"
 #include "CDetail.hpp"
 #include "fuzzy.hpp"
@@ -59,8 +58,8 @@ public:
     void setPlayers(objectmap& m_players);
 
     // *** various functions *** //
-    string showEntryDescription(std::map<string, CCharacter*>& mapChars);
-    string showDescription(std::map<string, CCharacter*>& mapChars); 
+    string showEntryDescription();
+    string showDescription();
     string showAll(std::string sMode);
     string showExits(std::string sMode);
     string showCharacters(std::string sMode);

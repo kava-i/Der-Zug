@@ -7,17 +7,23 @@
 */
 CItem::CItem(nlohmann::json jBasic, CPlayer* p) : CObject{jBasic, p}
 {
+    std::cout << "Creating item... \n";
     m_jAttributes = jBasic;
 
     std::string sType = jBasic.value("type", "");
+    std::cout << "Type: " << sType << std::endl;
     m_sCategory = func::split(sType, "_")[0];
     m_sType = func::split(sType, "_")[1];
+
+    std::cout << "built item-category (" << m_sCategory << ") and type (" << m_sType << ")\n";
 
     m_sAttack = jBasic.value("attack", "");
     m_sFunction = jBasic.value("function", m_sCategory);
     m_effekt = jBasic.value("effekt", 0);
     m_value = jBasic.value("value", 1);
-    m_hidden = jBasic.value("value", false);
+    m_hidden = jBasic.value("hidden", false);
+
+    std::cout << "Finished creating item.\n";
 }
 
 /**

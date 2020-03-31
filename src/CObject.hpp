@@ -32,6 +32,8 @@ public:
         m_text = new CText(jAttributes.value("description", nlohmann::json::parse("{}") ), p);
     }
 
+    virtual ~CObject() { delete m_text; }
+
     // *** GETTER *** //
 
     ///Return id of object

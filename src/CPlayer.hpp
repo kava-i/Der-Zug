@@ -76,9 +76,6 @@ public:
 
     // ** Constructors ** //
 
-    /// Default destructor
-    CPlayer() {};
-
     /**
     * Full constructor for player
     * @param jAtts json with all attributes
@@ -86,6 +83,8 @@ public:
     * @param newAttacks attacks of player
     */
     CPlayer(nlohmann::json jAttributes, CRoom* room, attacks newAttacks);
+
+    ~CPlayer();
 
     // *** GETTER *** // 
     ///Return first login (yes, no)
@@ -120,6 +119,7 @@ public:
  
 
     // *** SETTER *** //
+
     ///Set first login.
     void setFirstLogin(bool val); 
 

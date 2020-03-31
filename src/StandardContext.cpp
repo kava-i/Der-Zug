@@ -66,7 +66,7 @@ void CStandardContext::h_show(string& sIdentifier, CPlayer* p) {
         p->addSelectContest(p->getRoom()->getCharacters(), "talk");
     }
     else if(sIdentifier == "room")
-        p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
+        p->appendPrint(p->getRoom()->showDescription());
     else if(sIdentifier == "items")
         p->appendPrint(p->getRoom()->showItems(p->getMode()));
     else if(sIdentifier == "details")

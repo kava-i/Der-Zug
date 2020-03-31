@@ -1,6 +1,6 @@
 #include "CTradeContext.hpp"
 #include "CPlayer.hpp"
-#include "CCharacter.hpp"
+#include "CPerson.hpp"
 
 CTradeContext::CTradeContext(CPlayer* p, std::string partner)
 {

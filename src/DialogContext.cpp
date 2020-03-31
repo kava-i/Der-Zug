@@ -50,6 +50,5 @@ void CDialogContext::h_call(string& sIdentifier, CPlayer* p)
 }
 
 void CDialogContext::error(CPlayer* p) {
-    std::cout << "ho! " << std::endl;
     p->appendPrint("Dialog: Please choose a number, or enter \"help\".\n");
 }

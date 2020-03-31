@@ -7,6 +7,45 @@ CWorld::CWorld(CPlayer* p) {
     worldFactory(p);
 }
 
+// *** GETTER *** // 
+
+///Return dictionary of all rooms in the game.
+map<string, CRoom*>& CWorld::getRooms() { 
+    return m_rooms; 
+}
+
+///Return dictionary of all characters aka people in the game.
+map<string, CPerson*>& CWorld::getCharacters() { 
+    return m_characters; 
+}
+
+///Return dictionary of all attacks in the game.
+map<string, CAttack*>& CWorld::getAttacks() { 
+    return m_attacks; 
+}
+
+///Return dictionary of all quests in the game.
+map<string, CQuest*>& CWorld::getQuests() { 
+    return m_quests; 
+}
+
+/**
+* Return a item. Look for given item in dictionary of items (jsons) and create item from json.
+* Return null-pointer if item-json couldn't be found and print error message!
+* @param[in] sID id to search item.
+* @param[in] p instance of player needed to create an object.
+* @return The created item as a pointer.
+*/
+CItem* CWorld::getItem(string sID, CPlayer* p) { 
+    if(m_items.count(sID) > 0)
+        return new CItem(m_items[sID], p); 
+    else {
+        std::cout << "Fatal Error!! Item not found!! (CWord::getItem()): \"" << sID << "\"" << std::endl;
+        return nullptr; 
+    }
+}
+
+
 void CWorld::worldFactory(CPlayer* p) 
 {
     //Initialize functions
@@ -88,6 +127,9 @@ void CWorld::itemFactory(std::string sPath) {
 
     for(auto j_item: j_items) 
         m_items[j_item["id"]] = j_item;
+
+    if(m_items.count("ticket") > 0)
+        std::cout << "Created TICKET.\n";
 }
 
 
@@ -137,7 +179,7 @@ CWorld::objectmap CWorld::characterFactory(nlohmann::json j_characters, CPlayer*
         map<string, CAttack*> attacks = parsePersonAttacks(j_char);
 
         //Create character and add to maps
-        m_characters[j_char["id"]] = new CCharacter(j_char, newDialog, items, attacks, p);
+        m_characters[j_char["id"]] = new CPerson(j_char, newDialog, attacks, p, items);
         mapChars[j_char["id"]] = j_char["name"];
     }
 

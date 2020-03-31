@@ -13,7 +13,6 @@
 #include "CDetail.hpp"
 #include "CPerson.hpp"
 #include "CPlayer.hpp"
-#include "CCharacter.hpp"
 #include "CAttack.hpp"
 #include "CFight.hpp"
 #include "CDialog.hpp"

@@ -11,7 +11,6 @@
 #include "CRoom.hpp"
 #include "CDetail.hpp"
 #include "CPerson.hpp"
-#include "CCharacter.hpp"
 #include "CQuest.hpp"
 #include "CAttack.hpp"
 #include "CQuestContext.hpp"
@@ -33,7 +32,7 @@ class CWorld
 {
 private:
     map<string, CRoom*>      m_rooms;
-    map<string, CCharacter*> m_characters;
+    map<string, CPerson*> m_characters;
     map<string, CAttack*>    m_attacks;
     map<string, CQuest*>     m_quests;
     map<string, nlohmann::json> m_items;
@@ -44,11 +43,27 @@ public:
     CWorld(CPlayer*);
     
     // *** GETTER *** //
-    map<string, CRoom*>& getRooms() { return m_rooms; }
-    map<string, CCharacter*>& getCharacters() { return m_characters; }
-    map<string, CAttack*>& getAttacks() { return m_attacks; }
-    map<string, CQuest*>& getQuests() { return m_quests; }
-    CItem* getItem(string sID, CPlayer* p) { return new CItem(m_items[sID], p); }
+    
+    ///Return dictionary of all rooms in the game.
+    map<string, CRoom*>& getRooms();
+
+    ///Return dictionary of all characters aka people in the game.
+    map<string, CPerson*>& getCharacters();
+
+    ///Return dictionary of all attacks in the game.
+    map<string, CAttack*>& getAttacks();
+
+    ///Return dictionary of all quests in the game.
+    map<string, CQuest*>& getQuests();
+
+    /**
+    * Return a item. Look for given item in dictionary of items (jsons) and create item from json.
+    * Return null-pointer if item-json couldn't be found and print error message!
+    * @param[in] sID id to search item.
+    * @param[in] p instance of player needed to create an object.
+    * @return The created item as a pointer.
+    */
+    CItem* getItem(string sID, CPlayer* p);
 
     // *** FACTORYS *** // 
     typedef map<string, string> objectmap;

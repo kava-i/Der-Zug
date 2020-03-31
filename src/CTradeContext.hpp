@@ -2,13 +2,13 @@
 #define CTRADECONTEXT_H
 
 #include "CContext.hpp"
-class CCharacter;
+class CPerson;
 class CItem;
 
 class CTradeContext : public CContext
 {
 private: 
-    CCharacter* m_tradingPartner;
+    CPerson* m_tradingPartner;
     size_t m_collum;
     size_t m_inventory;
     CItem* m_curItem;

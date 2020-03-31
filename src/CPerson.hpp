@@ -16,49 +16,77 @@
 
 using std::string;
 
-class CPerson
+class CPerson : public CObject
 {
 protected:
-    string m_sName;
-    string m_sID;
 
-    //Stats
+    ///Stats, such as live points, strength, virtue etc.
     typedef map<string, int> stats;
     stats m_stats;
 
-    CInventory m_inventory;
-
+    ///This Persons attacks
     typedef std::map<string, CAttack*> attacks;
-    attacks m_attacks;
+    attacks m_attacks;  
 
-    //Dialog
+    ///Inventory of this person
+    CInventory m_inventory;                     
+
+    ///Persons dialogue
     SDialog* m_dialog;
 
 public:
-    
-    virtual ~CPerson() {}
+
+    /**
+    * Constructor for Person, i.e. "character". Calls constructor from base class CObject.
+    * param[in] jAtts json with attributes
+    * param[in] dialogue dialogue of this character.
+    * param[in] items list of items 
+    * param[in] attacks list of attacks
+    */
+    typedef std::map<std::string, CItem*> map_type;
+    CPerson(nlohmann::json jAttributes, SDialog* dialog, attacks newAttacks, CPlayer* p, map_type=map_type());
 
     // *** GETTER *** // 
-    string getName();
-    string getID();
+
+    /**
+    * Return person's stats, like strength, virtue, live-points, by passing name of stat.
+    * @param[in] id specify which stat shall be returned.
+    * @return return given stat.
+    */
     int getStat(std::string id);
-    SDialog* getDialog();
+
+    ///Return person's attacks.
     attacks& getAttacks();
+
+    ///Return person's inventory.
     CInventory& getInventory();
 
+    ///Return person's dialogue.
+    SDialog* getDialog();
+
+    
     // *** SETTER *** //
-    void setDialog(SDialog* newDialog);
+
+    ///Set a new stat of this person
     void setStat(std::string, int stat);
 
+    ///Set person's dialogue.
+    void setDialog(SDialog* newDialog);
+
+
     // *** Attacks *** // 
+
+    /**
+    * Print all attacks. Attacks are printed in the form: Name \n Strengt\n Description.
+    */
     string printAttacks();
     string getAttack(string sPlayerChoice);
 
+
     // *** Functions needed in CPlayer *** //
-    virtual void throw_event(std::string) {}
+    virtual void throw_event(std::string) { std::cout << "FATAL!!!\n"; }
     virtual void setStatus(string)   { std::cout << "FATAL!!!\n"; }
     virtual void appendPrint(string) { std::cout << "FATAL!!!\n"; }
-
 };
 
 #endif

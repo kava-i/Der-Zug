@@ -16,13 +16,13 @@ void CRoom::setPlayers(objectmap& onlinePlayers) { m_players = onlinePlayers; }
 
 // *** VARIOUS FUNCTIONS *** //
 
-string CRoom::showEntryDescription(std::map<std::string, CCharacter*>& mapChars)
+string CRoom::showEntryDescription()
 {
     string sDesc = m_sEntry + m_text->print() + "\n";
     return sDesc;
 }
 
-string CRoom::showDescription(std::map<std::string, CCharacter*>& mapChars)
+string CRoom::showDescription()
 {
     string sDesc = m_text->print();
     return sDesc;
