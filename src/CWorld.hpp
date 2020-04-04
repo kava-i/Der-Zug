@@ -8,12 +8,12 @@
 #include <stdio.h>
 #include <experimental/filesystem>
 #include <streambuf>
+#include "CEnhancedContext.hpp"
 #include "CRoom.hpp"
 #include "CDetail.hpp"
 #include "CPerson.hpp"
 #include "CQuest.hpp"
 #include "CAttack.hpp"
-#include "CQuestContext.hpp"
 #include "CFight.hpp"
 #include "CDialog.hpp"
 #include "json.hpp"

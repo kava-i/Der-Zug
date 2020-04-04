@@ -38,12 +38,7 @@ void CTradeContext::h_decideSell(std::string& sIdentifier, CPlayer* p)
 {
     if(sIdentifier == "yes")
     {
-        p->appendPrint("PERZEPTION: Du hast " + m_curItem->getName() + " verkauft.\n\n");
-        p->throw_event("recieveMoney " + std::to_string(m_curItem->getValue()));
-        CItem* item = new CItem(m_curItem->getAttributes(), p);
-        m_tradingPartner->getInventory().addItem(item);
-        p->getInventory().removeItemByID(m_curItem->getID());
-    }
+            }
 
     else
         p->appendPrint("PERZEPTION: Du hast dich entschieden " + m_curItem->getName() + " nicht zu verkaufen.\n\n");

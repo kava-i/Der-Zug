@@ -161,13 +161,12 @@
   id: gleis5
   description: 
     - PERZEPTION;Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst.
+    - PERZEPTION;Wieder stehen drei Passanten merkwürdig gekleidet in einer Ecke und deuten wild umher.
   exits: 
     bahnhof_gleise: { name: Zurück zu den Gleisen }
   characters:
     - name: Passant1
       id: passant7
-      description: 
-      - "PERZEPTION;Wieder stehen drei Passanten merkwürdig gekleidet in einer Ecke und deuten wild umher."
       dialog: strangeGuysDialog
     - name: Passant2
       id: passant8
