@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <experimental/filesystem>
 #include <streambuf>
-#include "CGameContext.hpp"
+#include "CEnhancedContext.hpp"
 #include "CWorld.hpp"
 #include "CRoom.hpp"
 #include "CDetail.hpp"
@@ -38,7 +38,7 @@ private:
     map<string, nlohmann::json> m_playerJsons;
     CPlayer* m_curPlayer;
 
-    CGameContext* m_context;
+    CEnhancedContext* m_context;
 
     typedef std::pair<string, string> event;
     typedef std::map<string, string> objectmap;

@@ -17,7 +17,7 @@ CItem::CItem(nlohmann::json jBasic, CPlayer* p) : CObject{jBasic, p}
     m_sFunction = jBasic.value("function", m_sCategory);
     m_effekt = jBasic.value("effekt", 0);
     m_value = jBasic.value("value", 1);
-    m_hidden = jBasic.value("value", false);
+    m_hidden = jBasic.value("hidden", false);
 }
 
 /**

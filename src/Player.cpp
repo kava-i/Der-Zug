@@ -53,11 +53,15 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks newAttacks)
     m_vistited[m_room->getID()] = true;
 
     for(auto it : m_world->getQuests())
-        m_contextStack.insert(new CQuestContext(it.second), 3, it.first);
+    {
+        CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"permeable",true}, {"questID",it.first}});
+        context->initializeQuestListeners(it.second->getHandler());
+        m_contextStack.insert(context, 3, it.first);
+    }
 
     //Add eventhandler to eventmanager
-    m_contextStack.insert(new CWorldContext(), 2, "world");
-    m_contextStack.insert(new CStandardContext(), 0, "standard");
+    m_contextStack.insert(new CEnhancedContext((std::string)"world"), 2, "world");
+    m_contextStack.insert(new CEnhancedContext((std::string)"standard"), 0, "standard");
 }
 
 // *** GETTER *** // 
@@ -174,7 +178,12 @@ void CPlayer::changeMode()
 */
 void CPlayer::setFight(CFight* newFight) { 
     m_curFight = newFight;
-    m_contextStack.insert(new CFightContext(m_attacks), 1, "fight");
+
+    //Create fight-context and add to context-stack.
+    CEnhancedContext* context = new CEnhancedContext((std::string)"fight");
+    context->initializeFightListeners(m_attacks.size());
+    m_contextStack.insert(context, 1, "fight");
+
     m_curFight->initializeFight();
 }
 
@@ -197,7 +206,11 @@ void CPlayer::endFight() {
 void CPlayer::startDialog(string sCharacter)
 {
     m_dialog = m_world->getCharacters()[sCharacter]->getDialog();
-    m_contextStack.insert(new CDialogContext(this, sCharacter), 1, "dialog");
+
+    //Create context and add to context-stack.
+    CEnhancedContext* context = new CEnhancedContext((std::string)"dialog", {{"partner", sCharacter}});
+    context->initializeDialogListeners("START", this);
+    m_contextStack.insert(context, 1, "dialog");
 
     std::string newCommand = m_dialog->states["START"]->callState(this);
     if(newCommand != "")
@@ -210,7 +223,10 @@ void CPlayer::startDialog(string sCharacter)
 */
 void CPlayer::startChat(CPlayer* player)
 {
+    m_sPrint += "TECH GUY - Sorry this option is currently not available\n";
+    /*
     m_sPrint += "DRAMA - Du gehst auf " + player->getName() + " zu und räusperst dich... \n";
+
     if(player->getContexts().nonPermeableContextInList() == true)
         m_sPrint += "\nTECH GUY - " + player->getName() + " ist zur Zeit beschäftigt.\n"; 
     else
@@ -221,7 +237,7 @@ void CPlayer::startChat(CPlayer* player)
         
         //Send text by throwing event
         throw_event("Hey " + player->getName() + ".");
-    }
+    }*/
 }
 
 /**
@@ -393,7 +409,10 @@ void CPlayer::startTrade(std::string partner)
 {
     m_sPrint += "Started to trade with " + partner + ".\n";
 
-    m_contextStack.insert(new CTradeContext(this, partner), 1, "trade");
+    //Create trade-context and add to context-stack
+    CEnhancedContext* context = new CEnhancedContext((std::string)"trade", {{"partner", partner}});
+    context->print(this);
+    m_contextStack.insert(context, 1, "trade");
 }
 
 /**
@@ -442,10 +461,7 @@ void CPlayer::equipeItem(CItem* item, string sType)
         m_sPrint+="PERZEPTION - Bereits ein " + sType + " ausgerüstet. Austauschen? (yes/no)\n";
 
         //Create Choice-Context
-        CChoiceContext* context = new CChoiceContext(item->getID(), "Choose only yes or no\n");
-        context->add_listener("yes", &CContext::h_choose_equipe);
-        context->add_listener("no", &CContext::h_choose_equipe);
-        m_contextStack.insert(context, 1, "choice");
+        m_contextStack.insert(new CEnhancedContext((nlohmann::json){{"permeable", false},{"error", "TECH GUY - Choose onlye yes or no\n"},{"itemID", item->getID()},{"handlers",{{"yes", "h_choose_equipe"},{"no","h_choose_equipe"}}}}), 1, "equipe");
     }
 }
 
@@ -527,7 +543,19 @@ void CPlayer::addEP(int ep)
         m_sPrint+= GREEN + "Level Up!" + WHITE + "\n";
     }
     if(counter > 0)
-        updateStats(counter);
+    {
+        CEnhancedContext* context = m_contextStack.getContext("updateStats");
+        if(context == NULL)
+            updateStats(counter);
+        else
+        {
+            context->setAttribute<int>("numPoints", context->getAttribute<int>("numPoints")+counter);
+            m_sPrint+= "Du hast " + std::to_string(context->getAttribute<int>("numPoints")) + " Punkte zu vergeben.\n";
+            for(size_t i=0; i<m_abbilities.size(); i++)
+                m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" + std::to_string(getStat(m_abbilities[i])) + ")\n";
+            m_sPrint += "Nummer oder Attribut wählen.\n";
+        }
+    }
 }
 
 /**
@@ -539,17 +567,17 @@ void CPlayer::updateStats(int numPoints)
     m_sPrint+= "Du hast " + std::to_string(numPoints) + " Punkte zu vergeben.\n";
 
     //Print attributes and level of each attribute and add choice-context.
-    std::string sError = "Nummer, oder Attribut wählen.\n";
-    CChoiceContext* context = new CChoiceContext(std::to_string(numPoints), sError);
+    std::string sError = "Nummer oder Attribut wählen.\n";
+    CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"permeable", false},{"numPoints", numPoints}, {"error", sError}});
     for(size_t i=0; i<m_abbilities.size(); i++)
     {
         m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" + std::to_string(getStat(m_abbilities[i])) + ")\n";
-        context->add_listener(func::returnToLower(m_abbilities[i]), &CContext::h_updateStats);
-        context->add_listener(std::to_string(i+1), &CContext::h_updateStats);
+        context->add_listener(func::returnToLower(m_abbilities[i]), &CEnhancedContext::h_updateStats);
+        context->add_listener(std::to_string(i+1), &CEnhancedContext::h_updateStats);
     }
 
     m_sPrint += sError;
-    m_contextStack.insert(context, 1, "choice");
+    m_contextStack.insert(context, 1, "updateStats");
 }
 
 /**
@@ -678,14 +706,15 @@ CPlayer* CPlayer::getPlayer(string sIdentifier)
 void CPlayer::addSelectContest(std::map<std::string, std::string>& mapObjects, std::string sEventType)
 {
     //Add context.
-    CContext* context = new CChoiceContext(sEventType, mapObjects);
+    CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"permeable",true},{"eventtype",sEventType}, {"map_objects",mapObjects}});
+    context->setErrorFunction(&CEnhancedContext::error_delete);
     
     //Add listeners
     for(size_t i=1; i<=mapObjects.size();i++)
-        context->add_listener(std::to_string(i), &CContext::h_select);
+        context->add_listener(std::to_string(i), &CEnhancedContext::h_select);
 
     //Insert context into context-stack.
-    m_contextStack.insert(context, 1, "choice");
+    m_contextStack.insert(context, 1, "select");
 }
 
 
@@ -711,7 +740,7 @@ void CPlayer::throw_event(string sInput)
     std::vector<std::pair<std::string, std::string>> events = parser.parse(sInput);
 
     //Iterate over parsed events and call throw_event for each context and each event
-    std::deque<CContext*> sortedCtxList = m_contextStack.getSortedCtxList();
+    std::deque<CEnhancedContext*> sortedCtxList = m_contextStack.getSortedCtxList();
     for(size_t i=0; i<events.size(); i++)
     {
         std::cout << events[i].first << ", " << events[i].second << "\n";

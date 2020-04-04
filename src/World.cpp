@@ -12,7 +12,8 @@ void CWorld::worldFactory(CPlayer* p)
     //Initialize functions
     CDState::initializeFunctions();
     CItem::initializeFunctions();
-    CQuestContext::initializeFunctions();
+    CEnhancedContext::initializeHanlders();
+    CEnhancedContext::initializeTemplates();
 
     //Create attacks
     attackFactory();

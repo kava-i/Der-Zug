@@ -5,24 +5,24 @@ CContextStack::CContextStack()
     m_reloadQueue = false;
 }
 
-void CContextStack::insert(CContext *ctx, int priority, std::string name)
+void CContextStack::insert(CEnhancedContext*ctx, int priority, std::string name)
 {
     m_contextStack[name] = ctx;
     ctx->setName(name);
-    m_sortedContexts.push_back(std::pair<CContext*,int>{ctx,priority});
-    std::sort(m_sortedContexts.begin(),m_sortedContexts.end(),[](std::pair<CContext*,int>& a,std::pair<CContext*,int>& b){return a.second<b.second;});
+    m_sortedContexts.push_back(std::pair<CEnhancedContext*,int>{ctx,priority});
+    std::sort(m_sortedContexts.begin(),m_sortedContexts.end(),[](std::pair<CEnhancedContext*,int>& a,std::pair<CEnhancedContext*,int>& b){return a.second<b.second;});
     m_reloadQueue = true;
 }
 
 void CContextStack::erase(std::string name)
 {
-    CContext* ctx = nullptr;
+    CEnhancedContext* ctx = nullptr;
     try
     {
 	ctx = m_contextStack.at(name);
 	m_reloadQueue = true;
 	m_contextStack.erase(name);
-	m_sortedContexts.erase(std::remove_if(m_sortedContexts.begin(),m_sortedContexts.end(),[ctx](const std::pair<CContext*,int> &p){if(p.first==ctx)return true; else return false;}),m_sortedContexts.end());
+	m_sortedContexts.erase(std::remove_if(m_sortedContexts.begin(),m_sortedContexts.end(),[ctx](const std::pair<CEnhancedContext*,int> &p){if(p.first==ctx)return true; else return false;}),m_sortedContexts.end());
     }
     catch(...)
     {
@@ -30,7 +30,15 @@ void CContextStack::erase(std::string name)
     }
 }
 
-const std::deque<CContext*> &CContextStack::getSortedCtxList()
+CEnhancedContext* CContextStack::getContext(std::string sName)
+{
+    if(m_contextStack.count(sName) >= 0)
+        return m_contextStack[sName];
+    else
+        return NULL;
+}
+
+const std::deque<CEnhancedContext*> &CContextStack::getSortedCtxList()
 {
     if(m_reloadQueue)
     {
@@ -44,18 +52,16 @@ const std::deque<CContext*> &CContextStack::getSortedCtxList()
 
 bool CContextStack::nonPermeableContextInList()
 {
-    return std::accumulate(m_sortedContexts.begin(),m_sortedContexts.end(),0,[](int b,std::pair<CContext*,int> &k){if(k.first->getPermeable())return b;else return b+1;}) > 1;
+    return std::accumulate(m_sortedContexts.begin(),m_sortedContexts.end(),0,[](int b,std::pair<CEnhancedContext*,int> &k){if(k.first->getPermeable())return b;else return b+1;}) > 1;
 }
 
-#include "CWorldContext.hpp"
-#include "CFightContext.hpp"
 TEST_CASE("Testing permeable context stacks","[CContextStack]")
 {
     CContextStack st;
-    CFightContext cdiag({});
-    CWorldContext cworld;
-    st.insert((CContext*)&cdiag,10,"diag");
-    st.insert((CContext*)&cworld,11,"world");
+    CEnhancedContext cdiag((std::string)"fight");
+    CEnhancedContext cworld((std::string)"world");
+    st.insert((CEnhancedContext*)&cdiag,10,"diag");
+    st.insert((CEnhancedContext*)&cworld,11,"world");
     REQUIRE(st.nonPermeableContextInList()==false);
     st.erase("diag");
     REQUIRE(st.getSortedCtxList().size() == 1);
@@ -65,17 +71,17 @@ TEST_CASE("Testing permeable context stacks","[CContextStack]")
 TEST_CASE("Testing CContextStack","[CContextStack]")
 {
     CContextStack st;
-    st.insert((CContext*)0,0,"alex");
-    st.insert((CContext*)1,1,"blex");
-    st.insert((CContext*)2,2,"clex");
-    st.insert((CContext*)3,3,"dlex");
+    st.insert((CEnhancedContext*)0,0,"alex");
+    st.insert((CEnhancedContext*)1,1,"blex");
+    st.insert((CEnhancedContext*)2,2,"clex");
+    st.insert((CEnhancedContext*)3,3,"dlex");
     REQUIRE( st.getSortedCtxList().size() == 4);
     st.erase("dlex");
     REQUIRE( st.getSortedCtxList().size() == 3);
-    REQUIRE( st.getSortedCtxList().front() == (CContext*)2);
+    REQUIRE( st.getSortedCtxList().front() == (CEnhancedContext*)2);
     st.erase("ogo");
     REQUIRE( st.getSortedCtxList().size() == 3);
-    REQUIRE( st.getSortedCtxList().front() == (CContext*)2);
-    st.insert((CContext*)4,10,"flex");
-    REQUIRE( st.getSortedCtxList().front() == (CContext*)4);
+    REQUIRE( st.getSortedCtxList().front() == (CEnhancedContext*)2);
+    st.insert((CEnhancedContext*)4,10,"flex");
+    REQUIRE( st.getSortedCtxList().front() == (CEnhancedContext*)4);
 }

@@ -9,7 +9,9 @@ map<string, nlohmann::json> CGame::getPlayerJsons() {
 }
 
 CGame::CGame() {
-    m_context = new CGameContext();
+    CEnhancedContext::initializeHanlders();
+    CEnhancedContext::initializeTemplates();
+    m_context = new CEnhancedContext((std::string)"game");
     m_context->setGame(this);
 
     m_world = new CWorld(NULL);
@@ -96,6 +98,9 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePla
     //Check whether player is dead
     if(m_curPlayer->getStat("hp") <= 0) {
         m_context->throw_event(std::make_pair("reload_player", m_curPlayer->getID()), m_players["programmer"]);
+
+        //ERROR !! Current player is deleted when this function is called!! 
+        //Maybe set current player in reload player?
         m_curPlayer->throw_event("startTutorial");
     }
 
@@ -130,6 +135,7 @@ bool CGame::reloadPlayer(string sID)
 
     //Create new player
     playerFactory(m_playerJsons[sID]);
+    m_curPlayer = m_players[sID];
 
     return true;
 }

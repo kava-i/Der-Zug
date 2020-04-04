@@ -5,7 +5,6 @@
 #include <map>
 #include "CPerson.hpp"
 #include "CAttack.hpp"
-#include "CContext.hpp"
 
 using std::string;
 

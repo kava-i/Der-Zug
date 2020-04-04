@@ -1,12 +1,19 @@
 #include "CEnhancedContext.hpp"
+#include "CPlayer.hpp"
+#include "CGame.hpp"
 
 // ***** ***** CONSTRUCTORS ***** ***** //
 
+std::map<std::string, void (CEnhancedContext::*)(std::string&, CPlayer* p)> CEnhancedContext::m_handlers = {};
+std::map<std::string, nlohmann::json> CEnhancedContext::m_templates = {};
+
 CEnhancedContext::CEnhancedContext(nlohmann::json jAttributes)
 {
+    std::cout << "Building context from json object.\n";
+
     m_jAttributes = jAttributes;
     m_sName = jAttributes.value("name", "context");
-    m_permeable = jAttributes("permeable", false);
+    m_permeable = jAttributes.value("permeable", false);
     m_curPermeable = m_permeable;
     m_block = false;
     m_sHelp = jAttributes.value("help", "");
@@ -14,117 +21,771 @@ CEnhancedContext::CEnhancedContext(nlohmann::json jAttributes)
 
     if(jAttributes.count("handlers") > 0)
     {
-        for(const auto &it : jAttributes["handlers"])
+        for(const auto &it : jAttributes["handlers"].get<map_type>())
             add_listener(it.first, m_handlers[it.second]);  
     }
-    add_listener("help", &h_help);
+    add_listener("help", &CEnhancedContext::h_help);
+
+    m_error = &CEnhancedContext::error;
 }
  
-CEnhancedContext::CEnhancedContext(std::string sTemplate)
+CEnhancedContext::CEnhancedContext(std::string sTemplate) : CEnhancedContext(getTemplate(sTemplate))
 {
-    if(m_templates.count(sTemplate) > 0)
-        CEnhancedContext(m_templates[sTemplate]);
-    else
-        std::cout << "Error in creating context with template: " << sTemplate << std::endl;
+    std::cout << "Building context from template.\n";
 }
 
-CEnhancedContext::CEnhancedContext(std::string sTemplate, nlohmann::json jAttributes)
+CEnhancedContext::CEnhancedContext(std::string sTemplate, nlohmann::json jAttributes) : CEnhancedContext(getTemplate(sTemplate))
 {
-    if(m_templates.count(sTemplate) > 0)
-        CEnhancedContext(m_templates[sTemplate]);
-    else
-        std::cout << "Error in creating context with template: " << sTemplate << std::endl;
-
+    std::cout << "Building context from template and extra json.\n";
     m_jAttributes = jAttributes;
     m_sName = jAttributes.value("name", m_sName);
-    m_permeable = jAttributes("permeable", m_permeable);
+    m_permeable = jAttributes.value("permeable", m_permeable);
     m_curPermeable = m_permeable;
     m_sHelp = jAttributes.value("help", m_sHelp);
     m_sError = jAttributes.value("error", m_sError);
 
     if(jAttributes.count("handlers") > 0)
     {
-        for(const auto &it : jAttributes["handlers"])
+        for(const auto &it : jAttributes["handlers"].get<map_type>())
             add_listener(it.first, m_handlers[it.second]);  
     }
+
+    m_error = &CEnhancedContext::error;
+}
+
+// ***** ***** GETTER ***** ***** //
+std::string CEnhancedContext::getName() {
+    return m_sName;
+}
+
+bool CEnhancedContext::getPermeable() {
+    return m_permeable;
+}
+
+nlohmann::json CEnhancedContext::getTemplate(std::string sTemplate)
+{
+    if(m_templates.count(sTemplate) == 0)
+    {
+        std::cout << "Template requested that does not exist: " << sTemplate << std::endl;
+        return nlohmann::json::object();
+    }
+    return m_templates[sTemplate];
+} 
+
+
+
+// ***** ***** SETTER ***** ***** //
+void CEnhancedContext::setName(std::string sName) {
+    m_sName = sName;
+}
+
+void CEnhancedContext::setGame(CGame* game) {
+    m_game = game;
+}
+
+void CEnhancedContext::setErrorFunction(void(CEnhancedContext::*func)(CPlayer* p)) {
+    m_error = func;
 }
 
 // ***** ***** INITIALIZERS ***** ***** //
-std::map<string, void (CContext::*)(std::string&, CPlayer* p)> CQuestContext::m_handlers = {};
-void CQuestContext::initializeHanlders()
+void CEnhancedContext::initializeHanlders()
 {
-
     // ***** GAME CONTEXT ***** //
     m_handlers["h_reloadGame"] = &CEnhancedContext::h_reloadGame;
     m_handlers["h_reloadPlayer"] = &CEnhancedContext::h_reloadPlayer;
     m_handlers["h_reloadWorlds"] = &CEnhancedContext::h_reloadWorlds;
     m_handlers["h_reloadWorld"] = &CEnhancedContext::h_reloadWorld;
-    m_handlers["h_updateListeners"] &CEnhancedContext::h_updatePlayers;
+    m_handlers["h_updateListeners"] = &CEnhancedContext::h_updatePlayers;
 
     // ***** WORLD CONTEXT ***** //
-    m_handlers["h_deleteCharacter"] = &h_deleteCharacter(string&, CPlayer*)M
-    m_handlers["h_addItem"] = &h_addItem(string&, CPlayer*);
-    m_handlers["h_recieveMoney"] = &h_recieveMoney(string&, CPlayer*);
-    m_handlers["h_newFight"] = &h_newFight(string&, CPlayer*);
-    m_handlers["h_endFight"] = &h_endFight(string&, CPlayer*);
-    m_handlers["h_endDialog"] = &h_endDialog(string&, CPlayer*);
-    m_handlers["h_gameover"] = &h_gameover(string&, CPlayer*);
+    m_handlers["h_deleteCharacter"] = &CEnhancedContext::h_deleteCharacter;
+    m_handlers["h_addItem"] = &CEnhancedContext::h_addItem;
+    m_handlers["h_recieveMoney"] = &CEnhancedContext::h_recieveMoney;
+    m_handlers["h_newFight"] = &CEnhancedContext::h_newFight;
+    m_handlers["h_endFight"] = &CEnhancedContext::h_endFight;
+    m_handlers["h_endDialog"] = &CEnhancedContext::h_endDialog;
+    m_handlers["h_gameover"] = &CEnhancedContext::h_gameover;
+
+    // ***** STANDARD CONTEXT ***** //
+    m_handlers["h_show"] = &CEnhancedContext::h_show;
+    m_handlers["h_look"] = &CEnhancedContext::h_look;
+    m_handlers["h_take"] = &CEnhancedContext::h_take;
+    m_handlers["h_goTo"] = &CEnhancedContext::h_goTo;
+    m_handlers["h_consume"] = &CEnhancedContext::h_consume;
+    m_handlers["h_equipe"]  = &CEnhancedContext::h_equipe;
+    m_handlers["h_dequipe"] = &CEnhancedContext::h_dequipe;
+    m_handlers["h_examine"] = &CEnhancedContext::h_examine;
+    m_handlers["h_startDialog"] = &CEnhancedContext::h_startDialog;
+    m_handlers["h_changeMode"]  = &CEnhancedContext::h_changeMode;
+    m_handlers["h_try"] = &CEnhancedContext::h_try;
+    m_handlers["h_firstZombieAttack"] = &CEnhancedContext::h_firstZombieAttack;
+    m_handlers["h_moveToHospital"] = &CEnhancedContext::h_moveToHospital;
+    m_handlers["h_exitTrainstation"] = &CEnhancedContext::h_exitTrainstation;
+    m_handlers["h_startTutorial"] = &CEnhancedContext::h_startTutorial;
 
     // *** FIGHT CONTEXT *** //
-    m_handlers["h_fight_show"] = &h_fight_show(string&, CPlayer*);
+    m_handlers["h_fight_show"] = &CEnhancedContext::h_fight_show;
 
     // *** DIALOG CONTEXT *** //
-    m_handlers["h_call"] = &h_call(string&, CPlayer*);
+    m_handlers["h_call"] = &CEnhancedContext::h_call;
 
     // *** TRADECONTEXT *** //
-    m_handlers["h_sell"] = &h_sell(string&, CPlayer*);
-    m_handlers["h_buy"] = &h_buy(string&, CPlayer*);
-    m_handlers["h_exit"] = &h_exit(string&, CPlayer*);
+    m_handlers["h_sell"] = &CEnhancedContext::h_sell;
+    m_handlers["h_buy"] = &CEnhancedContext::h_buy;
+    m_handlers["h_exit"] = &CEnhancedContext::h_exit;
 
     // *** CHATCONTEXT *** //
-    m_handlers["h_send"] = &h_send(string&, CPlayer*);
-    m_handlers["h_end"] = &h_end(string&, CPlayer*);
-
-    // *** CHOICE CONTEXT *** //
-    m_handlers["h_select"] = &h_select(string&, CPlayer*);
-    m_handlers["h_choose_equipe"] = &h_choose_equipe(string&, CPlayer*);
-    m_handlers["h_updateStats"] = &h_updateStats(string&, CPlayer*);
+    m_handlers["h_send"] = &CEnhancedContext::h_send;
+    m_handlers["h_end"] = &CEnhancedContext::h_end;
 
     // *** QUESTS *** //
-    m_handlers["h_ticketverkaeufer"] = &h_ticketverkaeufer(string&, CPlayer*);
-    m_handlers["h_ticketverkauf"] = &h_ticketverkauf(string&, CPlayer*);
-    m_handlers["h_zum_gleis"] = &h_zum_gleis(string&, CPlayer*);
-    m_handlers["h_reden"] = &h_reden(string&, CPlayer*);
-    m_handlers["h_besiege_besoffene_frau"] = &h_besiege_besoffene_frau(string&, CPlayer*);
-    m_handlers["h_geldauftreiben"] = &h_geldauftreiben(string&, CPlayer*)
+    m_handlers["1ticketverkaeufer"] = &CEnhancedContext::h_ticketverkaeufer;
+    m_handlers["2ticketkauf"] = &CEnhancedContext::h_ticketverkauf;
+    m_handlers["3zum_gleis"] = &CEnhancedContext::h_zum_gleis;
+    m_handlers["1reden"] = &CEnhancedContext::h_reden;
+    m_handlers["1besiege_besoffene_frau"] = &CEnhancedContext::h_besiege_besoffene_frau;
+    m_handlers["1geldauftreiben"] = &CEnhancedContext::h_geldauftreiben;
 
     // *** PROGRAMMER *** //
-    m_handlers["h_try"] = &h_try(string&, CPlayer*) {}
 
-    // ***** QUESTS ***** //
+    // *** OTHER CONTEXT *** //
+    m_handlers["h_select"] = &CEnhancedContext::h_select;
+    m_handlers["h_choose_equipe"] = &CEnhancedContext::h_choose_equipe;
+    m_handlers["h_updateStats"] = &CEnhancedContext::h_updateStats;
 
-    //Use id of state as identfier
 
-    // *** Zug nach Moskau *** //
-    m_handlers["1ticketverkaeufer"] = &CContext::h_ticketverkaeufer;
-    m_handlers["2ticketkauf"]       = &CContext::h_ticketverkauf;
-    m_handlers["3zum_gleis"]        = &CContext::h_zum_gleis;
+}
 
-    // *** Die komische Gruppe *** // 
-    m_handlers["1reden"] = &CContext::h_reden;
-    // *** Besoffene Frau *** //
-    m_handlers["1besiege_besoffene_frau"] = &CContext::h_besiege_besoffene_frau;
+void CEnhancedContext::initializeTemplates()
+{
+    m_templates["game"] = {{"permeable", true}, {"handlers",{{"reload_game","h_reloadGame"},{"reload_player","h_reloadPlayer"},{"reload_world", "h_reloadWorld"},{"reload_worlds","h_reloadWorlds"},{"update_players","h_updatePlayers"}}}};
 
-    // *** Geld auftreiben *** //
-    m_handlers["1geldauftreiben"] = &CContext::h_geldauftreiben;
+    m_templates["world"] = {{"permeable", true},{"handlers",{{"deleteCharacter", "h_deleteCharacter"},{"addItem", "h_addItem"},{"recieveMoney", "h_recieveMoney"},{"fight", "h_newFight"},{"endFight","h_endFight"},{"endDialog","h_endDialog"},{"gameover","h_gameover"}}}};
+
+    m_templates["standard"] = {{"name", "standard"}, {"permeable",false}, {"help","standard.txt"}, {"handlers",{{"show","h_show"}, {"look","h_look"}, {"go","h_goTo"}, {"talk","h_startDialog"}, {"pick","h_take"}, {"consume","h_consume"}, {"equipe","h_equipe"}, {"dequipe","h_dequipe"}, {"examine","h_examine"}, {"mode","h_mode"}, {"try", "h_try"}, {"go", "h_firstZombieAttack"}, {"go", "h_moveToHospital"}, {"go", "h_exitTrainstation"}, {"startTutorial", "h_startTutorial"}}}};
+
+    m_templates["fight"] = {{"name","fight"}, {"permeable",false}, {"help","fight.txt"}, {"handlers",{{"show","h_fight_show"}}}};
+
+    m_templates["dialog"] = {{"name","dialog"}, {"permeable",false},{"help","dialog.txt"}};
+
+    m_templates["trade"] = {{"name","trade"}, {"permeable",false}, {"help","trade.txt"}, {"handlers",{{"buy", "h_buy"},{"sell","h_sell"},{"exit","h_exit"}}}};
+}
+
+// ***** ***** FUNCTIONS ***** ****** // 
+void CEnhancedContext::add_listener(std::string sEventType, void(CEnhancedContext::*handler)(std::string&, CPlayer*)) {
+    m_eventmanager[sEventType].push_back(handler);
+}
+
+void CEnhancedContext::add_listener(std::string sEventType, void(CEnhancedContext::*handler)(std::string&, CPlayer*), size_t pos){
+    m_eventmanager[sEventType].insert(m_eventmanager[sEventType].begin()+pos, handler);
+}
+
+void CEnhancedContext::delete_listener(std::string sEventType, int index) {
+    m_eventmanager[sEventType].erase(m_eventmanager[sEventType].begin()+index);
+}
+
+bool CEnhancedContext::throw_event(event e, CPlayer* p)
+{    
+    m_curPermeable = m_permeable;
+    m_block = false;
+
+    if(m_eventmanager.count(e.first) == 0) {
+        error(p);
+        return m_curPermeable;
+    }
+        
+    for(auto it : m_eventmanager[e.first]) {
+        if(m_block == true)
+            break;
+        (this->*it)(e.second, p);
+    }
+
+    return m_curPermeable;
+}
+
+// ***** ERROR FUNCTIONS ****** ***** //
+
+void CEnhancedContext::error(CPlayer* p)
+{
+    if(m_permeable == false && m_sError != "")
+        p->appendPrint(m_sError);
+    else if(m_permeable == false)
+        p->appendPrint("TECH GUY - Falsche EIngabe, gebe \"help\" ein, falls du nicht weiter weißt. (" +m_sName+")");
+    else
+        std::cout << "Context " << m_sName << " called with error state, probably normal.\n";
+}
+
+void CEnhancedContext::error_delete(CPlayer* p)
+{
+    std::cout << "Error from context " << m_sName << " called. Context will be deleted.\n";
+    p->getContexts().erase(m_sName); 
 }
 
 
-std::map<std::string, nlohmann::json> m_templates;
-void CEnhancedContext::initializeTemplates()
+// ***** ***** ***** HANDLER ***** ***** ***** //
+
+void CEnhancedContext::h_help(std::string &sIdentifier, CPlayer* p)
+{    
+    if(m_sHelp != "")
+    {
+        std::ifstream read("factory/help/"+m_sHelp);
+
+        std::string str((std::istreambuf_iterator<char>(read)),
+                    std::istreambuf_iterator<char>());
+        p->appendPrint("\n<b>Help: </b>\n" + str);
+    }
+    else
+        p->appendPrint("TECH GUY - No help for this context, sorry.\n");
+}
+
+// ***** ***** GAME CONTEXT ***** ***** //
+
+void CEnhancedContext::h_reloadGame(std::string&, CPlayer* p)
 {
-    m_templates["standard"] = {"name":"standard", "permeable":false, "help":"standard.txt", "handlers":["show":"h_show", "look":"h_look", "go":"h_goTo", "talk":"h_startDialog", "pick":"h_take", "consume":"h_consume", "equipe":"h_equipe", "dequipe":"h_dequipe", "examine":"h_examine", "mode":"h_mode", "find":"h_find"]};
-    m_templates["fight"] = {"name":"fight", "permeable":false,"help":"fight.txt", "handlers":["show":"h_fight_show"]};
-    m_templates["dialog"] = {"name":"dialog","permeable":false,"help":"dialog.txt"};
-    m_templates["trade"] = {"name":"trade", "permeable":false, "help":"trade.txt"};
-    m_templates
+    p->appendPrint("reloading game... \n");
+    m_curPermeable = false;
+}
+
+void CEnhancedContext::h_reloadPlayer(std::string& sPlayer, CPlayer*p)
+{
+    p->appendPrint("reloading Player: " + sPlayer + "... \n");
+    if(m_game->reloadPlayer(sPlayer) == false)
+        p->appendPrint("Player does not exist... reloading world failed.\n");
+    else
+        p->appendPrint("Done.\n");
+    m_curPermeable = false;
+}
+
+void CEnhancedContext::h_reloadWorlds(std::string& sPlayer, CPlayer*p)
+{
+    p->appendPrint("reloading all worlds... \n");
+    if(m_game->reloadWorld() == true)
+        p->appendPrint("Reloading all worlds failed.\n");
+    else
+        p->appendPrint("Done.\n");
+    m_curPermeable = false;
+}
+
+void CEnhancedContext::h_reloadWorld(std::string& sPlayer, CPlayer*p)
+{
+    p->appendPrint("reloading world of: " + sPlayer + "... \n");
+    if(m_game->reloadWorld(sPlayer) == false)
+        p->appendPrint("Player does not exist... reloading world failed.\n");
+    else
+        p->appendPrint("Done.\n"); 
+    m_curPermeable = false;
+}
+
+void CEnhancedContext::h_updatePlayers(std::string&, CPlayer*p)
+{
+    p->appendPrint("updating players... \n");
+    m_game->playerFactory(true); 
+    p->appendPrint("done.\n");
+    m_curPermeable = false;
+}
+
+
+// ***** ***** WORLD CONTEXT ***** ***** //
+
+void CEnhancedContext::h_deleteCharacter(std::string& sIdentifier, CPlayer* p) {
+    std::cout << "h_deleteCharacter " << sIdentifier << std::endl;
+    p->getRoom()->getCharacters().erase(sIdentifier);
+    delete p->getWorld()->getCharacters()[sIdentifier];
+    p->getWorld()->getCharacters().erase(sIdentifier); 
+
+    m_curPermeable=false;
+}
+
+void CEnhancedContext::h_addItem(std::string& sIdentifier, CPlayer* p) {
+    p->addItem(p->getWorld()->getItem(sIdentifier, p));
+    m_curPermeable=false;
+}
+
+void CEnhancedContext::h_recieveMoney(std::string& sIdentifier, CPlayer* p) {
+    p->setStat("gold", p->getStat("gold") + stoi(sIdentifier));
+    p->appendPrint(Webcmd::set_color(Webcmd::color::GREEN) + "+" + sIdentifier + " Schiling" + Webcmd::set_color(Webcmd::color::WHITE) + "\n");
+
+   m_curPermeable = false; 
+}
+
+void CEnhancedContext::h_endFight(std::string& sIdentifier, CPlayer* p) {
+    std::cout << "h_endFight " << std::endl;
+    p->endFight();
+    m_curPermeable=false;
+}
+
+void CEnhancedContext::h_endDialog(std::string& sIdentifier, CPlayer* p) {
+    std::cout << "h_endDialog." << std::endl;
+    p->getContexts().erase("dialog");
+    m_curPermeable=false;
+}
+
+
+void CEnhancedContext::h_newFight(std::string& sIdentifier, CPlayer* p) {
+    p->setFight(new CFight(p, p->getWorld()->getCharacters()[sIdentifier]));
+}
+
+void CEnhancedContext::h_gameover(std::string& sIdentifier, CPlayer* p) {
+    p->setStat("hp", 0);
+    p->appendPrint("\nDu bist gestorben... \n\n Press Enter to continue....\n");
+}
+
+
+// ***** ***** STANDARD CONTEXT ***** ***** //
+
+void CEnhancedContext::h_show(std::string& sIdentifier, CPlayer* p) {
+    if(sIdentifier == "exits")
+    {
+        p->appendPrint(p->getRoom()->showExits(p->getMode()));
+        p->addSelectContest(p->getRoom()->getExtits2(), "go");
+    }
+    else if(sIdentifier == "people")
+    {
+        p->appendPrint(p->getRoom()->showCharacters(p->getMode()));
+        p->addSelectContest(p->getRoom()->getCharacters(), "talk");
+    }
+    else if(sIdentifier == "room")
+        p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
+    else if(sIdentifier == "items")
+        p->appendPrint(p->getRoom()->showItems(p->getMode()));
+    else if(sIdentifier == "details")
+        p->appendPrint(p->getRoom()->showDetails(p->getMode()));
+    else if(sIdentifier == "inventory")
+        p->appendPrint(p->getInventory().printInventory());
+    else if(sIdentifier == "equiped")
+        p->printEquiped();
+    else if(sIdentifier == "quests")
+        p->showQuests(false);
+    else if(sIdentifier == "solved quests")
+        p->showQuests(true);
+    else if(sIdentifier == "stats")
+        p->showStats();
+    else if(sIdentifier == "mind")
+        p->showMinds();
+    else if(sIdentifier == "attacks")
+        p->appendPrint(p->printAttacks());
+    else if(sIdentifier == "all")
+        p->appendPrint(p->getRoom()->showAll(p->getMode()));
+    else
+        p->appendPrint("Unkown \"show-function\"\n"); 
+}
+
+void CEnhancedContext::h_look(std::string& sIdentifier, CPlayer* p) {
+    size_t pos=sIdentifier.find(" ");
+    if(pos == std::string::npos) {
+        p->appendPrint("Soll ich in, auf oder unter der box schauen?\n");
+        return;
+    }
+
+    p->appendPrint(p->getRoom()->look(sIdentifier.substr(0,pos),sIdentifier.substr(pos+1),p->getMode()));
+}
+
+void CEnhancedContext::h_goTo(std::string& sIdentifier, CPlayer* p) {
+    p->changeRoom(sIdentifier);
+}
+
+void CEnhancedContext::h_startDialog(std::string& sIdentifier, CPlayer* p)
+{
+    //Get selected character
+    std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier);
+    CPlayer* player = p->getPlayer(sIdentifier);
+
+    //Check if character was found
+    if(character != "") 
+        p->startDialog(character);
+    else if(player != NULL) 
+        p->startChat(player);
+    else
+        p->appendPrint("Character not found");
+}
+
+void CEnhancedContext::h_take(std::string& sIdentifier, CPlayer* p) {
+    if(sIdentifier.find("all") == 0)
+        p->addAll();
+    else if(p->getRoom()->getItem(sIdentifier) == NULL)
+        p->appendPrint("Item not found.\n");
+    else
+        p->addItem(p->getRoom()->getItem(sIdentifier));
+}
+
+void CEnhancedContext::h_consume(std::string& sIdentifier, CPlayer* p) {
+    if(p->getInventory().getItem(sIdentifier) != NULL) {
+        if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
+            p->appendPrint("This item is not consumeable.\n");
+    }
+    else
+        p->appendPrint("Item not in inventory! (use \"show inventory\" to see your items.)\n");
+}
+
+void CEnhancedContext::h_equipe(std::string& sIdentifier, CPlayer* p) {
+    if(p->getInventory().getItem(sIdentifier) != NULL) {
+        std::cout << "Function: " << p->getInventory().getItem(sIdentifier)->getFunction() << std::endl;
+        if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
+            p->appendPrint("This item is not equipable.\n");
+    }
+}
+
+void CEnhancedContext::h_dequipe(std::string& sIdentifier, CPlayer* p) {
+    p->dequipeItem(sIdentifier);
+}
+
+void CEnhancedContext::h_examine(std::string &sIdentifier, CPlayer*p) {
+    //Check for detail
+    auto lambda1 = [](CDetail* detail) { return detail->getName(); };
+    std::string sObject = func::getObjectId(p->getRoom()->getDetails(), sIdentifier, lambda1);
+    if(sObject != "")
+        p->appendPrint(p->getRoom()->getDetails()[sObject]->getDescription());
+
+    auto lambda2 = [](CItem* item) { return item->getName(); };
+    sObject = func::getObjectId(p->getRoom()->getItems(), sIdentifier, lambda2);
+    //Check for item
+    if(sObject != "")
+        p->appendPrint(p->getRoom()->getItems()[sObject]->getDescription());
+
+    //Check for person
+    sObject = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier);
+    //Check for item
+    if(sObject != "")
+        p->appendPrint(p->getWorld()->getCharacters()[sObject]->getDescription());
+}
+
+void CEnhancedContext::h_changeMode(std::string& sIdentifier, CPlayer* p) {
+    p->changeMode();
+}
+
+
+// **** SPECIAL HANDLER ***** //
+void CEnhancedContext::h_firstZombieAttack(std::string& sIdentifier, CPlayer* p)
+{
+    //Get selected room
+    if(p->getRoom()->getID() != "hospital_stairs")
+        return;
+
+    p->appendPrint("\n$\nA zombie comes running down the stairs and attacks you!");
+
+    //Create fight
+    p->setFight(new CFight(p, p->getWorld()->getCharacters()["hospital_zombie1"]));
+    delete_listener("go", 3);
+}
+
+void CEnhancedContext::h_moveToHospital(std::string& sIdentifier, CPlayer* p)
+{
+    //Get selected room
+    if(p->getRoom()->getID().find("compartment") == std::string::npos || fuzzy::fuzzy_cmp("corridor", sIdentifier) > 0.2)
+        return;
+
+    p->changeRoom(p->getWorld()->getRooms()["hospital_foyer"]);
+    m_block = true;
+}
+
+void CEnhancedContext::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
+{
+    if(p->getRoom()->getID() != "bahnhof_eingangshalle" || func::getObjectId(p->getRoom()->getExtits2(), sIdentifier) != "ausgang")
+        return;
+
+    p->appendPrint("Du drehst dich zum dem großen, offen stehenden Eingangstor der Bahnhofshalle. Und kurz kommt dir der Gedanke doch den Zug nicht zu nehmen, doch alles beim Alten zu belassen. Doch etwas sagt dir, dass es einen guten Grund gab das nicht zu tun, einen guten Grund nach Moskau zu fahren. Und auch, wenn du ihn gerade nicht mehr erkennst. Vielleicht ist gerade das der beste Grund: rausfinden, was dich dazu getrieben hat, diesen termin in Moskau zu vereinbaren.\n Du guckst dich wieder in der Halle um, und überlegst, wo du anfängst zu suchen.\n");
+    
+    m_block=true;
+}
+
+void CEnhancedContext::h_startTutorial(std::string&, CPlayer* p)
+{
+    p->appendPrint("Willkommen bei \"DER ZUG\"! Du befindest dich auf dem Weg nach Moskau. Dir fehlt dein Ticket. Tickets sind teuer. Glücklicherweise kennst du einen leicht verrückten, viel denkenden Mann, der sich \"Der Ticketverkäufer\" nennt. Suche ihn, er hat immer noch ein günsttiges Ticket für dich. Benutze die Befhelte \"go to [name des Ausgangs]\", um den Raum zu wechseln, um dir Personen und Ausgänge anzeigen zu lassen, nutze \"show people\", bzw. \"show exits\" oder auch \"show all\". Eine Liste mit allen Befhelen und zusätzlichen Hilfestellungen erhältst du, indem du \"help\" eingibst.\n $\n");
+
+    p->appendPrint(p->getRoom()->getDescription() + "\n");
+    p->setNewQuest("zug_nach_moskau");
+    p->setNewQuest("tutorial");
+}
+
+void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
+{
+   
+}
+
+
+// ***** ***** FIGHT CONTEXT ***** ***** //
+void CEnhancedContext::initializeFightListeners(int num)
+{
+    for(int i=1; i<=num; i++)
+        add_listener(std::to_string(i), &CEnhancedContext::h_fight); 
+}
+
+void CEnhancedContext::h_fight(std::string& sIdentifier, CPlayer* p) {
+    std::cout << "h_fight " << sIdentifier << std::endl;
+    std::string newCommand = p->getFight()->fightRound((sIdentifier));
+    if(newCommand != "")    
+        p->throw_event(newCommand);
+}
+
+void CEnhancedContext::h_fight_show(std::string& sIdentifier, CPlayer* p) {
+    if(sIdentifier == "stats")
+        p->appendPrint(p->getFight()->printStats(p));
+    else if(sIdentifier == "opponent stats")
+        p->appendPrint(p->getFight()->printStats(p->getFight()->getOpponent()));
+    else
+        p->appendPrint("Falsche Eingabe! Versuche es mit \"show stats\" oder \"show opponent stats\"\n");
+}
+
+
+// ***** ***** DIALOG CONTEXT ***** *****
+
+void CEnhancedContext::initializeDialogListeners(std::string newState, CPlayer* p)
+{
+    //Set (new) state.
+    setAttribute<std::string>("state", newState); 
+
+    //Clear listeners.
+    m_eventmanager.clear();
+
+    //Add help listener 
+    add_listener("help", &CEnhancedContext::h_help);
+
+    //Add listener for each dialog option.
+    std::vector<size_t> activeOptions = p->getDialog()->states[newState]->getActiveOptions(p);
+    for(auto opt : activeOptions)
+        add_listener(std::to_string(opt), &CEnhancedContext::h_call);
+}
+
+void CEnhancedContext::h_call(std::string& sIdentifier, CPlayer* p)
+{
+    std::cout << "h_call, " << sIdentifier << std::endl;
+
+    std::string curState = getAttribute<std::string>("state");
+    std::string nextState = p->getDialog()->states[curState]->getNextState(sIdentifier, p);
+    if(nextState == "")
+        p->appendPrint("No valid option.\n");
+    else if(nextState == "trade")
+        p->startTrade(getAttribute<std::string>("partner"));
+    else
+    {
+        initializeDialogListeners(nextState, p);
+        std::string newCommand = p->getDialog()->states[nextState]->callState(p);
+        if(newCommand != "")
+            p->throw_event(newCommand);
+    }
+}
+
+// ***** ***** TRADE CONTEXT ***** ***** // 
+
+void CEnhancedContext::print(CPlayer* p)
+{
+    CCharacter* partner = p->getWorld()->getCharacters()[getAttribute<std::string>("partner")];
+    p->appendPrint("<b>" + p->getName() + "'s Inventory:</b>\n" 
+                    + p->getInventory().printInventory()
+                    + "\n<b>" + partner->getName() + "'s Inventory: </b>\n" 
+                    + partner->getInventory().printInventory());
+}
+
+void CEnhancedContext::h_sell(std::string& sIdentifier, CPlayer* p)
+{
+    CCharacter* partner = p->getWorld()->getCharacters()[getAttribute<std::string>("partner")];
+    CItem* curItem = p->getInventory().getItem(sIdentifier);
+    if(curItem == NULL)
+        p->appendPrint("LOGIK - Dieser Gegenstand befindet sich nicht in deinem Inventar, du kannst ihn logischerwiese dehalb nicht verkaufen!\n");
+    else
+    {
+        p->appendPrint("PERZEPTION - Du hast " + curItem->getName() + " verkauft.\n\n");
+        p->throw_event("recieveMoney " + std::to_string(curItem->getValue()));
+        CItem* item = new CItem(curItem->getAttributes(), p);
+        partner->getInventory().addItem(item);
+        p->getInventory().removeItemByID(curItem->getID());
+    }
+    print(p);
+}
+
+void CEnhancedContext::h_buy(std::string& sIdentifier, CPlayer* p)
+{
+    CCharacter* partner = p->getWorld()->getCharacters()[getAttribute<std::string>("partner")];
+    CItem* curItem = partner->getInventory().getItem(sIdentifier);
+
+    if(curItem == NULL)
+        p->appendPrint("LOGIK - Dieser Gegenstand befindet sich nicht in dem Inventar des Händlers, du kannst ihn logischerwiese dehalb nicht kaufen!\n");
+    else
+    {
+        if(p->getStat("gold") < curItem->getValue())
+        {
+            p->appendPrint("PERZEPTION - Du hast nicht genuegend Geld um "+curItem->getName()+" zu kaufen");
+            return;
+        }
+
+        p->appendPrint("PERZEPTION - Du hast " + curItem->getName() + " gekauft.\n\n");
+        p->setStat("gold", p->getStat("gold") - curItem->getValue());
+        p->getInventory().addItem(new CItem(curItem->getAttributes(), p));
+        partner->getInventory().removeItemByID(curItem->getID());
+    }
+    print(p);
+}
+
+void CEnhancedContext::h_exit(std::string&, CPlayer* p)
+{
+    CCharacter* partner = p->getWorld()->getCharacters()[getAttribute<std::string>("partner")];
+    p->getContexts().erase("trade");
+    p->getContexts().erase("dialog");
+    p->startDialog(partner->getID());
+}
+
+// ***** ***** QUEST CONTEXT ***** ***** //
+
+void CEnhancedContext::initializeQuestListeners(map_type handler)
+{
+    for(auto it : handler)
+    {
+        if(m_handlers.count(it.first) == 0)
+            std::cout << "FATAL ERROR, Quest-handler \"" << it.first << "\" does not exits!!\n";
+        else
+            add_listener(it.second, m_handlers[it.first]);
+    }
+}
+
+// *** *** Zug nach Moskau *** *** //
+void CEnhancedContext::h_ticketverkaeufer(std::string& sIdentifier, CPlayer* p)
+{
+    if(p->getRoom()->getID() != "bahnhof_toiletten")
+        return;
+
+    if(fuzzy::fuzzy_cmp("männer-toilette", sIdentifier) <= 0.2) {
+        p->questSolved(getAttribute<std::string>("questID"), "1ticketverkaeufer");
+        delete_listener("go", 0);
+    }
+}
+
+
+void CEnhancedContext::h_ticketverkauf(std::string& sIdentifier, CPlayer* p)
+{
+    if(sIdentifier == "ticket")
+        p->questSolved(getAttribute<std::string>("questID"), "2ticketkauf");
+}
+
+void CEnhancedContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
+{    
+    auto lamda= [](CExit* exit) {return exit->getName();};
+    std::string room = func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lamda);
+
+    if(room != "gleis3" || p->getInventory().getItem_byID("ticket") == NULL)
+        return; 
+
+    p->questSolved(getAttribute<std::string>("questID"), "3zum_gleis");
+
+    p->appendPrint("Du siehst deinen Zug einfahren. Du bewegst dich auf ihn zu, zeigst dein Ticket, der Schaffner musstert dich kurz und lässt dich dann eintreten. Du suchst dir einen freien Platz, legst dein Bündel auf den sitz neben dich und schläfst ein...\n $ Nach einem scheinbar endlos langem schlaf wachst du wieder in deinem Abteil auf. Das Abteil ist leer. Leer bist auf einen geheimnisvollen Begleiter: Parsen.\n");
+
+    p->setRoom(p->getWorld()->getRooms()["compartment-a"]);
+    m_curPermeable = false;
+    m_block = true;
+    p->getContexts().erase(getAttribute<std::string>("questID"));
+    p->questSolved("tutorial", "1tutorial");
+}
+
+// *** *** Die komische Gruppe *** *** //
+void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
+{
+    std::string character = func::getObjectId(p->getRoom()->getCharacters(),sIdentifier);
+    if(character == "" || character.find("passant") == std::string::npos)
+        return;
+
+    CQuest* quest = p->getWorld()->getQuests()[getAttribute<std::string>("questID")];
+    CQuestStep* step = quest->getSteps()["1reden"];
+    for(size_t i=0; i<step->getWhich().size(); i++) {
+        if(step->getWhich()[i] == p->getWorld()->getCharacters()[character]->getID())
+            return;
+    }
+
+    int num = (((int)character.back()-48)-1)/3;
+    step->getWhich().push_back("passant" + std::to_string(num*3+1));
+    step->getWhich().push_back("passant" + std::to_string(num*3+2));
+    step->getWhich().push_back("passant" + std::to_string(num*3+3));
+    step->incSucc(1);
+    p->questSolved(quest->getID(), "1reden");
+
+    //Change dialog of all "Passanten"
+    if(step->getSolved() == true)
+    {
+        for(size_t i=1; i<=9; i++)
+            p->getWorld()->getCharacters()["passant"+std::to_string(i)]->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2", p));
+        p->getContexts().erase(quest->getID());
+    }
+}
+    
+// *** *** Besoffene Frau *** *** //
+void CEnhancedContext::h_besiege_besoffene_frau(std::string& sIdentifier, CPlayer* p)
+{
+    if(sIdentifier != "besoffene_frau")
+        return;
+
+    p->questSolved(getAttribute<std::string>("questID"), "1besiege_besoffene_frau");
+    p->appendPrint("Du suchst in den Taschen der Frau und findest drei Schillinge.\n");
+    p->throw_event("recieveMoney 3");
+    p->getContexts().erase(getAttribute<std::string>("questID"));
+}
+
+// *** *** GELD AUFTREIBEN *** *** //
+void CEnhancedContext::h_geldauftreiben(std::string& sIdentifier, CPlayer* p)
+{
+    if(p->getStat("gold") + stoi(sIdentifier) < 10)
+        return;
+
+    CQuest* quest = p->getWorld()->getQuests()[getAttribute<std::string>("questID")];
+    if(quest->getActive() == true)
+        p->appendPrint("Wundervoll, genug Geld, um das Ticket zu kaufen!\n");
+
+    p->questSolved(quest->getID(), "1geldauftreiben");
+    p->getContexts().erase(quest->getID());
+}
+
+
+// ***** ***** OTHER CONTEXTS ***** ***** //
+
+void CEnhancedContext::h_select(std::string& sIdentifier, CPlayer* p)
+{
+    std::cout << "h_select: " << sIdentifier << std::endl;
+    map_type map_objects = getAttribute<map_type>("map_objects");
+    std::string obj = func::getObjectId(map_objects, sIdentifier);
+
+    p->throw_event(getAttribute<std::string>("eventtype")+ " " + obj);
+    m_curPermeable=false;
+    p->getContexts().erase("select"); 
+}
+
+void CEnhancedContext::h_choose_equipe(std::string& sIdentifier, CPlayer* p)
+{
+    std::cout << "h_choose_equipe: " << sIdentifier << std::endl;
+
+    if(sIdentifier == "yes") {
+        p->dequipeItem("weapon");
+        p->equipeItem(p->getInventory().getItem_byID(getAttribute<std::string>("itemID")), "weapon");
+        p->getContexts().erase("equipe");
+    }
+
+    else if(sIdentifier == "no") {
+        p->appendPrint("You chose not to equipe " + p->getInventory().getItem_byID(getAttribute<std::string>("itemID"))->getName() + ".\n");
+        p->getContexts().erase("equipe");
+    }
+
+    else
+        error(p);
+}
+
+void CEnhancedContext::h_updateStats(std::string& sIdentifier, CPlayer* p)
+{
+    std::string ability="";
+    for(size_t i=0; i<p->getAbbilities().size(); i++)
+    {
+        if(fuzzy::fuzzy_cmp(func::returnToLower(p->getAbbilities()[i]), sIdentifier) <= 0.2)
+            ability = p->getAbbilities()[i];
+        if(std::isdigit(sIdentifier[0]) && i == stoul(sIdentifier, nullptr, 0)-1)
+            ability = p->getAbbilities()[i];
+    }
+
+    if(ability == "")
+        p->appendPrint("Falsche Eingabe!\n");
+
+    else
+    {
+        p->setStat(ability, p->getStat(ability)+1);
+        p->appendPrint(ability + " updated by 1\n");
+        int num = getAttribute<int>("numPoints")-1;
+        p->getContexts().erase("updateStats");
+        if(num>0)
+            p->updateStats(num);
+    }
+}
+

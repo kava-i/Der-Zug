@@ -1,2 +1,1 @@
-Use 'r'/'l' to switch collum (right/ left) or 'i' to change inventory (player/ tradring partner). Then simply select the item in highlighted collum, by number.
-Alternativly you can enter "buy [name of item]" or "sell [name of item]".
+Enter "buy [name of item]" or "sell [name of item]" to buy or sell an item. Use "Exit" to return to dialog."
