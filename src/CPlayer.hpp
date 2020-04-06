@@ -56,10 +56,10 @@ private:
     CFight* m_curFight;                         ///< Current fight player is engaged in (maybe NULL)
 
     // *** Others *** //
-    map<string, CPlayer*> m_players;            ///< List of all online players in game
-    std::map<std::string, bool> m_vistited;     ///< List of all visited rooms
-    CContextStack m_contextStack;               ///< List of all current contexts
-    Webconsole* _cout;                          ///< Pointer to the console
+    map<string, CPlayer*> m_players;                ///< List of all online players in game
+    std::map<std::string, bool> m_vistited;         ///< List of all visited rooms
+    CContextStack<CEnhancedContext> m_contextStack; ///< List of all current contexts
+    Webconsole* _cout;                              ///< Pointer to the console
 
     typedef map<string, vector<std::tuple<std::chrono::system_clock::time_point, double, void(CPlayer::*)()>> > timeEvents;
     timeEvents m_timeEventes;                   ///< List of all events triggered by time
@@ -107,7 +107,7 @@ public:
     CFight* getFight();
 
     //Return players context-stack 
-    CContextStack& getContexts();
+    CContextStack<CEnhancedContext>& getContexts();
  
 
     // *** SETTER *** //

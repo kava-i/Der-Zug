@@ -158,9 +158,9 @@ void CEnhancedContext::initializeHanlders()
 
 void CEnhancedContext::initializeTemplates()
 {
-    m_templates["game"] = {{"permeable", true}, {"handlers",{{"reload_game","h_reloadGame"},{"reload_player","h_reloadPlayer"},{"reload_world", "h_reloadWorld"},{"reload_worlds","h_reloadWorlds"},{"update_players","h_updatePlayers"}}}};
+    m_templates["game"] = {{"name", "game"}, {"permeable", true}, {"handlers",{{"reload_game","h_reloadGame"},{"reload_player","h_reloadPlayer"},{"reload_world", "h_reloadWorld"},{"reload_worlds","h_reloadWorlds"},{"update_players","h_updatePlayers"}}}};
 
-    m_templates["world"] = {{"permeable", true},{"handlers",{{"deleteCharacter", "h_deleteCharacter"},{"addItem", "h_addItem"},{"recieveMoney", "h_recieveMoney"},{"fight", "h_newFight"},{"endFight","h_endFight"},{"endDialog","h_endDialog"},{"gameover","h_gameover"}}}};
+    m_templates["world"] = {{"name", "world"}, {"permeable", true},{"handlers",{{"deleteCharacter", "h_deleteCharacter"},{"addItem", "h_addItem"},{"recieveMoney", "h_recieveMoney"},{"fight", "h_newFight"},{"endFight","h_endFight"},{"endDialog","h_endDialog"},{"gameover","h_gameover"}}}};
 
     m_templates["standard"] = {{"name", "standard"}, {"permeable",false}, {"help","standard.txt"}, {"handlers",{{"show","h_show"}, {"look","h_look"}, {"go","h_goTo"}, {"talk","h_startDialog"}, {"pick","h_take"}, {"consume","h_consume"}, {"equipe","h_equipe"}, {"dequipe","h_dequipe"}, {"examine","h_examine"}, {"mode","h_mode"}, {"try", "h_try"}, {"go", "h_firstZombieAttack"}, {"go", "h_moveToHospital"}, {"go", "h_exitTrainstation"}, {"startTutorial", "h_startTutorial"}}}};
 

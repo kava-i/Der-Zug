@@ -1,28 +1,30 @@
 #include "SortedContext.hpp"
 
-CContextStack::CContextStack()
+template<class T>
+CContextStack<T>::CContextStack()
 {
     m_reloadQueue = false;
 }
 
-void CContextStack::insert(CEnhancedContext*ctx, int priority, std::string name)
+template<class T>
+void CContextStack<T>::insert(T*ctx, int priority, std::string name)
 {
     m_contextStack[name] = ctx;
-    ctx->setName(name);
-    m_sortedContexts.push_back(std::pair<CEnhancedContext*,int>{ctx,priority});
-    std::sort(m_sortedContexts.begin(),m_sortedContexts.end(),[](std::pair<CEnhancedContext*,int>& a,std::pair<CEnhancedContext*,int>& b){return a.second<b.second;});
+    m_sortedContexts.push_back(std::pair<T*,int>{ctx,priority});
+    std::sort(m_sortedContexts.begin(),m_sortedContexts.end(),[](std::pair<T*,int>& a,std::pair<T*,int>& b){return a.second<b.second;});
     m_reloadQueue = true;
 }
 
-void CContextStack::erase(std::string name)
+template<class T>
+void CContextStack<T>::erase(std::string name)
 {
-    CEnhancedContext* ctx = nullptr;
+    T* ctx = nullptr;
     try
     {
 	ctx = m_contextStack.at(name);
 	m_reloadQueue = true;
 	m_contextStack.erase(name);
-	m_sortedContexts.erase(std::remove_if(m_sortedContexts.begin(),m_sortedContexts.end(),[ctx](const std::pair<CEnhancedContext*,int> &p){if(p.first==ctx)return true; else return false;}),m_sortedContexts.end());
+	m_sortedContexts.erase(std::remove_if(m_sortedContexts.begin(),m_sortedContexts.end(),[ctx](const std::pair<T*,int> &p){if(p.first==ctx)return true; else return false;}),m_sortedContexts.end());
     }
     catch(...)
     {
@@ -30,15 +32,8 @@ void CContextStack::erase(std::string name)
     }
 }
 
-CEnhancedContext* CContextStack::getContext(std::string sName)
-{
-    if(m_contextStack.count(sName) >= 0)
-        return m_contextStack[sName];
-    else
-        return NULL;
-}
-
-const std::deque<CEnhancedContext*> &CContextStack::getSortedCtxList()
+template<class T>
+const std::deque<T*>& CContextStack<T>::getSortedCtxList()
 {
     if(m_reloadQueue)
     {
@@ -50,14 +45,15 @@ const std::deque<CEnhancedContext*> &CContextStack::getSortedCtxList()
     return m_sortedQueue;
 }
 
-bool CContextStack::nonPermeableContextInList()
+template<class T>
+bool CContextStack<T>::nonPermeableContextInList()
 {
-    return std::accumulate(m_sortedContexts.begin(),m_sortedContexts.end(),0,[](int b,std::pair<CEnhancedContext*,int> &k){if(k.first->getPermeable())return b;else return b+1;}) > 1;
+    return std::accumulate(m_sortedContexts.begin(),m_sortedContexts.end(),0,[](int b,std::pair<T*,int> &k){if(k.first->getPermeable())return b;else return b+1;}) > 1;
 }
 
 TEST_CASE("Testing permeable context stacks","[CContextStack]")
 {
-    CContextStack st;
+    CContextStack<CEnhancedContext> st;
     CEnhancedContext cdiag((std::string)"fight");
     CEnhancedContext cworld((std::string)"world");
     st.insert((CEnhancedContext*)&cdiag,10,"diag");
@@ -70,7 +66,7 @@ TEST_CASE("Testing permeable context stacks","[CContextStack]")
 
 TEST_CASE("Testing CContextStack","[CContextStack]")
 {
-    CContextStack st;
+    CContextStack<CEnhancedContext> st;
     st.insert((CEnhancedContext*)0,0,"alex");
     st.insert((CEnhancedContext*)1,1,"blex");
     st.insert((CEnhancedContext*)2,2,"clex");

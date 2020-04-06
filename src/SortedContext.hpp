@@ -5,19 +5,27 @@
 #include "CEnhancedContext.hpp"
 #include <catch2/catch.hpp>
 
+template<class T>
 class CContextStack
 {
-    private:
-	std::map<std::string,CEnhancedContext*> m_contextStack;
-	std::vector<std::pair<CEnhancedContext*,int>> m_sortedContexts;
-	std::deque<CEnhancedContext*> m_sortedQueue;
+private:
+	std::map<std::string,T*> m_contextStack;
+	std::vector<std::pair<T*,int>> m_sortedContexts;
+	std::deque<T*> m_sortedQueue;
 	bool m_reloadQueue;
 
-    public:
+public:
 	CContextStack();
-	void insert(CEnhancedContext* ctx, int priority, std::string name);
+	void insert(T* ctx, int priority, std::string name);
 	void erase(std::string name);
-    CEnhancedContext* getContext(std::string sName);
-	const std::deque<CEnhancedContext*> &getSortedCtxList();
+    T* getContext(std::string sName)
+    {
+        if(m_contextStack.count(sName) >= 0)
+            return m_contextStack[sName];
+        else
+            return NULL;
+    }
+
+	const std::deque<T*> &getSortedCtxList();
 	bool nonPermeableContextInList();
 };

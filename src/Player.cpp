@@ -45,9 +45,11 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks) : CPerson(
     m_room = m_world->getRooms()[m_room->getID()];
     m_vistited[m_room->getID()] = true;
 
+
+    //Initialize context stack
     for(auto it : m_world->getQuests())
     {
-        CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"permeable",true}, {"questID",it.first}});
+        CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"name", it.first}, {"permeable",true}, {"questID",it.first}});
         context->initializeQuestListeners(it.second->getHandler());
         m_contextStack.insert(context, 3, it.first);
     }
@@ -111,7 +113,7 @@ CFight* CPlayer::getFight() {
 }
 
 //Return players context-stack 
-CContextStack& CPlayer::getContexts() { 
+CContextStack<CEnhancedContext>& CPlayer::getContexts() { 
     return m_contextStack; 
 }
 
@@ -461,7 +463,7 @@ void CPlayer::equipeItem(CItem* item, string sType)
         m_sPrint+="PERZEPTION - Bereits ein " + sType + " ausgerüstet. Austauschen? (yes/no)\n";
 
         //Create Choice-Context
-        m_contextStack.insert(new CEnhancedContext((nlohmann::json){{"permeable", false},{"error", "TECH GUY - Choose onlye yes or no\n"},{"itemID", item->getID()},{"handlers",{{"yes", "h_choose_equipe"},{"no","h_choose_equipe"}}}}), 1, "equipe");
+        m_contextStack.insert(new CEnhancedContext((nlohmann::json){{"name", "equipe"}, {"permeable", false},{"error", "TECH GUY - Choose onl yes or no\n"},{"itemID", item->getID()},{"handlers",{{"yes", "h_choose_equipe"},{"no","h_choose_equipe"}}}}), 1, "equipe");
     }
 }
 
@@ -568,7 +570,7 @@ void CPlayer::updateStats(int numPoints)
 
     //Print attributes and level of each attribute and add choice-context.
     std::string sError = "Nummer oder Attribut wählen.\n";
-    CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"permeable", false},{"numPoints", numPoints}, {"error", sError}});
+    CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"name", "updateStats"}, {"permeable", false},{"numPoints", numPoints}, {"error", sError}});
     for(size_t i=0; i<m_abbilities.size(); i++)
     {
         m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" + std::to_string(getStat(m_abbilities[i])) + ")\n";
@@ -706,7 +708,7 @@ CPlayer* CPlayer::getPlayer(string sIdentifier)
 void CPlayer::addSelectContest(std::map<std::string, std::string>& mapObjects, std::string sEventType)
 {
     //Add context.
-    CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"permeable",true},{"eventtype",sEventType}, {"map_objects",mapObjects}});
+    CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"name", "select"}, {"permeable",true},{"eventtype",sEventType}, {"map_objects",mapObjects}});
     context->setErrorFunction(&CEnhancedContext::error_delete);
     
     //Add listeners
