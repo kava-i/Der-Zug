@@ -345,7 +345,7 @@ void CEnhancedContext::h_show(std::string& sIdentifier, CPlayer* p) {
         p->addSelectContest(p->getRoom()->getCharacters(), "talk");
     }
     else if(sIdentifier == "room")
-        p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
+        p->appendPrint(p->getRoom()->showDescription());
     else if(sIdentifier == "items")
         p->appendPrint(p->getRoom()->showItems(p->getMode()));
     else if(sIdentifier == "details")
@@ -569,7 +569,7 @@ void CEnhancedContext::h_call(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::print(CPlayer* p)
 {
-    CCharacter* partner = p->getWorld()->getCharacters()[getAttribute<std::string>("partner")];
+    CPerson* partner = p->getWorld()->getCharacters()[getAttribute<std::string>("partner")];
     p->appendPrint("<b>" + p->getName() + "'s Inventory:</b>\n" 
                     + p->getInventory().printInventory()
                     + "\n<b>" + partner->getName() + "'s Inventory: </b>\n" 
@@ -578,7 +578,7 @@ void CEnhancedContext::print(CPlayer* p)
 
 void CEnhancedContext::h_sell(std::string& sIdentifier, CPlayer* p)
 {
-    CCharacter* partner = p->getWorld()->getCharacters()[getAttribute<std::string>("partner")];
+    CPerson* partner = p->getWorld()->getCharacters()[getAttribute<std::string>("partner")];
     CItem* curItem = p->getInventory().getItem(sIdentifier);
     if(curItem == NULL)
         p->appendPrint("LOGIK - Dieser Gegenstand befindet sich nicht in deinem Inventar, du kannst ihn logischerwiese dehalb nicht verkaufen!\n");
@@ -595,7 +595,7 @@ void CEnhancedContext::h_sell(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_buy(std::string& sIdentifier, CPlayer* p)
 {
-    CCharacter* partner = p->getWorld()->getCharacters()[getAttribute<std::string>("partner")];
+    CPerson* partner = p->getWorld()->getCharacters()[getAttribute<std::string>("partner")];
     CItem* curItem = partner->getInventory().getItem(sIdentifier);
 
     if(curItem == NULL)
@@ -618,7 +618,7 @@ void CEnhancedContext::h_buy(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_exit(std::string&, CPlayer* p)
 {
-    CCharacter* partner = p->getWorld()->getCharacters()[getAttribute<std::string>("partner")];
+    CPerson* partner = p->getWorld()->getCharacters()[getAttribute<std::string>("partner")];
     p->getContexts().erase("trade");
     p->getContexts().erase("dialog");
     p->startDialog(partner->getID());
