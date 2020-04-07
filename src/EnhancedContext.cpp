@@ -22,9 +22,9 @@ CEnhancedContext::CEnhancedContext(nlohmann::json jAttributes)
     if(jAttributes.count("handlers") > 0)
     {
         for(const auto &it : jAttributes["handlers"].get<map_type>())
-            add_listener(it.first, m_handlers[it.second]);  
+            add_listener(it.second, it.first);
     }
-    add_listener("help", &CEnhancedContext::h_help);
+    add_listener("h_help", "help");
 
     m_error = &CEnhancedContext::error;
 }
@@ -47,7 +47,7 @@ CEnhancedContext::CEnhancedContext(std::string sTemplate, nlohmann::json jAttrib
     if(jAttributes.count("handlers") > 0)
     {
         for(const auto &it : jAttributes["handlers"].get<map_type>())
-            add_listener(it.first, m_handlers[it.second]);  
+            add_listener(it.second, it.first);
     }
 
     m_error = &CEnhancedContext::error;
@@ -124,6 +124,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_startTutorial"] = &CEnhancedContext::h_startTutorial;
 
     // *** FIGHT CONTEXT *** //
+    m_handlers["h_fight"] = &CEnhancedContext::h_fight;
     m_handlers["h_fight_show"] = &CEnhancedContext::h_fight_show;
 
     // *** DIALOG CONTEXT *** //
@@ -172,34 +173,33 @@ void CEnhancedContext::initializeTemplates()
 }
 
 // ***** ***** FUNCTIONS ***** ****** // 
-void CEnhancedContext::add_listener(std::string sEventType, void(CEnhancedContext::*handler)(std::string&, CPlayer*)) {
-    m_eventmanager[sEventType].push_back(handler);
-}
 
-void CEnhancedContext::add_listener(std::string sEventType, void(CEnhancedContext::*handler)(std::string&, CPlayer*), size_t pos){
-    m_eventmanager[sEventType].insert(m_eventmanager[sEventType].begin()+pos, handler);
-}
+void CEnhancedContext::add_listener(std::string sID, std::string sEventType, size_t priority)
+{
+    m_eventmanager.insert(new CListener(sID, sEventType), priority, sID);
 
-void CEnhancedContext::delete_listener(std::string sEventType, int index) {
-    m_eventmanager[sEventType].erase(m_eventmanager[sEventType].begin()+index);
 }
-
 bool CEnhancedContext::throw_event(event e, CPlayer* p)
 {    
     m_curPermeable = m_permeable;
     m_block = false;
-
-    if(m_eventmanager.count(e.first) == 0) {
+    bool called = false;
+    
+    std::deque<CListener*> sortedEventmanager = m_eventmanager.getSortedCtxList();
+    for(size_t i=0; i<sortedEventmanager.size() && m_block == false; i++)
+    {
+        if(sortedEventmanager[i]->checkMatch(e.first) == true) {
+            if(m_handlers.count(sortedEventmanager[i]->getID()) > 0)
+                (this->*m_handlers[sortedEventmanager[i]->getID()])(e.second, p);
+            else
+                p->printError("ERROR, given handler not found: " + sortedEventmanager[i]->getID() + "\n");
+            called = true;
+        }
+    }   
+ 
+    if(called == false)
         error(p);
-        return m_curPermeable;
-    }
         
-    for(auto it : m_eventmanager[e.first]) {
-        if(m_block == true)
-            break;
-        (this->*it)(e.second, p);
-    }
-
     return m_curPermeable;
 }
 
@@ -465,7 +465,7 @@ void CEnhancedContext::h_firstZombieAttack(std::string& sIdentifier, CPlayer* p)
 
     //Create fight
     p->setFight(new CFight(p, p->getWorld()->getCharacters()["hospital_zombie1"]));
-    delete_listener("go", 3);
+    m_eventmanager.erase("h_firstZombieAttack");
 }
 
 void CEnhancedContext::h_moveToHospital(std::string& sIdentifier, CPlayer* p)
@@ -507,7 +507,7 @@ void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
 void CEnhancedContext::initializeFightListeners(int num)
 {
     for(int i=1; i<=num; i++)
-        add_listener(std::to_string(i), &CEnhancedContext::h_fight); 
+        add_listener("h_fight", std::to_string(i));
 }
 
 void CEnhancedContext::h_fight(std::string& sIdentifier, CPlayer* p) {
@@ -538,12 +538,12 @@ void CEnhancedContext::initializeDialogListeners(std::string newState, CPlayer* 
     m_eventmanager.clear();
 
     //Add help listener 
-    add_listener("help", &CEnhancedContext::h_help);
+    add_listener("h_help", "help");
 
     //Add listener for each dialog option.
     std::vector<size_t> activeOptions = p->getDialog()->states[newState]->getActiveOptions(p);
     for(auto opt : activeOptions)
-        add_listener(std::to_string(opt), &CEnhancedContext::h_call);
+        add_listener("h_call", std::to_string(opt));
 }
 
 void CEnhancedContext::h_call(std::string& sIdentifier, CPlayer* p)
@@ -633,7 +633,7 @@ void CEnhancedContext::initializeQuestListeners(map_type handler)
         if(m_handlers.count(it.first) == 0)
             std::cout << "FATAL ERROR, Quest-handler \"" << it.first << "\" does not exits!!\n";
         else
-            add_listener(it.second, m_handlers[it.first]);
+            add_listener(it.first, it.second, 1);
     }
 }
 
@@ -645,7 +645,7 @@ void CEnhancedContext::h_ticketverkaeufer(std::string& sIdentifier, CPlayer* p)
 
     if(fuzzy::fuzzy_cmp("männer-toilette", sIdentifier) <= 0.2) {
         p->questSolved(getAttribute<std::string>("questID"), "1ticketverkaeufer");
-        delete_listener("go", 0);
+        m_eventmanager.erase("1ticketverkaeufer");
     }
 }
 

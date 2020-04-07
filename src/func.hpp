@@ -23,6 +23,13 @@ namespace func
     std::vector<std::string> split(std::string str, std::string delimiter);
 
     /**
+    * @param[in] vec (vector to search string in )
+    * @param[in] str (string to search for)
+    * @return Return whether string occurs in vector.
+    */
+    bool inArray(std::vector<std::string> vec, std::string str);
+
+    /**
     * Convert a given string to only contain lower case characters.
     * @param[in, out] str string to be modified
     */

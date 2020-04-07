@@ -574,8 +574,8 @@ void CPlayer::updateStats(int numPoints)
     for(size_t i=0; i<m_abbilities.size(); i++)
     {
         m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" + std::to_string(getStat(m_abbilities[i])) + ")\n";
-        context->add_listener(func::returnToLower(m_abbilities[i]), &CEnhancedContext::h_updateStats);
-        context->add_listener(std::to_string(i+1), &CEnhancedContext::h_updateStats);
+        context->add_listener("h_updateStats", m_abbilities[i]);
+        context->add_listener("h_updateStats", std::to_string(i+1));
     }
 
     m_sPrint += sError;
@@ -626,7 +626,8 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps)
         }
 
         //Check dependency in stats
-        else if(m_stats.count(it.key()) > 0) {
+        else if(m_stats.count(it.key()) > 0)
+        {
             int val = it.value();
             if(val < 0 && val*(-1) < m_stats[it.key()])
                 return false;
@@ -713,11 +714,22 @@ void CPlayer::addSelectContest(std::map<std::string, std::string>& mapObjects, s
     
     //Add listeners
     for(size_t i=1; i<=mapObjects.size();i++)
-        context->add_listener(std::to_string(i), &CEnhancedContext::h_select);
+        context->add_listener("h_select", std::to_string(i));
 
     //Insert context into context-stack.
     m_contextStack.insert(context, 1, "select");
 }
+
+/**
+* In the case of a serious error, leading game not not continue, let the player no
+* that something went wrong and print error in console.
+*/
+void CPlayer::printError(std::string sError)
+{
+    std::cout << sError << std::endl;
+    appendPrint("Sorry, but something went wrong. Maybe try something else.\n");
+}
+
 
 
 // *** Eventmanager functions *** //

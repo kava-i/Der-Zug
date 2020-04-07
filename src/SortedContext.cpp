@@ -1,56 +1,7 @@
 #include "SortedContext.hpp"
 
-template<class T>
-CContextStack<T>::CContextStack()
-{
-    m_reloadQueue = false;
-}
 
-template<class T>
-void CContextStack<T>::insert(T*ctx, int priority, std::string name)
-{
-    m_contextStack[name] = ctx;
-    m_sortedContexts.push_back(std::pair<T*,int>{ctx,priority});
-    std::sort(m_sortedContexts.begin(),m_sortedContexts.end(),[](std::pair<T*,int>& a,std::pair<T*,int>& b){return a.second<b.second;});
-    m_reloadQueue = true;
-}
-
-template<class T>
-void CContextStack<T>::erase(std::string name)
-{
-    T* ctx = nullptr;
-    try
-    {
-	ctx = m_contextStack.at(name);
-	m_reloadQueue = true;
-	m_contextStack.erase(name);
-	m_sortedContexts.erase(std::remove_if(m_sortedContexts.begin(),m_sortedContexts.end(),[ctx](const std::pair<T*,int> &p){if(p.first==ctx)return true; else return false;}),m_sortedContexts.end());
-    }
-    catch(...)
-    {
-	return;
-    }
-}
-
-template<class T>
-const std::deque<T*>& CContextStack<T>::getSortedCtxList()
-{
-    if(m_reloadQueue)
-    {
-	m_sortedQueue.clear();
-	for(auto &it : m_sortedContexts)
-	    m_sortedQueue.push_front(it.first);
-	m_reloadQueue = false;
-    }
-    return m_sortedQueue;
-}
-
-template<class T>
-bool CContextStack<T>::nonPermeableContextInList()
-{
-    return std::accumulate(m_sortedContexts.begin(),m_sortedContexts.end(),0,[](int b,std::pair<T*,int> &k){if(k.first->getPermeable())return b;else return b+1;}) > 1;
-}
-
+/*
 TEST_CASE("Testing permeable context stacks","[CContextStack]")
 {
     CContextStack<CEnhancedContext> st;
@@ -81,3 +32,4 @@ TEST_CASE("Testing CContextStack","[CContextStack]")
     st.insert((CEnhancedContext*)4,10,"flex");
     REQUIRE( st.getSortedCtxList().front() == (CEnhancedContext*)4);
 }
+*/

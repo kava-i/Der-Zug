@@ -316,6 +316,12 @@ public:
     */
     void addSelectContest(std::map<std::string, std::string>& mapObjects, std::string sEventType);
 
+    /**
+    * In the case of a serious error, leading game not not continue, let the player no
+    * that something went wrong and print error in console.
+    */
+    void printError(std::string sError);
+
 
     // ** Eventmanager functions ** // 
 

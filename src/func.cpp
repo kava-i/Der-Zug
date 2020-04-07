@@ -23,6 +23,20 @@ std::vector<std::string> func::split(std::string str, std::string delimiter)
 }
 
 /**
+* @param[in] vec (vector to search string in )
+* @param[in] str (string to search for)
+* @return Return whether string occurs in vector.
+*/
+bool func::inArray(std::vector<std::string> vec, std::string str)
+{
+    for(const auto& it : vec) {
+        if(it.c_str() == str.c_str())
+            return true;
+    }
+    return false;
+}
+
+/**
 * Convert a given string to only contain lower case characters.
 * @param[in, out] str string to be modified
 */

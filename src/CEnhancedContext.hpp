@@ -6,6 +6,8 @@
 #include <vector>
 #include "func.hpp"
 #include "Webcmd.hpp"
+#include "SortedContext.hpp"
+#include "CListener.hpp"
 #include "json.hpp"
 
 class CPlayer;
@@ -16,10 +18,9 @@ class CEnhancedContext
 protected:
     typedef std::map<std::string, std::string> map_type;
     typedef std::pair<std::string, std::string> event;
-    typedef std::map<std::string, std::vector<void(CEnhancedContext::*)(std::string&, CPlayer*)>> eventmanager;
 
-    eventmanager m_eventmanager;
-
+    CContextStack<CListener> m_eventmanager;
+    
     nlohmann::json m_jAttributes;
     std::string m_sName;
     bool m_permeable;
@@ -72,13 +73,9 @@ public:
     static void initializeTemplates();
     
 
-    // *** Add and delete listeners and throw event
-    void add_listener(std::string, void(CEnhancedContext::*)(std::string&, CPlayer*));
-    void add_listener(std::string, void(CEnhancedContext::*)(std::string&, CPlayer*), size_t pos);
-    void delete_listener(std::string sEventType, int num);
-
+    // *** Throw events *** //
+    void add_listener(std::string sID, std::string sEventType, size_t priority=0);
     bool throw_event(event newEvent, CPlayer* p);
-    
 
     // *** ERROR HANDLER *** //
     void error(CPlayer* p);
