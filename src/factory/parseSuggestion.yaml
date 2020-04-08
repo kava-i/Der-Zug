@@ -1,7 +1,0 @@
----
-- id: START
-  text: "YOU may I introduce myself?\nParsen is looking up from is seet and stars you right in the eyes. He doesn't make a sound."
-  options: 
-    1: "Blickaufrechthalten;(0,0,0,0);->durstlöscher"
-    2: "Ist alles in Ordnung bei Ihnen;(0,0,0,0);->stress"
-    3: 

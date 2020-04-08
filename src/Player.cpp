@@ -629,7 +629,7 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps)
         else if(m_stats.count(it.key()) > 0)
         {
             int val = it.value();
-            if(val < 0 && val*(-1) < m_stats[it.key()])
+            if(val < 0 && val*(-1) <= m_stats[it.key()])
                 return false;
             else if(val > 0 && val > m_stats[it.key()])
                 return false;
