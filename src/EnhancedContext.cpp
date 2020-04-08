@@ -589,14 +589,23 @@ void CEnhancedContext::initializeDialogListeners(std::string newState, CPlayer* 
 
     //Add listener for each dialog option.
     std::vector<size_t> activeOptions = p->getDialog()->states[newState]->getActiveOptions(p);
+    std::map<size_t, size_t> mapOtptions;
+    size_t counter = 1;
     for(auto opt : activeOptions)
-        add_listener("h_call", std::to_string(opt));
+    {
+        mapOtptions[counter] = opt;
+        add_listener("h_call", std::to_string(counter));
+        counter++;
+    }
+    setAttribute<std::map<size_t, size_t>>("mapOptions", mapOtptions);
 }
 
 void CEnhancedContext::h_call(std::string& sIdentifier, CPlayer* p)
 {
+    size_t option = getAttribute<std::map<size_t, size_t>>("mapOptions")[stoi(sIdentifier)];
+
     std::string curState = getAttribute<std::string>("state");
-    std::string nextState = p->getDialog()->states[curState]->getNextState(sIdentifier, p);
+    std::string nextState = p->getDialog()->states[curState]->getNextState(std::to_string(option), p);
     if(nextState == "")
         p->appendPrint("No valid option.\n");
     else if(nextState == "trade")

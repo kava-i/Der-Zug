@@ -66,8 +66,12 @@ string CDState::standard(CPlayer* p)
     }
 
     std::vector<size_t> activeOptions = getActiveOptions(p);
+    size_t counter = 1;
     for(auto opt : activeOptions)
-        sOutput += std::to_string(opt) + ": " + m_options[opt].sText + "\n";
+    {
+        sOutput += std::to_string(counter) + ": " + m_options[opt].sText + "\n";
+        counter++;
+    }
         
     if(activeOptions.size() == 0){
         p->appendPrint(sOutput + "Dialog ended.\n");
