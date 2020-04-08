@@ -152,7 +152,6 @@ namespace func
         // to array of matches including the exact score.
         std::vector<std::pair<std::string, double>> matches;
         for(auto[i, it] = std::tuple{1, mapObjects.begin()}; it!=mapObjects.end(); i++, it++) {
-            std::cout << sName << " | " << it->second << std::endl;
             if(std::isdigit(sName[0]) && (i==stoi(sName)))
                 return it->first;
             double match = fuzzy::fuzzy_cmp(getName(it->second), sName);

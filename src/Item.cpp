@@ -10,7 +10,6 @@ CItem::CItem(nlohmann::json jBasic, CPlayer* p) : CObject{jBasic, p}
     m_jAttributes = jBasic;
 
     std::string sType = jBasic.value("type", "");
-    std::cout << "Type: " << sType << std::endl;
     m_sCategory = func::split(sType, "_")[0];
     m_sType = func::split(sType, "_")[1];
 

@@ -9,8 +9,6 @@ std::map<std::string, nlohmann::json> CEnhancedContext::m_templates = {};
 
 CEnhancedContext::CEnhancedContext(nlohmann::json jAttributes)
 {
-    std::cout << "Building context from json object.\n";
-
     m_jAttributes = jAttributes;
     m_sName = jAttributes.value("name", "context");
     m_permeable = jAttributes.value("permeable", false);
@@ -429,7 +427,6 @@ void CEnhancedContext::h_look(std::string& sIdentifier, CPlayer* p) {
 }
 
 void CEnhancedContext::h_goTo(std::string& sIdentifier, CPlayer* p) {
-    std::cout << "h_goTo, " << sIdentifier << std::endl;
     p->changeRoom(sIdentifier);
 }
 
@@ -468,7 +465,6 @@ void CEnhancedContext::h_consume(std::string& sIdentifier, CPlayer* p) {
 
 void CEnhancedContext::h_equipe(std::string& sIdentifier, CPlayer* p) {
     if(p->getInventory().getItem(sIdentifier) != NULL) {
-        std::cout << "Function: " << p->getInventory().getItem(sIdentifier)->getFunction() << std::endl;
         if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
             p->appendPrint("This item is not equipable.\n");
     }
@@ -519,7 +515,6 @@ void CEnhancedContext::h_firstZombieAttack(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_moveToHospital(std::string& sIdentifier, CPlayer* p)
 {
-    std::cout << "h_moveToHospital, " << sIdentifier << std::endl;
     //Get selected room
     if(p->getRoom()->getID().find("compartment") == std::string::npos || func::getObjectId(p->getRoom()->getExtits2(), sIdentifier) != "trainCorridor")
         return;
@@ -530,7 +525,6 @@ void CEnhancedContext::h_moveToHospital(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
 {
-    std::cout << "h_exitTrainstation, " << sIdentifier << std::endl;
     if(p->getRoom()->getID() != "bahnhof_eingangshalle" || func::getObjectId(p->getRoom()->getExtits2(), sIdentifier) != "ausgang")
         return;
 
@@ -562,7 +556,6 @@ void CEnhancedContext::initializeFightListeners(int num)
 }
 
 void CEnhancedContext::h_fight(std::string& sIdentifier, CPlayer* p) {
-    std::cout << "h_fight " << sIdentifier << std::endl;
     std::string newCommand = p->getFight()->fightRound((sIdentifier));
     if(newCommand != "")    
         p->throw_event(newCommand);
@@ -599,8 +592,6 @@ void CEnhancedContext::initializeDialogListeners(std::string newState, CPlayer* 
 
 void CEnhancedContext::h_call(std::string& sIdentifier, CPlayer* p)
 {
-    std::cout << "h_call, " << sIdentifier << std::endl;
-
     std::string curState = getAttribute<std::string>("state");
     std::string nextState = p->getDialog()->states[curState]->getNextState(sIdentifier, p);
     if(nextState == "")
@@ -787,7 +778,6 @@ void CEnhancedContext::h_geldauftreiben(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_select(std::string& sIdentifier, CPlayer* p)
 {
-    std::cout << "h_select: " << sIdentifier << std::endl;
     map_type map_objects = getAttribute<map_type>("map_objects");
     std::string obj = func::getObjectId(map_objects, sIdentifier);
 
@@ -798,8 +788,6 @@ void CEnhancedContext::h_select(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_choose_equipe(std::string& sIdentifier, CPlayer* p)
 {
-    std::cout << "h_choose_equipe: " << sIdentifier << std::endl;
-
     if(sIdentifier == "yes") {
         p->dequipeItem("weapon");
         p->equipeItem(p->getInventory().getItem_byID(getAttribute<std::string>("itemID")), "weapon");
