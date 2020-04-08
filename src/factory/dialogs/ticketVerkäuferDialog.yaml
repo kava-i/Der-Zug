@@ -21,8 +21,8 @@
   - "TICKETVERKÄUFER;10 Schillinge und das Ticket ist dein."
   options:
     1: "Ich denke, ich bin doch nicht interessiert.;{};ende"
-    2: Ich nehme es!;{"gold":10};verkauf2
-    3: Ich habe leider nicht genug;{"gold":-10};ende
+    2: Ich nehme es!;{"gold":">9"};verkauf2
+    3: Ich habe leider nicht genug;{"gold":"<10"};ende
   function: keinTicket
 
 - id: verkauf2

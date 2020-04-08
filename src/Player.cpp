@@ -612,26 +612,28 @@ void CPlayer::showStats() {
 */
 bool CPlayer::checkDependencies(nlohmann::json jDeps)
 {
+    std::map<char, std::function<bool(int, int)>> operators;
+    operators['='] = [](int a, int b) { return a=b; };
+    operators['>'] = [](int a, int b) { return a>b; };
+    operators['<'] = [](int a, int b) { return a<b; };
+
     if(jDeps.size() == 0)
         return true;
     for(auto it=jDeps.begin(); it!=jDeps.end(); it++)
     {
+        std::string value = it.value();
+
         //Check dependency in mind
         if(m_minds.count(it.key()) > 0) {
-            int val = it.value();
-            if(val < 0 && val*(-1) < m_minds[it.key()].level)
-                return false;
-            else if(val > 0 && val > m_minds[it.key()].level)
+            if(operators[value[0]](stoi(value.substr(1)), m_minds[it.key()].level) == false)
                 return false;
         }
 
         //Check dependency in stats
         else if(m_stats.count(it.key()) > 0)
         {
-            int val = it.value();
-            if(val < 0 && val*(-1) <= m_stats[it.key()])
-                return false;
-            else if(val > 0 && val > m_stats[it.key()])
+            std::cout << value.substr(1) << value[0] << m_stats[it.key()] << " = " << operators[value[0]](m_stats[it.key()], stoi(value.substr(1))) << std::endl;
+            if(operators[value[0]](m_stats[it.key()], stoi(value.substr(1))) == false)
                 return false;
         }
         else
@@ -639,7 +641,7 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps)
     } 
     return true;
 }
-    
+
 
 // *** Others *** // 
 

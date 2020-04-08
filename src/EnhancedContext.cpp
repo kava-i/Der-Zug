@@ -544,7 +544,10 @@ void CEnhancedContext::h_startTutorial(std::string&, CPlayer* p)
 
 void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
 {
-   
+    p->throw_event("go to neben");
+    p->throw_event("go to Toil");
+    p->throw_event("go to Männer");
+    p->throw_event("talk to ticket");
 }
 
 
