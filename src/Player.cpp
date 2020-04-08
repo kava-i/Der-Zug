@@ -463,7 +463,7 @@ void CPlayer::equipeItem(CItem* item, string sType)
         m_sPrint+="PERZEPTION - Bereits ein " + sType + " ausgerüstet. Austauschen? (yes/no)\n";
 
         //Create Choice-Context
-        m_contextStack.insert(new CEnhancedContext((nlohmann::json){{"name", "equipe"}, {"permeable", false},{"error", "TECH GUY - Choose onl yes or no\n"},{"itemID", item->getID()},{"handlers",{{"yes", "h_choose_equipe"},{"no","h_choose_equipe"}}}}), 1, "equipe");
+        m_contextStack.insert(new CEnhancedContext((nlohmann::json){{"name", "equipe"}, {"permeable", false},{"error", "TECH GUY - Choose onl yes or no\n"},{"itemID", item->getID()},{"handlers",{{"yes",{ "h_choose_equipe"}},{"no",{"h_choose_equipe"}}}}}), 1, "equipe");
     }
 }
 

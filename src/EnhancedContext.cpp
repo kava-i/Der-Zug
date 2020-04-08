@@ -21,8 +21,10 @@ CEnhancedContext::CEnhancedContext(nlohmann::json jAttributes)
 
     if(jAttributes.count("handlers") > 0)
     {
-        for(const auto &it : jAttributes["handlers"].get<map_type>())
-            add_listener(it.second, it.first);
+        for(const auto &it : jAttributes["handlers"].get<std::map<string, vector<string>>>()) {
+            for(size_t i=0; i<it.second.size(); i++)
+                add_listener(it.second[i], it.first, i);
+        }
     }
     add_listener("h_help", "help");
 
@@ -46,8 +48,10 @@ CEnhancedContext::CEnhancedContext(std::string sTemplate, nlohmann::json jAttrib
 
     if(jAttributes.count("handlers") > 0)
     {
-        for(const auto &it : jAttributes["handlers"].get<map_type>())
-            add_listener(it.second, it.first);
+        for(const auto &it : jAttributes["handlers"].get<std::map<string, vector<string>>>()) {
+            for(size_t i=0; i<it.second.size(); i++)
+                add_listener(it.second[i], it.first, i);
+        }
     }
 
     m_error = &CEnhancedContext::error;
@@ -159,17 +163,60 @@ void CEnhancedContext::initializeHanlders()
 
 void CEnhancedContext::initializeTemplates()
 {
-    m_templates["game"] = {{"name", "game"}, {"permeable", true}, {"handlers",{{"reload_game","h_reloadGame"},{"reload_player","h_reloadPlayer"},{"reload_world", "h_reloadWorld"},{"reload_worlds","h_reloadWorlds"},{"update_players","h_updatePlayers"}}}};
+    m_templates["game"] = {
+                    {"name", "game"}, {"permeable", true}, 
+                    {"handlers",{
+                        {"reload_game",{"h_reloadGame"}},
+                        {"reload_player",{"h_reloadPlayer"}},
+                        {"reload_world", {"h_reloadWorld"}},
+                        {"reload_worlds",{"h_reloadWorlds"}},
+                        {"update_players",{"h_updatePlayers"}}}}
+                    };
 
-    m_templates["world"] = {{"name", "world"}, {"permeable", true},{"handlers",{{"deleteCharacter", "h_deleteCharacter"},{"addItem", "h_addItem"},{"recieveMoney", "h_recieveMoney"},{"fight", "h_newFight"},{"endFight","h_endFight"},{"endDialog","h_endDialog"},{"gameover","h_gameover"}}}};
+    m_templates["world"] = {
+                    {"name", "world"}, {"permeable", true},
+                    {"handlers",{
+                        {"deleteCharacter", {"h_deleteCharacter"}},
+                        {"addItem", {"h_addItem"}},
+                        {"recieveMoney", {"h_recieveMoney"}},
+                        {"fight", {"h_newFight"}},
+                        {"endFight",{"h_endFight"}},
+                        {"endDialog",{"h_endDialog"}},
+                        {"gameover",{"h_gameover"}}}}
+                    };
 
-    m_templates["standard"] = {{"name", "standard"}, {"permeable",false}, {"help","standard.txt"}, {"handlers",{{"show","h_show"}, {"look","h_look"}, {"go","h_goTo"}, {"talk","h_startDialog"}, {"pick","h_take"}, {"consume","h_consume"}, {"equipe","h_equipe"}, {"dequipe","h_dequipe"}, {"examine","h_examine"}, {"mode","h_mode"}, {"try", "h_try"}, {"go", "h_firstZombieAttack"}, {"go", "h_moveToHospital"}, {"go", "h_exitTrainstation"}, {"startTutorial", "h_startTutorial"}}}};
+    m_templates["standard"] = {
+                    {"name", "standard"}, {"permeable",false}, {"help","standard.txt"},   
+                    {"handlers",{
+                        {"show",{"h_show"}}, 
+                        {"look",{"h_look"}}, 
+                        {"go",{"h_moveToHospital","h_exitTrainstation","h_goTo","h_firstZombieAttack"}}, 
+                        {"talk",{"h_startDialog"}}, 
+                        {"pick",{"h_take"}}, 
+                        {"consume",{"h_consume"}}, 
+                        {"equipe",{"h_equipe"}}, 
+                        {"dequipe",{"h_dequipe"}}, 
+                        {"examine",{"h_examine"}}, 
+                        {"mode",{"h_mode"}}, 
+                        {"try", {"h_try"}}, 
+                        {"startTutorial", {"h_startTutorial"}}}}
+                    };
 
-    m_templates["fight"] = {{"name","fight"}, {"permeable",false}, {"help","fight.txt"}, {"handlers",{{"show","h_fight_show"}}}};
+    m_templates["fight"] = {
+                    {"name","fight"}, {"permeable",false}, {"help","fight.txt"}, 
+                    {"handlers",{
+                        {"show",{"h_fight_show"}}}}
+                    };
 
     m_templates["dialog"] = {{"name","dialog"}, {"permeable",false},{"help","dialog.txt"}};
 
-    m_templates["trade"] = {{"name","trade"}, {"permeable",false}, {"help","trade.txt"}, {"handlers",{{"buy", "h_buy"},{"sell","h_sell"},{"exit","h_exit"}}}};
+    m_templates["trade"] = {
+                    {"name","trade"}, {"permeable",false}, {"help","trade.txt"}, 
+                    {"handlers",{
+                        {"buy", {"h_buy"}},
+                        {"sell",{"h_sell"}},
+                        {"exit",{"h_exit"}}}}
+                    };
 }
 
 // ***** ***** FUNCTIONS ***** ****** // 
@@ -186,6 +233,7 @@ bool CEnhancedContext::throw_event(event e, CPlayer* p)
     bool called = false;
     
     std::deque<CListener*> sortedEventmanager = m_eventmanager.getSortedCtxList();
+    std::reverse(sortedEventmanager.begin(), sortedEventmanager.end());
     for(size_t i=0; i<sortedEventmanager.size() && m_block == false; i++)
     {
         if(sortedEventmanager[i]->checkMatch(e.first) == true) {
@@ -381,6 +429,7 @@ void CEnhancedContext::h_look(std::string& sIdentifier, CPlayer* p) {
 }
 
 void CEnhancedContext::h_goTo(std::string& sIdentifier, CPlayer* p) {
+    std::cout << "h_goTo, " << sIdentifier << std::endl;
     p->changeRoom(sIdentifier);
 }
 
@@ -470,8 +519,9 @@ void CEnhancedContext::h_firstZombieAttack(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_moveToHospital(std::string& sIdentifier, CPlayer* p)
 {
+    std::cout << "h_moveToHospital, " << sIdentifier << std::endl;
     //Get selected room
-    if(p->getRoom()->getID().find("compartment") == std::string::npos || fuzzy::fuzzy_cmp("corridor", sIdentifier) > 0.2)
+    if(p->getRoom()->getID().find("compartment") == std::string::npos || func::getObjectId(p->getRoom()->getExtits2(), sIdentifier) != "trainCorridor")
         return;
 
     p->changeRoom(p->getWorld()->getRooms()["hospital_foyer"]);
@@ -480,6 +530,7 @@ void CEnhancedContext::h_moveToHospital(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
 {
+    std::cout << "h_exitTrainstation, " << sIdentifier << std::endl;
     if(p->getRoom()->getID() != "bahnhof_eingangshalle" || func::getObjectId(p->getRoom()->getExtits2(), sIdentifier) != "ausgang")
         return;
 
