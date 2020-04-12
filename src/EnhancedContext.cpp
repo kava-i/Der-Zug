@@ -382,7 +382,6 @@ void CEnhancedContext::h_endDialog(std::string& sIdentifier, CPlayer* p) {
     m_curPermeable=false;
 }
 
-
 void CEnhancedContext::h_newFight(std::string& sIdentifier, CPlayer* p) {
     p->setFight(new CFight(p, p->getWorld()->getCharacters()[sIdentifier]));
 }
@@ -774,7 +773,7 @@ void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
         p->getContexts().erase(quest->getID());
     }
 }
-    
+
 // *** *** Besoffene Frau *** *** //
 void CEnhancedContext::h_besiege_besoffene_frau(std::string& sIdentifier, CPlayer* p)
 {
