@@ -31,12 +31,10 @@ CEnhancedContext::CEnhancedContext(nlohmann::json jAttributes)
  
 CEnhancedContext::CEnhancedContext(std::string sTemplate) : CEnhancedContext(getTemplate(sTemplate))
 {
-    std::cout << "Building context from template.\n";
 }
 
 CEnhancedContext::CEnhancedContext(std::string sTemplate, nlohmann::json jAttributes) : CEnhancedContext(getTemplate(sTemplate))
 {
-    std::cout << "Building context from template and extra json.\n";
     m_jAttributes = jAttributes;
     m_sName = jAttributes.value("name", m_sName);
     m_permeable = jAttributes.value("permeable", m_permeable);

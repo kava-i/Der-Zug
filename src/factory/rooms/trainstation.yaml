@@ -6,7 +6,7 @@
     - PERZEPTION;Die Eingangshalle des sog. \"Moskauer Bahnhofs\" in Sankt Petersburg ist ein eindrucksvolles Gebilde. Tausende Passanten wandern umher, es herscht Trubel und Lärm und dazu glänzt die architektonische Meisterleistung eines Konstantin Thron von allen Seiten auf einen herab. Nach Norden geht es zu den Gleisen, im Süden liegt der Ausgang und nach Osten geht es zu einer Nebenhalle.
     - 'PERZEPTION_1;Drei Passanten stehen merkwürdig gekleidet in einer Ecke der Eingangshalle nahe den Gleisen und deuten wild umher.;{};{"perzeption":1}'
   exits:
-    bahnhof_gleise: {name: Fernzügen, prep: zu den}
+    bahnhof_fernzüge: {name: Fernzügen, prep: zu den}
     bahnhof_nebenhalle: {name: Nebenhalle, prep: zur }
     ausgang: { name: Ausgang, prep: zum }
   characters:
@@ -38,8 +38,8 @@
         basic_stick: Stick
 
 
-- name: Gleise
-  id: bahnhof_gleise
+- name: Fernzüge 
+  id: bahnhof_fernzüge
   description: 
     - PERZEPTION;Hier ist der Lärm Ohrenbetäubend, die Dampflokomotiven haben den ganzen bereich vernebelt. Schwitzige, ölbeschmierte Arbeiter reparieren notdürftig Züge, reiche Familien rennen in aufwändigen Gewändern ihren Packburschen davon, es herscht wildes Treiben. Richtung Noden liegen die Gleise des Bahnhofs, nach Süden geht es zurück zur Eingangshalle
   exits:
@@ -129,7 +129,7 @@
   description: 
     - PERZEPTION;Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst.
   exits: 
-    bahnhof_gleise: { name: Zurück zu den Gleisen }
+    bahnhof_fernzüge: { name: Zurück zu den Gleisen/ Fernzügen }
   characters:
 
 - name: "Gleis 2"
@@ -137,7 +137,7 @@
   description: 
     - PERZEPTION;Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst.
   exits: 
-    bahnhof_gleise: { name: Zurück zu den Gleisen }
+    bahnhof_fernzüge: { name: Zurück zu den Gleisen/ Fernzügen }
   characters:
 
 - name: "Gleis 3"
@@ -145,7 +145,7 @@
   description: 
     - PERZEPTION;Ah, Gleis 3. Hier fährt dein Zug nach Moskau. Es ist selbstsam leer.
   exits: 
-    bahnhof_gleise: { name: Zurück zu den Gleisen }
+    bahnhof_fernzüge: { name: Zurück zu den Gleisen/ Fernzügen }
   characters:
 
 - name: "Gleis 4"
@@ -153,7 +153,7 @@
   description: 
     - PERZEPTION;Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst.
   exits: 
-    bahnhof_gleise: { name: Zurück zu den Gleisen }
+    bahnhof_fernzüge: { name: Zurück zu den Gleisen/ Fernzügen }
   characters:
 
 - name: "Gleis 5"
@@ -162,7 +162,7 @@
     - PERZEPTION;Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst.
     - PERZEPTION;Wieder stehen drei Passanten merkwürdig gekleidet in einer Ecke und deuten wild umher.
   exits: 
-    bahnhof_gleise: { name: Zurück zu den Gleisen }
+    bahnhof_fernzüge: { name: Zurück zu den Gleisen/ Fernzügen}
   characters:
     - name: Passant1
       id: passant7
