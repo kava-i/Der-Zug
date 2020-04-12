@@ -16,9 +16,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks) : CPerson(
 {
     //Set login data and player information
     m_sPassword = jAtts["password"];
-    m_firstLogin = true;
-    m_sMode = jAtts.value("mode", "prosa");
-
+    m_firstLogin = true; m_sMode = jAtts.value("mode", "prosa"); 
     m_abbilities = {"strength", "skill"};
 
     //Character and Level
@@ -42,7 +40,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks) : CPerson(
     //Initialize all rooms as not visited
     for(const auto& it : m_world->getRooms())
         m_vistited[it.second->getID()] = false;
-    m_room = m_world->getRooms()[m_room->getID()];
+    m_room = m_world->getRoom(m_room->getID());
     m_vistited[m_room->getID()] = true;
 
 
@@ -205,7 +203,7 @@ void CPlayer::endFight() {
 */
 void CPlayer::startDialog(string sCharacter)
 {
-    m_dialog = m_world->getCharacters()[sCharacter]->getDialog();
+    m_dialog = m_world->getCharacter(sCharacter)->getDialog();
 
     //Create context and add to context-stack.
     CEnhancedContext* context = new CEnhancedContext((std::string)"dialog", {{"partner", sCharacter}});
@@ -341,7 +339,7 @@ std::vector<std::string> CPlayer::findWay(CRoom* room, std::string roomID)
             //Also check, that target-room is visited and in the same area as current room.
             if(parents[it.first] == "" && m_vistited[it.first] == true && node->getArea() == m_room->getArea())
             {
-                q.push(m_world->getRooms()[it.first]);
+                q.push(m_world->getRoom(it.first));
                 parents[it.first] = node->getID();
             }
         } 
@@ -447,7 +445,7 @@ void CPlayer::equipeItem(CItem* item, string sType)
 
         //Check for new attack
         if(sAttack != "") {
-            m_attacks[sAttack] = m_world->getAttacks()[sAttack];
+            m_attacks[sAttack] = m_world->getAttack(sAttack);
             m_sPrint += "PERZEPTION - Neue Attacke: \"" + m_attacks[sAttack]->getName() + "\".\n";
         }
         m_equipment[sType] = item;
@@ -513,7 +511,7 @@ void CPlayer::showQuests(bool solved)
 void CPlayer::setNewQuest(std::string sQuestID)
 {
     int ep=0;
-    m_sPrint += m_world->getQuests()[sQuestID]->setActive(ep);
+    m_sPrint += m_world->getQuest(sQuestID)->setActive(ep);
     addEP(ep);
 }
 
@@ -525,7 +523,7 @@ void CPlayer::setNewQuest(std::string sQuestID)
 void CPlayer::questSolved(std::string sQuestID, std::string sStepID)
 {
     int ep=0;
-    m_sPrint+=m_world->getQuests()[sQuestID]->getSteps()[sStepID]->solved(ep);
+    m_sPrint+=m_world->getQuest(sQuestID)->getSteps()[sStepID]->solved(ep);
     addEP(ep);
 }
 

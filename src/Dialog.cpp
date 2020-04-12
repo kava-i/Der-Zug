@@ -145,7 +145,7 @@ string CDState::betrunkene(CPlayer* p)
 string CDState::strangeGuy1(CPlayer* p)
 {
     string sOutput = standard(p);
-    if(p->getWorld()->getQuests()["komische_gruppe"]->getActive() == false)
+    if(p->getWorld()->getQuest("komische_gruppe")->getActive() == false)
         p->setNewQuest("komische_gruppe");
     return sOutput;
 }
@@ -157,7 +157,7 @@ string CDState::strangeGuy2(CPlayer* p)
     p->questSolved("komische_gruppe", "2hilfe");
 
     for(size_t i=1; i<=9; i++)
-        p->getWorld()->getCharacters()["passant"+std::to_string(i)]->getDialog()->states["START"]->deleteDialogOption("die_gruppe", 1);
+        p->getWorld()->getCharacter("passant"+std::to_string(i))->getDialog()->states["START"]->deleteDialogOption("die_gruppe", 1);
 
     return sOutput;
 }
@@ -183,7 +183,7 @@ void CDState::deleteDialogOption(string sStateID, size_t optID) {
 
 void CDState::changeDialog(string sCharacter, string sDialog, CPlayer* p)
 {
-    p->getWorld()->getCharacters()[sCharacter]->setDialog(p->getWorld()->dialogFactory(sDialog, p));
+    p->getWorld()->getCharacter(sCharacter)->setDialog(p->getWorld()->dialogFactory(sDialog, p));
 }
 
 int CDState::numOptions()

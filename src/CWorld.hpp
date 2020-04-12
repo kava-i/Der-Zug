@@ -47,14 +47,26 @@ public:
     ///Return dictionary of all rooms in the game.
     map<string, CRoom*>& getRooms();
 
+    ///Get a Room from world
+    CRoom* getRoom(std::string sID);
+
     ///Return dictionary of all characters aka people in the game.
     map<string, CPerson*>& getCharacters();
 
+    ///Get a character from world.
+    CPerson* getCharacter(std::string sID);
+    
     ///Return dictionary of all attacks in the game.
     map<string, CAttack*>& getAttacks();
 
+    ///Get an attack from world.
+    CAttack* getAttack(std::string sID);
+
     ///Return dictionary of all quests in the game.
     map<string, CQuest*>& getQuests();
+
+    ///Get a quest from world.
+    CQuest* getQuest(std::string sID);
 
     /**
     * Return a item. Look for given item in dictionary of items (jsons) and create item from json.

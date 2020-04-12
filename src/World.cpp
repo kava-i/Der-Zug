@@ -14,9 +14,25 @@ map<string, CRoom*>& CWorld::getRooms() {
     return m_rooms; 
 }
 
+///Get a Room from world
+CRoom* CWorld::getRoom(std::string sID) {
+    if(m_rooms.count(sID) > 0)
+        return m_rooms[sID];
+    std::cout << "FATAL!!! Accessing room which does not exist: " << sID << std::endl;
+    return nullptr;
+}
+     
 ///Return dictionary of all characters aka people in the game.
 map<string, CPerson*>& CWorld::getCharacters() { 
     return m_characters; 
+}
+
+///Get a character from world.
+CPerson* CWorld::getCharacter(std::string sID) {
+    if(m_characters.count(sID) > 0)
+        return m_characters[sID];
+    std::cout << "FATAL!!! Accessing character which does not exist: " << sID << std::endl;
+    return nullptr;
 }
 
 ///Return dictionary of all attacks in the game.
@@ -24,11 +40,28 @@ map<string, CAttack*>& CWorld::getAttacks() {
     return m_attacks; 
 }
 
+///Get an attack from world.
+CAttack* CWorld::getAttack(std::string sID)
+{
+    if(m_attacks.count(sID) > 0)
+        return m_attacks[sID];
+    std::cout << "FATAL!!! Accessing room which does not exist: " << sID << std::endl;
+    return nullptr;
+}
+
 ///Return dictionary of all quests in the game.
 map<string, CQuest*>& CWorld::getQuests() { 
     return m_quests; 
 }
 
+///Get a quest from world.
+CQuest* CWorld::getQuest(std::string sID)
+{
+    if(m_quests.count(sID) > 0)
+        return m_quests[sID];
+    std::cout << "FATAL!!! Accessing room which does not exist: " << sID << std::endl;
+    return nullptr;
+}
 /**
 * Return a item. Look for given item in dictionary of items (jsons) and create item from json.
 * Return null-pointer if item-json couldn't be found and print error message!

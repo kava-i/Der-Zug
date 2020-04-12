@@ -352,7 +352,7 @@ void CEnhancedContext::h_updatePlayers(std::string&, CPlayer*p)
 void CEnhancedContext::h_deleteCharacter(std::string& sIdentifier, CPlayer* p) {
     std::cout << "h_deleteCharacter " << sIdentifier << std::endl;
     p->getRoom()->getCharacters().erase(sIdentifier);
-    delete p->getWorld()->getCharacters()[sIdentifier];
+    delete p->getWorld()->getCharacter(sIdentifier);
     p->getWorld()->getCharacters().erase(sIdentifier); 
 
     m_curPermeable=false;
@@ -383,7 +383,7 @@ void CEnhancedContext::h_endDialog(std::string& sIdentifier, CPlayer* p) {
 }
 
 void CEnhancedContext::h_newFight(std::string& sIdentifier, CPlayer* p) {
-    p->setFight(new CFight(p, p->getWorld()->getCharacters()[sIdentifier]));
+    p->setFight(new CFight(p, p->getWorld()->getCharacter(sIdentifier)));
 }
 
 void CEnhancedContext::h_gameover(std::string& sIdentifier, CPlayer* p) {
@@ -506,7 +506,7 @@ void CEnhancedContext::h_examine(std::string &sIdentifier, CPlayer*p) {
     sObject = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier);
     //Check for item
     if(sObject != "")
-        p->appendPrint(p->getWorld()->getCharacters()[sObject]->getDescription());
+        p->appendPrint(p->getWorld()->getCharacter(sObject)->getDescription());
 }
 
 void CEnhancedContext::h_changeMode(std::string& sIdentifier, CPlayer* p) {
@@ -524,7 +524,7 @@ void CEnhancedContext::h_firstZombieAttack(std::string& sIdentifier, CPlayer* p)
     p->appendPrint("\n$\nA zombie comes running down the stairs and attacks you!");
 
     //Create fight
-    p->setFight(new CFight(p, p->getWorld()->getCharacters()["hospital_zombie1"]));
+    p->setFight(new CFight(p, p->getWorld()->getCharacter("hospital_zombie1")));
     m_eventmanager.erase("h_firstZombieAttack");
 }
 
@@ -534,7 +534,7 @@ void CEnhancedContext::h_moveToHospital(std::string& sIdentifier, CPlayer* p)
     if(p->getRoom()->getID().find("compartment") == std::string::npos || func::getObjectId(p->getRoom()->getExtits2(), sIdentifier) != "trainCorridor")
         return;
 
-    p->changeRoom(p->getWorld()->getRooms()["hospital_foyer"]);
+    p->changeRoom(p->getWorld()->getRoom("hospital_foyer"));
     m_block = true;
 }
 
@@ -638,7 +638,7 @@ void CEnhancedContext::h_call(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::print(CPlayer* p)
 {
-    CPerson* partner = p->getWorld()->getCharacters()[getAttribute<std::string>("partner")];
+    CPerson* partner = p->getWorld()->getCharacter(getAttribute<std::string>("partner"));
     p->appendPrint("<b>" + p->getName() + "'s Inventory:</b>\n" 
                     + p->getInventory().printInventory()
                     + "\n<b>" + partner->getName() + "'s Inventory: </b>\n" 
@@ -647,7 +647,7 @@ void CEnhancedContext::print(CPlayer* p)
 
 void CEnhancedContext::h_sell(std::string& sIdentifier, CPlayer* p)
 {
-    CPerson* partner = p->getWorld()->getCharacters()[getAttribute<std::string>("partner")];
+    CPerson* partner = p->getWorld()->getCharacter(getAttribute<std::string>("partner"));
     CItem* curItem = p->getInventory().getItem(sIdentifier);
     if(curItem == NULL)
         p->appendPrint("LOGIK - Dieser Gegenstand befindet sich nicht in deinem Inventar, du kannst ihn logischerwiese dehalb nicht verkaufen!\n");
@@ -664,7 +664,7 @@ void CEnhancedContext::h_sell(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_buy(std::string& sIdentifier, CPlayer* p)
 {
-    CPerson* partner = p->getWorld()->getCharacters()[getAttribute<std::string>("partner")];
+    CPerson* partner = p->getWorld()->getCharacter(getAttribute<std::string>("partner"));
     CItem* curItem = partner->getInventory().getItem(sIdentifier);
 
     if(curItem == NULL)
@@ -687,7 +687,7 @@ void CEnhancedContext::h_buy(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_exit(std::string&, CPlayer* p)
 {
-    CPerson* partner = p->getWorld()->getCharacters()[getAttribute<std::string>("partner")];
+    CPerson* partner = p->getWorld()->getCharacter(getAttribute<std::string>("partner"));
     p->getContexts().erase("trade");
     p->getContexts().erase("dialog");
     p->startDialog(partner->getID());
@@ -737,7 +737,7 @@ void CEnhancedContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
 
     p->appendPrint("Du siehst deinen Zug einfahren. Du bewegst dich auf ihn zu, zeigst dein Ticket, der Schaffner musstert dich kurz und lässt dich dann eintreten. Du suchst dir einen freien Platz, legst dein Bündel auf den sitz neben dich und schläfst ein...\n $ Nach einem scheinbar endlos langem schlaf wachst du wieder in deinem Abteil auf. Das Abteil ist leer. Leer bist auf einen geheimnisvollen Begleiter: Parsen.\n");
 
-    p->setRoom(p->getWorld()->getRooms()["compartment-a"]);
+    p->setRoom(p->getWorld()->getRoom("compartment-a"));
     m_curPermeable = false;
     m_block = true;
     p->getContexts().erase(getAttribute<std::string>("questID"));
@@ -751,10 +751,10 @@ void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
     if(character == "" || character.find("passant") == std::string::npos)
         return;
 
-    CQuest* quest = p->getWorld()->getQuests()[getAttribute<std::string>("questID")];
+    CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
     CQuestStep* step = quest->getSteps()["1reden"];
     for(size_t i=0; i<step->getWhich().size(); i++) {
-        if(step->getWhich()[i] == p->getWorld()->getCharacters()[character]->getID())
+        if(step->getWhich()[i] == p->getWorld()->getCharacter(character)->getID())
             return;
     }
 
@@ -769,7 +769,7 @@ void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
     if(step->getSolved() == true)
     {
         for(size_t i=1; i<=9; i++)
-            p->getWorld()->getCharacters()["passant"+std::to_string(i)]->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2", p));
+            p->getWorld()->getCharacter("passant"+std::to_string(i))->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2", p));
         p->getContexts().erase(quest->getID());
     }
 }
@@ -792,7 +792,7 @@ void CEnhancedContext::h_geldauftreiben(std::string& sIdentifier, CPlayer* p)
     if(p->getStat("gold") + stoi(sIdentifier) < 10)
         return;
 
-    CQuest* quest = p->getWorld()->getQuests()[getAttribute<std::string>("questID")];
+    CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
     if(quest->getActive() == true)
         p->appendPrint("Wundervoll, genug Geld, um das Ticket zu kaufen!\n");
 
