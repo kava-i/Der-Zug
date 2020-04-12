@@ -32,7 +32,7 @@ protected:
     CInventory m_inventory;                     
 
     ///Persons dialogue
-    SDialog* m_dialog;
+    CDialog* m_dialog;
 
 public:
 
@@ -44,7 +44,7 @@ public:
     * param[in] attacks list of attacks
     */
     typedef std::map<std::string, CItem*> map_type;
-    CPerson(nlohmann::json jAttributes, SDialog* dialog, attacks newAttacks, CPlayer* p, map_type=map_type());
+    CPerson(nlohmann::json jAttributes, CDialog* dialog, attacks newAttacks, CPlayer* p, map_type=map_type());
 
     // *** GETTER *** // 
 
@@ -63,7 +63,7 @@ public:
     CInventory& getInventory();
 
     ///Return person's dialogue.
-    SDialog* getDialog();
+    CDialog* getDialog();
 
     
     // *** SETTER *** //
@@ -72,7 +72,7 @@ public:
     void setStat(std::string, int stat);
 
     ///Set person's dialogue.
-    void setDialog(SDialog* newDialog);
+    void setDialog(CDialog* newDialog);
 
 
     // *** Attacks *** // 

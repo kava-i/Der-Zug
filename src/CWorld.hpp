@@ -102,5 +102,5 @@ public:
     //Character, Dialog, Details
     map<string, CDetail*> detailFactory(nlohmann::json j_room, CPlayer* p, std::string sArea);
     objectmap characterFactory(nlohmann::json j_characters, CPlayer* p);
-    SDialog* dialogFactory(string sPath, CPlayer* p); 
+    CDialog* dialogFactory(string sPath, CPlayer* p); 
 };

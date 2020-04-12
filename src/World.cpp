@@ -161,9 +161,6 @@ void CWorld::itemFactory(std::string sPath) {
 
     for(auto j_item: j_items) 
         m_items[j_item["id"]] = j_item;
-
-    if(m_items.count("ticket") > 0)
-        std::cout << "Created TICKET.\n";
 }
 
 
@@ -202,7 +199,7 @@ CWorld::objectmap CWorld::characterFactory(nlohmann::json j_characters, CPlayer*
     for(auto j_char : j_characters)
     {
         //Create dialog 
-        SDialog* newDialog = new SDialog;
+        CDialog* newDialog = new CDialog;
         if(j_char.count("dialog") > 0)
             newDialog = dialogFactory(j_char["dialog"], p); 
         else
@@ -251,7 +248,7 @@ map<string, CAttack*> CWorld::parsePersonAttacks(nlohmann::json j_person)
 }
 
 
-SDialog* CWorld::dialogFactory(string sPath, CPlayer* p)
+CDialog* CWorld::dialogFactory(string sPath, CPlayer* p)
 {
     //Read json creating all rooms
     std::ifstream read("factory/jsons/dialogs/"+sPath+".json");
@@ -261,7 +258,7 @@ SDialog* CWorld::dialogFactory(string sPath, CPlayer* p)
 
     //Create new dialog
     map<string, CDState*> mapStates;
-    struct SDialog* newDialog = new SDialog();
+    CDialog* newDialog = new CDialog("", mapStates);
 
     for(auto j_state : j_states)
     {
@@ -284,8 +281,8 @@ SDialog* CWorld::dialogFactory(string sPath, CPlayer* p)
     }
 
     //Update dialog values and return
-    newDialog->sName = sPath;
-    newDialog->states= mapStates;
+    newDialog->setName(sPath);
+    newDialog->setStates(mapStates);
     return newDialog;
 }
 

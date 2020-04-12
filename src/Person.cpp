@@ -8,7 +8,7 @@
 * param[in] items list of items 
 * param[in] attacks list of attacks
 */
-CPerson::CPerson(nlohmann::json jAttributes, SDialog* dialogue, attacks newAttacks, CPlayer* p, map_type items) : CObject(jAttributes, p)
+CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttacks, CPlayer* p, map_type items) : CObject(jAttributes, p)
 {
     //Set stats.
     m_stats["highness"] = 0;
@@ -39,7 +39,7 @@ int CPerson::getStat(std::string id) {
 }
 
 ///Return person's dialogue.
-SDialog* CPerson::getDialog() { 
+CDialog* CPerson::getDialog() { 
     return m_dialog; 
 }
 
@@ -69,7 +69,7 @@ void CPerson::setStat(std::string id, int stat) {
 }
 
 ///Set person's dialogue.
-void CPerson::setDialog(SDialog* newDialog) { 
+void CPerson::setDialog(CDialog* newDialog) { 
     m_dialog = newDialog; 
 }
 

@@ -553,7 +553,6 @@ void CEnhancedContext::h_startTutorial(std::string&, CPlayer* p)
     p->appendPrint(p->getRoom()->getDescription() + "\n");
     p->setNewQuest("zug_nach_moskau");
     p->setNewQuest("tutorial");
-    p->updateStats(2);
 }
 
 void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
@@ -601,7 +600,7 @@ void CEnhancedContext::initializeDialogListeners(std::string newState, CPlayer* 
     add_listener("h_help", "help");
 
     //Add listener for each dialog option.
-    std::vector<size_t> activeOptions = p->getDialog()->states[newState]->getActiveOptions(p);
+    std::vector<size_t> activeOptions = p->getDialog()->getState(newState)->getActiveOptions(p);
     std::map<size_t, size_t> mapOtptions;
     size_t counter = 1;
     for(auto opt : activeOptions)
@@ -618,7 +617,7 @@ void CEnhancedContext::h_call(std::string& sIdentifier, CPlayer* p)
     size_t option = getAttribute<std::map<size_t, size_t>>("mapOptions")[stoi(sIdentifier)];
 
     std::string curState = getAttribute<std::string>("state");
-    std::string nextState = p->getDialog()->states[curState]->getNextState(std::to_string(option), p);
+    std::string nextState = p->getDialog()->getState(curState)->getNextState(std::to_string(option), p);
     if(nextState == "")
         p->appendPrint("No valid option.\n");
     else if(nextState == "trade")
@@ -626,7 +625,7 @@ void CEnhancedContext::h_call(std::string& sIdentifier, CPlayer* p)
     else
     {
         initializeDialogListeners(nextState, p);
-        std::string newCommand = p->getDialog()->states[nextState]->callState(p);
+        std::string newCommand = p->getDialog()->getState(nextState)->callState(p);
         if(newCommand != "")
             p->throw_event(newCommand);
     }

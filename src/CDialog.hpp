@@ -15,9 +15,47 @@ using std::vector;
 class CDState;
 class CPlayer;
 
-struct SDialog {
-    string sName;
-    map<string, CDState*> states;
+class CDialog 
+{
+private: 
+    std::string m_sName;
+    std::map<std::string, CDState*> m_states;
+
+public:
+    CDialog() {}
+    CDialog(std::string sName, std::map<std::string, CDState*> states);
+
+    ///Getter for name of dialog.
+    std::string getName();
+
+    ///Getter for map of states in dialog.
+    std::map<std::string, CDState*>& getStates();
+
+    ///Getter for a single state
+    CDState* getState(std::string sID);
+
+    ///Setter for dialog name.
+    void setName(std::string sName);
+    
+    ///Setter for dialog states.
+    void setStates(std::map<std::string, CDState*> states);
+
+
+    // *** various functions *** //
+
+    ///Function changing the text of a state.
+    void changeStateText(string sStateID, size_t text);
+
+    //Function adding a new dialog option to a given state.
+    void addDialogOption(string sStateID, size_t optID);
+
+    ///Function deleting an option from a given state.
+    void deleteDialogOption(string sStateID, size_t optID);
+
+    ///Function changing the complete dialog.
+    void changeDialog(string sOld, string sNew, CPlayer* p);
+
+
 };
 
 struct SDOption {
@@ -37,13 +75,13 @@ private:
     dialogoptions m_options;
 
     //Reference to the complete Dialoge
-    SDialog* m_dialog;
+    CDialog* m_dialog;
 
     //Static map f all state-functions
     static std::map<string, string (CDState::*)(CPlayer*)> m_functions;
 
 public:
-    CDState(nlohmann::json jAtts, dialogoptions states, SDialog* dia, CPlayer* p);
+    CDState(nlohmann::json jAtts, dialogoptions states, CDialog* dia, CPlayer* p);
 
     // *** GETTER *** // 
     string getText();
@@ -66,11 +104,6 @@ public:
     string betrunkene(CPlayer*);
     string strangeGuy1(CPlayer*); 
     string strangeGuy2(CPlayer*); 
-
-    void changeStateText(string sStateID, size_t text);
-    void addDialogOption(string sStateID, size_t optID);
-    void deleteDialogOption(string sStateID, size_t optID);
-    void changeDialog(string sOld, string sNew, CPlayer* p);
 
 
     std::vector<size_t> getActiveOptions(CPlayer*);

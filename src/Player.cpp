@@ -210,7 +210,7 @@ void CPlayer::startDialog(string sCharacter)
     context->initializeDialogListeners("START", this);
     m_contextStack.insert(context, 1, "dialog");
 
-    std::string newCommand = m_dialog->states["START"]->callState(this);
+    std::string newCommand = m_dialog->getState("START")->callState(this);
     if(newCommand != "")
         throw_event(newCommand);
 }

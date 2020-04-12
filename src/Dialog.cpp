@@ -1,7 +1,68 @@
 #include "CDialog.hpp"
 #include "CPlayer.hpp"
 
-CDState::CDState(nlohmann::json jAtts, dialogoptions opts, SDialog* dia, CPlayer* p)
+// ***** ***** CDialog ***** *****
+CDialog::CDialog(std::string sName, std::map<std::string, CDState*> states)
+{
+    m_sName = sName;
+    m_states = states;
+}
+
+///Getter for name of dialog.
+std::string CDialog::getName() {
+    return m_sName;
+}
+
+///Getter for map of states in dialog.
+std::map<std::string, CDState*>& CDialog::getStates() {
+    return m_states;
+}
+
+///Getter for a single state
+CDState* CDialog::getState(std::string sID) {
+    if(m_states.count(sID) > 0)
+        return m_states[sID];
+    std::cout << "FATAL!!! Trying to access dialog-state that does not exits: " << sID << std::endl;
+    return nullptr;
+}
+
+
+///Setter for dialog name.
+void CDialog::setName(std::string sName) {
+    m_sName = sName;
+}
+
+///Setter for dialog states.
+void CDialog::setStates(std::map<std::string, CDState*> states) {
+    m_states = states;
+}
+
+// *** VARIOUS FUNCTIONS *** // 
+void CDialog::changeStateText(string sStateID, size_t text) {
+    m_states[sStateID]->setText(text);
+}
+void CDialog::addDialogOption(string sStateID, size_t optID) {
+    m_states[sStateID]->getOptions()[m_states[sStateID]->numOptions()+1] = m_states[sStateID]->getOptions()[-1];
+}
+
+void CDialog::deleteDialogOption(string sStateID, size_t optID) {
+    m_states[sStateID]->getOptions().erase(optID);
+
+    for(int i=optID+1; i<m_states[sStateID]->numOptions()+2; i++)
+    {
+        auto nodeHandler = m_states[sStateID]->getOptions().extract(i);
+        nodeHandler.key() = i-1;
+        m_states[sStateID]->getOptions().insert(std::move(nodeHandler));
+    }
+} 
+
+void CDialog::changeDialog(string sCharacter, string sDialog, CPlayer* p)
+{
+    p->getWorld()->getCharacter(sCharacter)->setDialog(p->getWorld()->dialogFactory(sDialog, p));
+}
+
+// ***** ***** CDState ***** ***** //
+CDState::CDState(nlohmann::json jAtts, dialogoptions opts, CDialog* dia, CPlayer* p)
 {
     m_text = new CText(jAtts.value("text", nlohmann::json::array()), p);
     m_sFunction = jAtts.value("function", "standard");
@@ -18,11 +79,23 @@ CDState::CDState(nlohmann::json jAtts, dialogoptions opts, SDialog* dia, CPlayer
 }
 
 // *** GETTER *** //
-string CDState::getText() { return m_text->print(); }
-CDState::dialogoptions& CDState::getOptions() { return m_options; }
+
+///Getter for returning text of dialog-state.
+string CDState::getText() { 
+    return m_text->print(); 
+}
+
+///Getter for returning options of dialog-state.
+CDState::dialogoptions& CDState::getOptions() { 
+    return m_options; 
+}
 
 // *** SETTER *** //
-void CDState::setText(size_t text) { m_text = m_alternativeTexts[text]; }
+
+///Setter for text of dialog-state.
+void CDState::setText(size_t text) { 
+    m_text = m_alternativeTexts[text]; 
+}
 
 // *** FUNCTIONS *** // 
 
@@ -54,6 +127,17 @@ string CDState::getNextState(string sPlayerChoice, CPlayer* p)
     else
         return m_options[stoi(sPlayerChoice)].sTarget;
 }
+
+int CDState::numOptions()
+{
+    int counter = 0;
+    for(auto it : m_options) {
+        if(it.first > 0)
+            counter++;
+    }
+    return counter;
+}
+
 
 // *** FUNCTION POINTER *** //
 string CDState::standard(CPlayer* p)
@@ -96,9 +180,9 @@ std::vector<size_t> CDState::getActiveOptions(CPlayer* p)
 string CDState::parsen1(CPlayer* p)
 {
     string sOutput = standard(p);
-    addDialogOption("START", -1);       //Add new option (4)
-    deleteDialogOption("START", 1);     //Delete old option (1)
-    changeStateText("START", 0);        //Change text (0)
+    m_dialog->addDialogOption("START", -1);       //Add new option (4)
+    m_dialog->deleteDialogOption("START", 1);     //Delete old option (1)
+    m_dialog->changeStateText("START", 0);        //Change text (0)
     m_sFunction = "standard";           
     return sOutput;
 }
@@ -114,13 +198,13 @@ string CDState::parsen2(CPlayer* p)
 string CDState::pissingman1(CPlayer* p)
 {
     string sOutput = standard(p);
-    changeDialog("pissing_man", "defaultDialog", p);
+    m_dialog->changeDialog("pissing_man", "defaultDialog", p);
     return sOutput;
 } 
 
 string CDState::ticket(CPlayer* p)
 {
-    deleteDialogOption("START", 1);
+    m_dialog->deleteDialogOption("START", 1);
     string sOutput = standard(p); 
     return sOutput+";addItem ticket";
 }
@@ -157,41 +241,9 @@ string CDState::strangeGuy2(CPlayer* p)
     p->questSolved("komische_gruppe", "2hilfe");
 
     for(size_t i=1; i<=9; i++)
-        p->getWorld()->getCharacter("passant"+std::to_string(i))->getDialog()->states["START"]->deleteDialogOption("die_gruppe", 1);
+        p->getWorld()->getCharacter("passant"+std::to_string(i))->getDialog()->deleteDialogOption("START", 1);
 
     return sOutput;
 }
 
-// *** VARIOUS FUNCTIONS *** // 
-void CDState::changeStateText(string sStateID, size_t text) {
-    m_dialog->states["START"]->setText(text);
-}
-void CDState::addDialogOption(string sStateID, size_t optID) {
-    m_dialog->states["START"]->getOptions()[m_dialog->states["START"]->numOptions()+1] = m_dialog->states["START"]->getOptions()[-1];
-}
 
-void CDState::deleteDialogOption(string sStateID, size_t optID) {
-    m_dialog->states["START"]->getOptions().erase(optID);
-
-    for(int i=optID+1; i<m_dialog->states["START"]->numOptions()+2; i++)
-    {
-        auto nodeHandler = m_dialog->states["START"]->getOptions().extract(i);
-        nodeHandler.key() = i-1;
-        m_dialog->states["START"]->getOptions().insert(std::move(nodeHandler));
-    }
-} 
-
-void CDState::changeDialog(string sCharacter, string sDialog, CPlayer* p)
-{
-    p->getWorld()->getCharacter(sCharacter)->setDialog(p->getWorld()->dialogFactory(sDialog, p));
-}
-
-int CDState::numOptions()
-{
-    int counter = 0;
-    for(auto it : m_options) {
-        if(it.first > 0)
-            counter++;
-    }
-    return counter;
-}
