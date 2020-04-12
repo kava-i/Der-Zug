@@ -57,6 +57,7 @@ public:
 
     ///Return person's attacks.
     attacks& getAttacks();
+    std::map<std::string, std::string> getAttacks2();
 
     ///Return person's inventory.
     CInventory& getInventory();

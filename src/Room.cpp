@@ -2,13 +2,34 @@
 
 // *** GETTER *** // 
 
-string CRoom::getEntry()        { return m_sEntry; }
-string CRoom::getArea()         { return m_sArea; }
-CRoom::objectmap& CRoom::getCharacters()    { return m_characters; }
-CRoom::objectmap& CRoom::getExtits2()       { return m_exits_objectMap; }
-std::map<string, CExit*>& CRoom::getExtits() { return m_exits; }
-std::map<string, CItem*>& CRoom::getItems()  { return m_items; }
-std::map<string, CDetail*>& CRoom::getDetails()  { return m_details; }
+string CRoom::getEntry() { 
+    return m_sEntry; 
+}
+
+string CRoom::getArea() { 
+    return m_sArea; 
+}
+
+CRoom::objectmap& CRoom::getCharacters() { 
+    return m_characters; 
+}
+
+std::map<string, CExit*>& CRoom::getExtits() { 
+    return m_exits; 
+}
+
+CRoom::objectmap CRoom::getExtits2() { 
+    auto lambda = [](CExit* exit) { return exit->getName(); };
+    return func::convertToObjectmap(m_exits, lambda); 
+}
+
+std::map<string, CItem*>& CRoom::getItems() { 
+    return m_items; 
+}
+
+std::map<string, CDetail*>& CRoom::getDetails() { 
+    return m_details; 
+}
 
 // *** SETTER *** //
 void CRoom::setPlayers(objectmap& onlinePlayers) { m_players = onlinePlayers; }

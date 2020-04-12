@@ -314,7 +314,7 @@ public:
     * @param mapObjects map of objects from which to select.
     * @param sEventType type of event.
     */
-    void addSelectContest(std::map<std::string, std::string>& mapObjects, std::string sEventType);
+    void addSelectContest(std::map<std::string, std::string> mapObjects, std::string sEventType);
 
     /**
     * In the case of a serious error, leading game not not continue, let the player no

@@ -48,6 +48,13 @@ CPerson::attacks& CPerson::getAttacks() {
     return m_attacks; 
 }
 
+///Return attacks as a map_type (string)
+std::map<std::string, std::string> CPerson::getAttacks2()
+{
+    auto lambda = [](CAttack* attack) { return attack->getName(); };
+    return func::convertToObjectmap(m_attacks, lambda);
+}
+
 ///Return person's inventory.
 CInventory& CPerson::getInventory()  {
     return m_inventory; 
@@ -90,10 +97,13 @@ string CPerson::printAttacks()
 
 string CPerson::getAttack(string sPlayerChoice)
 {
-    for(auto[i, it] = std::tuple{1, m_attacks.begin()};it!=m_attacks.end();i++, it++) {
-        if(std::isdigit(sPlayerChoice[0]) && i==stoi(sPlayerChoice))
-            return it->first;
-    }
+    auto lambda = [](CAttack* attack) { return attack->getName(); };
+    std::string sAttack = func::getObjectId(m_attacks, sPlayerChoice, lambda);
+
+    if(m_attacks.count(sAttack) > 0)
+        return sAttack;
+
+    std::cout << "Error, attack accessed, that does not exist: " << sPlayerChoice << std::endl;
     return "";
 }
     

@@ -5,7 +5,7 @@
 #include <string>
 #include <map>
 #include "CObject.hpp"
-#include "CExit.hpp"
+#include "CExit.hpp" 
 #include "CText.hpp"
 #include "CItem.hpp"
 #include "CDetail.hpp"
@@ -21,7 +21,6 @@ private:
     
     typedef std::map<string, std::string> objectmap;
     objectmap m_characters;
-    objectmap m_exits_objectMap;
     objectmap m_players;
 
     std::map<string, CExit*> m_exits;
@@ -37,8 +36,6 @@ public:
         std::map<std::string, nlohmann::json> mapExits = jAtts["exits"].get<std::map<std::string, nlohmann::json>>();
         for(const auto &it : mapExits) 
             m_exits[it.first] = new CExit(it.first, it.second, p);
-        auto lamda = [](CExit* exit) { return exit->getName(); };
-        m_exits_objectMap = func::convertToObjectmap(m_exits, lamda);
 
         m_characters = characters;
         m_items = items;
@@ -49,8 +46,8 @@ public:
     string getEntry();
     string getArea(); 
     objectmap& getCharacters();
-    objectmap& getExtits2();
     std::map<string, CExit*>& getExtits();
+    objectmap getExtits2();
     std::map<string, CItem*>& getItems();
     std::map<string, CDetail*>& getDetails();
 

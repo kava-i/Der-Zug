@@ -141,7 +141,7 @@ namespace func
     * @return Return id of found object or empty string.
     */
     template<typename T1, typename T2=std::function<std::string(T1)>> 
-    std::string getObjectId( std::map<std::string, T1>& mapObjects, std::string sName, 
+    std::string getObjectId( std::map<std::string, T1> mapObjects, std::string sName, 
                                T2 getName = [](T1 t) -> std::string { return t; } )
     {
         //Check if name is an id and thus can be directly accessed and returned.

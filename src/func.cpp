@@ -30,8 +30,13 @@ std::vector<std::string> func::split(std::string str, std::string delimiter)
 bool func::inArray(std::vector<std::string> vec, std::string str)
 {
     for(const auto& it : vec) {
-        if(it.c_str() == str.c_str())
+        std::cout << it.c_str() << " | " << str.c_str() << " -> ";
+        if(it == str)
+        {
+            std::cout << "true" << std::endl;
             return true;
+        }
+        std::cout << "false" << std::endl;
     }
     return false;
 }

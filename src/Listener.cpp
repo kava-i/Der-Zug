@@ -76,6 +76,8 @@ bool CListener::regexCompare(std::string sEventType) {
 * @return whether this listener picks up on thrown event.
 */
 bool CListener::inVector(std::string sEventType) {
+    if(std::isdigit(sEventType[0]) && stoul(sEventType, nullptr, 0) <= m_arrayEventType.size() && stoul(sEventType, nullptr, 0) > 0)
+        return true;
     return func::inArray(m_arrayEventType, sEventType);
 }
 

@@ -222,8 +222,24 @@ void CEnhancedContext::initializeTemplates()
 void CEnhancedContext::add_listener(std::string sID, std::string sEventType, size_t priority)
 {
     m_eventmanager.insert(new CListener(sID, sEventType), priority, sID);
-
 }
+
+void CEnhancedContext::add_listener(std::string sID, std::regex eventType, size_t priority)
+{
+    m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
+}
+
+void CEnhancedContext::add_listener(std::string sID, std::vector<std::string> eventType, size_t priority)
+{
+    m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
+}
+
+void CEnhancedContext::add_listener(std::string sID, std::map<std::string, std::string> eventType, size_t priority)
+{
+    m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
+}
+
+
 bool CEnhancedContext::throw_event(event e, CPlayer* p)
 {    
     m_curPermeable = m_permeable;
@@ -540,6 +556,7 @@ void CEnhancedContext::h_startTutorial(std::string&, CPlayer* p)
     p->appendPrint(p->getRoom()->getDescription() + "\n");
     p->setNewQuest("zug_nach_moskau");
     p->setNewQuest("tutorial");
+    p->updateStats(2);
 }
 
 void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
@@ -552,10 +569,9 @@ void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
 
 
 // ***** ***** FIGHT CONTEXT ***** ***** //
-void CEnhancedContext::initializeFightListeners(int num)
+void CEnhancedContext::initializeFightListeners(std::map<std::string, std::string> mapAttacks)
 {
-    for(int i=1; i<=num; i++)
-        add_listener("h_fight", std::to_string(i));
+    add_listener("h_fight", mapAttacks);
 }
 
 void CEnhancedContext::h_fight(std::string& sIdentifier, CPlayer* p) {

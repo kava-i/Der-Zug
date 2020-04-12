@@ -181,7 +181,7 @@ void CPlayer::setFight(CFight* newFight) {
 
     //Create fight-context and add to context-stack.
     CEnhancedContext* context = new CEnhancedContext((std::string)"fight");
-    context->initializeFightListeners(m_attacks.size());
+    context->initializeFightListeners(getAttacks2());
     m_contextStack.insert(context, 1, "fight");
 
     m_curFight->initializeFight();
@@ -571,12 +571,12 @@ void CPlayer::updateStats(int numPoints)
     //Print attributes and level of each attribute and add choice-context.
     std::string sError = "Nummer oder Attribut wählen.\n";
     CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"name", "updateStats"}, {"permeable", false},{"numPoints", numPoints}, {"error", sError}});
+
     for(size_t i=0; i<m_abbilities.size(); i++)
-    {
         m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" + std::to_string(getStat(m_abbilities[i])) + ")\n";
-        context->add_listener("h_updateStats", m_abbilities[i]);
-        context->add_listener("h_updateStats", std::to_string(i+1));
-    }
+
+    
+    context->add_listener("h_updateStats", m_abbilities);
 
     m_sPrint += sError;
     m_contextStack.insert(context, 1, "updateStats");
@@ -708,16 +708,17 @@ CPlayer* CPlayer::getPlayer(string sIdentifier)
 * @param mapObjects map of objects from which to select.
 * @param sEventType type of event.
 */
-void CPlayer::addSelectContest(std::map<std::string, std::string>& mapObjects, std::string sEventType)
+void CPlayer::addSelectContest(std::map<std::string, std::string> mapObjects, std::string sEventType)
 {
     //Add context.
     CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"name", "select"}, {"permeable",true},{"eventtype",sEventType}, {"map_objects",mapObjects}});
-    context->setErrorFunction(&CEnhancedContext::error_delete);
-    
-    //Add listeners
-    for(size_t i=1; i<=mapObjects.size();i++)
-        context->add_listener("h_select", std::to_string(i));
 
+    //Set error function, to delete context when not called 
+    context->setErrorFunction(&CEnhancedContext::error_delete); 
+
+    //Add listeners/ eventhandlers
+    context->add_listener("h_select", mapObjects);
+    
     //Insert context into context-stack.
     m_contextStack.insert(context, 1, "select");
 }

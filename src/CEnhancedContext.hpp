@@ -16,8 +16,7 @@ class CGame;
 class CEnhancedContext
 {
 protected:
-    typedef std::map<std::string, std::string> map_type;
-    typedef std::pair<std::string, std::string> event;
+    typedef std::map<std::string, std::string> map_type; typedef std::pair<std::string, std::string> event;
 
     CContextStack<CListener> m_eventmanager;
     
@@ -75,6 +74,10 @@ public:
 
     // *** Throw events *** //
     void add_listener(std::string sID, std::string sEventType, size_t priority=0);
+    void add_listener(std::string sID, std::regex eventType, size_t priority=0);
+    void add_listener(std::string sID, std::vector<std::string> eventType, size_t priority=0);
+    void add_listener(std::string sID, std::map<std::string, std::string> eventType, size_t priority=0);
+
     bool throw_event(event newEvent, CPlayer* p);
 
     // *** ERROR HANDLER *** //
@@ -123,7 +126,7 @@ public:
 
 
     // *** FIGHT CONTEXT *** //
-    void initializeFightListeners(int num);
+    void initializeFightListeners(std::map<std::string, std::string> mapAttacks);
     void h_fight(std::string&, CPlayer*);
     void h_fight_show(std::string&, CPlayer*);
 
