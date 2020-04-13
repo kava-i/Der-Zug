@@ -13,7 +13,8 @@ namespace Webcmd
 	YELLOW = 4,
 	BLUE = 5,
 	ORANGE = 6,
-    DARK = 8
+    DARK = 8,
+    WHITEDARK = 9
     };
 
     std::string set_color(color cl);

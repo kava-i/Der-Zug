@@ -5,6 +5,7 @@
 #define BLUE Webcmd::set_color(Webcmd::color::BLUE)
 #define PURPLE Webcmd::set_color(Webcmd::color::PURPLE)
 #define WHITE Webcmd::set_color(Webcmd::color::WHITE)
+#define WHITEDARK Webcmd::set_color(Webcmd::color::WHITEDARK)
 
 /**
 * Full constructor for player
@@ -128,8 +129,28 @@ void CPlayer::setPrint(string newPrint) {
 }
 
 ///Append to current player output.
-void CPlayer::appendPrint(string newPrint) { 
-    m_sPrint.append(newPrint); 
+void CPlayer::appendPrint(std::string sPrint) {
+    m_sPrint += sPrint;
+}
+
+void CPlayer::appendStoryPrint(string sPrint) { 
+    m_sPrint += "<div class='spoken'>STORY TELLER - " + WHITEDARK + sPrint + WHITE + "</div>";
+}
+
+void CPlayer::appendDescPrint(string sPrint) {
+    m_sPrint += "<div class='spoken'>PERZEPTION - " + WHITEDARK + sPrint + WHITE + "</div>";
+}
+
+void CPlayer::appendErrorPrint(string sPrint) {
+    m_sPrint += "<div class='spoken'>LOGIK - " + WHITEDARK + sPrint + WHITE + "</div>";
+}
+
+void CPlayer::appendTechPrint(string sPrint) {
+    m_sPrint += "<div class='spoken'>TECH GUY - " + WHITEDARK + sPrint + "</div>";
+}
+
+void CPlayer::appendSuccPrint(string sPrint) {
+    m_sPrint += GREEN + sPrint + WHITE;
 }
 
 ///Set player's world.
@@ -165,7 +186,7 @@ void CPlayer::changeMode()
         m_sMode = "list";
     else
         m_sMode = "prosa";
-    m_sPrint = "TECH GUY - \"Mode\" wurde auf '" + m_sMode + "' gesetzt.\n";
+    appendTechPrint("\"Mode\" wurde auf '" + m_sMode + "' gesetzt.\n");
 }
 
 // *** Fight *** //
@@ -191,7 +212,7 @@ void CPlayer::setFight(CFight* newFight) {
 void CPlayer::endFight() {
     delete m_curFight;
     m_contextStack.erase("fight");
-    m_sPrint += "Fight ended.\n";
+    appendDescPrint("Fight ended.\n");
 }
 
 // *** Dialog *** //
@@ -221,7 +242,7 @@ void CPlayer::startDialog(string sCharacter)
 */
 void CPlayer::startChat(CPlayer* player)
 {
-    m_sPrint += "TECH GUY - Sorry this option is currently not available\n";
+    appendTechPrint("Sorry this option is currently not available\n");
     /*
     m_sPrint += "DRAMA - Du gehst auf " + player->getName() + " zu und räusperst dich... \n";
 
@@ -290,7 +311,7 @@ void CPlayer::changeRoom(string sIdentifier)
     
     //Print error message.
     else
-        m_sPrint += "Room not found.\n";
+        appendDescPrint("Room not found.\n");
 }
 
 /**
@@ -299,7 +320,7 @@ void CPlayer::changeRoom(string sIdentifier)
 */
 void CPlayer::changeRoom(CRoom* newRoom)
 {
-    m_sPrint += newRoom->showEntryDescription();
+    appendPrint(newRoom->showEntryDescription());
     m_lastRoom = m_room; 
     m_room = newRoom;
     m_vistited[m_room->getID()] = true;
@@ -381,11 +402,11 @@ void CPlayer::addAll()
 	    ++it;
     }
     if(sOutput == "")
-        m_sPrint += "PERZEPTION - Keine Items im Raum.\n";
+        appendErrorPrint("Keine Items im Raum.\n");
     else
     {
         sOutput.erase(sOutput.end() -2);
-        m_sPrint += "PERZEPTION - " + sOutput + " zu {name}'s Inventar hinzugefügt.\n";
+        appendDescPrint(sOutput + " zu {name}'s Inventar hinzugefügt.\n");
     }
 }
 
@@ -397,7 +418,7 @@ void CPlayer::addItem(CItem* item)
 {
     std::cout << "Adding item....\n";
     m_inventory.addItem(item);
-    m_sPrint += item->getName() + " added to " + m_sName + "'s inventory.\n";
+    appendDescPrint(item->getName() + " added to " + m_sName + "'s inventory.\n");
     m_room->getItems().erase(item->getID());
 }
 
@@ -407,7 +428,7 @@ void CPlayer::addItem(CItem* item)
 */
 void CPlayer::startTrade(std::string partner)
 {
-    m_sPrint += "Started to trade with " + partner + ".\n";
+    appendDescPrint("Started to trade with " + partner + ".\n");
 
     //Create trade-context and add to context-stack
     CEnhancedContext* context = new CEnhancedContext((std::string)"trade", {{"partner", partner}});
@@ -426,7 +447,7 @@ void CPlayer::printEquiped() {
         else str="empty handed as it seems.";
         return str;
     };
-    m_sPrint += func::table(m_equipment, getElem, "width:20%");
+    appendPrint(func::table(m_equipment, getElem, "width:20%"));
 }
 
 /**
@@ -440,28 +461,28 @@ void CPlayer::equipeItem(CItem* item, string sType)
     //If nothing is equipped in this category -> equip.
     if(m_equipment[sType] == NULL)
     {
-        m_sPrint += "PERZEPTION - Du hast " + item->getName() + " als " + sType + " ausgerüstet.\n";
+        appendDescPrint("Du hast " + item->getName() + " als " + sType + " ausgerüstet.\n");
         string sAttack = item->getAttack();
 
         //Check for new attack
         if(sAttack != "") {
             m_attacks[sAttack] = m_world->getAttack(sAttack);
-            m_sPrint += "PERZEPTION - Neue Attacke: \"" + m_attacks[sAttack]->getName() + "\".\n";
+            appendDescPrint("Neue Attacke: \"" + m_attacks[sAttack]->getName() + "\".\n");
         }
         m_equipment[sType] = item;
     }
 
     //If this item is already equipped -> print error message.
     else if(m_equipment[sType]->getID() == item->getID())
-        m_sPrint+= "PERZEPTION - " + sType + " bereits ausgerüstet.\n";
+        appendErrorPrint(sType + " bereits ausgerüstet.\n");
 
     //If another item is equipped in this category -> add choice-context
     else
     {
-        m_sPrint+="PERZEPTION - Bereits ein " + sType + " ausgerüstet. Austauschen? (yes/no)\n";
+        appendErrorPrint("Bereits ein " + sType + " ausgerüstet. Austauschen? (yes/no)\n");
 
         //Create Choice-Context
-        m_contextStack.insert(new CEnhancedContext((nlohmann::json){{"name", "equipe"}, {"permeable", false},{"error", "TECH GUY - Choose onl yes or no\n"},{"itemID", item->getID()},{"handlers",{{"yes",{ "h_choose_equipe"}},{"no",{"h_choose_equipe"}}}}}), 1, "equipe");
+        m_contextStack.insert(new CEnhancedContext((nlohmann::json){{"name", "equipe"}, {"permeable", false},{"error", "TECH GUY - Choose only yes or no\n"},{"itemID", item->getID()},{"handlers",{{"yes",{ "h_choose_equipe"}},{"no",{"h_choose_equipe"}}}}}), 1, "equipe");
     }
 }
 
@@ -471,11 +492,11 @@ void CPlayer::equipeItem(CItem* item, string sType)
 */
 void CPlayer::dequipeItem(string sType) {
     if(m_equipment.count(sType) == 0)
-        m_sPrint += "Nothing to dequipe.\n";
+        appendErrorPrint("Nothing to dequipe.\n");
     else if(m_equipment[sType] == NULL)
-        m_sPrint += "Nothing to dequipe.\n";
+        appendErrorPrint("Nothing to dequipe.\n");
     else {
-        m_sPrint += "PERZEPTION - " + sType + " " + m_equipment[sType]->getName() + " abgelegt.\n";
+        appendDescPrint(sType + " " + m_equipment[sType]->getName() + " abgelegt.\n");
 
         //Erase attack
         if(m_equipment[sType]->getAttack() != "")
@@ -511,7 +532,7 @@ void CPlayer::showQuests(bool solved)
 void CPlayer::setNewQuest(std::string sQuestID)
 {
     int ep=0;
-    m_sPrint += m_world->getQuest(sQuestID)->setActive(ep);
+    appendSuccPrint(m_world->getQuest(sQuestID)->setActive(ep));
     addEP(ep);
 }
 
@@ -523,7 +544,7 @@ void CPlayer::setNewQuest(std::string sQuestID)
 void CPlayer::questSolved(std::string sQuestID, std::string sStepID)
 {
     int ep=0;
-    m_sPrint+=m_world->getQuest(sQuestID)->getSteps()[sStepID]->solved(ep);
+    appendSuccPrint(m_world->getQuest(sQuestID)->getSteps()[sStepID]->solved(ep));
     addEP(ep);
 }
 
@@ -538,10 +559,9 @@ void CPlayer::addEP(int ep)
 {
     m_ep+=ep;
     size_t counter=0;
-    for(;m_ep>=20; m_ep-=20, counter++){
-        m_level++;
-        m_sPrint+= GREEN + "Level Up!" + WHITE + "\n";
-    }
+    for(;m_ep>=20; m_ep-=20, counter++, m_level++)
+        appendSuccPrint("Level Up!\n");
+
     if(counter > 0)
     {
         CEnhancedContext* context = m_contextStack.getContext("updateStats");
@@ -550,10 +570,10 @@ void CPlayer::addEP(int ep)
         else
         {
             context->setAttribute<int>("numPoints", context->getAttribute<int>("numPoints")+counter);
-            m_sPrint+= "Du hast " + std::to_string(context->getAttribute<int>("numPoints")) + " Punkte zu vergeben.\n";
+            m_sPrint+= "Du hast " + std::to_string(context->getAttribute<int>("numPoints")) + " Punkte zu vergeben!\n";
             for(size_t i=0; i<m_abbilities.size(); i++)
                 m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" + std::to_string(getStat(m_abbilities[i])) + ")\n";
-            m_sPrint += "Nummer oder Attribut wählen.\n";
+            m_sPrint += "Wähle eine Zahl geben den Namen des Attributes aus.\n";
         }
     }
 }
@@ -567,7 +587,7 @@ void CPlayer::updateStats(int numPoints)
     m_sPrint+= "Du hast " + std::to_string(numPoints) + " Punkte zu vergeben.\n";
 
     //Print attributes and level of each attribute and add choice-context.
-    std::string sError = "Nummer oder Attribut wählen.\n";
+    std::string sError = "Wähle eine Zahl oder den Namen des Attributes aus.\n";
     CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"name", "updateStats"}, {"permeable", false},{"numPoints", numPoints}, {"error", sError}});
 
     for(size_t i=0; i<m_abbilities.size(); i++)
@@ -728,7 +748,7 @@ void CPlayer::addSelectContest(std::map<std::string, std::string> mapObjects, st
 void CPlayer::printError(std::string sError)
 {
     std::cout << sError << std::endl;
-    appendPrint("Sorry, but something went wrong. Maybe try something else.\n");
+    appendTechPrint("Sorry, but something went wrong. Maybe try something else.\n");
 }
 
 
@@ -829,7 +849,7 @@ void CPlayer::t_highness()
 {
     if(m_stats["highness"]==0)
         return;
-    m_sPrint += "Time always comes to give you a hand; Things begin to become clearer again. Highness decreased by 1.\n";
+    appendStoryPrint("Time always comes to give you a hand; Things begin to become clearer again. Highness decreased by 1.\n");
     m_stats["highness"]--;
 
     if(m_stats["highness"]>0)

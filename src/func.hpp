@@ -123,8 +123,12 @@ namespace func
             sOutput.replace(sOutput.rfind(","), 2, " und ");
 
         //Erase last element (I don't now why this is necessary actually :D
-        //if(sOutput.back() == ' ')
-        //    sOutput.pop_back();
+        if(sOutput.back() == ' ')
+            sOutput.pop_back();
+
+        //Add dot at the end of text.
+        if(sOutput.size() > 1)
+            sOutput += ".";
 
         //Return string
         return sOutput;

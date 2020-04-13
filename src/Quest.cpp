@@ -41,7 +41,7 @@ std::string CQuest::setActive(int& ep) {
     m_active = true;
     m_questSteps.begin()->second->setActive(true);
 
-    std::string sOutput = Webcmd::set_color(Webcmd::color::GREEN)+ "New Quest: <b>" + m_sName + "</b>: <i>" + m_sDescription + "</i>" + Webcmd::set_color(Webcmd::color::WHITE) + "\n";
+    std::string sOutput = "New Quest: <b>" + m_sName + "</b>: <i>" + m_sDescription + "</i>\n";
 
     for(auto it : m_questSteps)
     {
@@ -87,11 +87,7 @@ std::string CQuest::checkSolved(int& ep)
     }
     m_solved=true;
     if(m_active == true)
-    {
-        ep=m_EP;
-        std::cout << "EP (checkSolved): " << ep << std::endl;
-        return Webcmd::set_color(Webcmd::color::GREEN) + "Quest "+ m_sName + " solved! + " + std::to_string(m_EP) + " EP\n" + Webcmd::set_color(Webcmd::color::WHITE);
-    }
+        return "Quest "+ m_sName + " solved! + " + std::to_string(m_EP) + " EP\n";
     else
         return "";
 }
@@ -169,6 +165,6 @@ std::string CQuestStep::handleSolved()
 {
     for(auto step : m_linkedSteps)
         m_quest->getSteps()[step]->setActive(true);
-    return Webcmd::set_color(Webcmd::color::GREEN) + m_sName + " Erfolgreich!\n" + Webcmd::set_color(Webcmd::color::WHITE);
+    return m_sName + " Erfolgreich!\n";
 }
 

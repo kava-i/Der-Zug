@@ -37,6 +37,7 @@ private:
     bool m_firstLogin;                          ///< Indicate whether this is the players first login.
     std::string m_sMode;                        ///< Print modes: "Prosa", "List" 
     string m_sPrint;
+    string m_sStorryTeller;                     ///< Person speaking general output.
 
     // *** Attributes concerning game world *** //
     CWorld* m_world;                            ///< Pointer to players world (all rooms, chars, etc.)
@@ -120,6 +121,11 @@ public:
 
     ///Append to current player output.
     void appendPrint(string newPrint);
+    void appendStoryPrint(std::string sPrint);
+    void appendDescPrint(std::string sPrint);
+    void appendErrorPrint(std::string sPrint);
+    void appendTechPrint(std::string sPrint);
+    void appendSuccPrint(std::string sPrint);
 
     ///Set player's world.
     void setWorld(CWorld* newWorld);

@@ -51,20 +51,18 @@ string CRoom::showDescription()
 
 string CRoom::showAll(std::string sMode)
 {
-    string sDesc = m_text->print()+ "\n";
-    sDesc+=showDetails(sMode);
-    sDesc+=showExits(sMode);
-    sDesc+=showCharacters(sMode);
-    sDesc+=showItems(sMode);
-    return sDesc;
+    return showExits(sMode)+" "+showCharacters(sMode)+" "+showItems(sMode)+" "+showDetails(sMode)+"\n";
 }
 
 string CRoom::showExits(std::string sMode)
 {
     if(sMode == "prosa")
     {
-        auto lamda = [](CExit* exit) {return exit->getPrep() + " " + exit->getName();};
-        return "PERZEPTION - Ah, hier geht es " + func::printProsa(m_exits,lamda) + ".\n";
+        auto lambda = [](CExit* exit) {return exit->getPrep() + " " + exit->getName();};
+        std::string sProsa = func::printProsa(m_exits, lambda);
+        if(sProsa != "")
+            return "Ah, hier geht es " + sProsa;
+        return "Der Raum hat keine Ausgänge.";
     }
     else
     {
@@ -78,9 +76,12 @@ string CRoom::showCharacters(std::string sMode)
     std::string sOutput = "";
     if(sMode == "prosa")
     {
-        sOutput = "PERZEPTION - Hier sind " + func::printProsa(m_characters) + ".\n";
+        if(func::printProsa(m_characters) != "")
+            sOutput = "Hier sind " + func::printProsa(m_characters);
         if(func::printProsa(m_players) != "")
-            sOutput += "Und außerdem noch "+ func::printProsa(m_players) + ".\n";
+            sOutput += "Und außerdem noch "+ func::printProsa(m_players);
+        if(sOutput == "")
+            sOutput = "In diesem Raum sind keine Personen.";
     }
     else
         sOutput = "Characters: \n" + func::printList(m_characters) + func::printList(m_players);
@@ -94,9 +95,19 @@ string CRoom::showItems(std::string sMode)
     auto condition = [](CItem* item) { return item->getHidden() != true; };
 
     if(sMode == "prosa")
-        return "PERZEPTION - Ah, hier sind folgende Gegenstände: " + func::printProsa(m_items, printing, condition) + ".\n";
+    {
+        std::string sProsa = func::printProsa(m_items, printing, condition);
+        if(sProsa != "")
+            return "Hier sind folgende Gegenstände: " + sProsa;
+    }
+
     else
-        return "Items: \n" + func::printList(m_items, printing, condition);
+    {
+        std::string sList = func::printList(m_items, printing, condition);
+        if(sList != "")
+            return "Items: \n" + sList;
+    }
+    return "Keine Gegenstände im Raum."; 
 } 
 
 string CRoom::showDetails(std::string sMode)
@@ -104,7 +115,7 @@ string CRoom::showDetails(std::string sMode)
     std::string details = "";
     auto lamda = [](CDetail* detail) { return detail->getName(); };
     if(sMode == "prosa") 
-        details += "PERZEPTION - Hier sind " + func::printProsa(m_details, lamda) + "\n";
+        details += "Hier sind " + func::printProsa(m_details, lamda);
     else 
         details += "Details:\n" + func::printList(m_details, lamda);
 
@@ -127,9 +138,9 @@ string CRoom::look(string sWhere, string sWhat, std::string sMode)
             {
                 std::string sItems = func::printProsa(detail.second->getItems());
                 if(sItems != "")
-                    sOutput += "PERZEPTION - In " + detail.second->getName() + " sind " + sItems + ".\n";
+                    sOutput += "In " + detail.second->getName() + " sind " + sItems + ".\n";
                 else
-                    sOutput = "PERZEPTION - Nichts gefunden.\n";
+                    sOutput = "Nichts gefunden.\n";
             }
             else
                 sOutput += detail.second->getName() + "\n" + func::printList(detail.second->getItems());

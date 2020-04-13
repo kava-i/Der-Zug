@@ -2,6 +2,7 @@
 #include "CPlayer.hpp"
 
 #define WHITE Webcmd::set_color(Webcmd::color::WHITE)
+#define WHITEDARK Webcmd::set_color(Webcmd::color::WHITEDARK)
 #define DARK Webcmd::set_color(Webcmd::color::DARK)
 
 CText::CText(nlohmann::json jAttributes, CPlayer* p)
@@ -82,16 +83,13 @@ std::string COutput::print(CPlayer* p)
     std::string sOutput = "";
     for(auto it=mUpdates.begin(); it!=mUpdates.end(); it++) {
         p->getMinds()[it->first].level += it->second;
-        sOutput += p->getMinds()[it->first].color + it->first + " updated!\n" + WHITE;
+        sOutput += p->getMinds()[it->first].color + it->first + " updated!" + WHITE + "\n";
     }
     mUpdates.clear();
 
     // *** Print text *** // 
+    std::string sExtra = "";
 
-    //No dependencies -> simple print
-    if(m_jDeps.size() == 0 && m_mind.first==nullptr)
-        return m_sSpeaker + " -  " + m_sText + "\n" + sOutput;
-    
     //Normal dependencies don't match -> return nothing
     if(p->checkDependencies(m_jDeps) == false)
         return "";
@@ -99,10 +97,10 @@ std::string COutput::print(CPlayer* p)
     //Mind dependencies -> check if they match -> print with "success" || return nothing
     if(m_mind.second != 0) {
         if(m_mind.first->level >= m_mind.second)
-            return m_sSpeaker + DARK + " (level " + std::to_string(m_mind.second) + ": Erfolg) - " + WHITE + m_sText + "\n" + sOutput;
+            sExtra = DARK + " (level " + std::to_string(m_mind.second) + ": Erfolg)" + WHITE;
         else
             return "";
     }
 
-    return m_sSpeaker + " - " + m_sText + "\n" + sOutput;
+    return "<div class='spoken'>" + m_sSpeaker + sExtra + " - " + WHITEDARK + m_sText + WHITE + sOutput + "</div>";
 }
