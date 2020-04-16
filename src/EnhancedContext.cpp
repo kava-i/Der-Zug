@@ -763,7 +763,7 @@ void CEnhancedContext::h_ticketverkaeufer(std::string& sIdentifier, CPlayer* p)
     if(p->getRoom()->getID() != "bahnhof_toiletten")
         return;
 
-    if(fuzzy::fuzzy_cmp("männer-toilette", sIdentifier) <= 0.2) {
+    if(sIdentifier == "bahnhof_maennerToilette" || fuzzy::fuzzy_cmp("männer-toilette", sIdentifier) <= 0.2) {
         p->questSolved(getAttribute<std::string>("questID"), "1ticketverkaeufer");
         m_eventmanager.erase("1ticketverkaeufer");
     }
