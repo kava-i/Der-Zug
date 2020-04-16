@@ -464,20 +464,11 @@ void CEnhancedContext::h_startDialog(std::string& sIdentifier, CPlayer* p)
 
     //Check if character was found
     if(character != "") 
-    {
-        std::cout << "Starting dialog.\n";
         p->startDialog(character);  
-    }
     else if(player != "") 
-    {
-        std::cout << "Starting chat.\n";
         p->startChat(p->getPlayer(player));
-    }
     else
-    {
-        std::cout << "Noting.\n";
         p->appendErrorPrint("Character not found");
-    }
 }
 
 void CEnhancedContext::h_take(std::string& sIdentifier, CPlayer* p) {
@@ -586,8 +577,8 @@ void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
 {
     p->throw_event("go to neben");
     p->throw_event("go to Toil");
-    p->throw_event("go to Männer");
-    p->throw_event("talk to ticket");
+    p->throw_event("go to Frauen");
+    p->throw_event("talk to beso");
 }
 
 

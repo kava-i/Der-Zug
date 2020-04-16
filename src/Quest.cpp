@@ -87,7 +87,10 @@ std::string CQuest::checkSolved(int& ep)
     }
     m_solved=true;
     if(m_active == true)
+    {
+        ep = m_EP;
         return "Quest "+ m_sName + " solved! + " + std::to_string(m_EP) + " EP\n";
+    }
     else
         return "";
 }

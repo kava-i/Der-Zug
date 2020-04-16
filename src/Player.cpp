@@ -331,7 +331,7 @@ void CPlayer::changeRoom(string sIdentifier)
     
     //Print error message.
     else
-        appendDescPrint("Room not found.\n");
+        appendErrorPrint("Room not found.\n");
 }
 
 /**
@@ -577,10 +577,13 @@ void CPlayer::questSolved(std::string sQuestID, std::string sStepID)
 */
 void CPlayer::addEP(int ep)
 {
+    std::cout << "Added ep: " << ep << "\n";
     m_ep+=ep;
+    std::cout << "EP: " << m_ep << std::endl;
     size_t counter=0;
     for(;m_ep>=20; m_ep-=20, counter++, m_level++)
         appendSuccPrint("Level Up!\n");
+    std::cout << "EP: " << m_ep << std::endl;
 
     if(counter > 0)
     {
