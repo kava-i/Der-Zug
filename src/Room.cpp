@@ -79,7 +79,7 @@ string CRoom::showCharacters(std::string sMode)
         if(func::printProsa(m_characters) != "")
             sOutput = "Hier sind " + func::printProsa(m_characters);
         if(func::printProsa(m_players) != "")
-            sOutput += "Und außerdem noch "+ func::printProsa(m_players);
+            sOutput += " Und außerdem noch "+ func::printProsa(m_players);
         if(sOutput == "")
             sOutput = "In diesem Raum sind keine Personen.";
     }

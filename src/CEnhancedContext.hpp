@@ -1,4 +1,4 @@
-#ifndef CENHANCEDCONTEXT_H
+#ifndef CENHANCEDCONTEXT_H 
 #define CENHANCEDCONTEXT_H
 
 #include <iostream>
@@ -74,7 +74,7 @@ public:
 
     // *** Throw events *** //
     void add_listener(std::string sID, std::string sEventType, size_t priority=0);
-    void add_listener(std::string sID, std::regex eventType, size_t priority=0);
+    void add_listener(std::string sID, std::regex eventType, int pos, size_t priority=0);
     void add_listener(std::string sID, std::vector<std::string> eventType, size_t priority=0);
     void add_listener(std::string sID, std::map<std::string, std::string> eventType, size_t priority=0);
 
@@ -115,6 +115,7 @@ public:
     void h_startDialog      (std::string&, CPlayer*);
     void h_changeMode       (std::string&, CPlayer*);
     void h_try(std::string&, CPlayer*);                 ///< PRogrammer function for testing
+    void h_test(std::string&, CPlayer*);
 
     //Rooms
     void h_firstZombieAttack (std::string&, CPlayer*);
@@ -141,8 +142,8 @@ public:
     void h_exit(std::string&, CPlayer*);
 
     // *** CHATCONTEXT *** //
-    void h_send(std::string&, CPlayer*) {}
-    void h_end(std::string&, CPlayer*) {};
+    void h_send(std::string&, CPlayer*);
+    void h_end(std::string&, CPlayer*);
 
     // *** QUESTS *** //
     void initializeQuestListeners(std::map<std::string, std::string> handler);

@@ -55,7 +55,13 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks) : CPerson(
 
     //Add eventhandler to eventmanager
     m_contextStack.insert(new CEnhancedContext((std::string)"world"), 2, "world");
-    m_contextStack.insert(new CEnhancedContext((std::string)"standard"), 0, "standard");
+    
+    CEnhancedContext* context = new CEnhancedContext((std::string)"standard");
+    std::regex reg("spreche mit (.*)");
+    context->add_listener("h_startDialog", reg, 1);
+    std::regex reg2("spreche (.*) an");
+    context->add_listener("h_startDialog", reg2, 1, 1);
+    m_contextStack.insert(context, 0, "standard");
 }
 
 CPlayer::~CPlayer()
@@ -116,6 +122,12 @@ CContextStack<CEnhancedContext>& CPlayer::getContexts() {
     return m_contextStack; 
 }
 
+//Return map of players
+std::map<std::string, CPlayer*>& CPlayer::getMapOFOnlinePlayers()
+{
+    return m_players;
+}
+
 // *** SETTER *** // 
 
 ///Set first login.
@@ -146,12 +158,20 @@ void CPlayer::appendErrorPrint(string sPrint) {
 }
 
 void CPlayer::appendTechPrint(string sPrint) {
-    m_sPrint += "<div class='spoken'>TECH GUY - " + WHITEDARK + sPrint + "</div>";
+    m_sPrint += "<div class='spoken'>TECH GUY - " + WHITEDARK + sPrint + WHITE + "</div>";
 }
 
+void CPlayer::appendSpeackerPrint(std::string sSpeaker, std::string sPrint) {
+    m_sPrint += "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
+}
+
+std::string CPlayer::returnSpeakerPrint(std::string sSpeaker, std::string sPrint) {
+    return "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
+}
 void CPlayer::appendSuccPrint(string sPrint) {
     m_sPrint += GREEN + sPrint + WHITE;
 }
+
 
 ///Set player's world.
 void CPlayer::setWorld(CWorld* newWorld) { 
@@ -243,21 +263,21 @@ void CPlayer::startDialog(string sCharacter)
 void CPlayer::startChat(CPlayer* player)
 {
     appendTechPrint("Sorry this option is currently not available\n");
-    /*
-    m_sPrint += "DRAMA - Du gehst auf " + player->getName() + " zu und räusperst dich... \n";
+    appendStoryPrint("Du gehst auf " + player->getName() + " zu und räusperst dich... \n");
 
     if(player->getContexts().nonPermeableContextInList() == true)
-        m_sPrint += "\nTECH GUY - " + player->getName() + " ist zur Zeit beschäftigt.\n"; 
+        appendTechPrint(player->getName() + " ist zur Zeit beschäftigt.\n");
     else
     {
         //Add Chat context for both players
-        m_contextStack.insert(new CChatContext(player), 1, "chat");
-        player->getContexts().insert(new CChatContext(this), 1, "chat");
+        addChatContext(player->getID());
+        player->addChatContext(m_sID);
         
         //Send text by throwing event
         throw_event("Hey " + player->getName() + ".");
-    }*/
+    }
 }
+
 
 /**
 * Direct print of message to web-console. Used when chatting and usually call in chat-context
@@ -713,12 +733,17 @@ string CPlayer::doLogin(string sName, string sPassword)
 */
 CPlayer* CPlayer::getPlayer(string sIdentifier)
 {
-    for(auto it : m_players)
-    {
-        if(fuzzy::fuzzy_cmp(it.second->getName(), sIdentifier) <= 0.2)
-            return it.second;
-    }
-    return NULL;
+    //Try to get player's id by using function from func.hpp
+    auto lambda = [](CPlayer* player) { return player->getName(); };
+    std::string sPlayerID = func::getObjectId(m_players, sIdentifier, lambda);
+
+    //Check if player's id could be retrieved.
+    if(sPlayerID != "")
+        return m_players[sPlayerID];
+
+    //If not, print error message on console and for player and return null-pointer.
+    printError("FATAL ERROR!!! Player accessed that does not exist: " + sIdentifier);
+    return nullptr;
 }
 
 /**
@@ -739,6 +764,18 @@ void CPlayer::addSelectContest(std::map<std::string, std::string> mapObjects, st
     
     //Insert context into context-stack.
     m_contextStack.insert(context, 1, "select");
+}
+
+/**
+* Add chat context.
+* @param sPlayer (chat partner (other player))
+*/
+void CPlayer::addChatContext(std::string sPartner)
+{
+    CEnhancedContext* context = new CEnhancedContext("chat", {{"partner", sPartner}});
+    std::regex reg("(.*)");
+    context->add_listener("h_send", reg, 1);
+    m_contextStack.insert(context, 1, "chat");
 }
 
 /**

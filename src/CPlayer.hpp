@@ -109,6 +109,9 @@ public:
 
     //Return players context-stack 
     CContextStack<CEnhancedContext>& getContexts();
+
+    //Return map of players
+    std::map<std::string, CPlayer*>& getMapOFOnlinePlayers();
  
 
     // *** SETTER *** //
@@ -125,6 +128,8 @@ public:
     void appendDescPrint(std::string sPrint);
     void appendErrorPrint(std::string sPrint);
     void appendTechPrint(std::string sPrint);
+    void appendSpeackerPrint(std::string sSpeaker, std::string sPrint);
+    std::string returnSpeakerPrint(std::string sSpeaker, std::string sPrint);
     void appendSuccPrint(std::string sPrint);
 
     ///Set player's world.
@@ -172,6 +177,12 @@ public:
     * context-stack and throw event 'Hey + player-name'.
     */
     void startChat(CPlayer* sPlayer);
+
+    /**
+    * Add chat context.
+    * @param sPlayer (chat partner (other player))
+    */
+    void addChatContext(std::string sPartner);
 
     /**
     * Direct print of message to web-console. Used when chatting and usually call in chat-context

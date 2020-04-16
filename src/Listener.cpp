@@ -8,10 +8,11 @@ CListener::CListener(std::string id, std::string sEventType)
     m_check_function = &CListener::stringCompare;
 }
     
-CListener::CListener(std::string id, std::regex eventType)
+CListener::CListener(std::string id, std::regex eventType, int pos)
 {
     m_id = id;
     m_regexEventType = eventType;
+    m_pos = pos;
     m_check_function = &CListener::regexCompare;
 }
 
@@ -48,8 +49,8 @@ std::string CListener::getID() {
 * @param[in] sEventType (event-type thrown)
 * @return whether this listener pick up thrown on event.
 */
-bool CListener::checkMatch(std::string sEventType) {
-    return (this->*m_check_function)(sEventType);
+bool CListener::checkMatch(event& e) {
+    return (this->*m_check_function)(e);
 }
 
 /**
@@ -57,8 +58,8 @@ bool CListener::checkMatch(std::string sEventType) {
 * param[in] sEventType (event-type thrown)
 * @return whether this listener picks up on thrown event.
 */
-bool CListener::stringCompare(std::string sEventType) {
-    return sEventType == m_stringEventType;
+bool CListener::stringCompare(event& e) {
+    return e.first == m_stringEventType;
 }
 
 /**
@@ -66,8 +67,16 @@ bool CListener::stringCompare(std::string sEventType) {
 * @param[in] sEventType (event-type thrown)
 * @return whether this listener picks up on thrown event.
 */
-bool CListener::regexCompare(std::string sEventType) {
-    return std::regex_match(sEventType, m_regexEventType);    
+bool CListener::regexCompare(event& e) {
+    std::string str = e.first + " " + e.second;
+    std::cout << "Comparing regex: " << str << std::endl;
+    std::smatch m;
+    if(std::regex_match(str, m, m_regexEventType))
+    {
+        e.second = m[m_pos];
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -75,10 +84,10 @@ bool CListener::regexCompare(std::string sEventType) {
 * @param[in] sEventType (event-type thrown)
 * @return whether this listener picks up on thrown event.
 */
-bool CListener::inVector(std::string sEventType) {
-    if(std::isdigit(sEventType[0]) && stoul(sEventType, nullptr, 0) <= m_arrayEventType.size() && stoul(sEventType, nullptr, 0) > 0)
+bool CListener::inVector(event& e) {
+    if(std::isdigit(e.first[0]) && stoul(e.first, nullptr, 0) <= m_arrayEventType.size() && stoul(e.first, nullptr, 0) > 0)
         return true;
-    return func::inArray(m_arrayEventType, sEventType);
+    return func::inArray(m_arrayEventType, e.first);
 }
 
 /**
@@ -87,6 +96,6 @@ bool CListener::inVector(std::string sEventType) {
 * @param[in] sEventType (event-type thrown)
 * @return whether this listener picks up on thrown event.
 */
-bool CListener::inMap(std::string sEventType) {
-    return func::getObjectId(m_mapEventType, sEventType) != "";
+bool CListener::inMap(event& e) {
+    return func::getObjectId(m_mapEventType, e.first) != "";
 }

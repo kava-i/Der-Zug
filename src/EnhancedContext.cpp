@@ -123,6 +123,8 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_exitTrainstation"] = &CEnhancedContext::h_exitTrainstation;
     m_handlers["h_startTutorial"] = &CEnhancedContext::h_startTutorial;
 
+    m_handlers["h_test"] = &CEnhancedContext::h_test;
+
     // *** FIGHT CONTEXT *** //
     m_handlers["h_fight"] = &CEnhancedContext::h_fight;
     m_handlers["h_fight_show"] = &CEnhancedContext::h_fight_show;
@@ -213,6 +215,11 @@ void CEnhancedContext::initializeTemplates()
                         {"sell",{"h_sell"}},
                         {"exit",{"h_exit"}}}}
                     };
+    m_templates["chat"] = {
+                    {"name", "chat"}, {"permeable", false}, {"help","chat.txt"},
+                    {"handlers",{
+                        {"[end]",{"h_end"}}}}
+                    };
 }
 
 // ***** ***** FUNCTIONS ***** ****** // 
@@ -222,9 +229,9 @@ void CEnhancedContext::add_listener(std::string sID, std::string sEventType, siz
     m_eventmanager.insert(new CListener(sID, sEventType), priority, sID);
 }
 
-void CEnhancedContext::add_listener(std::string sID, std::regex eventType, size_t priority)
+void CEnhancedContext::add_listener(std::string sID, std::regex eventType, int pos, size_t priority)
 {
-    m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
+    m_eventmanager.insert(new CListener(sID, eventType, pos), priority, sID);
 }
 
 void CEnhancedContext::add_listener(std::string sID, std::vector<std::string> eventType, size_t priority)
@@ -248,7 +255,7 @@ bool CEnhancedContext::throw_event(event e, CPlayer* p)
     std::reverse(sortedEventmanager.begin(), sortedEventmanager.end());
     for(size_t i=0; i<sortedEventmanager.size() && m_block == false; i++)
     {
-        if(sortedEventmanager[i]->checkMatch(e.first) == true) {
+        if(sortedEventmanager[i]->checkMatch(e) == true) {
             if(m_handlers.count(sortedEventmanager[i]->getID()) > 0)
                 (this->*m_handlers[sortedEventmanager[i]->getID()])(e.second, p);
             else
@@ -445,17 +452,29 @@ void CEnhancedContext::h_goTo(std::string& sIdentifier, CPlayer* p) {
 
 void CEnhancedContext::h_startDialog(std::string& sIdentifier, CPlayer* p)
 {
+    std::cout << "h_startDialog, " << sIdentifier << std::endl;
+
     //Get selected character
     std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier);
-    CPlayer* player = p->getPlayer(sIdentifier);
+    auto lambda = [](CPlayer* player) { return player->getName(); };
+    std::string player = func::getObjectId(p->getMapOFOnlinePlayers(), sIdentifier, lambda);
 
     //Check if character was found
     if(character != "") 
-        p->startDialog(character);
-    else if(player != NULL) 
-        p->startChat(player);
+    {
+        std::cout << "Starting dialog.\n";
+        p->startDialog(character);  
+    }
+    else if(player != "") 
+    {
+        std::cout << "Starting chat.\n";
+        p->startChat(p->getPlayer(player));
+    }
     else
+    {
+        std::cout << "Noting.\n";
         p->appendErrorPrint("Character not found");
+    }
 }
 
 void CEnhancedContext::h_take(std::string& sIdentifier, CPlayer* p) {
@@ -509,6 +528,11 @@ void CEnhancedContext::h_examine(std::string &sIdentifier, CPlayer*p) {
 
 void CEnhancedContext::h_changeMode(std::string& sIdentifier, CPlayer* p) {
     p->changeMode();
+}
+
+void CEnhancedContext::h_test(std::string& sIdentifier, CPlayer* p) {
+    std::cout << "h_test, " << sIdentifier << std::endl;
+    p->appendPrint(sIdentifier);
 }
 
 
@@ -688,6 +712,34 @@ void CEnhancedContext::h_exit(std::string&, CPlayer* p)
     p->getContexts().erase("dialog");
     p->startDialog(partner->getID());
 }
+
+// ***** ***** CHAT CONTEXT ***** ***** //
+void CEnhancedContext::h_send(string& sInput, CPlayer* p)
+{
+    CPlayer* chatPartner = p->getPlayer(getAttribute<std::string>("partner"));
+    std::cout << "... sending.\n";
+    chatPartner->send(p->returnSpeakerPrint(func::returnToUpper(p->getName()), sInput + "\n"));
+    p->appendSpeackerPrint("YOU", sInput + "\n");
+}
+
+void CEnhancedContext::h_end(string& sMessage, CPlayer* p)
+{
+    CPlayer* chatPartner = p->getPlayer(getAttribute<std::string>("partner"));
+    if(sMessage == "[end]")
+        chatPartner->send("[Gespräch beendet].\n");
+    else
+    {
+        chatPartner->send(p->returnSpeakerPrint(func::returnToUpper(p->getName()), sMessage));
+        chatPartner->send("[Gespräch beendet].\n");
+    }
+
+    chatPartner->getContexts().erase("chat");
+
+    p->appendPrint("Gespräch mit " + chatPartner->getName() + " beendet.\n");
+    p->getContexts().erase("chat");
+    m_block = true; 
+}
+
 
 // ***** ***** QUEST CONTEXT ***** ***** //
 
