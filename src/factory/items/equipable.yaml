@@ -6,12 +6,12 @@
   attack: stick_smack
   value: 5
   description: 
-    - "PERZEPTION;A wooden stick hard enough to course some pain."
+    - {speaker: PERZEPTION, text: "A wooden stick hard enough to course some pain."}
 
 - name: Basic Sword
   id: basic_sword
   type: equipe_weapon
   value: 30
   description: 
-    - "PERZEPTION;A basic sword, just what you would expect."
+    - {speaker: PERZEPTION, text: "A basic sword, just what you would expect."}
 

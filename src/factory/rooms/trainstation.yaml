@@ -3,8 +3,8 @@
 - name: "Eingangshalle"
   id: bahnhof_eingangshalle
   description: 
-    - PERZEPTION;Die Eingangshalle des sog. \"Moskauer Bahnhofs\" in Sankt Petersburg ist ein eindrucksvolles Gebilde. Tausende Passanten wandern umher, es herscht Trubel und Lärm und dazu glänzt die architektonische Meisterleistung eines Konstantin Thron von allen Seiten auf einen herab. Nach Norden geht es zu den Gleisen, im Süden liegt der Ausgang und nach Osten geht es zu einer Nebenhalle.
-    - 'PERZEPTION_1;Drei Passanten stehen merkwürdig gekleidet in einer Ecke der Eingangshalle nahe den Gleisen und deuten wild umher.;{};{"perzeption":1}'
+    - {speaker: PERZEPTION, text: "Die Eingangshalle des sog. \"Moskauer Bahnhofs\" in Sankt Petersburg ist ein eindrucksvolles Gebilde. Tausende Passanten wandern umher, es herscht Trubel und Lärm und dazu glänzt die architektonische Meisterleistung eines Konstantin Thron von allen Seiten auf einen herab. Nach Norden geht es zu den Gleisen, im Süden liegt der Ausgang und nach Osten geht es zu einer Nebenhalle."}
+    - {speaker: PERZEPTION, text: "Drei Passanten stehen merkwürdig gekleidet in einer Ecke der Eingangshalle nahe den Gleisen und deuten wild umher.", mind: 1, update:{mind: perzeption;1}}
   exits:
     bahnhof_fernzüge: {name: Fernzügen, prep: zu den}
     bahnhof_nebenhalle: {name: Nebenhalle, prep: zur }
@@ -29,7 +29,7 @@
     - name: Small box
       id: trainstation_small-box
       description: 
-        - "PERZEPTION;A small wooden box stands in the left corner of the room."
+        - {speaker: PERZEPTION, text: "A small wooden box stands in the left corner of the room."}
       look: in
       items:
         basic_wine: Wine
@@ -41,7 +41,7 @@
 - name: Fernzüge 
   id: bahnhof_fernzüge
   description: 
-    - PERZEPTION;Hier ist der Lärm Ohrenbetäubend, die Dampflokomotiven haben den ganzen bereich vernebelt. Schwitzige, ölbeschmierte Arbeiter reparieren notdürftig Züge, reiche Familien rennen in aufwändigen Gewändern ihren Packburschen davon, es herscht wildes Treiben. Richtung Noden liegen die Gleise des Bahnhofs, nach Süden geht es zurück zur Eingangshalle
+    - {speaker: PERZEPTION, text: "Hier ist der Lärm Ohrenbetäubend, die Dampflokomotiven haben den ganzen bereich vernebelt. Schwitzige, ölbeschmierte Arbeiter reparieren notdürftig Züge, reiche Familien rennen in aufwändigen Gewändern ihren Packburschen davon, es herscht wildes Treiben. Richtung Noden liegen die Gleise des Bahnhofs, nach Süden geht es zurück zur Eingangshalle"}
   exits:
     gleis1: { name: "Gleis 1", prep: zu}
     gleis2: { name: "Gleis 2", prep: zu}
@@ -53,8 +53,8 @@
 - name: Nebenhalle
   id: bahnhof_nebenhalle 
   description: 
-    - PERZEPTION;Hier ist es etwas ruhiger und leerer. Aber die Personen hier kommen dir unheimlicher und auch sonderbarer vor. Ah und hier sind auch die Toiletten.
-    - "PERZEPTION;Wieder stehen drei Passanten merkwürdig gekleidet in einer Ecke im Norden-Westen und deuten wild umher."
+    - {speaker: PERZEPTION, text: "Hier ist es etwas ruhiger und leerer. Aber die Personen hier kommen dir unheimlicher und auch sonderbarer vor. Ah und hier sind auch die Toiletten."}
+    - {speaker: PERZEPTION, text: "Wieder stehen drei Passanten merkwürdig gekleidet in einer Ecke im Norden-Westen und deuten wild umher."}
   exits:
     bahnhof_eingangshalle: { name: Eingangshalle, prep: zur}
     bahnhof_toiletten: { name: Toiletten, prep: zu den}
@@ -63,7 +63,7 @@
       id: konstantin_thron
       dialog: konstantinDialog
       description:
-      - "PERZEPTION;Herr Thron wirkt etwas eingebildet."
+      - {speaker: PERZEPTION, text: "Herr Thron wirkt etwas eingebildet."}
       items:
         basic_cigaretts: { }
         basic_wine: { }
@@ -80,7 +80,7 @@
 - name: Ausgang
   id: ausgang
   description:
-  - PERZEPTION;You have left this world
+  - {speaker: PERZEPTION, text: "You have left this world"}
   exits:
     bahnhof_eingangshalle: { name: Eingangshalle }
   characters:
@@ -88,7 +88,7 @@
 - name: Toiletten
   id: bahnhof_toiletten 
   description: 
-    - PERZEPTION;Versifte Toiletten, aber endlich Ruhe, hier scheint niemand zu sein. Zwei Türen führen zu den Männer- bzw. Frauentoiletten. Im Westen geht es zurück ins Nebengebäude.
+    - {speaker: PERZEPTION, text: "Versifte Toiletten, aber endlich Ruhe, hier scheint niemand zu sein. Zwei Türen führen zu den Männer- bzw. Frauentoiletten. Im Westen geht es zurück ins Nebengebäude."}
   exits:
     bahnhof_maennerToilette: { name: Männer-Toilette, prep: zur}
     bahnhof_frauenToilette: { name: Frauen-Toilette, prep: zur}
@@ -98,7 +98,7 @@
 - name: Männer-Toilette
   id: bahnhof_maennerToilette
   description: 
-    - PERZEPTION;Die Männertoilette, sie ist erstaunlich sauber, in einer Ecke liegen einige zerdrückte Kippenstummel, aber es riecht nicht nach Rauch.
+    - {speaker: PERZEPTION, text: "Die Männertoilette, sie ist erstaunlich sauber, in einer Ecke liegen einige zerdrückte Kippenstummel, aber es riecht nicht nach Rauch."}
   exits:
     bahnhof_toiletten: { name: Vorraum, prep: zurück zum }
   characters:
@@ -109,8 +109,8 @@
 - name: Frauen-Toilette
   id: bahnhof_frauenToilette
   description: 
-    - "PERZEPTION;Die Frauentoilette:  es stinkt nach Alkohol, Kippen und Sex. Der Boden ist voller Alkohol und Glasscherben."
-    - "PERZEPTION;Eine besoffene Frau schnarcht laut auf der Toilette. Die Tür steht offen. Dich beschleicht der Gedanke, dass sie für das Chaos, den Geruch und die Scherben verantwortlich ist."
+    - {speaker: PERZEPTION, text: "Die Frauentoilette:  es stinkt nach Alkohol, Kippen und Sex. Der Boden ist voller Alkohol und Glasscherben."}
+    - {speaker: PERZEPTION, text: Eine besoffene Frau schnarcht laut auf der Toilette. Die Tür steht offen. Dich beschleicht der Gedanke, dass sie für das Chaos, den Geruch und die Scherben verantwortlich ist."}
   exits:
     bahnhof_toiletten: { name: Vorraum, prep: zurück zum }
   characters:
@@ -127,7 +127,7 @@
 - name: "Gleis 1"
   id: gleis1
   description: 
-    - PERZEPTION;Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst.
+    - {speaker: PERZEPTION, text: "Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst."}
   exits: 
     bahnhof_fernzüge: { name: Zurück zu den Gleisen/ Fernzügen }
   characters:
@@ -135,7 +135,7 @@
 - name: "Gleis 2"
   id: gleis2
   description: 
-    - PERZEPTION;Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst.
+    - {speaker: PERZEPTION, text: "Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst."}
   exits: 
     bahnhof_fernzüge: { name: Zurück zu den Gleisen/ Fernzügen }
   characters:
@@ -143,7 +143,7 @@
 - name: "Gleis 3"
   id: gleis3
   description: 
-    - PERZEPTION;Ah, Gleis 3. Hier fährt dein Zug nach Moskau. Es ist selbstsam leer.
+    - {speaker: PERZEPTION, text: "Ah, Gleis 3. Hier fährt dein Zug nach Moskau. Es ist selbstsam leer."}
   exits: 
     bahnhof_fernzüge: { name: Zurück zu den Gleisen/ Fernzügen }
   characters:
@@ -151,7 +151,7 @@
 - name: "Gleis 4"
   id: gleis4
   description: 
-    - PERZEPTION;Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst.
+    - {speaker: PERZEPTION, text: "Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst."}
   exits: 
     bahnhof_fernzüge: { name: Zurück zu den Gleisen/ Fernzügen }
   characters:
@@ -159,8 +159,8 @@
 - name: "Gleis 5"
   id: gleis5
   description: 
-    - PERZEPTION;Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst.
-    - PERZEPTION;Wieder stehen drei Passanten merkwürdig gekleidet in einer Ecke und deuten wild umher.
+    - {speaker: PERZEPTION, text: "Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst."}
+    - {speaker: PERZEPTION, text: "Wieder stehen drei Passanten merkwürdig gekleidet in einer Ecke und deuten wild umher."}
   exits: 
     bahnhof_fernzüge: { name: Zurück zu den Gleisen/ Fernzügen}
   characters:

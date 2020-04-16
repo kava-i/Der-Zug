@@ -27,18 +27,16 @@ class COutput
 private:
     std::string m_sSpeaker;
     std::string m_sText;
-    nlohmann::json m_jDeps;
-    std::map<std::string, int> mUpdates;
-
-    std::pair<SMind*, int> m_mind;
+    nlohmann::json m_jAbillities;
+    int m_mind;
+    std::map<std::string, std::string> mUpdates;
 
 public:
-    COutput(std::string sAtts, CPlayer*);
+    COutput(nlohmann::json jAttributes, CPlayer*);
 
     // *** getter *** //
     std::string getText();
     std::string getSpeaker();
-    nlohmann::json getDeps();
 
     std::string print(CPlayer* p);
 };

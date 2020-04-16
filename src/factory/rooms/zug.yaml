@@ -3,7 +3,7 @@
  - name: "Compartment A"
    id: compartment-a
    description: 
-    - "PERZEPTION;The compartment is empty. Empty, but one mysterious passenger: Parsen."
+    - {speaker: PERZEPTION, text: "The compartment is empty. Empty, but one mysterious passenger: Parsen."}
    entry: "You enter your appartment.\n"
    exits:
      trainCorridor: { name: Korridor, prep: zum}
@@ -20,7 +20,7 @@
  - name: "Compartment B"
    id: compartment-b
    description: 
-    - PERZEPTION;Another compartment. Two grumpy women are sitting together, playing cards.
+    - {speaker: PERZEPTION, text: "Another compartment. Two grumpy women are sitting together, playing cards."}
    exits:
      trainCorridor: { name: Korridor, prep: zum}
    characters:
@@ -32,7 +32,7 @@
  - name: "Compartment C"
    id: compartment-c
    description: 
-    - PERZEPTION;An empty compartment.
+    - {speaker: PERZEPTION, text: "An empty compartment."}
    exits:
      trainCorridor: { name: Korridor, prep: zum}
    characters:
@@ -40,7 +40,7 @@
  - name: "Compartment D"
    id: compartment-d
    description: 
-    - PERZEPTION;An empty compartment. Its cold here
+    - {speaker: PERZEPTION, text: "An empty compartment. Its cold here"}
    exits:
      trainCorridor: { name: Korridor, prep: zum }
    characters:
@@ -48,7 +48,7 @@
  - name: "Corridor"
    id: trainCorridor
    description: 
-    - PERZEPTION;The corridor feels empty and silent. Red carbet is flushing the floor. And the other compartments are wispering in their oldfashioned skin.
+    - {speaker: PERZEPTION, text: "The corridor feels empty and silent. Red carbet is flushing the floor. And the other compartments are wispering in their oldfashioned skin."}
    entry: "You leave the compartment and enter the corridor of the train.\n"
    exits: 
      compartment-a: { name: Compartment A, prep: zum }
@@ -58,7 +58,7 @@
    characters:
      - name: "Pissing man"
        description: 
-       - "PERZEPTION;A man is standing shy between compartment B and C and seems to be having a piss.\n"
+       - {speaker: PERZEPTION, text: "A man is standing shy between compartment B and C and seems to be having a piss.\n"}
        id: pissing_man
        dialog: pissingManDialog
    

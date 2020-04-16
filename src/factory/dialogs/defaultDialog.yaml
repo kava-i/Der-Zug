@@ -1,4 +1,4 @@
 ---
 - id: START
   text: 
-  - "LOGIK;This is very boring. Nobody wants to talk man!"
+  - {speaker: LOGIK, text: "AThis is very boring. Nobody wants to talk man!"}

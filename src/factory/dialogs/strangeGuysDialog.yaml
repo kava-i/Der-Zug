@@ -1,7 +1,7 @@
 ---
 - id: START
   text: 
-  - "PERZEPTION;Die drei merkwürdigen Passanten ignorieren dich vollkommen und zeigen weiter wild durch die Gegend."
+  - {speaker: PERZEPTION, text: "Die drei merkwürdigen Passanten ignorieren dich vollkommen und zeigen weiter wild durch die Gegend."}
   options:
     1: "Verehrte Herren? Ich bin auf der Suche nach jemandem, könnt ihr mir vielleicht...?;{};verrückt"
     2: "Dialog beenden.;{};ende"
@@ -9,8 +9,8 @@
 
 - id: verrückt
   text: 
-  - "PERZEPTION;Sie ignorieren dich weiter. Du beschließt sie für verrückt zu halten."
+  - {speaker: PERZEPTION, text: "Sie ignorieren dich weiter. Du beschließt sie für verrückt zu halten."}
 
 - id: ende
   text: 
-  - "DRAMA;Du schüttelst deinen Kopf und gehst."
+  - {speaker: DRAMA, text: "Du schüttelst deinen Kopf und gehst."}

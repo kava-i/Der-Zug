@@ -90,6 +90,9 @@ void CEnhancedContext::setErrorFunction(void(CEnhancedContext::*func)(CPlayer* p
 // ***** ***** INITIALIZERS ***** ***** //
 void CEnhancedContext::initializeHanlders()
 {
+    // ***** GENERAL STUFF ***** //
+    m_handlers["h_help"] = &CEnhancedContext::h_help;
+
     // ***** GAME CONTEXT ***** //
     m_handlers["h_reloadGame"] = &CEnhancedContext::h_reloadGame;
     m_handlers["h_reloadPlayer"] = &CEnhancedContext::h_reloadPlayer;
@@ -301,7 +304,7 @@ void CEnhancedContext::h_help(std::string &sIdentifier, CPlayer* p)
                     std::istreambuf_iterator<char>());
         p->appendPrint("\n<b>Help: </b>\n" + str);
     }
-    else
+    else if(m_permeable == false)
         p->appendTechPrint("No help for this context, sorry.\n");
 }
 
@@ -417,7 +420,7 @@ void CEnhancedContext::h_show(std::string& sIdentifier, CPlayer* p) {
     else if(sIdentifier == "details")
         p->appendDescPrint(p->getRoom()->showDetails(p->getMode()) + "\n");
     else if(sIdentifier == "inventory")
-        p->appendDescPrint(p->getInventory().printInventory());
+        p->appendPrint(p->getInventory().printInventory());
     else if(sIdentifier == "equiped")
         p->printEquiped();
     else if(sIdentifier == "quests")

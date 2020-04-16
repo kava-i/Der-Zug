@@ -27,44 +27,16 @@ std::string CText::print()
 }
 
     
-COutput::COutput(std::string sAtts, CPlayer* p)
+COutput::COutput(nlohmann::json jAttributes, CPlayer* p)
 {
-    if(sAtts == "[]")
-    {
-        m_sSpeaker = "";
-        m_sText = "";
-        return;
-    }
+    m_sSpeaker = jAttributes.value("speaker", "");
+    m_sText = jAttributes.value("text", "") + "$";
+    m_mind = jAttributes.value("mind", -1);
 
-    std::vector<std::string> atts = func::split(sAtts, ";");
-    m_sSpeaker = atts[0];
-    m_sText = atts[1] + "$";
-
-    if(atts.size()>2)
-        m_jDeps = nlohmann::json::parse(atts[2]);
-    if(atts.size()>3) {
-        nlohmann::json j = nlohmann::json::parse(atts[3]);
-        mUpdates = j.get<std::map<std::string, int>>();
-    }
-
-    if(p == NULL)
-        return;
-
-    //check for "_" in speaker -> speaker is mind and has a depenency
-    std::vector<std::string> mind_val = func::split(m_sSpeaker, "_");
-    if(mind_val.size() > 1)
-    {
-        m_sSpeaker = mind_val[0];
-        m_mind = std::make_pair(&p->getMinds()[func::returnToLower(m_sSpeaker)], (int)mind_val[1][0] - 48);
-    }
-    //Check if speaker is mind
-    else if(p->getMinds().count(func::returnToLower(m_sSpeaker)) > 0)
-        m_mind = std::make_pair(&p->getMinds()[func::returnToLower(m_sSpeaker)], 0);
-    else
-        m_mind = std::make_pair(nullptr, 0);
-
-    if(m_mind.first != nullptr)
-        m_sSpeaker = m_mind.first->color + m_sSpeaker + WHITE;
+    if(jAttributes.count("deps") > 0)
+        m_jAbillities = jAttributes["abilities"];
+    if(jAttributes.count("update") > 0)
+        mUpdates = jAttributes["update"].get<std::map<std::string, std::string>>();
 }
 
 std::string COutput::getSpeaker() {
@@ -73,34 +45,35 @@ std::string COutput::getSpeaker() {
 std::string COutput::getText() {
     return m_sText;
 }
-nlohmann::json COutput::getDeps() {
-    return m_jDeps;
-}
 
 std::string COutput::print(CPlayer* p)
 {
+    std::string sUpdated = "";
+    std::string sSuccess = "";
+
+    //Check normal dependencies
+    if(p->checkDependencies(m_jAbillities) == false)
+        return "";
+
+    //Mind dependencies -> check if they match -> print with "success" || return nothing
+    if(m_mind != -1) {
+        if(p->getMinds()[func::returnToLower(m_sSpeaker)].level >= m_mind)
+            sSuccess = DARK + " (level " + std::to_string(m_mind) + ": Erfolg)" + WHITE;
+        else
+            return "";
+    }
+    
     //Update mind attributes
+    /*
     std::string sOutput = "";
     for(auto it=mUpdates.begin(); it!=mUpdates.end(); it++) {
+        
         p->getMinds()[it->first].level += it->second;
         sOutput += p->getMinds()[it->first].color + it->first + " updated!" + WHITE + "\n";
     }
     mUpdates.clear();
+    */
 
     // *** Print text *** // 
-    std::string sExtra = "";
-
-    //Normal dependencies don't match -> return nothing
-    if(p->checkDependencies(m_jDeps) == false)
-        return "";
-
-    //Mind dependencies -> check if they match -> print with "success" || return nothing
-    if(m_mind.second != 0) {
-        if(m_mind.first->level >= m_mind.second)
-            sExtra = DARK + " (level " + std::to_string(m_mind.second) + ": Erfolg)" + WHITE;
-        else
-            return "";
-    }
-
-    return "<div class='spoken'>" + m_sSpeaker + sExtra + " - " + WHITEDARK + m_sText + WHITE + sOutput + "</div>";
+    return "<div class='spoken'>" + m_sSpeaker + sSuccess + " - " + WHITEDARK + m_sText + WHITE + sUpdated + "</div>";
 }

@@ -232,7 +232,7 @@ void CPlayer::setFight(CFight* newFight) {
 void CPlayer::endFight() {
     delete m_curFight;
     m_contextStack.erase("fight");
-    appendDescPrint("Fight ended.\n");
+    appendPrint("Fight ended.\n");
 }
 
 // *** Dialog *** //

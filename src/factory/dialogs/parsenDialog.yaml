@@ -1,10 +1,10 @@
 ---
 - id: START
   text: 
-  - "DU;may I introduce myself?"
-  - "PERZEPTION;Parsen is looking up from his seet and stars you right in the eyes. He doesn't make a sound."
+  - {speaker: DU, text: "may I introduce myself?"}
+  - {speaker: PERZEPTION, text: "Parsen is looking up from his seet and stars you right in the eyes. He doesn't make a sound."}
   altTexts:
-  - - "PERZEPTION;Parsen is looking up from is seet and stars you right in the eyes. He doesn't make a sound."
+  - - {speaker: PERZEPTION, text: "Parsen is looking up from is seet and stars you right in the eyes. He doesn't make a sound."}
   options:
     1: Blick aufrechthalten und warten.;{};durstlöscher
     2: Ist alles in Ordnung bei Ihnen?;{};stress
@@ -14,38 +14,38 @@
 
 - id: durstlöscher
   text: 
-  - "PARSEN;wie scmhetk Eizthirone?"
+  - {speaker: PARSEN, text: "wie scmhetk Eizthirone?"}
   options:
     1: "Was sagst du?;{};durstlöscher2"
 
 - id: durstlöscher2
   text: 
-  - "PARSEN;Ich sagte, wie schmeckt Zitrone. Der Durstlöscher." 
-  - "PERZEPTION;Du schaust in deine Hände, zwischen denen du einen Durstöschler, Sorte: Zitrone hälltst. Dir fällt ein, dass du ihn vor der Fahrt noch gekauft hattest."
+  - {speaker: PARSEN, text: "Ich sagte, wie schmeckt Zitrone. Der Durstlöscher."}
+  - {speaker: PERZEPTION, text: "Du schaust in deine Hände, zwischen denen du einen Durstöschler, Sorte: Zitrone hälltst. Dir fällt ein, dass du ihn vor der Fahrt noch gekauft hattest."}
   options:
     1: "Lecker. Echt ein leckerer Durstlöscher. Ich bin {name}. Sehr erfreut.;{};bekanntschaft"
 
 - id: bekanntschaft 
   text: 
-  - "PARSEN;Mein Name ist Parsen. ebenfalls sehr erfreut. Noch eine gute Fahrt. Parsen läschelt dir freundlich zu und ließt dann weiter in seinem Buch."
+  - {speaker: PARSEN, text: "Mein Name ist Parsen. ebenfalls sehr erfreut. Noch eine gute Fahrt. Parsen läschelt dir freundlich zu und ließt dann weiter in seinem Buch."}
   function: parsen1
 
 - id: stress
   text: 
-  - "PARSEN;Lass mich in Ruhe und kümmere dich um anderes!"
+  - {speaker: PARSEN, text: "Lass mich in Ruhe und kümmere dich um anderes!"}
   
 - id: feigling
   text: 
-  - "PARSEN;Hahahahaha. You can't even bear a man looking at you fuck off and leave me alone."
+  - {speaker: PARSEN, text: "Hahahahaha. You can't even bear a man looking at you fuck off and leave me alone."}
 
 - id: prügel
   text: 
-  - "PARSEN;Na dann komm mal her du kleiner!"
+  - {speaker: PARSEN, text: "Na dann komm mal her du kleiner!"}
   function: parsen2
 
 - id: dream
   text: 
-  - "PARSEN;Shure, go ahead, what to you want to tell me?"
+  - {speaker: PARSEN, text: "Shure, go ahead, what to you want to tell me?"}
 
 
       
