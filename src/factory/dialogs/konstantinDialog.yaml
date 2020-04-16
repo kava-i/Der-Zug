@@ -2,7 +2,8 @@
 
 - id: START
   text: 
-  - {speaker: LOGIK, text: "Dieser Mann ist der berühmte Architekt dieses Bahnhofs.", mind: 1} 
+  - {speaker: LOGIK, text: "Dieser Mann ist der berühmte Architekt dieses Bahnhofs.", mind: 1}
+  - {speaker: PERZEPTION, text: "Und reich ist er auch. Ich habe ein gespür für so etwas", abilities: {gold: ">9", hp: ">14"}}
   - {speaker: PERZEPTION, text: "Du näherst dich ihm unterwürfig. Er beachtet dich noch nicht."}
   options: 
     1: "Sehr geehrtet Herr Thron, dürfte ich mich ihnen vorstellen?;{};nein"

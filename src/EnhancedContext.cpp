@@ -392,6 +392,7 @@ void CEnhancedContext::h_endDialog(std::string& sIdentifier, CPlayer* p) {
 
 void CEnhancedContext::h_newFight(std::string& sIdentifier, CPlayer* p) {
     p->setFight(new CFight(p, p->getWorld()->getCharacter(sIdentifier)));
+    m_curPermeable=false;
 }
 
 void CEnhancedContext::h_gameover(std::string& sIdentifier, CPlayer* p) {

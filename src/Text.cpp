@@ -33,7 +33,7 @@ COutput::COutput(nlohmann::json jAttributes, CPlayer* p)
     m_sText = jAttributes.value("text", "") + "$";
     m_mind = jAttributes.value("mind", -1);
 
-    if(jAttributes.count("deps") > 0)
+    if(jAttributes.count("abilities") > 0)
         m_jAbillities = jAttributes["abilities"];
     if(jAttributes.count("update") > 0)
         mUpdates = jAttributes["update"].get<std::map<std::string, std::string>>();
