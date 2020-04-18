@@ -1,5 +1,8 @@
 #include "CWorld.hpp"
 
+#define cRED "\033[1;31m"
+#define cCLEAR "\033[0m"
+
 namespace fs = std::experimental::filesystem;
 
 CWorld::CWorld() {}
@@ -18,7 +21,7 @@ map<string, CRoom*>& CWorld::getRooms() {
 CRoom* CWorld::getRoom(std::string sID) {
     if(m_rooms.count(sID) > 0)
         return m_rooms[sID];
-    std::cout << "FATAL!!! Accessing room which does not exist: " << sID << std::endl;
+    std::cout << cRED << "FATAL! Accessing room which does not exist: " << sID << cCLEAR << std::endl;
     return nullptr;
 }
      
@@ -31,7 +34,7 @@ map<string, CPerson*>& CWorld::getCharacters() {
 CPerson* CWorld::getCharacter(std::string sID) {
     if(m_characters.count(sID) > 0)
         return m_characters[sID];
-    std::cout << "FATAL!!! Accessing character which does not exist: " << sID << std::endl;
+    std::cout<<cRED<< "FATAL! Accessing character which does not exist: " << sID <<cCLEAR<< std::endl;
     return nullptr;
 }
 
@@ -45,7 +48,7 @@ CAttack* CWorld::getAttack(std::string sID)
 {
     if(m_attacks.count(sID) > 0)
         return m_attacks[sID];
-    std::cout << "FATAL!!! Accessing room which does not exist: " << sID << std::endl;
+    std::cout << cRED << "FATAL! Accessing attack which does not exist: " << sID <<cCLEAR<<std::endl;
     return nullptr;
 }
 
@@ -59,7 +62,7 @@ CQuest* CWorld::getQuest(std::string sID)
 {
     if(m_quests.count(sID) > 0)
         return m_quests[sID];
-    std::cout << "FATAL!!! Accessing room which does not exist: " << sID << std::endl;
+    std::cout << cRED << "FATAL!!! Accessing room which does not exist: " << sID << cCLEAR << std::endl;
     return nullptr;
 }
 /**

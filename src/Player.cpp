@@ -6,6 +6,8 @@
 #define PURPLE Webcmd::set_color(Webcmd::color::PURPLE)
 #define WHITE Webcmd::set_color(Webcmd::color::WHITE)
 #define WHITEDARK Webcmd::set_color(Webcmd::color::WHITEDARK)
+#define cRED "\033[1;31m"
+#define cCLEAR "\033[0m"
 
 /**
 * Full constructor for player
@@ -23,7 +25,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks) : CPerson(
     //Character and Level
     m_level = 0;
     m_ep = 0;
-    m_minds["perzeption"] = {"perzeption", BLUE, 0};
+    m_minds["perzeption"] = {"perzeption", BLUE, 1};
     m_minds["peddler"] = {"peddler", RED, 0};
     m_minds["drama"]  = {"drama", RED, 0};
     m_minds["logik"]  = {"logik", RED, 1};
@@ -100,6 +102,13 @@ CRoom* CPlayer::getRoom() {
 ///Return dictionary of player's minds.
 std::map<std::string, SMind>& CPlayer::getMinds() { 
     return m_minds; 
+}
+
+SMind& CPlayer::getMind(std::string sMind) {
+    if(m_minds.count(func::returnToLower(sMind)) > 0)
+        return m_minds[func::returnToLower(sMind)];
+    std::cout << cRED << "FATAL Error! Requested mind does not exist: " << sMind << std::endl;
+    return m_minds["logik"]; 
 }
 
 ///Return players abilities (strength, moral, etc.)
@@ -577,13 +586,10 @@ void CPlayer::questSolved(std::string sQuestID, std::string sStepID)
 */
 void CPlayer::addEP(int ep)
 {
-    std::cout << "Added ep: " << ep << "\n";
     m_ep+=ep;
-    std::cout << "EP: " << m_ep << std::endl;
     size_t counter=0;
     for(;m_ep>=20; m_ep-=20, counter++, m_level++)
         appendSuccPrint("Level Up!\n");
-    std::cout << "EP: " << m_ep << std::endl;
 
     if(counter > 0)
     {
@@ -673,7 +679,6 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps)
         //Check dependency in stats
         else if(m_stats.count(it.key()) > 0)
         {
-            std::cout << value.substr(1) << value[0] << m_stats[it.key()] << " = " << operators[value[0]](m_stats[it.key()], stoi(value.substr(1))) << std::endl;
             if(operators[value[0]](m_stats[it.key()], stoi(value.substr(1))) == false)
                 return false;
         }
@@ -787,10 +792,9 @@ void CPlayer::addChatContext(std::string sPartner)
 */
 void CPlayer::printError(std::string sError)
 {
-    std::cout << sError << std::endl;
+    std::cout << "\033[1;31m"+sError+"\033[0m"<< std::endl;
     appendTechPrint("Sorry, but something went wrong. Maybe try something else.\n");
 }
-
 
 
 // *** Eventmanager functions *** //

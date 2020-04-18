@@ -98,6 +98,9 @@ public:
     ///Return dictionary of player's minds.
     std::map<std::string, SMind>& getMinds();
 
+    ///Return a requested mind
+    SMind& getMind(std::string sMind);
+
     ///Return players abilities (strength, moral, etc.)
     std::vector<std::string> getAbbilities();
 

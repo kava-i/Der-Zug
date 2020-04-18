@@ -4,7 +4,7 @@
   id: bahnhof_eingangshalle
   description: 
     - {speaker: PERZEPTION, text: "Die Eingangshalle des sog. \"Moskauer Bahnhofs\" in Sankt Petersburg ist ein eindrucksvolles Gebilde. Tausende Passanten wandern umher, es herscht Trubel und Lärm und dazu glänzt die architektonische Meisterleistung eines Konstantin Thron von allen Seiten auf einen herab. Nach Norden geht es zu den Gleisen, im Süden liegt der Ausgang und nach Osten geht es zu einer Nebenhalle."}
-    - {speaker: PERZEPTION, text: "Drei Passanten stehen merkwürdig gekleidet in einer Ecke der Eingangshalle nahe den Gleisen und deuten wild umher.", mind: 1, update:{mind: perzeption;1}}
+    - {speaker: PERZEPTION, text: "Drei Passanten stehen merkwürdig gekleidet in einer Ecke der Eingangshalle nahe den Gleisen und deuten wild umher.", d_mind: {perzeption: 1}, u_mind: {perzeption: 1}, u_abilities: {highness: 2}}
   exits:
     bahnhof_fernzüge: {name: Fernzügen, prep: zu den}
     bahnhof_nebenhalle: {name: Nebenhalle, prep: zur }

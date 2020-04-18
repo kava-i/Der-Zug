@@ -27,9 +27,11 @@ class COutput
 private:
     std::string m_sSpeaker;
     std::string m_sText;
+
+    nlohmann::json m_jMinds;
     nlohmann::json m_jAbillities;
-    int m_mind;
-    std::map<std::string, std::string> mUpdates;
+    nlohmann::json m_updateMind;
+    nlohmann::json m_updateAbilities;
 
 public:
     COutput(nlohmann::json jAttributes, CPlayer*);
@@ -39,6 +41,9 @@ public:
     std::string getSpeaker();
 
     std::string print(CPlayer* p);
+
+    bool checkDependencies(std::string& sSuccess, CPlayer* p);
+    void updateAttrbutes(std::string& sUpdated, CPlayer* p);
 };
 
 #endif
