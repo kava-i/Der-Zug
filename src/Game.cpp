@@ -80,10 +80,11 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePla
 {
     func::convertToLower(sInput);    
 
+    //Create map of online player's
     std::map<string, string> mapOnlinePlayers;
     std::map<string, CPlayer*> mapOnlinePlayers2;
     for(auto it : onlinePlayers) {
-        if(it != m_players[sPlayerID]->getID()) {
+        if(it != m_players[sPlayerID]->getID() && m_players[sPlayerID]->getRoom()->getID() == m_players[it]->getRoom()->getID()) {
             mapOnlinePlayers[m_players[it]->getID()] = m_players[it]->getName();
             mapOnlinePlayers2[m_players[it]->getID()] = m_players[it];
         }
