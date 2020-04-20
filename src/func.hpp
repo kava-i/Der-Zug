@@ -51,6 +51,23 @@ namespace func
 
 
     /**
+    * Convert a string to number. Starts from the back, stops at first non-digit character 
+    * from the back.
+    * @param[in] str (source string)
+    * @return number
+    */
+    int getNumFromBack(std::string str);
+
+
+    /**
+    * Extracts all leading chars before some digits
+    * @param[in] str (source string) 
+    * @return leading chars
+    */
+    std::string extractLeadingChars(const std::string& str);
+
+
+    /**
     *                   *** returnSwapedString  ***
     * Randomly swap a certain amount of characters in every nth word of a given string. 
     * Number of characters to be swapped depends on given number ("num"). Higher number

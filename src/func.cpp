@@ -129,6 +129,29 @@ std::string func::returnSwapedString(std::string str, int val)
     return str2;
 }
 
+int func::getNumFromBack(std::string str)
+{
+    int counter = 1; 
+    int num = 0;
+    while(std::isdigit(str.back()))
+    {
+        num += counter * ((char)str.back()-48);
+        str.pop_back();
+    }
+    return num;
+}
+
+std::string func::extractLeadingChars(const std::string& str)
+{
+    std::string sOpt;
+    for(size_t i=0; i<str.length(); i++)
+    {
+        if(std::isdigit(str[i]) == false)
+            sOpt+=str[i];
+    }
+    return sOpt; 
+} 
+
 TEST_CASE("Testing func::split functionality","[func::split]")
 {
     std::string lk="Hallo ich funktioniere";

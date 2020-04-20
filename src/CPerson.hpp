@@ -84,6 +84,16 @@ public:
     string getAttack(string sPlayerChoice);
 
 
+    // *** Various functions *** //
+
+    /**
+    * Check if a given attribute exists.
+    * @param[in] name of attribute.
+    * @return whether attribute exists or not.
+    */
+    bool attributeExists(std::string sAttribute);
+
+
     // *** Functions needed in CPlayer *** //
     virtual void throw_event(std::string) { std::cout << "FATAL!!!\n"; }
     virtual void setStatus(string)   { std::cout << "FATAL!!!\n"; }

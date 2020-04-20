@@ -659,32 +659,44 @@ void CPlayer::showStats() {
 */
 bool CPlayer::checkDependencies(nlohmann::json jDeps)
 {
-    std::map<char, std::function<bool(int, int)>> operators;
-    operators['='] = [](int a, int b) { return a=b; };
-    operators['>'] = [](int a, int b) { return a>b; };
-    operators['<'] = [](int a, int b) { return a<b; };
+    std::map<std::string , std::function<bool(int, int)>> operators;
+    operators["="] = [](int a, int b) { return a=b; };
+    operators[">"] = [](int a, int b) { return a>b; };
+    operators[">="] = [](int a, int b) { return a>=b; };
+    operators["<"] = [](int a, int b) { return a<b; };
+    operators["<="] = [](int a, int b) { return a<=b; };
+    operators["!="] = [](int a, int b) { return a!=b; };
 
     if(jDeps.size() == 0)
         return true;
     for(auto it=jDeps.begin(); it!=jDeps.end(); it++)
     {
-        std::string value = it.value();
+        //Assign value with position 0 = operator
+        std::string sOpt = func::extractLeadingChars(it.value());
+        int value = func::getNumFromBack(it.value());
+
+        std::cout << "After: " << sOpt << "|" << value << std::endl;
+
 
         //Check dependency in mind
         if(m_minds.count(it.key()) > 0) {
-            if(operators[value[0]](stoi(value.substr(1)), m_minds[it.key()].level) == false)
+            std::cout << "Mind: " << it.key() << " - " << m_minds[it.key()].level << std::endl;
+            if(operators[sOpt](m_minds[it.key()].level, value) == false)
                 return false;
         }
 
         //Check dependency in stats
-        else if(m_stats.count(it.key()) > 0)
-        {
-            if(operators[value[0]](m_stats[it.key()], stoi(value.substr(1))) == false)
+        else if(m_stats.count(it.key()) > 0) {
+            std::cout << "Stat: " << it.key() << " - " << m_stats[it.key()] << std::endl;
+            if(operators[sOpt](m_stats[it.key()], value) == false)
                 return false;
         }
-        else
-            std::cout << "Error in document: " << it.key() << std::endl;
+        else {
+            std::cout << cRED << "Error in document: " << it.key() << cCLEAR << std::endl;
+            return false;
+        }
     } 
+
     return true;
 }
 

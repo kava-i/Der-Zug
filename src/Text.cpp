@@ -33,14 +33,10 @@ COutput::COutput(nlohmann::json jAttributes, CPlayer* p)
     m_sSpeaker = jAttributes.value("speaker", "");
     m_sText = jAttributes.value("text", "") + "$";
 
-    if(jAttributes.count("d_mind") > 0)
-        m_jMinds = jAttributes["d_mind"];
-    if(jAttributes.count("d_abilities") > 0)
-        m_jAbillities = jAttributes["d_abilities"];
-    if(jAttributes.count("u_mind") > 0)
-        m_updateMind = jAttributes["u_mind"];
-    if(jAttributes.count("u_abilities") > 0)
-        m_updateAbilities = jAttributes["u_abilities"];
+    if(jAttributes.count("deps") > 0)
+        m_jDeps = jAttributes["deps"];
+    if(jAttributes.count("updates") > 0)
+        m_jUpdates = jAttributes["updates"];
 }
 
 std::string COutput::getSpeaker() {
@@ -69,47 +65,38 @@ std::string COutput::print(CPlayer* p)
 
 bool COutput::checkDependencies(std::string& sSuccess, CPlayer* p)
 {
-    //Check normal dependencies
-    if(p->checkDependencies(m_jAbillities) == false)
+    //Check dependencies
+    if(p->checkDependencies(m_jDeps) == false)
+        return false;
+    
+    //Create success output:
+    for(auto it=m_jDeps.begin(); it!=m_jDeps.end(); it++)
     {
-        std::cout << "dependencies failed.\n";
-        return false; 
+        if(p->getMinds().count(it.key()) > 0)
+            sSuccess = DARK + " (level " + std::to_string(p->getMind(it.key()).level) + ": Erfolg)" + WHITE;
     }
 
-    //Mind dependencies -> check if they match -> print with "success" || return nothing
-    for(auto it=m_jMinds.begin(); it!=m_jMinds.end(); it++)
-    {
-        int val=it.value();
-        std::cout << "Value: " << val << " (" << it.key() << std::endl;
-        std::cout << "Level: " << p->getMind(it.key()).level << std::endl;
-        if(p->getMind(it.key()).level >= val)
-            sSuccess = DARK + " (level " + std::to_string(val) + ": Erfolg)" + WHITE;
-        else
-        {   
-            std::cout << "mind failed.\n";
-            return false; 
-        }
-    }
     return true;
 }
 
 void COutput::updateAttrbutes(std::string& sUpdated, CPlayer* p)
 {
-    //Check updates for minds
-    for(auto it=m_updateMind.begin(); it!=m_updateMind.end(); it++)
+    for(auto it=m_jUpdates.begin(); it!= m_jUpdates.end(); it++)
     {
         int val=it.value();
-        p->getMind(it.key()).level += val;
-        sUpdated += p->getMind(it.key()).color + it.key()+ " updated!" + WHITE + "\n";
-    }
-    m_updateMind.clear();
 
-    //Check updates for abilities
-    for(auto it=m_updateAbilities.begin(); it!=m_updateAbilities.end(); it++)
-    {
-        int val=it.value();
-        p->setStat(it.key(), p->getStat(it.key())+val);
-        sUpdated += GREEN + it.key() + " updated!" + WHITE + "\n";
-    } 
-    m_updateAbilities.clear();
+        //Check updates for minds
+        if(p->getMinds().count(it.key()) > 0) {
+            p->getMind(it.key()).level += val;
+            sUpdated += p->getMind(it.key()).color + it.key()+ " updated!" + WHITE + "\n";
+        }
+
+        //Check updates for abilities
+        else if(p->attributeExists(it.key()) == true) {
+            p->setStat(it.key(), p->getStat(it.key())+val);
+            sUpdated += GREEN + it.key() + " updated!" + WHITE + "\n";
+        }
+    }
+
+    m_jUpdates.clear();
 }

@@ -28,10 +28,8 @@ private:
     std::string m_sSpeaker;
     std::string m_sText;
 
-    nlohmann::json m_jMinds;
-    nlohmann::json m_jAbillities;
-    nlohmann::json m_updateMind;
-    nlohmann::json m_updateAbilities;
+    nlohmann::json m_jDeps;
+    nlohmann::json m_jUpdates;
 
 public:
     COutput(nlohmann::json jAttributes, CPlayer*);

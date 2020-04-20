@@ -107,3 +107,14 @@ string CPerson::getAttack(string sPlayerChoice)
     return "";
 }
     
+
+// *** Various functions *** //
+
+/**
+* Check if a given attribute exists.
+* @param[in] name of attribute.
+* @return whether attribute exists or not.
+*/
+bool CPerson::attributeExists(std::string sAttribute) {
+    return m_stats.count(func::returnToLower(sAttribute)) > 0;
+}
