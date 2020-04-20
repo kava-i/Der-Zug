@@ -66,6 +66,7 @@ CDState::CDState(nlohmann::json jAtts, dialogoptions opts, CDialog* dia, CPlayer
 {
     m_text = new CText(jAtts.value("text", nlohmann::json::array()), p);
     m_sFunction = jAtts.value("function", "standard");
+    m_sActions = jAtts.value("actions", "");
 
     //Parse alternative texts
     std::vector<CText*> altTexts;
@@ -104,8 +105,6 @@ void CDState::initializeFunctions()
 {
     m_functions["standard"]     = &CDState::standard;
     m_functions["parsen1"]      = &CDState::parsen1;
-    m_functions["parsen2"]      = &CDState::parsen2;
-    m_functions["pissingman1"]  = &CDState::pissingman1;
     m_functions["ticket"]       = &CDState::ticket;
     m_functions["keinTicket"]   = &CDState::keinTicket;
     m_functions["betrunkene"]   = &CDState::betrunkene;
@@ -138,16 +137,27 @@ int CDState::numOptions()
     return counter;
 }
 
+void CDState::executeActions(CPlayer* p)
+{
+    std::vector<std::string> actions = func::split(m_sActions, "|");
+    for(const auto& action : actions)
+    {
+        std::vector<std::string> parameters = func::split(action, ",");
+        if(parameters[0] == "addDialogOption") 
+            m_dialog->addDialogOption(parameters[1], std::stoi(parameters[2]));
+        else if(parameters[0] == "deleteDialogOption")
+            m_dialog->deleteDialogOption(parameters[1], std::stoi(parameters[2]));
+        else if(parameters[0] == "changeStateText")
+            m_dialog->changeStateText(parameters[1], std::stoi(parameters[2]));
+        else if(parameters[0] == "changeDialog")
+            m_dialog->changeDialog(parameters[1], parameters[2], p);
+    }
+}
 
 // *** FUNCTION POINTER *** //
 string CDState::standard(CPlayer* p)
 {
     string sOutput = m_text->print() + "\n";
-
-    if(numOptions() == 0) {
-        p->appendPrint(sOutput + "Dialog ended. \n");
-        return "endDialog";
-    }
 
     std::vector<size_t> activeOptions = getActiveOptions(p);
     size_t counter = 1;
@@ -156,6 +166,9 @@ string CDState::standard(CPlayer* p)
         sOutput += std::to_string(counter) + ": " + m_options[opt].sText + "\n";
         counter++;
     }
+    
+    //Execute actions after this dialog state (f.e. delete options, change text etc.)
+    executeActions(p);
         
     if(activeOptions.size() == 0){
         p->appendPrint(sOutput + "Dialog ended.\n");
@@ -180,31 +193,13 @@ std::vector<size_t> CDState::getActiveOptions(CPlayer* p)
 string CDState::parsen1(CPlayer* p)
 {
     string sOutput = standard(p);
-    m_dialog->addDialogOption("START", -1);       //Add new option (4)
-    m_dialog->deleteDialogOption("START", 1);     //Delete old option (1)
-    m_dialog->changeStateText("START", 0);        //Change text (0)
-    m_sFunction = "standard";           
-    return sOutput;
-}
-
-string CDState::parsen2(CPlayer* p)
-{
-    string sOutput = standard(p);
     p->appendPrint("$");
     sOutput+=";fight parsen";
     return sOutput;
 }
 
-string CDState::pissingman1(CPlayer* p)
-{
-    string sOutput = standard(p);
-    m_dialog->changeDialog("pissing_man", "defaultDialog", p);
-    return sOutput;
-} 
-
 string CDState::ticket(CPlayer* p)
 {
-    m_dialog->deleteDialogOption("START", 1);
     string sOutput = standard(p); 
     return sOutput+";addItem ticket";
 }

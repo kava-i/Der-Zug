@@ -28,6 +28,7 @@
 - id: verkauf2
   text: 
   - {speaker: TICKETVERKÄUFER, text: "Und es ist dein! Eine gute Fahrt wünsche ich dir! Und jetzt, lass mich denken!!"}
+  actions: "deleteDialogOption,START,1"
   function: ticket
 
 - id: denken

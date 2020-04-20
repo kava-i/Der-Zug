@@ -29,7 +29,7 @@
 - id: bekanntschaft 
   text: 
   - {speaker: PARSEN, text: "Mein Name ist Parsen. ebenfalls sehr erfreut. Noch eine gute Fahrt. Parsen läschelt dir freundlich zu und ließt dann weiter in seinem Buch."}
-  function: parsen1
+  actions: "addDialogOption,START,-1|deleteDialogOption,,START,1|changeStateText,START,0"
 
 - id: stress
   text: 
@@ -42,7 +42,7 @@
 - id: prügel
   text: 
   - {speaker: PARSEN, text: "Na dann komm mal her du kleiner!"}
-  function: parsen2
+  function: parsen1
 
 - id: dream
   text: 

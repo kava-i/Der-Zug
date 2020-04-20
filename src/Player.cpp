@@ -675,18 +675,14 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps)
         std::string sOpt = func::extractLeadingChars(it.value());
         int value = func::getNumFromBack(it.value());
 
-        std::cout << "After: " << sOpt << "|" << value << std::endl;
-
         //Check dependency in mind
         if(m_minds.count(it.key()) > 0) {
-            std::cout << "Mind: " << it.key() << " - " << m_minds[it.key()].level << std::endl;
             if(operators[sOpt](m_minds[it.key()].level, value) == false)
                 return false;
         }
 
         //Check dependency in stats
         else if(m_stats.count(it.key()) > 0) {
-            std::cout << "Stat: " << it.key() << " - " << m_stats[it.key()] << std::endl;
             if(operators[sOpt](m_stats[it.key()], value) == false)
                 return false;
         }

@@ -274,10 +274,6 @@ CDialog* CWorld::dialogFactory(string sPath, CPlayer* p)
                 nlohmann::json jDeps;
                 if(jAtts.count("deps") > 0)
                     jDeps = jAtts["deps"];
-                std::cout << "id: " << jAtts["id"] << ", ";
-                std::cout << "deps: " << jDeps << ", ";
-                std::cout << "target: " << jAtts["to"] << std::endl;
-                
             
                 options[jAtts["id"]] = {jAtts["text"], jDeps, jAtts["to"]};
             }

@@ -8,8 +8,9 @@
 
 - id: fuckoff
   text: 
-  - {speaker: YOU, text: "Are you seriosly pissing straight on the floor?\nPISSING MAN You fuck off and leave an old man be!"}
-  function: pissingman1
+  - {speaker: YOU, text: "Are you seriosly pissing straight on the floor?"}
+  - {speaker: PISSING MAN, text: "You fuck off and leave an old man be!"}
+  actions: "changeDialog,pissing_man,defaultDialog"
 
 - id: walkaway
   text: 

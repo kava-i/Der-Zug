@@ -66,9 +66,11 @@ struct SDOption {
 
 class CDState {
 private:
-    CText* m_text;
-    string m_sFunction;
-    vector<CText*> m_alternativeTexts;    
+
+    CText* m_text;                      //< Text which will be printed after call.
+    string m_sFunction;                 //< Function called when calling state.
+    string m_sActions;                  //< Actions executed after call.
+    vector<CText*> m_alternativeTexts;  //< Map of alternative texts 
 
     //Map of options 
     typedef std::map<int, SDOption> dialogoptions;
@@ -93,12 +95,11 @@ public:
     static void initializeFunctions();
     string callState(CPlayer*);
     string getNextState(string sPlayerChoice, CPlayer* p);
+    void executeActions(CPlayer* P);
 
     // *** functions *** //
     string standard(CPlayer*);
     string parsen1(CPlayer*);
-    string parsen2(CPlayer*);
-    string pissingman1(CPlayer*);
     string ticket(CPlayer*);
     string keinTicket(CPlayer*);
     string betrunkene(CPlayer*);
