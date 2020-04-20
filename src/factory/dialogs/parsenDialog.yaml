@@ -6,24 +6,25 @@
   altTexts:
   - - {speaker: PERZEPTION, text: "Parsen is looking up from is seet and stars you right in the eyes. He doesn't make a sound."}
   options:
-    1: Blick aufrechthalten und warten.;{};durstlöscher
-    2: Ist alles in Ordnung bei Ihnen?;{};stress
-    3: Blick ausweichen.;{};feigling
-    4: Ich find tu solltest tich mal nspannen!;{"highness":">2"};prügel
-    -1: Call I tell you about that dream I had recently?;{};dream
+  -  {id: 1, text: "Blick aufrechthalten und warten.", to: durstlöscher}
+  -  {id: 2, text: "Ist alles in Ordnung bei Ihnen?", to: stress}
+  -  {id: 3, text: "Blick ausweichen.", to: feigling}
+  -  {id: 4, text: "Ich find tu solltest tich mal nspannen!", deps: {highness: ">2"}, to: prügel}
+  -  {id: -1, text: "Call I tell you about that dream I had recently?", to: dream} 
+
 
 - id: durstlöscher
   text: 
   - {speaker: PARSEN, text: "wie scmhetk Eizthirone?"}
   options:
-    1: "Was sagst du?;{};durstlöscher2"
+  -  {id: 1, text: "Was sagst du?", to: durstlöscher2}
 
 - id: durstlöscher2
   text: 
   - {speaker: PARSEN, text: "Ich sagte, wie schmeckt Zitrone. Der Durstlöscher."}
   - {speaker: PERZEPTION, text: "Du schaust in deine Hände, zwischen denen du einen Durstöschler, Sorte: Zitrone hälltst. Dir fällt ein, dass du ihn vor der Fahrt noch gekauft hattest."}
   options:
-    1: "Lecker. Echt ein leckerer Durstlöscher. Ich bin {name}. Sehr erfreut.;{};bekanntschaft"
+  -  {id: 1, text: "Lecker. Echt ein leckerer Durstlöscher. Ich bin {name}. Sehr erfreut.", to: bekanntschaft}
 
 - id: bekanntschaft 
   text: 
@@ -49,8 +50,6 @@
 
 
       
-
-
 
 
 

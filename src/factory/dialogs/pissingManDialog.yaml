@@ -3,8 +3,8 @@
   text: 
   - {speaker: DRAMA, text: "You're looking at the man and you're thinking of what to say..."}
   options:
-    1: "Are you seriosly pissing straight on the floor?;{};fuckoff"
-    2: "Walk away.;{};walkaway"
+  - {id: 1, text: "Are you seriosly pissing straight on the floor?", to: fuckoff}
+  -  {id: 2, text: "Walk away.", to: walkaway}
 
 - id: fuckoff
   text: 

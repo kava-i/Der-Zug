@@ -6,9 +6,9 @@
   - {speaker: PERZEPTION, text: "Und reich ist er auch. Ich habe ein gespür für so etwas", deps: {gold: ">9", hp: ">14"}}
   - {speaker: PERZEPTION, text: "Du näherst dich ihm unterwürfig. Er beachtet dich noch nicht."}
   options: 
-    1: "Sehr geehrtet Herr Thron, dürfte ich mich ihnen vorstellen?;{};nein"
-    2: "Sie sind der Mann, der diesen...;{};redeschwall"
-    3: "Zeig mir deine Ware.;{};trade"
+  -  {id: 1, text: "Sehr geehrtet Herr Thron, dürfte ich mich ihnen vorstellen?", to: nein}
+  -  {id: 2, text: "Sie sind der Mann, der diesen...", to: redeschwall}
+  -  {id: 3, text: "Zeig mir deine Ware.", to: trade}
 
 - id: nein
   text: 
@@ -18,15 +18,15 @@
   text: 
   - {speaker: HERR THRON, text: "Ja, genau, der bin ich. Ich habe diesen großartigen Bahnhof entworfen und beim Baum begleitet. er Bahnhof und das Empfangsgebäude entstanden im Jahre 1847 mit der Teileröffnung der Bahnstrecke Sankt Petersburg–Moskau (auch Nikolai-Bahn genannt, so hieß der Bahnhof bis 1917 Nikolai-Bahnhof). Der durchgehende Verkehr bis Moskau wurde 1851 aufgenommen. ..."}
   options:
-    1: "[Weiter];{};redeschwall2"
-    2: "[Gehen];{};ende"
+  -  {id: 1, text: "[Weiter]", to: redeschwall2}
+  -  {id: 2, text: "[Gehen]", to: ende}
 
 - id: redeschwall2
   text: 
   - {speaker: HERR REDESCHWALL, text: "Ah, es ist gerade etwas spannendes über mich in einer Zeitung erschienen. Ich zitiere: Erste Aufmerksamkeit als Architekt erlangte er mit der Gestaltung der Innenausstattung des Gebäudes der Petersburger Kunstakademie am Ufer der Newa. 1827 unterbreitete er dem Zaren sein Projekt der Sankt-Katharinenkirche am Obwodnij-Kanal"}
   options:
-    1: "[Weiter];{};redeschwall3"
-    2: "[Gehen];{};ende"
+  -  {id: 1, text: "[Weiter]", to: redeschwall3}
+  -  {id: 2, text: "[Gehen]", to: ende}
 
   
 - id: redeschwall3

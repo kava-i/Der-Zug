@@ -677,7 +677,6 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps)
 
         std::cout << "After: " << sOpt << "|" << value << std::endl;
 
-
         //Check dependency in mind
         if(m_minds.count(it.key()) > 0) {
             std::cout << "Mind: " << it.key() << " - " << m_minds[it.key()].level << std::endl;

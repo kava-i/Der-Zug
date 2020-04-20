@@ -137,6 +137,7 @@ int func::getNumFromBack(std::string str)
     {
         num += counter * ((char)str.back()-48);
         str.pop_back();
+        counter *= 10;
     }
     return num;
 }

@@ -266,14 +266,20 @@ CDialog* CWorld::dialogFactory(string sPath, CPlayer* p)
     for(auto j_state : j_states)
     {
         // *** parse options *** //
-        map<int, SDOption> options;
+        std::map<int, SDOption> options;
         if(j_state.count("options") != 0)
         {
-            std::map<string, string> mapOptions = j_state["options"].get<std::map<string, string>>(); 
-            for(auto it : mapOptions) {
-                std::vector<string> vAtts = func::split(it.second, ";");
-                nlohmann::json jDeps = nlohmann::json::parse(vAtts[1]);
-                options[stoi(it.first)] = {vAtts[0], jDeps, vAtts[2]};
+            for(auto& jAtts : j_state["options"])
+            {
+                nlohmann::json jDeps;
+                if(jAtts.count("deps") > 0)
+                    jDeps = jAtts["deps"];
+                std::cout << "id: " << jAtts["id"] << ", ";
+                std::cout << "deps: " << jDeps << ", ";
+                std::cout << "target: " << jAtts["to"] << std::endl;
+                
+            
+                options[jAtts["id"]] = {jAtts["text"], jDeps, jAtts["to"]};
             }
         }
 

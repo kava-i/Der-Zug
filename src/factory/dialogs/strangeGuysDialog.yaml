@@ -1,10 +1,11 @@
 ---
+
 - id: START
   text: 
   - {speaker: PERZEPTION, text: "Die drei merkwürdigen Passanten ignorieren dich vollkommen und zeigen weiter wild durch die Gegend."}
   options:
-    1: "Verehrte Herren? Ich bin auf der Suche nach jemandem, könnt ihr mir vielleicht...?;{};verrückt"
-    2: "Dialog beenden.;{};ende"
+  -  {id: 1, text: "Verehrte Herren? Ich bin auf der Suche nach jemandem, könnt ihr mir vielleicht...?", to: verrückt}
+  -  {id: 2, text: "Dialog beenden.", to: ende}
   function: strangeGuy1
 
 - id: verrückt
