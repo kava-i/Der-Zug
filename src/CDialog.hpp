@@ -101,7 +101,6 @@ public:
     // *** functions *** //
     string standard(CPlayer*);
     string keinTicket(CPlayer*);
-    string betrunkene(CPlayer*);
     string strangeGuy1(CPlayer*); 
     string strangeGuy2(CPlayer*); 
 

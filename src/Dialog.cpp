@@ -106,7 +106,6 @@ void CDState::initializeFunctions()
 {
     m_functions["standard"]     = &CDState::standard;
     m_functions["keinTicket"]   = &CDState::keinTicket;
-    m_functions["betrunkene"]   = &CDState::betrunkene;
     m_functions["strangeGuy1"]   = &CDState::strangeGuy1;
     m_functions["strangeGuy2"]   = &CDState::strangeGuy2;
 }
@@ -152,6 +151,8 @@ void CDState::executeActions(CPlayer* p)
             m_dialog->changeStateText(parameters[1], std::stoi(parameters[2]));
         else if(parameters[0] == "changeDialog")
             m_dialog->changeDialog(parameters[1], parameters[2], p);
+        else if(parameters[0] == "setNewQuest")
+            p->setNewQuest(parameters[1]);
     }
 }
 
@@ -200,13 +201,6 @@ string CDState::keinTicket(CPlayer* p)
     string sOutput=standard(p);
     if(p->getStat("gold") < 10)
         p->setNewQuest("geld_fuer_ticket");
-    return sOutput;
-}
-
-string CDState::betrunkene(CPlayer* p)
-{
-    string sOutput = standard(p);
-    p->setNewQuest("besoffene_frau");
     return sOutput;
 }
 
