@@ -67,6 +67,7 @@ CDState::CDState(nlohmann::json jAtts, dialogoptions opts, CDialog* dia, CPlayer
     m_text = new CText(jAtts.value("text", nlohmann::json::array()), p);
     m_sFunction = jAtts.value("function", "standard");
     m_sActions = jAtts.value("actions", "");
+    m_sEvents = jAtts.value("events", "");
 
     //Parse alternative texts
     std::vector<CText*> altTexts;
@@ -104,8 +105,6 @@ std::map<string, string (CDState::*)(CPlayer* p)> CDState::m_functions = {};
 void CDState::initializeFunctions()
 {
     m_functions["standard"]     = &CDState::standard;
-    m_functions["parsen1"]      = &CDState::parsen1;
-    m_functions["ticket"]       = &CDState::ticket;
     m_functions["keinTicket"]   = &CDState::keinTicket;
     m_functions["betrunkene"]   = &CDState::betrunkene;
     m_functions["strangeGuy1"]   = &CDState::strangeGuy1;
@@ -114,7 +113,9 @@ void CDState::initializeFunctions()
 
 
 string CDState::callState(CPlayer* p) {
-    return (this->*m_functions[m_sFunction])(p);
+    std::string sReturn = (this->*m_functions[m_sFunction])(p) + m_sEvents;
+    std::cout << "Events: " << sReturn << std::endl;
+    return sReturn;
 }
 
 string CDState::getNextState(string sPlayerChoice, CPlayer* p)
@@ -190,19 +191,9 @@ std::vector<size_t> CDState::getActiveOptions(CPlayer* p)
     return activeOptions;
 }
 
-string CDState::parsen1(CPlayer* p)
-{
-    string sOutput = standard(p);
-    p->appendPrint("$");
-    sOutput+=";fight parsen";
-    return sOutput;
-}
 
-string CDState::ticket(CPlayer* p)
-{
-    string sOutput = standard(p); 
-    return sOutput+";addItem ticket";
-}
+
+// ***** SPECIAL STATE FUNCTIONS ***** //
 
 string CDState::keinTicket(CPlayer* p)
 {
@@ -215,8 +206,6 @@ string CDState::keinTicket(CPlayer* p)
 string CDState::betrunkene(CPlayer* p)
 {
     string sOutput = standard(p);
-    p->appendPrint("$");
-    sOutput+=";fight besoffene_frau";
     p->setNewQuest("besoffene_frau");
     return sOutput;
 }

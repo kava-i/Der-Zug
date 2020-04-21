@@ -9,7 +9,7 @@
   -  {id: 1, text: "Blick aufrechthalten und warten.", to: durstlöscher}
   -  {id: 2, text: "Ist alles in Ordnung bei Ihnen?", to: stress}
   -  {id: 3, text: "Blick ausweichen.", to: feigling}
-  -  {id: 4, text: "Ich find tu solltest tich mal nspannen!", deps: {highness: ">2"}, to: prügel}
+  -  {id: 4, text: "Ich find tu solltest tich mal nspannen!", deps: {highness: ">=2"}, to: prügel}
   -  {id: -1, text: "Call I tell you about that dream I had recently?", to: dream} 
 
 
@@ -41,8 +41,8 @@
 
 - id: prügel
   text: 
-  - {speaker: PARSEN, text: "Na dann komm mal her du kleiner!"}
-  function: parsen1
+  - {speaker: PARSEN, text: "Na dann komm mal her du kleiner!$"}
+  events: ";fight parsen"
 
 - id: dream
   text: 

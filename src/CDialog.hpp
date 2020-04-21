@@ -70,6 +70,7 @@ private:
     CText* m_text;                      //< Text which will be printed after call.
     string m_sFunction;                 //< Function called when calling state.
     string m_sActions;                  //< Actions executed after call.
+    string m_sEvents;                   //< string holding a list of events, which will be executed.
     vector<CText*> m_alternativeTexts;  //< Map of alternative texts 
 
     //Map of options 
@@ -99,8 +100,6 @@ public:
 
     // *** functions *** //
     string standard(CPlayer*);
-    string parsen1(CPlayer*);
-    string ticket(CPlayer*);
     string keinTicket(CPlayer*);
     string betrunkene(CPlayer*);
     string strangeGuy1(CPlayer*); 
