@@ -1,4 +1,5 @@
 ---
+
 - name: Foyer
   id: hospital_foyer
   description: 
@@ -35,6 +36,7 @@
       id: "hospital_zombie1"
       hp: 40
       strength: 12
+      ep: 10
       attacks: 
         bite: Bite
     

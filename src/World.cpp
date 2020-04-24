@@ -111,6 +111,7 @@ void CWorld::roomFactory(CPlayer* player)
 
 void CWorld::roomFactory(string sPath, CPlayer* p)
 {
+    std::cout << sPath << std::endl;
     //Read json creating all rooms
     std::ifstream read(sPath);
     nlohmann::json j_rooms;

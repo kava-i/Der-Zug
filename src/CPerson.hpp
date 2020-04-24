@@ -98,6 +98,8 @@ public:
     virtual void throw_event(std::string) { std::cout << "FATAL!!!\n"; }
     virtual void setStatus(string)   { std::cout << "FATAL!!!\n"; }
     virtual void appendPrint(string) { std::cout << "FATAL!!!\n"; }
+    virtual void appendSuccPrint(string) { std::cout << "FATAL!!!\n"; }
+    virtual void addEP(int ep)       { std::cout << "FATAL!!!\n"; }
 };
 
 #endif

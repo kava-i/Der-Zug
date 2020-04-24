@@ -25,6 +25,11 @@ string CFight::fightRound(string sPlayerChoice)
     if(m_opponent->getStat("hp") <= 0) {
         sOutput += "You defeted " + m_opponent->getName() + "!\n";
         m_player->appendPrint(sOutput);
+        int ep = m_opponent->getStat("ep");
+        if(ep != 0) {
+            m_player->appendSuccPrint("+ " + std::to_string(ep) + " EP\n");
+            m_player->addEP(ep);
+        }
         return "endFight;deleteCharacter " + m_opponent->getID();
     }
 
