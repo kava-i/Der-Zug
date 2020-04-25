@@ -16,6 +16,7 @@ CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttac
     m_stats["gold"]     = jAttributes.value("gold", 5);
     m_stats["strength"] = jAttributes.value("strength", 8);
     m_stats["skill"]    = jAttributes.value("skill", 8);
+    m_stats["ep"]       = jAttributes.value("ep", 0);
     
 
     //Set dialogue and attacks
