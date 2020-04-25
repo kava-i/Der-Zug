@@ -78,15 +78,16 @@ string CFight::printStats(CPerson* person,bool printDesc)
     int hp = person->getStat("hp");
     int max_hp = person->getStat("max_hp");
     std::string sOutput = "<div style=\"padding-right: 3rem;\"><span style=\"color:green;padding-right:1rem\">"+person->getName()+"</span><div style=\"position:relative;left:0;top:0;display:inline-block;width:10rem;height:1rem;\"><div style=\"height:100%;background-color: #E74C3C;width:"+std::to_string((int)hp*100/max_hp)+"%;\"></div><div style=\"position: absolute;top:0;left:0;right:0;color:white;text-align: center;\">HP:"+std::to_string(hp)+"/"+std::to_string(max_hp)+"</div></div> <span style=\"padding-left: 1rem;color:#2e86c1;\">Strength: " + std::to_string(person->getStat("strength")) + "</span>\n";
+
+    sOutput += "\n";
     if(printDesc)
     {
-	sOutput+=person->getDescription();
-	sOutput+="\n\n";
+	    sOutput+=person->getDescription();
+	    sOutput+="\n\n";
     }
     else
-	sOutput+="\n";
-    
-    sOutput += person->printAttacksFight();
+        sOutput += person->printAttacksFight();
+
     sOutput += "</div>";
     return sOutput;
 }

@@ -114,7 +114,6 @@ void CWorld::roomFactory(CPlayer* player)
 
 void CWorld::roomFactory(string sPath, CPlayer* p)
 {
-    std::cout << sPath << std::endl;
     //Read json creating all rooms
     std::ifstream read(sPath);
     nlohmann::json j_rooms;
@@ -259,7 +258,6 @@ CWorld::objectmap CWorld::parseRoomChars(nlohmann::json j_room, std::string sAre
             m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, p, items);
             mapCharacters[jBasic["id"]] = jBasic["name"];
         }
-        std::cout << "Added Character: " << sID << std::endl;
     }
     return mapCharacters;
 }
@@ -309,27 +307,20 @@ CDialog* CWorld::dialogFactory(string sPath, CPlayer* p)
 
     for(auto j_state : j_states)
     {
-        std::cout << j_state << std::endl;
-
         // *** parse options *** //
         std::map<int, SDOption> options;
         if(j_state.count("options") != 0)
         {
-            std::cout << "1.\n";
             for(auto& jAtts : j_state["options"])
             {
-                std::cout << "2.\n";
                 nlohmann::json jDeps;
                 if(jAtts.count("deps") > 0)
                     jDeps = jAtts["deps"];
             
-                std::cout << "3.\n";
                 options[jAtts["id"]] = {jAtts["text"], jDeps, jAtts["to"]};
             }
-            std::cout << "4.\n";
         }
 
-        std::cout << "5.\n";
         // *** parse state *** //
 
         //Create state
