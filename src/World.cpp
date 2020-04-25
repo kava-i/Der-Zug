@@ -232,6 +232,10 @@ CWorld::objectmap CWorld::parseRoomChars(nlohmann::json j_room, std::string sAre
         else
             jBasic = {};
 
+        //Update basic with specific json
+        func::updateJson(jBasic, it.second);     
+    
+        //Update id
         jBasic["id"] = sID;
 
         //Create dialog 
@@ -247,8 +251,14 @@ CWorld::objectmap CWorld::parseRoomChars(nlohmann::json j_room, std::string sAre
 
         //Create character and add to maps
         m_characters[sID] = new CPerson(jBasic, newDialog, attacks, p, items);
-        mapCharacters[sID] = jBasic.value("name", "");
+        mapCharacters[sID] = jBasic["name"];
 
+        //Add [amount] characters with "id = id + num" if amount is set.
+        for(size_t i=2; i<=it.second.value("amount", 0u); i++) {
+            jBasic["id"]  =  sID+std::to_string(i);
+            m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, p, items);
+            mapCharacters[jBasic["id"]] = jBasic["name"];
+        }
         std::cout << "Added Character: " << sID << std::endl;
     }
     return mapCharacters;
@@ -305,16 +315,21 @@ CDialog* CWorld::dialogFactory(string sPath, CPlayer* p)
         std::map<int, SDOption> options;
         if(j_state.count("options") != 0)
         {
+            std::cout << "1.\n";
             for(auto& jAtts : j_state["options"])
             {
+                std::cout << "2.\n";
                 nlohmann::json jDeps;
                 if(jAtts.count("deps") > 0)
                     jDeps = jAtts["deps"];
             
+                std::cout << "3.\n";
                 options[jAtts["id"]] = {jAtts["text"], jDeps, jAtts["to"]};
             }
+            std::cout << "4.\n";
         }
 
+        std::cout << "5.\n";
         // *** parse state *** //
 
         //Create state

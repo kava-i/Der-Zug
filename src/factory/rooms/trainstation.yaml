@@ -13,6 +13,7 @@
     passant1: { }
     passant2: { }
     passant3: { }
+    zombie: {ep: 15}
   items:
     buch_PdG: { }
     basic_stick: { hidden: true }
@@ -27,6 +28,7 @@
       look: in
       items:
         basic_wine: Wine
+        basic_wine2: Wine
         basic_cigaretts: A pack of Cigaretts
         basic_sword: Basic Sword
         basic_stick: Stick

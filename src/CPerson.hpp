@@ -99,6 +99,8 @@ public:
     */
     bool attributeExists(std::string sAttribute);
 
+    std::string getAllInformation();
+
 
     // *** Functions needed in CPlayer *** //
     virtual void throw_event(std::string) { std::cout << "FATAL!!!\n"; }

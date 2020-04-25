@@ -140,6 +140,21 @@ std::string func::returnSwapedString(std::string str, int val)
     return str2;
 }
 
+/**
+* replace all entries in first json, which also occure in second json with
+* this second value.
+* @param[in] json1 (first json which will be updated)
+* @param[in] json2 (second json)
+*/
+void func::updateJson(nlohmann::json& json1, nlohmann::json& json2)
+{
+    for(auto it = json1.begin(); it!=json1.end(); it++)
+    {
+        if(json2.count(it.key()) > 0)
+            json1[it.key()] = json2[it.key()];
+    }
+}
+
 int func::getNumFromBack(std::string str)
 {
     int counter = 1; 

@@ -102,6 +102,7 @@ public:
     void h_endFight(std::string&, CPlayer*);
     void h_endDialog(std::string&, CPlayer*);
     void h_gameover(std::string&, CPlayer*);
+    void h_showPersonInfo(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
     void h_show             (std::string&, CPlayer*);

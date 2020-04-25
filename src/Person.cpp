@@ -135,3 +135,13 @@ string CPerson::getAttack(string sPlayerChoice)
 bool CPerson::attributeExists(std::string sAttribute) {
     return m_stats.count(func::returnToLower(sAttribute)) > 0;
 }
+
+std::string CPerson::getAllInformation()
+{
+    std::string sOutput = "";
+    sOutput += "id: " + m_sID + ", name: " + m_sName + ", ";
+    for(auto it : m_stats)
+        sOutput += it.first + ", " + std::to_string(it.second) + ", ";
+    sOutput + ", ";
+    return sOutput;
+}

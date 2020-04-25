@@ -108,6 +108,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_endFight"] = &CEnhancedContext::h_endFight;
     m_handlers["h_endDialog"] = &CEnhancedContext::h_endDialog;
     m_handlers["h_gameover"] = &CEnhancedContext::h_gameover;
+    m_handlers["h_showPersonInfo"] = &CEnhancedContext::h_showPersonInfo;
 
     // ***** STANDARD CONTEXT ***** //
     m_handlers["h_show"] = &CEnhancedContext::h_show;
@@ -183,7 +184,8 @@ void CEnhancedContext::initializeTemplates()
                         {"fight", {"h_newFight"}},
                         {"endFight",{"h_endFight"}},
                         {"endDialog",{"h_endDialog"}},
-                        {"gameover",{"h_gameover"}}}}
+                        {"gameover",{"h_gameover"}},
+                        {"showinfo",{"h_showPersonInfo"}} }}
                     };
 
     m_templates["standard"] = {
@@ -398,6 +400,16 @@ void CEnhancedContext::h_newFight(std::string& sIdentifier, CPlayer* p) {
 void CEnhancedContext::h_gameover(std::string& sIdentifier, CPlayer* p) {
     p->setStat("hp", 0);
     p->appendStoryPrint("\nDu bist gestorben... \n\n $\n");
+}
+
+void CEnhancedContext::h_showPersonInfo(std::string& sIdentifier, CPlayer* p) {
+    std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier);
+
+    if(character != "")
+        p->appendPrint(p->getWorld()->getCharacter(character)->getAllInformation());
+    else
+        p->appendPrint("character not found.\n");
+    m_curPermeable=false;
 }
 
 
@@ -812,21 +824,15 @@ void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
     //Change dialog of all "Passanten"
     if(step->getSolved() == true)
     {
-        std::cout << "1.\n";
         for(size_t i=1; i<=3; i++)
             p->getWorld()->getCharacter("trainstation_bahnhof_eingangshalle_passant"+std::to_string(i))->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2", p));
-        std::cout << "2.\n";
         for(size_t i=4; i<=6; i++)
             p->getWorld()->getCharacter("trainstation_bahnhof_nebenhalle_passant"+std::to_string(i))->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2", p));
-        std::cout << "3.\n";
         for(size_t i=7; i<=9; i++)
             p->getWorld()->getCharacter("trainstation_gleis5_passant"+std::to_string(i))->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2", p));
-        std::cout << "4.\n";
 
         p->getContexts().erase(quest->getID());
-        std::cout << "5.\n";
     }
-    std::cout << "6.\n";
 }
 
 // *** *** Besoffene Frau *** *** //

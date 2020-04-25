@@ -9,6 +9,7 @@
 #include <regex>
 #include <time.h>
 #include <ctime>
+#include "json.hpp"
 
 #include "fuzzy.hpp"
 #include "Webcmd.hpp"
@@ -82,6 +83,14 @@ namespace func
     * @param num number indicating how many characters will be swapped in how many words.
     */
     std::string returnSwapedString(std::string str, int num);
+
+    /**
+    * replace all entries in first json, which also occure in second json with
+    * this second value.
+    * @param[in] json1 (first json which will be updated)
+    * @param[in] json2 (second json)
+    */
+    void updateJson(nlohmann::json& json1, nlohmann::json& json2);
 
     /**
     *                   ***     printList       ***
