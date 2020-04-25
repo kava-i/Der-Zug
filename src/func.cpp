@@ -179,6 +179,32 @@ std::string func::extractLeadingChars(const std::string& str)
     return sOpt; 
 } 
 
+/**
+* Append to is highest postfix+1. Iterate over map and get highest postfix of similar ids.
+* Return id + postfix increased by one.
+* @param[in] mapObjects (map of all objects which might have a similar id
+* @param[in] sID (id which shall be edited)
+* @return id + greates postfix+1.
+*/
+std::string func::incIDNumber(std::map<std::string, std::string> mapObjects, std::string sID)
+{
+    int max = 0;
+    bool found = false;
+    for(const auto& it : mapObjects)
+    {
+        if(it.first.find(sID) != std::string::npos)
+            found = true;
+        if(it.first.find(sID) != std::string::npos && getNumFromBack(it.first) > max)
+            max = getNumFromBack(it.first);
+    } 
+    if(max == 0 && found == false)
+        return sID;
+    else if(max == 0 && found == true)
+        return sID + "1";
+    else
+        return sID + std::to_string(max+1);
+}
+
 TEST_CASE("Testing func::split functionality","[func::split]")
 {
     std::string lk="Hallo ich funktioniere";

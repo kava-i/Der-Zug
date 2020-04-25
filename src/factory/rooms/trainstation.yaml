@@ -10,10 +10,12 @@
     bahnhof_nebenhalle: {name: Nebenhalle, prep: zur }
     ausgang: { name: Ausgang, prep: zum }
   characters:
-    passant1: { }
-    passant2: { }
-    passant3: { }
-    zombie: {ep: 15}
+    - [passant1, { }]
+    - [passant2, { }]
+    - [passant3, { }]
+    - [zombie, { ep: 15}]
+    - [zombie, { amount: 2}]
+    - [zombie, { ep: 20, amount: 4}]
   items:
     buch_PdG: { }
     basic_stick: { hidden: true }
@@ -55,10 +57,10 @@
     bahnhof_eingangshalle: { name: Eingangshalle, prep: zur}
     bahnhof_toiletten: { name: Toiletten, prep: zu den}
   characters:
-    passant4: { }
-    passant5: { }
-    passant6: { }
-    konstantin_thron: { }
+    - [passant4, { }]
+    - [passant5, { }]
+    - [passant6, { }]
+    - [konstantin_thron, { }]
 
 - name: Ausgang
   id: ausgang
@@ -83,7 +85,7 @@
   exits:
     bahnhof_toiletten: { name: Vorraum, prep: zurück zum }
   characters:
-    ticketVerkäufer: { }
+    - [ticketVerkäufer, { }]
 
 - name: Frauen-Toilette
   id: bahnhof_frauenToilette
@@ -93,7 +95,7 @@
   exits:
     bahnhof_toiletten: { name: Vorraum, prep: zurück zum }
   characters:
-    besoffene_frau: { } 
+    - [besoffene_frau, { }]
 
 
 - name: "Gleis 1"
@@ -132,6 +134,6 @@
   exits: 
     bahnhof_fernzüge: { name: Zurück zu den Gleisen/ Fernzügen}
   characters:
-    passant7: { }
-    passant8: { }
-    passant9: { } 
+    - [passant7, { }]
+    - [passant8, { }]
+    - [passant9, { }]

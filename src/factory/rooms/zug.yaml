@@ -8,7 +8,7 @@
    exits:
      trainCorridor: { name: Korridor, prep: zum}
    characters:
-     parsen: { }
+     - [parsen, { }]
 
  - name: "Compartment B"
    id: compartment-b
@@ -17,8 +17,8 @@
    exits:
      trainCorridor: { name: Korridor, prep: zum}
    characters:
-     pink_woman: { }
-     blue_woman: { }
+     - [pink_woman, { }]
+     - [blue_woman, { }]
 
  - name: "Compartment C"
    id: compartment-c
@@ -45,4 +45,4 @@
      compartment-c: { name: Compartment C, prep: zum }
      compartment-d: { name: Compartment D, prep: zum }
    characters:
-     pissing_man: { } 
+     - [pissing_man, { } ]

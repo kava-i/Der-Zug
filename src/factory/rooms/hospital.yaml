@@ -31,7 +31,7 @@
     hospital_foyer: { name: Foyer, prep: zum }
     hospital_corridor: { name: Corridor, prep: zum}
   characters:
-    zombie: { }
+    - [zombie, { }]
     
 - name: Corridor
   id: hospital_corridor

@@ -93,6 +93,15 @@ namespace func
     void updateJson(nlohmann::json& json1, nlohmann::json& json2);
 
     /**
+    * Append to is highest postfix+1. Iterate over map and get highest postfix of similar ids.
+    * Return id + postfix increased by one.
+    * @param[in] mapObjects (map of all objects which might have a similar id
+    * @param[in] sID (id which shall be edited)
+    * @return id + greates postfix+1.
+    */
+    std::string incIDNumber(std::map<std::string, std::string> mapObjects, std::string sID);
+    
+    /**
     *                   ***     printList       ***
     * Print all elements from a directory with any type. Pass lambda function to specify 
     * out put for type apart from string, integer etc. It is also possible to pass a 

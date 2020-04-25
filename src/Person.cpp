@@ -141,7 +141,7 @@ std::string CPerson::getAllInformation()
     std::string sOutput = "";
     sOutput += "id: " + m_sID + ", name: " + m_sName + ", ";
     for(auto it : m_stats)
-        sOutput += it.first + ", " + std::to_string(it.second) + ", ";
+        sOutput += it.first + ": " + std::to_string(it.second) + ", ";
     sOutput + ", ";
     return sOutput;
 }

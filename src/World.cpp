@@ -220,22 +220,27 @@ CWorld::objectmap CWorld::parseRoomChars(nlohmann::json j_room, std::string sAre
     if(j_room.count("characters") == 0)
         return mapCharacters;
 
-    for(auto it : j_room["characters"].get<map<string, nlohmann::json>>())
+    std::cout << "1.\n";
+    for(auto it : j_room["characters"].get<vector<nlohmann::json>>())
     {
-        std::string sID = sArea + "_" + j_room["id"].get<std::string>() + "_" + it.first;
+        std::cout << it << std::endl;
+        auto character = it.get<std::pair<std::string, nlohmann::json>>();
+        std::cout << "From: " << character.first << " : " << character.second << std::endl;
+        std::string sID = sArea + "_" + j_room["id"].get<std::string>() + "_" + character.first;
+        std::cout << "id: " << sID << std::endl;
 
         //Gett basic json for construction.
         nlohmann::json jBasic;
-        if(m_jCharacters.count(it.first) > 0)
-            jBasic = m_jCharacters[it.first];
+        if(m_jCharacters.count(character.first) > 0)
+            jBasic = m_jCharacters[character.first];
         else
             jBasic = {};
 
         //Update basic with specific json
-        func::updateJson(jBasic, it.second);     
+        func::updateJson(jBasic, character.second);     
     
         //Update id
-        jBasic["id"] = sID;
+        jBasic["id"] = func::incIDNumber(mapCharacters, sID);
 
         //Create dialog 
         CDialog* newDialog = new CDialog;
@@ -245,18 +250,20 @@ CWorld::objectmap CWorld::parseRoomChars(nlohmann::json j_room, std::string sAre
             newDialog = dialogFactory("defaultDialog", p);
 
         //Create items and attacks
-        map<std::string, CItem*> items = parseRoomItems(jBasic, sID, p);
+        map<std::string, CItem*> items = parseRoomItems(jBasic, jBasic["id"], p);
         map<string, CAttack*> attacks = parsePersonAttacks(jBasic);
 
         //Create character and add to maps
-        m_characters[sID] = new CPerson(jBasic, newDialog, attacks, p, items);
-        mapCharacters[sID] = jBasic["name"];
+        m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, p, items);
+        mapCharacters[jBasic["id"]] = jBasic["name"];
+        std::cout << "Created character with id: " << jBasic["id"] << std::endl;
 
         //Add [amount] characters with "id = id + num" if amount is set.
-        for(size_t i=2; i<=it.second.value("amount", 0u); i++) {
-            jBasic["id"]  =  sID+std::to_string(i);
+        for(size_t i=2; i<=character.second.value("amount", 0u); i++) {
+            jBasic["id"]  =  func::incIDNumber(mapCharacters, sID);
             m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, p, items);
             mapCharacters[jBasic["id"]] = jBasic["name"];
+            std::cout << "Created character with id: " << jBasic["id"] << std::endl;
         }
     }
     return mapCharacters;
