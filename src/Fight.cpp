@@ -60,7 +60,7 @@ string CFight::turn(string selectedAttack, CPerson* attacker, CPerson* defender)
     sOutput += attack->getOutput() + "\n";
 
     int damage = attack->getPower() + attacker->getStat("strength");
-    sOutput += "Damage delt: " + std::to_string(damage) + "\n\n";
+    sOutput += "Damage dealt: " + std::to_string(damage) + "\n\n";
     defender->setStat("hp", defender->getStat("hp") - damage);
 
     return sOutput;
@@ -78,7 +78,7 @@ string CFight::printStats(CPerson* person)
 string CFight::createFightingAgainst() 
 {
     std::string sOutput;
-    sOutput += "\n\nFighting against eachother: \n";
+    sOutput += "\n\nFighting against each other: \n";
 
     sOutput += printStats(m_player);
     sOutput += printStats(m_opponent);
