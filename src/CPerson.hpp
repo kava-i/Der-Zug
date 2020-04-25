@@ -27,6 +27,7 @@ protected:
     ///This Persons attacks
     typedef std::map<string, CAttack*> attacks;
     attacks m_attacks;  
+    std::string m_description;
 
     ///Inventory of this person
     CInventory m_inventory;                     
@@ -35,6 +36,10 @@ protected:
     CDialog* m_dialog;
 
 public:
+    std::string getDescription()
+    {
+	return m_description;
+    }
 
     /**
     * Constructor for Person, i.e. "character". Calls constructor from base class CObject.
@@ -81,6 +86,7 @@ public:
     * Print all attacks. Attacks are printed in the form: Name \n Strengt\n Description.
     */
     string printAttacks();
+    string printAttacksFight();
     string getAttack(string sPlayerChoice);
 
 
