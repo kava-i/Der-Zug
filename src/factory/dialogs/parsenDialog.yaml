@@ -42,7 +42,7 @@
 - id: prügel
   text: 
   - {speaker: PARSEN, text: "Na dann komm mal her du kleiner!$"}
-  events: ";fight parsen"
+  events: ";fight zug_compartment-a_parsen"
 
 - id: dream
   text: 

@@ -99,6 +99,9 @@ void CWorld::worldFactory(CPlayer* p)
     //Create items
     itemFactory();
 
+    //Create characters
+    characterFactory();
+
     //Create rooms
     roomFactory(p);
 }
@@ -122,10 +125,8 @@ void CWorld::roomFactory(string sPath, CPlayer* p)
     
     for(auto j_room : j_rooms )
     {
-        //Parse characters 
-        objectmap mapChars;
-        if(j_room.count("characters") > 0)
-            mapChars = characterFactory(j_room["characters"], p);
+        //Parse characters
+        objectmap mapChars = parseRoomChars(j_room, sArea, p);
 
         //Parse items
         map<string, CItem*> mapItems = parseRoomItems(j_room, sArea, p);
@@ -197,28 +198,60 @@ map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, std::string sA
     return mapItems;
 } 
 
-CWorld::objectmap CWorld::characterFactory(nlohmann::json j_characters, CPlayer* p)
+void CWorld::characterFactory()
 {
-    objectmap mapChars;
-    for(auto j_char : j_characters)
+    for(auto& p : fs::directory_iterator("factory/jsons/characters"))
+        characterFactory(p.path());
+}
+
+void CWorld::characterFactory(std::string sPath) {
+    //Read json creating all characters
+    std::ifstream read(sPath);
+    nlohmann::json j_chars;
+    read >> j_chars;
+    read.close();
+
+    for(auto j_char : j_chars) 
+        m_jCharacters[j_char["id"]] = j_char;
+}
+
+CWorld::objectmap CWorld::parseRoomChars(nlohmann::json j_room, std::string sArea, CPlayer* p)
+{
+    std::map<std::string, std::string> mapCharacters;
+    if(j_room.count("characters") == 0)
+        return mapCharacters;
+
+    for(auto it : j_room["characters"].get<map<string, nlohmann::json>>())
     {
+        std::string sID = sArea + "_" + j_room["id"].get<std::string>() + "_" + it.first;
+
+        //Gett basic json for construction.
+        nlohmann::json jBasic;
+        if(m_jCharacters.count(it.first) > 0)
+            jBasic = m_jCharacters[it.first];
+        else
+            jBasic = {};
+
+        jBasic["id"] = sID;
+
         //Create dialog 
         CDialog* newDialog = new CDialog;
-        if(j_char.count("dialog") > 0)
-            newDialog = dialogFactory(j_char["dialog"], p); 
+        if(jBasic.count("dialog") > 0)
+            newDialog = dialogFactory(jBasic["dialog"], p); 
         else
             newDialog = dialogFactory("defaultDialog", p);
 
         //Create items and attacks
-        map<std::string, CItem*> items = parseRoomItems(j_char, j_char["id"], p);
-        map<string, CAttack*> attacks = parsePersonAttacks(j_char);
+        map<std::string, CItem*> items = parseRoomItems(jBasic, sID, p);
+        map<string, CAttack*> attacks = parsePersonAttacks(jBasic);
 
         //Create character and add to maps
-        m_characters[j_char["id"]] = new CPerson(j_char, newDialog, attacks, p, items);
-        mapChars[j_char["id"]] = j_char["name"];
-    }
+        m_characters[sID] = new CPerson(jBasic, newDialog, attacks, p, items);
+        mapCharacters[sID] = jBasic.value("name", "");
 
-    return mapChars;
+        std::cout << "Added Character: " << sID << std::endl;
+    }
+    return mapCharacters;
 }
 
 void CWorld::attackFactory()
@@ -266,6 +299,8 @@ CDialog* CWorld::dialogFactory(string sPath, CPlayer* p)
 
     for(auto j_state : j_states)
     {
+        std::cout << j_state << std::endl;
+
         // *** parse options *** //
         std::map<int, SDOption> options;
         if(j_state.count("options") != 0)
@@ -289,6 +324,7 @@ CDialog* CWorld::dialogFactory(string sPath, CPlayer* p)
     //Update dialog values and return
     newDialog->setName(sPath);
     newDialog->setStates(mapStates);
+
     return newDialog;
 }
 

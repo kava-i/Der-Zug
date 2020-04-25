@@ -541,7 +541,7 @@ void CEnhancedContext::h_firstZombieAttack(std::string& sIdentifier, CPlayer* p)
     p->appendDescPrint("\n$\nA zombie comes running down the stairs and attacks you!");
 
     //Create fight
-    p->setFight(new CFight(p, p->getWorld()->getCharacter("hospital_zombie1")));
+    p->setFight(new CFight(p, p->getWorld()->getCharacter("hospital_hospital_stairs_zombie")));
     m_eventmanager.erase("h_firstZombieAttack");
 }
 
@@ -802,25 +802,37 @@ void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
     }
 
     int num = (((int)character.back()-48)-1)/3;
-    step->getWhich().push_back("passant" + std::to_string(num*3+1));
-    step->getWhich().push_back("passant" + std::to_string(num*3+2));
-    step->getWhich().push_back("passant" + std::to_string(num*3+3));
+    character.pop_back();
+    step->getWhich().push_back(character + std::to_string(num*3+1));
+    step->getWhich().push_back(character + std::to_string(num*3+2));
+    step->getWhich().push_back(character + std::to_string(num*3+3));
     step->incSucc(1);
     p->questSolved(quest->getID(), "1reden");
 
     //Change dialog of all "Passanten"
     if(step->getSolved() == true)
     {
-        for(size_t i=1; i<=9; i++)
-            p->getWorld()->getCharacter("passant"+std::to_string(i))->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2", p));
+        std::cout << "1.\n";
+        for(size_t i=1; i<=3; i++)
+            p->getWorld()->getCharacter("trainstation_bahnhof_eingangshalle_passant"+std::to_string(i))->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2", p));
+        std::cout << "2.\n";
+        for(size_t i=4; i<=6; i++)
+            p->getWorld()->getCharacter("trainstation_bahnhof_nebenhalle_passant"+std::to_string(i))->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2", p));
+        std::cout << "3.\n";
+        for(size_t i=7; i<=9; i++)
+            p->getWorld()->getCharacter("trainstation_gleis5_passant"+std::to_string(i))->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2", p));
+        std::cout << "4.\n";
+
         p->getContexts().erase(quest->getID());
+        std::cout << "5.\n";
     }
+    std::cout << "6.\n";
 }
 
 // *** *** Besoffene Frau *** *** //
 void CEnhancedContext::h_besiege_besoffene_frau(std::string& sIdentifier, CPlayer* p)
 {
-    if(sIdentifier != "besoffene_frau")
+    if(sIdentifier != "trainstation_bahnhof_frauenToilette_besoffene_frau")
         return;
 
     p->questSolved(getAttribute<std::string>("questID"), "1besiege_besoffene_frau");

@@ -36,6 +36,7 @@ private:
     map<string, CAttack*>    m_attacks;
     map<string, CQuest*>     m_quests;
     map<string, nlohmann::json> m_items;
+    map<string, nlohmann::json> m_jCharacters;
 
 public:
 
@@ -99,8 +100,12 @@ public:
     void itemFactory(std::string sPath);
     map<string, CItem*> parseRoomItems(nlohmann::json j_room, std::string sArea, CPlayer* p);
 
+    //Characters
+    void characterFactory();
+    void characterFactory(std::string sPath);
+    std::map<std::string, std::string> parseRoomChars(nlohmann::json j_room, std::string sArea, CPlayer* p);
+
     //Character, Dialog, Details
     map<string, CDetail*> detailFactory(nlohmann::json j_room, CPlayer* p, std::string sArea);
-    objectmap characterFactory(nlohmann::json j_characters, CPlayer* p);
     CDialog* dialogFactory(string sPath, CPlayer* p); 
 };

@@ -36,6 +36,12 @@ namespace func
     void convertToLower(std::string &str);
 
     /**
+    * Convert a given string to only contain upper case characters.
+    * @param[in, out] str string to be modified
+    */
+    void convertToUpper(std::string &str);
+
+    /**
     * Return the given string to only contain lower case characters.
     * @param str string to be converted.
     * @return converted string in lower case.

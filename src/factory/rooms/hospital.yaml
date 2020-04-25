@@ -7,7 +7,6 @@
   exits: 
     compartment-a: { name: Eingangstor, prep: zum }
     hospital_stairs: { name: Treppe, prep: zur}
-  characters:
   items:
     buch_PdG: { }
     basic_stick: { }
@@ -32,13 +31,7 @@
     hospital_foyer: { name: Foyer, prep: zum }
     hospital_corridor: { name: Corridor, prep: zum}
   characters:
-    - name: "Zombie"
-      id: "hospital_zombie1"
-      hp: 40
-      strength: 12
-      ep: 10
-      attacks: 
-        bite: Bite
+    zombie: { }
     
 - name: Corridor
   id: hospital_corridor
@@ -46,6 +39,5 @@
     - {speaker: PERZEPTION, text: "The corridor too is enormous. Tall walls to both sides, chandeliers hangig from the cealing, and again you can hear you're footsteps echoing."}
   exits:
     hospital_stairs: { name: Treppe, prep: zur } 
-  characters:
 
 

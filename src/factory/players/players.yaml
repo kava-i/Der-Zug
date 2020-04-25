@@ -1,6 +1,6 @@
 ---
 
-- name: "sophia"
+- name: "Sophia"
   password: password
   id: programmer_anna 
   room: compartment-a
@@ -10,7 +10,7 @@
     kick: Kick
     between_the_legs_kick: "Kick between the legs"
 
-- name: "jan"
+- name: "Jan"
   password: password
   id: programmer_jan
   room: trainCorridor
@@ -19,7 +19,7 @@
   attacks:
     punsch: "Punsch"
 
-- name: "alex"
+- name: "Alex"
   password: password
   id: programmer_jonny
   room: bahnhof_eingangshalle
@@ -34,7 +34,7 @@
   password: password
   room: trainCorridor
 
-- name: "alex schwebel"
+- name: "Alex schwebel"
   password: password
   id: alex_schwebel
   room: compartment-a
@@ -44,7 +44,7 @@
     kick: Kick
     punsch: "Punsch" 
 
-- name: "anna"
+- name: "Anna"
   password: password
   id: annas_friends1
   room: bahnhof_eingangshalle
@@ -54,7 +54,7 @@
     kick: Kick
     between_the_legs_kick: "Kick between the legs"
 
-- name: "leon"
+- name: "Leon"
   password: password
   id: annas_friends2
   room: bahnhof_eingangshalle
@@ -64,7 +64,7 @@
     kick: Kick
     between_the_legs_kick: "Kick between the legs"
 
-- name: "lukas"
+- name: "Lukas"
   password: password
   id: annas_friends3
   room: bahnhof_eingangshalle
@@ -74,7 +74,7 @@
     kick: Kick
     between_the_legs_kick: "Kick between the legs"
 
-- name: "laura"
+- name: "Laura"
   password: password
   id: annas_friends4
   room: bahnhof_eingangshalle

@@ -53,6 +53,17 @@ void func::convertToLower(std::string &str)
 }
 
 /**
+* Convert a given string to only contain upper case characters.
+* @param[in, out] str string to be modified
+*/
+void func::convertToUpper(std::string &str)
+{
+    std::locale loc1;
+    for(unsigned int i=0; i<str.length(); i++)
+        str[i] = toupper(str[i], loc1);
+}
+
+/**
 * Return the given string to only contain lower case characters.
 * @param str str to be converted.
 * @return converted string in lower case.

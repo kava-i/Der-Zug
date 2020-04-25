@@ -18,6 +18,7 @@
 CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks) : CPerson(jAtts, nullptr, lAttacks, this)
 {
     //Set login data and player information
+    func::convertToUpper(m_sName);
     m_sPassword = jAtts["password"];
     m_firstLogin = true; m_sMode = jAtts.value("mode", "prosa"); 
     m_abbilities = {"strength", "skill"};
@@ -736,7 +737,7 @@ void CPlayer::checkCommands()
 */
 string CPlayer::doLogin(string sName, string sPassword)
 {
-    if(sName == m_sName && sPassword == m_sPassword) 
+    if(sName == func::returnToLower(m_sName) && sPassword == m_sPassword) 
         return m_sID;
     else 
         return "";

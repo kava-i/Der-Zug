@@ -14,5 +14,5 @@
 - id: nichtso
   text: 
   - {speaker: BETRUNKENE, text: "Glaubst du eine Frau kann nicht auf sich selbst aufpassen?! Dir zeig ich's, du Lappen!$"}
-  events: ";fight besoffene_frau"
+  events: ";fight trainstation_bahnhof_frauenToilette_besoffene_frau"
   actions: "setNewQuest,besoffene_frau"

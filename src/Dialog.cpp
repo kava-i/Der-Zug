@@ -218,8 +218,11 @@ string CDState::strangeGuy2(CPlayer* p)
     p->throw_event("recieveMoney 3");
     p->questSolved("komische_gruppe", "2hilfe");
 
-    for(size_t i=1; i<=9; i++)
-        p->getWorld()->getCharacter("passant"+std::to_string(i))->getDialog()->deleteDialogOption("START", 1);
+    for(auto it : {"trainstation_gleis5_", "trainstation_nebenhalle_", "trainstation_eingangshalle_"}) 
+    {
+        for(size_t i=1; i<=3; i++)
+            p->getWorld()->getCharacter(std::string(it) + "passant"+std::to_string(i))->getDialog()->deleteDialogOption("START", 1);
+    }
 
     return sOutput;
 }
