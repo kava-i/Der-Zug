@@ -20,34 +20,6 @@ CItem::CItem(nlohmann::json jBasic, CPlayer* p) : CObject{jBasic, p}
     m_hidden = jBasic.value("hidden", false);
 }
 
-/**
-* Constructor for derived items. The basic json usually supplies basic attributes. Which 
-* might get overridden, by specific attributes, which otherwise only supply extra item
-* specific attributes.
-* @param[in] jBasic basic attributes from base item.
-* @param[in] jItem extra attributes from specific individual item.
-*/
-CItem::CItem(nlohmann::json jBasic, nlohmann::json jItem, CPlayer* p, std::string sID) : CObject {jBasic, p} 
-{
-    m_sID = sID;
-    
-    std::string sType = jItem.value("type", jBasic.value("type", ""));
-    m_sCategory = func::split(sType, "_")[0];
-    m_sType = func::split(sType, "_")[1];
-
-    m_sAttack = jItem.value("attack", jBasic.value("attack", ""));
-    m_sFunction = jItem.value("function", jBasic.value("function", m_sCategory));
-    m_effekt = jItem.value("effekt", jBasic.value("effekt", 0));
-    m_value = jItem.value("value", jBasic.value("value", 1));
-    m_hidden = jItem.value("hidden", false);
-
-    m_jAttributes = jBasic;
-    jItem.erase("amount");
-    for(auto it=jItem.begin(); it!=jItem.end(); ++it)
-        m_jAttributes[it.key()] = it.value();
-    m_jAttributes["id"] = m_sID;
-}
-
 // *** GETTTER *** //
 nlohmann::json CItem::getAttributes() {
     return m_jAttributes;
@@ -107,6 +79,12 @@ void CItem::initializeFunctions()
 
     //Equipe-functions
     m_functions["equipe"] = &CItem::equipe;
+}
+
+// ***** VARIOUS FUNCTIONS ***** //
+std::string CItem::getAllInfos()
+{
+    return "id: " + m_sID + ", name: " + m_sName + ", catagory: " + m_sCategory + ", type: " + m_sType + ", function: " + m_sFunction + ", attack: " + m_sAttack + ", effekt: " + std::to_string(m_effekt) + ", value: " + std::to_string(m_value) + ", hidden: " + std::to_string(m_hidden) + "\n"; 
 }
 
 // ***** FUNCTION-CALLER ***** // 

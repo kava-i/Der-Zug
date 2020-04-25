@@ -145,7 +145,7 @@ map<string, CDetail*> CWorld::detailFactory(nlohmann::json j_room, CPlayer* p, s
         return mapDetails;
 
     for(auto j_detail : j_room["details"])
-        mapDetails[j_detail["id"]] = new CDetail(j_detail, p, sArea);
+        mapDetails[j_detail["id"]] = new CDetail(j_detail, p, sArea + "_" + j_room["id"].get<std::string>());
 
     return mapDetails;
 }
@@ -174,23 +174,33 @@ map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, std::string sA
     if(j_room.count("items") == 0)
         return mapItems;
 
-    map<string, nlohmann::json> items = j_room["items"].get<map<string, nlohmann::json>>();
-    for(auto it : items) 
+    for(auto it : j_room["items"].get<std::vector<nlohmann::json>>()) 
     {
-        std::string sID = sArea + "_" + it.first; 
+        //Convert json array to par and create id
+        auto item = it.get<std::pair<std::string, nlohmann::json>>();
+        std::string sID = sArea + "_" + j_room["id"].get<std::string>() + "_" + item.first; 
 
+        //Get basic json for construction
         nlohmann::json jBasic;
-        if(m_items.count(it.first) > 0)
-            jBasic = m_items[it.first];
+        if(m_items.count(item.first) > 0)
+            jBasic = m_items[item.first];
         else
             jBasic = {};
 
-        mapItems[sID] = new CItem(jBasic, it.second, p, sID);
+        //Update basic with specific json
+        func::updateJson(jBasic, item.second);
+
+        //Update id
+        auto lambda = [](CItem* item) { return item->getName(); };
+        jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapItems, lambda), sID);
+
+        //Create item
+        mapItems[jBasic["id"]] = new CItem(jBasic, p);
 
         //Add [amount] items with "id = id + num" if amount is set.
-        for(size_t i=2; i<=it.second.value("amount", 0u); i++) {
-            std::string newID =  sID +std::to_string(i);
-            mapItems[newID] = new CItem(jBasic, it.second, p, newID);
+        for(size_t i=2; i<=item.second.value("amount", 0u); i++) {
+            jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapItems, lambda), sID);
+            mapItems[jBasic["id"]] = new CItem(jBasic, p);
         }
     }
 
@@ -220,14 +230,11 @@ CWorld::objectmap CWorld::parseRoomChars(nlohmann::json j_room, std::string sAre
     if(j_room.count("characters") == 0)
         return mapCharacters;
 
-    std::cout << "1.\n";
     for(auto it : j_room["characters"].get<vector<nlohmann::json>>())
     {
-        std::cout << it << std::endl;
+        //Convert json array to pair and create id
         auto character = it.get<std::pair<std::string, nlohmann::json>>();
-        std::cout << "From: " << character.first << " : " << character.second << std::endl;
         std::string sID = sArea + "_" + j_room["id"].get<std::string>() + "_" + character.first;
-        std::cout << "id: " << sID << std::endl;
 
         //Gett basic json for construction.
         nlohmann::json jBasic;
@@ -256,14 +263,12 @@ CWorld::objectmap CWorld::parseRoomChars(nlohmann::json j_room, std::string sAre
         //Create character and add to maps
         m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, p, items);
         mapCharacters[jBasic["id"]] = jBasic["name"];
-        std::cout << "Created character with id: " << jBasic["id"] << std::endl;
 
         //Add [amount] characters with "id = id + num" if amount is set.
         for(size_t i=2; i<=character.second.value("amount", 0u); i++) {
             jBasic["id"]  =  func::incIDNumber(mapCharacters, sID);
             m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, p, items);
             mapCharacters[jBasic["id"]] = jBasic["name"];
-            std::cout << "Created character with id: " << jBasic["id"] << std::endl;
         }
     }
     return mapCharacters;

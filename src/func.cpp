@@ -148,11 +148,8 @@ std::string func::returnSwapedString(std::string str, int val)
 */
 void func::updateJson(nlohmann::json& json1, nlohmann::json& json2)
 {
-    for(auto it = json1.begin(); it!=json1.end(); it++)
-    {
-        if(json2.count(it.key()) > 0)
-            json1[it.key()] = json2[it.key()];
-    }
+    for(auto it = json2.begin(); it!=json2.end(); it++)
+        json1[it.key()] = json2[it.key()];
 }
 
 int func::getNumFromBack(std::string str)

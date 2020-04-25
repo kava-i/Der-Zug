@@ -33,15 +33,6 @@ public:
     */
     CItem(nlohmann::json jBasic, CPlayer* p);
 
-    /**
-    * Constructor for derived items. The basic json usually supplies basic attributes. Which 
-    * might get overridden, by specific attributes, which otherwise only supply extra item
-    * specific attributes.
-    * @param[in] jBasic basic attributes from base item.
-    * @param[in] jItem extra attributes from specific individual item.
-    */
-    CItem(nlohmann::json jBasic, nlohmann::json jItem, CPlayer* p, std::string sID="");
-
     // *** GETTER *** // 
     nlohmann::json getAttributes();
     std::string getCategory();
@@ -61,6 +52,8 @@ public:
     void setValue(int value);
     void setHidden(bool hidden); 
 
+    std::string getAllInfos(); 
+    
     static void initializeFunctions();
     bool callFunction(CPlayer* p);
 

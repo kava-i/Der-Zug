@@ -16,8 +16,8 @@
   description:
   - {speaker: PERZEPTION, text: "Herr Thron wirkt etwas eingebildet."}
   items:
-    basic_cigaretts: { }
-    basic_wine: { }
+    - [basic_cigaretts, { }]
+    - [basic_wine, { }]
 
 - name: Passant1
   id: passant4

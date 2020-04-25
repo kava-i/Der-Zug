@@ -109,6 +109,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_endDialog"] = &CEnhancedContext::h_endDialog;
     m_handlers["h_gameover"] = &CEnhancedContext::h_gameover;
     m_handlers["h_showPersonInfo"] = &CEnhancedContext::h_showPersonInfo;
+    m_handlers["h_showItemInfo"] = &CEnhancedContext::h_showItemInfo;
 
     // ***** STANDARD CONTEXT ***** //
     m_handlers["h_show"] = &CEnhancedContext::h_show;
@@ -185,7 +186,8 @@ void CEnhancedContext::initializeTemplates()
                         {"endFight",{"h_endFight"}},
                         {"endDialog",{"h_endDialog"}},
                         {"gameover",{"h_gameover"}},
-                        {"showinfo",{"h_showPersonInfo"}} }}
+                        {"showperson",{"h_showPersonInfo"}},
+                        {"showitem",{"h_showItemInfo"}} }}
                     };
 
     m_templates["standard"] = {
@@ -411,7 +413,17 @@ void CEnhancedContext::h_showPersonInfo(std::string& sIdentifier, CPlayer* p) {
         p->appendPrint("character not found.\n");
     m_curPermeable=false;
 }
+void CEnhancedContext::h_showItemInfo(std::string& sIdentifier, CPlayer* p) 
+{
+    auto lambda = [](CItem* item) { return item->getName(); };
+    std::string item = func::getObjectId(p->getRoom()->getItems(), sIdentifier, lambda);
 
+    if(item != "")
+        p->appendPrint(p->getRoom()->getItems()[item]->getAllInfos());
+    else
+        p->appendPrint("Item not found.\n");
+    m_curPermeable=false;
+}
 
 // ***** ***** STANDARD CONTEXT ***** ***** //
 

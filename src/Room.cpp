@@ -147,7 +147,13 @@ string CRoom::look(string sWhere, string sWhat, std::string sMode)
     
             //Change from hidden to visible and "empty" detail
             for(auto it : detail.second->getItems()) 
-                m_items[it.first]->setHidden(false);
+            {
+                std::cout << it.first << std::endl;
+                if(m_items.count(it.first) > 0)
+                    m_items[it.first]->setHidden(false);
+                else
+                    std::cout << "Item not found: " << it.first << std::endl;
+            }
             detail.second->getItems().clear();
         }
     }

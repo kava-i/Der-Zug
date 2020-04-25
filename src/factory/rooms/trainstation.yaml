@@ -17,11 +17,12 @@
     - [zombie, { amount: 2}]
     - [zombie, { ep: 20, amount: 4}]
   items:
-    buch_PdG: { }
-    basic_stick: { hidden: true }
-    basic_sword: { hidden: true }
-    basic_wine: { hidden: true, amount: 2 }
-    basic_cigaretts: { hidden: true, amount: 2 }
+    - [buch_PdG, { }]
+    - [basic_stick, { hidden: true }]
+    - [basic_sword, { hidden: true }]
+    - [basic_wine, { hidden: true, amount: 2 }]
+    - [basic_wine, { value: 999 }]
+    - [basic_cigaretts, { hidden: true, amount: 2 }]
   details:
     - name: Small box
       id: trainstation_small-box
@@ -30,7 +31,7 @@
       look: in
       items:
         basic_wine: Wine
-        basic_wine2: Wine
+        basic_wine1: Wine
         basic_cigaretts: A pack of Cigaretts
         basic_sword: Basic Sword
         basic_stick: Stick
