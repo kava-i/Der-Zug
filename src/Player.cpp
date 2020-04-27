@@ -178,6 +178,7 @@ void CPlayer::appendSpeackerPrint(std::string sSpeaker, std::string sPrint) {
 std::string CPlayer::returnSpeakerPrint(std::string sSpeaker, std::string sPrint) {
     return "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
 }
+
 void CPlayer::appendSuccPrint(string sPrint) {
     m_sPrint += GREEN + sPrint + WHITE;
 }
@@ -350,7 +351,7 @@ void CPlayer::changeRoom(string sIdentifier)
 */
 void CPlayer::changeRoom(CRoom* newRoom)
 {
-    appendPrint(newRoom->showEntryDescription());
+    appendPrint(newRoom->showDescription(m_world->getCharacters()));
     m_lastRoom = m_room; 
     m_room = newRoom;
     m_vistited[m_room->getID()] = true;

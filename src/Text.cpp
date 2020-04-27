@@ -27,11 +27,19 @@ std::string CText::print()
     return sOutput;
 }
 
+std::string CText::reducedPrint()
+{
+    std::string sOutput = "";
+    for(size_t i=0; i<m_texts.size(); i++)
+        sOutput += m_texts[i]->reducedPrint(m_player);
+    return sOutput;
+}
+
     
 COutput::COutput(nlohmann::json jAttributes, CPlayer* p)
 {
     m_sSpeaker = jAttributes.value("speaker", "");
-    m_sText = jAttributes.value("text", "") + "$";
+    m_sText = jAttributes.value("text", ""); 
 
     if(jAttributes.count("deps") > 0)
         m_jDeps = jAttributes["deps"];
@@ -60,7 +68,23 @@ std::string COutput::print(CPlayer* p)
     updateAttrbutes(sUpdated, p);
 
     // *** Print text *** // 
-    return p->returnSpeakerPrint(m_sSpeaker + sSuccess, m_sText + "\n" + sUpdated);
+    return p->returnSpeakerPrint(m_sSpeaker + sSuccess, m_sText + "$\n" + sUpdated);
+}
+
+std::string COutput::reducedPrint(CPlayer* p)
+{
+    //Variables
+    std::string sSuccess = "";  //Storing, when success of mind will be announced 
+
+    //Check dependencies
+    if(checkDependencies(sSuccess, p) == false)
+    {
+        std::cout << "CHECK DEPENDENCIES FAILED!\n";
+        return ""; 
+    }
+
+    // *** Print text *** // 
+    return m_sText;
 }
 
 bool COutput::checkDependencies(std::string& sSuccess, CPlayer* p)

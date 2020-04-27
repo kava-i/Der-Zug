@@ -20,7 +20,12 @@ CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttac
     m_stats["ep"]	    = jAttributes.value("ep", 0);
     
 
-    m_description = jAttributes.value("appearance","Diese Person ist einzigartig");
+    m_roomDescription = new CText(jAttributes.value("roomDescription", nlohmann::json::parse("{}")), p);
+
+    //If no description is set, set default description
+    if(jAttributes.count("description") == 0)
+        m_text = new CText(nlohmann::json::parse("[{\"speaker\":\"PERZEPTION\",\"text\":\"Diese Person ist so einzigartig, dass es nicht besonders erwähnenswertes an ihr geben kann. (Dies kann man so und auch so verstehen)\"}]"), p);
+
     //Set dialogue and attacks
     m_attacks = newAttacks;
     m_dialog = dialogue;
@@ -61,6 +66,16 @@ std::map<std::string, std::string> CPerson::getAttacks2()
 ///Return person's inventory.
 CInventory& CPerson::getInventory()  {
     return m_inventory; 
+}
+
+///Description where the player is located in the room
+std::string CPerson::getRoomDescription() {
+    return m_roomDescription->reducedPrint();
+}
+
+///Brief description of character
+std::string CPerson::getReducedDescription() {
+    return m_text->reducedPrint();
 }
 
 

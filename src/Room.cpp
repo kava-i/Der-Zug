@@ -1,4 +1,5 @@
 #include "CRoom.hpp" 
+#include "CPerson.hpp"
 
 // *** GETTER *** // 
 
@@ -37,16 +38,12 @@ void CRoom::setPlayers(objectmap& onlinePlayers) { m_players = onlinePlayers; }
 
 // *** VARIOUS FUNCTIONS *** //
 
-string CRoom::showEntryDescription()
+string CRoom::showDescription(std::map<std::string, CPerson*> mapCharacters)
 {
-    string sDesc = m_sEntry + m_text->print() + "\n";
-    return sDesc;
-}
-
-string CRoom::showDescription()
-{
-    string sDesc = m_text->print();
-    return sDesc;
+    string sDesc = "><div class='spoken2'>";
+    for(auto it : m_characters)
+        sDesc += mapCharacters[it.first]->getRoomDescription();
+    return m_text->print() + sDesc + "</div>";
 }
 
 string CRoom::showAll(std::string sMode)

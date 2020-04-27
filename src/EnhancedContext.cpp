@@ -439,7 +439,7 @@ void CEnhancedContext::h_show(std::string& sIdentifier, CPlayer* p) {
         p->addSelectContest(p->getRoom()->getCharacters(), "talk");
     }
     else if(sIdentifier == "room")
-        p->appendPrint(p->getRoom()->showDescription());
+        p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
     else if(sIdentifier == "items")
         p->appendDescPrint(p->getRoom()->showItems(p->getMode()) + "\n");
     else if(sIdentifier == "details")

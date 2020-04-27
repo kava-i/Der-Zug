@@ -20,6 +20,10 @@ class CPerson : public CObject
 {
 protected:
 
+    ///Additional descriptions
+    CText* m_roomDescription;           //< Player in room, sometimes as mind.
+    CText* m_sShotDescription;          //< Brief description, never as mind.
+    
     ///Stats, such as live points, strength, virtue etc.
     typedef map<string, int> stats;
     stats m_stats;
@@ -27,7 +31,6 @@ protected:
     ///This Persons attacks
     typedef std::map<string, CAttack*> attacks;
     attacks m_attacks;  
-    std::string m_description;
 
     ///Inventory of this person
     CInventory m_inventory;                     
@@ -36,10 +39,6 @@ protected:
     CDialog* m_dialog;
 
 public:
-    std::string getDescription()
-    {
-	return m_description;
-    }
 
     /**
     * Constructor for Person, i.e. "character". Calls constructor from base class CObject.
@@ -70,7 +69,15 @@ public:
     ///Return person's dialogue.
     CDialog* getDialog();
 
-    
+    ///Description where the player is located in the room
+    std::string getRoomDescription();    
+
+    /**
+    * get description of character, in non-spoken format.
+    */
+    std::string getReducedDescription();
+
+
     // *** SETTER *** //
 
     ///Set a new stat of this person

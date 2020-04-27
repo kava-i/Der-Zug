@@ -82,7 +82,7 @@ string CFight::printStats(CPerson* person,bool printDesc)
     sOutput += "\n";
     if(printDesc)
     {
-	    sOutput+=person->getDescription();
+	    sOutput+=person->getReducedDescription();
 	    sOutput+="\n\n";
     }
     else
@@ -102,7 +102,7 @@ string CFight::createFightingAgainst()
     sOutput += "<span style='padding-right: 3rem;'>";
     for(int i = 0; i <  std::count(kk.begin(), kk.end(), '\n');i++)
     {
-	sOutput+="|\n";
+	    sOutput+="|\n";
     }
     sOutput += "</span>";
     

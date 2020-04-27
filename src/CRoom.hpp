@@ -12,6 +12,7 @@
 #include "fuzzy.hpp"
 
 using std::string;
+class CPerson;
 
 class CRoom : public CObject
 { 
@@ -55,8 +56,7 @@ public:
     void setPlayers(objectmap& m_players);
 
     // *** various functions *** //
-    string showEntryDescription();
-    string showDescription();
+    string showDescription(std::map<std::string, CPerson*> mapCharacters);
     string showAll(std::string sMode);
     string showExits(std::string sMode);
     string showCharacters(std::string sMode);

@@ -15,6 +15,8 @@
   dialog: konstantinDialog
   description:
   - {speaker: PERZEPTION, text: "Herr Thron wirkt etwas eingebildet."}
+  roomDescription:
+  - {speaker: PERZEPTION, text: "Ein Mann steht an eine Wand gelehnt, ließt Zeitung und raucht Pfeife."}
   items:
     - [basic_cigaretts, { }]
     - [basic_wine, { }]
@@ -37,6 +39,10 @@
   id: besoffene_frau
   hp: 40
   strength: 16
+  roomDescription:
+  - {speaker: PERZEPTION, text: "Eine anscheinend bewusstlose Frau liegt in einer Alkoholpfütze, eine noch glühene, halb abgebrannte Zigarette befindet sich zwischen ihren Fingern."}
+  description:
+  - {speaker: PERZEPTION, text: "Eine betrunkene Frau. Sie sieht von Alkohol mitgenommen aus, aber dahinter erkennt man, etwas von einer beeindruckenden Schönheit... und Stärker."}
   attacks:
     kick: Normal Kick
     punsch: Punsch

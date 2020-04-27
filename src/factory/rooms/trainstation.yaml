@@ -4,7 +4,6 @@
   id: bahnhof_eingangshalle
   description: 
     - {speaker: PERZEPTION, text: "Die Eingangshalle des sog. \"Moskauer Bahnhofs\" in Sankt Petersburg ist ein eindrucksvolles Gebilde. Tausende Passanten wandern umher, es herscht Trubel und Lärm und dazu glänzt die architektonische Meisterleistung eines Konstantin Thron von allen Seiten auf einen herab. Nach Norden geht es zu den Gleisen, im Süden liegt der Ausgang und nach Osten geht es zu einer Nebenhalle."}
-    - {speaker: PERZEPTION, text: "Drei Passanten stehen merkwürdig gekleidet in einer Ecke der Eingangshalle nahe den Gleisen und deuten wild umher.", deps: {perzeption: ">=1"}, updates: {perzeption: 1}}
   exits:
     bahnhof_fernzüge: {name: Fernzügen, prep: zu den}
     bahnhof_nebenhalle: {name: Nebenhalle, prep: zur }
@@ -53,7 +52,6 @@
   id: bahnhof_nebenhalle 
   description: 
     - {speaker: PERZEPTION, text: "Hier ist es etwas ruhiger und leerer. Aber die Personen hier kommen dir unheimlicher und auch sonderbarer vor. Ah und hier sind auch die Toiletten."}
-    - {speaker: PERZEPTION, text: "Wieder stehen drei Passanten merkwürdig gekleidet in einer Ecke im Norden-Westen und deuten wild umher."}
   exits:
     bahnhof_eingangshalle: { name: Eingangshalle, prep: zur}
     bahnhof_toiletten: { name: Toiletten, prep: zu den}
@@ -92,7 +90,6 @@
   id: bahnhof_frauenToilette
   description: 
     - {speaker: PERZEPTION, text: "Die Frauentoilette:  es stinkt nach Alkohol, Kippen und Sex. Der Boden ist voller Alkohol und Glasscherben."}
-    - {speaker: PERZEPTION, text: Eine besoffene Frau schnarcht laut auf der Toilette. Die Tür steht offen. Dich beschleicht der Gedanke, dass sie für das Chaos, den Geruch und die Scherben verantwortlich ist."}
   exits:
     bahnhof_toiletten: { name: Vorraum, prep: zurück zum }
   characters:
@@ -131,7 +128,6 @@
   id: gleis5
   description: 
     - {speaker: PERZEPTION, text: "Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst."}
-    - {speaker: PERZEPTION, text: "Wieder stehen drei Passanten merkwürdig gekleidet in einer Ecke und deuten wild umher."}
   exits: 
     bahnhof_fernzüge: { name: Zurück zu den Gleisen/ Fernzügen}
   characters:
