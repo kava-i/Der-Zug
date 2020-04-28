@@ -837,11 +837,11 @@ void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
     if(step->getSolved() == true)
     {
         for(size_t i=1; i<=3; i++)
-            p->getWorld()->getCharacter("trainstation_bahnhof_eingangshalle_passant"+std::to_string(i))->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2", p));
+            p->getWorld()->getCharacter("trainstation_bahnhof_eingangshalle_passant"+std::to_string(i))->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
         for(size_t i=4; i<=6; i++)
-            p->getWorld()->getCharacter("trainstation_bahnhof_nebenhalle_passant"+std::to_string(i))->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2", p));
+            p->getWorld()->getCharacter("trainstation_bahnhof_nebenhalle_passant"+std::to_string(i))->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
         for(size_t i=7; i<=9; i++)
-            p->getWorld()->getCharacter("trainstation_gleis5_passant"+std::to_string(i))->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2", p));
+            p->getWorld()->getCharacter("trainstation_gleis5_passant"+std::to_string(i))->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
 
         p->getContexts().erase(quest->getID());
     }

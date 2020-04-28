@@ -31,10 +31,11 @@ class CPlayer;
 class CWorld
 {
 private:
-    map<string, CRoom*>      m_rooms;
-    map<string, CPerson*> m_characters;
-    map<string, CAttack*>    m_attacks;
-    map<string, CQuest*>     m_quests;
+    map<string, CRoom*>     m_rooms;
+    map<string, CPerson*>   m_characters;
+    map<string, CAttack*>   m_attacks;
+    map<string, CQuest*>    m_quests;
+    map<string, CDialog*>   m_dialogs;
     map<string, nlohmann::json> m_items;
     map<string, nlohmann::json> m_jCharacters;
 
@@ -68,6 +69,12 @@ public:
 
     ///Get a quest from world.
     CQuest* getQuest(std::string sID);
+
+    ///Return dictionary of all dialogs in the game.
+    map<string, CDialog*>& getDialogs();
+    
+    ///Return a dialog from world
+    CDialog* getDialog(std::string sID);
 
     /**
     * Return a item. Look for given item in dictionary of items (jsons) and create item from json.
@@ -105,7 +112,10 @@ public:
     void characterFactory(std::string sPath);
     std::map<std::string, std::string> parseRoomChars(nlohmann::json j_room, std::string sArea, CPlayer* p);
 
+    //Dialogs
+    void dialogFactory(CPlayer* p);
+    void dialogFactory(std::string sFileName, CPlayer* p);
+
     //Character, Dialog, Details
     map<string, CDetail*> detailFactory(nlohmann::json j_room, CPlayer* p, std::string sArea);
-    CDialog* dialogFactory(string sPath, CPlayer* p); 
 };

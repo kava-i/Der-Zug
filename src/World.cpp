@@ -62,9 +62,24 @@ CQuest* CWorld::getQuest(std::string sID)
 {
     if(m_quests.count(sID) > 0)
         return m_quests[sID];
-    std::cout << cRED << "FATAL!!! Accessing room which does not exist: " << sID << cCLEAR << std::endl;
+    std::cout << cRED << "FATAL!!! Accessing quest which does not exist: " << sID << cCLEAR << std::endl;
     return nullptr;
 }
+
+///Return dictionary of all dialogs in the game.
+map<string, CDialog*>& CWorld::getDialogs() {
+    return m_dialogs;
+}
+
+///Return a dialog from world
+CDialog* CWorld::getDialog(std::string sID)
+{
+    if(m_dialogs.count(sID) > 0)
+        return m_dialogs[sID];
+    std::cout << cRED << "FATAL!!! Accessing dialog which does not exist: " << sID << cCLEAR << std::endl;
+    return nullptr;
+}
+
 /**
 * Return a item. Look for given item in dictionary of items (jsons) and create item from json.
 * Return null-pointer if item-json couldn't be found and print error message!
@@ -98,6 +113,9 @@ void CWorld::worldFactory(CPlayer* p)
 
     //Create items
     itemFactory();
+
+    //Create dialogs
+    dialogFactory(p);
 
     //Create characters
     characterFactory();
@@ -252,9 +270,9 @@ CWorld::objectmap CWorld::parseRoomChars(nlohmann::json j_room, std::string sAre
         //Create dialog 
         CDialog* newDialog = new CDialog;
         if(jBasic.count("dialog") > 0)
-            newDialog = dialogFactory(jBasic["dialog"], p); 
+            newDialog = getDialog(jBasic["dialog"]); 
         else
-            newDialog = dialogFactory("defaultDialog", p);
+            newDialog = getDialog("defaultDialog");
 
         //Create items and attacks
         map<std::string, CItem*> items = parseRoomItems(jBasic, jBasic["id"], p);
@@ -305,8 +323,16 @@ map<string, CAttack*> CWorld::parsePersonAttacks(nlohmann::json j_person)
 }
 
 
-CDialog* CWorld::dialogFactory(string sPath, CPlayer* p)
+void CWorld::dialogFactory(CPlayer* player)
 {
+    for(auto& p : fs::directory_iterator("factory/jsons/dialogs"))
+        dialogFactory(p.path().stem(), player);
+}
+
+void CWorld::dialogFactory(string sPath, CPlayer* p)
+{
+    std::cout << "FILENAME: " << sPath << std::endl;
+
     //Read json creating all rooms
     std::ifstream read("factory/jsons/dialogs/"+sPath+".json");
     nlohmann::json j_states;
@@ -342,8 +368,9 @@ CDialog* CWorld::dialogFactory(string sPath, CPlayer* p)
     //Update dialog values and return
     newDialog->setName(sPath);
     newDialog->setStates(mapStates);
-
-    return newDialog;
+    
+    //Add dialog to map of all dialogs:
+    m_dialogs[sPath] = newDialog;
 }
 
 void CWorld::questFactory()
