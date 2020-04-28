@@ -197,7 +197,7 @@ std::string func::incIDNumber(std::map<std::string, std::string> mapObjects, std
     if(max == 0 && found == false)
         return sID;
     else if(max == 0 && found == true)
-        return sID + "1";
+        return sID + "2";
     else
         return sID + std::to_string(max+1);
 }

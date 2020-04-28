@@ -1,13 +1,7 @@
 ---
 
-- name: Passant1
-  id: passant1
-  dialog: strangeGuysDialog
-- name: Passant2
-  id: passant2
-  dialog: strangeGuysDialog
-- name: Passant3
-  id: passant3
+- name: Passant
+  id: passant
   dialog: strangeGuysDialog
 
 - name: Konstantin Thron
@@ -20,16 +14,6 @@
   items:
     - [basic_cigaretts, { }]
     - [basic_wine, { }]
-
-- name: Passant1
-  id: passant4
-  dialog: strangeGuysDialog
-- name: Passant2
-  id: passant5
-  dialog: strangeGuysDialog
-- name: Passant3
-  id: passant6
-  dialog: strangeGuysDialog
 
 - name: Ticketverkäufer
   id: ticketVerkäufer
@@ -47,14 +31,4 @@
     kick: Normal Kick
     punsch: Punsch
   dialog: drunkWomanDialog
-
-- name: Passant1
-  id: passant7
-  dialog: strangeGuysDialog
-- name: Passant2
-  id: passant8
-  dialog: strangeGuysDialog
-- name: Passant3
-  id: passant9
-  dialog: strangeGuysDialog
 

@@ -3,7 +3,7 @@
 - id: START
   text: 
   - {speaker: PERZEPTION, text: "Die drei merkwürdigen Passanten zeigen zwar weiter wie wild durch die Gegend, aber statt dich zu ignorieren, grinsen dich alle mit einem breiten und überaus freundlichen Lächeln an."}
-  - {speaker: PASSANT1, text: "Ahh, werter Herr, sie haben uns alle gefunden! Das freut uns. Nun, da sie uns gefunden haben, werden wir Ihnen sehr sehr gerne helfen. Sie müssen uns nur sagen, wie wir Ihnen helfen können!"}
+  - {speaker: PASSANT, text: "Ahh, werter Herr, sie haben uns alle gefunden! Das freut uns. Nun, da sie uns gefunden haben, werden wir Ihnen sehr sehr gerne helfen. Sie müssen uns nur sagen, wie wir Ihnen helfen können!"}
   options:
   -  {id: 1, text: "Ich brauche ein Ticket nach Moskau, und...", to: hilfe}
   -  {id: 2, text: "Vielleicht sagen Sie mir erstmal, also ich bin nämlich verwirrt. Wer sind denn Sie eigentlich?", to: die_gruppe}

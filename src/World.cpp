@@ -331,8 +331,6 @@ void CWorld::dialogFactory(CPlayer* player)
 
 void CWorld::dialogFactory(string sPath, CPlayer* p)
 {
-    std::cout << "FILENAME: " << sPath << std::endl;
-
     //Read json creating all rooms
     std::ifstream read("factory/jsons/dialogs/"+sPath+".json");
     nlohmann::json j_states;

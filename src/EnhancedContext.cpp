@@ -820,28 +820,29 @@ void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
 
     CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
     CQuestStep* step = quest->getSteps()["1reden"];
+    
+    //If character ID ends with a number, delete.
+    if(std::isdigit(character.back()) == true)
+        character.pop_back();
+
     for(size_t i=0; i<step->getWhich().size(); i++) {
-        if(step->getWhich()[i] == p->getWorld()->getCharacter(character)->getID())
+        if(step->getWhich()[i].find(character) != std::string::npos)
             return;
     }
 
-    int num = (((int)character.back()-48)-1)/3;
-    character.pop_back();
-    step->getWhich().push_back(character + std::to_string(num*3+1));
-    step->getWhich().push_back(character + std::to_string(num*3+2));
-    step->getWhich().push_back(character + std::to_string(num*3+3));
+    step->getWhich().push_back(character);
     step->incSucc(1);
     p->questSolved(quest->getID(), "1reden");
 
     //Change dialog of all "Passanten"
     if(step->getSolved() == true)
     {
-        for(size_t i=1; i<=3; i++)
-            p->getWorld()->getCharacter("trainstation_bahnhof_eingangshalle_passant"+std::to_string(i))->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
-        for(size_t i=4; i<=6; i++)
-            p->getWorld()->getCharacter("trainstation_bahnhof_nebenhalle_passant"+std::to_string(i))->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
-        for(size_t i=7; i<=9; i++)
-            p->getWorld()->getCharacter("trainstation_gleis5_passant"+std::to_string(i))->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
+        for(auto it : {"", "2", "3"})
+            p->getWorld()->getCharacter((string)"trainstation_bahnhof_eingangshalle_passant"+it)->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
+        for(auto it : {"", "2", "3"})
+            p->getWorld()->getCharacter((string)"trainstation_bahnhof_nebenhalle_passant"+it)->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
+        for(auto it : {"", "2", "3"})
+            p->getWorld()->getCharacter((string)"trainstation_gleis5_passant"+it)->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
 
         p->getContexts().erase(quest->getID());
     }

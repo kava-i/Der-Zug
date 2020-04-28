@@ -9,9 +9,7 @@
     bahnhof_nebenhalle: {name: Nebenhalle, prep: zur }
     ausgang: { name: Ausgang, prep: zum }
   characters:
-    - [passant1, { }]
-    - [passant2, { }]
-    - [passant3, { }]
+    - [passant, {amount: 3}]
     - [zombie, { ep: 15}]
     - [zombie, { amount: 2}]
     - [zombie, { ep: 20, amount: 4}]
@@ -56,9 +54,7 @@
     bahnhof_eingangshalle: { name: Eingangshalle, prep: zur}
     bahnhof_toiletten: { name: Toiletten, prep: zu den}
   characters:
-    - [passant4, { }]
-    - [passant5, { }]
-    - [passant6, { }]
+    - [passant, {amount: 3}]
     - [konstantin_thron, { }]
 
 - name: Ausgang
@@ -131,6 +127,4 @@
   exits: 
     bahnhof_fernzüge: { name: Zurück zu den Gleisen/ Fernzügen}
   characters:
-    - [passant7, { }]
-    - [passant8, { }]
-    - [passant9, { }]
+    - [passant, { amount: 3 }]
