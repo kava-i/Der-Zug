@@ -19,7 +19,7 @@ std::string CText::print()
     std::string sOutput = "";
     
     for(size_t i=0; i<m_texts.size(); i++)
-        sOutput += func::returnSwapedString(m_texts[i]->print(m_player), m_player->getStat("highness"));
+        sOutput += m_texts[i]->print(m_player);
 
     if(sOutput != "")
         sOutput.pop_back();
@@ -68,7 +68,7 @@ std::string COutput::print(CPlayer* p)
     updateAttrbutes(sUpdated, p);
 
     // *** Print text *** // 
-    return p->returnSpeakerPrint(m_sSpeaker + sSuccess, m_sText + "$\n" + sUpdated);
+    return p->returnSpeakerPrint(m_sSpeaker + sSuccess, func::returnSwapedString(m_sText, p->getStat("highness")) + "$\n" + sUpdated);
 }
 
 std::string COutput::reducedPrint(CPlayer* p)
@@ -78,13 +78,10 @@ std::string COutput::reducedPrint(CPlayer* p)
 
     //Check dependencies
     if(checkDependencies(sSuccess, p) == false)
-    {
-        std::cout << "CHECK DEPENDENCIES FAILED!\n";
         return ""; 
-    }
 
     // *** Print text *** // 
-    return m_sText;
+    return func::returnSwapedString(m_sText, p->getStat("highness"));
 }
 
 bool COutput::checkDependencies(std::string& sSuccess, CPlayer* p)
