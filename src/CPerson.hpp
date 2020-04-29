@@ -48,7 +48,7 @@ public:
     * param[in] attacks list of attacks
     */
     typedef std::map<std::string, CItem*> map_type;
-    CPerson(nlohmann::json jAttributes, CDialog* dialog, attacks newAttacks, CPlayer* p, map_type=map_type());
+    CPerson(nlohmann::json jAttributes, CDialog* dialog, attacks newAttacks, CText* text, CPlayer* p, map_type=map_type());
 
     // *** GETTER *** // 
 

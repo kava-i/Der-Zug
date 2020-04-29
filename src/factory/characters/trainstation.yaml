@@ -30,5 +30,6 @@
   attacks:
     kick: Normal Kick
     punsch: Punsch
+  defaultDescription: people
   dialog: drunkWomanDialog
 

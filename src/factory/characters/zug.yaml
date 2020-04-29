@@ -14,8 +14,9 @@
   id: blue_woman
 
 - name: "Pissing man"
-  description: 
+  roomDescription: 
   - {speaker: PERZEPTION, text: "A man is standing shy between compartment B and C and seems to be having a piss.\n"}
+  defaultDescription: people
   id: pissing_man
   dialog: pissingManDialog
 

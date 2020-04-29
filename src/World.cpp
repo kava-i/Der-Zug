@@ -80,6 +80,25 @@ CDialog* CWorld::getDialog(std::string sID)
     return nullptr;
 }
 
+///Return dictionary of all defaultDescriptions in the game.
+map<string, std::vector<CText*>>& CWorld::getDescriptions() {
+    return m_defaultDescriptions;
+}
+
+///Return a description from world
+CText* CWorld::getDescription(std::string sID)
+{
+    srand(time(NULL));
+    if(m_defaultDescriptions.count(sID) > 0)
+    {
+        size_t num = rand() % (m_defaultDescriptions[sID].size()-1);
+        std::cout << "Size: " << m_defaultDescriptions.size() << ", " << "num: " << num << std::endl;
+        return m_defaultDescriptions[sID][num];
+    }
+    std::cout << cRED << "FATAL!!! Accessing description which does not exist: " << sID << cCLEAR << std::endl;
+    return nullptr;
+}
+
 /**
 * Return a item. Look for given item in dictionary of items (jsons) and create item from json.
 * Return null-pointer if item-json couldn't be found and print error message!
@@ -116,6 +135,9 @@ void CWorld::worldFactory(CPlayer* p)
 
     //Create dialogs
     dialogFactory(p);
+
+    //Create default descriptions
+    defaultDescriptionFactory(p);
 
     //Create characters
     characterFactory();
@@ -277,15 +299,20 @@ CWorld::objectmap CWorld::parseRoomChars(nlohmann::json j_room, std::string sAre
         //Create items and attacks
         map<std::string, CItem*> items = parseRoomItems(jBasic, jBasic["id"], p);
         map<string, CAttack*> attacks = parsePersonAttacks(jBasic);
+        
+        //Create text
+        CText* text = nullptr;
+        if(jBasic.count("defaultDescription") > 0)
+            text = getDescription(jBasic["defaultDescription"]);
 
         //Create character and add to maps
-        m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, p, items);
+        m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks,text,p,items);
         mapCharacters[jBasic["id"]] = jBasic["name"];
 
         //Add [amount] characters with "id = id + num" if amount is set.
         for(size_t i=2; i<=character.second.value("amount", 0u); i++) {
             jBasic["id"]  =  func::incIDNumber(mapCharacters, sID);
-            m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, p, items);
+            m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, text, p, items);
             mapCharacters[jBasic["id"]] = jBasic["name"];
         }
     }
@@ -371,6 +398,26 @@ void CWorld::dialogFactory(string sPath, CPlayer* p)
     m_dialogs[sPath] = newDialog;
 }
 
+void CWorld::defaultDescriptionFactory(CPlayer* player)
+{
+    for(auto& p : fs::directory_iterator("factory/jsons/defaultDescriptions"))
+        defaultDescriptionFactory(p.path().stem(), player);
+}
+
+void CWorld::defaultDescriptionFactory(std::string sFilename, CPlayer* player)
+{
+    std::cout << "Creating description: " << sFilename << std::endl;
+
+    //Read json creating all default descriptions
+    std::ifstream read("factory/jsons/defaultDescriptions/"+sFilename+".json");
+    nlohmann::json j_descriptions;
+    read >> j_descriptions;
+    read.close();
+
+    for(auto j_description : j_descriptions)
+        m_defaultDescriptions[sFilename].push_back(new CText(j_description, player));
+}
+
 void CWorld::questFactory()
 {
     for(auto& p : fs::directory_iterator("factory/jsons/quests"))
@@ -379,7 +426,7 @@ void CWorld::questFactory()
 
 void CWorld::questFactory(std::string sPath)
 {
-    //Read json creating all rooms
+    //Read json creating all quests
     std::ifstream read(sPath);
     nlohmann::json j_quests;
     read >> j_quests;

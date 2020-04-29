@@ -1,4 +1,5 @@
 #include "CPerson.hpp"
+#include "CPlayer.hpp"
 
 
 /**
@@ -8,23 +9,22 @@
 * param[in] items list of items 
 * param[in] attacks list of attacks
 */
-CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttacks, CPlayer* p, map_type items) : CObject(jAttributes, p)
+CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttacks, CText* text, CPlayer* p, map_type items) : CObject(jAttributes, p)
 {
     //Set stats.
-    m_stats["highness"]	    = 0;
+    m_stats["highness"]	= 0;
     m_stats["hp"]	    = jAttributes.value("hp", 40);
-    m_stats["max_hp"]	    = m_stats["hp"];
+    m_stats["max_hp"]   = m_stats["hp"];
     m_stats["gold"]	    = jAttributes.value("gold", 5);
-    m_stats["strength"]	    = jAttributes.value("strength", 8);
-    m_stats["skill"]	    = jAttributes.value("skill", 8);
+    m_stats["strength"] = jAttributes.value("strength", 8);
+    m_stats["skill"]    = jAttributes.value("skill", 8);
     m_stats["ep"]	    = jAttributes.value("ep", 0);
     
-
+    
     m_roomDescription = new CText(jAttributes.value("roomDescription", nlohmann::json::parse("{}")), p);
 
-    //If no description is set, set default description
-    if(jAttributes.count("description") == 0)
-        m_text = new CText(nlohmann::json::parse("[{\"speaker\":\"PERZEPTION\",\"text\":\"Diese Person ist so einzigartig, dass es nicht besonders erwähnenswertes an ihr geben kann. (Dies kann man so und auch so verstehen)\"}]"), p);
+    if(text!=nullptr)
+        m_text = text;
 
     //Set dialogue and attacks
     m_attacks = newAttacks;

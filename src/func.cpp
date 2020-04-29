@@ -124,7 +124,7 @@ std::string func::returnSwapedString(std::string str, int val)
         //Randomly swap characters from word.
         for(size_t i=0; i<word.size(); i++)
         {
-            size_t num = rand() % word.size()-1;
+            size_t num = rand() % (word.size()-1);
             if(i%(limit) != 0 || isalpha(word[i]) == false || isalpha(word[num]) == false)
                 continue;
 

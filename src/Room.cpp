@@ -126,8 +126,6 @@ string CRoom::look(string sWhere, string sWhat, std::string sMode)
     string sOutput = "";
     for(auto detail : m_details)
     {
-        std::cout << "Detail: " << detail.first << std::endl;
-
         if(detail.second->getLook() == sWhere && fuzzy::fuzzy_cmp(detail.second->getName(), sWhat) <= 0.2)
         {
             //Print output

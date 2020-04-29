@@ -15,7 +15,7 @@
 * @param room current room of payer
 * @param newAttacks attacks of player
 */
-CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks) : CPerson(jAtts, nullptr, lAttacks, this)
+CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks) : CPerson(jAtts, nullptr, lAttacks, nullptr, this)
 {
     //Set login data and player information
     func::convertToUpper(m_sName);

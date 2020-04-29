@@ -1,1 +1,1 @@
-[{"name": "Zombie", "id": "zombie", "hp": 40, "strength": 12, "ep": 10, "attacks": {"bite": "Bite"}}, {"name": "A boy", "id": "zombieboy", "hp": 20, "ep": 5}]
+[{"name": "Zombie", "id": "zombie", "hp": 40, "strength": 12, "ep": 10, "attacks": {"bite": "Bite"}, "defaultDescription": "zombies"}, {"name": "A boy", "id": "zombieboy", "hp": 20, "ep": 5}]
