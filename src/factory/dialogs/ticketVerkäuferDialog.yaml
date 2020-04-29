@@ -3,7 +3,7 @@
 - id: START
   text: 
   - {speaker: YOU, text: "[räuspern]"}
-  - {speaker: TICKETVERKÄUFER, "Und sie wollen...?"}
+  - {speaker: TICKETVERKÄUFER, text: "Und sie wollen...?"}
   options: 
     - {id: 1, text: "Sie sind der Ticketverkäufer, richtig?", to: beeindrucken}
     - {id: 2, text: "Über was denken sie nach?", to: "denken"}
