@@ -6,6 +6,7 @@
   ep: 10
   attacks: {bite: Bite}
   defaultDescription: zombies
+  defaultDialog: zombies
 
 - name: "A boy"
   id: "zombieboy"
