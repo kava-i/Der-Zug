@@ -156,26 +156,28 @@ void CPlayer::appendPrint(std::string sPrint) {
 }
 
 void CPlayer::appendStoryPrint(string sPrint) { 
-    m_sPrint += "<div class='spoken'>STORY TELLER - " + WHITEDARK + sPrint + WHITE + "</div>";
+    appendSpeackerPrint("STORY TELLER", sPrint);
 }
 
 void CPlayer::appendDescPrint(string sPrint) {
-    m_sPrint += "<div class='spoken'>PERZEPTION - " + WHITEDARK + sPrint + WHITE + "</div>";
+    appendSpeackerPrint("PERZEPTION", sPrint);
 }
 
 void CPlayer::appendErrorPrint(string sPrint) {
-    m_sPrint += "<div class='spoken'>LOGIK - " + WHITEDARK + sPrint + WHITE + "</div>";
+    appendSpeackerPrint("LOGIK", sPrint);
 }
 
 void CPlayer::appendTechPrint(string sPrint) {
-    m_sPrint += "<div class='spoken'>TECH GUY - " + WHITEDARK + sPrint + WHITE + "</div>";
+    appendSpeackerPrint("TECHGUY", sPrint);
 }
 
 void CPlayer::appendSpeackerPrint(std::string sSpeaker, std::string sPrint) {
+    sPrint = func::returnSwapedString(sPrint, getStat("highness"));
     m_sPrint += "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
 }
 
 std::string CPlayer::returnSpeakerPrint(std::string sSpeaker, std::string sPrint) {
+    sPrint = func::returnSwapedString(sPrint, getStat("highness"));
     return "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
 }
 

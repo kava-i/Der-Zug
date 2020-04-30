@@ -106,7 +106,6 @@ CDialog* CWorld::getRandomDialog(std::string sID) {
     if(m_defaultDialogs.count(sID) > 0)
     {
         size_t num = rand() % m_defaultDialogs[sID].size();
-        std::cout << m_defaultDialogs[sID].size() << ", " << num << std::endl;
         return m_defaultDialogs[sID][num];
     }
     std::cout << cRED << "FATAL!!! Accessing dialog which does not exist: " << sID << cCLEAR << std::endl;

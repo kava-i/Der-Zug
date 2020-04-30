@@ -67,8 +67,8 @@ std::string COutput::print(CPlayer* p)
     //Update mind attributes
     updateAttrbutes(sUpdated, p);
 
-    // *** Print text *** // 
-    return p->returnSpeakerPrint(m_sSpeaker + sSuccess, func::returnSwapedString(m_sText, p->getStat("highness")) + "$\n" + sUpdated);
+    //return text 
+    return p->returnSpeakerPrint(m_sSpeaker + sSuccess, m_sText + "$\n" + sUpdated);
 }
 
 std::string COutput::reducedPrint(CPlayer* p)
@@ -80,8 +80,8 @@ std::string COutput::reducedPrint(CPlayer* p)
     if(checkDependencies(sSuccess, p) == false)
         return ""; 
 
-    // *** Print text *** // 
-    return func::returnSwapedString(m_sText, p->getStat("highness"));
+    //Return text
+    return m_sText;
 }
 
 bool COutput::checkDependencies(std::string& sSuccess, CPlayer* p)
