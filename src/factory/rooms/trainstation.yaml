@@ -15,23 +15,23 @@
     - [zombie, { ep: 20, amount: 4}]
   items:
     - [buch_PdG, { }]
-    - [basic_stick, { hidden: true }]
-    - [basic_sword, { hidden: true }]
-    - [basic_wine, { hidden: true, amount: 2 }]
-    - [basic_wine, { value: 999 }]
-    - [basic_cigaretts, { hidden: true, amount: 2 }]
   details:
-    - name: Small box
-      id: trainstation_small-box
+    - name: kleine Kiste 
+      id: trainstation_kleine-kiste
       description: 
-        - {speaker: PERZEPTION, text: "A small wooden box stands in the left corner of the room."}
+        - {speaker: PERZEPTION, text: "Eine kleine hölzerne Kiste steht in der Ecke des Raumes."}
       look: in
       items:
-        basic_wine: Wine
-        basic_wine1: Wine
-        basic_cigaretts: A pack of Cigaretts
-        basic_sword: Basic Sword
-        basic_stick: Stick
+        - [basic_stick, { }]
+        - [basic_sword, { }]
+        - [basic_wine, { amount: 2 }]
+        - [basic_cigaretts, { amount: 2 }]
+    - name: Dreckige Kiste
+      id: trainstation_dreckige-kiste
+      description: 
+        - {speaker: PERZEPTION, text: "Eine dreckige Kiste steht unscheinbar zwischen ein paar Automaten."}
+      look: in
+      defaultItems: {value: 30, categories: [others, consume]}
 
 
 - name: Fernzüge 

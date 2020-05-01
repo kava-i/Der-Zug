@@ -202,9 +202,37 @@ map<string, CDetail*> CWorld::detailFactory(nlohmann::json j_room, CPlayer* p, s
         return mapDetails;
 
     for(auto j_detail : j_room["details"])
-        mapDetails[j_detail["id"]] = new CDetail(j_detail, p, sArea + "_" + j_room["id"].get<std::string>());
+    {
+        parseRandomItemsToDetail(j_detail);
+        map<string, CItem*> mapItems = parseRoomItems(j_detail, sArea +"_"+ j_room["id"].get<std::string>()+"_"+j_detail["id"].get<std::string>(), p);
+        mapDetails[j_detail["id"]] = new CDetail(j_detail, p, mapItems);
+    }
 
     return mapDetails;
+}
+
+void CWorld::parseRandomItemsToDetail(nlohmann::json& j_detail)
+{
+    std::cout << "parseRandomItemsToDetail\n";
+    if(j_detail.count("defaultItems") > 0)
+    {
+        nlohmann::json j = j_detail["defaultItems"];
+        int value = j["value"];
+        while(value > 0)
+        {
+            auto it = m_items.begin();
+            size_t num = rand() % m_items.size();
+            std::advance(it, num);
+            nlohmann::json jItem = it->second;
+            if(j.count("categories") > 0 && func::inArray(j["categories"], jItem["category"]) == false)
+                continue;
+            if(j.count("types") > 0 && func::inArray(j["types"], jItem["type"]) == false)
+                continue;
+            value -= jItem.value("value", 2); 
+            nlohmann::json newItem = {it->first, nlohmann::json::object()};
+            j_detail["items"].push_back(newItem);
+        }
+    }
 }
 
 void CWorld::itemFactory()

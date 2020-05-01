@@ -11,8 +11,6 @@
     - [buch_PdG, { }]
     - [basic_stick, { }]
     - [basic_sword, { }]
-    - [basic_wine, { hidden: true, amount: 2}]
-    - [basic_cigaretts, { hidden: true}]
   details:
     - name: Small box
       id: hospital_small-box
@@ -20,8 +18,8 @@
         - {speaker: PERZEPTION, text: "A small wooden box stands in the left corner of the room."}
       look: in
       items:
-        basic_wine: Wine
-        basic_cigaretts: A pack of Cigaretts
+      - [basic_wine, { hidden: true, amount: 2}]
+      - [basic_cigaretts, { hidden: true}]
 
 - name: Stairs
   id: hospital_stairs

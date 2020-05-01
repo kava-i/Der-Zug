@@ -138,6 +138,7 @@ public:
     //Default dialogs
     void defaultDialogFactory(CPlayer* p);
 
-    //Character, Dialog, Details
+    //Details
     map<string, CDetail*> detailFactory(nlohmann::json j_room, CPlayer* p, std::string sArea);
+    void parseRandomItemsToDetail(nlohmann::json& j_detail);
 };

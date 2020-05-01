@@ -8,14 +8,6 @@
   description: 
     - {speaker: PERZEPTION, text: "Just a normal book, notjhing special"}
 
-- name: "Ticket"
-  id: ticket
-  category: others
-  type: ticket
-  value: 20
-  description: 
-    - {speaker: PERZEPTION, text: "Zugticket nach Moskau."}
-
 - name: "G.F.W. Hegel, <i>Phänemenologie des Geistes</i>"
   id: buch_PdG
   category: others

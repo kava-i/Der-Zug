@@ -123,6 +123,7 @@ string CRoom::showDetails(std::string sMode)
 
 string CRoom::look(string sWhere, string sWhat, std::string sMode)
 {
+    auto lambda = [](CItem* item) { return item->getName(); };
     string sOutput = "";
     for(auto detail : m_details)
     {
@@ -131,24 +132,17 @@ string CRoom::look(string sWhere, string sWhat, std::string sMode)
             //Print output
             if(sMode == "prosa")
             {
-                std::string sItems = func::printProsa(detail.second->getItems());
+                std::string sItems = func::printProsa(detail.second->getItems(), lambda);
                 if(sItems != "")
                     sOutput += "In " + detail.second->getName() + " sind " + sItems + ".\n";
                 else
                     sOutput = "Nichts gefunden.\n";
             }
             else
-                sOutput += detail.second->getName() + "\n" + func::printList(detail.second->getItems());
+                sOutput += detail.second->getName() + "\n" + func::printList(detail.second->getItems(), lambda);
     
             //Change from hidden to visible and "empty" detail
-            for(auto it : detail.second->getItems()) 
-            {
-                std::cout << it.first << std::endl;
-                if(m_items.count(it.first) > 0)
-                    m_items[it.first]->setHidden(false);
-                else
-                    std::cout << "Item not found: " << it.first << std::endl;
-            }
+            m_items.insert(detail.second->getItems().begin(), detail.second->getItems().end());
             detail.second->getItems().clear();
         }
     }
