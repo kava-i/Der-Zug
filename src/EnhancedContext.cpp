@@ -430,20 +430,20 @@ void CEnhancedContext::h_showItemInfo(std::string& sIdentifier, CPlayer* p)
 void CEnhancedContext::h_show(std::string& sIdentifier, CPlayer* p) {
     if(sIdentifier == "exits")
     {
-        p->appendDescPrint(p->getRoom()->showExits(p->getMode())+"\n");
+        p->appendDescPrint(p->getRoom()->showExits(p->getMode(), p->getGramma())+"\n");
         p->addSelectContest(p->getRoom()->getExtits2(), "go");
     }
     else if(sIdentifier == "people")
     {
-        p->appendDescPrint(p->getRoom()->showCharacters(p->getMode()) + "\n");
+        p->appendDescPrint(p->getRoom()->showCharacters(p->getMode(), p->getGramma()) + "\n"); 
         p->addSelectContest(p->getRoom()->getCharacters(), "talk");
     }
     else if(sIdentifier == "room")
         p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
     else if(sIdentifier == "items")
-        p->appendDescPrint(p->getRoom()->showItems(p->getMode()) + "\n");
+        p->appendDescPrint(p->getRoom()->showItems(p->getMode(), p->getGramma()) + "\n");
     else if(sIdentifier == "details")
-        p->appendDescPrint(p->getRoom()->showDetails(p->getMode()) + "\n");
+        p->appendDescPrint(p->getRoom()->showDetails(p->getMode(), p->getGramma()) + "\n");
     else if(sIdentifier == "inventory")
         p->appendPrint(p->getInventory().printInventory());
     else if(sIdentifier == "equiped")
@@ -459,13 +459,14 @@ void CEnhancedContext::h_show(std::string& sIdentifier, CPlayer* p) {
     else if(sIdentifier == "attacks")
         p->appendPrint(p->printAttacks());
     else if(sIdentifier == "all")
-        p->appendDescPrint(p->getRoom()->showAll(p->getMode()));
+        p->appendDescPrint(p->getRoom()->showAll(p->getMode(), p->getGramma()));
     else
         p->appendTechPrint("Unkown \"show-function\"\n"); 
 }
 
 void CEnhancedContext::h_look(std::string& sIdentifier, CPlayer* p) {
     size_t pos=sIdentifier.find(" ");
+    
     if(pos == std::string::npos) {
         p->appendErrorPrint("Soll ich in, auf oder unter der box schauen?\n");
         return;

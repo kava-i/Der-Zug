@@ -149,6 +149,9 @@ void CWorld::worldFactory(CPlayer* p)
     //Create items
     itemFactory();
 
+    //Create details
+    detailFactory();
+
     //Create dialogs
     dialogFactory(p);
 
@@ -188,24 +191,70 @@ void CWorld::roomFactory(string sPath, CPlayer* p)
         map<string, CItem*> mapItems = parseRoomItems(j_room, sArea, p);
 
         //Parse details
-        map<string, CDetail*> mapDetails = detailFactory(j_room, p, sArea);
+        map<string, CDetail*> mapDetails = parseRoomDetails(j_room, p, sArea);
         
         //Create new room
         m_rooms[j_room["id"]] = new CRoom(sArea, j_room, mapChars, mapItems, mapDetails, p);
     }
 }
 
-map<string, CDetail*> CWorld::detailFactory(nlohmann::json j_room, CPlayer* p, std::string sArea)
+void CWorld::detailFactory()
+{
+    for(auto& p : fs::directory_iterator("factory/jsons/details"))
+        detailFactory(p.path());
+}
+
+void CWorld::detailFactory(std::string sPath)
+{
+    //Read json creating all details
+    std::ifstream read(sPath);
+    nlohmann::json j_details;
+    read >> j_details;
+    read.close();
+
+    for(auto j_detail: j_details) 
+        m_details[j_detail["id"]] = j_detail;
+}
+
+map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p, std::string sArea)
 {
     map<string, CDetail*> mapDetails;
     if(j_room.count("details") == 0)
         return mapDetails;
 
-    for(auto j_detail : j_room["details"])
+    for(auto it : j_room["details"].get<std::vector<nlohmann::json>>())
     {
-        parseRandomItemsToDetail(j_detail);
-        map<string, CItem*> mapItems = parseRoomItems(j_detail, sArea +"_"+ j_room["id"].get<std::string>()+"_"+j_detail["id"].get<std::string>(), p);
-        mapDetails[j_detail["id"]] = new CDetail(j_detail, p, mapItems);
+        //Convert json array to pair and create id
+        auto detail = it.get<std::pair<std::string, nlohmann::json>>();
+        std::string sID = sArea + "_" + j_room["id"].get<std::string>() + "_" + detail.first; 
+
+        //Get basic json for construction
+        nlohmann::json jBasic;
+        if(m_details.count(detail.first) > 0)
+            jBasic = m_details[detail.first];
+        else
+            jBasic = {};
+
+        //Update basic with specific json
+        func::updateJson(jBasic, detail.second);
+
+        //Update id
+        auto lambda = [](CDetail* detail) { return detail->getName(); };
+        jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapDetails, lambda), sID);
+
+
+        //Create items
+        parseRandomItemsToDetail(jBasic);
+        map<string, CItem*> mapItems = parseRoomItems(jBasic, jBasic["id"], p);
+
+        //Create detail
+        mapDetails[jBasic["id"]] = new CDetail(jBasic, p, mapItems);
+
+        //Add [amount] details with "id = id + num" if amount is set.
+        for(size_t i=2; i<=detail.second.value("amount", 0u); i++) {
+            jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapDetails, lambda), sID);
+            mapDetails[jBasic["id"]] = new CDetail(jBasic, p, mapItems);
+        }
     }
 
     return mapDetails;
@@ -213,7 +262,6 @@ map<string, CDetail*> CWorld::detailFactory(nlohmann::json j_room, CPlayer* p, s
 
 void CWorld::parseRandomItemsToDetail(nlohmann::json& j_detail)
 {
-    std::cout << "parseRandomItemsToDetail\n";
     if(j_detail.count("defaultItems") > 0)
     {
         nlohmann::json j = j_detail["defaultItems"];
@@ -242,7 +290,7 @@ void CWorld::itemFactory()
 }
 
 void CWorld::itemFactory(std::string sPath) {
-    //Read json creating all rooms
+    //Read json creating all items
     std::ifstream read(sPath);
     nlohmann::json j_items;
     read >> j_items;
@@ -261,7 +309,7 @@ map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, std::string sA
 
     for(auto it : j_room["items"].get<std::vector<nlohmann::json>>()) 
     {
-        //Convert json array to par and create id
+        //Convert json array to pair and create id
         auto item = it.get<std::pair<std::string, nlohmann::json>>();
         std::string sID = sArea + "_" + j_room["id"].get<std::string>() + "_" + item.first; 
 

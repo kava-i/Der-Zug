@@ -12,14 +12,7 @@
     - [basic_stick, { }]
     - [basic_sword, { }]
   details:
-    - name: Small box
-      id: hospital_small-box
-      description: 
-        - {speaker: PERZEPTION, text: "A small wooden box stands in the left corner of the room."}
-      look: in
-      items:
-      - [basic_wine, { hidden: true, amount: 2}]
-      - [basic_cigaretts, { hidden: true}]
+    - [kleine_kiste, {}]
 
 - name: Stairs
   id: hospital_stairs

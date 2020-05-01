@@ -15,11 +15,11 @@
     - [basic_cigaretts, { }]
     - [basic_wine, { }]
 
-- name: Ticketverkäufer
+- name: der Ticketverkäufer
   id: ticketVerkäufer
   dialog: ticketVerkäuferDialog
 
-- name: Besoffener Frau
+- name: eine esoffener Frau
   id: besoffene_frau
   hp: 40
   strength: 16

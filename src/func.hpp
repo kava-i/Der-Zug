@@ -226,13 +226,26 @@ namespace func
     * @param[in] lambda expression to generate value.
     * @return converted map.
     */
-    template<typename T1, typename T2> 
-    std::map<std::string, std::string> convertToObjectmap(std::map<std::string, T1> in, T2 &lambda)
+    template<typename T1, typename T2 > 
+    std::map<std::string, std::string> convertToObjectmap(std::map<std::string, T1> in, T2 lambda)
     {
         std::map<std::string, std::string> out;
         for(const auto &it : in)
             out[it.first] = lambda(it.second);
         return out;
+    }
+
+    /**
+    * Convert map to vector.
+    */
+    template<typename T1, typename T2=std::function<std::string(T1)>>
+    std::vector<std::string> to_vector(std::map<std::string, T1> map, 
+                                        T2 lambda = [](T1 t) -> std::string { return t; })
+    {
+        std::vector<std::string> vec;
+        for(const auto& it : map)
+            vec.push_back(lambda(it.second));
+        return vec;
     }
     
 

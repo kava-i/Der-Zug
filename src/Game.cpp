@@ -9,12 +9,16 @@ map<string, nlohmann::json> CGame::getPlayerJsons() {
 }
 
 CGame::CGame() {
+    std::cout << "Creating game.\n";
+
     CEnhancedContext::initializeHanlders();
     CEnhancedContext::initializeTemplates();
     m_context = new CEnhancedContext((std::string)"game");
     m_context->setGame(this);
 
     m_world = new CWorld(NULL);
+    //m_gramma = new CGramma({"dictionary.txt", "EIG.txt"});
+    m_gramma = new CGramma({});
     //Create players
     playerFactory();
     std::cout << "Finished parsing!\n";
@@ -46,7 +50,7 @@ void CGame::playerFactory(nlohmann::json j_player)
 {
     //Create attacks
     map<string, CAttack*> attacks = m_world->parsePersonAttacks(j_player);
-    m_players[j_player["id"]] = new CPlayer(j_player, m_world->getRooms()[j_player["room"]], attacks);
+    m_players[j_player["id"]] = new CPlayer(j_player, m_world->getRooms()[j_player["room"]], attacks, m_gramma);
 }
 
 

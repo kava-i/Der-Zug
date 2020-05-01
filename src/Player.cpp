@@ -15,7 +15,7 @@
 * @param room current room of payer
 * @param newAttacks attacks of player
 */
-CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks) : CPerson(jAtts, nullptr, lAttacks, nullptr, this)
+CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* gramma) : CPerson(jAtts, nullptr, lAttacks, nullptr, this)
 {
     //Set login data and player information
     func::convertToUpper(m_sName);
@@ -40,6 +40,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks) : CPerson(
     
     //Initiazize world
     m_world = new CWorld(this);
+    m_gramma = gramma;
 
     //Initialize all rooms as not visited
     for(const auto& it : m_world->getRooms())
@@ -93,6 +94,11 @@ string CPlayer::getPrint()  {
 ///Return pointer to players world (all rooms, chars, etc.)
 CWorld* CPlayer::getWorld() { 
     return m_world; 
+}
+
+///Return pointer to gramma-class
+CGramma* CPlayer::getGramma() {
+    return m_gramma;
 }
 
 ///Return current room.
@@ -168,7 +174,7 @@ void CPlayer::appendErrorPrint(string sPrint) {
 }
 
 void CPlayer::appendTechPrint(string sPrint) {
-    appendSpeackerPrint("TECHGUY", sPrint);
+    appendSpeackerPrint("TECH GUY", sPrint);
 }
 
 void CPlayer::appendSpeackerPrint(std::string sSpeaker, std::string sPrint) {

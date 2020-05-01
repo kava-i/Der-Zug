@@ -9,6 +9,8 @@
 #include "CText.hpp"
 #include "CItem.hpp"
 #include "CDetail.hpp"
+#include "gramma.hpp"
+#include "func.hpp"
 #include "fuzzy.hpp"
 
 using std::string;
@@ -57,11 +59,11 @@ public:
 
     // *** various functions *** //
     string showDescription(std::map<std::string, CPerson*> mapCharacters);
-    string showAll(std::string sMode);
-    string showExits(std::string sMode);
-    string showCharacters(std::string sMode);
-    string showItems(std::string sMode);
-    string showDetails(std::string sMode);
+    string showAll(std::string sMode, CGramma* gramma);
+    string showExits(std::string sMode, CGramma* gramma);
+    string showCharacters(std::string sMode, CGramma* gramma);
+    string showItems(std::string sMode, CGramma* gramma);
+    string showDetails(std::string sMode, CGramma*);
     string look(string sWhere, string sWhat, std::string sMode);
     CItem* getItem(string sPlayerChoice);
 };

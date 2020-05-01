@@ -46,20 +46,18 @@ string CRoom::showDescription(std::map<std::string, CPerson*> mapCharacters)
     return m_text->print() + sDesc + "</div>";
 }
 
-string CRoom::showAll(std::string sMode)
+string CRoom::showAll(std::string sMode, CGramma* gramma)
 {
-    return showExits(sMode)+" "+showCharacters(sMode)+" "+showItems(sMode)+" "+showDetails(sMode)+"\n";
+    return showExits(sMode, gramma) + " " + showCharacters(sMode, gramma) + " " 
+            + showItems(sMode, gramma) + " " + showDetails(sMode, gramma) + "\n";
 }
 
-string CRoom::showExits(std::string sMode)
+string CRoom::showExits(std::string sMode, CGramma* gramma)
 {
     if(sMode == "prosa")
     {
         auto lambda = [](CExit* exit) {return exit->getPrep() + " " + exit->getName();};
-        std::string sProsa = func::printProsa(m_exits, lambda);
-        if(sProsa != "")
-            return "Ah, hier geht es " + sProsa;
-        return "Der Raum hat keine Ausgänge.";
+        return gramma->build(func::to_vector(m_exits, lambda), "Hier geht es", "nirgends mehr hin.");
     }
     else
     {
@@ -68,15 +66,15 @@ string CRoom::showExits(std::string sMode)
     }
 }
 
-string CRoom::showCharacters(std::string sMode)
+string CRoom::showCharacters(std::string sMode, CGramma* gramma)
 {
     std::string sOutput = "";
     if(sMode == "prosa")
     {
         if(func::printProsa(m_characters) != "")
-            sOutput = "Hier sind " + func::printProsa(m_characters);
+            sOutput += gramma->build(func::to_vector(m_characters), "Hier sind", "");
         if(func::printProsa(m_players) != "")
-            sOutput += " Und außerdem noch "+ func::printProsa(m_players);
+            sOutput += gramma->build(func::to_vector(m_players), " Und außerdem noch ", "");
         if(sOutput == "")
             sOutput = "In diesem Raum sind keine Personen.";
     }
@@ -85,36 +83,31 @@ string CRoom::showCharacters(std::string sMode)
     return sOutput;
 }       
 
-string CRoom::showItems(std::string sMode)
+string CRoom::showItems(std::string sMode, CGramma* gramma)
 {
     string sOutput = "";
     auto printing = [](CItem* item) { return item->getName(); };
     auto condition = [](CItem* item) { return item->getHidden() != true; };
 
     if(sMode == "prosa")
-    {
-        std::string sProsa = func::printProsa(m_items, printing, condition);
-        if(sProsa != "")
-            return "Hier sind folgende Gegenstände: " + sProsa;
-    }
-
+        return gramma->build(func::to_vector(m_items, printing), "Hier sind", "nichts zu finden.");
     else
     {
         std::string sList = func::printList(m_items, printing, condition);
         if(sList != "")
             return "Items: \n" + sList;
     }
-    return "Keine Gegenstände im Raum."; 
+    return "Nichts gefunden.\n";
 } 
 
-string CRoom::showDetails(std::string sMode)
+string CRoom::showDetails(std::string sMode, CGramma* gramma)
 {
     std::string details = "";
-    auto lamda = [](CDetail* detail) { return detail->getName(); };
+    auto lambda = [](CDetail* detail) { return detail->getName(); };
     if(sMode == "prosa") 
-        details += "Hier sind " + func::printProsa(m_details, lamda);
+        details += gramma->build(func::to_vector(m_details, lambda), "Hier sind ", "nichts weiteres zu sehen.");
     else 
-        details += "Details:\n" + func::printList(m_details, lamda);
+        details += "Details:\n" + func::printList(m_details, lambda);
 
     if(details == "")
         details = "Keine Details zu finden.\n";

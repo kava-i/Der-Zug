@@ -37,6 +37,7 @@ private:
     map<string, CQuest*>    m_quests;
     map<string, CDialog*>   m_dialogs;
     map<string, nlohmann::json> m_items;
+    map<string, nlohmann::json> m_details;
     map<string, nlohmann::json> m_jCharacters;
 
     map<string, vector<CText*>> m_defaultDescriptions;
@@ -139,6 +140,8 @@ public:
     void defaultDialogFactory(CPlayer* p);
 
     //Details
-    map<string, CDetail*> detailFactory(nlohmann::json j_room, CPlayer* p, std::string sArea);
+    void detailFactory();
+    void detailFactory(std::string sPath);
+    map<string, CDetail*> parseRoomDetails(nlohmann::json j_room, CPlayer* p, std::string sArea);
     void parseRandomItemsToDetail(nlohmann::json& j_detail);
 };

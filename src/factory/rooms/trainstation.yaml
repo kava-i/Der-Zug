@@ -16,23 +16,8 @@
   items:
     - [buch_PdG, { }]
   details:
-    - name: kleine Kiste 
-      id: trainstation_kleine-kiste
-      description: 
-        - {speaker: PERZEPTION, text: "Eine kleine hölzerne Kiste steht in der Ecke des Raumes."}
-      look: in
-      items:
-        - [basic_stick, { }]
-        - [basic_sword, { }]
-        - [basic_wine, { amount: 2 }]
-        - [basic_cigaretts, { amount: 2 }]
-    - name: Dreckige Kiste
-      id: trainstation_dreckige-kiste
-      description: 
-        - {speaker: PERZEPTION, text: "Eine dreckige Kiste steht unscheinbar zwischen ein paar Automaten."}
-      look: in
-      defaultItems: {value: 30, categories: [others, consume]}
-
+    - [kleine_kiste, {}]
+    - [dreckige_kiste, {}]
 
 - name: Fernzüge 
   id: bahnhof_fernzüge
@@ -77,6 +62,8 @@
   id: bahnhof_maennerToilette
   description: 
     - {speaker: PERZEPTION, text: "Die Männertoilette, sie ist erstaunlich sauber, in einer Ecke liegen einige zerdrückte Kippenstummel, aber es riecht nicht nach Rauch."}
+  details:
+  - [buecherregal, { amount: 2, description: [{speaker: PERZEPTION, text: "Ein versifftes Bücherregal"}] }]
   exits:
     bahnhof_toiletten: { name: Vorraum, prep: zurück zum }
   characters:
