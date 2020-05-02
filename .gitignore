@@ -1,5 +1,5 @@
 bin/*
 Testing/*
 build/*
-src/dictionary.txt
-src/EIG.txt
+dictionary.txt
+EIG.txt
