@@ -5,8 +5,14 @@
 
 namespace fs = std::experimental::filesystem;
 
-CWorld::CWorld() {}
+CWorld::CWorld() {
+    m_path_to_world = "factory/world1/";
+    std::cout << "declared path.\n";
+}
+
 CWorld::CWorld(CPlayer* p) {
+    m_path_to_world = "factory/world1/";
+    std::cout << "declared path.\n";
     worldFactory(p);
 }
 
@@ -168,7 +174,7 @@ void CWorld::worldFactory(CPlayer* p)
 
 void CWorld::roomFactory(CPlayer* player)
 {
-    for(auto& p : fs::directory_iterator("factory/jsons/rooms"))
+    for(auto& p : fs::directory_iterator(m_path_to_world + "/jsons/rooms"))
         roomFactory(p.path(), player);
 }
 
@@ -200,7 +206,7 @@ void CWorld::roomFactory(string sPath, CPlayer* p)
 
 void CWorld::detailFactory()
 {
-    for(auto& p : fs::directory_iterator("factory/jsons/details"))
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/details"))
         detailFactory(p.path());
 }
 
@@ -285,7 +291,7 @@ void CWorld::parseRandomItemsToDetail(nlohmann::json& j_detail)
 
 void CWorld::itemFactory()
 {
-    for(auto& p : fs::directory_iterator("factory/jsons/items"))
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/items"))
         itemFactory(p.path());
 }
 
@@ -342,7 +348,7 @@ map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, std::string sA
 
 void CWorld::characterFactory()
 {
-    for(auto& p : fs::directory_iterator("factory/jsons/characters"))
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/characters"))
         characterFactory(p.path());
 }
 
@@ -416,7 +422,7 @@ CWorld::objectmap CWorld::parseRoomChars(nlohmann::json j_room, std::string sAre
 
 void CWorld::attackFactory()
 {
-    for(auto& p : fs::directory_iterator("factory/jsons/attacks"))
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/attacks"))
         attackFactory(p.path());
 }
 
@@ -447,7 +453,7 @@ map<string, CAttack*> CWorld::parsePersonAttacks(nlohmann::json j_person)
 
 void CWorld::dialogFactory(CPlayer* player)
 {
-    for(auto& p : fs::directory_iterator("factory/jsons/dialogs"))
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/dialogs"))
     {
         //Read json creating all rooms
         std::ifstream read(p.path());
@@ -496,14 +502,14 @@ CDialog* CWorld::dialogFactory(nlohmann::json j_states, std::string sFilename, C
 
 void CWorld::defaultDescriptionFactory(CPlayer* player)
 {
-    for(auto& p : fs::directory_iterator("factory/jsons/defaultDescriptions"))
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/defaultDescriptions"))
         defaultDescriptionFactory(p.path().stem(), player);
 }
 
 void CWorld::defaultDescriptionFactory(std::string sFilename, CPlayer* player)
 {
     //Read json creating all default descriptions
-    std::ifstream read("factory/jsons/defaultDescriptions/"+sFilename+".json");
+    std::ifstream read(m_path_to_world + "jsons/defaultDescriptions/"+sFilename+".json");
     nlohmann::json j_descriptions;
     read >> j_descriptions;
     read.close();
@@ -514,7 +520,7 @@ void CWorld::defaultDescriptionFactory(std::string sFilename, CPlayer* player)
 
 void CWorld::defaultDialogFactory(CPlayer* player)
 {
-    for(auto& p : fs::directory_iterator("factory/jsons/defaultDialogs"))
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/defaultDialogs"))
     {
         //Read json creating all default descriptions
         std::ifstream read(p.path());
@@ -529,7 +535,7 @@ void CWorld::defaultDialogFactory(CPlayer* player)
 
 void CWorld::questFactory()
 {
-    for(auto& p : fs::directory_iterator("factory/jsons/quests"))
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/quests"))
         questFactory(p.path());
 }
 

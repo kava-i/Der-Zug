@@ -22,6 +22,7 @@
 
 //#include <Python.h>
 
+
 using std::string;
 using std::map;
 using std::vector;
@@ -43,12 +44,16 @@ private:
     map<string, vector<CText*>> m_defaultDescriptions;
     map<string, vector<CDialog*>> m_defaultDialogs;
 
+    std::string m_path_to_world;
 public:
 
     CWorld();
     CWorld(CPlayer*);
     
     // *** GETTER *** //
+    std::string getPathToWorld() {
+        return m_path_to_world;
+    }
     
     ///Return dictionary of all rooms in the game.
     map<string, CRoom*>& getRooms();

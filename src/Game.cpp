@@ -9,6 +9,7 @@ map<string, nlohmann::json> CGame::getPlayerJsons() {
 }
 
 CGame::CGame() {
+
     std::cout << "Creating game.\n";
 
     CEnhancedContext::initializeHanlders();
@@ -19,6 +20,7 @@ CGame::CGame() {
     m_world = new CWorld(NULL);
     //m_gramma = new CGramma({"dictionary.txt", "EIG.txt"});
     m_gramma = new CGramma({});
+
     //Create players
     playerFactory();
     std::cout << "Finished parsing!\n";
@@ -30,7 +32,7 @@ void CGame::playerFactory(bool update)
     std::cout << "Parsing players... \n";
 
     //Read json creating all rooms
-    std::ifstream read("factory/jsons/players/players.json");
+    std::ifstream read(m_world->getPathToWorld() + "jsons/players/players.json");
     nlohmann::json j_players;
     read >> j_players;
     read.close();
