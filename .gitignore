@@ -2,4 +2,6 @@ bin/*
 Testing/*
 build/*
 dictionary.txt
+src/dictionary.txt
 EIG.txt
+src/EIG.txt
