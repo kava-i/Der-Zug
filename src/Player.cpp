@@ -15,11 +15,13 @@
 * @param room current room of payer
 * @param newAttacks attacks of player
 */
-CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks) : CPerson(jAtts, nullptr, lAttacks, this)
+CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* gramma) : CPerson(jAtts, nullptr, lAttacks, nullptr, this)
 {
     //Set login data and player information
+    func::convertToUpper(m_sName);
     m_sPassword = jAtts["password"];
-    m_firstLogin = true; m_sMode = jAtts.value("mode", "prosa"); 
+    m_firstLogin = true; 
+    m_sMode = jAtts.value("mode", "prosa"); 
     m_abbilities = {"strength", "skill"};
 
     //Character and Level
@@ -39,6 +41,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks) : CPerson(
     
     //Initiazize world
     m_world = new CWorld(this);
+    m_gramma = gramma;
 
     //Initialize all rooms as not visited
     for(const auto& it : m_world->getRooms())
@@ -58,12 +61,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks) : CPerson(
     //Add eventhandler to eventmanager
     m_contextStack.insert(new CEnhancedContext((std::string)"world"), 2, "world");
     
-    CEnhancedContext* context = new CEnhancedContext((std::string)"standard");
-    std::regex reg("spreche mit (.*)");
-    context->add_listener("h_startDialog", reg, 1);
-    std::regex reg2("spreche (.*) an");
-    context->add_listener("h_startDialog", reg2, 1, 1);
-    m_contextStack.insert(context, 0, "standard");
+    m_contextStack.insert(new CEnhancedContext((std::string)"standard"), 0 , "standard");
 }
 
 CPlayer::~CPlayer()
@@ -92,6 +90,11 @@ string CPlayer::getPrint()  {
 ///Return pointer to players world (all rooms, chars, etc.)
 CWorld* CPlayer::getWorld() { 
     return m_world; 
+}
+
+///Return pointer to gramma-class
+CGramma* CPlayer::getGramma() {
+    return m_gramma;
 }
 
 ///Return current room.
@@ -155,28 +158,39 @@ void CPlayer::appendPrint(std::string sPrint) {
 }
 
 void CPlayer::appendStoryPrint(string sPrint) { 
-    m_sPrint += "<div class='spoken'>STORY TELLER - " + WHITEDARK + sPrint + WHITE + "</div>";
+    appendSpeackerPrint(m_world->getConfig()["printing"]["story"], sPrint);
 }
 
 void CPlayer::appendDescPrint(string sPrint) {
-    m_sPrint += "<div class='spoken'>PERZEPTION - " + WHITEDARK + sPrint + WHITE + "</div>";
+    appendSpeackerPrint(m_world->getConfig()["printing"]["desc"], sPrint);
 }
 
 void CPlayer::appendErrorPrint(string sPrint) {
-    m_sPrint += "<div class='spoken'>LOGIK - " + WHITEDARK + sPrint + WHITE + "</div>";
+    appendSpeackerPrint(m_world->getConfig()["printing"]["error"], sPrint);
 }
 
 void CPlayer::appendTechPrint(string sPrint) {
-    m_sPrint += "<div class='spoken'>TECH GUY - " + WHITEDARK + sPrint + WHITE + "</div>";
+    appendSpeackerPrint(m_world->getConfig()["printing"]["tech"], sPrint);
 }
 
 void CPlayer::appendSpeackerPrint(std::string sSpeaker, std::string sPrint) {
-    m_sPrint += "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
+    sPrint = func::returnSwapedString(sPrint, getStat("highness"));
+
+    if(sSpeaker != "")
+        m_sPrint += "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
+    else
+        m_sPrint += sPrint + "\n";
 }
 
 std::string CPlayer::returnSpeakerPrint(std::string sSpeaker, std::string sPrint) {
-    return "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
+    sPrint = func::returnSwapedString(sPrint, getStat("highness"));
+    
+    if(sSpeaker != "")
+        return "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
+    else
+        return sPrint + "\n";
 }
+
 void CPlayer::appendSuccPrint(string sPrint) {
     m_sPrint += GREEN + sPrint + WHITE;
 }
@@ -349,7 +363,7 @@ void CPlayer::changeRoom(string sIdentifier)
 */
 void CPlayer::changeRoom(CRoom* newRoom)
 {
-    appendPrint(newRoom->showEntryDescription());
+    appendPrint(newRoom->showDescription(m_world->getCharacters()));
     m_lastRoom = m_room; 
     m_room = newRoom;
     m_vistited[m_room->getID()] = true;
@@ -736,7 +750,7 @@ void CPlayer::checkCommands()
 */
 string CPlayer::doLogin(string sName, string sPassword)
 {
-    if(sName == m_sName && sPassword == m_sPassword) 
+    if(sName == func::returnToLower(m_sName) && sPassword == m_sPassword) 
         return m_sID;
     else 
         return "";

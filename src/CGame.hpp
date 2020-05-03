@@ -17,10 +17,12 @@
 #include "CFight.hpp"
 #include "CDialog.hpp"
 #include "json.hpp"
+#include "gramma.hpp"
 #include "fuzzy.hpp"
 #include "func.hpp"
 
 //#include <Python.h>
+
 
 using std::string;
 using std::map;
@@ -36,6 +38,7 @@ private:
     map<string, CPlayer*> m_players;
     map<string, nlohmann::json> m_playerJsons;
     CPlayer* m_curPlayer;
+    CGramma* m_gramma;
 
     CEnhancedContext* m_context;
 

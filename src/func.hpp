@@ -9,6 +9,7 @@
 #include <regex>
 #include <time.h>
 #include <ctime>
+#include "json.hpp"
 
 #include "fuzzy.hpp"
 #include "Webcmd.hpp"
@@ -34,6 +35,12 @@ namespace func
     * @param[in, out] str string to be modified
     */
     void convertToLower(std::string &str);
+
+    /**
+    * Convert a given string to only contain upper case characters.
+    * @param[in, out] str string to be modified
+    */
+    void convertToUpper(std::string &str);
 
     /**
     * Return the given string to only contain lower case characters.
@@ -77,6 +84,23 @@ namespace func
     */
     std::string returnSwapedString(std::string str, int num);
 
+    /**
+    * replace all entries in first json, which also occure in second json with
+    * this second value.
+    * @param[in] json1 (first json which will be updated)
+    * @param[in] json2 (second json)
+    */
+    void updateJson(nlohmann::json& json1, nlohmann::json& json2);
+
+    /**
+    * Append to is highest postfix+1. Iterate over map and get highest postfix of similar ids.
+    * Return id + postfix increased by one.
+    * @param[in] mapObjects (map of all objects which might have a similar id
+    * @param[in] sID (id which shall be edited)
+    * @return id + greates postfix+1.
+    */
+    std::string incIDNumber(std::map<std::string, std::string> mapObjects, std::string sID);
+    
     /**
     *                   ***     printList       ***
     * Print all elements from a directory with any type. Pass lambda function to specify 
@@ -202,13 +226,26 @@ namespace func
     * @param[in] lambda expression to generate value.
     * @return converted map.
     */
-    template<typename T1, typename T2> 
-    std::map<std::string, std::string> convertToObjectmap(std::map<std::string, T1> in, T2 &lambda)
+    template<typename T1, typename T2 > 
+    std::map<std::string, std::string> convertToObjectmap(std::map<std::string, T1> in, T2 lambda)
     {
         std::map<std::string, std::string> out;
         for(const auto &it : in)
             out[it.first] = lambda(it.second);
         return out;
+    }
+
+    /**
+    * Convert map to vector.
+    */
+    template<typename T1, typename T2=std::function<std::string(T1)>>
+    std::vector<std::string> to_vector(std::map<std::string, T1> map, 
+                                        T2 lambda = [](T1 t) -> std::string { return t; })
+    {
+        std::vector<std::string> vec;
+        for(const auto& it : map)
+            vec.push_back(lambda(it.second));
+        return vec;
     }
     
 

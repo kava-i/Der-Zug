@@ -7,29 +7,25 @@
 #include "CObject.hpp"
 #include "json.hpp"
 
-using std::string;
+class CItem; 
 
 class CDetail : public CObject
 {
 private: 
-    string m_sLook;
-
-    typedef std::map<string, string> objectmap;
-    objectmap m_characters;
-    objectmap m_items;
+    std::string m_sLook;
+    std::map<std::string, CItem*> m_items;
 
 public:
 
     //Constructor 
-    CDetail(nlohmann::json jAttributes, CPlayer* p, std::string sArea);
+    CDetail(nlohmann::json jAttributes, CPlayer* p, std::map<std::string, CItem*> items);
 
     // *** GETTER *** //
-    string getLook();
-    objectmap& getCharacters();
-    objectmap& getItems();
+    std::string getLook();
+    std::map<std::string, CItem*>& getItems();
 
     // *** FUNCTIONS *** //
-    string look(string sWhere, string sWhat);
+    std::string look(std::string sWhere, std::string sWhat);
 };
 
 #endif

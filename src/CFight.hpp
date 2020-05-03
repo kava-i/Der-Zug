@@ -27,7 +27,7 @@ public:
     string fightRound(string sPlayerChoice);
     string turn(string selectedAttack, CPerson* attacker, CPerson* defender);
 
-    string printStats(CPerson* person);
+    string printStats(CPerson* person,bool printDesc=true);
     string createFightingAgainst();
     string pickOpponentAttack();
 };

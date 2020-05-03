@@ -1,4 +1,5 @@
 #include "CPerson.hpp"
+#include "CPlayer.hpp"
 
 
 /**
@@ -8,15 +9,22 @@
 * param[in] items list of items 
 * param[in] attacks list of attacks
 */
-CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttacks, CPlayer* p, map_type items) : CObject(jAttributes, p)
+CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttacks, CText* text, CPlayer* p, map_type items) : CObject(jAttributes, p)
 {
     //Set stats.
-    m_stats["highness"] = 0;
-    m_stats["hp"]       = jAttributes.value("hp", 40);
-    m_stats["gold"]     = jAttributes.value("gold", 5);
+    m_stats["highness"]	= 0;
+    m_stats["hp"]	    = jAttributes.value("hp", 40);
+    m_stats["max_hp"]   = m_stats["hp"];
+    m_stats["gold"]	    = jAttributes.value("gold", 5);
     m_stats["strength"] = jAttributes.value("strength", 8);
     m_stats["skill"]    = jAttributes.value("skill", 8);
+    m_stats["ep"]	    = jAttributes.value("ep", 0);
     
+    
+    m_roomDescription = new CText(jAttributes.value("roomDescription", nlohmann::json::parse("{}")), p);
+
+    if(text!=nullptr)
+        m_text = text;
 
     //Set dialogue and attacks
     m_attacks = newAttacks;
@@ -60,6 +68,16 @@ CInventory& CPerson::getInventory()  {
     return m_inventory; 
 }
 
+///Description where the player is located in the room
+std::string CPerson::getRoomDescription() {
+    return m_roomDescription->reducedPrint();
+}
+
+///Brief description of character
+std::string CPerson::getReducedDescription() {
+    return m_text->reducedPrint();
+}
+
 
 // *** SETTER *** //
 
@@ -95,6 +113,20 @@ string CPerson::printAttacks()
     return sOutput;
 }
 
+string CPerson::printAttacksFight()
+{
+    std::string sOutput;
+    //Iterate over attacks and add to output.
+    for(auto[i, it] = std::tuple{1, m_attacks.begin()};it!=m_attacks.end();i++, it++) 
+    {
+        sOutput += "<span style=\"color: #c39bd3\">"+ std::to_string(i)+". "+it->second->getName() + " </span>"
+		    + "[<span style=\"color: #f7dc6f;\">Power: " + std::to_string(it->second->getPower()) + "</span>]\n" + it->second->getDescription() + "\n\n";
+    }
+
+    //Return output.
+    return sOutput;
+}
+
 string CPerson::getAttack(string sPlayerChoice)
 {
     auto lambda = [](CAttack* attack) { return attack->getName(); };
@@ -117,4 +149,14 @@ string CPerson::getAttack(string sPlayerChoice)
 */
 bool CPerson::attributeExists(std::string sAttribute) {
     return m_stats.count(func::returnToLower(sAttribute)) > 0;
+}
+
+std::string CPerson::getAllInformation()
+{
+    std::string sOutput = "";
+    sOutput += "id: " + m_sID + ", name: " + m_sName + ", ";
+    for(auto it : m_stats)
+        sOutput += it.first + ": " + std::to_string(it.second) + ", ";
+    sOutput + ", ";
+    return sOutput;
 }

@@ -30,13 +30,8 @@ std::vector<std::string> func::split(std::string str, std::string delimiter)
 bool func::inArray(std::vector<std::string> vec, std::string str)
 {
     for(const auto& it : vec) {
-        std::cout << it.c_str() << " | " << str.c_str() << " -> ";
         if(it == str)
-        {
-            std::cout << "true" << std::endl;
             return true;
-        }
-        std::cout << "false" << std::endl;
     }
     return false;
 }
@@ -50,6 +45,17 @@ void func::convertToLower(std::string &str)
     std::locale loc1;
     for(unsigned int i=0; i<str.length(); i++)
         str[i] = tolower(str[i], loc1);
+}
+
+/**
+* Convert a given string to only contain upper case characters.
+* @param[in, out] str string to be modified
+*/
+void func::convertToUpper(std::string &str)
+{
+    std::locale loc1;
+    for(unsigned int i=0; i<str.length(); i++)
+        str[i] = toupper(str[i], loc1);
 }
 
 /**
@@ -113,7 +119,7 @@ std::string func::returnSwapedString(std::string str, int val)
         //Randomly swap characters from word.
         for(size_t i=0; i<word.size(); i++)
         {
-            size_t num = rand() % word.size()-1;
+            size_t num = rand() % word.size();
             if(i%(limit) != 0 || isalpha(word[i]) == false || isalpha(word[num]) == false)
                 continue;
 
@@ -127,6 +133,18 @@ std::string func::returnSwapedString(std::string str, int val)
     for(auto word : words)
         str2+=word + " ";
     return str2;
+}
+
+/**
+* replace all entries in first json, which also occure in second json with
+* this second value.
+* @param[in] json1 (first json which will be updated)
+* @param[in] json2 (second json)
+*/
+void func::updateJson(nlohmann::json& json1, nlohmann::json& json2)
+{
+    for(auto it = json2.begin(); it!=json2.end(); it++)
+        json1[it.key()] = json2[it.key()];
 }
 
 int func::getNumFromBack(std::string str)
@@ -152,6 +170,32 @@ std::string func::extractLeadingChars(const std::string& str)
     }
     return sOpt; 
 } 
+
+/**
+* Append to is highest postfix+1. Iterate over map and get highest postfix of similar ids.
+* Return id + postfix increased by one.
+* @param[in] mapObjects (map of all objects which might have a similar id
+* @param[in] sID (id which shall be edited)
+* @return id + greates postfix+1.
+*/
+std::string func::incIDNumber(std::map<std::string, std::string> mapObjects, std::string sID)
+{
+    int max = 0;
+    bool found = false;
+    for(const auto& it : mapObjects)
+    {
+        if(it.first.find(sID) != std::string::npos)
+            found = true;
+        if(it.first.find(sID) != std::string::npos && getNumFromBack(it.first) > max)
+            max = getNumFromBack(it.first);
+    } 
+    if(max == 0 && found == false)
+        return sID;
+    else if(max == 0 && found == true)
+        return sID + "2";
+    else
+        return sID + std::to_string(max+1);
+}
 
 TEST_CASE("Testing func::split functionality","[func::split]")
 {

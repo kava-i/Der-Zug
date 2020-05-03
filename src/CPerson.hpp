@@ -20,6 +20,10 @@ class CPerson : public CObject
 {
 protected:
 
+    ///Additional descriptions
+    CText* m_roomDescription;           //< Player in room, sometimes as mind.
+    CText* m_sShotDescription;          //< Brief description, never as mind.
+    
     ///Stats, such as live points, strength, virtue etc.
     typedef map<string, int> stats;
     stats m_stats;
@@ -44,7 +48,7 @@ public:
     * param[in] attacks list of attacks
     */
     typedef std::map<std::string, CItem*> map_type;
-    CPerson(nlohmann::json jAttributes, CDialog* dialog, attacks newAttacks, CPlayer* p, map_type=map_type());
+    CPerson(nlohmann::json jAttributes, CDialog* dialog, attacks newAttacks, CText* text, CPlayer* p, map_type=map_type());
 
     // *** GETTER *** // 
 
@@ -65,7 +69,15 @@ public:
     ///Return person's dialogue.
     CDialog* getDialog();
 
-    
+    ///Description where the player is located in the room
+    std::string getRoomDescription();    
+
+    /**
+    * get description of character, in non-spoken format.
+    */
+    std::string getReducedDescription();
+
+
     // *** SETTER *** //
 
     ///Set a new stat of this person
@@ -81,6 +93,7 @@ public:
     * Print all attacks. Attacks are printed in the form: Name \n Strengt\n Description.
     */
     string printAttacks();
+    string printAttacksFight();
     string getAttack(string sPlayerChoice);
 
 
@@ -93,11 +106,15 @@ public:
     */
     bool attributeExists(std::string sAttribute);
 
+    std::string getAllInformation();
+
 
     // *** Functions needed in CPlayer *** //
     virtual void throw_event(std::string) { std::cout << "FATAL!!!\n"; }
     virtual void setStatus(string)   { std::cout << "FATAL!!!\n"; }
     virtual void appendPrint(string) { std::cout << "FATAL!!!\n"; }
+    virtual void appendSuccPrint(string) { std::cout << "FATAL!!!\n"; }
+    virtual void addEP(int ep)       { std::cout << "FATAL!!!\n"; }
 };
 
 #endif

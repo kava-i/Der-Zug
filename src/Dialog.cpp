@@ -58,7 +58,7 @@ void CDialog::deleteDialogOption(string sStateID, size_t optID) {
 
 void CDialog::changeDialog(string sCharacter, string sDialog, CPlayer* p)
 {
-    p->getWorld()->getCharacter(sCharacter)->setDialog(p->getWorld()->dialogFactory(sDialog, p));
+    p->getWorld()->getCharacter(sCharacter)->setDialog(p->getWorld()->getDialog(sDialog));
 }
 
 // ***** ***** CDState ***** ***** //
@@ -218,9 +218,17 @@ string CDState::strangeGuy2(CPlayer* p)
     p->throw_event("recieveMoney 3");
     p->questSolved("komische_gruppe", "2hilfe");
 
-    for(size_t i=1; i<=9; i++)
-        p->getWorld()->getCharacter("passant"+std::to_string(i))->getDialog()->deleteDialogOption("START", 1);
+    m_dialog->deleteDialogOption("START", 1);
 
+    /*
+    for(size_t i=1; i<=3; i++)
+        p->getWorld()->getCharacter("trainstation_bahnhof_eingangshalle_passant"+std::to_string(i))->getDialog()->deleteDialogOption("START", 1);
+    for(size_t i=4; i<=6; i++)
+        p->getWorld()->getCharacter("trainstation_bahnhof_nebenhalle_passant"+std::to_string(i))->getDialog()->deleteDialogOption("START", 1);
+    for(size_t i=7; i<=9; i++)
+        p->getWorld()->getCharacter("trainstation_gleis5_passant"+std::to_string(i))->getDialog()->deleteDialogOption("START", 1);
+    */
+ 
     return sOutput;
 }
 

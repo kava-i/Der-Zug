@@ -5,12 +5,49 @@
 
 namespace fs = std::experimental::filesystem;
 
-CWorld::CWorld() {}
+CWorld::CWorld() {
+    std::ifstream readPath("factory/current_world.json");
+    nlohmann::json j;
+    readPath >> j;
+    if(j.count("world") > 0)
+        m_path_to_world = j["world"];
+    else
+        m_path_to_world = "factory/world1/";
+    readPath.close();
+
+    std::ifstream readConfig(m_path_to_world + "config.json");
+    readConfig >> m_config;
+    readConfig.close();
+}
+
 CWorld::CWorld(CPlayer* p) {
+    std::ifstream readPath("factory/current_world.json");
+    nlohmann::json j;
+    readPath >> j;
+    if(j.count("world") > 0)
+        m_path_to_world = j["world"];
+    else
+        m_path_to_world = "factory/world1/";
+    readPath.close();
+
     worldFactory(p);
+
+    std::ifstream readConfig(m_path_to_world + "config.json");
+    readConfig >> m_config;
+    readConfig.close();
 }
 
 // *** GETTER *** // 
+
+///Return path to correct world
+std::string CWorld::getPathToWorld() {
+    return m_path_to_world;
+}
+
+///Return json for configuration
+nlohmann::json& CWorld::getConfig() {
+    return m_config;
+}
 
 ///Return dictionary of all rooms in the game.
 map<string, CRoom*>& CWorld::getRooms() { 
@@ -62,9 +99,57 @@ CQuest* CWorld::getQuest(std::string sID)
 {
     if(m_quests.count(sID) > 0)
         return m_quests[sID];
-    std::cout << cRED << "FATAL!!! Accessing room which does not exist: " << sID << cCLEAR << std::endl;
+    std::cout << cRED << "FATAL!!! Accessing quest which does not exist: " << sID << cCLEAR << std::endl;
     return nullptr;
 }
+
+///Return dictionary of all dialogs in the game.
+map<string, CDialog*>& CWorld::getDialogs() {
+    return m_dialogs;
+}
+
+///Return a dialog from world
+CDialog* CWorld::getDialog(std::string sID)
+{
+    if(m_dialogs.count(sID) > 0)
+        return m_dialogs[sID];
+    std::cout << cRED << "FATAL!!! Accessing dialog which does not exist: " << sID << cCLEAR << std::endl;
+    return nullptr;
+}
+
+///Return dictionary of all default descriptions in the game.
+map<string, std::vector<CText*>>& CWorld::getRandomDescriptions() {
+    return m_defaultDescriptions;
+}
+
+///Return a randowm description from default descriptions
+CText* CWorld::getRandomDescription(std::string sID)
+{
+    if(m_defaultDescriptions.count(sID) > 0) {
+        size_t num = rand() % m_defaultDescriptions[sID].size();
+        return m_defaultDescriptions[sID][num];
+    }
+    std::cout << cRED << "FATAL!!! Accessing description which does not exist: " << sID << cCLEAR << std::endl;
+    return nullptr;
+}
+
+///Return dictionary of all default dialogs in the game.
+map<string, std::vector<CDialog*>>& CWorld::getRandomDialogs() {
+    return m_defaultDialogs;
+}
+
+///Return a random dialog from default dialogs
+CDialog* CWorld::getRandomDialog(std::string sID) {
+    if(m_defaultDialogs.count(sID) > 0)
+    {
+        size_t num = rand() % m_defaultDialogs[sID].size();
+        return m_defaultDialogs[sID][num];
+    }
+    std::cout << cRED << "FATAL!!! Accessing dialog which does not exist: " << sID << cCLEAR << std::endl;
+    return nullptr;
+}
+
+
 /**
 * Return a item. Look for given item in dictionary of items (jsons) and create item from json.
 * Return null-pointer if item-json couldn't be found and print error message!
@@ -84,6 +169,8 @@ CItem* CWorld::getItem(string sID, CPlayer* p) {
 
 void CWorld::worldFactory(CPlayer* p) 
 {
+    srand(time(NULL));
+
     //Initialize functions
     CDState::initializeFunctions();
     CItem::initializeFunctions();
@@ -99,14 +186,30 @@ void CWorld::worldFactory(CPlayer* p)
     //Create items
     itemFactory();
 
+    //Create details
+    detailFactory();
+
+    //Create dialogs
+    dialogFactory(p);
+
+    //Create default descriptions and dialogs
+    defaultDescriptionFactory(p);
+    defaultDialogFactory(p);
+
+    //Create characters
+    characterFactory();
+
     //Create rooms
     roomFactory(p);
 }
 
 void CWorld::roomFactory(CPlayer* player)
 {
-    for(auto& p : fs::directory_iterator("factory/jsons/rooms"))
+    for(auto& p : fs::directory_iterator(m_path_to_world + "/jsons/rooms"))
+    {
+        std::cout << p.path() << std::endl;
         roomFactory(p.path(), player);
+    }
 }
 
 void CWorld::roomFactory(string sPath, CPlayer* p)
@@ -121,42 +224,113 @@ void CWorld::roomFactory(string sPath, CPlayer* p)
     
     for(auto j_room : j_rooms )
     {
-        //Parse characters 
-        objectmap mapChars;
-        if(j_room.count("characters") > 0)
-            mapChars = characterFactory(j_room["characters"], p);
+        //Parse characters
+        objectmap mapChars = parseRoomChars(j_room, sArea, p);
 
         //Parse items
         map<string, CItem*> mapItems = parseRoomItems(j_room, sArea, p);
 
         //Parse details
-        map<string, CDetail*> mapDetails = detailFactory(j_room, p, sArea);
+        map<string, CDetail*> mapDetails = parseRoomDetails(j_room, p, sArea);
         
         //Create new room
         m_rooms[j_room["id"]] = new CRoom(sArea, j_room, mapChars, mapItems, mapDetails, p);
     }
 }
 
-map<string, CDetail*> CWorld::detailFactory(nlohmann::json j_room, CPlayer* p, std::string sArea)
+void CWorld::detailFactory()
+{
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/details"))
+        detailFactory(p.path());
+}
+
+void CWorld::detailFactory(std::string sPath)
+{
+    //Read json creating all details
+    std::ifstream read(sPath);
+    nlohmann::json j_details;
+    read >> j_details;
+    read.close();
+
+    for(auto j_detail: j_details) 
+        m_details[j_detail["id"]] = j_detail;
+}
+
+map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p, std::string sArea)
 {
     map<string, CDetail*> mapDetails;
     if(j_room.count("details") == 0)
         return mapDetails;
 
-    for(auto j_detail : j_room["details"])
-        mapDetails[j_detail["id"]] = new CDetail(j_detail, p, sArea);
+    for(auto it : j_room["details"].get<std::vector<nlohmann::json>>())
+    {
+        //Convert json array to pair and create id
+        auto detail = it.get<std::pair<std::string, nlohmann::json>>();
+        std::string sID = sArea + "_" + j_room["id"].get<std::string>() + "_" + detail.first; 
+
+        //Get basic json for construction
+        nlohmann::json jBasic;
+        if(m_details.count(detail.first) > 0)
+            jBasic = m_details[detail.first];
+        else
+            jBasic = {};
+
+        //Update basic with specific json
+        func::updateJson(jBasic, detail.second);
+
+        //Update id
+        auto lambda = [](CDetail* detail) { return detail->getName(); };
+        jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapDetails, lambda), sID);
+
+
+        //Create items
+        parseRandomItemsToDetail(jBasic);
+        map<string, CItem*> mapItems = parseRoomItems(jBasic, jBasic["id"], p);
+
+        //Create detail
+        mapDetails[jBasic["id"]] = new CDetail(jBasic, p, mapItems);
+
+        //Add [amount] details with "id = id + num" if amount is set.
+        for(size_t i=2; i<=detail.second.value("amount", 0u); i++) {
+            jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapDetails, lambda), sID);
+            mapDetails[jBasic["id"]] = new CDetail(jBasic, p, mapItems);
+        }
+    }
 
     return mapDetails;
 }
 
+void CWorld::parseRandomItemsToDetail(nlohmann::json& j_detail)
+{
+    if(j_detail.count("defaultItems") > 0)
+    {
+        nlohmann::json j = j_detail["defaultItems"];
+        int value = j["value"];
+        while(value > 0)
+        {
+            auto it = m_items.begin();
+            size_t num = rand() % m_items.size();
+            std::advance(it, num);
+            nlohmann::json jItem = it->second;
+            if(j.count("categories") > 0 && func::inArray(j["categories"], jItem["category"]) == false)
+                continue;
+            if(j.count("types") > 0 && func::inArray(j["types"], jItem["type"]) == false)
+                continue;
+            value -= jItem.value("value", 2); 
+            nlohmann::json newItem = {it->first, nlohmann::json::object()};
+            j_detail["items"].push_back(newItem);
+        }
+    }
+}
+
 void CWorld::itemFactory()
 {
-    for(auto& p : fs::directory_iterator("factory/jsons/items"))
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/items"))
         itemFactory(p.path());
 }
 
 void CWorld::itemFactory(std::string sPath) {
-    //Read json creating all rooms
+    //Read json creating all items
     std::ifstream read(sPath);
     nlohmann::json j_items;
     read >> j_items;
@@ -173,56 +347,116 @@ map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, std::string sA
     if(j_room.count("items") == 0)
         return mapItems;
 
-    map<string, nlohmann::json> items = j_room["items"].get<map<string, nlohmann::json>>();
-    for(auto it : items) 
+    for(auto it : j_room["items"].get<std::vector<nlohmann::json>>()) 
     {
-        std::string sID = sArea + "_" + it.first; 
+        //Convert json array to pair and create id
+        auto item = it.get<std::pair<std::string, nlohmann::json>>();
+        std::string sID = sArea + "_" + j_room["id"].get<std::string>() + "_" + item.first; 
 
+        //Get basic json for construction
         nlohmann::json jBasic;
-        if(m_items.count(it.first) > 0)
-            jBasic = m_items[it.first];
+        if(m_items.count(item.first) > 0)
+            jBasic = m_items[item.first];
         else
             jBasic = {};
 
-        mapItems[sID] = new CItem(jBasic, it.second, p, sID);
+        //Update basic with specific json
+        func::updateJson(jBasic, item.second);
+
+        //Update id
+        auto lambda = [](CItem* item) { return item->getName(); };
+        jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapItems, lambda), sID);
+
+        //Create item
+        mapItems[jBasic["id"]] = new CItem(jBasic, p);
 
         //Add [amount] items with "id = id + num" if amount is set.
-        for(size_t i=2; i<=it.second.value("amount", 0u); i++) {
-            std::string newID =  sID +std::to_string(i);
-            mapItems[newID] = new CItem(jBasic, it.second, p, newID);
+        for(size_t i=2; i<=item.second.value("amount", 0u); i++) {
+            jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapItems, lambda), sID);
+            mapItems[jBasic["id"]] = new CItem(jBasic, p);
         }
     }
 
     return mapItems;
 } 
 
-CWorld::objectmap CWorld::characterFactory(nlohmann::json j_characters, CPlayer* p)
+void CWorld::characterFactory()
 {
-    objectmap mapChars;
-    for(auto j_char : j_characters)
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/characters"))
+        characterFactory(p.path());
+}
+
+void CWorld::characterFactory(std::string sPath) {
+    //Read json creating all characters
+    std::ifstream read(sPath);
+    nlohmann::json j_chars;
+    read >> j_chars;
+    read.close();
+
+    for(auto j_char : j_chars) 
+        m_jCharacters[j_char["id"]] = j_char;
+}
+
+CWorld::objectmap CWorld::parseRoomChars(nlohmann::json j_room, std::string sArea, CPlayer* p)
+{
+    std::map<std::string, std::string> mapCharacters;
+    if(j_room.count("characters") == 0)
+        return mapCharacters;
+
+    for(auto it : j_room["characters"].get<vector<nlohmann::json>>())
     {
+        //Convert json array to pair and create id
+        auto character = it.get<std::pair<std::string, nlohmann::json>>();
+        std::string sID = sArea + "_" + j_room["id"].get<std::string>() + "_" + character.first;
+
+        //Gett basic json for construction.
+        nlohmann::json jBasic;
+        if(m_jCharacters.count(character.first) > 0)
+            jBasic = m_jCharacters[character.first];
+        else
+            jBasic = {};
+
+        //Update basic with specific json
+        func::updateJson(jBasic, character.second);     
+    
+        //Update id
+        jBasic["id"] = func::incIDNumber(mapCharacters, sID);
+
         //Create dialog 
         CDialog* newDialog = new CDialog;
-        if(j_char.count("dialog") > 0)
-            newDialog = dialogFactory(j_char["dialog"], p); 
+        if(jBasic.count("dialog") > 0)
+            newDialog = getDialog(jBasic["dialog"]); 
+        else if(jBasic.count("defaultDialog") > 0)
+            newDialog = getRandomDialog(jBasic["defaultDialog"]);
         else
-            newDialog = dialogFactory("defaultDialog", p);
+            newDialog = getDialog("defaultDialog");
 
         //Create items and attacks
-        map<std::string, CItem*> items = parseRoomItems(j_char, j_char["id"], p);
-        map<string, CAttack*> attacks = parsePersonAttacks(j_char);
+        map<std::string, CItem*> items = parseRoomItems(jBasic, jBasic["id"], p);
+        map<string, CAttack*> attacks = parsePersonAttacks(jBasic);
+        
+        //Create text
+        CText* text = nullptr;
+        if(jBasic.count("defaultDescription") > 0)
+            text = getRandomDescription(jBasic["defaultDescription"]);
 
         //Create character and add to maps
-        m_characters[j_char["id"]] = new CPerson(j_char, newDialog, attacks, p, items);
-        mapChars[j_char["id"]] = j_char["name"];
-    }
+        m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks,text,p,items);
+        mapCharacters[jBasic["id"]] = jBasic["name"];
 
-    return mapChars;
+        //Add [amount] characters with "id = id + num" if amount is set.
+        for(size_t i=2; i<=character.second.value("amount", 0u); i++) {
+            jBasic["id"]  =  func::incIDNumber(mapCharacters, sID);
+            m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, text, p, items);
+            mapCharacters[jBasic["id"]] = jBasic["name"];
+        }
+    }
+    return mapCharacters;
 }
 
 void CWorld::attackFactory()
 {
-    for(auto& p : fs::directory_iterator("factory/jsons/attacks"))
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/attacks"))
         attackFactory(p.path());
 }
 
@@ -251,14 +485,21 @@ map<string, CAttack*> CWorld::parsePersonAttacks(nlohmann::json j_person)
 }
 
 
-CDialog* CWorld::dialogFactory(string sPath, CPlayer* p)
+void CWorld::dialogFactory(CPlayer* player)
 {
-    //Read json creating all rooms
-    std::ifstream read("factory/jsons/dialogs/"+sPath+".json");
-    nlohmann::json j_states;
-    read >> j_states;
-    read.close();
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/dialogs"))
+    {
+        //Read json creating all rooms
+        std::ifstream read(p.path());
+        nlohmann::json j_states;
+        read >> j_states;
+        read.close();
+        m_dialogs[p.path().stem()] = dialogFactory(j_states, p.path().stem(), player);
+    }
+}
 
+CDialog* CWorld::dialogFactory(nlohmann::json j_states, std::string sFilename, CPlayer* p)
+{
     //Create new dialog
     map<string, CDState*> mapStates;
     CDialog* newDialog = new CDialog("", mapStates);
@@ -286,20 +527,55 @@ CDialog* CWorld::dialogFactory(string sPath, CPlayer* p)
     }
 
     //Update dialog values and return
-    newDialog->setName(sPath);
+    newDialog->setName(sFilename);
     newDialog->setStates(mapStates);
+    
+    //Add dialog to map of all dialogs:
     return newDialog;
+}
+
+void CWorld::defaultDescriptionFactory(CPlayer* player)
+{
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/defaultDescriptions"))
+        defaultDescriptionFactory(p.path().stem(), player);
+}
+
+void CWorld::defaultDescriptionFactory(std::string sFilename, CPlayer* player)
+{
+    //Read json creating all default descriptions
+    std::ifstream read(m_path_to_world + "jsons/defaultDescriptions/"+sFilename+".json");
+    nlohmann::json j_descriptions;
+    read >> j_descriptions;
+    read.close();
+
+    for(auto j_description : j_descriptions)
+        m_defaultDescriptions[sFilename].push_back(new CText(j_description, player));
+}
+
+void CWorld::defaultDialogFactory(CPlayer* player)
+{
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/defaultDialogs"))
+    {
+        //Read json creating all default descriptions
+        std::ifstream read(p.path());
+        nlohmann::json j_descriptions;
+        read >> j_descriptions;
+        read.close();
+
+        for(auto j_dialog : j_descriptions)
+            m_defaultDialogs[p.path().stem()].push_back(dialogFactory(j_dialog, p.path().stem(), player));
+    }
 }
 
 void CWorld::questFactory()
 {
-    for(auto& p : fs::directory_iterator("factory/jsons/quests"))
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/quests"))
         questFactory(p.path());
 }
 
 void CWorld::questFactory(std::string sPath)
 {
-    //Read json creating all rooms
+    //Read json creating all quests
     std::ifstream read(sPath);
     nlohmann::json j_quests;
     read >> j_quests;

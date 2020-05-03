@@ -1,0 +1,48 @@
+---
+
+ - name: "Compartment A"
+   id: compartment-a
+   description: 
+    - {speaker: PERZEPTION, text: "The compartment is empty. Empty, but one mysterious passenger: Parsen."}
+   entry: "You enter your appartment.\n"
+   exits:
+     trainCorridor: { name: Korridor, prep: zum}
+   characters:
+     - [parsen, { }]
+
+ - name: "Compartment B"
+   id: compartment-b
+   description: 
+    - {speaker: PERZEPTION, text: "Another compartment. Two grumpy women are sitting together, playing cards."}
+   exits:
+     trainCorridor: { name: Korridor, prep: zum}
+   characters:
+     - [pink_woman, { }]
+     - [blue_woman, { }]
+
+ - name: "Compartment C"
+   id: compartment-c
+   description: 
+    - {speaker: PERZEPTION, text: "An empty compartment."}
+   exits:
+     trainCorridor: { name: Korridor, prep: zum}
+
+ - name: "Compartment D"
+   id: compartment-d
+   description: 
+    - {speaker: PERZEPTION, text: "An empty compartment. Its cold here"}
+   exits:
+     trainCorridor: { name: Korridor, prep: zum }
+
+ - name: "Corridor"
+   id: trainCorridor
+   description: 
+    - {speaker: PERZEPTION, text: "The corridor feels empty and silent. Red carbet is flushing the floor. And the other compartments are wispering in their oldfashioned skin."}
+   entry: "You leave the compartment and enter the corridor of the train.\n"
+   exits: 
+     compartment-a: { name: Compartment A, prep: zum }
+     compartment-b: { name: Compartment B, prep: zum }
+     compartment-c: { name: Compartment C, prep: zum }
+     compartment-d: { name: Compartment D, prep: zum }
+   characters:
+     - [pissing_man, { } ]

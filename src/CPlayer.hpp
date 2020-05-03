@@ -17,6 +17,7 @@
 #include "CRoom.hpp"
 #include "CFight.hpp"
 #include "CMind.hpp"
+#include "gramma.hpp"
 #include "func.hpp"
 
 
@@ -41,6 +42,8 @@ private:
 
     // *** Attributes concerning game world *** //
     CWorld* m_world;                            ///< Pointer to players world (all rooms, chars, etc.)
+    CGramma* m_gramma;                          ///< Pointer to the gramma-class
+
     CRoom* m_room;                              ///< Pointer to current room
     CRoom* m_lastRoom;                          ///< Pointer to last room visited
 
@@ -75,7 +78,7 @@ public:
     * @param room current room of payer
     * @param newAttacks attacks of player
     */
-    CPlayer(nlohmann::json jAttributes, CRoom* room, attacks newAttacks);
+    CPlayer(nlohmann::json jAttributes, CRoom* room, attacks newAttacks, CGramma* gramma);
 
     ~CPlayer();
 
@@ -92,6 +95,9 @@ public:
     ///Return pointer to players world (all rooms, chars, etc.)
     CWorld* getWorld();
 
+    ///Return pointer to gramma-class
+    CGramma* getGramma();
+ 
     ///Return current room.
     CRoom* getRoom();
 

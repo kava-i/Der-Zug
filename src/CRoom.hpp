@@ -9,9 +9,12 @@
 #include "CText.hpp"
 #include "CItem.hpp"
 #include "CDetail.hpp"
+#include "gramma.hpp"
+#include "func.hpp"
 #include "fuzzy.hpp"
 
 using std::string;
+class CPerson;
 
 class CRoom : public CObject
 { 
@@ -33,7 +36,9 @@ public:
         m_sArea = sArea;
         m_sEntry = jAtts.value("entry", "");
 
-        std::map<std::string, nlohmann::json> mapExits = jAtts["exits"].get<std::map<std::string, nlohmann::json>>();
+        std::map<std::string, nlohmann::json> mapExits;
+        if(jAtts.count("exits") > 0)
+            mapExits = jAtts["exits"].get<std::map<std::string, nlohmann::json>>();
         for(const auto &it : mapExits) 
             m_exits[it.first] = new CExit(it.first, it.second, p);
 
@@ -55,13 +60,12 @@ public:
     void setPlayers(objectmap& m_players);
 
     // *** various functions *** //
-    string showEntryDescription();
-    string showDescription();
-    string showAll(std::string sMode);
-    string showExits(std::string sMode);
-    string showCharacters(std::string sMode);
-    string showItems(std::string sMode);
-    string showDetails(std::string sMode);
+    string showDescription(std::map<std::string, CPerson*> mapCharacters);
+    string showAll(std::string sMode, CGramma* gramma);
+    string showExits(std::string sMode, CGramma* gramma);
+    string showCharacters(std::string sMode, CGramma* gramma);
+    string showItems(std::string sMode, CGramma* gramma);
+    string showDetails(std::string sMode, CGramma*);
     string look(string sWhere, string sWhat, std::string sMode);
     CItem* getItem(string sPlayerChoice);
 };

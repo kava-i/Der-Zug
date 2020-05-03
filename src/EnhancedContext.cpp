@@ -108,6 +108,8 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_endFight"] = &CEnhancedContext::h_endFight;
     m_handlers["h_endDialog"] = &CEnhancedContext::h_endDialog;
     m_handlers["h_gameover"] = &CEnhancedContext::h_gameover;
+    m_handlers["h_showPersonInfo"] = &CEnhancedContext::h_showPersonInfo;
+    m_handlers["h_showItemInfo"] = &CEnhancedContext::h_showItemInfo;
 
     // ***** STANDARD CONTEXT ***** //
     m_handlers["h_show"] = &CEnhancedContext::h_show;
@@ -183,7 +185,9 @@ void CEnhancedContext::initializeTemplates()
                         {"fight", {"h_newFight"}},
                         {"endFight",{"h_endFight"}},
                         {"endDialog",{"h_endDialog"}},
-                        {"gameover",{"h_gameover"}}}}
+                        {"gameover",{"h_gameover"}},
+                        {"showperson",{"h_showPersonInfo"}},
+                        {"showitem",{"h_showItemInfo"}} }}
                     };
 
     m_templates["standard"] = {
@@ -199,8 +203,7 @@ void CEnhancedContext::initializeTemplates()
                         {"dequipe",{"h_dequipe"}}, 
                         {"examine",{"h_examine"}}, 
                         {"mode",{"h_changeMode"}}, 
-                        {"try", {"h_try"}}, 
-                        {"startTutorial", {"h_startTutorial"}}}}
+                        {"try", {"h_try"}}}},
                     };
 
     m_templates["fight"] = {
@@ -400,26 +403,46 @@ void CEnhancedContext::h_gameover(std::string& sIdentifier, CPlayer* p) {
     p->appendStoryPrint("\nDu bist gestorben... \n\n $\n");
 }
 
+void CEnhancedContext::h_showPersonInfo(std::string& sIdentifier, CPlayer* p) {
+    std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier);
+
+    if(character != "")
+        p->appendPrint(p->getWorld()->getCharacter(character)->getAllInformation());
+    else
+        p->appendPrint("character not found.\n");
+    m_curPermeable=false;
+}
+void CEnhancedContext::h_showItemInfo(std::string& sIdentifier, CPlayer* p) 
+{
+    auto lambda = [](CItem* item) { return item->getName(); };
+    std::string item = func::getObjectId(p->getRoom()->getItems(), sIdentifier, lambda);
+
+    if(item != "")
+        p->appendPrint(p->getRoom()->getItems()[item]->getAllInfos());
+    else
+        p->appendPrint("Item not found.\n");
+    m_curPermeable=false;
+}
 
 // ***** ***** STANDARD CONTEXT ***** ***** //
 
 void CEnhancedContext::h_show(std::string& sIdentifier, CPlayer* p) {
     if(sIdentifier == "exits")
     {
-        p->appendDescPrint(p->getRoom()->showExits(p->getMode())+"\n");
+        p->appendDescPrint(p->getRoom()->showExits(p->getMode(), p->getGramma())+"\n");
         p->addSelectContest(p->getRoom()->getExtits2(), "go");
     }
     else if(sIdentifier == "people")
     {
-        p->appendDescPrint(p->getRoom()->showCharacters(p->getMode()) + "\n");
+        p->appendDescPrint(p->getRoom()->showCharacters(p->getMode(), p->getGramma()) + "\n"); 
         p->addSelectContest(p->getRoom()->getCharacters(), "talk");
     }
     else if(sIdentifier == "room")
-        p->appendPrint(p->getRoom()->showDescription());
+        p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
     else if(sIdentifier == "items")
-        p->appendDescPrint(p->getRoom()->showItems(p->getMode()) + "\n");
+        p->appendDescPrint(p->getRoom()->showItems(p->getMode(), p->getGramma()) + "\n");
     else if(sIdentifier == "details")
-        p->appendDescPrint(p->getRoom()->showDetails(p->getMode()) + "\n");
+        p->appendDescPrint(p->getRoom()->showDetails(p->getMode(), p->getGramma()) + "\n");
     else if(sIdentifier == "inventory")
         p->appendPrint(p->getInventory().printInventory());
     else if(sIdentifier == "equiped")
@@ -435,13 +458,14 @@ void CEnhancedContext::h_show(std::string& sIdentifier, CPlayer* p) {
     else if(sIdentifier == "attacks")
         p->appendPrint(p->printAttacks());
     else if(sIdentifier == "all")
-        p->appendDescPrint(p->getRoom()->showAll(p->getMode()));
+        p->appendDescPrint(p->getRoom()->showAll(p->getMode(), p->getGramma()));
     else
         p->appendTechPrint("Unkown \"show-function\"\n"); 
 }
 
 void CEnhancedContext::h_look(std::string& sIdentifier, CPlayer* p) {
     size_t pos=sIdentifier.find(" ");
+    
     if(pos == std::string::npos) {
         p->appendErrorPrint("Soll ich in, auf oder unter der box schauen?\n");
         return;
@@ -541,7 +565,7 @@ void CEnhancedContext::h_firstZombieAttack(std::string& sIdentifier, CPlayer* p)
     p->appendDescPrint("\n$\nA zombie comes running down the stairs and attacks you!");
 
     //Create fight
-    p->setFight(new CFight(p, p->getWorld()->getCharacter("hospital_zombie1")));
+    p->setFight(new CFight(p, p->getWorld()->getCharacter("hospital_hospital_stairs_zombie")));
     m_eventmanager.erase("h_firstZombieAttack");
 }
 
@@ -796,23 +820,30 @@ void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
 
     CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
     CQuestStep* step = quest->getSteps()["1reden"];
+    
+    //If character ID ends with a number, delete.
+    if(std::isdigit(character.back()) == true)
+        character.pop_back();
+
     for(size_t i=0; i<step->getWhich().size(); i++) {
-        if(step->getWhich()[i] == p->getWorld()->getCharacter(character)->getID())
+        if(step->getWhich()[i].find(character) != std::string::npos)
             return;
     }
 
-    int num = (((int)character.back()-48)-1)/3;
-    step->getWhich().push_back("passant" + std::to_string(num*3+1));
-    step->getWhich().push_back("passant" + std::to_string(num*3+2));
-    step->getWhich().push_back("passant" + std::to_string(num*3+3));
+    step->getWhich().push_back(character);
     step->incSucc(1);
     p->questSolved(quest->getID(), "1reden");
 
     //Change dialog of all "Passanten"
     if(step->getSolved() == true)
     {
-        for(size_t i=1; i<=9; i++)
-            p->getWorld()->getCharacter("passant"+std::to_string(i))->setDialog(p->getWorld()->dialogFactory("strangeGuysDialog2", p));
+        for(auto it : {"", "2", "3"})
+            p->getWorld()->getCharacter((string)"trainstation_bahnhof_eingangshalle_passant"+it)->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
+        for(auto it : {"", "2", "3"})
+            p->getWorld()->getCharacter((string)"trainstation_bahnhof_nebenhalle_passant"+it)->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
+        for(auto it : {"", "2", "3"})
+            p->getWorld()->getCharacter((string)"trainstation_gleis5_passant"+it)->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
+
         p->getContexts().erase(quest->getID());
     }
 }
@@ -820,7 +851,7 @@ void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
 // *** *** Besoffene Frau *** *** //
 void CEnhancedContext::h_besiege_besoffene_frau(std::string& sIdentifier, CPlayer* p)
 {
-    if(sIdentifier != "besoffene_frau")
+    if(sIdentifier != "trainstation_bahnhof_frauenToilette_besoffene_frau")
         return;
 
     p->questSolved(getAttribute<std::string>("questID"), "1besiege_besoffene_frau");

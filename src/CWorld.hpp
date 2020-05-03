@@ -22,6 +22,7 @@
 
 //#include <Python.h>
 
+
 using std::string;
 using std::map;
 using std::vector;
@@ -31,18 +32,33 @@ class CPlayer;
 class CWorld
 {
 private:
-    map<string, CRoom*>      m_rooms;
-    map<string, CPerson*> m_characters;
-    map<string, CAttack*>    m_attacks;
-    map<string, CQuest*>     m_quests;
+    map<string, CRoom*>     m_rooms;
+    map<string, CPerson*>   m_characters;
+    map<string, CAttack*>   m_attacks;
+    map<string, CQuest*>    m_quests;
+    map<string, CDialog*>   m_dialogs;
     map<string, nlohmann::json> m_items;
+    map<string, nlohmann::json> m_details;
+    map<string, nlohmann::json> m_jCharacters;
 
+    map<string, vector<CText*>> m_defaultDescriptions;
+    map<string, vector<CDialog*>> m_defaultDialogs;
+
+    nlohmann::json m_config;
+    std::string m_path_to_world;
 public:
 
     CWorld();
     CWorld(CPlayer*);
     
     // *** GETTER *** //
+
+    ///Return path to correct world
+    std::string getPathToWorld();
+
+    ///Return json for configuration
+    nlohmann::json& getConfig();
+ 
     
     ///Return dictionary of all rooms in the game.
     map<string, CRoom*>& getRooms();
@@ -67,6 +83,24 @@ public:
 
     ///Get a quest from world.
     CQuest* getQuest(std::string sID);
+
+    ///Return dictionary of all dialogs in the game.
+    map<string, CDialog*>& getDialogs();
+    
+    ///Return a dialog from world
+    CDialog* getDialog(std::string sID);
+
+    ///Return dictionary of all defaultDescriptions in the game.
+    map<string, std::vector<CText*>>& getRandomDescriptions();
+    
+    ///Return a description from world
+    CText* getRandomDescription(std::string sID);
+
+    ///Return dictionary of all default dialogs in the game.
+    map<string, std::vector<CDialog*>>& getRandomDialogs();
+
+    ///Return a random dialog from default dialogs
+    CDialog* getRandomDialog(std::string sID);
 
     /**
     * Return a item. Look for given item in dictionary of items (jsons) and create item from json.
@@ -99,8 +133,25 @@ public:
     void itemFactory(std::string sPath);
     map<string, CItem*> parseRoomItems(nlohmann::json j_room, std::string sArea, CPlayer* p);
 
-    //Character, Dialog, Details
-    map<string, CDetail*> detailFactory(nlohmann::json j_room, CPlayer* p, std::string sArea);
-    objectmap characterFactory(nlohmann::json j_characters, CPlayer* p);
-    CDialog* dialogFactory(string sPath, CPlayer* p); 
+    //Characters
+    void characterFactory();
+    void characterFactory(std::string sPath);
+    std::map<std::string, std::string> parseRoomChars(nlohmann::json j_room, std::string sArea, CPlayer* p);
+
+    //Dialogs
+    void dialogFactory(CPlayer* p);
+    CDialog* dialogFactory(nlohmann::json j_states, std::string sFileName, CPlayer* p);
+
+    //Default descriptions
+    void defaultDescriptionFactory(CPlayer* p);
+    void defaultDescriptionFactory(std::string sFileName, CPlayer* p);
+
+    //Default dialogs
+    void defaultDialogFactory(CPlayer* p);
+
+    //Details
+    void detailFactory();
+    void detailFactory(std::string sPath);
+    map<string, CDetail*> parseRoomDetails(nlohmann::json j_room, CPlayer* p, std::string sArea);
+    void parseRandomItemsToDetail(nlohmann::json& j_detail);
 };
