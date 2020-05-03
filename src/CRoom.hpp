@@ -36,7 +36,9 @@ public:
         m_sArea = sArea;
         m_sEntry = jAtts.value("entry", "");
 
-        std::map<std::string, nlohmann::json> mapExits = jAtts["exits"].get<std::map<std::string, nlohmann::json>>();
+        std::map<std::string, nlohmann::json> mapExits;
+        if(jAtts.count("exits") > 0)
+            mapExits = jAtts["exits"].get<std::map<std::string, nlohmann::json>>();
         for(const auto &it : mapExits) 
             m_exits[it.first] = new CExit(it.first, it.second, p);
 

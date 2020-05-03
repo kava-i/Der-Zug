@@ -6,17 +6,48 @@
 namespace fs = std::experimental::filesystem;
 
 CWorld::CWorld() {
-    m_path_to_world = "factory/world1/";
-    std::cout << "declared path.\n";
+    std::ifstream readPath("factory/current_world.json");
+    nlohmann::json j;
+    readPath >> j;
+    if(j.count("world") > 0)
+        m_path_to_world = j["world"];
+    else
+        m_path_to_world = "factory/world1/";
+    readPath.close();
+
+    std::ifstream readConfig(m_path_to_world + "config.json");
+    readConfig >> m_config;
+    readConfig.close();
 }
 
 CWorld::CWorld(CPlayer* p) {
-    m_path_to_world = "factory/world1/";
-    std::cout << "declared path.\n";
+    std::ifstream readPath("factory/current_world.json");
+    nlohmann::json j;
+    readPath >> j;
+    if(j.count("world") > 0)
+        m_path_to_world = j["world"];
+    else
+        m_path_to_world = "factory/world1/";
+    readPath.close();
+
     worldFactory(p);
+
+    std::ifstream readConfig(m_path_to_world + "config.json");
+    readConfig >> m_config;
+    readConfig.close();
 }
 
 // *** GETTER *** // 
+
+///Return path to correct world
+std::string CWorld::getPathToWorld() {
+    return m_path_to_world;
+}
+
+///Return json for configuration
+nlohmann::json& CWorld::getConfig() {
+    return m_config;
+}
 
 ///Return dictionary of all rooms in the game.
 map<string, CRoom*>& CWorld::getRooms() { 
@@ -175,7 +206,10 @@ void CWorld::worldFactory(CPlayer* p)
 void CWorld::roomFactory(CPlayer* player)
 {
     for(auto& p : fs::directory_iterator(m_path_to_world + "/jsons/rooms"))
+    {
+        std::cout << p.path() << std::endl;
         roomFactory(p.path(), player);
+    }
 }
 
 void CWorld::roomFactory(string sPath, CPlayer* p)

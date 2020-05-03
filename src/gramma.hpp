@@ -71,6 +71,7 @@ public:
             m_links[vec[1]].push_back(vec[0]);
         }
         read.close();
+        std::cout << "Size: " << m_all.size() << std::endl;
     }
 
     /**

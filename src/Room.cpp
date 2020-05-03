@@ -40,10 +40,15 @@ void CRoom::setPlayers(objectmap& onlinePlayers) { m_players = onlinePlayers; }
 
 string CRoom::showDescription(std::map<std::string, CPerson*> mapCharacters)
 {
-    string sDesc = "><div class='spoken2'>";
+    string sDesc = "";
     for(auto it : m_characters)
         sDesc += mapCharacters[it.first]->getRoomDescription();
-    return m_text->print() + sDesc + "</div>";
+
+    if(m_text->print().find("</div") != std::string::npos)
+        sDesc += "><div class='spoken2'>"+sDesc+"<div>";
+    else
+        sDesc += "\n";
+    return m_text->print() + " " + sDesc;
 }
 
 string CRoom::showAll(std::string sMode, CGramma* gramma)

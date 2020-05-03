@@ -44,6 +44,7 @@ private:
     map<string, vector<CText*>> m_defaultDescriptions;
     map<string, vector<CDialog*>> m_defaultDialogs;
 
+    nlohmann::json m_config;
     std::string m_path_to_world;
 public:
 
@@ -51,9 +52,13 @@ public:
     CWorld(CPlayer*);
     
     // *** GETTER *** //
-    std::string getPathToWorld() {
-        return m_path_to_world;
-    }
+
+    ///Return path to correct world
+    std::string getPathToWorld();
+
+    ///Return json for configuration
+    nlohmann::json& getConfig();
+ 
     
     ///Return dictionary of all rooms in the game.
     map<string, CRoom*>& getRooms();

@@ -203,8 +203,7 @@ void CEnhancedContext::initializeTemplates()
                         {"dequipe",{"h_dequipe"}}, 
                         {"examine",{"h_examine"}}, 
                         {"mode",{"h_changeMode"}}, 
-                        {"try", {"h_try"}}, 
-                        {"startTutorial", {"h_startTutorial"}}}}
+                        {"try", {"h_try"}}}},
                     };
 
     m_templates["fight"] = {

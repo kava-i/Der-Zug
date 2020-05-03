@@ -20,7 +20,8 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     //Set login data and player information
     func::convertToUpper(m_sName);
     m_sPassword = jAtts["password"];
-    m_firstLogin = true; m_sMode = jAtts.value("mode", "prosa"); 
+    m_firstLogin = true; 
+    m_sMode = jAtts.value("mode", "prosa"); 
     m_abbilities = {"strength", "skill"};
 
     //Character and Level
@@ -60,12 +61,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     //Add eventhandler to eventmanager
     m_contextStack.insert(new CEnhancedContext((std::string)"world"), 2, "world");
     
-    CEnhancedContext* context = new CEnhancedContext((std::string)"standard");
-    std::regex reg("spreche mit (.*)");
-    context->add_listener("h_startDialog", reg, 1);
-    std::regex reg2("spreche (.*) an");
-    context->add_listener("h_startDialog", reg2, 1, 1);
-    m_contextStack.insert(context, 0, "standard");
+    m_contextStack.insert(new CEnhancedContext((std::string)"standard"), 0 , "standard");
 }
 
 CPlayer::~CPlayer()
@@ -162,29 +158,37 @@ void CPlayer::appendPrint(std::string sPrint) {
 }
 
 void CPlayer::appendStoryPrint(string sPrint) { 
-    appendSpeackerPrint("STORY TELLER", sPrint);
+    appendSpeackerPrint(m_world->getConfig()["printing"]["story"], sPrint);
 }
 
 void CPlayer::appendDescPrint(string sPrint) {
-    appendSpeackerPrint("PERZEPTION", sPrint);
+    appendSpeackerPrint(m_world->getConfig()["printing"]["desc"], sPrint);
 }
 
 void CPlayer::appendErrorPrint(string sPrint) {
-    appendSpeackerPrint("LOGIK", sPrint);
+    appendSpeackerPrint(m_world->getConfig()["printing"]["error"], sPrint);
 }
 
 void CPlayer::appendTechPrint(string sPrint) {
-    appendSpeackerPrint("TECH GUY", sPrint);
+    appendSpeackerPrint(m_world->getConfig()["printing"]["tech"], sPrint);
 }
 
 void CPlayer::appendSpeackerPrint(std::string sSpeaker, std::string sPrint) {
     sPrint = func::returnSwapedString(sPrint, getStat("highness"));
-    m_sPrint += "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
+
+    if(sSpeaker != "")
+        m_sPrint += "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
+    else
+        m_sPrint += sPrint + "\n";
 }
 
 std::string CPlayer::returnSpeakerPrint(std::string sSpeaker, std::string sPrint) {
     sPrint = func::returnSwapedString(sPrint, getStat("highness"));
-    return "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
+    
+    if(sSpeaker != "")
+        return "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
+    else
+        return sPrint + "\n";
 }
 
 void CPlayer::appendSuccPrint(string sPrint) {
