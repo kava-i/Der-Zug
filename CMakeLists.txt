@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 SET(CMAKE_CXX_FLAGS "-Wall -Werror -O3")
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+find_package(Boost REQUIRED)
 INCLUDE_DIRECTORIES(websocketpp ${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 file(GLOB SOURCES_PROGRAMM
@@ -25,9 +26,9 @@ add_executable(txtadventure_server EXCLUDE_FROM_ALL ${SOURCES_PROGRAMM})
 target_compile_definitions(txtadventure_server PRIVATE _COMPILE_FOR_SERVER_=1)
 add_test(MainTest ../bin/txtadventure -d true)
 
-target_link_libraries(txtadventure PRIVATE boost_system)
+target_link_libraries(txtadventure PRIVATE ${Boost_LIBRARY})
 target_link_libraries(txtadventure_server
-    PRIVATE boost_system)
+    PRIVATE ${Boost_LIBRARIES})
 
 target_link_libraries(txtadventure
 	PRIVATE pthread ssl crypto stdc++fs
