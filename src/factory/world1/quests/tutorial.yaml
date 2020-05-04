@@ -5,6 +5,10 @@
   description: "Beende das Tutorial um die grundlegenden Aspekte des Textadventures und deren Funktionsweisen kennen zu lernen."
   ep: 35
   steps:
+  - name: "Hallo" 
+    id: 0tut_hallo 
+    handler: first_login
+    description: "Hallo in dieser neuen Welt. Zunächst einmal einige Grundlegende Dinge müssen wir lernen und besprechen."
   - name: "Erstmal lernen"
     id: 1tutorial
     description: "Das Hervortreiben der Allgemeinheit des Denkens ist der absolute Wert der Bildung..."

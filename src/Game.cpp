@@ -73,11 +73,10 @@ string CGame::startGame(string sInput, string sPasswordID, Webconsole* _cout)
 {
     m_players[sPasswordID]->setWobconsole(_cout);
     if(m_players[sPasswordID]->getFirstLogin() == true) {
-        m_players[sPasswordID]->throw_event("startTutorial");
+        //m_players[sPasswordID]->throw_event("first_login");
         m_players[sPasswordID]->setFirstLogin(false);
     }
-    else
-        m_players[sPasswordID]->throw_event("show room");
+    m_players[sPasswordID]->throw_event("show room");
 
     return m_players[sPasswordID]->getPrint();
 }

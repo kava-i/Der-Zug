@@ -206,10 +206,7 @@ void CWorld::worldFactory(CPlayer* p)
 void CWorld::roomFactory(CPlayer* player)
 {
     for(auto& p : fs::directory_iterator(m_path_to_world + "/jsons/rooms"))
-    {
-        std::cout << p.path() << std::endl;
         roomFactory(p.path(), player);
-    }
 }
 
 void CWorld::roomFactory(string sPath, CPlayer* p)

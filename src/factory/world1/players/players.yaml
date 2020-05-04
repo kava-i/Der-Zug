@@ -28,6 +28,7 @@
   attacks:
     kick: "Kick"
     punsch: "Punsch"
+  quests: [tutorial]
 
 - name: "programmer"
   id: programmer

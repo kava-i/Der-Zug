@@ -60,8 +60,14 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
 
     //Add eventhandler to eventmanager
     m_contextStack.insert(new CEnhancedContext((std::string)"world"), 2, "world");
-    
     m_contextStack.insert(new CEnhancedContext((std::string)"standard"), 0 , "standard");
+
+    //Add quests
+    if(jAtts.count("quests") > 0)
+    {
+        for(const auto& it : jAtts["quests"])
+            setNewQuest(it);
+    }
 }
 
 CPlayer::~CPlayer()
