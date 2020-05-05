@@ -201,6 +201,14 @@ void CPlayer::appendSuccPrint(string sPrint) {
     m_sPrint += GREEN + sPrint + WHITE;
 }
 
+///Add staged events
+void CPlayer::addStagedEvent(std::string sNewEvent)
+{
+    if(m_sStagedEvents == "")
+        m_sStagedEvents += sNewEvent;
+    else
+        m_sStagedEvents += ";" + sNewEvent;
+}
 
 ///Set player's world.
 void CPlayer::setWorld(CWorld* newWorld) { 

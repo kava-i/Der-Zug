@@ -41,10 +41,10 @@ COutput::COutput(nlohmann::json jAttributes, CPlayer* p)
     m_sSpeaker = jAttributes.value("speaker", "");
     m_sText = jAttributes.value("text", ""); 
 
-    if(jAttributes.count("deps") > 0)
-        m_jDeps = jAttributes["deps"];
-    if(jAttributes.count("updates") > 0)
-        m_jUpdates = jAttributes["updates"];
+    m_jDeps = jAttributes.value("deps", nlohmann::json::object());
+    m_jUpdates = jAttributes.value("updates", nlohmann::json::object());
+    m_permanentEvents = jAttributes.value("pEvents", {});
+    m_oneTimeEvents = jAttributes.value("otEvents", {});
 }
 
 std::string COutput::getSpeaker() {
@@ -67,6 +67,9 @@ std::string COutput::print(CPlayer* p)
     //Update mind attributes
     updateAttrbutes(sUpdated, p);
 
+    //Add events to players staged events
+    addEvents(p);  
+
     //return text 
     return p->returnSpeakerPrint(m_sSpeaker + sSuccess, m_sText + "$\n" + sUpdated);
 }
@@ -79,6 +82,9 @@ std::string COutput::reducedPrint(CPlayer* p)
     //Check dependencies
     if(checkDependencies(sSuccess, p) == false)
         return ""; 
+
+    //Add events to players staged events
+    addEvents(p);  
 
     //Return text
     return m_sText;
@@ -121,3 +127,16 @@ void COutput::updateAttrbutes(std::string& sUpdated, CPlayer* p)
 
     m_jUpdates.clear();
 }
+
+/**
+* Add events to player staged events.
+*/
+void COutput::addEvents(CPlayer* p)
+{
+    for(const auto &it : m_permanentEvents)
+        p->addStagedEvent(it);
+    for(const auto &it : m_oneTimeEvents)
+        p->addStagedEvent(it);
+    m_oneTimeEvents.clear(); 
+}
+

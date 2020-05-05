@@ -2,6 +2,7 @@
 #define CTEXT_H
 
 #include <iostream>
+#include <vector>
 #include "json.hpp"
 #include "func.hpp"
 #include "Webcmd.hpp"
@@ -31,6 +32,8 @@ private:
 
     nlohmann::json m_jDeps;
     nlohmann::json m_jUpdates;
+    std::vector<std::string> m_permanentEvents;
+    std::vector<std::string> m_oneTimeEvents;
 
 public:
     COutput(nlohmann::json jAttributes, CPlayer*);
