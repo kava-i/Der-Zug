@@ -47,6 +47,7 @@ public:
 
     bool checkDependencies(std::string& sSuccess, CPlayer* p);
     void updateAttrbutes(std::string& sUpdated, CPlayer* p);
+    void addEvents(CPlayer* p);
 };
 
 #endif

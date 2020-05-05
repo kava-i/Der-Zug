@@ -45,7 +45,7 @@ string CRoom::showDescription(std::map<std::string, CPerson*> mapCharacters)
         sDesc += mapCharacters[it.first]->getRoomDescription();
 
     if(m_text->print().find("</div") != std::string::npos)
-        sDesc += "><div class='spoken2'>"+sDesc+"<div>";
+        sDesc = "<div class='spoken2'>"+sDesc+"</div>";
     else
         sDesc += "\n";
     return m_text->print() + " " + sDesc;

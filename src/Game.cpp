@@ -18,8 +18,8 @@ CGame::CGame() {
     m_context->setGame(this);
 
     m_world = new CWorld(NULL);
-    m_gramma = new CGramma({"dictionary.txt", "EIG.txt"});
-    //m_gramma = new CGramma({});
+    //m_gramma = new CGramma({"dictionary.txt", "EIG.txt"});
+    m_gramma = new CGramma({});
 
     //Create players
     playerFactory();

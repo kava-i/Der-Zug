@@ -159,7 +159,7 @@ void CDState::executeActions(CPlayer* p)
 // *** FUNCTION POINTER *** //
 string CDState::standard(CPlayer* p)
 {
-    string sOutput = m_text->print() + "\n";
+    string sOutput = m_text->print();
 
     std::vector<size_t> activeOptions = getActiveOptions(p);
     size_t counter = 1;
@@ -175,7 +175,7 @@ string CDState::standard(CPlayer* p)
     if(activeOptions.size() == 0){
         p->appendPrint(sOutput + "Dialog ended.\n");
         return "endDialog";
-     }
+    }
 
     p->appendPrint(sOutput);
     return "";
@@ -220,15 +220,6 @@ string CDState::strangeGuy2(CPlayer* p)
 
     m_dialog->deleteDialogOption("START", 1);
 
-    /*
-    for(size_t i=1; i<=3; i++)
-        p->getWorld()->getCharacter("trainstation_bahnhof_eingangshalle_passant"+std::to_string(i))->getDialog()->deleteDialogOption("START", 1);
-    for(size_t i=4; i<=6; i++)
-        p->getWorld()->getCharacter("trainstation_bahnhof_nebenhalle_passant"+std::to_string(i))->getDialog()->deleteDialogOption("START", 1);
-    for(size_t i=7; i<=9; i++)
-        p->getWorld()->getCharacter("trainstation_gleis5_passant"+std::to_string(i))->getDialog()->deleteDialogOption("START", 1);
-    */
- 
     return sOutput;
 }
 

@@ -562,7 +562,8 @@ void CEnhancedContext::h_firstZombieAttack(std::string& sIdentifier, CPlayer* p)
     if(p->getRoom()->getID() != "hospital_stairs")
         return;
 
-    p->appendDescPrint("\n$\nA zombie comes running down the stairs and attacks you!");
+    p->appendPrint("$ ");
+    p->appendDescPrint("A zombie comes running down the stairs and attacks you!");
 
     //Create fight
     p->setFight(new CFight(p, p->getWorld()->getCharacter("hospital_hospital_stairs_zombie")));
@@ -595,8 +596,6 @@ void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
 {
     p->throw_event("go to neben");
     p->throw_event("go to Toil");
-    p->throw_event("go to Frauen");
-    p->throw_event("talk to beso");
 }
 
 

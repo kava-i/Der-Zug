@@ -21,8 +21,8 @@ std::string CText::print()
     for(size_t i=0; i<m_texts.size(); i++)
         sOutput += m_texts[i]->print(m_player);
 
-    if(sOutput != "")
-        sOutput.pop_back();
+    //if(sOutput != "")
+    //    sOutput.pop_back();
 
     return sOutput;
 }
@@ -41,10 +41,13 @@ COutput::COutput(nlohmann::json jAttributes, CPlayer* p)
     m_sSpeaker = jAttributes.value("speaker", "");
     m_sText = jAttributes.value("text", ""); 
 
+    //Add dependencies and upgrades
     m_jDeps = jAttributes.value("deps", nlohmann::json::object());
     m_jUpdates = jAttributes.value("updates", nlohmann::json::object());
-    m_permanentEvents = jAttributes.value("pEvents", {});
-    m_oneTimeEvents = jAttributes.value("otEvents", {});
+
+    //Add events
+    m_permanentEvents = jAttributes.value("pEvents", std::vector<std::string>());
+    m_oneTimeEvents = jAttributes.value("otEvents", std::vector<std::string>());
 }
 
 std::string COutput::getSpeaker() {
@@ -71,7 +74,7 @@ std::string COutput::print(CPlayer* p)
     addEvents(p);  
 
     //return text 
-    return p->returnSpeakerPrint(m_sSpeaker + sSuccess, m_sText + "$\n" + sUpdated);
+    return p->returnSpeakerPrint(m_sSpeaker + sSuccess, m_sText + "$" + sUpdated);
 }
 
 std::string COutput::reducedPrint(CPlayer* p)
@@ -134,7 +137,10 @@ void COutput::updateAttrbutes(std::string& sUpdated, CPlayer* p)
 void COutput::addEvents(CPlayer* p)
 {
     for(const auto &it : m_permanentEvents)
+    {
+        std::cout << "ADDED PERMANENT EVENT: " << it << std::endl;
         p->addStagedEvent(it);
+    }
     for(const auto &it : m_oneTimeEvents)
         p->addStagedEvent(it);
     m_oneTimeEvents.clear(); 

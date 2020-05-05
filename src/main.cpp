@@ -99,17 +99,17 @@ class WebserverGame
 	    std::list<std::string> lk;
 	    for(const auto &it : *ptr)
 	    {
-		lk.push_back(it.second->GetID());
+		    lk.push_back(it.second->GetID());
 	    }
 
-            std::cout<<"Befor play: sInput: "<<sInput<<" calling with id: "<<_id<<std::endl;
-            std::string sOutput = game->play(sInput, _id,lk);
-            std::cout<<"Got output: "<<sOutput<<std::endl;
-            std::cout<<"Writing to client now"<<std::endl;
-            _cout->write(sOutput);
-            std::cout<<"Send the output to client"<<std::endl;
-            _cout->flush();
-	    }
+        std::cout<<"Befor play: sInput: "<<sInput<<" calling with id: "<<_id<<std::endl;
+        std::string sOutput = game->play(sInput, _id,lk);
+        std::cout<<"Got output: "<<sOutput<<std::endl;
+        std::cout<<"Writing to client now"<<std::endl;
+        _cout->write(sOutput);
+        std::cout<<"Send the output to client"<<std::endl;
+        _cout->flush();
+    }
 };
 
 int main(int x, char **argc)

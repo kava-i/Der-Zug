@@ -160,7 +160,6 @@ public:
 
     ///Change mode to 'prosa' or 'list' mode and print change
     void changeMode();
-    
 
     // ** Fight ** //
 

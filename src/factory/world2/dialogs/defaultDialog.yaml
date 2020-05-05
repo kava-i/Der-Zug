@@ -2,5 +2,16 @@
 
 - id: START
   text:
-  - {speaker: PERZEPTION, text: "Ah, Hier ist es so langweilig. Niemand redet mit mir!"}
+  - {text: "Die Person ignoriert dich. Hier ist es so langweilig. Niemand redet mit mir!"}
+  options:
+  - {id: 1, text: "Mir ist sterbends langeweilig, haben Sie lust auf eine kleine Diskussion... Über Hegel zum Beispiel?", to: diskussion}
+  - {id: 2, text: "[Einfach gehen und die langeweile ertragen.]", to: gehen}
+
+- id: diskussion
+  text:
+  - {text: "Du wirst weiter kalt ignoriert. Du wendest dich ab und gehst."}
+
+- id: gehen
+  text:
+  - {text: "Du wendest dich ab und gehst."}
 

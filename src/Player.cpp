@@ -158,9 +158,16 @@ void CPlayer::setPrint(string newPrint) {
     m_sPrint = newPrint; 
 }
 
-///Append to current player output.
+///Append to current player output and throw staged events if exists.
 void CPlayer::appendPrint(std::string sPrint) {
     m_sPrint += sPrint;
+    if(m_sStagedEvents != "")
+    {
+        m_sPrint += "\n";
+        std::string events = m_sStagedEvents;
+        m_sStagedEvents = "";
+        throw_event(events);
+    }
 }
 
 void CPlayer::appendStoryPrint(string sPrint) { 
@@ -183,9 +190,9 @@ void CPlayer::appendSpeackerPrint(std::string sSpeaker, std::string sPrint) {
     sPrint = func::returnSwapedString(sPrint, getStat("highness"));
 
     if(sSpeaker != "")
-        m_sPrint += "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
+        appendPrint("<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>");
     else
-        m_sPrint += sPrint + "\n";
+        appendPrint(sPrint + "\n");
 }
 
 std::string CPlayer::returnSpeakerPrint(std::string sSpeaker, std::string sPrint) {
@@ -229,7 +236,6 @@ void CPlayer::setPlayers(map<string, CPlayer*> players) {
 void CPlayer::setWobconsole(Webconsole* webconsole) { 
     _cout = webconsole; 
 }
-
 
 
 // *** *** FUNCTIONS *** *** // 
@@ -377,9 +383,9 @@ void CPlayer::changeRoom(string sIdentifier)
 */
 void CPlayer::changeRoom(CRoom* newRoom)
 {
-    appendPrint(newRoom->showDescription(m_world->getCharacters()));
     m_lastRoom = m_room; 
     m_room = newRoom;
+    appendPrint(newRoom->showDescription(m_world->getCharacters()));
     m_vistited[m_room->getID()] = true;
 }
 

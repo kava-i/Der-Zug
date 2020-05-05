@@ -9,7 +9,7 @@
 
 - id: besserso
   text: 
-  - {speaker: BETRUNKENE, text: "Dann verpiss dich, ja!? $Du gehst... $schnell..."}
+  - {speaker: BETRUNKENE, text: "Dann verpiss dich, ja!? $ Du gehst... $ schnell..."}
 
 - id: nichtso
   text: 
