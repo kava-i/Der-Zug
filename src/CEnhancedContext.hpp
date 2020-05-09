@@ -106,6 +106,8 @@ public:
     void h_showItemInfo(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
+    void initializeStandardHandlers();
+    void h_showExits(std::string& sIdentifier, CPlayer* p);
     void h_show             (std::string&, CPlayer*);
     void h_look             (std::string&, CPlayer*);
     void h_take             (std::string&, CPlayer*);

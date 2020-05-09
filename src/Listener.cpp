@@ -59,7 +59,7 @@ bool CListener::checkMatch(event& e) {
 * @return whether this listener picks up on thrown event.
 */
 bool CListener::stringCompare(event& e) {
-    return e.first == m_stringEventType;
+    return fuzzy::fuzzy_cmp(e.first, m_stringEventType) <= 0.2;
 }
 
 /**

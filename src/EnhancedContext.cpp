@@ -112,6 +112,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_showItemInfo"] = &CEnhancedContext::h_showItemInfo;
 
     // ***** STANDARD CONTEXT ***** //
+    m_handlers["h_showExits"] = &CEnhancedContext::h_showExits;
     m_handlers["h_show"] = &CEnhancedContext::h_show;
     m_handlers["h_look"] = &CEnhancedContext::h_look;
     m_handlers["h_take"] = &CEnhancedContext::h_take;
@@ -425,6 +426,20 @@ void CEnhancedContext::h_showItemInfo(std::string& sIdentifier, CPlayer* p)
 }
 
 // ***** ***** STANDARD CONTEXT ***** ***** //
+
+void CEnhancedContext::initializeStandardHandlers()
+{
+    std::regex r1("spreche (.*) an");
+    add_listener("h_startDialog", r1, 1);
+    add_listener("h_showExits", "wo kann ich hingehen?");
+    
+}
+
+void CEnhancedContext::h_showExits(std::string& sIdentifier, CPlayer* p) {
+    p->appendDescPrint(p->getRoom()->showExits(p->getMode(), p->getGramma())+"\n");
+        p->addSelectContest(p->getRoom()->getExtits2(), "go");
+}
+
 
 void CEnhancedContext::h_show(std::string& sIdentifier, CPlayer* p) {
     if(sIdentifier == "exits")
