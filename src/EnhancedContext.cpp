@@ -429,10 +429,19 @@ void CEnhancedContext::h_showItemInfo(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::initializeStandardHandlers()
 {
+    add_listener("h_show", "zeige");
+    add_listener("h_look", "schaue");
+    add_listener("h_goTo", "gehe");
     std::regex r1("spreche (.*) an");
     add_listener("h_startDialog", r1, 1);
-    add_listener("h_showExits", "wo kann ich hingehen?");
-    
+    std::regex r2("hebe (.*) auf");
+    add_listener("h_take", r2, 1);
+    std::regex r3("(trinke|rauche|esse) (.*)");
+    add_listener("h_consume", r3, 1);
+    std::regex r4("rüste (.*) aus");
+    add_listener("h_equipe", r4, 1);
+    std::regex("Rüste (.*) ab");
+    add_listener("h_examine", "betrachte");
 }
 
 void CEnhancedContext::h_showExits(std::string& sIdentifier, CPlayer* p) {
