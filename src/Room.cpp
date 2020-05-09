@@ -119,31 +119,22 @@ string CRoom::showDetails(std::string sMode, CGramma* gramma)
     return details;
 }
 
-string CRoom::look(string sWhere, string sWhat, std::string sMode)
+string CRoom::look(string sDetail, std::string sMode, CGramma* gramma)
 {
+    CDetail* detail = m_details[sDetail];
     auto lambda = [](CItem* item) { return item->getName(); };
-    string sOutput = "";
-    for(auto detail : m_details)
-    {
-        if(detail.second->getLook() == sWhere && fuzzy::fuzzy_cmp(detail.second->getName(), sWhat) <= 0.2)
-        {
-            //Print output
-            if(sMode == "prosa")
-            {
-                std::string sItems = func::printProsa(detail.second->getItems(), lambda);
-                if(sItems != "")
-                    sOutput += "In " + detail.second->getName() + " sind " + sItems + ".\n";
-                else
-                    sOutput = "Nichts gefunden.\n";
-            }
-            else
-                sOutput += detail.second->getName() + "\n" + func::printList(detail.second->getItems(), lambda);
-    
-            //Change from hidden to visible and "empty" detail
-            m_items.insert(detail.second->getItems().begin(), detail.second->getItems().end());
-            detail.second->getItems().clear();
-        }
-    }
+    std::string sOutput = "";
+
+    //Print output
+    if(sMode == "prosa")
+        sOutput = gramma->build(func::to_vector(detail->getItems(), lambda), "In der Kiste sind", "leider nichts.");
+    else
+        sOutput = detail->getName() + "\n" + func::printList(detail->getItems(), lambda);
+
+    //Change from hidden to visible and "empty" detail
+    m_items.insert(detail->getItems().begin(), detail->getItems().end());
+    detail->getItems().clear();
+
     if(sMode=="list"  && sOutput == "") sOutput = "Nichts gefunden.\n";
     return sOutput;
 }

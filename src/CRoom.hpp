@@ -66,7 +66,7 @@ public:
     string showCharacters(std::string sMode, CGramma* gramma);
     string showItems(std::string sMode, CGramma* gramma);
     string showDetails(std::string sMode, CGramma*);
-    string look(string sWhere, string sWhat, std::string sMode);
+    string look(std::string sDetail, std::string sMode, CGramma* gramma);
     CItem* getItem(string sPlayerChoice);
 };
     

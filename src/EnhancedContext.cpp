@@ -487,15 +487,36 @@ void CEnhancedContext::h_show(std::string& sIdentifier, CPlayer* p) {
         p->appendErrorPrint("Unbekannte \"zeige-function\"\n"); 
 }
 
-void CEnhancedContext::h_look(std::string& sIdentifier, CPlayer* p) {
-    size_t pos=sIdentifier.find(" ");
+void CEnhancedContext::h_look(std::string& sIdentifier, CPlayer* p) 
+{
+    //Extract details (sWhat) and where to look (sWhere) from identifier
+    size_t pos = sIdentifier.find(" ");
+    if(pos == std::string::npos)
+    {
+        p->appendErrorPrint("Ich weiß nicht, was du durchsuchen willst.\n");
+        return;
+    }
     
-    if(pos == std::string::npos) {
-        p->appendErrorPrint("Soll ich in, auf oder unter der box schauen?\n");
+    std::string sWhere = sIdentifier.substr(0, pos);
+    std::string sWhat = sIdentifier.substr(pos+1);
+    auto lambda = [](CDetail* detail) { return detail->getName();};
+    std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), sIdentifier, lambda);
+
+    std::cout << "Where: " << sWhere << ", What: " << sWhat << std::endl;
+
+    //Check whether input is correct/ detail could be found.
+    if(sDetail == "")
+    {
+        p->appendErrorPrint("Ich weiß nicht, was du durchsuchen willst.\n");
         return;
     }
 
-    p->appendDescPrint(p->getRoom()->look(sIdentifier.substr(0,pos),sIdentifier.substr(pos+1),p->getMode()));
+    //Check whether sWhere matched with detail
+    CDetail* detail  = p->getRoom()->getDetails()[sDetail];
+    if(detail->getLook() == sWhere)
+        p->appendDescPrint(p->getRoom()->look(sDetail, p->getMode(), p->getGramma()));
+    else
+        p->appendErrorPrint("Ich kann nicht " + sWhere + " " + detail->getName() + " schauen.\nSoll ich in, auf oder unter " + detail->getName() + " schauen?\n");
 }
 
 void CEnhancedContext::h_goTo(std::string& sIdentifier, CPlayer* p) {
