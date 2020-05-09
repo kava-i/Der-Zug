@@ -14,7 +14,8 @@ class CItem : public CObject
 protected:
 
     nlohmann::json m_jAttributes;
-    std::string m_sCategory;
+    CText* m_useDescription;             ///< Description when item is used.
+    std::string m_sCategory;        
     std::string m_sType;
     std::string m_sFunction;
     std::string m_sAttack;

@@ -1,21 +1,23 @@
 ---
 
-- name: Wine
+- name: Wein 
   id: basic_wine 
   category: consume
   type: drug
   effekt: 2
   value: 20
   description: 
-    - {speaker: PERZEPTION, text: "A good dusty bottle of grandmas red wine"}
+    - {speaker: PERZEPTION, text: "Eine gute, staubige Flasche von Großmutters Rotwein."}
+  useDescription:
+    - {speaker: PERZEPTION, text: "Du trinkst die Falsche Wein auf ex! Deine Highness erhöht sich um 2."}
 
-- name: Pack of old cigaretts
+- name: Packung alter Zigaretten
   id: basic_cigaretts
   category: consume
   type: drug
   effekt: 0
   value: 6
   description: 
-    - {speaker: PERZEPTION, text: "A pack of malboro gold, dusty and old, but they'll do when you're craving."}
+    - {speaker: PERZEPTION, text: "Eine Packung Malboro Gold. Staubig und alt, aber es wird reichen."}
 
 

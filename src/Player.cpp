@@ -345,13 +345,13 @@ void CPlayer::send(string sMessage)
 void CPlayer::changeRoom(string sIdentifier)
 {
     //Check if player wants to go back.
-    if(sIdentifier == "back") {
+    if(sIdentifier == "back" || sIdentifier == "zurück") {
         changeRoom(m_lastRoom);
         return;
     }
 
     //Get selected room, checking exits in current room.
-    auto lamda1= [](CExit* exit) { return exit->getName(); };
+    auto lamda1= [](CExit* exit) { return exit->getPrep() + " " + exit->getName(); };
     string room = func::getObjectId(getRoom()->getExtits(), sIdentifier, lamda1);
 
     if(room != "") {

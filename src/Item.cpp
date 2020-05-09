@@ -9,6 +9,11 @@ CItem::CItem(nlohmann::json jBasic, CPlayer* p) : CObject{jBasic, p}
 {
     m_jAttributes = jBasic;
 
+    if(jBasic.count("useDescription") > 0)
+        m_useDescription = new CText(jBasic["useDescription"], p);
+    else
+        m_useDescription = nullptr;
+
     std::string sType = jBasic.value("type", "");
     m_sCategory = jBasic.value("category", "others");
     m_sType = jBasic.value("type", "");
@@ -107,7 +112,10 @@ void CItem::consume(CPlayer* p)
         p->setStat("highness", p->getStat("highness") + getEffekt());
         if(!p->checkEventExists("highness"))
             p->addTimeEvent("highness", 2, &CPlayer::t_highness);
-        p->appendPrint("You consume drug: " + getName() + ". Highness inceased by " + std::to_string(getEffekt()) + ".\n");
+        if(m_useDescription != nullptr)
+            p->appendPrint(m_useDescription->print());
+        else
+            p->appendDescPrint("Du consumierst eine Droge: deine Highness erhöht sich um " + std::to_string(getEffekt()));
         p->getInventory().removeItemByID(getID());
     }
 }

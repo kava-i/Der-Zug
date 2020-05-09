@@ -437,7 +437,7 @@ void CEnhancedContext::initializeStandardHandlers()
     std::regex r2("hebe (.*) auf");
     add_listener("h_take", r2, 1);
     std::regex r3("(trinke|rauche|esse) (.*)");
-    add_listener("h_consume", r3, 1);
+    add_listener("h_consume", r3, 2);
     std::regex r4("rüste (.*) aus");
     add_listener("h_equipe", r4, 1);
     std::regex("Rüste (.*) ab");
@@ -451,40 +451,40 @@ void CEnhancedContext::h_showExits(std::string& sIdentifier, CPlayer* p) {
 
 
 void CEnhancedContext::h_show(std::string& sIdentifier, CPlayer* p) {
-    if(sIdentifier == "exits")
+    if(sIdentifier == "exits" || sIdentifier == "ausgänge")
     {
         p->appendDescPrint(p->getRoom()->showExits(p->getMode(), p->getGramma())+"\n");
         p->addSelectContest(p->getRoom()->getExtits2(), "go");
     }
-    else if(sIdentifier == "people")
+    else if(sIdentifier == "people" || sIdentifier == "personen")
     {
         p->appendDescPrint(p->getRoom()->showCharacters(p->getMode(), p->getGramma()) + "\n"); 
         p->addSelectContest(p->getRoom()->getCharacters(), "talk");
     }
     else if(sIdentifier == "room")
         p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
-    else if(sIdentifier == "items")
+    else if(sIdentifier == "items" || sIdentifier == "gegenstände")
         p->appendDescPrint(p->getRoom()->showItems(p->getMode(), p->getGramma()) + "\n");
-    else if(sIdentifier == "details")
+    else if(sIdentifier == "details" || sIdentifier == "mobiliar")
         p->appendDescPrint(p->getRoom()->showDetails(p->getMode(), p->getGramma()) + "\n");
-    else if(sIdentifier == "inventory")
+    else if(sIdentifier == "inventory" || sIdentifier == "inventar")
         p->appendPrint(p->getInventory().printInventory());
-    else if(sIdentifier == "equiped")
+    else if(sIdentifier == "equiped" || sIdentifier == "ausrüstung")
         p->printEquiped();
     else if(sIdentifier == "quests")
         p->showQuests(false);
-    else if(sIdentifier == "solved quests")
+    else if(sIdentifier == "solved quests" || sIdentifier == "gelöste Quests")
         p->showQuests(true);
     else if(sIdentifier == "stats")
         p->showStats();
     else if(sIdentifier == "mind")
         p->showMinds();
-    else if(sIdentifier == "attacks")
+    else if(sIdentifier == "attacks" || sIdentifier == "attacken")
         p->appendPrint(p->printAttacks());
-    else if(sIdentifier == "all")
+    else if(sIdentifier == "all" || sIdentifier == "alles")
         p->appendDescPrint(p->getRoom()->showAll(p->getMode(), p->getGramma()));
     else
-        p->appendTechPrint("Unkown \"show-function\"\n"); 
+        p->appendErrorPrint("Unbekannte \"zeige-function\"\n"); 
 }
 
 void CEnhancedContext::h_look(std::string& sIdentifier, CPlayer* p) {
@@ -530,19 +530,22 @@ void CEnhancedContext::h_take(std::string& sIdentifier, CPlayer* p) {
 }
 
 void CEnhancedContext::h_consume(std::string& sIdentifier, CPlayer* p) {
+    std::cout << "h_consume, " << sIdentifier << std::endl;
     if(p->getInventory().getItem(sIdentifier) != NULL) {
         if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
-            p->appendTechPrint("This item is not consumeable.\n");
+            p->appendTechPrint("Dieser Gegenstand kann nicht konsumiert werden.\n");
     }
     else
-        p->appendErrorPrint("Item not in inventory! (use \"show inventory\" to see your items.)\n");
+        p->appendErrorPrint("Gegenstand nicht in deinem Inventar! (benutze \"zeige Inventar\" um deine Items zu sehen.)\n");
 }
 
 void CEnhancedContext::h_equipe(std::string& sIdentifier, CPlayer* p) {
     if(p->getInventory().getItem(sIdentifier) != NULL) {
         if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
-            p->appendErrorPrint("This item is not equipable.\n");
+            p->appendErrorPrint("Dieser Gegenstand kann nicht ausgerüstet werden.\n");
     }
+    else
+        p->appendErrorPrint("Gegenstand nicht in deinem Inventar! (benutze \"zeige Inventar\" um deine Items zu sehen.)\n");
 }
 
 void CEnhancedContext::h_dequipe(std::string& sIdentifier, CPlayer* p) {
