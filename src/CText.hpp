@@ -20,8 +20,8 @@ private:
 public:
     CText(nlohmann::json jAttributes, CPlayer*);
 
-    std::string print();
-    std::string reducedPrint();
+    std::string print(bool events=true);
+    std::string reducedPrint(bool events=true);
 };
 
 class COutput
@@ -42,8 +42,8 @@ public:
     std::string getText();
     std::string getSpeaker();
 
-    std::string print(CPlayer* p);
-    std::string reducedPrint(CPlayer* p);
+    std::string print(CPlayer* p, bool events=true);
+    std::string reducedPrint(CPlayer* p, bool events=false);
 
     bool checkDependencies(std::string& sSuccess, CPlayer* p);
     void updateAttrbutes(std::string& sUpdated, CPlayer* p);

@@ -76,7 +76,7 @@ string CGame::startGame(string sInput, string sPasswordID, Webconsole* _cout)
         //m_players[sPasswordID]->throw_event("first_login");
         m_players[sPasswordID]->setFirstLogin(false);
     }
-    m_players[sPasswordID]->throw_event("show room");
+    m_players[sPasswordID]->throw_events("show room");
 
     return m_players[sPasswordID]->getPrint();
 }
@@ -107,7 +107,7 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePla
 
         //ERROR !! Current player is deleted when this function is called!! 
         //Maybe set current player in reload player?
-        m_curPlayer->throw_event("startTutorial");
+        m_curPlayer->throw_events("startTutorial");
     }
 
     //Parse commands
@@ -123,7 +123,7 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePla
         return m_curPlayer->getPrint();
 
     //Throw event of player
-    m_curPlayer->throw_event(sInput);
+    m_curPlayer->throw_events(sInput);
     
     return m_curPlayer->getPrint(); 
 }

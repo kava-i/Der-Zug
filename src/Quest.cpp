@@ -41,7 +41,7 @@ std::string CQuest::setActive(int& ep) {
     m_active = true;
     m_questSteps.begin()->second->setActive(true);
 
-    std::string sOutput = "New Quest: <b>" + m_sName + "</b>: <i>" + m_sDescription + "</i>\n";
+    std::string sOutput = "Neue Quest: <b>" + m_sName + "</b>: <i>" + m_sDescription + "</i>\n";
 
     for(auto it : m_questSteps)
     {
@@ -89,7 +89,7 @@ std::string CQuest::checkSolved(int& ep)
     if(m_active == true)
     {
         ep = m_EP;
-        return "Quest "+ m_sName + " solved! + " + std::to_string(m_EP) + " EP\n";
+        return "Quest "+ m_sName + " abgeschlossen! + " + std::to_string(m_EP) + " EP\n";
     }
     else
         return "";

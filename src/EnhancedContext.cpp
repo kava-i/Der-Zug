@@ -218,9 +218,9 @@ void CEnhancedContext::initializeTemplates()
     m_templates["trade"] = {
                     {"name","trade"}, {"permeable",false}, {"help","trade.txt"}, 
                     {"handlers",{
-                        {"buy", {"h_buy"}},
-                        {"sell",{"h_sell"}},
-                        {"exit",{"h_exit"}}}}
+                        {"kaufe", {"h_buy"}},
+                        {"verkaufe",{"h_sell"}},
+                        {"zurück",{"h_exit"}}}}
                     };
     m_templates["chat"] = {
                     {"name", "chat"}, {"permeable", false}, {"help","chat.txt"},
@@ -362,7 +362,6 @@ void CEnhancedContext::h_updatePlayers(std::string&, CPlayer*p)
 // ***** ***** WORLD CONTEXT ***** ***** //
 
 void CEnhancedContext::h_deleteCharacter(std::string& sIdentifier, CPlayer* p) {
-    std::cout << "h_deleteCharacter " << sIdentifier << std::endl;
     p->getRoom()->getCharacters().erase(sIdentifier);
     delete p->getWorld()->getCharacter(sIdentifier);
     p->getWorld()->getCharacters().erase(sIdentifier); 
@@ -383,13 +382,11 @@ void CEnhancedContext::h_recieveMoney(std::string& sIdentifier, CPlayer* p) {
 }
 
 void CEnhancedContext::h_endFight(std::string& sIdentifier, CPlayer* p) {
-    std::cout << "h_endFight " << std::endl;
     p->endFight();
     m_curPermeable=false;
 }
 
 void CEnhancedContext::h_endDialog(std::string& sIdentifier, CPlayer* p) {
-    std::cout << "h_endDialog." << std::endl;
     p->getContexts().erase("dialog");
     m_curPermeable=false;
 }
@@ -502,8 +499,6 @@ void CEnhancedContext::h_look(std::string& sIdentifier, CPlayer* p)
     auto lambda = [](CDetail* detail) { return detail->getName();};
     std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), sIdentifier, lambda);
 
-    std::cout << "Where: " << sWhere << ", What: " << sWhat << std::endl;
-
     //Check whether input is correct/ detail could be found.
     if(sDetail == "")
     {
@@ -525,8 +520,6 @@ void CEnhancedContext::h_goTo(std::string& sIdentifier, CPlayer* p) {
 
 void CEnhancedContext::h_startDialog(std::string& sIdentifier, CPlayer* p)
 {
-    std::cout << "h_startDialog, " << sIdentifier << std::endl;
-
     //Get selected character
     std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier);
     auto lambda = [](CPlayer* player) { return player->getName(); };
@@ -551,7 +544,6 @@ void CEnhancedContext::h_take(std::string& sIdentifier, CPlayer* p) {
 }
 
 void CEnhancedContext::h_consume(std::string& sIdentifier, CPlayer* p) {
-    std::cout << "h_consume, " << sIdentifier << std::endl;
     if(p->getInventory().getItem(sIdentifier) != NULL) {
         if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
             p->appendTechPrint("Dieser Gegenstand kann nicht konsumiert werden.\n");
@@ -598,7 +590,6 @@ void CEnhancedContext::h_changeMode(std::string& sIdentifier, CPlayer* p) {
 }
 
 void CEnhancedContext::h_test(std::string& sIdentifier, CPlayer* p) {
-    std::cout << "h_test, " << sIdentifier << std::endl;
     p->appendPrint(sIdentifier);
 }
 
@@ -642,8 +633,8 @@ void CEnhancedContext::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
 {
-    p->throw_event("go to neben");
-    p->throw_event("go to Toil");
+    p->throw_events("go to neben");
+    p->throw_events("go to Toil");
 }
 
 
@@ -656,7 +647,7 @@ void CEnhancedContext::initializeFightListeners(std::map<std::string, std::strin
 void CEnhancedContext::h_fight(std::string& sIdentifier, CPlayer* p) {
     std::string newCommand = p->getFight()->fightRound((sIdentifier));
     if(newCommand != "")    
-        p->throw_event(newCommand);
+        p->throw_events(newCommand);
 }
 
 void CEnhancedContext::h_fight_show(std::string& sIdentifier, CPlayer* p) {
@@ -709,7 +700,7 @@ void CEnhancedContext::h_call(std::string& sIdentifier, CPlayer* p)
         initializeDialogListeners(nextState, p);
         std::string newCommand = p->getDialog()->getState(nextState)->callState(p);
         if(newCommand != "")
-            p->throw_event(newCommand);
+            p->throw_events(newCommand);
     }
 }
 
@@ -718,9 +709,9 @@ void CEnhancedContext::h_call(std::string& sIdentifier, CPlayer* p)
 void CEnhancedContext::print(CPlayer* p)
 {
     CPerson* partner = p->getWorld()->getCharacter(getAttribute<std::string>("partner"));
-    p->appendPrint("<b>" + p->getName() + "'s Inventory:</b>\n" 
+    p->appendPrint("<b>" + p->getName() + "s Inventar:</b>\n" 
                     + p->getInventory().printInventory()
-                    + "\n<b>" + partner->getName() + "'s Inventory: </b>\n" 
+                    + "\n<b>" + partner->getName() + "s Inventar: </b>\n" 
                     + partner->getInventory().printInventory());
 }
 
@@ -733,7 +724,7 @@ void CEnhancedContext::h_sell(std::string& sIdentifier, CPlayer* p)
     else
     {
         p->appendDescPrint("Du hast " + curItem->getName() + " verkauft.\n\n");
-        p->throw_event("recieveMoney " + std::to_string(curItem->getValue()));
+        p->throw_events("recieveMoney " + std::to_string(curItem->getValue()));
         CItem* item = new CItem(curItem->getAttributes(), p);
         partner->getInventory().addItem(item);
         p->getInventory().removeItemByID(curItem->getID());
@@ -776,7 +767,6 @@ void CEnhancedContext::h_exit(std::string&, CPlayer* p)
 void CEnhancedContext::h_send(string& sInput, CPlayer* p)
 {
     CPlayer* chatPartner = p->getPlayer(getAttribute<std::string>("partner"));
-    std::cout << "... sending.\n";
     chatPartner->send(p->returnSpeakerPrint(func::returnToUpper(p->getName()), sInput + "\n"));
     p->appendSpeackerPrint("YOU", sInput + "\n");
 }
@@ -905,7 +895,7 @@ void CEnhancedContext::h_besiege_besoffene_frau(std::string& sIdentifier, CPlaye
 
     p->questSolved(getAttribute<std::string>("questID"), "1besiege_besoffene_frau");
     p->appendDescPrint("Du suchst in den Taschen der Frau und findest drei Schillinge.\n");
-    p->throw_event("recieveMoney 3");
+    p->throw_events("recieveMoney 3");
     p->getContexts().erase(getAttribute<std::string>("questID"));
 }
 
@@ -931,7 +921,7 @@ void CEnhancedContext::h_select(std::string& sIdentifier, CPlayer* p)
     map_type map_objects = getAttribute<map_type>("map_objects");
     std::string obj = func::getObjectId(map_objects, sIdentifier);
 
-    p->throw_event(getAttribute<std::string>("eventtype")+ " " + obj);
+    p->throw_events(getAttribute<std::string>("eventtype")+ " " + obj);
     m_curPermeable=false;
     p->getContexts().erase("select"); 
 }

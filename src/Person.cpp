@@ -75,7 +75,7 @@ std::string CPerson::getRoomDescription() {
 
 ///Brief description of character
 std::string CPerson::getReducedDescription() {
-    return m_text->reducedPrint();
+    return m_text->reducedPrint(false);
 }
 
 

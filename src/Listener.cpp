@@ -59,7 +59,7 @@ bool CListener::checkMatch(event& e) {
 * @return whether this listener picks up on thrown event.
 */
 bool CListener::stringCompare(event& e) {
-    return fuzzy::fuzzy_cmp(e.first, m_stringEventType) <= 0.2;
+    return e.first == m_stringEventType;
 }
 
 /**
@@ -69,7 +69,6 @@ bool CListener::stringCompare(event& e) {
 */
 bool CListener::regexCompare(event& e) {
     std::string str = e.first + " " + e.second;
-    std::cout << "Comparing regex: " << str << std::endl;
     std::smatch m;
     if(std::regex_match(str, m, m_regexEventType))
     {

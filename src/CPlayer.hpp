@@ -363,7 +363,7 @@ public:
     * loop breaks.
     * @param sInput
     */
-    void throw_event(string sInput);
+    void throw_events(string sInput);
     
     // *** Time events *** //
 

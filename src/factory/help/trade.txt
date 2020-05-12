@@ -1,1 +1,1 @@
-Enter "buy [name of item]" or "sell [name of item]" to buy or sell an item. Use "Exit" to return to dialog."
+Gebe "kaufe [Name des Items]" oder "verkaufe [Name des Items]" ein um das gewünschte Item zu kaufen, bzw. zu verkaufen. Gebe "zurück" ein, um zum Dialog zurück zu kehren."

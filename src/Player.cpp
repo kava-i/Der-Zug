@@ -168,7 +168,7 @@ void CPlayer::appendPrint(std::string sPrint) {
         m_sPrint += "\n";
         std::string events = m_sStagedEvents;
         m_sStagedEvents = "";
-        throw_event(events);
+        throw_events(events);
     }
 }
 
@@ -298,7 +298,7 @@ void CPlayer::startDialog(string sCharacter)
 
     std::string newCommand = m_dialog->getState("START")->callState(this);
     if(newCommand != "")
-        throw_event(newCommand);
+        throw_events(newCommand);
 }
 
 /**
@@ -319,7 +319,7 @@ void CPlayer::startChat(CPlayer* player)
         player->addChatContext(m_sID);
         
         //Send text by throwing event
-        throw_event("Hey " + player->getName() + ".");
+        throw_events("Hey " + player->getName() + ".");
     }
 }
 
@@ -371,7 +371,7 @@ void CPlayer::changeRoom(string sIdentifier)
         for(const auto& it : path)
             events += "go " + it + ";";
         events.pop_back();
-        throw_event(events);
+        throw_events(events);
     }
     
     //Print error message.
@@ -481,9 +481,8 @@ void CPlayer::addAll()
 */
 void CPlayer::addItem(CItem* item)
 {
-    std::cout << "Adding item....\n";
     m_inventory.addItem(item);
-    appendDescPrint(item->getName() + " added to " + m_sName + "'s inventory.\n");
+    appendDescPrint(item->getName() + " zu {name]'s Inventar hinzugefügt.\n");
     m_room->getItems().erase(item->getID());
 }
 
@@ -852,8 +851,9 @@ void CPlayer::printError(std::string sError)
 * loop breaks.
 * @param sInput
 */
-void CPlayer::throw_event(string sInput)
+void CPlayer::throw_events(string sInput)
 {
+    std::cout << cRED << "Events: " << sInput << cCLEAR << std::endl;
     //Check for time triggered events
     checkTimeEvents();
 
@@ -865,7 +865,7 @@ void CPlayer::throw_event(string sInput)
     std::deque<CEnhancedContext*> sortedCtxList = m_contextStack.getSortedCtxList();
     for(size_t i=0; i<events.size(); i++)
     {
-        std::cout << events[i].first << ", " << events[i].second << "\n";
+        std::cout << cRED << events[i].first << ", " << events[i].second << cCLEAR <<"\n";
 
         for(size_t j=0; j<sortedCtxList.size(); j++) {
             if(sortedCtxList[j]->throw_event(events[i], this) == false)

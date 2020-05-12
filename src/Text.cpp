@@ -14,12 +14,12 @@ CText::CText(nlohmann::json jAttributes, CPlayer* p)
         m_texts.push_back(new COutput(atts, p));
 }
 
-std::string CText::print()
+std::string CText::print(bool events)
 {
     std::string sOutput = "";
     
     for(size_t i=0; i<m_texts.size(); i++)
-        sOutput += m_texts[i]->print(m_player);
+        sOutput += m_texts[i]->print(m_player, events);
 
     //if(sOutput != "")
     //    sOutput.pop_back();
@@ -27,11 +27,11 @@ std::string CText::print()
     return sOutput;
 }
 
-std::string CText::reducedPrint()
+std::string CText::reducedPrint(bool events)
 {
     std::string sOutput = "";
     for(size_t i=0; i<m_texts.size(); i++)
-        sOutput += m_texts[i]->reducedPrint(m_player);
+        sOutput += m_texts[i]->reducedPrint(m_player, events);
     return sOutput;
 }
 
@@ -57,7 +57,7 @@ std::string COutput::getText() {
     return m_sText;
 }
 
-std::string COutput::print(CPlayer* p)
+std::string COutput::print(CPlayer* p, bool events)
 {
     //Variables
     std::string sSuccess = "";  //Storing, when success of mind will be announced 
@@ -71,13 +71,14 @@ std::string COutput::print(CPlayer* p)
     updateAttrbutes(sUpdated, p);
 
     //Add events to players staged events
-    addEvents(p);  
+    if(events == true)
+        addEvents(p);  
 
     //return text 
     return p->returnSpeakerPrint(m_sSpeaker + sSuccess, m_sText + "$" + sUpdated);
 }
 
-std::string COutput::reducedPrint(CPlayer* p)
+std::string COutput::reducedPrint(CPlayer* p, bool events)
 {
     //Variables
     std::string sSuccess = "";  //Storing, when success of mind will be announced 
@@ -87,7 +88,8 @@ std::string COutput::reducedPrint(CPlayer* p)
         return ""; 
 
     //Add events to players staged events
-    addEvents(p);  
+    if(events==true)
+        addEvents(p);  
 
     //Return text
     return m_sText;

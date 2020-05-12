@@ -23,7 +23,7 @@ string CFight::fightRound(string sPlayerChoice)
 
     //Check wether opponent is dead
     if(m_opponent->getStat("hp") <= 0) {
-        sOutput += "You defeted " + m_opponent->getName() + "!\n";
+        sOutput += "Du hast " + m_opponent->getName() + " besiegt!\n";
         m_player->appendPrint(sOutput);
         int ep = m_opponent->getStat("ep");
         if(ep != 0) {
@@ -40,7 +40,7 @@ string CFight::fightRound(string sPlayerChoice)
 
     //Check wether player is dead
     if(m_player->getStat("hp") <= 0) {
-        sOutput += "You were killed! by " + m_opponent->getName() + "!\n";
+        sOutput += "Du wurdest von " + m_opponent->getName() + " getötet!\n";
         m_player->appendPrint(sOutput);
         return "endFight;gameover";
     }
@@ -60,11 +60,11 @@ string CFight::turn(string selectedAttack, CPerson* attacker, CPerson* defender)
     //Create output
     string sOutput; 
     sOutput += "\n<div style=\"display: flex;justify-content: center;\">";
-    sOutput += attacker->getName() + " uses " + attack->getName() + "\n";
+    sOutput += attacker->getName() + " benutzt " + attack->getName() + "\n";
     sOutput += attack->getOutput() + "\n";
 
     int damage = attack->getPower() + attacker->getStat("strength");
-    sOutput += "Damage dealt: " + std::to_string(damage) + "\n";
+    sOutput += "Angerichteter Schaden: " + std::to_string(damage) + "\n";
     sOutput += "</div>";
     defender->setStat("hp", defender->getStat("hp") - damage);
 
@@ -117,7 +117,6 @@ string CFight::pickOpponentAttack()
 {
    srand(time(NULL));
    size_t attack = rand() % m_opponent->getAttacks().size() + 1;
-   std::cout << "Attack: " << attack << "-> " << m_opponent->getAttack(std::to_string(attack)) << "\n";
    return m_opponent->getAttack(std::to_string(attack));
 }
 
