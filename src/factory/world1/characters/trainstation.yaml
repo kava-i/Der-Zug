@@ -28,9 +28,9 @@
   hp: 40
   strength: 16
   roomDescription:
-  - {speaker: PERZEPTION, text: "Eine anscheinend bewusstlose Frau liegt in einer Alkoholpfütze, eine noch glühene, halb abgebrannte Zigarette befindet sich zwischen ihren Fingern.", otEvents: [talk besoffene frau]}
+  - {speaker: PERZEPTION, text: "Eine anscheinend bewusstlose Frau liegt in einer Alkoholpfütze, eine noch glühene, halb abgebrannte Zigarette befindet sich zwischen ihren Fingern.", post_otEvents: [talk besoffene frau]}
   description:
-  - {speaker: PERZEPTION, text: "Eine betrunkene Frau. Sie sieht von Alkohol mitgenommen aus, aber dahinter erkennt man, etwas von einer beeindruckenden Schönheit... und Stärker.", pEvents: [talk besoffene frau]}
+  - {speaker: PERZEPTION, text: "Eine betrunkene Frau. Sie sieht von Alkohol mitgenommen aus, aber dahinter erkennt man, etwas von einer beeindruckenden Schönheit... und Stärker.", post_pEvents: [talk besoffene frau]}
   attacks:
     kick: Normal Kick
     punsch: Punsch

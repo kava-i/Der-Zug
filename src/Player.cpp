@@ -161,15 +161,11 @@ void CPlayer::setPrint(string newPrint) {
 }
 
 ///Append to current player output and throw staged events if exists.
-void CPlayer::appendPrint(std::string sPrint) {
+void CPlayer::appendPrint(std::string sPrint) 
+{
+    throw_staged_events(m_staged_pre_events);
     m_sPrint += sPrint;
-    if(m_sStagedEvents != "")
-    {
-        m_sPrint += "\n";
-        std::string events = m_sStagedEvents;
-        m_sStagedEvents = "";
-        throw_events(events);
-    }
+    throw_staged_events(m_staged_post_events); 
 }
 
 void CPlayer::appendStoryPrint(string sPrint) { 
@@ -210,14 +206,34 @@ void CPlayer::appendSuccPrint(string sPrint) {
     m_sPrint += GREEN + sPrint + WHITE;
 }
 
-///Add staged events
-void CPlayer::addStagedEvent(std::string sNewEvent)
+///Add staged events to throw before printing
+void CPlayer::addPreEvent(std::string sNewEvent)
 {
-    if(m_sStagedEvents == "")
-        m_sStagedEvents += sNewEvent;
+    if(m_staged_pre_events == "")
+        m_staged_pre_events += sNewEvent;
     else
-        m_sStagedEvents += ";" + sNewEvent;
+        m_staged_pre_events += ";" + sNewEvent;
 }
+
+///Add staged events to throw after printing
+void CPlayer::addPostEvent(std::string sNewEvent)
+{
+    if(m_staged_post_events == "")
+        m_staged_post_events += sNewEvent;
+    else
+        m_staged_post_events += ";" + sNewEvent;
+}
+
+//Throw staged events and clear events afterwards
+void CPlayer::throw_staged_events(std::string& events) 
+{
+    if(events=="")
+        return;
+    std::string newEvents = events;
+    events = "";
+    throw_events(newEvents); 
+}
+
 
 ///Set player's world.
 void CPlayer::setWorld(CWorld* newWorld) { 

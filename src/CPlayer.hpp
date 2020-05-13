@@ -38,7 +38,8 @@ private:
     bool m_firstLogin;                          ///< Indicate whether this is the players first login.
     std::string m_sMode;                        ///< Print modes: "Prosa", "List" 
     string m_sPrint;                            ///< Text printing after throwing events
-    string m_sStagedEvents;                     ///< Events thrown after text is printed
+    string m_staged_pre_events;                 ///< Events thrown before printing
+    string m_staged_post_events;                ///< Events thrown after printing
 
     // *** Attributes concerning game world *** //
     CWorld* m_world;                            ///< Pointer to players world (all rooms, chars, etc.)
@@ -141,9 +142,15 @@ public:
     std::string returnSpeakerPrint(std::string sSpeaker, std::string sPrint);
     void appendSuccPrint(std::string sPrint);
 
-    ///Add staged events
-    void addStagedEvent(std::string sNewEvent);
-    
+    ///Add staged events to throw before printing
+    void addPreEvent(std::string sNewEvent);
+
+    ///Add staged events to throw after printing
+    void addPostEvent(std::string sNewEvent);
+
+    //Throw staged events and clear events afterwards
+    void throw_staged_events(std::string& events);
+
     ///Set player's world.
     void setWorld(CWorld* newWorld);
 

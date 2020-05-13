@@ -46,8 +46,10 @@ COutput::COutput(nlohmann::json jAttributes, CPlayer* p)
     m_jUpdates = jAttributes.value("updates", nlohmann::json::object());
 
     //Add events
-    m_permanentEvents = jAttributes.value("pEvents", std::vector<std::string>());
-    m_oneTimeEvents = jAttributes.value("otEvents", std::vector<std::string>());
+    m_pre_permanentEvents = jAttributes.value("pre_pEvents", std::vector<std::string>());
+    m_pre_oneTimeEvents = jAttributes.value("pre_otEvents", std::vector<std::string>());
+    m_post_permanentEvents = jAttributes.value("post_pEvents", std::vector<std::string>());
+    m_post_oneTimeEvents = jAttributes.value("post_otEvents", std::vector<std::string>());
 }
 
 std::string COutput::getSpeaker() {
@@ -138,13 +140,15 @@ void COutput::updateAttrbutes(std::string& sUpdated, CPlayer* p)
 */
 void COutput::addEvents(CPlayer* p)
 {
-    for(const auto &it : m_permanentEvents)
-    {
-        std::cout << "ADDED PERMANENT EVENT: " << it << std::endl;
-        p->addStagedEvent(it);
-    }
-    for(const auto &it : m_oneTimeEvents)
-        p->addStagedEvent(it);
-    m_oneTimeEvents.clear(); 
+    for(const auto &it : m_pre_permanentEvents)
+        p->addPreEvent(it);
+    for(const auto &it : m_pre_oneTimeEvents)
+        p->addPreEvent(it);
+    m_pre_oneTimeEvents.clear();
+    for(const auto &it : m_post_permanentEvents)
+        p->addPostEvent(it);
+    for(const auto &it : m_post_oneTimeEvents)
+        p->addPostEvent(it);
+    m_post_oneTimeEvents.clear(); 
 }
 

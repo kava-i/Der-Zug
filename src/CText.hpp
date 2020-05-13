@@ -32,8 +32,10 @@ private:
 
     nlohmann::json m_jDeps;
     nlohmann::json m_jUpdates;
-    std::vector<std::string> m_permanentEvents;
-    std::vector<std::string> m_oneTimeEvents;
+    std::vector<std::string> m_pre_permanentEvents;
+    std::vector<std::string> m_pre_oneTimeEvents;
+    std::vector<std::string> m_post_permanentEvents;
+    std::vector<std::string> m_post_oneTimeEvents;
 
 public:
     COutput(nlohmann::json jAttributes, CPlayer*);
