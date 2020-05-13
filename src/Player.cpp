@@ -54,14 +54,14 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     for(auto it : m_world->getQuests())
     {
         CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"name", it.first}, {"permeable",true}, {"questID",it.first}});
-        context->initializeQuestListeners(it.second->getHandler());
+        context->initializeHandlers(it.second->getHandler());
         m_contextStack.insert(context, 3, it.first);
     }
 
     //Add eventhandler to eventmanager
     m_contextStack.insert(new CEnhancedContext((std::string)"world"), 2, "world");
     CEnhancedContext* context = new CEnhancedContext((std::string)"standard");
-    context->initializeStandardHandlers();
+    context->initializeHandlers(m_world->getConfig().value("commands", nlohmann::json::object()));
     m_contextStack.insert(context, 0 , "standard");
 
     //Add quests

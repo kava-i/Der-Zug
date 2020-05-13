@@ -12,6 +12,8 @@
   text: 
   - {speaker: PASSANT, text: "Jaja, ich verstehe schon und das soll um Himmels Willlen keine weiteren Probleme geben! Hier nehmen sie diese drei Schillien, mehr können wir Ihnen aber leider nicht finden. Den <i>Ticketverkäufer</i> kennen Sie?"}
   function: strangeGuy2
+  actions: "deleteDialogOption,START,1"
+  events: ";recieveMoney 2"
 
 - id: die_gruppe
   text: 

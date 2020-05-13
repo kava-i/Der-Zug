@@ -78,6 +78,8 @@ public:
     void add_listener(std::string sID, std::vector<std::string> eventType, size_t priority=0);
     void add_listener(std::string sID, std::map<std::string, std::string> eventType, size_t priority=0);
 
+    void initializeHandlers(std::vector<nlohmann::json> handlers);
+
     bool throw_event(event newEvent, CPlayer* p);
 
     // *** ERROR HANDLER *** //
@@ -106,7 +108,6 @@ public:
     void h_showItemInfo(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
-    void initializeStandardHandlers();
     void h_showExits(std::string& sIdentifier, CPlayer* p);
     void h_show             (std::string&, CPlayer*);
     void h_look             (std::string&, CPlayer*);

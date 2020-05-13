@@ -22,7 +22,7 @@ std::map<std::string, CQuestStep*> CQuest::getSteps() {
     return m_questSteps;
 }
 
-std::map<std::string, std::string> CQuest::getHandler() {
+std::vector<nlohmann::json> CQuest::getHandler() {
     return m_handler;
 }
 
@@ -30,7 +30,7 @@ std::map<std::string, std::string> CQuest::getHandler() {
 void CQuest::setSteps(std::map<std::string, CQuestStep*> steps) {
     m_questSteps = steps;
 }
-void CQuest::setHandler(std::map<std::string, std::string> handlers) {
+void CQuest::setHandler(std::vector<nlohmann::json> handlers) {
     m_handler = handlers;
 }
 

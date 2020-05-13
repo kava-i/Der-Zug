@@ -582,19 +582,24 @@ void CWorld::questFactory(std::string sPath)
     {
         //Create new Quest
         std::map<std::string, CQuestStep*> mapSteps;
-        std::map<std::string, std::string> mapHandler;
+        std::vector<nlohmann::json> listeners;
         CQuest* newQuest = new CQuest(j_quest);
     
         //Create steps
         for(auto j_step : j_quest["steps"]) {
             mapSteps[j_step["id"]] = new CQuestStep(j_step, newQuest);
             if(j_step.count("handler") > 0)
-                mapHandler[j_step["id"]] = j_step["handler"];
+            {
+                nlohmann::json handler = j_step["handler"];
+                if(handler.count("priority") == 0)
+                    handler["priority"] = 1; 
+                listeners.push_back(handler);
+            }
         }
 
         //Update quest info
         newQuest->setSteps(mapSteps);
-        newQuest->setHandler(mapHandler);
+        newQuest->setHandler(listeners);
         m_quests[j_quest["id"]] = newQuest;
     }
 }

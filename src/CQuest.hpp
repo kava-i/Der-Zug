@@ -19,7 +19,7 @@ private:
     bool m_solved;
     bool m_active;
     std::map<std::string, CQuestStep*> m_questSteps;
-    std::map<std::string, std::string> m_handler;
+    std::vector<nlohmann::json> m_handler;
 
 public:
     CQuest(nlohmann::json jAttributes);
@@ -28,11 +28,11 @@ public:
     std::string getID();
     bool getActive();
     std::map<std::string, CQuestStep*> getSteps();
-    std::map<std::string, std::string> getHandler();
+    std::vector<nlohmann::json> getHandler();
 
     //Setter
     void setSteps(std::map<std::string, CQuestStep*> steps);
-    void setHandler(std::map<std::string, std::string> handlers);
+    void setHandler(std::vector<nlohmann::json> handlers);
 
     std::string setActive(int& ep);
 

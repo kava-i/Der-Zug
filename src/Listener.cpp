@@ -59,6 +59,7 @@ bool CListener::checkMatch(event& e) {
 * @return whether this listener picks up on thrown event.
 */
 bool CListener::stringCompare(event& e) {
+    std::cout << "SORRY! " << e.first << "|" << m_stringEventType << std::endl;
     return e.first == m_stringEventType;
 }
 

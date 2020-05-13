@@ -213,12 +213,6 @@ string CDState::strangeGuy1(CPlayer* p)
 string CDState::strangeGuy2(CPlayer* p)
 {
     string sOutput = standard(p);
-    p->throw_events("recieveMoney 3");
     p->questSolved("komische_gruppe", "2hilfe");
-
-    m_dialog->deleteDialogOption("START", 1);
-
     return sOutput;
 }
-
-

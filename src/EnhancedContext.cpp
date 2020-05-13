@@ -251,6 +251,16 @@ void CEnhancedContext::add_listener(std::string sID, std::map<std::string, std::
     m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
 }
 
+void CEnhancedContext::initializeHandlers(std::vector<nlohmann::json> listeners)
+{
+    for(auto it : listeners)
+    {
+        if(it.count("regex") > 0)
+            add_listener(it["id"], (std::regex)it["regex"], it.value("take", 1)); 
+        else if(it.count("string") > 0)
+            add_listener(it["id"], (std::string)it["string"], it.value("priority", 0));
+    }
+}
 
 bool CEnhancedContext::throw_event(event e, CPlayer* p)
 {    
@@ -424,22 +434,7 @@ void CEnhancedContext::h_showItemInfo(std::string& sIdentifier, CPlayer* p)
 
 // ***** ***** STANDARD CONTEXT ***** ***** //
 
-void CEnhancedContext::initializeStandardHandlers()
-{
-    add_listener("h_show", "zeige");
-    add_listener("h_look", "schaue");
-    add_listener("h_goTo", "gehe");
-    std::regex r1("spreche (.*) an");
-    add_listener("h_startDialog", r1, 1);
-    std::regex r2("hebe (.*) auf");
-    add_listener("h_take", r2, 1);
-    std::regex r3("(trinke|rauche|esse) (.*)");
-    add_listener("h_consume", r3, 2);
-    std::regex r4("rüste (.*) aus");
-    add_listener("h_equipe", r4, 1);
-    std::regex("Rüste (.*) ab");
-    add_listener("h_examine", "betrachte");
-}
+
 
 void CEnhancedContext::h_showExits(std::string& sIdentifier, CPlayer* p) {
     p->appendDescPrint(p->getRoom()->showExits(p->getMode(), p->getGramma())+"\n");
