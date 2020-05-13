@@ -482,7 +482,7 @@ void CPlayer::addAll()
 void CPlayer::addItem(CItem* item)
 {
     m_inventory.addItem(item);
-    appendDescPrint(item->getName() + " zu {name]'s Inventar hinzugefügt.\n");
+    appendDescPrint("<b> "+item->getName() + "</b> zu {name}'s Inventar hinzugefügt.\n");
     m_room->getItems().erase(item->getID());
 }
 
@@ -508,7 +508,7 @@ void CPlayer::printEquiped() {
     auto getElem = [](CItem* item){ 
         std::string str; 
         if(item) str = item->getName(); 
-        else str="empty handed as it seems.";
+        else str="nichts ausgerüstet.";
         return str;
     };
     appendPrint(func::table(m_equipment, getElem, "width:20%"));
@@ -543,10 +543,10 @@ void CPlayer::equipeItem(CItem* item, string sType)
     //If another item is equipped in this category -> add choice-context
     else
     {
-        appendErrorPrint("Bereits ein " + sType + " ausgerüstet. Austauschen? (yes/no)\n");
+        appendErrorPrint("Bereits ein " + sType + " ausgerüstet. Austauschen? (ja/nein)\n");
 
         //Create Choice-Context
-        m_contextStack.insert(new CEnhancedContext((nlohmann::json){{"name", "equipe"}, {"permeable", false},{"error", "TECH GUY - Choose only yes or no\n"},{"itemID", item->getID()},{"handlers",{{"yes",{ "h_choose_equipe"}},{"no",{"h_choose_equipe"}}}}}), 1, "equipe");
+        m_contextStack.insert(new CEnhancedContext((nlohmann::json){{"name", "equipe"}, {"permeable", false},{"error", "Wähle ja oder nein\n"},{"itemID", item->getID()},{"handlers",{{"ja",{ "h_choose_equipe"}},{"nein",{"h_choose_equipe"}}}}}), 1, "equipe");
     }
 }
 

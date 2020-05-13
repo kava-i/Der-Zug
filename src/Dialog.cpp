@@ -112,9 +112,7 @@ void CDState::initializeFunctions()
 
 
 string CDState::callState(CPlayer* p) {
-    std::string sReturn = (this->*m_functions[m_sFunction])(p) + m_sEvents;
-    std::cout << "Events: " << sReturn << std::endl;
-    return sReturn;
+    return (this->*m_functions[m_sFunction])(p) + m_sEvents;
 }
 
 string CDState::getNextState(string sPlayerChoice, CPlayer* p)

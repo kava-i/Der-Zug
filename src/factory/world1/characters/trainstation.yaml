@@ -3,6 +3,10 @@
 - name: Passant
   id: passant
   dialog: strangeGuysDialog
+  description:
+  - {speaker: PERZEPTION, text: "Ein komischer Passant, der wild in der Gegend umherzeigt"}
+  roomDescription:
+  - {speaker: PERZEPTION, text: "Ein Passant aus der komischen Gruppe an Passanten, die wild in der Gegen umherzeigen."}
 
 - name: Konstantin Thron
   id: konstantin_thron

@@ -1,19 +1,19 @@
 ---
  
-- name: Stick
+- name: Stock 
   id: basic_stick 
   category: equipe
   type: weapon 
   attack: stick_smack
   value: 5
   description: 
-    - {speaker: PERZEPTION, text: "A wooden stick hard enough to course some pain."}
+    - {speaker: PERZEPTION, text: "Ein Stock aus Holz, hard genug um Schmerzen zu verursachen."}
 
-- name: Basic Sword
+- name: Einfaches Schwert 
   id: basic_sword
   category: equipe
   type: weapon
   value: 30
   description: 
-    - {speaker: PERZEPTION, text: "A basic sword, just what you would expect."}
+    - {speaker: PERZEPTION, text: "Ein einfaches Schwert."}
 

@@ -470,7 +470,7 @@ void CEnhancedContext::h_show(std::string& sIdentifier, CPlayer* p) {
         p->printEquiped();
     else if(sIdentifier == "quests")
         p->showQuests(false);
-    else if(sIdentifier == "solved quests" || sIdentifier == "gelöste Quests")
+    else if(sIdentifier == "solved quests" || sIdentifier == "gelöste quests")
         p->showQuests(true);
     else if(sIdentifier == "stats")
         p->showStats();
@@ -538,9 +538,15 @@ void CEnhancedContext::h_take(std::string& sIdentifier, CPlayer* p) {
     if(sIdentifier.find("all") == 0)
         p->addAll();
     else if(p->getRoom()->getItem(sIdentifier) == NULL)
+    {
+        std::cout << "Not found.\n";
         p->appendErrorPrint("Item not found.\n");
+    }
     else
+    {
+        std::cout << "Getting item.\n";
         p->addItem(p->getRoom()->getItem(sIdentifier));
+    }
 }
 
 void CEnhancedContext::h_consume(std::string& sIdentifier, CPlayer* p) {
@@ -566,6 +572,13 @@ void CEnhancedContext::h_dequipe(std::string& sIdentifier, CPlayer* p) {
 }
 
 void CEnhancedContext::h_examine(std::string &sIdentifier, CPlayer*p) {
+    //Check for room 
+    if(sIdentifier == "raum")
+    {
+        p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
+        return;
+    }
+
     //Check for detail
     auto lambda1 = [](CDetail* detail) { return detail->getName(); };
     std::string sObject = func::getObjectId(p->getRoom()->getDetails(), sIdentifier, lambda1);

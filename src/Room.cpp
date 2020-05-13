@@ -42,7 +42,7 @@ string CRoom::showDescription(std::map<std::string, CPerson*> mapCharacters)
 {
     string sDesc = "";
     for(auto it : m_characters)
-        sDesc += mapCharacters[it.first]->getRoomDescription();
+        sDesc += mapCharacters[it.first]->getRoomDescription() + " ";
 
     if(m_text->print().find("</div") != std::string::npos)
         sDesc = "<div class='spoken2'>"+sDesc+"</div>";
