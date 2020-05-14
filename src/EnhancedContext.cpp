@@ -729,6 +729,8 @@ void CEnhancedContext::h_sell(std::string& sIdentifier, CPlayer* p)
     CItem* curItem = p->getInventory().getItem(sIdentifier);
     if(curItem == NULL)
         p->appendErrorPrint("Dieser Gegenstand befindet sich nicht in deinem Inventar, du kannst ihn logischerwiese dehalb nicht verkaufen!\n");
+    else if(p->getEquipment().count(curItem->getType()) > 0 && p->getEquipment()[curItem->getType()]->getID() == curItem->getID())
+        p->appendErrorPrint("Du kannst ausgerüstete Gegenstände nicht verkaufen.\n");
     else
     {
         p->appendDescPrint("Du hast " + curItem->getName() + " verkauft.\n\n");
