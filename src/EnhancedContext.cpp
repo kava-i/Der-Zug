@@ -641,8 +641,8 @@ void CEnhancedContext::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
 {
-    p->throw_events("go to neben");
-    p->throw_events("go to Toil");
+    p->throw_events("go to neben", "try");
+    p->throw_events("go to Toil", "try");
 }
 
 
@@ -655,7 +655,7 @@ void CEnhancedContext::initializeFightListeners(std::map<std::string, std::strin
 void CEnhancedContext::h_fight(std::string& sIdentifier, CPlayer* p) {
     std::string newCommand = p->getFight()->fightRound((sIdentifier));
     if(newCommand != "")    
-        p->throw_events(newCommand);
+        p->throw_events(newCommand, "h_fight");
 }
 
 void CEnhancedContext::h_fight_show(std::string& sIdentifier, CPlayer* p) {
@@ -708,7 +708,7 @@ void CEnhancedContext::h_call(std::string& sIdentifier, CPlayer* p)
         initializeDialogListeners(nextState, p);
         std::string newCommand = p->getDialog()->getState(nextState)->callState(p);
         if(newCommand != "")
-            p->throw_events(newCommand);
+            p->throw_events(newCommand, "h_call");
     }
 }
 
@@ -734,7 +734,7 @@ void CEnhancedContext::h_sell(std::string& sIdentifier, CPlayer* p)
     else
     {
         p->appendDescPrint("Du hast " + curItem->getName() + " verkauft.\n\n");
-        p->throw_events("recieveMoney " + std::to_string(curItem->getValue()));
+        p->throw_events("recieveMoney " + std::to_string(curItem->getValue()), "h_sell");
         CItem* item = new CItem(curItem->getAttributes(), p);
         partner->getInventory().addItem(item);
         p->getInventory().removeItemByID(curItem->getID());
@@ -906,7 +906,7 @@ void CEnhancedContext::h_besiege_besoffene_frau(std::string& sIdentifier, CPlaye
 
     p->questSolved(getAttribute<std::string>("questID"), "1besiege_besoffene_frau");
     p->appendDescPrint("Du suchst in den Taschen der Frau und findest drei Schillinge.\n");
-    p->throw_events("recieveMoney 3");
+    p->throw_events("recieveMoney 3", "h_besiege_besoffene_frau");
     p->getContexts().erase(getAttribute<std::string>("questID"));
 }
 
@@ -932,7 +932,7 @@ void CEnhancedContext::h_select(std::string& sIdentifier, CPlayer* p)
     map_type map_objects = getAttribute<map_type>("map_objects");
     std::string obj = func::getObjectId(map_objects, sIdentifier);
 
-    p->throw_events(getAttribute<std::string>("eventtype")+ " " + obj);
+    p->throw_events(getAttribute<std::string>("eventtype")+ " " + obj, "h_select");
     m_curPermeable=false;
     p->getContexts().erase("select"); 
 }

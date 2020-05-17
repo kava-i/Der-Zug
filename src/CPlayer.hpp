@@ -27,6 +27,7 @@
 using std::string;
 using std::map;
 using std::vector;
+using std::pair;
 
 class CPlayer : public CPerson
 {
@@ -38,8 +39,10 @@ private:
     bool m_firstLogin;                          ///< Indicate whether this is the players first login.
     std::string m_sMode;                        ///< Print modes: "Prosa", "List" 
     string m_sPrint;                            ///< Text printing after throwing events
-    string m_staged_pre_events;                 ///< Events thrown before printing
-    string m_staged_post_events;                ///< Events thrown after printing
+
+    //*** Stagged Events *** //
+    std::string m_staged_pre_events;            ///< Events thrown before printing
+    std::string m_staged_post_events;           ///< Events thrown after printing
 
     // *** Attributes concerning game world *** //
     CWorld* m_world;                            ///< Pointer to players world (all rooms, chars, etc.)
@@ -149,7 +152,7 @@ public:
     void addPostEvent(std::string sNewEvent);
 
     //Throw staged events and clear events afterwards
-    void throw_staged_events(std::string& events);
+    void throw_staged_events(std::string& events, std::string sMessage);
 
     ///Set player's world.
     void setWorld(CWorld* newWorld);
@@ -370,7 +373,7 @@ public:
     * loop breaks.
     * @param sInput
     */
-    void throw_events(string sInput);
+    void throw_events(string sInput, std::string sMessage);
     
     // *** Time events *** //
 

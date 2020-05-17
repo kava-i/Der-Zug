@@ -72,11 +72,9 @@ string CGame::checkLogin(string sName, string sPassword)
 string CGame::startGame(string sInput, string sPasswordID, Webconsole* _cout)
 {
     m_players[sPasswordID]->setWobconsole(_cout);
-    if(m_players[sPasswordID]->getFirstLogin() == true) {
-        //m_players[sPasswordID]->throw_event("first_login");
+    if(m_players[sPasswordID]->getFirstLogin() == true)
         m_players[sPasswordID]->setFirstLogin(false);
-    }
-    m_players[sPasswordID]->throw_events("show room");
+    m_players[sPasswordID]->throw_events("show room", "startGame");
 
     return m_players[sPasswordID]->getPrint();
 }
@@ -104,10 +102,6 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePla
     //Check whether player is dead
     if(m_curPlayer->getStat("hp") <= 0) {
         m_context->throw_event(std::make_pair("reload_player", m_curPlayer->getID()), m_players["programmer"]);
-
-        //ERROR !! Current player is deleted when this function is called!! 
-        //Maybe set current player in reload player?
-        m_curPlayer->throw_events("startTutorial");
     }
 
     //Parse commands
@@ -123,7 +117,7 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePla
         return m_curPlayer->getPrint();
 
     //Throw event of player
-    m_curPlayer->throw_events(sInput);
+    m_curPlayer->throw_events(sInput, "CGame::play");
     
     return m_curPlayer->getPrint(); 
 }

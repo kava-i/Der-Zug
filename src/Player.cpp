@@ -163,9 +163,9 @@ void CPlayer::setPrint(string newPrint) {
 ///Append to current player output and throw staged events if exists.
 void CPlayer::appendPrint(std::string sPrint) 
 {
-    throw_staged_events(m_staged_pre_events);
+    throw_staged_events(m_staged_pre_events, "pre");
     m_sPrint += sPrint;
-    throw_staged_events(m_staged_post_events); 
+    throw_staged_events(m_staged_post_events, "post"); 
 }
 
 void CPlayer::appendStoryPrint(string sPrint) { 
@@ -210,28 +210,29 @@ void CPlayer::appendSuccPrint(string sPrint) {
 void CPlayer::addPreEvent(std::string sNewEvent)
 {
     if(m_staged_pre_events == "")
-        m_staged_pre_events += sNewEvent;
+        m_staged_pre_events = sNewEvent;
     else
-        m_staged_pre_events += ";" + sNewEvent;
+        m_staged_pre_events += ";"+sNewEvent;
 }
 
 ///Add staged events to throw after printing
 void CPlayer::addPostEvent(std::string sNewEvent)
 {
     if(m_staged_post_events == "")
-        m_staged_post_events += sNewEvent;
+        m_staged_post_events = sNewEvent;
     else
-        m_staged_post_events += ";" + sNewEvent;
+        m_staged_post_events += ";"+sNewEvent;
 }
 
 //Throw staged events and clear events afterwards
-void CPlayer::throw_staged_events(std::string& events) 
+void CPlayer::throw_staged_events(std::string& events, std::string sMessage) 
 {
-    if(events=="")
+    if(events == "")
         return;
+
     std::string newEvents = events;
     events = "";
-    throw_events(newEvents); 
+    throw_events(newEvents, sMessage+"-events"); 
 }
 
 
@@ -314,7 +315,7 @@ void CPlayer::startDialog(string sCharacter)
 
     std::string newCommand = m_dialog->getState("START")->callState(this);
     if(newCommand != "")
-        throw_events(newCommand);
+        throw_events(newCommand, "CPlayer::startDialog");
 }
 
 /**
@@ -335,7 +336,7 @@ void CPlayer::startChat(CPlayer* player)
         player->addChatContext(m_sID);
         
         //Send text by throwing event
-        throw_events("Hey " + player->getName() + ".");
+        throw_events("Hey " + player->getName() + ".", "CPlayer::startChat");
     }
 }
 
@@ -387,7 +388,7 @@ void CPlayer::changeRoom(string sIdentifier)
         for(const auto& it : path)
             events += "go " + it + ";";
         events.pop_back();
-        throw_events(events);
+        throw_events(events, "CPlayer::changeRoom");
     }
     
     //Print error message.
@@ -867,9 +868,9 @@ void CPlayer::printError(std::string sError)
 * loop breaks.
 * @param sInput
 */
-void CPlayer::throw_events(string sInput)
+void CPlayer::throw_events(string sInput, std::string sMessage)
 {
-    std::cout << cRED << "Events: " << sInput << cCLEAR << std::endl;
+    std::cout << cRED << "Events: " << sInput << ", from: " << sMessage << cCLEAR << std::endl;
     //Check for time triggered events
     checkTimeEvents();
 
