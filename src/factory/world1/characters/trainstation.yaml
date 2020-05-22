@@ -1,5 +1,11 @@
 ---
 
+- name: Cho Chikun
+  id: cho_chikun
+  dialog: cho_chikun
+  description: 
+  - {speaker: LOGIK, text: "Ein verrück aussehender Mann, irgendwie kommt er mir bekannt vor"}
+  
 - name: Passant
   id: passant
   dialog: strangeGuysDialog

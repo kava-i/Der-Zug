@@ -27,10 +27,10 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     //Character and Level
     m_level = 0;
     m_ep = 0;
-    m_minds["perzeption"] = {"perzeption", BLUE, 1};
-    m_minds["peddler"] = {"peddler", RED, 0};
-    m_minds["drama"]  = {"drama", RED, 0};
-    m_minds["logik"]  = {"logik", RED, 1};
+    m_minds["perzeption"] = {"perzeption", BLUE, 1, 0.5};
+    m_minds["peddler"] = {"peddler", RED, 0, 0.4};
+    m_minds["drama"]  = {"drama", RED, 0, 0.3};
+    m_minds["logik"]  = {"logik", RED, 1, 0.2};
 
     //Set current room
     m_room = room;
@@ -741,6 +741,7 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps)
     operators["<"] = [](int a, int b) { return a<b; };
     operators["<="] = [](int a, int b) { return a<=b; };
     operators["!="] = [](int a, int b) { return a!=b; };
+    operators["&"] = [](int a, int b) { return true; };
 
     if(jDeps.size() == 0)
         return true;
@@ -749,6 +750,16 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps)
         //Assign value with position 0 = operator
         std::string sOpt = func::extractLeadingChars(it.value());
         int value = func::getNumFromBack(it.value());
+
+        if(sOpt == "&")
+        {
+            double level = m_minds[it.key()].level + m_minds[it.key()].relevance;
+            for(const auto& mind : m_minds)
+            {
+                if(mind.first != it.key() && mind.second.level + mind.second.relevance > level)
+                    return false;
+            }
+        }
 
         //Check dependency in mind
         if(m_minds.count(it.key()) > 0) {

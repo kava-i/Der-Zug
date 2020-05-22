@@ -3,7 +3,8 @@
 - name: "Eingangshalle"
   id: bahnhof_eingangshalle
   description: 
-    - {speaker: PERZEPTION, text: "Die Eingangshalle des sog. \"Moskauer Bahnhofs\" in Sankt Petersburg ist ein eindrucksvolles Gebilde. Tausende Passanten wandern umher, es herscht Trubel und Lärm und dazu glänzt die architektonische Meisterleistung eines Konstantin Thron von allen Seiten auf einen herab. Nach Norden geht es zu den Gleisen, im Süden liegt der Ausgang und nach Osten geht es zu einer Nebenhalle.", pre_otEvents: [first_login]}
+    - {speaker: PERZEPTION, text: "Die Eingangshalle des sog. \"Moskauer Bahnhofs\" in Sankt Petersburg ist ein eindrucksvolles Gebilde. Tausende Passanten wandern umher, es herscht Trubel und Lärm und dazu glänzt die architektonische Meisterleistung eines Konstantin Thron von allen Seiten auf einen herab. Nach Norden geht es zu den Gleisen, im Süden liegt der Ausgang und nach Osten geht es zu einer Nebenhalle.", deps:{perzeption: "&"}, pre_otEvents: [first_login]}
+    - {speaker: LOGIK, text: "Eingangshalle, die. Eingangshalle des Moskaue Bahnhofs. Bahnhof von Sankt Petersburg. Großes Gebäude. Für ein solches Gebäude viele Menschen. Architekt: Konstantin Thron.", deps: {logik: "&"}}
   exits:
     bahnhof_fernzüge: {name: Fernzügen, prep: zu den}
     bahnhof_nebenhalle: {name: Nebenhalle, prep: zur }
@@ -13,6 +14,7 @@
     - [zombie, { ep: 15}]
     - [zombie, { amount: 2}]
     - [zombie, { ep: 20, amount: 4}]
+    - [cho_chikun, {}]
   items:
     - [buch_PdG, { }]
   details:
