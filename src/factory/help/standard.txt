@@ -1,5 +1,5 @@
 Commands
-Zeige [Inventar, Personen, Gegenstände, Ausgänge]   z.B. "Zeige personen"
+Zeige [Inventar, Personen, Gegenstände, Ausgänge, besuchte Räume]   z.B. "Zeige personen"
 Zeige (gelöste) Quests                              z.B. "Zeige quests" oder "zeige gelöste quests"
 Schaue [in, unter, auf, über] [mobeliar]            z.B. "schaue in der Kiste"
 Gehe [Preposition] [Name des Ausgangs]              z.B. "Gehe auf den Flur"

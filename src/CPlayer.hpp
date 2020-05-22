@@ -228,6 +228,12 @@ public:
     */
     void changeRoom(CRoom* newRoom);
 
+
+    /**
+    * Print all already visited rooms.
+    */
+    void showVisited();
+
     /**
     * Look for shortes way (if exists) to given room. And return way as vector, or empty array.
     * @param room players room

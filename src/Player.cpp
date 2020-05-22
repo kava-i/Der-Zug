@@ -411,6 +411,27 @@ void CPlayer::changeRoom(CRoom* newRoom)
 }
 
 /**
+* Print all already visited rooms.
+*/
+void CPlayer::showVisited()
+{
+    std::map<std::string, std::string> mapRooms;
+    for(auto const& it : m_vistited)
+    {
+        if(it.second == true)
+            mapRooms[it.first] = m_world->getRoom(it.first)->getName();
+    }
+    std::string sOutput = "";
+
+    if(m_sMode == "prosa")
+        sOutput = m_gramma->build(func::to_vector(mapRooms), "Du warst schon in", "keinem anderen Raum.");
+    else
+        sOutput = "Räume in denen du schon warst: \n" + func::printList(mapRooms);
+    appendDescPrint(sOutput + "\nGebe \"gehe [name des Raumes]\" ein, um direkt dort hinzugelangen.\n");
+}
+
+
+/**
 * Look for shortes way (if exists) to given room. And return way as vector, or empty array.
 * @param room players room
 * @param roomID id of desired target-room

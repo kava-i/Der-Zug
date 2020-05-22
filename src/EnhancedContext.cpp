@@ -196,6 +196,7 @@ void CEnhancedContext::initializeTemplates()
     m_templates["standard"] = {
                     {"name", "standard"}, {"permeable",false}, {"help","standard.txt"},   
                     {"handlers",{
+                        {"go", {"h_goTo"}},
                         {"show",{"h_show"}}, 
                         {"look",{"h_look"}}, 
                         {"talk",{"h_startDialog"}}, 
@@ -455,6 +456,8 @@ void CEnhancedContext::h_show(std::string& sIdentifier, CPlayer* p) {
         p->appendDescPrint(p->getRoom()->showExits(p->getMode(), p->getGramma())+"\n");
         p->addSelectContest(p->getRoom()->getExtits2(), "go");
     }
+    if(sIdentifier == "visited" || sIdentifier == "besuchte räume")
+        p->showVisited();
     else if(sIdentifier == "people" || sIdentifier == "personen")
     {
         p->appendDescPrint(p->getRoom()->showCharacters(p->getMode(), p->getGramma()) + "\n"); 
@@ -651,8 +654,8 @@ void CEnhancedContext::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
 void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
 {
     p->throw_events("recieveMoney 4", "try");
-    p->throw_events("go to neben", "try");
-    p->throw_events("go to Toil", "try");
+    p->throw_events("go neben", "try");
+    p->throw_events("go Toil", "try");
     p->throw_events("gehe zur Männer", "try");
     p->throw_events("spreche Ticket an", "try");
 
