@@ -591,8 +591,8 @@ void CWorld::questFactory(std::string sPath)
             if(j_step.count("handler") > 0)
             {
                 nlohmann::json handler = j_step["handler"];
-                if(handler.count("priority") == 0)
-                    handler["priority"] = 1; 
+                //if(handler.count("priority") == 0)
+                //    handler["priority"] = 1; 
                 listeners.push_back(handler);
             }
         }

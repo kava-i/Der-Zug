@@ -3,7 +3,7 @@
  - name: "Compartment A"
    id: compartment-a
    description: 
-    - {speaker: PERZEPTION, text: "The compartment is empty. Empty, but one mysterious passenger: Parsen."}
+    - {speaker: PERZEPTION, text: "The compartment is empty. Empty, but one mysterious passenger: Parsen.", post_otEvents: [addQuest leave]}
    entry: "You enter your appartment.\n"
    exits:
      trainCorridor: { name: Korridor, prep: zum}

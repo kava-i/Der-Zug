@@ -164,6 +164,8 @@ void CPlayer::setPrint(string newPrint) {
 void CPlayer::appendPrint(std::string sPrint) 
 {
     throw_staged_events(m_staged_pre_events, "pre");
+    if(m_staged_pre_events != "")
+        m_sPrint += "\n";
     m_sPrint += sPrint;
     throw_staged_events(m_staged_post_events, "post"); 
 }

@@ -108,6 +108,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_endFight"] = &CEnhancedContext::h_endFight;
     m_handlers["h_endDialog"] = &CEnhancedContext::h_endDialog;
     m_handlers["h_gameover"] = &CEnhancedContext::h_gameover;
+    m_handlers["h_addQuest"] = &CEnhancedContext::h_addQuest;
     m_handlers["h_showPersonInfo"] = &CEnhancedContext::h_showPersonInfo;
     m_handlers["h_showItemInfo"] = &CEnhancedContext::h_showItemInfo;
 
@@ -187,6 +188,7 @@ void CEnhancedContext::initializeTemplates()
                         {"endFight",{"h_endFight"}},
                         {"endDialog",{"h_endDialog"}},
                         {"gameover",{"h_gameover"}},
+                        {"addQuest",{"h_addQuest"}},
                         {"showperson",{"h_showPersonInfo"}},
                         {"showitem",{"h_showItemInfo"}} }}
                     };
@@ -196,7 +198,6 @@ void CEnhancedContext::initializeTemplates()
                     {"handlers",{
                         {"show",{"h_show"}}, 
                         {"look",{"h_look"}}, 
-                        {"go",{"h_moveToHospital","h_exitTrainstation","h_goTo","h_firstZombieAttack"}}, 
                         {"talk",{"h_startDialog"}}, 
                         {"pick",{"h_take"}}, 
                         {"consume",{"h_consume"}}, 
@@ -411,6 +412,11 @@ void CEnhancedContext::h_gameover(std::string& sIdentifier, CPlayer* p) {
     p->appendStoryPrint("\nDu bist gestorben... \n\n $\n");
 }
 
+void CEnhancedContext::h_addQuest(std::string& sIdentifier, CPlayer* p) {
+    p->setNewQuest(sIdentifier);
+    m_curPermeable=false;
+}
+
 void CEnhancedContext::h_showPersonInfo(std::string& sIdentifier, CPlayer* p) {
     std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier);
 
@@ -431,6 +437,7 @@ void CEnhancedContext::h_showItemInfo(std::string& sIdentifier, CPlayer* p)
         p->appendPrint("Item not found.\n");
     m_curPermeable=false;
 }
+
 
 // ***** ***** STANDARD CONTEXT ***** ***** //
 
@@ -620,11 +627,13 @@ void CEnhancedContext::h_firstZombieAttack(std::string& sIdentifier, CPlayer* p)
 void CEnhancedContext::h_moveToHospital(std::string& sIdentifier, CPlayer* p)
 {
     //Get selected room
-    if(p->getRoom()->getID().find("compartment") == std::string::npos || func::getObjectId(p->getRoom()->getExtits2(), sIdentifier) != "trainCorridor")
+    auto lambda = [](CExit* exit) { return exit->getPrep() + "_" + exit->getName();};
+    if(p->getRoom()->getID().find("compartment") == std::string::npos || func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lambda) != "trainCorridor")
         return;
 
     p->changeRoom(p->getWorld()->getRoom("hospital_foyer"));
     m_block = true;
+    m_curPermeable=false;
 }
 
 void CEnhancedContext::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
@@ -641,8 +650,12 @@ void CEnhancedContext::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
 {
+    p->throw_events("recieveMoney 4", "try");
     p->throw_events("go to neben", "try");
     p->throw_events("go to Toil", "try");
+    p->throw_events("gehe zur Männer", "try");
+    p->throw_events("spreche Ticket an", "try");
+
 }
 
 
@@ -829,7 +842,7 @@ void CEnhancedContext::h_ticketverkaeufer(std::string& sIdentifier, CPlayer* p)
     if(p->getRoom()->getID() != "bahnhof_toiletten")
         return;
 
-    if(sIdentifier == "bahnhof_maennerToilette" || fuzzy::fuzzy_cmp("männer-toilette", sIdentifier) <= 0.2) {
+    if(sIdentifier == "bahnhof_maennerToilette" || fuzzy::fuzzy_cmp("zur männer-toilette", sIdentifier) <= 0.2) {
         p->questSolved(getAttribute<std::string>("questID"), "1ticketverkaeufer");
         m_eventmanager.erase("1ticketverkaeufer");
     }
@@ -838,13 +851,15 @@ void CEnhancedContext::h_ticketverkaeufer(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_ticketverkauf(std::string& sIdentifier, CPlayer* p)
 {
+    std::cout << "h_ticketverkauf, " << sIdentifier << std::endl;
     if(sIdentifier == "ticket")
         p->questSolved(getAttribute<std::string>("questID"), "2ticketkauf");
 }
 
 void CEnhancedContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
 {    
-    auto lamda= [](CExit* exit) {return exit->getName();};
+    auto lamda= [](CExit* exit) {return exit->getPrep() + " " + exit->getName();};
+    std::cout<< "sIdentifier: " << sIdentifier << std::endl;
     std::string room = func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lamda);
 
     if(room != "gleis3" || p->getInventory().getItem_byID("ticket") == NULL)

@@ -1,0 +1,1 @@
+[{"name": "Verlasse deinen Raum", "id": "leave", "description": "Verlasse deinen Raum und finde nach drau\u00dfen (oder nach innen)", "ep": 100, "steps": [{"name": "Finde den Ausgang", "id": "0leave", "handler": {"id": "h_moveToHospital", "regex": "gehe (.*)"}, "description": "Um einen Raum verlassen zu k\u00f6nnen, musst du den Ausgang finden."}]}]
