@@ -37,15 +37,24 @@ void CGame::playerFactory(bool update)
     read >> j_players;
     read.close();
 
+    std::cout << "1.\n";
+
     for(auto j_player : j_players) {
 
+        std::cout << "2.1\n";
         //Add json to list of player jsons
         m_playerJsons[j_player["id"]] = j_player;
+
+        std::cout << "2.2\n";
 
         //Create player (when only updating, skip, when player already exists)
         if(update == false || m_players.count(j_player["id"]) == 0)
             playerFactory(j_player);
+        
+        std::cout << "2.3\n";
     }
+
+    std::cout << "3.\n";
 }
 
 void CGame::playerFactory(nlohmann::json j_player)

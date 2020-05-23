@@ -1,7 +1,19 @@
-{"printing":
-    {"story":"", 
-    "error":"",
-    "desc":"",
-    "tech":""}
+{
+    "printing":{
+        "story":"", 
+        "error":"",
+        "desc":"",
+        "tech":""
+    },
+    "commands":[
+        {"id":"h_show", "regex":"zeige (.*)"},
+        {"id":"h_look", "regex":"schaue (.*)"},
+        {"id":"h_goTo", "regex":"gehe (.*)"},
+        {"id":"h_startDialog", "regex":"spreche (.*) an"},
+        {"id":"h_take", "regex":"hebe (.*) auf"},
+        {"id":"h_consume", "regex":"(trinke|rauche|esse) (.*)", "take":2},
+        {"id":"h_equipe", "regex":"rüste (.*) aus"},
+        {"id":"h_dequipe", "regex":"rüste (.*) ab"},
+        {"id":"h_examine", "regex":"(betrachte|beobachte) (.*)", "take":2}
+    ]
 }
-
