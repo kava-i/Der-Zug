@@ -20,9 +20,17 @@ class GameDesigner:
                 "items" : "list",
                 "details" : "list",
                 "attacks" : "list",
-                "name" : "string",
-                "id" : "string"
             }
+        self.attributes = {
+            "dialogs": {"id":"", "text":list(), "options":list()},
+            "details": {"name":"", "id":"", "description":list(), "look":"", "items":list(), "defaultItems":""},
+            "characters": {"name":"", "id":"", "hp":0, "strength":0, "roomDescription":list(), "description":list(), "defaultDescription":"", "defaultDialog":"","attacks":list(), "dialog":""},
+            "players": {"name":"", "id":"", "room":"", "hp":0, "strength":0, "attacks":list()},
+            "quests": {"name":"", "id":"", "description":"", "ep":0, "steps":list()},
+            "items": {"name":"", "id":"", "category":"", "type":"", "attack":"", "value":0, "description":list()},
+            "rooms": {"name": "", "id":"", "description": list(), "entry" : "", "exits": list(), "characters" : list(), "items" : list(), "details": list()},
+            "attacks": {"name":"", "id":"", "description":"", "power":0}
+        }
 
     def selectWorld(self):
         #First window to select world
@@ -109,10 +117,10 @@ class GameDesigner:
 
         #List all objects in json
         objects = Combobox(self.selectionFrame)
-        objests_list = list()
+        objects_list = list()
         for key, value in data.items():
             objects_list.append(key)
-        objects["values"] = objext_list
+        objects["values"] = objects_list 
         objects.current(0)
         objects.grid(column=0, row=5)
         
