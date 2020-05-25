@@ -1,6 +1,7 @@
 ---
 
-- name: "Verlasse deinen Raum"
+leave:
+  name: "Verlasse deinen Raum"
   id: "leave"
   description: "Verlasse deinen Raum und finde nach draußen (oder nach innen)"
   ep: 100

@@ -1,6 +1,7 @@
 ---
 
-- id: START
+START:
+  id: START
   text: 
   - {speaker: PERZEPTION, text: "Die drei merkwürdigen Passanten ignorieren dich vollkommen und zeigen weiter wild durch die Gegend."}
   options:
@@ -8,10 +9,12 @@
   -  {id: 2, text: "Dialog beenden.", to: ende}
   function: strangeGuy1
 
-- id: verrückt
+verrückt:
+  id: verrückt
   text: 
   - {speaker: PERZEPTION, text: "Sie ignorieren dich weiter. Du beschließt sie für verrückt zu halten."}
 
-- id: ende
+ende:
+  id: ende
   text: 
   - {speaker: DRAMA, text: "Du schüttelst deinen Kopf und gehst."}

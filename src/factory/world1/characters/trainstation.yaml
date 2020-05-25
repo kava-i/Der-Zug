@@ -1,12 +1,14 @@
 ---
 
-- name: Cho Chikun
+cho_chikun:
+  name: Cho Chikun
   id: cho_chikun
   dialog: cho_chikun
   description: 
   - {speaker: LOGIK, text: "Ein verrück aussehender Mann, irgendwie kommt er mir bekannt vor"}
   
-- name: Passant
+passant: 
+  name: Passant
   id: passant
   dialog: strangeGuysDialog
   description:
@@ -14,7 +16,8 @@
   roomDescription:
   - {speaker: PERZEPTION, text: "Ein Passant aus der komischen Gruppe an Passanten, die wild in der Gegen umherzeigen."}
 
-- name: Konstantin Thron
+konstantin_thron:
+  name: Konstantin Thron
   id: konstantin_thron
   dialog: konstantinDialog
   description:
@@ -25,11 +28,13 @@
     - [basic_cigaretts, { }]
     - [basic_wine, { }]
 
-- name: der Ticketverkäufer
+ticketVerkäufer:
+  name: der Ticketverkäufer
   id: ticketVerkäufer
   dialog: ticketVerkäuferDialog
 
-- name: eine besoffene Frau
+besoffene_frau:
+  name: eine besoffene Frau
   id: besoffene_frau
   hp: 40
   strength: 16

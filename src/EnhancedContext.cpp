@@ -456,7 +456,7 @@ void CEnhancedContext::h_show(std::string& sIdentifier, CPlayer* p) {
         p->appendDescPrint(p->getRoom()->showExits(p->getMode(), p->getGramma())+"\n");
         p->addSelectContest(p->getRoom()->getExtits2(), "go");
     }
-    if(sIdentifier == "visited" || sIdentifier == "besuchte räume")
+    else if(sIdentifier == "visited" || sIdentifier == "besuchte räume")
         p->showVisited();
     else if(sIdentifier == "people" || sIdentifier == "personen")
     {

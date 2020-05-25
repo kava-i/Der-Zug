@@ -1,5 +1,6 @@
 ---
-- name: "Parsen"
+parsen:
+  name: "Parsen"
   id: parsen
   hp: 50
   strength: 14
@@ -8,15 +9,19 @@
     punsch: Punsch
   dialog: parsenDialog
 
-- name: "Old woman in pink"
+pink_woman:
+  name: "Old woman in pink"
   id: pink_woman
-- name: "Old woman in blue"
+
+blue_woman:
+  name: "Old woman in blue"
   id: blue_woman
 
-- name: "Pissing man"
+pissing_man:
+  name: "Pissing man"
+  id: pissing_man
   roomDescription: 
   - {speaker: PERZEPTION, text: "A man is standing shy between compartment B and C and seems to be having a piss.\n"}
   defaultDescription: people
-  id: pissing_man
   dialog: pissingManDialog
 

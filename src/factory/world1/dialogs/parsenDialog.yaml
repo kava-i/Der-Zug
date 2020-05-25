@@ -1,5 +1,7 @@
 ---
-- id: START
+
+START:
+  id: START
   text: 
   - {speaker: DU, text: "may I introduce myself?"}
   - {speaker: PERZEPTION, text: "Parsen is looking up from his seet and stars you right in the eyes. He doesn't make a sound."}
@@ -13,38 +15,45 @@
   -  {id: -1, text: "Call I tell you about that dream I had recently?", to: dream} 
 
 
-- id: durstlöscher
+durstlöscher:
+  id: durstlöscher
   text: 
   - {speaker: PARSEN, text: "wie scmhetk Eizthirone?"}
   options:
   -  {id: 1, text: "Was sagst du?", to: durstlöscher2}
 
-- id: durstlöscher2
+durstlöscher2:
+  id: durstlöscher2
   text: 
   - {speaker: PARSEN, text: "Ich sagte, wie schmeckt Zitrone. Der Durstlöscher."}
   - {speaker: PERZEPTION, text: "Du schaust in deine Hände, zwischen denen du einen Durstöschler, Sorte: Zitrone hälltst. Dir fällt ein, dass du ihn vor der Fahrt noch gekauft hattest."}
   options:
   -  {id: 1, text: "Lecker. Echt ein leckerer Durstlöscher. Ich bin {name}. Sehr erfreut.", to: bekanntschaft}
 
-- id: bekanntschaft 
+bekanntschaft:
+  id: bekanntschaft 
   text: 
   - {speaker: PARSEN, text: "Mein Name ist Parsen. ebenfalls sehr erfreut. Noch eine gute Fahrt. Parsen läschelt dir freundlich zu und ließt dann weiter in seinem Buch."}
   actions: "addDialogOption,START,-1|deleteDialogOption,START,1|changeStateText,START,0"
 
-- id: stress
+stress:
+  id: stress
   text: 
   - {speaker: PARSEN, text: "Lass mich in Ruhe und kümmere dich um anderes!"}
   
-- id: feigling
+feigling:
+  id: feigling
   text: 
   - {speaker: PARSEN, text: "Hahahahaha. You can't even bear a man looking at you fuck off and leave me alone."}
 
-- id: prügel
+prügel:
+  id: prügel
   text: 
   - {speaker: PARSEN, text: "Na dann komm mal her du kleiner!$"}
   events: ";fight zug_compartment-a_parsen"
 
-- id: dream
+dream:
+  id: dream
   text: 
   - {speaker: PARSEN, text: "Shure, go ahead, what to you want to tell me?"}
 

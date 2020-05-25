@@ -1,1 +1,1 @@
-[{"id":"taxifahrer","name":"Taxifahrer","roomDescription":[{"post_otEvents":["talk taxifahrer"],"speaker":"","text":"Vorne sitzt gelangweilt ein Texifahrer und trinkt"}]}]
+{"texifahrer": {"name": "Taxifahrer", "id": "taxifahrer", "roomDescription": [{"text": "Gelangweilt sitz vorne ein Taxifahrer."}]}}

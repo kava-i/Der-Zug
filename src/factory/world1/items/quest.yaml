@@ -1,6 +1,7 @@
 ---
 
-- name: "Ticket"
+ticket:
+  name: "Ticket"
   id: ticket
   category: quest
   type: ticket

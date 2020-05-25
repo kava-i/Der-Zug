@@ -1,5 +1,6 @@
 ---
-- name: "Zombie"
+zombie:
+  name: "Zombie"
   id: "zombie"
   hp: 40
   strength: 12
@@ -8,7 +9,8 @@
   defaultDescription: zombies
   defaultDialog: zombies
 
-- name: "A boy"
+zombieboy:
+  name: "A boy"
   id: "zombieboy"
   hp: 20
   ep: 5

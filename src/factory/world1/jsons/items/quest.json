@@ -1,1 +1,1 @@
-[{"name": "Ticket", "id": "ticket", "category": "quest", "type": "ticket", "value": 20, "description": [{"speaker": "PERZEPTION", "text": "Zugticket nach Moskau."}]}]
+{"ticket": {"name": "Ticket", "id": "ticket", "category": "quest", "type": "ticket", "value": 20, "description": [{"speaker": "PERZEPTION", "text": "Zugticket nach Moskau."}]}}

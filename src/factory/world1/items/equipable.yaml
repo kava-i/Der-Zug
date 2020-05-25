@@ -1,6 +1,7 @@
 ---
  
-- name: Stock 
+basic_stick:
+  name: Stock 
   id: basic_stick 
   category: equipe
   type: weapon 
@@ -9,7 +10,8 @@
   description: 
     - {speaker: PERZEPTION, text: "Ein Stock aus Holz, hard genug um Schmerzen zu verursachen."}
 
-- name: Einfaches Schwert 
+basic_sword:
+  name: Einfaches Schwert 
   id: basic_sword
   category: equipe
   type: weapon

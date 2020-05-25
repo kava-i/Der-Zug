@@ -1,6 +1,7 @@
 ---
 
-- name: "Tutorial"
+tutorial:
+  name: "Tutorial"
   id: tutorial
   description: "Beende das Tutorial um die grundlegenden Aspekte des Textadventures und deren Funktionsweisen kennen zu lernen."
   ep: 35
@@ -13,7 +14,8 @@
     id: 1tutorial
     description: "Das Hervortreiben der Allgemeinheit des Denkens ist der absolute Wert der Bildung..."
 
-- name: "Zug nach Moskau"
+zug_nach_moskau:
+  name: "Zug nach Moskau"
   id: zug_nach_moskau
   description: "Du musst dringend nach Moskau. Etwas zieht dich dorthin, du weißt nicht genau, was es ist. Kaufe ein Ticket und finde den Zug nach Moskau, dann sehen wir weiter."
   steps:
@@ -34,7 +36,8 @@
     description: "Du hast das Ticket. Jetzt auf zum Gleis!"
     handler: {id: 3zum_gleis, regex: "gehe (.*)"}
 
-- name: "Die komische Gruppe"
+komische_gruppe:
+  name: "Die komische Gruppe"
   id: komische_gruppe
   description: "Dir ist diese komische Gruppe an Passanten aufgefallen. Keine Ahnung, was die wollen."
   steps:
@@ -49,7 +52,8 @@
     id: 2hilfe
     description: "Seltsame Menschen, haben of seltsame Ansprüche, aber bieten seltene Hilfe."
 
-- name: "Die besoffene Frau"
+besoffene_frau:
+  name: "Die besoffene Frau"
   id: besoffene_frau
   description: "Eine besoffene Frau auf der Toilette, die dich plötzlich angreift."
   steps:
@@ -58,7 +62,8 @@
     description: "Oh, die wurde wohl agressiv. Jetzt heißt anwenden, was du in deinen Jahren auf der Straße gelernt hast."
     handler: {id: 1besiege_besoffene_frau, string: deleteCharacter}
 
-- name: "Geld Auftreiben"
+geld_fuer_ticket:
+  name: "Geld Auftreiben"
   id: geld_fuer_ticket
   description: "Okay, auch 10 Schillinge ist noch mehr als gedacht. Heißt also Geld auftreiben."
   steps:

@@ -1,6 +1,7 @@
 ---
 
-- name: Taxifahrer
-  id: taxifahrer
-  roomDescription:
-  - {text: "Gelangweilt sitz vorne ein Taxifahrer."}
+texifahrer:
+    name: Taxifahrer
+    id: taxifahrer
+    roomDescription:
+    - {text: "Gelangweilt sitz vorne ein Taxifahrer."}

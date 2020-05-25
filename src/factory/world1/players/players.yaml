@@ -1,6 +1,7 @@
 ---
 
-- name: "Sophia"
+programmer_anna:
+  name: "Sophia"
   password: password
   id: programmer_anna 
   room: compartment-a
@@ -10,7 +11,8 @@
     kick: Kick
     between_the_legs_kick: "Kick between the legs"
 
-- name: "Jan"
+programmer_jan:
+  name: "Jan"
   password: password
   id: programmer_jan
   room: trainCorridor
@@ -19,7 +21,8 @@
   attacks:
     punsch: "Punsch"
 
-- name: "Alex"
+programmer_jonny:
+  name: "Alex"
   password: password
   id: programmer_jonny
   room: bahnhof_eingangshalle
@@ -30,7 +33,8 @@
     punsch: "Punsch"
   quests: [tutorial]
 
-- name: "programmer"
+programmer:
+  name: "programmer"
   id: programmer
   password: password
   room: trainCorridor

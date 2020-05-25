@@ -1,6 +1,7 @@
 ---
 
-- name: Wein 
+basic_wine:
+  name: Wein 
   id: basic_wine 
   category: consume
   type: drug
@@ -11,7 +12,8 @@
   useDescription:
     - {speaker: PERZEPTION, text: "Du trinkst die Falsche Wein auf ex! Deine Highness erhöht sich um 2."}
 
-- name: Packung alter Zigaretten
+basic_cigaretts:
+  name: Packung alter Zigaretten
   id: basic_cigaretts
   category: consume
   type: drug
