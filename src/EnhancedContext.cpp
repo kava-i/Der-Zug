@@ -708,6 +708,7 @@ void CEnhancedContext::initializeDialogListeners(std::string newState, CPlayer* 
         counter++;
     }
     setAttribute<std::map<size_t, size_t>>("mapOptions", mapOtptions);
+    std::cout << "Done.\n";
 }
 
 void CEnhancedContext::h_call(std::string& sIdentifier, CPlayer* p)

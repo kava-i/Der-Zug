@@ -115,6 +115,7 @@ bool COutput::checkDependencies(std::string& sSuccess, CPlayer* p)
 
 void COutput::updateAttrbutes(std::string& sUpdated, CPlayer* p)
 {
+    std::cout << "Checking ipdates\n";
     for(auto it=m_jUpdates.begin(); it!= m_jUpdates.end(); it++)
     {
         int val=it.value();
@@ -132,6 +133,7 @@ void COutput::updateAttrbutes(std::string& sUpdated, CPlayer* p)
         }
     }
 
+    std::cout << "Done.\n";
     m_jUpdates.clear();
 }
 

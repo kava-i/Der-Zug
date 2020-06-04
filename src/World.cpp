@@ -221,6 +221,8 @@ void CWorld::roomFactory(string sPath, CPlayer* p)
     
     for(auto j_room : j_rooms )
     {
+        std::cout << "Room: " << j_room["id"] << std::endl;
+
         //Parse characters
         objectmap mapChars = parseRoomChars(j_room, sArea, p);
 
@@ -255,6 +257,7 @@ void CWorld::detailFactory(std::string sPath)
 
 map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p, std::string sArea)
 {
+    std::cout << "Parsing details \n";
     map<string, CDetail*> mapDetails;
     if(j_room.count("details") == 0)
         return mapDetails;
@@ -340,6 +343,7 @@ void CWorld::itemFactory(std::string sPath) {
 
 map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, std::string sArea, CPlayer* p)
 {
+    std::cout << "Parsing Items\n";
     map<string, CItem*> mapItems;
     if(j_room.count("items") == 0)
         return mapItems;
@@ -396,6 +400,7 @@ void CWorld::characterFactory(std::string sPath) {
 
 CWorld::objectmap CWorld::parseRoomChars(nlohmann::json j_room, std::string sArea, CPlayer* p)
 {
+    std::cout << "Parsing characters\n";
     std::map<std::string, std::string> mapCharacters;
     if(j_room.count("characters") == 0)
         return mapCharacters;
