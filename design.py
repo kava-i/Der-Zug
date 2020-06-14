@@ -190,14 +190,19 @@ class GameDesigner:
         #  in a nicely formatted way
         counter = 1
         for key, value in edit_object.items():
+
+            #Add new frame and describing label.
+            frame = self.addFrame(self.editFrame, 0, counter, 2)
+            lbl = self.addLabel(frame, 15, key, 0, 0)
+
             if key not in self.fields or isinstance(value, str):
-                self.printString(counter, key, value)  
+                self.printString(counter, key, value, frame)  
             elif self.fields[key] == "list_object":
-                self.printListObjekt(counter, key, value)
+                self.printListObjekt(counter, key, value, frame)
             elif self.fields[key] == "list":
-                self.printList(counter, key, value)
+                self.printList(counter, key, value, frame)
             elif self.fields[key] == "object":
-                self.printDict(counter, key, value)
+                self.printDict(counter, key, value, frame)
             counter += 1
         
         btn_write = Button(self.editFrame, text="write", command=self.write)
@@ -205,8 +210,155 @@ class GameDesigner:
         btn_json= Button(self.editFrame, text="json", command=lambda : self.justJson(edit_object))
         btn_json.grid(column=0, row=counter+1, columnspan=2)
         self.inWorld.mainloop()
-        
+       
+ 
+    #Print attributes if value is a basic type, that can easily be printed in one line
+    def printString(self, counter, key, value, frame):
+
+        #Add entry field and add both to json with current object.
+        txt = self.addEntry(frame, 80, value, 1, 0, key, 2)
+        self.curObject[key] = txt
+
+
+    #Print attributes if value is a list, with no extra formatting for list elements
+    def printList(self, counter, key, value, frame):
+
+        #Insert list elements as text fields for editing.
+        rows=0
+        self.curObject[key] = list()
+        for elem in value:
+
+            #Create entry field and add to current json.
+            txt = self.addEntry(frame, 80, elem, 1, rows, key)
+            self.curObject[key].append(txt)
+            rows = rows + 1
+
+    #Print attributes in the for of a dictionary (f.e. exitis).
+    def printDict(self, counter, key, value, frame):
     
+        #Insert object elemts as two text fields for editing (key, value)
+        rows=0
+        self.curObject[key] = list()
+        obj=dict()
+        for k, v in value.items():
+
+            #Add two text fields to edit id and property, then add to object.
+            txt = self.addEntry(frame, 25, k, 1, rows, key)
+            txt.type2 = "str"
+            txt2 = self.addEntry(frame, 55, v, 2, rows, key)
+            txt2.type2 = "json"
+            obj[k] = (txt, txt2)
+
+            rows = rows + 1
+
+        #Add entries to json
+        self.curObject[key] = obj
+
+    #Print attributes if value is a list, with extra formatting for list elements
+    def printListObjekt(self, counter, key, value, frame):
+
+        #Iterate over list elements
+        self.curObject[key] = list()
+        frame.counter = 0
+        for elem in value:
+            self.addNew(frame, key, elem) 
+            frame.counter = frame.counter + 1
+    
+        #Add button to add new value
+        btn_new = Button(frame, width=3, text="+", command=lambda : self.addNew(frame, key, self.subAttributes[key]))
+        btn_new.grid(column=2, row=0, padx=3, sticky="NW")
+        
+        
+    #Add a new object to list (either a new already set, or completly new)
+    def addNew(self, frame, key, value):
+
+        #Initialize frame and new object
+        frame2 = self.addFrame(frame, 1, frame.counter, 1)
+        obj=dict()
+
+        #Iterate ober attributes
+        counter=0
+        for k, v in value.items():
+
+            #Add label with key and entry field with value. Add new entry in object.
+            lbl = self.addLabel(frame2, 13, k, 0, counter)
+            txt = self.addEntryOrSrolled(frame2, v, k, 1, counter)
+            obj[k] = txt
+            counter = counter + 1
+
+            #Add button to expand unset values if exists
+            if self.hasUnsetAttributes(value, key) == True:
+                frame2.expand=False
+                btn = Button(frame2, width=7, text="expand", command=partial(self.addValue, key, value, counter, frame2))
+                btn.grid(column=3, row=counter-1, padx=3)
+
+        #Add to json of current object.
+        self.curObject[key].append(obj)
+             
+
+    #Add value is called when user selects expand button, to also show unset fields.
+    def addValue(self, key, elem, counter, frame):
+
+        #If no already expaned: expand
+        if frame.expand == False:
+
+            #Initialize new frame and object
+            frame.expand = True
+            obj = dict()
+            for k, v in self.subAttributes[key].items():
+
+                #Only add, if not already in object
+                if k not in elem:
+
+                    #Add label and entry and add to object.
+                    nlbl = self.addLabel(frame, 13, k, 0, counter)
+                    txt = self.addEntry(frame, 67, v, 1, counter, k)
+                    obj[k] = txt
+
+                    #Increase counter.
+                    counter = counter + 1
+
+            #Add to json of current object.
+            self.curObject[key].append(obj)
+        
+        #Remove al expanded fields
+        else:
+            frame.expand = False
+            for w in frame.grid_slaves():
+                if int(w.grid_info()["row"]) >= counter:
+                    w.grid_forget()
+
+    ### ### ----- xx  VIEW JSON xx ----- ### ####
+
+    #Show overview of json with minimal formatting 
+    def showJson(self):
+        with open(self.pathToFile) as json_file:
+            data = json.load(json_file)
+        txt=scrolledtext.ScrolledText(self.overviewFrame, width=100, height=50)
+        for key, value in data.items():
+            txt.insert(INSERT, "_____________________________________\n")
+            for k, v in value.items():
+                if isinstance(v, list) or isinstance(v, dict): 
+                    txt.insert(INSERT, k + ": \n")
+                    for e in v:
+                        txt.insert(INSERT, "    -- " + str(e) + "\n")
+                else:
+                    txt.insert(INSERT, k + ": " + str(v) + "\n")
+                                
+            txt.insert(INSERT, "_____________________________________\n\n")
+        txt.grid(column = 6, row=4, columnspan = 6, rowspan=10)
+        self.inWorld.mainloop()
+
+    def justJson(self, obj):
+        txt=scrolledtext.ScrolledText(self.overviewFrame, width=100, height=50)
+        for key, value in obj.items():
+            txt.insert(INSERT, str(key) + ": " + str(value) + "\n")
+        txt.grid(column = 6, row=4, columnspan = 6, rowspan=10)
+        self.inWorld.mainloop()
+    
+    ### ### ----- xx OTHER FUNCTIONS xx ----- ### ###
+
+    #Create writable json, that write data
     def write(self):
 
         delete = list()
@@ -265,215 +417,7 @@ class GameDesigner:
         f = open(self.pathToFile, "w")
         json.dump(json_object, f)
         f.close()
-        
- 
-    #Print attributes if value is a basic type, that can easily be printed in one line
-    def printString(self, counter, key, value):
-
-        #Frame to hold description
-        frame = Frame(self.editFrame)
-        frame.grid(column=0, row=counter, columnspan=2, sticky="NW")
-        frame.type="frame"
-        
-        #Describing label
-        lbl=Label(frame, width=15, text=key + ":")
-        lbl.grid(column=0, row=0, sticky="W")
-        lbl.value = key
-        lbl.type="label"
-        
-        #Textfield for editing
-        txt = Entry(frame, width=80)
-        txt.insert(0, str(value))
-        txt.grid(column=1, row=0, columnspan=2)
-        txt.type="txt"
-        txt.type2 = self.getType2(key, value)
-        self.curObject[key] = txt
-
-    #Print attributes if value is a list, with no extra formatting for list elements
-    def printList(self, counter, key, value):
-
-        #Frame to hold description
-        frame = Frame(self.editFrame)
-        frame.grid(column=0, row=counter, columnspan=2, sticky="NW")
-        frame.type="frame"
-
-        #Describing label
-        lbl=Label(frame, width=15,text=key + ":")
-        lbl.grid(column=0, row=0, sticky="W")
-        lbl.value = key
-        lbl.type="label"
-        self.curObject[key] = list()
-
-        #Insert list elements as text fields for editing
-        rows=0
-        for i in value:
-            txt = Entry(frame, width=80)
-            txt.insert(0, str(i))
-            txt.grid(column=1, row=rows)
-            txt.type="txt"
-            txt.type2 = self.getType2(key, i)
-            self.curObject[key].append(txt)
-            rows = rows + 1
-
-    def printDict(self, counter, key, value):
-    
-        #Frame to hold description
-        frame = Frame(self.editFrame)
-        frame.grid(column=0, row=counter, columnspan=2, sticky="NW")
-        frame.type="frame"
-
-        #Describing label
-        lbl=Label(frame, width=15,text=key + ":")
-        lbl.grid(column=0, row=0, sticky="W")
-        lbl.value = key
-        lbl.type="label"
-        self.curObject[key] = list()
-
-        #Insert object elemts as two text fields for editing (key, value)
-        rows=0
-        obj=dict()
-        for k, v in value.items():
-
-            #Add text field to edit id
-            txt = Entry(frame, width=25)
-            txt.insert(0, str(k))
-            txt.grid(column=1, row=rows)
-            txt.type="txt"
-            txt.type2 = "str"
-
-            #Add text field to edit properties
-            txt2 = Entry(frame, width=55)
-            txt2.insert(0, str(v))
-            txt2.grid(column=2, row=rows)
-            txt2.type="txt"
-            txt2.type2 = "json"
-
-            #Add to map and increase row number
-            obj[k] = (txt, txt2)
-            rows = rows + 1
-
-        #Add entries to json
-        self.curObject[key] = obj
-
-    #Print attributes if value is a list, with extra formatting for list elements
-    def printListObjekt(self, counter, key, value):
-
-        #Frame to hold description
-        frame = Frame(self.editFrame)
-        frame.grid(column=0, row=counter, columnspan=2, sticky="NW")
-        frame.type="frame"
-
-        #Describing label
-        lbl = self.addLabel(frame,  15, key, 0, 0, key)
-        lbl=Label(frame, width=15,text=key + ":")
-        lbl.grid(column=0, row=0, sticky="NW")
-        lbl.value = key
-        lbl.type="label"
-        self.curObject[key] = list()
-
-        #Iterate over list elements
-        frame.counter = 0
-        for i in value:
-            addNew(frame, key, value) 
-            frame.counter = frame.counter + 1
-    
-        #Add button to add new value
-        btn_new = Button(frame, width=3, text="+", command=lambda : self.addNew(frame, key, value))
-        btn_new.grid(column=2, row=0, padx=3, sticky="NW")
-        
-        
-    def addNew(self, frame, key):
-        frame2=Frame(frame)
-        frame2.grid(column=1, row=frame.counter, pady=5, sticky="NW")
-        frame2.type="frame"
-
-        #Iterate ober attributes
-        counter=0
-        o=dict()
-        for k, v in self.subAttributes[key].items():
-            nlbl = Label(frame2, width=13,text=k + ":")
-            nlbl.grid(column=0, row=counter, sticky="NW")
-            nlbl.value = k
-            nlbl.type="label"
-        
-            #Use scrollbar for text elements (calculate height)
-            if k == "text":
-                txt = scrolledtext.ScrolledText(frame2, width=67, height=len(str(v))/67+1) 
-                txt.insert(INSERT, str(v))
-                txt.type="stxt"
-                txt.type2="str"
-            else:
-                txt = Entry(frame2, width=67)
-                txt.insert(0, str(v))
-                txt.type="txt"
-                txt.type2 = self.getType2(k, v)
-            txt.grid(column=1, row=counter, sticky="W")
-            counter = counter + 1
-
-            #Add button to expand unset values if exists
-            if self.hasUnsetAttributes(i, key) == True:
-                frame2.expand=False
-                btn = Button(frame2, width=7, text="expand", command=partial(self.addValue, key, i, counter2, frame2))
-                btn.grid(column=3, row=counter2-1, padx=3)
-
-
-            o[k] = txt
-        self.curObject[key].append(o)
-             
-    def addValue(self, key, elem, counter, frame):
-        if frame.expand == False:
-            frame.expand = True
-            o=dict()
-            for k, v in self.subAttributes[key].items():
-                if k not in elem:
-                    nlbl = Label(frame, width=13,text=k + ":")
-                    nlbl.grid(column=0, row=counter, sticky="NW")
-                    nlbl.value="label"
-                    txt = Entry(frame, width=67)
-                    txt.insert(0, str(v))
-                    txt.grid(column=1, row=counter, sticky="W")
-                    txt.type="txt"
-                    txt.type2 = self.getType2(k, v)
-                    counter = counter + 1
-                    o[k] = txt
-            self.curObject[key].append(o)
-            print(o)
-        else:
-            frame.expand = False
-            for w in frame.grid_slaves():
-                if int(w.grid_info()["row"]) >= counter:
-                    w.grid_forget()
-
-    ### ### ----- xx  VIEW JSON xx ----- ### ####
-
-    #Show overview of json with minimal formatting 
-    def showJson(self):
-        with open(self.pathToFile) as json_file:
-            data = json.load(json_file)
-        txt=scrolledtext.ScrolledText(self.overviewFrame, width=100, height=50)
-        for key, value in data.items():
-            txt.insert(INSERT, "_____________________________________\n")
-            for k, v in value.items():
-                if isinstance(v, list) or isinstance(v, dict): 
-                    txt.insert(INSERT, k + ": \n")
-                    for e in v:
-                        txt.insert(INSERT, "    -- " + str(e) + "\n")
-                else:
-                    txt.insert(INSERT, k + ": " + str(v) + "\n")
-                                
-            txt.insert(INSERT, "_____________________________________\n\n")
-        txt.grid(column = 6, row=4, columnspan = 6, rowspan=10)
-        self.inWorld.mainloop()
-
-    def justJson(self, obj):
-        txt=scrolledtext.ScrolledText(self.overviewFrame, width=100, height=50)
-        for key, value in obj.items():
-            txt.insert(INSERT, str(key) + ": " + str(value) + "\n")
-        txt.grid(column = 6, row=4, columnspan = 6, rowspan=10)
-        self.inWorld.mainloop()
-    
-    ### ### ----- xx OTHER FUNCTIONS xx ----- ### ###
-
+     
     #Comnmand to run textadventure
     def run(self):
         self.prozess = subprocess.Popen("make run", stdout=subprocess.PIPE, shell=True, preexec_fn=os.setsid)
@@ -552,13 +496,41 @@ class GameDesigner:
             else:
                 return val
 
-    def addLabel(self, frame, w, txt, c, r, value):
-        lbl = Label(frame, width=w ,text=txt + ":")
-        lbl.grid(column=c, row=r, sticky="NW")
-        lbl.value = value 
+    def addLabel(self, frame, w, txt, c, r, cs=1):
+        lbl = Label(frame, width=w, text=txt + ":")
+        lbl.grid(column=c, row=r, columnspan=cs, sticky="NW")
+        lbl.value = txt 
         lbl.type="label"
         return lbl
     
+    def addEntry(self, frame, w, value, c, r, key, cs=1):
+        txt = Entry(frame, width=w)
+        txt.insert(0, str(value))
+        txt.grid(column=c, row=r, columnspan=cs)
+        txt.type="txt"
+        txt.type2 = self.getType2(key, value)
+        return txt
+
+    def addEntryOrSrolled(self, frame, value, key, c, r):
+        if key == "text":
+            h = len(str(value))/67+1
+            txt = scrolledtext.ScrolledText(frame, width=67, height=h)
+            txt.insert(INSERT, str(value))
+            txt.type="stxt"
+            txt.type2="str"
+        else:
+            txt = Entry(frame, width=67)
+            txt.insert(0, str(value))
+            txt.type="txt"
+            txt.type2 = self.getType2(key, value)
+        txt.grid(column=c, row=r, sticky="W")
+        return txt
+
+    def addFrame(self, frame, c, r, cs):
+        frame = Frame(self.editFrame)
+        frame.grid(column=c, row=r, columnspan=2, sticky="NW")
+        frame.type="frame"
+        return frame
 
 
 designer = GameDesigner()
