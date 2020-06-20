@@ -47,6 +47,13 @@ class GameDesigner:
             "options": {"id":0, "text":"", "to":"", "deps":""},
             "steps": steps[0]
             }
+        self.initialSubAttributes = {
+            "text": {"speaker":"", "text":""},
+            "description":{"speaker":"", "text":""},
+            "roomDescription":{"speaker":"", "text":""},
+            "options":{"id":0, "text":"", "to":""},
+            "steps": steps[0]
+        }
 
         self.jsonType = ["post_pEvents", "post_otEvents", "pre_pEvents", "pre_otEvents", "updates", "deps", "characters", "details", "items"]
 
@@ -192,7 +199,7 @@ class GameDesigner:
         for key, value in edit_object.items():
 
             #Add new frame and describing label.
-            frame = self.addFrame(self.editFrame, 0, counter, 2)
+            frame = self.addFrame2(self.editFrame, 0, counter, 2)
             lbl = self.addLabel(frame, 15, key, 0, 0)
 
             if key not in self.fields or isinstance(value, str):
@@ -216,7 +223,7 @@ class GameDesigner:
     def printString(self, counter, key, value, frame):
 
         #Add entry field and add both to json with current object.
-        txt = self.addEntry(frame, 80, value, 1, 0, key, 2)
+        txt = self.addEntry(frame, 83, value, 1, 0, key, 2)
         self.curObject[key] = txt
 
 
@@ -228,8 +235,11 @@ class GameDesigner:
         self.curObject[key] = list()
         for elem in value:
 
+            #Label for numbering
+            lbl = self.addLabel2(frame, 2, "- ", 1, rows)
+
             #Create entry field and add to current json.
-            txt = self.addEntry(frame, 80, elem, 1, rows, key)
+            txt = self.addEntry(frame, 80, elem, 2, rows, key)
             self.curObject[key].append(txt)
             rows = rows + 1
 
@@ -242,10 +252,13 @@ class GameDesigner:
         obj=dict()
         for k, v in value.items():
 
+            #Label for numbering 
+            lbl = self.addLabel(frame, 2, "- ", 1, rows)
+
             #Add two text fields to edit id and property, then add to object.
-            txt = self.addEntry(frame, 25, k, 1, rows, key)
+            txt = self.addEntry(frame, 25, k, 2, rows, key)
             txt.type2 = "str"
-            txt2 = self.addEntry(frame, 55, v, 2, rows, key)
+            txt2 = self.addEntry(frame, 55, v, 3, rows, key)
             txt2.type2 = "json"
             obj[k] = (txt, txt2)
 
@@ -260,44 +273,51 @@ class GameDesigner:
         #Iterate over list elements
         self.curObject[key] = list()
         frame.counter = 0
+        frame2=Frame(frame)
         for elem in value:
             self.addNew(frame, key, elem) 
             frame.counter = frame.counter + 1
     
-        #Add button to add new value
-        btn_new = Button(frame, width=3, text="+", command=lambda : self.addNew(frame, key, self.subAttributes[key]))
-        btn_new.grid(column=2, row=0, padx=3, sticky="NW")
-        
-        
+                
     #Add a new object to list (either a new already set, or completly new)
     def addNew(self, frame, key, value):
 
+        #Label for numbering
+        lbl = self.addLabel(frame, 2, str(frame.counter+1), 1, frame.counter)
+
         #Initialize frame and new object
-        frame2 = self.addFrame(frame, 1, frame.counter, 1)
+        frame2 = Frame(frame)
+        frame2.grid(column=2, row=frame.counter, columnspan=1)
+        frame2.type="frame"
         obj=dict()
 
         #Iterate ober attributes
-        counter=0
+        frame2.counter=0
         for k, v in value.items():
 
             #Add label with key and entry field with value. Add new entry in object.
-            lbl = self.addLabel(frame2, 13, k, 0, counter)
-            txt = self.addEntryOrSrolled(frame2, v, k, 1, counter)
+            lbl = self.addLabel(frame2, 13, k, 0, frame2.counter)
+            #if frame2.counter == 0:
+            #    lbl.config(text= str(frame2.counter+1) + ". " + lbl.cget("text"))
+            txt = self.addEntryOrSrolled(frame2, v, k, 1, frame2.counter)
             obj[k] = txt
-            counter = counter + 1
+            frame2.counter += 1
 
-            #Add button to expand unset values if exists
-            if self.hasUnsetAttributes(value, key) == True:
-                frame2.expand=False
-                btn = Button(frame2, width=7, text="expand", command=partial(self.addValue, key, value, counter, frame2))
-                btn.grid(column=3, row=counter-1, padx=3)
+        #Add button to expand unset values if exists
+        if self.hasUnsetAttributes(value, key) == True:
+            frame2.expand=False
+            btn = Button(frame2, width=1, text=">", command=partial(self.expand, key, value, frame2.counter, frame2))
+            btn.grid(column=3, row=frame2.counter-1, padx=3)
+
+        #Add button to add new value
+        btn_new = Button(frame2, width=2, text="+", command=partial(self.addNew, frame, key, self.initialSubAttributes[key]))
+        btn_new.grid(column=4, row=(frame2.counter-1))
 
         #Add to json of current object.
         self.curObject[key].append(obj)
-             
-
+    
     #Add value is called when user selects expand button, to also show unset fields.
-    def addValue(self, key, elem, counter, frame):
+    def expand(self, key, elem, counter, frame):
 
         #If no already expaned: expand
         if frame.expand == False:
@@ -502,7 +522,15 @@ class GameDesigner:
         lbl.value = txt 
         lbl.type="label"
         return lbl
+
+    def addLabel2(self, frame, w, txt, c, r, cs=1):
+        lbl = Label(frame, width=w, text=txt)
+        lbl.grid(column=c, row=r, columnspan=cs, sticky="NW")
+        lbl.value = txt 
+        lbl.type="desc_label"
+        return lbl
     
+
     def addEntry(self, frame, w, value, c, r, key, cs=1):
         txt = Entry(frame, width=w)
         txt.insert(0, str(value))
@@ -531,6 +559,13 @@ class GameDesigner:
         frame.grid(column=c, row=r, columnspan=2, sticky="NW")
         frame.type="frame"
         return frame
+
+    def addFrame2(self, frame, c, r, cs):
+        frame = Frame(self.editFrame)
+        frame.grid(column=c, row=r, columnspan=2, sticky="NW", pady=3)
+        frame.type="frame"
+        return frame
+
 
 
 designer = GameDesigner()

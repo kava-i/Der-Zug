@@ -14,7 +14,6 @@ CGame *game;
 class WebserverGame
 {
     private:
-	Webconsole *_cout;
 	std::string _name;
 	std::string _password;
 	std::string _id;
