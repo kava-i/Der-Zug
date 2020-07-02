@@ -17,6 +17,8 @@ class WebserverGame
 	std::string _name;
 	std::string _password;
 	std::string _id;
+    Webconsole* _cout;
+
     public:
 	WebserverGame(Webconsole *cout)
 	{

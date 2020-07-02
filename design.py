@@ -156,17 +156,41 @@ class GameDesigner:
         objects.current(0)
         objects.grid(column=0, row=5)
         
-        #Create threebuttons
+        #Accept Button
         btn = Button(self.selectionFrame, text="Accept", command=lambda : self.editObject(objects.get()))
         btn.grid(column=1, row=5)
+
+        #Button to show overview
         btn2 = Button(self.selectionFrame, text="Overview", command=self.showJson)
         btn2.grid(column=2, row=5)
-        btn3 = Button(self.selectionFrame, text="New", command=lambda : self.editObject(""))
+
+        #Button to create new object
+        btn3 = Button(self.selectionFrame, text="+", command=lambda : self.editObject(""))
         btn3.grid(column=3, row=5)
+
+        #Button to delete object
+        btn4 = Button(self.selectionFrame, text="-", command=lambda : self.deleteObject(objects.get()))
+        btn4.grid(column=3, row=6)
+        
         self.inWorld.mainloop()
 
 
     ### ### ----- xx  EDITING OBJECT xx ----- ### ####
+
+    def deleteObject(self, name):
+        #Load json and change modified object
+        f = open(self.pathToFile, "r")
+        json_object = json.load(f)
+        f.close()
+        
+        del json_object[name]
+
+        #Write modified json
+        f = open(self.pathToFile, "w")
+        json.dump(json_object, f)
+        f.close()
+
+ 
 
     
     #Edit an object
@@ -247,25 +271,33 @@ class GameDesigner:
     def printDict(self, counter, key, value, frame):
     
         #Insert object elemts as two text fields for editing (key, value)
-        rows=0
+        frame.counter=0
         self.curObject[key] = list()
         obj=dict()
         for k, v in value.items():
 
-            #Label for numbering 
-            lbl = self.addLabel(frame, 2, "- ", 1, rows)
-
-            #Add two text fields to edit id and property, then add to object.
-            txt = self.addEntry(frame, 25, k, 2, rows, key)
-            txt.type2 = "str"
-            txt2 = self.addEntry(frame, 55, v, 3, rows, key)
-            txt2.type2 = "json"
-            obj[k] = (txt, txt2)
-
-            rows = rows + 1
+            self.addNew_dict(frame, key, k, v, obj)
+            frame.counter+=1
 
         #Add entries to json
         self.curObject[key] = obj
+
+    def addNew_dict(self, frame, key, k, v, obj):
+
+        #Label for numbering 
+        lbl = self.addLabel2(frame, 2, "- ", 1, frame.counter)
+
+        #Add two text fields to edit id and property, then add to object.
+        txt = self.addEntry(frame, 25, k, 2, frame.counter, key)
+        txt.type2 = "str"
+        txt2 = self.addEntry(frame, 55, v, 3, frame.counter, key)
+        txt2.type2 = "json"
+        obj[k] = (txt, txt2)
+
+        #Add button to add new value
+        btn_new = Button(frame, width=2, text="+", command=partial(self.addNew_dict, frame, key, "", "", obj))
+        btn_new.grid(column=4, row=frame.counter)
+
 
     #Print attributes if value is a list, with extra formatting for list elements
     def printListObjekt(self, counter, key, value, frame):
@@ -288,8 +320,7 @@ class GameDesigner:
         #Initialize frame and new object
         frame2 = Frame(frame)
         frame2.grid(column=2, row=frame.counter, columnspan=1)
-        frame2.type="frame"
-        obj=dict()
+        self.curObject[key].append(dict())
 
         #Iterate ober attributes
         frame2.counter=0
@@ -297,56 +328,54 @@ class GameDesigner:
 
             #Add label with key and entry field with value. Add new entry in object.
             lbl = self.addLabel(frame2, 13, k, 0, frame2.counter)
-            #if frame2.counter == 0:
-            #    lbl.config(text= str(frame2.counter+1) + ". " + lbl.cget("text"))
-            txt = self.addEntryOrSrolled(frame2, v, k, 1, frame2.counter)
-            obj[k] = txt
+            self.curObject[key][frame.counter][k] = self.addEntryOrSrolled(frame2, v, k, 1, frame2.counter)
             frame2.counter += 1
 
         #Add button to expand unset values if exists
         if self.hasUnsetAttributes(value, key) == True:
             frame2.expand=False
-            btn = Button(frame2, width=1, text=">", command=partial(self.expand, key, value, frame2.counter, frame2))
+            btn = Button(frame2, width=1, text=">", command=partial(self.expand, key, value, frame2.counter, frame2, frame.counter))
             btn.grid(column=3, row=frame2.counter-1, padx=3)
 
         #Add button to add new value
         btn_new = Button(frame2, width=2, text="+", command=partial(self.addNew, frame, key, self.initialSubAttributes[key]))
         btn_new.grid(column=4, row=(frame2.counter-1))
 
-        #Add to json of current object.
-        self.curObject[key].append(obj)
-    
+        #Add button to delete this entry
+        btn_del = Button(frame2, width=2, text="-", command=partial(self.deleteElem, frame2, key, frame.counter))
+        btn_del.grid(column=5, row=(frame2.counter-1))
+
+
+    def deleteElem(self, frame, key, num):
+        for w in frame.grid_slaves():
+            w.grid_forget()
+        del self.curObject[key][num]
+ 
     #Add value is called when user selects expand button, to also show unset fields.
-    def expand(self, key, elem, counter, frame):
+    def expand(self, key, elem, counter, frame, num):
 
         #If no already expaned: expand
         if frame.expand == False:
-
-            #Initialize new frame and object
             frame.expand = True
-            obj = dict()
-            for k, v in self.subAttributes[key].items():
 
+            for k, v in self.subAttributes[key].items():
                 #Only add, if not already in object
                 if k not in elem:
-
                     #Add label and entry and add to object.
                     nlbl = self.addLabel(frame, 13, k, 0, counter)
-                    txt = self.addEntry(frame, 67, v, 1, counter, k)
-                    obj[k] = txt
+                    self.curObject[key][num][k] = self.addEntry(frame, 67, "", 1, counter, k)
 
                     #Increase counter.
                     counter = counter + 1
-
-            #Add to json of current object.
-            self.curObject[key].append(obj)
         
-        #Remove al expanded fields
+        #Remove all expanded fields
         else:
             frame.expand = False
             for w in frame.grid_slaves():
                 if int(w.grid_info()["row"]) >= counter:
                     w.grid_forget()
+
+        self.inWorld.mainloop()
 
     ### ### ----- xx  VIEW JSON xx ----- ### ####
 
@@ -358,10 +387,14 @@ class GameDesigner:
         for key, value in data.items():
             txt.insert(INSERT, "_____________________________________\n")
             for k, v in value.items():
-                if isinstance(v, list) or isinstance(v, dict): 
+                if isinstance(v, list):
                     txt.insert(INSERT, k + ": \n")
                     for e in v:
                         txt.insert(INSERT, "    -- " + str(e) + "\n")
+                elif isinstance(v, dict):
+                    txt.insert(INSERT, k + ": \n")
+                    for k1, v1 in v.items():
+                        txt.insert(INSERT, "    " + k1 + ": " + str(v1) + "\n")
                 else:
                     txt.insert(INSERT, k + ": " + str(v) + "\n")
                                 
@@ -437,6 +470,7 @@ class GameDesigner:
         f = open(self.pathToFile, "w")
         json.dump(json_object, f)
         f.close()
+
      
     #Comnmand to run textadventure
     def run(self):
@@ -475,9 +509,10 @@ class GameDesigner:
         return True
 
     def myGet(self, elem):
-        val = ""
+        print("Elem type: ", elem.type)
         if elem.type == "txt":
             val = elem.get()
+            print("val: ", val)
         elif elem.type == "stxt":
             val = elem.get("1.0", END)
         if val.endswith("\n"):
@@ -506,8 +541,11 @@ class GameDesigner:
         if elem.type2 == "int":
             return int(self.myGet(elem))
         elif elem.type2 == "json":
+            print("in json object")
             value = self.myGet(elem)
             value = value.replace("\'", "\"")
+            if value == "":
+                return ""
             return json.loads(value)
         else:
             val = self.myGet(elem)
