@@ -310,25 +310,31 @@ class GameDesigner:
     def addNew_dict(self, frame, key, k, v, obj):
         
         frame2 = Frame(frame)
-        frame2.grid(column=2, row=frame.counter, columnspan)
+        frame2.grid(column=2, row=frame.counter, columnspan=1)
 
         #Label for numbering 
-        lbl = self.addLabel2(frame, 2, "- ", 1, frame.counter)
+        lbl = self.addLabel2(frame2, 1, "- ", 1, 0)
 
         #Add two text fields to edit id and property, then add to object.
-        txt = self.addEntry(frame, 25, k, 2, frame.counter, key)
+        txt = self.addEntry(frame2, 25, k, 2, 0, key)
         txt.type2 = "str"
-        txt2 = self.addEntry(frame, 55, v, 3, frame.counter, key)
+        txt2 = self.addEntry(frame2, 55, v, 3, 0, key)
         txt2.type2 = "json"
         obj[k] = (txt, txt2)
 
         #Add button to add new value
-        btn_new = Button(frame, width=2, text="+", command=partial(self.addNew_dict, frame, key, "", "", obj))
-        btn_new.grid(column=4, row=frame.counter)
+        btn_new = Button(frame2, width=2, text="+", command=partial(self.addNew_dict, frame, key, "", "", obj))
+        btn_new.grid(column=4, row=0)
         
         #Add tutton to delete value
-        btn_del = Button(frame, width=2, text="-", command=partial(self.deleteElem, frame, key, frame.counter))
-        btn_del.grid(column=5, row=frame.counter)
+        btn_del = Button(frame2, width=2, text="-", command=partial(self.delete_dict, frame2, key, k))
+        btn_del.grid(column=5, row=0)
+
+    #Delete dict element
+    def delete_dict(self, frame, key, k):
+        for w in frame.grid_slaves():
+            w.grid_forget()
+        del self.curObject[key][k]
 
 
     #Print attributes if value is a list, with extra formatting for list elements
@@ -342,11 +348,6 @@ class GameDesigner:
             self.addNew(frame, key, elem) 
             frame.counter = frame.counter + 1
 
-    def deleteListElem(self, frame, num):
-        counter = 0
-        for w in frame.grid_slaves():
-            w.grid_forget()
-    
                 
     #Add a new object to list (either a new already set, or completly new)
     def addNew(self, frame, key, value):
@@ -503,8 +504,6 @@ class GameDesigner:
         f.close()
         #backup
         if self.pathToFile not in self.backup:
-            print("Adding to backup:", self.pathToFile)
-            print(json_object)
             self.backup[self.pathToFile] = copy.copy(json_object)
         #modifie object
         json_object[self.curObject["id"]] = self.curObject
