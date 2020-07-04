@@ -100,6 +100,7 @@ public:
     void h_deleteCharacter(std::string&, CPlayer*);
     void h_addItem(std::string&, CPlayer*);
     void h_recieveMoney(std::string&, CPlayer*);
+    void h_eraseMoney(std::string&, CPlayer*);
     void h_newFight(std::string&, CPlayer*);
     void h_endFight(std::string&, CPlayer*);
     void h_endDialog(std::string&, CPlayer*);

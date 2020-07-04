@@ -104,6 +104,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_deleteCharacter"] = &CEnhancedContext::h_deleteCharacter;
     m_handlers["h_addItem"] = &CEnhancedContext::h_addItem;
     m_handlers["h_recieveMoney"] = &CEnhancedContext::h_recieveMoney;
+    m_handlers["h_eraseMoney"] = &CEnhancedContext::h_eraseMoney;
     m_handlers["h_newFight"] = &CEnhancedContext::h_newFight;
     m_handlers["h_endFight"] = &CEnhancedContext::h_endFight;
     m_handlers["h_endDialog"] = &CEnhancedContext::h_endDialog;
@@ -184,6 +185,7 @@ void CEnhancedContext::initializeTemplates()
                         {"deleteCharacter", {"h_deleteCharacter"}},
                         {"addItem", {"h_addItem"}},
                         {"recieveMoney", {"h_recieveMoney"}},
+                        {"eraseMoney", {"h_eraseMoney"}},
                         {"fight", {"h_newFight"}},
                         {"endFight",{"h_endFight"}},
                         {"endDialog",{"h_endDialog"}},
@@ -393,6 +395,12 @@ void CEnhancedContext::h_recieveMoney(std::string& sIdentifier, CPlayer* p) {
    m_curPermeable = false; 
 }
 
+void CEnhancedContext::h_eraseMoney(std::string& sIdentifier, CPlayer* p) {
+    p->setStat("gold", p->getStat("gold") - stoi(sIdentifier));
+    p->appendPrint(Webcmd::set_color(Webcmd::color::RED) + "-" + sIdentifier + " Schiling" + Webcmd::set_color(Webcmd::color::WHITE) + "\n");
+
+   m_curPermeable = false; 
+}
 void CEnhancedContext::h_endFight(std::string& sIdentifier, CPlayer* p) {
     p->endFight();
     m_curPermeable=false;

@@ -3,6 +3,7 @@ import json
 import subprocess
 import signal
 import time
+import copy
 from functools import partial
 from tkinter import *
 from tkinter.ttk import *
@@ -10,6 +11,9 @@ from tkinter import scrolledtext
 
 class GameDesigner:
     def __init__ (self):
+
+        self.backup = dict()
+
         self.window = Tk()
         self.window.title("Game designer")
         self.path = "src/factory/"
@@ -68,7 +72,7 @@ class GameDesigner:
         worlds.current(0)
         worlds.grid(column=0, row=1)
 
-        btn = Button(self.window, text="Accept", command=lambda:self.selectCategory( worlds.get()))
+        btn = Button(self.window, text="Accept", command=lambda:self.selectCategory(worlds.get()))
         btn.grid(column=1, row=1)
         self.window.mainloop()
 
@@ -93,11 +97,7 @@ class GameDesigner:
 
         #List all categories (load from disc)
         category = Combobox(self.selectionFrame)
-        category_list = list()
-        for filename in os.listdir(self.path):
-            if (filename.find("default") == -1):
-                category_list.append(filename)
-        category["values"] = category_list 
+        category["values"] = self.listFiles(self.path)
         category.current(0) #set the selected item
         category.grid(column=0, row=1)
 
@@ -108,8 +108,21 @@ class GameDesigner:
         btn_run.grid(column=2, row=1)
         btn_end = Button(self.selectionFrame, text="end", command=self.end)
         btn_end.grid(column=3, row=1)
+        btn_reset = Button(self.selectionFrame, text="reset", command=self.reset)
+        btn_reset.grid(column=4, row=1)
 
         self.inWorld.mainloop()
+
+    #Function to reset all changes in current session
+    def reset(self):
+        for key, value in self.backup.items():
+            print("writing ", key, ": ")
+            print(value)
+            f = open(key, "w")
+            json.dump(value, f)
+            f.close()
+        self.backup=dict()
+
 
     #Loop to select specific json files in category
     def selectFile(self, category):
@@ -123,13 +136,11 @@ class GameDesigner:
 
         #List all files (load from disc)
         files = Combobox(self.selectionFrame)
-        files_list = list()  
-        for filename in os.listdir(self.pathToCategory):
-            files_list.append(filename)
-        files["values"] = files_list 
+        files["values"] = self.listFiles(self.pathToCategory)
         files.current(0)
         files.grid(column=0, row=3)
         
+        self.file = files.get()
         btn = Button(self.selectionFrame, text="Accept", command=lambda : self.selectObject(files.get()))
         btn.grid(column=1, row=3)
         self.inWorld.mainloop()
@@ -152,9 +163,11 @@ class GameDesigner:
         objects_list = list()
         for key, value in data.items():
             objects_list.append(key)
+        objects_list.sort()
         objects["values"] = objects_list 
         objects.current(0)
         objects.grid(column=0, row=5)
+        self.curObjects = objects
         
         #Accept Button
         btn = Button(self.selectionFrame, text="Accept", command=lambda : self.editObject(objects.get()))
@@ -178,11 +191,17 @@ class GameDesigner:
     ### ### ----- xx  EDITING OBJECT xx ----- ### ####
 
     def deleteObject(self, name):
-        #Load json and change modified object
+
+        #Load json
         f = open(self.pathToFile, "r")
         json_object = json.load(f)
         f.close()
-        
+        #backup
+        if self.pathToFile not in self.backup:
+            print("Added to backup: ", self.pathToFile)
+            print(json_object)
+            self.backup[self.pathToFile] = copy.copy(json_object) 
+        #modifie object
         del json_object[name]
 
         #Write modified json
@@ -190,11 +209,17 @@ class GameDesigner:
         json.dump(json_object, f)
         f.close()
 
- 
+        #Reset stuff
+        for widget in self.editFrame.winfo_children():
+            widget.destroy() 
+        self.selectObject(self.file)
+
 
     
     #Edit an object
     def editObject(self, name):
+
+        self.curName = name
 
         #Destory old widgets
         for widget in self.editFrame.winfo_children():
@@ -283,6 +308,9 @@ class GameDesigner:
         self.curObject[key] = obj
 
     def addNew_dict(self, frame, key, k, v, obj):
+        
+        frame2 = Frame(frame)
+        frame2.grid(column=2, row=frame.counter, columnspan)
 
         #Label for numbering 
         lbl = self.addLabel2(frame, 2, "- ", 1, frame.counter)
@@ -297,6 +325,10 @@ class GameDesigner:
         #Add button to add new value
         btn_new = Button(frame, width=2, text="+", command=partial(self.addNew_dict, frame, key, "", "", obj))
         btn_new.grid(column=4, row=frame.counter)
+        
+        #Add tutton to delete value
+        btn_del = Button(frame, width=2, text="-", command=partial(self.deleteElem, frame, key, frame.counter))
+        btn_del.grid(column=5, row=frame.counter)
 
 
     #Print attributes if value is a list, with extra formatting for list elements
@@ -309,6 +341,11 @@ class GameDesigner:
         for elem in value:
             self.addNew(frame, key, elem) 
             frame.counter = frame.counter + 1
+
+    def deleteListElem(self, frame, num):
+        counter = 0
+        for w in frame.grid_slaves():
+            w.grid_forget()
     
                 
     #Add a new object to list (either a new already set, or completly new)
@@ -460,16 +497,34 @@ class GameDesigner:
             del self.curObject[key]
         print(self.curObject) 
 
-        #Load json and change modified object
+        #Load json 
         f = open(self.pathToFile, "r")
         json_object = json.load(f)
         f.close()
+        #backup
+        if self.pathToFile not in self.backup:
+            print("Adding to backup:", self.pathToFile)
+            print(json_object)
+            self.backup[self.pathToFile] = copy.copy(json_object)
+        #modifie object
         json_object[self.curObject["id"]] = self.curObject
 
         #Write modified json
         f = open(self.pathToFile, "w")
         json.dump(json_object, f)
         f.close()
+
+        #Reset everything
+        self.curObject = dict()
+        for widget in self.editFrame.winfo_children():
+            widget.destroy()        
+        if self.getObject(self.curName) != {}:
+            self.editObject(self.curName)
+        else:
+            self.selectObject(self.file)
+
+
+        
 
      
     #Comnmand to run textadventure
@@ -603,6 +658,15 @@ class GameDesigner:
         frame.grid(column=c, row=r, columnspan=2, sticky="NW", pady=3)
         frame.type="frame"
         return frame
+
+    def listFiles(self, path):
+        files = list()
+        for filename in os.listdir(path):
+            if (filename.find("default") == -1):
+                files.append(filename)
+        files.sort()
+        return files 
+
 
 
 
