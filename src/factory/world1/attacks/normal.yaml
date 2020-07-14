@@ -1,6 +1,6 @@
 ---
 
-punsg:
+punsch:
   name: "Schlag"
   id: punsch
   description: "Ein Normaler und simpler Schlag; gezielt auf Gesicht, Bauch, oder was auch immer erreichbar ist."

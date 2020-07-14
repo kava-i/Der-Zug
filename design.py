@@ -13,6 +13,12 @@ class GameDesigner:
     def __init__ (self):
 
         self.backup = dict()
+        self.back = list()
+
+        self.breakcrumbs = list()
+        self.curName = ""
+        self.file = ""
+        self.category = ""
 
         self.window = Tk()
         self.window.title("Game designer")
@@ -33,7 +39,7 @@ class GameDesigner:
         options = [{"id":0, "text":"", "to":""}]
         steps = [{"name":"", "id":"", "handler":"", "description":""}]
         self.attributes = {
-            "dialogs": {"id":"", "text":desc, "options":options},
+            "dialogs": {"id":"", "text":desc, "options":options, "actions":"", "events":""},
             "details": {"name":"", "id":"", "description":desc, "look":"", "items":[""], "defaultItems":""},
             "characters": {"name":"", "id":"", "hp":0, "strength":0, "roomDescription":desc, "description":desc, "defaultDescription":"", "defaultDialog":"","attacks":[""], "dialog":""},
             "players": {"name":"", "id":"", "room":"", "hp":0, "strength":0, "attacks":[""]},
@@ -61,6 +67,18 @@ class GameDesigner:
 
         self.jsonType = ["post_pEvents", "post_otEvents", "pre_pEvents", "pre_otEvents", "updates", "deps", "characters", "details", "items"]
 
+        self.helpDesc = {
+            "name":"Name shown to the player",
+            "id":"unique identifier, usually in lowercase with _/- instead of spaces. For some objects (items, rooms), the id of the room, or playing owning the item is automatically added to the id, please don't do so by yourself.",
+            "description":"Either simple description, or embedded into Text-Element (usually shown, when object is examined",
+            "output":"Text printed, when attack is executed",
+            "attacks":"A list of attacks, referenced by using the id of an attack.",
+            "defaultDescription":"Set to load a random description from a set of descriptions. F.e. 'zombies'",
+            "defaultDialog":"Set to load a random default dialog from a set of dialogs. F.e. 'person'",
+            "roomDescription":"Text printed, when description of the room is shown",
+            "dialog":"link to the dialog '.json' must be ignored"
+        }
+
         self.curWrite = dict()
 
     def selectWorld(self):
@@ -78,6 +96,7 @@ class GameDesigner:
 
     #Loop to select category (dialogs, rooms, etc.)
     def selectCategory(self, world):
+        
         #Create new window
         self.inWorld = Tk()
         self.inWorld.title("Game-Designer: " + world)
@@ -87,9 +106,16 @@ class GameDesigner:
         self.selectionFrame = Frame(self.inWorld)
         self.editFrame = Frame(self.inWorld)
         self.overviewFrame = Frame(self.inWorld)
+        self.helpFrame = Frame(self.inWorld)
         self.selectionFrame.grid(column=0, row=0, sticky="NW", padx=10, pady=15)
         self.editFrame.grid(column=0, row=1, sticky="NW", padx=10, pady=15)
-        self.overviewFrame.grid(column=1, row=0, rowspan=6, padx=10, sticky="N")
+        self.overviewFrame.grid(column=2, row=0, rowspan=6, padx=10, sticky="N")
+        #self.helpFrame.grid(column=1, row=0, rowspan=4, pady=15, sticky="N")
+
+        #Crete a label showing help informations
+        self.hlp = scrolledtext.ScrolledText(self.inWorld, width=30, height=7)
+        self.hlp.insert(INSERT, "Hover over label, or button to see help message.")
+        self.hlp.grid(column=1, pady=15, sticky="NW", row=0)
         
         #Create label to show user to select 
         lbl = Label(self.selectionFrame, text="select category to edit")
@@ -98,8 +124,12 @@ class GameDesigner:
         #List all categories (load from disc)
         category = Combobox(self.selectionFrame)
         category["values"] = self.listFiles(self.path)
-        category.current(0) #set the selected item
+        if len(category["values"]) > 0:
+            category.current(0) #set the selected item
         category.grid(column=0, row=1)
+
+        self.file = ""
+        self.category = category.get()
 
         #Create button to accept and link to function
         btn = Button(self.selectionFrame, text="Accept", command=lambda : self.selectFile(category.get()))
@@ -110,8 +140,22 @@ class GameDesigner:
         btn_end.grid(column=3, row=1)
         btn_reset = Button(self.selectionFrame, text="reset", command=self.reset)
         btn_reset.grid(column=4, row=1)
+        btn_reset.bind("<Enter>", partial(self.on_enter, "Reset to start of programm."))
+        btn_reset.bind("<Leave>", self.on_leave)
+        btn_back = Button(self.selectionFrame, text="back", command=self.step_back)
+        btn_back.grid(column=5, row=1)
+        btn_back.bind("<Enter>", partial(self.on_enter, "Erase last editing step."))
+        btn_back.bind("<Leave>", self.on_leave)
 
         self.inWorld.mainloop()
+
+    def on_enter(self, msg, event):
+        self.hlp.delete("1.0", END)
+        self.hlp.insert(INSERT, msg)
+
+    def on_leave(self, enter):
+        self.hlp.delete("1.0", END)
+        self.hlp.insert(INSERT, "Hover over label, or button to see help message.")
 
     #Function to reset all changes in current session
     def reset(self):
@@ -122,6 +166,27 @@ class GameDesigner:
             json.dump(value, f)
             f.close()
         self.backup=dict()
+
+        self.reload() 
+
+    #Function to reset only last step
+    def step_back(self):
+        #If empty, return
+        if len(self.back) == 0:
+            return
+
+        #Write object to disc 
+        path = self.back[-1][0]
+        obj = self.back[-1][1]
+        print("writing: ", path)
+        print(obj)
+        f = open(path, "w")
+        json.dump(obj, f)
+        f.close()
+        #Erase object
+        del self.back[-1]
+        
+        self.reload()
 
 
     #Loop to select specific json files in category
@@ -137,14 +202,65 @@ class GameDesigner:
         #List all files (load from disc)
         files = Combobox(self.selectionFrame)
         files["values"] = self.listFiles(self.pathToCategory)
-        files.current(0)
+        if len(files["values"]) > 0:
+            files.current(0)
         files.grid(column=0, row=3)
         
         self.file = files.get()
+        self.pathToFile = self.pathToCategory + "/" + self.file
         btn = Button(self.selectionFrame, text="Accept", command=lambda : self.selectObject(files.get()))
         btn.grid(column=1, row=3)
+
+        #Button to create new object
+        btn1 = Button(self.selectionFrame, text="add", command=self.addNewfile)
+        btn1.grid(column=2, row=3)
+
+        #Button to delete object
+        btn2 = Button(self.selectionFrame, text="del", command=self.deleteFile)
+        btn2.grid(column=3, row=3)
+
         self.inWorld.mainloop()
-    
+
+    def addNewfile(self):
+        popup = Tk() 
+        popup.wm_title("!")
+        lbl = Label(popup, text="Enter name:")
+        lbl.pack()
+        lbl.type="lbl" 
+        txt = Entry(popup)
+        txt.pack()
+        txt.type="txt"
+        B1 = Button(popup, text="Okay", command = lambda : self.destroy(popup))
+        B1.pack()
+        popup.mainloop()
+
+    def destroy(self, popup_win):
+        new_name = ""
+        for widget in popup_win.winfo_children():
+            if widget.type=="txt":
+                new_name = widget.get()
+                break
+        self.pathToFile = self.pathToCategory+"/"+new_name+".json"
+        popup_win.destroy()
+        new_json = dict()
+        f = open(self.pathToFile, "w")
+        json.dump(new_json, f)
+        f.close()
+        self.reload()
+        print(self.pathToFile)
+        
+
+
+    def deleteFile(self):
+        #Backup file
+        self.tobackup()
+        #Delete and reset path to file
+        os.remove(self.pathToFile)
+        self.file = ""
+        #Reload gui
+        self.reload()
+        
+
 
     #Loop to select object in json file
     def selectObject(self, File):
@@ -165,7 +281,8 @@ class GameDesigner:
             objects_list.append(key)
         objects_list.sort()
         objects["values"] = objects_list 
-        objects.current(0)
+        if len(objects["value"]) > 0:
+            objects.current(0)
         objects.grid(column=0, row=5)
         self.curObjects = objects
         
@@ -183,7 +300,7 @@ class GameDesigner:
 
         #Button to delete object
         btn4 = Button(self.selectionFrame, text="-", command=lambda : self.deleteObject(objects.get()))
-        btn4.grid(column=3, row=6)
+        btn4.grid(column=4, row=5)
         
         self.inWorld.mainloop()
 
@@ -192,15 +309,9 @@ class GameDesigner:
 
     def deleteObject(self, name):
 
-        #Load json
-        f = open(self.pathToFile, "r")
-        json_object = json.load(f)
-        f.close()
-        #backup
-        if self.pathToFile not in self.backup:
-            print("Added to backup: ", self.pathToFile)
-            print(json_object)
-            self.backup[self.pathToFile] = copy.copy(json_object) 
+        #backup and get json to modifie 
+        json_object = self.tobackup()
+
         #modifie object
         del json_object[name]
 
@@ -210,12 +321,8 @@ class GameDesigner:
         f.close()
 
         #Reset stuff
-        for widget in self.editFrame.winfo_children():
-            widget.destroy() 
-        self.selectObject(self.file)
-
-
-    
+        self.reload()
+       
     #Edit an object
     def editObject(self, name):
 
@@ -280,17 +387,32 @@ class GameDesigner:
     def printList(self, counter, key, value, frame):
 
         #Insert list elements as text fields for editing.
-        rows=0
+        frame.counter=0
         self.curObject[key] = list()
         for elem in value:
+            self.addNew_list(frame, key, elem)
+            frame.counter += 1
 
-            #Label for numbering
-            lbl = self.addLabel2(frame, 2, "- ", 1, rows)
+    #Add new list element
+    def addNew_list(self, frame, key, elem):
+        frame2 = Frame(frame)
+        frame2.grid(column=2, row=frame.counter, columnspan=1)
 
-            #Create entry field and add to current json.
-            txt = self.addEntry(frame, 80, elem, 2, rows, key)
-            self.curObject[key].append(txt)
-            rows = rows + 1
+        #Label for numbering
+        lbl = self.addLabel2(frame2, 2, "- ", 1, 0)
+
+        #Create entry field and add to current json.
+        txt = self.addEntry(frame2, 80, elem, 2, 0, key)
+        self.curObject[key].append(txt)
+
+        #Add button to add new value
+        btn_new = Button(frame2, width=2, text="+", command=partial(self.addNew_list, frame, key, ""))
+        btn_new.grid(column=3, row=0)
+        
+        #Add tutton to delete value
+        btn_del = Button(frame2, width=2, text="-", command=partial(self.delete_list_dict, frame2, key, frame.counter))
+        btn_del.grid(column=4, row=0)
+ 
 
     #Print attributes in the for of a dictionary (f.e. exitis).
     def printDict(self, counter, key, value, frame):
@@ -300,13 +422,13 @@ class GameDesigner:
         self.curObject[key] = list()
         obj=dict()
         for k, v in value.items():
-
             self.addNew_dict(frame, key, k, v, obj)
             frame.counter+=1
 
         #Add entries to json
         self.curObject[key] = obj
 
+        
     def addNew_dict(self, frame, key, k, v, obj):
         
         frame2 = Frame(frame)
@@ -327,11 +449,11 @@ class GameDesigner:
         btn_new.grid(column=4, row=0)
         
         #Add tutton to delete value
-        btn_del = Button(frame2, width=2, text="-", command=partial(self.delete_dict, frame2, key, k))
+        btn_del = Button(frame2, width=2, text="-", command=partial(self.delete_list_dict, frame2, key, k))
         btn_del.grid(column=5, row=0)
 
     #Delete dict element
-    def delete_dict(self, frame, key, k):
+    def delete_list_dict(self, frame, key, k):
         for w in frame.grid_slaves():
             w.grid_forget()
         del self.curObject[key][k]
@@ -498,13 +620,9 @@ class GameDesigner:
             del self.curObject[key]
         print(self.curObject) 
 
-        #Load json 
-        f = open(self.pathToFile, "r")
-        json_object = json.load(f)
-        f.close()
-        #backup
-        if self.pathToFile not in self.backup:
-            self.backup[self.pathToFile] = copy.copy(json_object)
+        #backup and get json
+        json_object = self.tobackup()
+
         #modifie object
         json_object[self.curObject["id"]] = self.curObject
 
@@ -513,16 +631,7 @@ class GameDesigner:
         json.dump(json_object, f)
         f.close()
 
-        #Reset everything
-        self.curObject = dict()
-        for widget in self.editFrame.winfo_children():
-            widget.destroy()        
-        if self.getObject(self.curName) != {}:
-            self.editObject(self.curName)
-        else:
-            self.selectObject(self.file)
-
-
+        self.reload()
         
 
      
@@ -536,6 +645,35 @@ class GameDesigner:
         os.killpg(os.getpgid(self.prozess.pid), signal.SIGTERM)
     
     ### ### ----- xx HELPING FUNCTIONS xx ----- ### ###
+
+    #Add json to backup
+    def tobackup(self):
+        #Load json
+        f = open(self.pathToFile, "r")
+        json_object = json.load(f)
+        f.close()
+        #backup to reset to start of programm
+        if self.pathToFile not in self.backup:
+            print("Added to backup: ", self.pathToFile)
+            print(json_object)
+            self.backup[self.pathToFile] = copy.copy(json_object) 
+        #backup to reset last step
+        back = list()
+        back.append(self.pathToFile)
+        back.append(copy.copy(json_object))
+        self.back.append(back)
+        
+        return json_object
+
+    #Reload
+    def reload(self): 
+        for widget in self.editFrame.winfo_children():
+            widget.destroy()        
+        if self.curName != "" and self.getObject(self.curName) != {}:
+            self.editObject(self.curName)
+        if self.file != "":
+            self.selectObject(self.file)
+        self.selectFile(self.category)
 
     #Load a json from disc and return object
     def getObject(self, name):
@@ -613,6 +751,11 @@ class GameDesigner:
         lbl.grid(column=c, row=r, columnspan=cs, sticky="NW")
         lbl.value = txt 
         lbl.type="label"
+        msg = "No help yet, if you'd like a help msg, add an issue to github"
+        if txt in self.helpDesc:
+            msg = self.helpDesc[txt]
+        lbl.bind("<Enter>", partial(self.on_enter, msg))
+        lbl.bind("<Leave>", self.on_leave)
         return lbl
 
     def addLabel2(self, frame, w, txt, c, r, cs=1):
