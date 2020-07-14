@@ -335,7 +335,7 @@ class GameDesigner:
 
         #Get json of object to edit and add missing attributes
         edit_object = self.getObject(name)
-        for key, value in self.attributes[self.getFromPath(4)].items():
+        for key, value in self.attributes[self.getFromPath(-2)].items():
             if key not in edit_object:
                 edit_object[key] = value
         self.curObject = dict()
@@ -685,7 +685,10 @@ class GameDesigner:
         return data[name]
 
     def getFromPath(self, elem):
-        x= self.pathToFile.split("/")
+        print(self.pathToFile)
+        x = self.pathToFile.split("/")
+        print(x)
+        print(x[elem])
         return x[elem]
     
     def hasUnsetAttributes(self, elem, key):
