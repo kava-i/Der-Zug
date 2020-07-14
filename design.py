@@ -22,7 +22,8 @@ class GameDesigner:
 
         self.window = Tk()
         self.window.title("Game designer")
-        self.path = "src/factory/"
+        self.dirname = os.path.dirname(__file__)
+        self.path = os.path.join(self.dirname, "src/factory/")
         self.fields = {
                 "text" : "list_object",
                 "roomDescription" : "list_object",
@@ -100,7 +101,7 @@ class GameDesigner:
         #Create new window
         self.inWorld = Tk()
         self.inWorld.title("Game-Designer: " + world)
-        self.path = "src/factory/" + world + "/jsons"
+        self.path = os.path.join(self.dirname, "src", "factory", world, "jsons")
 
         #Create Main containers
         self.selectionFrame = Frame(self.inWorld)
