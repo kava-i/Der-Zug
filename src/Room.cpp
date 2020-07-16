@@ -11,7 +11,7 @@ string CRoom::getArea() {
     return m_sArea; 
 }
 
-CRoom::objectmap& CRoom::getCharacters() { 
+std::map<std::string, CPerson*>& CRoom::getCharacters() { 
     return m_characters; 
 }
 
@@ -73,18 +73,19 @@ string CRoom::showExits(std::string sMode, CGramma* gramma)
 
 string CRoom::showCharacters(std::string sMode, CGramma* gramma)
 {
+    auto lambda = [](CPerson* person) {return person->getName();};
     std::string sOutput = "";
     if(sMode == "prosa")
     {
-        if(func::printProsa(m_characters) != "")
-            sOutput += gramma->build(func::to_vector(m_characters), "Hier sind", "");
+        if(func::printProsa(m_characters, lambda) != "")
+            sOutput += gramma->build(func::to_vector(m_characters, lambda), "Hier sind", "");
         if(func::printProsa(m_players) != "")
             sOutput += gramma->build(func::to_vector(m_players), " Und außerdem noch ", "");
         if(sOutput == "")
             sOutput = "In diesem Raum sind keine Personen.";
     }
     else
-        sOutput = "Characters: \n" + func::printList(m_characters) + func::printList(m_players);
+        sOutput = "Characters: \n" + func::printList(m_characters,lambda)+func::printList(m_players);
     return sOutput;
 }       
 

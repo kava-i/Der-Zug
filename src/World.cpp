@@ -224,7 +224,7 @@ void CWorld::roomFactory(string sPath, CPlayer* p)
         std::cout << "Room: " << j_room["id"] << std::endl;
 
         //Parse characters
-        objectmap mapChars = parseRoomChars(j_room, sArea, p);
+        std::map<std::string, CPerson*> mapChars = parseRoomChars(j_room, sArea, p);
 
         //Parse items
         map<string, CItem*> mapItems = parseRoomItems(j_room, sArea, p);
@@ -398,10 +398,10 @@ void CWorld::characterFactory(std::string sPath) {
         m_jCharacters[j_char["id"]] = j_char;
 }
 
-CWorld::objectmap CWorld::parseRoomChars(nlohmann::json j_room, std::string sArea, CPlayer* p)
+std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room, std::string sArea, CPlayer* p)
 {
     std::cout << "Parsing characters\n";
-    std::map<std::string, std::string> mapCharacters;
+    std::map<std::string, CPerson*> mapCharacters;
     if(j_room.count("characters") == 0)
         return mapCharacters;
 
@@ -422,7 +422,8 @@ CWorld::objectmap CWorld::parseRoomChars(nlohmann::json j_room, std::string sAre
         func::updateJson(jBasic, character.second);     
     
         //Update id
-        jBasic["id"] = func::incIDNumber(mapCharacters, sID);
+        auto lambda = [] (CPerson* person) { return person->getName(); };
+        jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapCharacters, lambda), sID);
 
         //Create dialog 
         CDialog* newDialog = new CDialog;
@@ -444,13 +445,15 @@ CWorld::objectmap CWorld::parseRoomChars(nlohmann::json j_room, std::string sAre
 
         //Create character and add to maps
         m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks,text,p,items);
-        mapCharacters[jBasic["id"]] = jBasic["name"];
+        //mapCharacters[jBasic["id"]] = jBasic["name"];
+        mapCharacters[jBasic["id"]] = m_characters[jBasic["id"]];
 
         //Add [amount] characters with "id = id + num" if amount is set.
         for(size_t i=2; i<=character.second.value("amount", 0u); i++) {
-            jBasic["id"]  =  func::incIDNumber(mapCharacters, sID);
+            jBasic["id"]  =  func::incIDNumber(func::convertToObjectmap(mapCharacters, lambda), sID);
             m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, text, p, items);
-            mapCharacters[jBasic["id"]] = jBasic["name"];
+            //mapCharacters[jBasic["id"]] = jBasic["name"];
+            mapCharacters[jBasic["id"]] = m_characters[jBasic["id"]];
         }
     }
     return mapCharacters;

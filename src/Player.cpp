@@ -30,7 +30,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     m_minds["perzeption"] = {"perzeption", BLUE, 1, 0.5};
     m_minds["peddler"] = {"peddler", RED, 0, 0.4};
     m_minds["drama"]  = {"drama", RED, 0, 0.3};
-    m_minds["logik"]  = {"logik", RED, 1, 0.2};
+    m_minds["logik"]  = {"logik", RED, 0, 0.2};
 
     //Set current room
     m_room = room;

@@ -9,12 +9,12 @@
 #include "CText.hpp"
 #include "CItem.hpp"
 #include "CDetail.hpp"
+#include "CPerson.hpp"
 #include "gramma.hpp"
 #include "func.hpp"
 #include "fuzzy.hpp"
 
 using std::string;
-class CPerson;
 
 class CRoom : public CObject
 { 
@@ -23,15 +23,15 @@ private:
     string m_sArea;
     
     typedef std::map<string, std::string> objectmap;
-    objectmap m_characters;
     objectmap m_players;
 
+    std::map<string, CPerson*> m_characters;
     std::map<string, CExit*> m_exits;
     std::map<string, CItem*> m_items;
     std::map<string, CDetail*> m_details;
 
 public:
-    CRoom(string sArea, nlohmann::json jAtts, objectmap characters, std::map<string, CItem*> items, std::map<string, CDetail*> details, CPlayer* p) : CObject{jAtts, p}
+    CRoom(string sArea, nlohmann::json jAtts, std::map<string, CPerson*> characters, std::map<string, CItem*> items, std::map<string, CDetail*> details, CPlayer* p) : CObject{jAtts, p}
     {
         m_sArea = sArea;
         m_sEntry = jAtts.value("entry", "");
@@ -50,7 +50,8 @@ public:
     // *** getter *** // 
     string getEntry();
     string getArea(); 
-    objectmap& getCharacters();
+    //objectmap& getCharacters();
+    std::map<string, CPerson*>& getCharacters();
     std::map<string, CExit*>& getExtits();
     objectmap getExtits2();
     std::map<string, CItem*>& getItems();

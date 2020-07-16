@@ -136,7 +136,7 @@ public:
     //Characters
     void characterFactory();
     void characterFactory(std::string sPath);
-    std::map<std::string, std::string> parseRoomChars(nlohmann::json j_room, std::string sArea, CPlayer* p);
+    std::map<std::string, CPerson*> parseRoomChars(nlohmann::json j_room, std::string sArea, CPlayer* p);
 
     //Dialogs
     void dialogFactory(CPlayer* p);

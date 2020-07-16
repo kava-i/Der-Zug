@@ -112,6 +112,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_addQuest"] = &CEnhancedContext::h_addQuest;
     m_handlers["h_showPersonInfo"] = &CEnhancedContext::h_showPersonInfo;
     m_handlers["h_showItemInfo"] = &CEnhancedContext::h_showItemInfo;
+    m_handlers["h_changeName"] = &CEnhancedContext::h_changeName;
 
     // ***** STANDARD CONTEXT ***** //
     m_handlers["h_showExits"] = &CEnhancedContext::h_showExits;
@@ -192,7 +193,8 @@ void CEnhancedContext::initializeTemplates()
                         {"gameover",{"h_gameover"}},
                         {"addQuest",{"h_addQuest"}},
                         {"showperson",{"h_showPersonInfo"}},
-                        {"showitem",{"h_showItemInfo"}} }}
+                        {"showitem",{"h_showItemInfo"}},
+                        {"changeName",{"h_changeName"}} }}
                     };
 
     m_templates["standard"] = {
@@ -427,7 +429,8 @@ void CEnhancedContext::h_addQuest(std::string& sIdentifier, CPlayer* p) {
 }
 
 void CEnhancedContext::h_showPersonInfo(std::string& sIdentifier, CPlayer* p) {
-    std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier);
+    auto lambda = [](CPerson* person) { return person->getName();};
+    std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda);
 
     if(character != "")
         p->appendPrint(p->getWorld()->getCharacter(character)->getAllInformation());
@@ -446,7 +449,19 @@ void CEnhancedContext::h_showItemInfo(std::string& sIdentifier, CPlayer* p)
         p->appendPrint("Item not found.\n");
     m_curPermeable=false;
 }
-
+void CEnhancedContext::h_changeName(std::string& sIdentifier, CPlayer* p)
+{
+    std::vector<std::string> v_atts = func::split(sIdentifier, "|");
+    if(v_atts[0] == "character")
+    {
+        if(p->getWorld()->getCharacter(v_atts[1]) != NULL)
+        {
+            p->getWorld()->getCharacter(v_atts[1])->setName(v_atts[2]);
+            std::cout << "Name changed to: " << p->getWorld()->getCharacter(v_atts[1])->getName() << std::endl;
+        }
+    }
+    m_curPermeable=false;
+}
 
 // ***** ***** STANDARD CONTEXT ***** ***** //
 
@@ -469,7 +484,8 @@ void CEnhancedContext::h_show(std::string& sIdentifier, CPlayer* p) {
     else if(sIdentifier == "people" || sIdentifier == "personen")
     {
         p->appendDescPrint(p->getRoom()->showCharacters(p->getMode(), p->getGramma()) + "\n"); 
-        p->addSelectContest(p->getRoom()->getCharacters(), "talk");
+        auto lambda = [](CPerson* person) {return person->getName();};
+        p->addSelectContest(func::convertToObjectmap(p->getRoom()->getCharacters(), lambda) , "talk");
     }
     else if(sIdentifier == "room")
         p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
@@ -534,9 +550,10 @@ void CEnhancedContext::h_goTo(std::string& sIdentifier, CPlayer* p) {
 void CEnhancedContext::h_startDialog(std::string& sIdentifier, CPlayer* p)
 {
     //Get selected character
-    std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier);
-    auto lambda = [](CPlayer* player) { return player->getName(); };
-    std::string player = func::getObjectId(p->getMapOFOnlinePlayers(), sIdentifier, lambda);
+    auto lambda1 = [](CPerson* person) { return person->getName(); };
+    std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda1);
+    auto lambda2 = [](CPlayer* player) { return player->getName(); };
+    std::string player = func::getObjectId(p->getMapOFOnlinePlayers(), sIdentifier, lambda2);
 
     //Check if character was found
     if(character != "") 
@@ -605,7 +622,8 @@ void CEnhancedContext::h_examine(std::string &sIdentifier, CPlayer*p) {
         p->appendPrint(p->getRoom()->getItems()[sObject]->getDescription());
 
     //Check for person
-    sObject = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier);
+    auto lambda3 = [](CPerson* person) { return person->getName();};
+    sObject = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda3);
     //Check for item
     if(sObject != "")
         p->appendPrint(p->getWorld()->getCharacter(sObject)->getDescription());
@@ -891,7 +909,8 @@ void CEnhancedContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
 // *** *** Die komische Gruppe *** *** //
 void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
 {
-    std::string character = func::getObjectId(p->getRoom()->getCharacters(),sIdentifier);
+    auto lambda = [](CPerson* person) { return person->getName();};
+    std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda);
     if(character == "" || character.find("passant") == std::string::npos)
         return;
 

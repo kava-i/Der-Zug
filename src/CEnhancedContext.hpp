@@ -108,6 +108,7 @@ public:
     void h_addQuest(std::string&, CPlayer*);
     void h_showPersonInfo(std::string&, CPlayer*);
     void h_showItemInfo(std::string&, CPlayer*);
+    void h_changeName(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
     void h_showExits(std::string& sIdentifier, CPlayer* p);
