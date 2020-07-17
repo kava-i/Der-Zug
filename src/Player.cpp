@@ -406,6 +406,7 @@ void CPlayer::changeRoom(CRoom* newRoom)
 {
     m_lastRoom = m_room; 
     m_room = newRoom;
+    appendDescPrint(newRoom->getEntry());
     appendPrint(newRoom->showDescription(m_world->getCharacters()));
     m_vistited[m_room->getID()] = true;
 }
