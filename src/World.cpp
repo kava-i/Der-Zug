@@ -580,6 +580,7 @@ void CWorld::questFactory()
 
 void CWorld::questFactory(std::string sPath)
 {
+    std::cout << "QuestFactory"<<std::endl;
     //Read json creating all quests
     std::ifstream read(sPath);
     nlohmann::json j_quests;
@@ -595,6 +596,7 @@ void CWorld::questFactory(std::string sPath)
     
         //Create steps
         for(auto j_step : j_quest["steps"]) {
+            std::cout << j_step["id"] << std::endl;
             mapSteps[j_step["id"]] = new CQuestStep(j_step, newQuest);
             if(j_step.count("handler") > 0)
             {
@@ -610,6 +612,7 @@ void CWorld::questFactory(std::string sPath)
         newQuest->setHandler(listeners);
         m_quests[j_quest["id"]] = newQuest;
     }
+    std::cout << "Done."<<std::endl;
 }
 
 

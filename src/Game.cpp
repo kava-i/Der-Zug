@@ -104,7 +104,7 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePla
     }
 
     //Parse commands
-    CParser parser;
+    CParser parser(m_world->getConfig());
     std::vector<event> events = parser.parse(sInput);
 
     //Check for programmer commands

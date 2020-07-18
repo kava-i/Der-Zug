@@ -41,6 +41,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     
     //Initiazize world
     m_world = new CWorld(this);
+    m_parser = new CParser(m_world->getConfig());
     m_gramma = gramma;
 
     //Initialize all rooms as not visited
@@ -406,7 +407,9 @@ void CPlayer::changeRoom(CRoom* newRoom)
 {
     m_lastRoom = m_room; 
     m_room = newRoom;
-    appendDescPrint(newRoom->getEntry());
+    std::string entry = newRoom->getEntry();
+    if(entry != "")
+        appendDescPrint(entry);
     appendPrint(newRoom->showDescription(m_world->getCharacters()));
     m_vistited[m_room->getID()] = true;
 }
@@ -910,8 +913,7 @@ void CPlayer::throw_events(string sInput, std::string sMessage)
     checkTimeEvents();
 
     //Parse command
-    CParser parser;
-    std::vector<std::pair<std::string, std::string>> events = parser.parse(sInput);
+    std::vector<std::pair<std::string, std::string>> events = m_parser->parse(sInput);
 
     //Iterate over parsed events and call throw_event for each context and each event
     std::deque<CEnhancedContext*> sortedCtxList = m_contextStack.getSortedCtxList();

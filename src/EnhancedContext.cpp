@@ -261,6 +261,7 @@ void CEnhancedContext::initializeHandlers(std::vector<nlohmann::json> listeners)
 {
     for(auto it : listeners)
     {
+        std::cout << "Added: " << it["id"] << std::endl;
         if(it.count("regex") > 0)
             add_listener(it["id"], (std::regex)it["regex"], it.value("take", 1)); 
         else if(it.count("string") > 0)
@@ -869,8 +870,11 @@ void CEnhancedContext::h_startTutorial(std::string&, CPlayer* p)
 // *** *** Zug nach Moskau *** *** //
 void CEnhancedContext::h_ticketverkaeufer(std::string& sIdentifier, CPlayer* p)
 {
+    std::cout << "Called, with id: " << sIdentifier << std::endl;
     if(p->getRoom()->getID() != "bahnhof_toiletten")
         return;
+
+    std::cout << "Called, with id: " << sIdentifier << std::endl;
 
     if(sIdentifier == "bahnhof_maennerToilette" || fuzzy::fuzzy_cmp("zur männer-toilette", sIdentifier) <= 0.2) {
         p->questSolved(getAttribute<std::string>("questID"), "1ticketverkaeufer");

@@ -46,6 +46,7 @@ private:
 
     // *** Attributes concerning game world *** //
     CWorld* m_world;                            ///< Pointer to players world (all rooms, chars, etc.)
+    CParser* m_parser;
     CGramma* m_gramma;                          ///< Pointer to the gramma-class
 
     CRoom* m_room;                              ///< Pointer to current room
