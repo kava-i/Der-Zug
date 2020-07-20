@@ -66,7 +66,7 @@ class GameDesigner:
             "steps": steps[0]
         }
 
-        self.jsonType = ["post_pEvents", "post_otEvents", "pre_pEvents", "pre_otEvents", "updates", "deps", "characters", "details", "items", "linkedSteps"]
+        self.jsonType = ["post_pEvents", "post_otEvents", "pre_pEvents", "pre_otEvents", "updates", "deps", "characters", "details", "items", "linkedSteps", "handler"]
 
         self.helpDesc = {
             "name":"Name shown to the player",

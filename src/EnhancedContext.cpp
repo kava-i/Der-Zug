@@ -261,7 +261,6 @@ void CEnhancedContext::initializeHandlers(std::vector<nlohmann::json> listeners)
 {
     for(auto it : listeners)
     {
-        std::cout << "Added: " << it["id"] << std::endl;
         if(it.count("regex") > 0)
             add_listener(it["id"], (std::regex)it["regex"], it.value("take", 1)); 
         else if(it.count("string") > 0)
