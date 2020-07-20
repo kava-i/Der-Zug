@@ -498,25 +498,20 @@ std::vector<std::string> CPlayer::findWay(CRoom* room, std::string roomID)
 */
 void CPlayer::addAll()
 {
-    std::string sOutput = "";
+    std::vector<std::string> items_names;
     for(auto it = m_room->getItems().begin(); it != m_room->getItems().end();)
     {
         if((*it).second->getHidden() == false) 
 	    {
             m_inventory.addItem((*it).second);
-            sOutput += (*it).second->getName() + ", ";
+            items_names.push_back((*it).second->getName());
             m_room->getItems().erase((*(it++)).second->getID());
 	        continue;
 	    }
 	    ++it;
     }
-    if(sOutput == "")
-        appendErrorPrint("Keine Items im Raum.\n");
-    else
-    {
-        sOutput.erase(sOutput.end() -2);
-        appendDescPrint(sOutput + " zu {name}'s Inventar hinzugefügt.\n");
-    }
+
+    appendDescPrint(m_gramma->build(items_names, "Du findest", "keine Gegenstände."));
 }
 
 /**
