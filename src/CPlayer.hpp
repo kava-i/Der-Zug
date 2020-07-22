@@ -409,6 +409,12 @@ public:
     * Event triggered when highness decreases.
     */
     void t_highness();
+
+    /**
+    * Event to throw any event after a certain time.
+    */
+    void t_throwEvent();
+    
 };
 
 #endif

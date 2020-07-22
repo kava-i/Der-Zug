@@ -113,6 +113,9 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_showPersonInfo"] = &CEnhancedContext::h_showPersonInfo;
     m_handlers["h_showItemInfo"] = &CEnhancedContext::h_showItemInfo;
     m_handlers["h_changeName"] = &CEnhancedContext::h_changeName;
+    m_handlers["h_setAttribute"] = &CEnhancedContext::h_setAttribute;
+    m_handlers["h_setNewAttribute"] = &CEnhancedContext::h_setNewAttribute;
+    m_handlers["h_addTimeEvent"] = &CEnhancedContext::h_addTimeEvent;
 
     // ***** STANDARD CONTEXT ***** //
     m_handlers["h_showExits"] = &CEnhancedContext::h_showExits;
@@ -194,7 +197,10 @@ void CEnhancedContext::initializeTemplates()
                         {"addQuest",{"h_addQuest"}},
                         {"showperson",{"h_showPersonInfo"}},
                         {"showitem",{"h_showItemInfo"}},
-                        {"changeName",{"h_changeName"}} }}
+                        {"changeName",{"h_changeName"}},
+                        {"setAttribute", {"h_setAttribute"}},
+                        {"setNewAttribute", {"h_setNewAttribute"}}, 
+                        {"addTimeEvent", {"h_addTimeEvent"}} }}
                     };
 
     m_templates["standard"] = {
@@ -463,8 +469,38 @@ void CEnhancedContext::h_changeName(std::string& sIdentifier, CPlayer* p)
     m_curPermeable=false;
 }
 
-// ***** ***** STANDARD CONTEXT ***** ***** //
+void CEnhancedContext::h_setAttribute(std::string& sIdentifier, CPlayer* p)
+{
+    std::cout << "h_setAttribute: " << sIdentifier << std::endl;
+    std::vector<std::string> atts = func::split(sIdentifier, "|");
+    if(atts[1] == "=")
+        p->setStat(atts[0], stoi(atts[2]));
+    else if(atts[1] == "+")
+        p->setStat(atts[0], p->getStat(atts[0]) + stoi(atts[2]));
+    else if(atts[1] == "-")
+        p->setStat(atts[0], p->getStat(atts[0]) - stoi(atts[2]));
+    else
+        std::cout << "Wrong operand for setting attribute." << "\n";
 
+    std::cout << atts[0] << ": " << p->getStat(atts[0]) << std::endl;
+    m_curPermeable=false;
+}
+
+void CEnhancedContext::h_setNewAttribute(std::string& sIdentifier, CPlayer* p)
+{
+    std::vector<std::string> atts = func::split(sIdentifier, "|");
+    p->getStats()[atts[0]] = stoi(atts[1]);
+    std::cout << "Added new attribute " << atts[0] << ", with value " << atts[1] << std::endl;
+}
+
+void CEnhancedContext::h_addTimeEvent(std::string&, CPlayer* p)
+{
+    p->addTimeEvent("talkto", 0.2, &CPlayer::t_throwEvent);
+    m_curPermeable = false;
+}
+
+
+// ***** ***** STANDARD CONTEXT ***** ***** //
 
 
 void CEnhancedContext::h_showExits(std::string& sIdentifier, CPlayer* p) {

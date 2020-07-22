@@ -52,6 +52,9 @@ public:
 
     // *** GETTER *** // 
 
+    ///return map of stats.
+    std::map<std::string, int>& getStats();
+
     /**
     * Return person's stats, like strength, virtue, live-points, by passing name of stat.
     * @param[in] id specify which stat shall be returned.

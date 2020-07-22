@@ -24,6 +24,11 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     m_sMode = jAtts.value("mode", "prosa"); 
     m_abbilities = {"strength", "skill"};
 
+    //Initiazize world
+    m_world = new CWorld(this);
+    m_parser = new CParser(m_world->getConfig());
+    m_gramma = gramma;
+
     //Character and Level
     m_level = 0;
     m_ep = 0;
@@ -32,6 +37,14 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     m_minds["drama"]  = {"drama", RED, 0, 0.3};
     m_minds["logik"]  = {"logik", RED, 0, 0.2};
 
+    //Attributes
+    if(m_world->getConfig().count("attributes")>0)
+    {
+        std::vector<std::string> attributes = m_world->getConfig()["attributes"];
+        for(auto it : attributes)   
+            m_stats[it] = 0;
+    }
+
     //Set current room
     m_room = room;
 
@@ -39,11 +52,6 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     m_equipment["weapon"] = NULL;
     m_equipment["armor"]  = NULL;
     
-    //Initiazize world
-    m_world = new CWorld(this);
-    m_parser = new CParser(m_world->getConfig());
-    m_gramma = gramma;
-
     //Initialize all rooms as not visited
     for(const auto& it : m_world->getRooms())
         m_vistited[it.second->getID()] = false;
@@ -969,6 +977,7 @@ void CPlayer::checkTimeEvents()
     //Execute events and delete afterwards
     for(auto it : lExecute) 
     {
+        std::cout << "Executing: " << it.first << ", " << it.second << std::endl;
         (this->*std::get<2>(m_timeEventes[it.first][it.second]))();
         m_timeEventes[it.first].erase(m_timeEventes[it.first].begin() + it.second);
         if(m_timeEventes[it.first].size() == 0)
@@ -990,5 +999,13 @@ void CPlayer::t_highness()
 
     if(m_stats["highness"]>0)
         addTimeEvent("highness", 2, &CPlayer::t_highness);
+}
+
+/**
+* Event to throw any event after a certain time.
+*/
+void CPlayer::t_throwEvent()
+{
+    addPostEvent("talk to taxi");
 }
 

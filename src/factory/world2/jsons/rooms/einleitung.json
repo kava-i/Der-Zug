@@ -1,1 +1,1 @@
-{"einleitung_taxi": {"name": "Taxi", "id": "einleitung_taxi", "description": [{"text": "Du bist in einem Taxi. Es ist beengen und du w\u00fcrdest ihm gerne entkommen."}], "characters": [["taxifahrer", {}]]}}
+{"einleitung_taxi": {"name": "Taxi", "id": "einleitung_taxi", "description": [{"text": "Du bist in einem Taxi. Es ist beengen und du w\u00fcrdest ihm gerne entkommen.", "post_otEvents": ["addTimeEvent talk to"]}], "characters": [["taxifahrer", {}]], "entry": ""}}

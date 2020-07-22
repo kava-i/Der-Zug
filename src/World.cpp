@@ -428,11 +428,17 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room, st
         //Create dialog 
         CDialog* newDialog = new CDialog;
         if(jBasic.count("dialog") > 0)
+        {
+            std::cout << "Dialog: " << jBasic["dialog"] << std::endl;
             newDialog = getDialog(jBasic["dialog"]); 
+        }
         else if(jBasic.count("defaultDialog") > 0)
             newDialog = getRandomDialog(jBasic["defaultDialog"]);
         else
+        {
+            std::cout << "no dialog" << std::endl;
             newDialog = getDialog("defaultDialog");
+        }
 
         //Create items and attacks
         map<std::string, CItem*> items = parseRoomItems(jBasic, jBasic["id"], p);

@@ -37,6 +37,11 @@ CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttac
 
 // *** GETTER *** //
 
+///return map of stats
+std::map<std::string, int>& CPerson::getStats() {
+    return m_stats;
+}
+
 /**
 * Return person's stats, like strength, virtue, live-points, by passing name of stat.
 * @param[in] id specify which stat shall be returned.
@@ -57,7 +62,7 @@ CPerson::attacks& CPerson::getAttacks() {
 }
 
 ///Return attacks as a map_type (string)
-std::map<std::string, std::string> CPerson::getAttacks2()
+std::map<std::string, std::string> CPerson::getAttacks2() 
 {
     auto lambda = [](CAttack* attack) { return attack->getName(); };
     return func::convertToObjectmap(m_attacks, lambda);

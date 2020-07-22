@@ -15,5 +15,6 @@
         {"id":"h_equipe", "regex":"rüste (.*) aus"},
         {"id":"h_dequipe", "regex":"rüste (.*) ab"},
         {"id":"h_examine", "regex":"(betrachte|beobachte) (.*)", "take":2}
-    ]
+    ],
+    "attributes":["geselligkeit", "gesundheit"]
 }
