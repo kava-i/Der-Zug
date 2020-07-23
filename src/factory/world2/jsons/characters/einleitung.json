@@ -1,1 +1,1 @@
-{"taxifahrer": {"name": "Taxifahrer", "id": "taxifahrer", "roomDescription": [{"text": "Gelangweilt sitz vorne ein Taxifahrer."}], "dialog": "taxifahrerDialog"}, "taxifahrer": {"name": "Taxifahrer", "id": "taxifahrer", "roomDescription": [{"text": "Gelangweilt sitz vorne ein Taxifahrer."}], "dialog": "taxifahrerDialog2", "hp": 0, "strength": 0, "defaultDescription": "", "defaultDialog": ""}}
+{"taxifahrer": {"name": "Taxifahrer", "id": "taxifahrer", "roomDescription": [{"text": "Gelangweilt sitz vorne ein Taxifahrer."}], "dialog": "taxifahrerDialog2"}}
