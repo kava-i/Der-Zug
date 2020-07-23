@@ -153,8 +153,6 @@ void CDState::executeActions(CPlayer* p)
             m_dialog->changeStateText(parameters[1], std::stoi(parameters[2]));
         else if(parameters[0] == "changeDialog")
             m_dialog->changeDialog(parameters[1], parameters[2], p);
-        else if(parameters[0] == "setNewQuest")
-            p->setNewQuest(parameters[1]);
     }
 }
 

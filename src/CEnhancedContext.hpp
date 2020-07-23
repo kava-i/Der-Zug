@@ -112,6 +112,7 @@ public:
     void h_setAttribute(std::string&, CPlayer*);
     void h_setNewAttribute(std::string&, CPlayer*);
     void h_addTimeEvent(std::string&, CPlayer*);
+    void h_setNewQuest(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
     void h_showExits(std::string& sIdentifier, CPlayer* p);

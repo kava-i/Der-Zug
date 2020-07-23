@@ -116,6 +116,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_setAttribute"] = &CEnhancedContext::h_setAttribute;
     m_handlers["h_setNewAttribute"] = &CEnhancedContext::h_setNewAttribute;
     m_handlers["h_addTimeEvent"] = &CEnhancedContext::h_addTimeEvent;
+    m_handlers["h_setNewQuest"] = &CEnhancedContext::h_setNewQuest;
 
     // ***** STANDARD CONTEXT ***** //
     m_handlers["h_showExits"] = &CEnhancedContext::h_showExits;
@@ -200,7 +201,8 @@ void CEnhancedContext::initializeTemplates()
                         {"changeName",{"h_changeName"}},
                         {"setAttribute", {"h_setAttribute"}},
                         {"setNewAttribute", {"h_setNewAttribute"}}, 
-                        {"addTimeEvent", {"h_addTimeEvent"}} }}
+                        {"addTimeEvent", {"h_addTimeEvent"}},
+                        {"setNewQuest", {"h_setNewQuest"}} }}
                     };
 
     m_templates["standard"] = {
@@ -509,6 +511,11 @@ void CEnhancedContext::h_addTimeEvent(std::string&, CPlayer* p)
     m_curPermeable = false;
 }
 
+void CEnhancedContext::h_setNewQuest(std::string& sIdentifier, CPlayer* p)
+{
+    p->setNewQuest(sIdentifier);
+    m_curPermeable = false;
+}
 
 // ***** ***** STANDARD CONTEXT ***** ***** //
 
