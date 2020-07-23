@@ -117,6 +117,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_setNewAttribute"] = &CEnhancedContext::h_setNewAttribute;
     m_handlers["h_addTimeEvent"] = &CEnhancedContext::h_addTimeEvent;
     m_handlers["h_setNewQuest"] = &CEnhancedContext::h_setNewQuest;
+    m_handlers["h_changeDialog"] = &CEnhancedContext::h_changeDialog;
 
     // ***** STANDARD CONTEXT ***** //
     m_handlers["h_showExits"] = &CEnhancedContext::h_showExits;
@@ -202,7 +203,8 @@ void CEnhancedContext::initializeTemplates()
                         {"setAttribute", {"h_setAttribute"}},
                         {"setNewAttribute", {"h_setNewAttribute"}}, 
                         {"addTimeEvent", {"h_addTimeEvent"}},
-                        {"setNewQuest", {"h_setNewQuest"}} }}
+                        {"setNewQuest", {"h_setNewQuest"}},
+                        {"changeDialog", {"h_changeDialog"}} }}
                     };
 
     m_templates["standard"] = {
@@ -505,15 +507,39 @@ void CEnhancedContext::h_setNewAttribute(std::string& sIdentifier, CPlayer* p)
     m_curPermeable=false;
 }
 
-void CEnhancedContext::h_addTimeEvent(std::string&, CPlayer* p)
+void CEnhancedContext::h_addTimeEvent(std::string& sIdentifier, CPlayer* p)
 {
-    p->addTimeEvent("talkto", 0.2, &CPlayer::t_throwEvent);
+    std::vector<std::string> atts = func::split(sIdentifier, ",");
+
+    //Check if sIdentifier contains the fitting values
+    if(atts.size() != 2 || std::isdigit(atts[1][0]) == false)
+        std::cout << "Something went worng! Player Attribute could not be changed.\n";
+    else
+        p->addTimeEvent("e", std::stod(atts[1], nullptr), &CPlayer::t_throwEvent, atts[0]);
     m_curPermeable = false;
 }
 
 void CEnhancedContext::h_setNewQuest(std::string& sIdentifier, CPlayer* p)
 {
     p->setNewQuest(sIdentifier);
+    m_curPermeable = false;
+}
+
+void CEnhancedContext::h_changeDialog(std::string& sIdentifier, CPlayer* p)
+{
+    std::vector<std::string> atts = func::split(sIdentifier, "|");
+    if(atts.size() != 2)
+    {
+        std::cout << "Something went worng! Dialog could not be changed.\n";
+        return;
+    }
+
+    auto lambda = [](CPerson* person) { return person->getName(); };
+    std::string character = func::getObjectId(p->getRoom()->getCharacters(), atts[0], lambda);
+    if(character == "")
+        character = atts[0];
+    p->getWorld()->getCharacter(character)->setDialog(p->getWorld()->getDialog(atts[1]));
+    
     m_curPermeable = false;
 }
 

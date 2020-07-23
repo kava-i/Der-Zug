@@ -70,7 +70,7 @@ private:
     CContextStack<CEnhancedContext> m_contextStack; ///< List of all current contexts
     Webconsole* _cout;                              ///< Pointer to the console
 
-    typedef map<string, vector<std::tuple<std::chrono::system_clock::time_point, double, void(CPlayer::*)()>> > timeEvents;
+    typedef map<string, vector<std::tuple<std::chrono::system_clock::time_point, double, void(CPlayer::*)(std::string), std::string>> > timeEvents;
     timeEvents m_timeEventes;                   ///< List of all events triggered by time
 
 public:
@@ -396,7 +396,7 @@ public:
     * @param duration how long it takes till event will be triggered.
     * @param func function called when event is triggered.
     */
-    void addTimeEvent(string sType, double duration, void(CPlayer::*func)());
+    void addTimeEvent(string sType, double duration, void(CPlayer::*func)(std::string), string i="");
 
     /**
     * check if a time event is triggered.
@@ -408,12 +408,12 @@ public:
     /**
     * Event triggered when highness decreases.
     */
-    void t_highness();
+    void t_highness(std::string);
 
     /**
     * Event to throw any event after a certain time.
     */
-    void t_throwEvent();
+    void t_throwEvent(std::string);
     
 };
 

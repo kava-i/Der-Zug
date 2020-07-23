@@ -949,10 +949,10 @@ bool CPlayer::checkEventExists(string sType)
 * @param duration how long it takes till event will be triggered.
 * @param func function called when event is triggered.
 */
-void CPlayer::addTimeEvent(string sType, double duration, void (CPlayer::*func)())
+void CPlayer::addTimeEvent(string sType, double duration, void (CPlayer::*func)(std::string), std::string sInfos)
 {
     auto start = std::chrono::system_clock::now();
-    m_timeEventes[sType].push_back(std::make_tuple(start, duration*60, func));
+    m_timeEventes[sType].push_back(std::make_tuple(start, duration*60, func, sInfos));
 }
 
 /**
@@ -977,8 +977,8 @@ void CPlayer::checkTimeEvents()
     //Execute events and delete afterwards
     for(auto it : lExecute) 
     {
-        std::cout << "Executing: " << it.first << ", " << it.second << std::endl;
-        (this->*std::get<2>(m_timeEventes[it.first][it.second]))();
+        std::tuple curT = m_timeEventes[it.first][it.second];
+        (this->*std::get<2>(curT))(std::get<3>(curT));
         m_timeEventes[it.first].erase(m_timeEventes[it.first].begin() + it.second);
         if(m_timeEventes[it.first].size() == 0)
             m_timeEventes.erase(it.first);
@@ -990,7 +990,7 @@ void CPlayer::checkTimeEvents()
 /**
 * Event triggered when highness decreases.
 */
-void CPlayer::t_highness()
+void CPlayer::t_highness(std::string)
 {
     if(m_stats["highness"]==0)
         return;
@@ -1004,8 +1004,8 @@ void CPlayer::t_highness()
 /**
 * Event to throw any event after a certain time.
 */
-void CPlayer::t_throwEvent()
+void CPlayer::t_throwEvent(std::string sInfo)
 {
-    addPostEvent("talk to taxi");
+    addPostEvent(sInfo);
 }
 
