@@ -58,7 +58,11 @@ void CDialog::deleteDialogOption(string sStateID, size_t optID) {
 
 void CDialog::changeDialog(string sCharacter, string sDialog, CPlayer* p)
 {
-    p->getWorld()->getCharacter(sCharacter)->setDialog(p->getWorld()->getDialog(sDialog));
+    auto lambda = [](CPerson* person) { return person->getName(); };
+    std::string character = func::getObjectId(p->getRoom()->getCharacters(), sCharacter, lambda);
+    if(character == "")
+        character = sCharacter;
+    p->getWorld()->getCharacter(character)->setDialog(p->getWorld()->getDialog(sDialog));
 }
 
 // ***** ***** CDState ***** ***** //
@@ -137,10 +141,10 @@ int CDState::numOptions()
 
 void CDState::executeActions(CPlayer* p)
 {
-    std::vector<std::string> actions = func::split(m_sActions, "|");
+    std::vector<std::string> actions = func::split(m_sActions, ",");
     for(const auto& action : actions)
     {
-        std::vector<std::string> parameters = func::split(action, ",");
+        std::vector<std::string> parameters = func::split(action, "|");
         if(parameters[0] == "addDialogOption") 
             m_dialog->addDialogOption(parameters[1], std::stoi(parameters[2]));
         else if(parameters[0] == "deleteDialogOption")
