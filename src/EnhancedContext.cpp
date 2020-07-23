@@ -471,9 +471,15 @@ void CEnhancedContext::h_changeName(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_setAttribute(std::string& sIdentifier, CPlayer* p)
 {
-    std::cout << "h_setAttribute: " << sIdentifier << std::endl;
+    //Get vector with [0]=attribute to modify, [1]=operand, [2]=value
     std::vector<std::string> atts = func::split(sIdentifier, "|");
-    if(atts[1] == "=")
+
+    //Check if sIdentifier contains the fitting values
+    if(atts.size() != 3 || std::isdigit(atts[2][0]) == false || p->getStat(atts[0]) == 999) 
+        std::cout << "Something went worng! Player Attribute could not be changed.\n";
+
+    //Modify attribute according to operand.
+    else if(atts[1] == "=")
         p->setStat(atts[0], stoi(atts[2]));
     else if(atts[1] == "+")
         p->setStat(atts[0], p->getStat(atts[0]) + stoi(atts[2]));
@@ -482,15 +488,19 @@ void CEnhancedContext::h_setAttribute(std::string& sIdentifier, CPlayer* p)
     else
         std::cout << "Wrong operand for setting attribute." << "\n";
 
-    std::cout << atts[0] << ": " << p->getStat(atts[0]) << std::endl;
     m_curPermeable=false;
 }
 
 void CEnhancedContext::h_setNewAttribute(std::string& sIdentifier, CPlayer* p)
 {
     std::vector<std::string> atts = func::split(sIdentifier, "|");
-    p->getStats()[atts[0]] = stoi(atts[1]);
-    std::cout << "Added new attribute " << atts[0] << ", with value " << atts[1] << std::endl;
+    
+    //Check if sIdentifier contains the fitting values
+    if(atts.size() != 2 || std::isdigit(atts[1][0]) == false)
+        std::cout << "Something went worng! Player Attribute could not be changed.\n";
+    else
+        p->getStats()[atts[0]] = stoi(atts[1]);
+    m_curPermeable=false;
 }
 
 void CEnhancedContext::h_addTimeEvent(std::string&, CPlayer* p)

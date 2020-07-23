@@ -48,7 +48,10 @@ std::map<std::string, int>& CPerson::getStats() {
 * @return return given stat.
 */
 int CPerson::getStat(std::string id) { 
-    return m_stats[id]; 
+    if(m_stats.count(id) > 0)
+        return m_stats[id]; 
+    std::cout << "Attribute accessed which does not exits.\n";
+    return 999;
 }
 
 ///Return person's dialogue.
