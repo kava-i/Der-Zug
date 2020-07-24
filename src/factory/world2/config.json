@@ -16,5 +16,8 @@
         {"id":"dequipe", "regex":"rüste (.*) ab"},
         {"id":"examine", "regex":"(betrachte|beobachte) (.*)", "take":2}
     ],
-    "attributes":["geselligkeit", "gesundheit"]
+    "attributes":["geselligkeit", "gesundheit"],
+    "mapAttributes":{
+        "rauchen":{"1":"Raucher", "0":"Nicht Raucher"}
+    }
 }

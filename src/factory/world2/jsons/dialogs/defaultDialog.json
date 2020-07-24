@@ -1,1 +1,38 @@
-{"START": {"id": "START", "text": [{"text": "Die Person schaut dich nicht mal an!"}], "options": [{"id": 1, "text": "Mir ist sterbends langeweilig, haben Sie lust auf eine kleine Diskussion... \u00dcber Hegel zum Beispiel?", "to": "diskussion"}, {"id": 2, "text": "[Einfach gehen und die langeweile ertragen.]", "to": "gehen"}]}, "diskussion": {"id": "diskussion", "text": [{"text": "Du wirst weiter kalt ignoriert. Du wendest dich ab und gehst."}]}, "gehen": {"id": "gehen", "text": [{"text": "Du wendest dich ab und gehst."}]}}
+{
+  "START": {
+    "id": "START",
+    "text": [
+      {
+        "text": "Die Person schaut dich nicht mal an!"
+      }
+    ],
+    "options": [
+      {
+        "id": 1,
+        "text": "Mir ist sterbends langeweilig, haben Sie lust auf eine kleine Diskussion... Über Hegel zum Beispiel?",
+        "to": "diskussion"
+      },
+      {
+        "id": 2,
+        "text": "[Einfach gehen und die langeweile ertragen.]",
+        "to": "gehen"
+      }
+    ]
+  },
+  "diskussion": {
+    "id": "diskussion",
+    "text": [
+      {
+        "text": "Du wirst weiter kalt ignoriert. Du wendest dich ab und gehst."
+      }
+    ]
+  },
+  "gehen": {
+    "id": "gehen",
+    "text": [
+      {
+        "text": "Du wendest dich ab und gehst."
+      }
+    ]
+  }
+}

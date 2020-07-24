@@ -16,5 +16,7 @@
         {"id":"dequipe", "regex":"rüste (.*) ab"},
         {"id":"examine", "regex":"(betrachte|beobachte) (.*)", "take":2}
         ] 
+
+    "mapAttributes":{}
 }
 

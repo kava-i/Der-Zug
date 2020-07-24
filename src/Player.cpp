@@ -729,9 +729,22 @@ void CPlayer::showMinds()
 */
 void CPlayer::showStats() {
 
-    m_sPrint += "Name: " + m_sName + "\n";
-    auto getElem = [](int x){return std::to_string(x);};
-    m_sPrint += func::table(m_stats, getElem);
+    m_sPrint += "--- " + m_sName + "---\n";
+    
+    std::map<std::string, std::map<std::string, std::string>> mapStats = m_world->getConfig()["mapAttributes"];
+    std::map<std::string, int> mStats;
+    for(auto it : m_stats)
+    {
+        if(mapStats.count(it.first) == 0)
+            mStats[it.first] = it.second;
+    }
+    auto lambda = [](int stat) { return std::to_string(stat); };
+    m_sPrint += func::table(mStats, lambda);
+    for(auto it : m_stats)
+    {
+        if(mapStats.count(it.first) > 0)
+            m_sPrint += mapStats[it.first][std::to_string(it.second)] + "\n";
+    }
 }
 
 /**
