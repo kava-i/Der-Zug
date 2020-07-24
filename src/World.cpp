@@ -527,7 +527,7 @@ CDialog* CWorld::dialogFactory(nlohmann::json j_states, std::string sFilename, C
                 if(jAtts.count("deps") > 0)
                     jDeps = jAtts["deps"];
             
-                options[jAtts["id"]] = {jAtts["text"], jDeps, jAtts["to"]};
+                options[jAtts["id"]] = {jAtts["text"], jDeps, jAtts["to"], false};
             }
         }
 

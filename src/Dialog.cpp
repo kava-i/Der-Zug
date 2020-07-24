@@ -56,6 +56,12 @@ void CDialog::deleteDialogOption(string sStateID, size_t optID) {
     }
 } 
 
+void CDialog::moveStart(string sStateID)
+{
+    m_states["START"] = m_states[sStateID];
+}
+
+
 void CDialog::changeDialog(string sCharacter, string sDialog, CPlayer* p)
 {
     auto lambda = [](CPerson* person) { return person->getName(); };
@@ -64,6 +70,7 @@ void CDialog::changeDialog(string sCharacter, string sDialog, CPlayer* p)
         character = sCharacter;
     p->getWorld()->getCharacter(character)->setDialog(p->getWorld()->getDialog(sDialog));
 }
+
 
 // ***** ***** CDState ***** ***** //
 CDState::CDState(nlohmann::json jAtts, dialogoptions opts, CDialog* dia, CPlayer* p)
@@ -126,7 +133,10 @@ string CDState::getNextState(string sPlayerChoice, CPlayer* p)
     else if(p->checkDependencies(m_options[stoi(sPlayerChoice)].jDependencys) == false)
         return "";
     else
+    {
+        m_options[stoi(sPlayerChoice)].visited = true;
         return m_options[stoi(sPlayerChoice)].sTarget;
+    }
 }
 
 int CDState::numOptions()
@@ -153,6 +163,8 @@ void CDState::executeActions(CPlayer* p)
             m_dialog->changeStateText(parameters[1], std::stoi(parameters[2]));
         else if(parameters[0] == "changeDialog")
             m_dialog->changeDialog(parameters[1], parameters[2], p);
+        else if(parameters[0] == "moveStart")
+            m_dialog->moveStart(parameters[1]);
     }
 }
 
@@ -167,10 +179,12 @@ string CDState::standard(CPlayer* p)
     size_t counter = 1;
     for(auto opt : activeOptions)
     {
-        sOutput += std::to_string(counter) + ": " + m_options[opt].sText + "\n";
+        if(m_options[opt].visited==false)
+            sOutput += std::to_string(counter) + ": " + m_options[opt].sText + "\n";
+        else
+            sOutput += "(" + std::to_string(counter) + ": " + m_options[opt].sText + ")\n";
         counter++;
     }
-    
     std::cout << "done.\n";
     
     //Execute actions after this dialog state (f.e. delete options, change text etc.)
