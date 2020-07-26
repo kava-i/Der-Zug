@@ -71,6 +71,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     m_contextStack.insert(new CEnhancedContext((std::string)"world"), 2, "world");
     CEnhancedContext* context = new CEnhancedContext((std::string)"standard");
     context->initializeHandlers(m_world->getConfig().value("commands", nlohmann::json::object()));
+    context->initializeHandlers(m_room->getHandler());
     m_contextStack.insert(context, 0 , "standard");
 
     //Add quests
@@ -418,8 +419,9 @@ void CPlayer::changeRoom(CRoom* newRoom)
     std::string entry = newRoom->getEntry();
     if(entry != "")
         appendDescPrint(entry);
-    appendPrint(newRoom->showDescription(m_world->getCharacters()));
+    appendPrint(m_room->showDescription(m_world->getCharacters()));
     m_vistited[m_room->getID()] = true;
+    m_contextStack.getContext("standard")->initializeHandlers(m_room->getHandler());
 }
 
 /**

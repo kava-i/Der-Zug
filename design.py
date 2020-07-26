@@ -42,7 +42,7 @@ class GameDesigner:
         self.attributes = {
             "dialogs": {"id":"", "text":desc, "options":options, "actions":"", "events":""},
             "details": {"name":"", "id":"", "description":desc, "look":"", "items":[""], "defaultItems":""},
-            "characters": {"name":"", "id":"", "hp":0, "strength":0, "roomDescription":desc, "description":desc, "defaultDescription":"", "defaultDialog":"","attacks":{}, "dialog":""},
+            "characters": {"name":"", "id":"", "hp":0, "strength":0, "roomDescription":desc, "description":desc, "defaultDescription":"", "defaultDialog":"","attacks":{}, "dialog":"", "handlers":""},
             "players": {"name":"", "id":"", "room":"", "hp":0, "strength":0, "attacks":[""]},
             "quests": {"name":"", "id":"", "description":"", "ep":0, "steps": steps},
             "items": {"name":"", "id":"", "category":"", "type":"", "attack":"", "value":0, "description":desc},
@@ -66,7 +66,7 @@ class GameDesigner:
             "steps": steps[0]
         }
 
-        self.jsonType = ["post_pEvents", "post_otEvents", "pre_pEvents", "pre_otEvents", "updates", "deps", "characters", "details", "items", "linkedSteps", "handler"]
+        self.jsonType = ["post_pEvents", "post_otEvents", "pre_pEvents", "pre_otEvents", "updates", "deps", "characters", "details", "items", "linkedSteps", "handler", "handlers"]
 
         self.helpDesc = {
             "name":"Name shown to the player",

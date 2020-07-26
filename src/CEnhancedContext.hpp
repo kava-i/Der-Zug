@@ -16,7 +16,8 @@ class CGame;
 class CEnhancedContext
 {
 protected:
-    typedef std::map<std::string, std::string> map_type; typedef std::pair<std::string, std::string> event;
+    typedef std::map<std::string, std::string> map_type; 
+    typedef std::pair<std::string, std::string> event;
 
     CContextStack<CListener> m_eventmanager;
     
@@ -114,6 +115,7 @@ public:
     void h_addTimeEvent(std::string&, CPlayer*);
     void h_setNewQuest(std::string&, CPlayer*);
     void h_changeDialog(std::string&, CPlayer*);
+    void h_thieve(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
     void h_showExits(std::string& sIdentifier, CPlayer* p);

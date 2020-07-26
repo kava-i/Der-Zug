@@ -135,6 +135,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_firstZombieAttack"] = &CEnhancedContext::h_firstZombieAttack;
     m_handlers["h_moveToHospital"] = &CEnhancedContext::h_moveToHospital;
     m_handlers["h_exitTrainstation"] = &CEnhancedContext::h_exitTrainstation;
+    m_handlers["h_thieve"] = &CEnhancedContext::h_thieve;
 
     m_handlers["h_test"] = &CEnhancedContext::h_test;
 
@@ -271,6 +272,7 @@ void CEnhancedContext::initializeHandlers(std::vector<nlohmann::json> listeners)
 {
     for(auto it : listeners)
     {
+        std::cout << it << std::endl;
         if(it.count("regex") > 0)
             add_listener(it["id"], (std::regex)it["regex"], it.value("take", 1)); 
         else if(it.count("string") > 0)
@@ -751,6 +753,12 @@ void CEnhancedContext::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
 
     p->appendStoryPrint("Du drehst dich zum dem großen, offen stehenden Eingangstor der Bahnhofshalle. Und kurz kommt dir der Gedanke doch den Zug nicht zu nehmen, doch alles beim Alten zu belassen. Doch etwas sagt dir, dass es einen guten Grund gab das nicht zu tun, einen guten Grund nach Moskau zu fahren. Und auch, wenn du ihn gerade nicht mehr erkennst. Vielleicht ist gerade das der beste Grund: rausfinden, was dich dazu getrieben hat, diesen termin in Moskau zu vereinbaren.\n Du guckst dich wieder in der Halle um, und überlegst, wo du anfängst zu suchen.\n");
     
+    m_block=true;
+}
+
+void CEnhancedContext::h_thieve(std::string& sIdentifier, CPlayer* p)
+{
+    p->appendStoryPrint("You know, me son. You should not be stealing!");
     m_block=true;
 }
 

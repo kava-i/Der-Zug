@@ -32,6 +32,16 @@ std::map<string, CDetail*>& CRoom::getDetails() {
     return m_details; 
 }
 
+std::vector<nlohmann::json> CRoom::getHandler() {
+    std::vector<nlohmann::json> handler;
+    handler.insert(handler.begin(), m_handler.begin(), m_handler.end());
+    for(auto it : m_characters) {
+        std::vector<nlohmann::json> c_handler = it.second->getHandler();
+        handler.insert(handler.end(), c_handler.begin(), c_handler.end());
+    }
+    return handler;
+} 
+
 // *** SETTER *** //
 void CRoom::setPlayers(objectmap& onlinePlayers) { m_players = onlinePlayers; }
 
