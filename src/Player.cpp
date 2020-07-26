@@ -70,7 +70,6 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     //Add eventhandler to eventmanager
     m_contextStack.insert(new CEnhancedContext((std::string)"world"), 2, "world");
     CEnhancedContext* context = new CEnhancedContext((std::string)"standard");
-    context->initializeHandlers(m_world->getConfig().value("commands", nlohmann::json::object()));
     context->initializeHandlers(m_room->getHandler());
     m_contextStack.insert(context, 0 , "standard");
 
