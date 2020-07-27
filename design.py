@@ -46,7 +46,7 @@ class GameDesigner:
             "players": {"name":"", "id":"", "room":"", "hp":0, "strength":0, "attacks":[""]},
             "quests": {"name":"", "id":"", "description":"", "ep":0, "steps": steps},
             "items": {"name":"", "id":"", "category":"", "type":"", "attack":"", "value":0, "description":desc},
-            "rooms": {"name": "", "id":"", "description": desc, "entry" : "", "exits": {"":""}, "characters" : [""], "items" : [""], "details": [""]},
+            "rooms": {"name": "", "id":"", "description": desc, "entry" : "", "exits": {"":""}, "characters" : [""], "items" : [""], "details": [""], "handlers":""},
             "attacks": {"name":"", "id":"", "description":"", "power":0}
         }
 

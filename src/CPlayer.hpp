@@ -169,6 +169,12 @@ public:
 
     // *** FUNCTIONS *** // 
 
+    /**
+    * Update room context after changing location
+    */
+    void updateRoomContext();
+    
+
     ///Change mode to 'prosa' or 'list' mode and print change
     void changeMode();
 

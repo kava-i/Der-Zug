@@ -73,14 +73,15 @@ public:
     static void initializeTemplates();
     
 
-    // *** Throw events *** //
-    void add_listener(std::string sID, std::string sEventType, size_t priority=0);
-    void add_listener(std::string sID, std::regex eventType, int pos, size_t priority=0);
-    void add_listener(std::string sID, std::vector<std::string> eventType, size_t priority=0);
-    void add_listener(std::string sID, std::map<std::string, std::string> eventType, size_t priority=0);
+    // *** Add and delete listeners *** //
+    void add_listener(std::string sID, std::string sEventType, size_t priority);
+    void add_listener(std::string sID, std::regex eventType, int pos, size_t priority);
+    void add_listener(std::string sID, std::vector<std::string> eventType, size_t priority);
+    void add_listener(std::string sID, std::map<std::string, std::string> eventType, size_t priority);
 
     void initializeHandlers(std::vector<nlohmann::json> handlers);
 
+    // *** Throw events *** //
     bool throw_event(event newEvent, CPlayer* p);
 
     // *** ERROR HANDLER *** //

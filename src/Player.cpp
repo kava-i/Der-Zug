@@ -25,9 +25,12 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     m_abbilities = {"strength", "skill"};
 
     //Initiazize world
+    std::cout << "Creating world.\n";
     m_world = new CWorld(this);
+    std::cout << "Done.\n";
     m_parser = new CParser(m_world->getConfig());
     m_gramma = gramma;
+    
 
     //Character and Level
     m_level = 0;
@@ -70,8 +73,8 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     //Add eventhandler to eventmanager
     m_contextStack.insert(new CEnhancedContext((std::string)"world"), 2, "world");
     CEnhancedContext* context = new CEnhancedContext((std::string)"standard");
-    context->initializeHandlers(m_room->getHandler());
     m_contextStack.insert(context, 0 , "standard");
+    updateRoomContext();
 
     //Add quests
     if(jAtts.count("quests") > 0)
@@ -270,6 +273,18 @@ void CPlayer::setWobconsole(Webconsole* webconsole) {
 
 // *** *** FUNCTIONS *** *** // 
 
+
+/**
+* Update room context after changing location
+*/
+void CPlayer::updateRoomContext()
+{
+    m_contextStack.erase("room");
+    CEnhancedContext* context = new CEnhancedContext((std::string)"room");
+    context->initializeHandlers(m_room->getHandler());
+    m_contextStack.insert(context, 0, "room");
+}
+
 /**
 * Change mode to 'prosa' or 'list' mode and print change
 */
@@ -420,7 +435,8 @@ void CPlayer::changeRoom(CRoom* newRoom)
         appendDescPrint(entry);
     appendPrint(m_room->showDescription(m_world->getCharacters()));
     m_vistited[m_room->getID()] = true;
-    m_contextStack.getContext("standard")->initializeHandlers(m_room->getHandler());
+
+    updateRoomContext();
 }
 
 /**
@@ -706,7 +722,7 @@ void CPlayer::updateStats(int numPoints)
         m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" + std::to_string(getStat(m_abbilities[i])) + ")\n";
 
     
-    context->add_listener("h_updateStats", m_abbilities);
+    context->add_listener("h_updateStats", m_abbilities, 1);
 
     m_sPrint += sError;
     m_contextStack.insert(context, 1, "updateStats");
@@ -882,7 +898,7 @@ void CPlayer::addSelectContest(std::map<std::string, std::string> mapObjects, st
     context->setErrorFunction(&CEnhancedContext::error_delete); 
 
     //Add listeners/ eventhandlers
-    context->add_listener("h_select", mapObjects);
+    context->add_listener("h_select", mapObjects, 1);
     
     //Insert context into context-stack.
     m_contextStack.insert(context, 1, "select");
@@ -896,7 +912,7 @@ void CPlayer::addChatContext(std::string sPartner)
 {
     CEnhancedContext* context = new CEnhancedContext("chat", {{"partner", sPartner}});
     std::regex reg("(.*)");
-    context->add_listener("h_send", reg, 1);
+    context->add_listener("h_send", reg, 1, 1);
     m_contextStack.insert(context, 1, "chat");
 }
 

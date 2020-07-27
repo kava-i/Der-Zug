@@ -15,9 +15,9 @@ private:
     /// Id of listener. Also indicating which function to call.
     std::string m_id;                                        
     
-    std::string m_stringEventType;                      ///< Used for direct string compare
-    std::regex m_regexEventType;                        ///< Match event-type with regex expression.
-    std::vector<std::string> m_arrayEventType;          ///< Check if type exists in array.
+    std::string m_stringEventType;          ///< Used for direct string compare
+    std::regex m_regexEventType;            ///< Match event-type with regex expression.
+    std::vector<std::string> m_arrayEventType;      ///< Check if type exists in array.
     std::map<std::string, std::string> m_mapEventType;  ///< Check if type exists in map.
 
     int m_pos;
