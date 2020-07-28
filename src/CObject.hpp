@@ -18,6 +18,7 @@ protected:
     std::string m_sID;      ///< unique identifier for object.
     std::string m_sName;    ///< name of object.
     CText* m_text;          ///< text class holdes description
+    std::vector<nlohmann::json> m_handler;     ///< handlers to be added.
 
 public:
 
@@ -30,6 +31,7 @@ public:
         m_sID = jAttributes.value("id", "");
         m_sName = jAttributes.value("name", "");
         m_text = new CText(jAttributes.value("description", nlohmann::json::parse("{}") ), p);
+        m_handler = jAttributes.value("handlers", std::vector<nlohmann::json>());
     }
 
     virtual ~CObject() { delete m_text; }
@@ -49,6 +51,11 @@ public:
     ///Return description by calling print-function from text class.
     std::string getDescription() {
         return m_text->print();
+    }
+
+    ///Return list of handler
+    std::vector<nlohmann::json> getHandler() {
+        return m_handler;
     }
 
     ///Set id of object.

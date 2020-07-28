@@ -32,9 +32,9 @@ class GameDesigner:
                 "steps" : "list_object",
                 "characters" : "list",
                 "exits" : "object",
+                "attacks" : "object",
                 "items" : "list",
-                "details" : "list",
-                "attacks" : "list",
+                "details" : "list"
             }
         desc = [{"speaker":"", "text":""}]
         options = [{"id":0, "text":"", "to":""}]
@@ -42,11 +42,11 @@ class GameDesigner:
         self.attributes = {
             "dialogs": {"id":"", "text":desc, "options":options, "actions":"", "events":""},
             "details": {"name":"", "id":"", "description":desc, "look":"", "items":[""], "defaultItems":""},
-            "characters": {"name":"", "id":"", "hp":0, "strength":0, "roomDescription":desc, "description":desc, "defaultDescription":"", "defaultDialog":"","attacks":[""], "dialog":""},
+            "characters": {"name":"", "id":"", "hp":0, "strength":0, "roomDescription":desc, "description":desc, "defaultDescription":"", "defaultDialog":"","attacks":{}, "dialog":"", "handlers":""},
             "players": {"name":"", "id":"", "room":"", "hp":0, "strength":0, "attacks":[""]},
             "quests": {"name":"", "id":"", "description":"", "ep":0, "steps": steps},
             "items": {"name":"", "id":"", "category":"", "type":"", "attack":"", "value":0, "description":desc},
-            "rooms": {"name": "", "id":"", "description": desc, "entry" : "", "exits": {"":""}, "characters" : [""], "items" : [""], "details": [""]},
+            "rooms": {"name": "", "id":"", "description": desc, "entry" : "", "exits": {"":""}, "characters" : [""], "items" : [""], "details": [""], "handlers":""},
             "attacks": {"name":"", "id":"", "description":"", "power":0}
         }
 
@@ -66,7 +66,7 @@ class GameDesigner:
             "steps": steps[0]
         }
 
-        self.jsonType = ["post_pEvents", "post_otEvents", "pre_pEvents", "pre_otEvents", "updates", "deps", "characters", "details", "items", "linkedSteps", "handler"]
+        self.jsonType = ["post_pEvents", "post_otEvents", "pre_pEvents", "pre_otEvents", "updates", "deps", "characters", "details", "items", "linkedSteps", "handler", "handlers"]
 
         self.helpDesc = {
             "name":"Name shown to the player",
@@ -443,7 +443,10 @@ class GameDesigner:
         txt = self.addEntry(frame2, 25, k, 2, 0, key)
         txt.type2 = "str"
         txt2 = self.addEntry(frame2, 55, v, 3, 0, key)
-        txt2.type2 = "json"
+        if key == "attacks":
+            txt2.type2 = "txt"
+        else:
+            txt2.type2 = "json"
         obj[k] = (txt, txt2)
 
         #Add button to add new value
@@ -580,6 +583,7 @@ class GameDesigner:
         #Iterate over created json and change attibutes
         for key, value in self.curObject.items():
 
+            #If object is a dictionary (f.e. exits)
             if isinstance(value, dict):
                 obj=dict()
                 for k, v in value.items():
@@ -590,6 +594,7 @@ class GameDesigner:
                 if len(obj) == 0: 
                    delete.append(key)  
 
+            #If object is of list-type (f.e. list of item/ characters, but also text 
             elif isinstance(value, list):
                 newList = list()
                 for elem in value:
@@ -604,7 +609,7 @@ class GameDesigner:
                         if len(obj) > 0:
                             newList.append(obj)
 
-                    #Elements that are simple lists (f.e. exits, items, characters etc.)
+                    #Elements that are simple lists (f.e. lists of exits, items, etc.)
                     else:
                         if self.isDefault(self.myGet(elem)) == False:
                             newList.append(self.getAsType(elem))
@@ -615,8 +620,16 @@ class GameDesigner:
                 else:
                     delete.append(key)
                     self.curObject[key] = list()
+            
+            #Normal attribute
             elif value.type == "txt":
-                self.curObject[key] = self.getAsType(value)
+                otp = self.getAsType(value)  
+                print("Adding element: ", key, otp)
+                if self.isDefault(otp) == False:
+                    self.curObject[key] = self.getAsType(value)
+                else:
+                    delete.append(key)
+                    self.curObject[key] = ""
                        
         for key in delete:
             del self.curObject[key]
@@ -706,10 +719,8 @@ class GameDesigner:
         return True
 
     def myGet(self, elem):
-        print("Elem type: ", elem.type)
         if elem.type == "txt":
             val = elem.get()
-            print("val: ", val)
         elif elem.type == "stxt":
             val = elem.get("1.0", END)
         if val.endswith("\n"):
@@ -718,7 +729,6 @@ class GameDesigner:
             return val
 
     def isDefault(self, elem):
-        print("elem: ", str(elem))
         if isinstance(elem, list) and len(elem) == 0:
             return True
         if isinstance(elem, str) and (len(elem) == 0 or elem == "\n"):
@@ -738,7 +748,6 @@ class GameDesigner:
         if elem.type2 == "int":
             return int(self.myGet(elem))
         elif elem.type2 == "json":
-            print("in json object")
             value = self.myGet(elem)
             value = value.replace("\'", "\"")
             if value == "":

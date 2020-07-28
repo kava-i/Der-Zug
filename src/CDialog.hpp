@@ -52,6 +52,9 @@ public:
     ///Function deleting an option from a given state.
     void deleteDialogOption(string sStateID, size_t optID);
 
+    ///Function moveing given state to the begining of the dialog
+    void moveStart(std::string sStateID);
+
     ///Function changing the complete dialog.
     void changeDialog(string sOld, string sNew, CPlayer* p);
 
@@ -62,6 +65,7 @@ struct SDOption {
     string sText;
     nlohmann::json jDependencys;
     string sTarget;
+    bool visited;
 };
 
 class CDState {

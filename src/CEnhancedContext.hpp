@@ -16,7 +16,8 @@ class CGame;
 class CEnhancedContext
 {
 protected:
-    typedef std::map<std::string, std::string> map_type; typedef std::pair<std::string, std::string> event;
+    typedef std::map<std::string, std::string> map_type; 
+    typedef std::pair<std::string, std::string> event;
 
     CContextStack<CListener> m_eventmanager;
     
@@ -45,6 +46,7 @@ public:
     std::string getName();
     bool getPermeable();
     nlohmann::json getTemplate(std::string sTemplate);
+    nlohmann::json& getAttributes();
 
     template<typename T> 
     T getAttribute(std::string sAttribute)
@@ -72,14 +74,16 @@ public:
     static void initializeTemplates();
     
 
-    // *** Throw events *** //
-    void add_listener(std::string sID, std::string sEventType, size_t priority=0);
-    void add_listener(std::string sID, std::regex eventType, int pos, size_t priority=0);
-    void add_listener(std::string sID, std::vector<std::string> eventType, size_t priority=0);
-    void add_listener(std::string sID, std::map<std::string, std::string> eventType, size_t priority=0);
+    // *** Add and delete listeners *** //
+    void add_listener(nlohmann::json);
+    void add_listener(std::string sID, std::string sEventType, size_t priority);
+    void add_listener(std::string sID, std::regex eventType, int pos, size_t priority);
+    void add_listener(std::string sID, std::vector<std::string> eventType, size_t priority);
+    void add_listener(std::string sID, std::map<std::string, std::string> eventType, size_t priority);
 
     void initializeHandlers(std::vector<nlohmann::json> handlers);
 
+    // *** Throw events *** //
     bool throw_event(event newEvent, CPlayer* p);
 
     // *** ERROR HANDLER *** //
@@ -112,6 +116,9 @@ public:
     void h_setAttribute(std::string&, CPlayer*);
     void h_setNewAttribute(std::string&, CPlayer*);
     void h_addTimeEvent(std::string&, CPlayer*);
+    void h_setNewQuest(std::string&, CPlayer*);
+    void h_changeDialog(std::string&, CPlayer*);
+    void h_thieve(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
     void h_showExits(std::string& sIdentifier, CPlayer* p);

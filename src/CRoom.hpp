@@ -56,6 +56,7 @@ public:
     objectmap getExtits2();
     std::map<string, CItem*>& getItems();
     std::map<string, CDetail*>& getDetails();
+    std::vector<nlohmann::json> getHandler();
 
     // *** setter *** //
     void setPlayers(objectmap& m_players);

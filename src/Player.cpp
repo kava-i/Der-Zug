@@ -25,9 +25,12 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     m_abbilities = {"strength", "skill"};
 
     //Initiazize world
+    std::cout << "Creating world.\n";
     m_world = new CWorld(this);
+    std::cout << "Done.\n";
     m_parser = new CParser(m_world->getConfig());
     m_gramma = gramma;
+    
 
     //Character and Level
     m_level = 0;
@@ -70,8 +73,8 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     //Add eventhandler to eventmanager
     m_contextStack.insert(new CEnhancedContext((std::string)"world"), 2, "world");
     CEnhancedContext* context = new CEnhancedContext((std::string)"standard");
-    context->initializeHandlers(m_world->getConfig().value("commands", nlohmann::json::object()));
     m_contextStack.insert(context, 0 , "standard");
+    updateRoomContext();
 
     //Add quests
     if(jAtts.count("quests") > 0)
@@ -270,6 +273,23 @@ void CPlayer::setWobconsole(Webconsole* webconsole) {
 
 // *** *** FUNCTIONS *** *** // 
 
+
+/**
+* Update room context after changing location
+*/
+void CPlayer::updateRoomContext()
+{
+    m_contextStack.erase("room");
+    CEnhancedContext* context = new CEnhancedContext((std::string)"room");
+    for(auto it : m_room->getHandler())
+    {
+        context->add_listener(it);
+        if(it.count("infos") > 0)
+            context->getAttributes()["infos"][(std::string)it["id"]] = it["infos"];
+    }
+    m_contextStack.insert(context, 0, "room");
+}
+
 /**
 * Change mode to 'prosa' or 'list' mode and print change
 */
@@ -418,8 +438,10 @@ void CPlayer::changeRoom(CRoom* newRoom)
     std::string entry = newRoom->getEntry();
     if(entry != "")
         appendDescPrint(entry);
-    appendPrint(newRoom->showDescription(m_world->getCharacters()));
+    appendPrint(m_room->showDescription(m_world->getCharacters()));
     m_vistited[m_room->getID()] = true;
+
+    updateRoomContext();
 }
 
 /**
@@ -705,7 +727,7 @@ void CPlayer::updateStats(int numPoints)
         m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" + std::to_string(getStat(m_abbilities[i])) + ")\n";
 
     
-    context->add_listener("h_updateStats", m_abbilities);
+    context->add_listener("h_updateStats", m_abbilities, 1);
 
     m_sPrint += sError;
     m_contextStack.insert(context, 1, "updateStats");
@@ -729,9 +751,22 @@ void CPlayer::showMinds()
 */
 void CPlayer::showStats() {
 
-    m_sPrint += "Name: " + m_sName + "\n";
-    auto getElem = [](int x){return std::to_string(x);};
-    m_sPrint += func::table(m_stats, getElem);
+    m_sPrint += "--- " + m_sName + "---\n";
+    
+    std::map<std::string, std::map<std::string, std::string>> mapStats = m_world->getConfig()["mapAttributes"];
+    std::map<std::string, int> mStats;
+    for(auto it : m_stats)
+    {
+        if(mapStats.count(it.first) == 0)
+            mStats[it.first] = it.second;
+    }
+    auto lambda = [](int stat) { return std::to_string(stat); };
+    m_sPrint += func::table(mStats, lambda);
+    for(auto it : m_stats)
+    {
+        if(mapStats.count(it.first) > 0)
+            m_sPrint += mapStats[it.first][std::to_string(it.second)] + "\n";
+    }
 }
 
 /**
@@ -868,7 +903,7 @@ void CPlayer::addSelectContest(std::map<std::string, std::string> mapObjects, st
     context->setErrorFunction(&CEnhancedContext::error_delete); 
 
     //Add listeners/ eventhandlers
-    context->add_listener("h_select", mapObjects);
+    context->add_listener("h_select", mapObjects, 1);
     
     //Insert context into context-stack.
     m_contextStack.insert(context, 1, "select");
@@ -882,7 +917,7 @@ void CPlayer::addChatContext(std::string sPartner)
 {
     CEnhancedContext* context = new CEnhancedContext("chat", {{"partner", sPartner}});
     std::regex reg("(.*)");
-    context->add_listener("h_send", reg, 1);
+    context->add_listener("h_send", reg, 1, 1);
     m_contextStack.insert(context, 1, "chat");
 }
 
@@ -949,10 +984,10 @@ bool CPlayer::checkEventExists(string sType)
 * @param duration how long it takes till event will be triggered.
 * @param func function called when event is triggered.
 */
-void CPlayer::addTimeEvent(string sType, double duration, void (CPlayer::*func)())
+void CPlayer::addTimeEvent(string sType, double duration, void (CPlayer::*func)(std::string), std::string sInfos)
 {
     auto start = std::chrono::system_clock::now();
-    m_timeEventes[sType].push_back(std::make_tuple(start, duration*60, func));
+    m_timeEventes[sType].push_back(std::make_tuple(start, duration*60, func, sInfos));
 }
 
 /**
@@ -977,8 +1012,8 @@ void CPlayer::checkTimeEvents()
     //Execute events and delete afterwards
     for(auto it : lExecute) 
     {
-        std::cout << "Executing: " << it.first << ", " << it.second << std::endl;
-        (this->*std::get<2>(m_timeEventes[it.first][it.second]))();
+        std::tuple curT = m_timeEventes[it.first][it.second];
+        (this->*std::get<2>(curT))(std::get<3>(curT));
         m_timeEventes[it.first].erase(m_timeEventes[it.first].begin() + it.second);
         if(m_timeEventes[it.first].size() == 0)
             m_timeEventes.erase(it.first);
@@ -990,7 +1025,7 @@ void CPlayer::checkTimeEvents()
 /**
 * Event triggered when highness decreases.
 */
-void CPlayer::t_highness()
+void CPlayer::t_highness(std::string)
 {
     if(m_stats["highness"]==0)
         return;
@@ -1004,8 +1039,8 @@ void CPlayer::t_highness()
 /**
 * Event to throw any event after a certain time.
 */
-void CPlayer::t_throwEvent()
+void CPlayer::t_throwEvent(std::string sInfo)
 {
-    addPostEvent("talk to taxi");
+    addPostEvent(sInfo);
 }
 

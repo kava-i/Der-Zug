@@ -6,15 +6,18 @@
         "tech":""
     },
     "commands":[
-        {"id":"h_show", "regex":"zeige (.*)"},
-        {"id":"h_look", "regex":"schaue (.*)"},
-        {"id":"h_goTo", "regex":"gehe (.*)"},
-        {"id":"h_startDialog", "regex":"spreche (.*) an"},
-        {"id":"h_take", "regex":"hebe (.*) auf"},
-        {"id":"h_consume", "regex":"(trinke|rauche|esse) (.*)", "take":2},
-        {"id":"h_equipe", "regex":"rüste (.*) aus"},
-        {"id":"h_dequipe", "regex":"rüste (.*) ab"},
-        {"id":"h_examine", "regex":"(betrachte|beobachte) (.*)", "take":2}
+        {"id":"show", "regex":"zeige (.*)"},
+        {"id":"look", "regex":"schaue (.*)"},
+        {"id":"go", "regex":"gehe (.*)"},
+        {"id":"talk", "regex":"spreche (.*) an"},
+        {"id":"pick", "regex":"hebe (.*) auf"},
+        {"id":"consume", "regex":"(trinke|rauche|esse) (.*)", "take":2},
+        {"id":"equipe", "regex":"rüste (.*) aus"},
+        {"id":"dequipe", "regex":"rüste (.*) ab"},
+        {"id":"examine", "regex":"(betrachte|beobachte) (.*)", "take":2}
     ],
-    "attributes":["geselligkeit", "gesundheit"]
+    "attributes":["geselligkeit", "gesundheit"],
+    "mapAttributes":{
+        "rauchen":{"1":"Raucher", "0":"Nicht Raucher"}
+    }
 }
