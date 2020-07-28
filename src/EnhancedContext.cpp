@@ -72,6 +72,9 @@ nlohmann::json CEnhancedContext::getTemplate(std::string sTemplate)
     return m_templates[sTemplate];
 } 
 
+nlohmann::json& CEnhancedContext::getAttributes() {
+    return m_jAttributes;
+}
 
 
 // ***** ***** SETTER ***** ***** //
@@ -246,11 +249,19 @@ void CEnhancedContext::initializeTemplates()
                         {"[end]",{"h_end"}}}}
                     };
 
-    m_templates["room"] = {{"name", "room"}, {"permeable", true}};
+    m_templates["room"] = {{"name", "room"}, {"permeable", true,}, {"infos", {}}};
 }
 
 // ***** ***** FUNCTIONS ***** ****** // 
 
+void CEnhancedContext::add_listener(nlohmann::json j)
+{
+    if(j.count("regex") > 0)
+        add_listener(j["id"], (std::regex)j["regex"], j.value("take", 1), 1); 
+    else if(j.count("string") > 0)
+        add_listener(j["id"], (std::string)j["string"], j.value("priority", 0));
+
+}
 void CEnhancedContext::add_listener(std::string sID, std::string sEventType, size_t priority)
 {
     m_eventmanager.insert(new CListener(sID, sEventType), priority, sID);
@@ -275,7 +286,6 @@ void CEnhancedContext::initializeHandlers(std::vector<nlohmann::json> listeners)
 {
     for(auto it : listeners)
     {
-        std::cout << it << std::endl;
         if(it.count("regex") > 0)
             add_listener(it["id"], (std::regex)it["regex"], it.value("take", 1), 1); 
         else if(it.count("string") > 0)
@@ -767,6 +777,8 @@ void CEnhancedContext::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_thieve(std::string& sIdentifier, CPlayer* p)
 {
+    if(m_jAttributes["infos"].count("h_thieve") > 0)
+        p->startDialog((std::string)m_jAttributes["infos"]["h_thieve"]);
     p->appendStoryPrint("You know, me son. You should not be stealing!");
     m_curPermeable = false;
 }

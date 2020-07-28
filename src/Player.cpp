@@ -281,7 +281,12 @@ void CPlayer::updateRoomContext()
 {
     m_contextStack.erase("room");
     CEnhancedContext* context = new CEnhancedContext((std::string)"room");
-    context->initializeHandlers(m_room->getHandler());
+    for(auto it : m_room->getHandler())
+    {
+        context->add_listener(it);
+        if(it.count("infos") > 0)
+            context->getAttributes()["infos"][(std::string)it["id"]] = it["infos"];
+    }
     m_contextStack.insert(context, 0, "room");
 }
 

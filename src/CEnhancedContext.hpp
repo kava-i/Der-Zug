@@ -46,6 +46,7 @@ public:
     std::string getName();
     bool getPermeable();
     nlohmann::json getTemplate(std::string sTemplate);
+    nlohmann::json& getAttributes();
 
     template<typename T> 
     T getAttribute(std::string sAttribute)
@@ -74,6 +75,7 @@ public:
     
 
     // *** Add and delete listeners *** //
+    void add_listener(nlohmann::json);
     void add_listener(std::string sID, std::string sEventType, size_t priority);
     void add_listener(std::string sID, std::regex eventType, int pos, size_t priority);
     void add_listener(std::string sID, std::vector<std::string> eventType, size_t priority);
