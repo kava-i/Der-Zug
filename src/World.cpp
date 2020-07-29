@@ -422,34 +422,30 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room, st
         //Update basic with specific json
         func::updateJson(jBasic, character.second);     
     
+        std::cout << "2.\n";
         //Update id
         auto lambda = [] (CPerson* person) { return person->getName(); };
         jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapCharacters, lambda), sID);
 
-        //Create dialog 
-        CDialog* newDialog = new CDialog;
-        if(jBasic.count("dialog") > 0)
-        {
-            std::cout << "Dialog: " << jBasic["dialog"] << std::endl;
-            newDialog = getDialog(jBasic["dialog"]); 
-        }
-        else if(jBasic.count("defaultDialog") > 0)
-            newDialog = getRandomDialog(jBasic["defaultDialog"]);
-        else
-        {
-            std::cout << "no dialog" << std::endl;
-            newDialog = getDialog("defaultDialog");
+        // ** Create dialog ** //
+        
+        //Load all dialogs 
+        std::map<std::string, CDialog*> dialogs;
+        for(auto it : m_dialogs) {
+            if(it.first.find(character.first) != std::string::npos)
+                dialogs[it.first.substr(character.first.length()+1)] = it.second;
         }
 
-        std::map<std::string, CDialog*> dialogs;
-        for(auto it : m_dialogs)
-        {
-            if(it.first.find(character.first) != std::string::npos)
-            {
-                dialogs[it.first.substr(it.first.find(character.first))] = it.second;
-                std::cout << "Found: " << it.first.substr(it.first.find(character.first)) << std::endl;
-            }
-        }
+        //Select main dialog
+        CDialog* newDialog = new CDialog;
+        if(dialogs.count("1") > 0)                  //Load standard dialog [id]_1
+            newDialog = dialogs["1"];
+        else if(jBasic.count("dialog") > 0)         //Load special dialog 
+            newDialog = getDialog(jBasic["dialog"]); 
+        else if(jBasic.count("defaultDialog") > 0)  //Load a random default dialogue
+            newDialog = getRandomDialog(jBasic["defaultDialog"]);
+        else
+            newDialog = getDialog("defaultDialog"); //Load the standard default-dialogue
 
         //Create items and attacks
         map<std::string, CItem*> items = parseRoomItems(jBasic, jBasic["id"], p);

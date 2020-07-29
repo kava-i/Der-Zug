@@ -76,10 +76,10 @@ public:
 
     // *** Add and delete listeners *** //
     void add_listener(nlohmann::json);
-    void add_listener(std::string sID, std::string sEventType, size_t priority);
-    void add_listener(std::string sID, std::regex eventType, int pos, size_t priority);
-    void add_listener(std::string sID, std::vector<std::string> eventType, size_t priority);
-    void add_listener(std::string sID, std::map<std::string, std::string> eventType, size_t priority);
+    void add_listener(std::string sID, std::string sEventType, int priority=0);
+    void add_listener(std::string sID, std::regex eventType, int pos, int priority=0);
+    void add_listener(std::string sID, std::vector<std::string> eventType, int priority=0);
+    void add_listener(std::string sID, std::map<std::string, std::string> eventType, int priority=0);
 
     void initializeHandlers(std::vector<nlohmann::json> handlers);
 
@@ -119,6 +119,7 @@ public:
     void h_setNewQuest(std::string&, CPlayer*);
     void h_changeDialog(std::string&, CPlayer*);
     void h_thieve(std::string&, CPlayer*);
+    void h_attack(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
     void h_showExits(std::string& sIdentifier, CPlayer* p);

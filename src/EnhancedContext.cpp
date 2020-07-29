@@ -21,10 +21,10 @@ CEnhancedContext::CEnhancedContext(nlohmann::json jAttributes)
     {
         for(const auto &it : jAttributes["handlers"].get<std::map<string, vector<string>>>()) {
             for(size_t i=0; i<it.second.size(); i++)
-                add_listener(it.second[i], it.first, i+1);
+                add_listener(it.second[i], it.first, 0-i);
         }
     }
-    add_listener("h_help", "help", 0);
+    add_listener("h_help", "help");
 
     m_error = &CEnhancedContext::error;
 }
@@ -46,7 +46,7 @@ CEnhancedContext::CEnhancedContext(std::string sTemplate, nlohmann::json jAttrib
     {
         for(const auto &it : jAttributes["handlers"].get<std::map<string, vector<string>>>()) {
             for(size_t i=0; i<it.second.size(); i++)
-                add_listener(it.second[i], it.first, i+1);
+                add_listener(it.second[i], it.first, 0-i);
         }
     }
 
@@ -136,10 +136,11 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_changeMode"]  = &CEnhancedContext::h_changeMode;
     m_handlers["h_try"] = &CEnhancedContext::h_try;
 
-    m_handlers["h_firstZombieAttack"] = &CEnhancedContext::h_firstZombieAttack;
+    //m_handlers["h_firstZombieAttack"] = &CEnhancedContext::h_firstZombieAttack;
     m_handlers["h_moveToHospital"] = &CEnhancedContext::h_moveToHospital;
     m_handlers["h_exitTrainstation"] = &CEnhancedContext::h_exitTrainstation;
     m_handlers["h_thieve"] = &CEnhancedContext::h_thieve;
+    m_handlers["h_attack"] = &CEnhancedContext::h_attack;
 
     m_handlers["h_test"] = &CEnhancedContext::h_test;
 
@@ -257,27 +258,27 @@ void CEnhancedContext::initializeTemplates()
 void CEnhancedContext::add_listener(nlohmann::json j)
 {
     if(j.count("regex") > 0)
-        add_listener(j["id"], (std::regex)j["regex"], j.value("take", 1), 1); 
+        add_listener(j["id"], (std::regex)j["regex"], j.value("take", 1), j.value("priority", 0)); 
     else if(j.count("string") > 0)
         add_listener(j["id"], (std::string)j["string"], j.value("priority", 0));
 
 }
-void CEnhancedContext::add_listener(std::string sID, std::string sEventType, size_t priority)
+void CEnhancedContext::add_listener(std::string sID, std::string sEventType, int priority)
 {
     m_eventmanager.insert(new CListener(sID, sEventType), priority, sID);
 }
 
-void CEnhancedContext::add_listener(std::string sID, std::regex eventType, int pos, size_t priority)
+void CEnhancedContext::add_listener(std::string sID, std::regex eventType, int pos, int priority)
 {
     m_eventmanager.insert(new CListener(sID, eventType, pos), priority, sID);
 }
 
-void CEnhancedContext::add_listener(std::string sID, std::vector<std::string> eventType, size_t priority)
+void CEnhancedContext::add_listener(std::string sID, std::vector<std::string> eventType, int priority)
 {
     m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
 }
 
-void CEnhancedContext::add_listener(std::string sID, std::map<std::string, std::string> eventType, size_t priority)
+void CEnhancedContext::add_listener(std::string sID, std::map<std::string, std::string> eventType, int priority)
 {
     m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
 }
@@ -287,7 +288,7 @@ void CEnhancedContext::initializeHandlers(std::vector<nlohmann::json> listeners)
     for(auto it : listeners)
     {
         if(it.count("regex") > 0)
-            add_listener(it["id"], (std::regex)it["regex"], it.value("take", 1), 1); 
+            add_listener(it["id"], (std::regex)it["regex"], it.value("take", 1), it.value("priority", 0)); 
         else if(it.count("string") > 0)
             add_listener(it["id"], (std::string)it["string"], it.value("priority", 0));
     }
@@ -302,7 +303,6 @@ bool CEnhancedContext::throw_event(event e, CPlayer* p)
     bool called = false;
     
     std::deque<CListener*> sortedEventmanager = m_eventmanager.getSortedCtxList();
-    std::reverse(sortedEventmanager.begin(), sortedEventmanager.end());
     for(size_t i=0; i<sortedEventmanager.size() && m_block == false; i++)
     {
         if(sortedEventmanager[i]->checkMatch(e) == true) {
@@ -441,7 +441,12 @@ void CEnhancedContext::h_endDialog(std::string& sIdentifier, CPlayer* p) {
 }
 
 void CEnhancedContext::h_newFight(std::string& sIdentifier, CPlayer* p) {
-    p->setFight(new CFight(p, p->getWorld()->getCharacter(sIdentifier)));
+    auto lambda = [](CPerson* person){return person->getName(); };
+    std::string str = func::getObjectId(p->getRoom()->getCharacters(), str, lambda);
+   
+    if(p->getWorld()->getCharacter(str) != nullptr)
+        p->setFight(new CFight(p, p->getWorld()->getCharacter(str)));
+
     m_curPermeable=false;
 }
 
@@ -552,10 +557,8 @@ void CEnhancedContext::h_changeDialog(std::string& sIdentifier, CPlayer* p)
     }
 
     auto lambda = [](CPerson* person) { return person->getName(); };
-    std::string character = func::getObjectId(p->getRoom()->getCharacters(), atts[0], lambda);
-    if(character == "")
-        character = atts[0];
-    p->getWorld()->getCharacter(character)->setDialog(p->getWorld()->getDialog(atts[1]));
+    std::string str = func::getObjectId(p->getRoom()->getCharacters(), atts[0], lambda);
+    p->getWorld()->getCharacter(str)->setDialog(atts[1]);
     
     m_curPermeable = false;
 }
@@ -737,6 +740,7 @@ void CEnhancedContext::h_test(std::string& sIdentifier, CPlayer* p) {
 // **** SPECIAL HANDLER ***** //
 void CEnhancedContext::h_firstZombieAttack(std::string& sIdentifier, CPlayer* p)
 {
+    std::cout << "HAAAALOOOO.\n";
     //Get selected room
     if(p->getRoom()->getID() != "hospital_stairs")
         return;
@@ -779,8 +783,8 @@ void CEnhancedContext::h_thieve(std::string& sIdentifier, CPlayer* p)
 {
     if(m_jAttributes["infos"].count("h_thieve") > 0)
     {
-        std::string character = m_jAttributes["infos"]["h_thieve"];
-        p->startDialog(character, p->getWorld()->getCharacter(character)->getDialog("Thieve"));
+        std::string str = m_jAttributes["infos"]["h_thieve"];
+        p->startDialog(str, p->getWorld()->getCharacter(str)->getDialog("thieve"));
     }
 
     else
@@ -788,6 +792,18 @@ void CEnhancedContext::h_thieve(std::string& sIdentifier, CPlayer* p)
     m_curPermeable = false;
 }
 
+void CEnhancedContext::h_attack(std::string& sIdentifier, CPlayer* p)
+{
+    std::cout << "h_attack: " << sIdentifier << std::endl;
+
+    if(m_jAttributes["infos"].count("h_attack") == 0)
+        return; 
+
+    std::string character = m_jAttributes["infos"]["h_attack"];
+    std::cout << "Infos: " << character << std::endl;
+    p->setFight(new CFight(p, p->getWorld()->getCharacter(character)));
+    m_curPermeable = false;
+}
 
 
 void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
@@ -804,7 +820,7 @@ void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
 // ***** ***** FIGHT CONTEXT ***** ***** //
 void CEnhancedContext::initializeFightListeners(std::map<std::string, std::string> mapAttacks)
 {
-    add_listener("h_fight", mapAttacks, 1);
+    add_listener("h_fight", mapAttacks);
 }
 
 void CEnhancedContext::h_fight(std::string& sIdentifier, CPlayer* p) {
@@ -834,7 +850,7 @@ void CEnhancedContext::initializeDialogListeners(std::string newState, CPlayer* 
     m_eventmanager.clear();
 
     //Add help listener 
-    add_listener("h_help", "help", 1);
+    add_listener("h_help", "help");
 
     //Add listener for each dialog option.
     std::vector<size_t> activeOptions = p->getDialog()->getState(newState)->getActiveOptions(p);
@@ -843,7 +859,7 @@ void CEnhancedContext::initializeDialogListeners(std::string newState, CPlayer* 
     for(auto opt : activeOptions)
     {
         mapOtptions[counter] = opt;
-        add_listener("h_call", std::to_string(counter), 1);
+        add_listener("h_call", std::to_string(counter));
         counter++;
     }
     setAttribute<std::map<size_t, size_t>>("mapOptions", mapOtptions);
@@ -965,7 +981,7 @@ void CEnhancedContext::initializeQuestListeners(map_type handler)
         if(m_handlers.count(it.first) == 0)
             std::cout << "FATAL ERROR, Quest-handler \"" << it.first << "\" does not exits!!\n";
         else
-            add_listener(it.first, it.second, 1);
+            add_listener(it.first, it.second);
     }
 }
 
@@ -1049,12 +1065,14 @@ void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
     //Change dialog of all "Passanten"
     if(step->getSolved() == true)
     {
+        std::cout << "CHANGING DIALOGS OF PASSANTEN\n";
         for(auto it : {"", "2", "3"})
-            p->getWorld()->getCharacter((string)"trainstation_bahnhof_eingangshalle_passant"+it)->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
+            p->getWorld()
+->getCharacter((string)"trainstation_bahnhof_eingangshalle_passant"+it)->setDialog("2");
         for(auto it : {"", "2", "3"})
-            p->getWorld()->getCharacter((string)"trainstation_bahnhof_nebenhalle_passant"+it)->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
+            p->getWorld()->getCharacter((string)"trainstation_bahnhof_nebenhalle_passant"+it)->setDialog("2");
         for(auto it : {"", "2", "3"})
-            p->getWorld()->getCharacter((string)"trainstation_gleis5_passant"+it)->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
+            p->getWorld()->getCharacter((string)"trainstation_gleis5_passant"+it)->setDialog("2");
 
         p->getContexts().erase(quest->getID());
     }
