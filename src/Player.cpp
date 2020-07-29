@@ -998,6 +998,10 @@ void CPlayer::addTimeEvent(string sType, double duration, void (CPlayer::*func)(
 */
 void CPlayer::checkTimeEvents()
 {
+    //Checl if player is currently occupied
+    if(m_contextStack.nonPermeableContextInList() == true)
+        return;
+
     std::list<std::pair<std::string, size_t>> lExecute;
 
     //Collect element to be executed
@@ -1015,6 +1019,7 @@ void CPlayer::checkTimeEvents()
     //Execute events and delete afterwards
     for(auto it : lExecute) 
     {
+        std::cout << "TIMEEVENTCOUNTER: " << it.second << std::endl;
         std::tuple curT = m_timeEventes[it.first][it.second];
         (this->*std::get<2>(curT))(std::get<3>(curT));
         m_timeEventes[it.first].erase(m_timeEventes[it.first].begin() + it.second);
