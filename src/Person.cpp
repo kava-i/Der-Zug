@@ -20,7 +20,6 @@ CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttac
     m_stats["skill"]    = jAttributes.value("skill", 8);
     m_stats["ep"]	    = jAttributes.value("ep", 0);
     
-    
     m_roomDescription = new CText(jAttributes.value("roomDescription", nlohmann::json::parse("{}")), p);
 
     if(text!=nullptr)

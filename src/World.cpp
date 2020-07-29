@@ -421,6 +421,7 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room, st
         //Update basic with specific json
         func::updateJson(jBasic, character.second);     
     
+        std::cout << "2.\n";
         //Update id
         auto lambda = [] (CPerson* person) { return person->getName(); };
         jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapCharacters, lambda), sID);
