@@ -388,6 +388,7 @@ void CWorld::characterFactory()
 }
 
 void CWorld::characterFactory(std::string sPath) {
+
     //Read json creating all characters
     std::ifstream read(sPath);
     nlohmann::json j_chars;

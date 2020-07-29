@@ -124,7 +124,6 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePla
 // ***** FUNCTIONS ***** //
 bool CGame::reloadPlayer(string sID)
 {
-
     if(m_players.count(sID) == 0)
         return false;
 
