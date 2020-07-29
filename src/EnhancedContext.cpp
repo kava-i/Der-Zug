@@ -1049,12 +1049,14 @@ void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
     //Change dialog of all "Passanten"
     if(step->getSolved() == true)
     {
+        std::cout << "CHANGING DIALOGS OF PASSANTEN\n";
         for(auto it : {"", "2", "3"})
-            p->getWorld()->getCharacter((string)"trainstation_bahnhof_eingangshalle_passant"+it)->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
+            p->getWorld()
+->getCharacter((string)"trainstation_bahnhof_eingangshalle_passant"+it)->setDialog("2");
         for(auto it : {"", "2", "3"})
-            p->getWorld()->getCharacter((string)"trainstation_bahnhof_nebenhalle_passant"+it)->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
+            p->getWorld()->getCharacter((string)"trainstation_bahnhof_nebenhalle_passant"+it)->setDialog("2");
         for(auto it : {"", "2", "3"})
-            p->getWorld()->getCharacter((string)"trainstation_gleis5_passant"+it)->setDialog(p->getWorld()->getDialog("strangeGuysDialog2"));
+            p->getWorld()->getCharacter((string)"trainstation_gleis5_passant"+it)->setDialog("2");
 
         p->getContexts().erase(quest->getID());
     }
