@@ -95,6 +95,9 @@ public:
     ///Set person's dialogue.
     void setDialog(CDialog* newDialog);
 
+    ///Set person's dialogue, taking a dialog from persons map of dialogues.
+    void setDialog(std::string dialog);
+
 
     // *** Attacks *** // 
 

@@ -555,7 +555,7 @@ void CEnhancedContext::h_changeDialog(std::string& sIdentifier, CPlayer* p)
     std::string character = func::getObjectId(p->getRoom()->getCharacters(), atts[0], lambda);
     if(character == "")
         character = atts[0];
-    p->getWorld()->getCharacter(character)->setDialog(p->getWorld()->getDialog(atts[1]));
+    p->getWorld()->getCharacter(character)->setDialog(atts[1]);
     
     m_curPermeable = false;
 }
@@ -780,7 +780,7 @@ void CEnhancedContext::h_thieve(std::string& sIdentifier, CPlayer* p)
     if(m_jAttributes["infos"].count("h_thieve") > 0)
     {
         std::string character = m_jAttributes["infos"]["h_thieve"];
-        p->startDialog(character, p->getWorld()->getCharacter(character)->getDialog("Thieve"));
+        p->startDialog(character, p->getWorld()->getCharacter(character)->getDialog("thieve"));
     }
 
     else

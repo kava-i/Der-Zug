@@ -30,6 +30,9 @@ CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttac
     m_attacks = newAttacks;
     m_dialog = dialogue;
     m_dialogs = dialogs;
+    std::cout << "Dialogs: \n";
+    for(auto it : m_dialogs)
+        std::cout << it.first << std::endl;
 
     //Add items to inventory one by one
     for(auto &item : items)
@@ -61,7 +64,10 @@ CDialog* CPerson::getDialog() {
 }
 
 CDialog* CPerson::getDialog(std::string dialog) {
-    return m_dialogs[dialog];
+    if(m_dialogs.count(dialog) > 0)
+        return m_dialogs[dialog];
+    std::cout << "Dialog not found: " << dialog << ".\n";
+    return nullptr;
 }
 
 ///Return person's attacks.
@@ -104,6 +110,12 @@ void CPerson::setDialog(CDialog* newDialog) {
     m_dialog = newDialog; 
 }
 
+///Set person's dialogue, taking a dialog from persons map of dialogues.
+void CPerson::setDialog(std::string dialog) {
+    if(m_dialogs.count(dialog) > 0)
+        m_dialog = m_dialogs[dialog];
+    std::cout << "Dialog not found: " << dialog << ".\n";
+}
 
 // *** ATTACKS *** //
 

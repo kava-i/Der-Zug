@@ -77,8 +77,9 @@ class GameDesigner:
             "defaultDescription":"Set to load a random description from a set of descriptions. F.e. 'zombies'",
             "defaultDialog":"Set to load a random default dialog from a set of dialogs. F.e. 'person'",
             "roomDescription":"Text printed, when description of the room is shown",
-            "dialog":"link to the dialog '.json' must be ignored",
+            "dialog":"link to (special) dialog. Usually the dialog in the format [name]_1 f.e. 'taxifahrer_1' is (if it exists) automatically loaded. ('.json' must be ignored)",
             "pre_otEvents":"Events have the form '[(command) (identifierer)]', 'pre'-> before test is printed, 'ot' one time",
+            "handlers":"Json format list of objects. Each objects needs: id (name of handler), string/ regex (either matching string are regular expression)"
         }
 
         self.curWrite = dict()
