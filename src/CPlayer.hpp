@@ -198,7 +198,9 @@ public:
     * Set current (new) Dialog player and add a Dialog-context to context-stack.
     * @param sCharacter id of dialogpartner and throw event to start Dialog.
     */
-    void startDialog(string sCharacter);
+    void startDialog(string sCharacter, CDialog* dialog = nullptr);
+    
+    
 
     /**
     * Try to start chatting. If player is busy, print error message, else add chat-context to 

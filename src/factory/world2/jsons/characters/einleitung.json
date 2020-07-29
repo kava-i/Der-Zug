@@ -1,1 +1,1 @@
-{"taxifahrer": {"name": "Taxifahrer", "id": "taxifahrer", "roomDescription": [{"text": "Gelangweilt sitz vorne ein Taxifahrer."}], "dialog": "taxifahrerDialog2", "handlers": [{"id": "h_thieve", "string": "pick", "priority": 0}]}}
+{"taxifahrer": {"name": "Taxifahrer", "id": "taxifahrer", "roomDescription": [{"text": "Gelangweilt sitz vorne ein Taxifahrer."}], "dialog": "taxifahrerDialog2", "handlers": [{"id": "h_thieve", "string": "pick", "priority": 0, "infos": ""}]}}

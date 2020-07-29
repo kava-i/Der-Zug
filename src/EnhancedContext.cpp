@@ -778,8 +778,13 @@ void CEnhancedContext::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
 void CEnhancedContext::h_thieve(std::string& sIdentifier, CPlayer* p)
 {
     if(m_jAttributes["infos"].count("h_thieve") > 0)
-        p->startDialog((std::string)m_jAttributes["infos"]["h_thieve"]);
-    p->appendStoryPrint("You know, me son. You should not be stealing!");
+    {
+        std::string character = m_jAttributes["infos"]["h_thieve"];
+        p->startDialog(character, p->getWorld()->getCharacter(character)->getDialog("Thieve"));
+    }
+
+    else
+        p->appendStoryPrint("You know, me son. You should not be stealing!");
     m_curPermeable = false;
 }
 

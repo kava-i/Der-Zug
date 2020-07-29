@@ -440,6 +440,16 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room, st
             newDialog = getDialog("defaultDialog");
         }
 
+        std::map<std::string, CDialog*> dialogs;
+        for(auto it : m_dialogs)
+        {
+            if(it.first.find(character.first) != std::string::npos)
+            {
+                dialogs[it.first.substr(it.first.find(character.first))] = it.second;
+                std::cout << "Found: " << it.first.substr(it.first.find(character.first)) << std::endl;
+            }
+        }
+
         //Create items and attacks
         map<std::string, CItem*> items = parseRoomItems(jBasic, jBasic["id"], p);
         map<string, CAttack*> attacks = parsePersonAttacks(jBasic);
@@ -450,15 +460,13 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room, st
             text = getRandomDescription(jBasic["defaultDescription"]);
 
         //Create character and add to maps
-        m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks,text,p,items);
-        //mapCharacters[jBasic["id"]] = jBasic["name"];
+        m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks,text, p, dialogs, items);
         mapCharacters[jBasic["id"]] = m_characters[jBasic["id"]];
 
         //Add [amount] characters with "id = id + num" if amount is set.
         for(size_t i=2; i<=character.second.value("amount", 0u); i++) {
             jBasic["id"]  =  func::incIDNumber(func::convertToObjectmap(mapCharacters, lambda), sID);
-            m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, text, p, items);
-            //mapCharacters[jBasic["id"]] = jBasic["name"];
+            m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, text, p, dialogs, items);
             mapCharacters[jBasic["id"]] = m_characters[jBasic["id"]];
         }
     }

@@ -37,6 +37,9 @@ protected:
 
     ///Persons dialogue
     CDialog* m_dialog;
+    
+    ///Map dialogs
+    std::map<std::string, CDialog*> m_dialogs;
 
 public:
 
@@ -48,7 +51,7 @@ public:
     * param[in] attacks list of attacks
     */
     typedef std::map<std::string, CItem*> map_type;
-    CPerson(nlohmann::json jAttributes, CDialog* dialog, attacks newAttacks, CText* text, CPlayer* p, map_type=map_type());
+    CPerson(nlohmann::json jAttributes, CDialog* dialog, attacks newAttacks, CText* text, CPlayer* p,std::map<std::string, CDialog*> dialogs, map_type=map_type());
 
     // *** GETTER *** // 
 
@@ -71,6 +74,9 @@ public:
 
     ///Return person's dialogue.
     CDialog* getDialog();
+
+    ///Return dialog from map
+    CDialog* getDialog(std::string dialog);
 
     ///Description where the player is located in the room
     std::string getRoomDescription();    

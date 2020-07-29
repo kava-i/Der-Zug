@@ -15,7 +15,7 @@
 * @param room current room of payer
 * @param newAttacks attacks of player
 */
-CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* gramma) : CPerson(jAtts, nullptr, lAttacks, nullptr, this)
+CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* gramma) : CPerson(jAtts, nullptr, lAttacks, nullptr, this, std::map<std::string, CDialog*>())
 {
     //Set login data and player information
     func::convertToUpper(m_sName);
@@ -335,9 +335,12 @@ void CPlayer::endFight() {
 * Set current (new) Dialog player and add a Dialog-context to context-stack.
 * @param sCharacter id of dialogpartner and throw event to start Dialog.
 */
-void CPlayer::startDialog(string sCharacter)
+void CPlayer::startDialog(string sCharacter, CDialog* dialog)
 {
-    m_dialog = m_world->getCharacter(sCharacter)->getDialog();
+    if(dialog != nullptr)
+        m_dialog = dialog;
+    else
+        m_dialog = m_world->getCharacter(sCharacter)->getDialog();
 
     //Create context and add to context-stack.
     CEnhancedContext* context = new CEnhancedContext((std::string)"dialog", {{"partner", sCharacter}});
