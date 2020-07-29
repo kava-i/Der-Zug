@@ -119,6 +119,7 @@ public:
     void h_setNewQuest(std::string&, CPlayer*);
     void h_changeDialog(std::string&, CPlayer*);
     void h_thieve(std::string&, CPlayer*);
+    void h_attack(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
     void h_showExits(std::string& sIdentifier, CPlayer* p);

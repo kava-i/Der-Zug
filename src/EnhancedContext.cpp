@@ -136,10 +136,11 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_changeMode"]  = &CEnhancedContext::h_changeMode;
     m_handlers["h_try"] = &CEnhancedContext::h_try;
 
-    m_handlers["h_firstZombieAttack"] = &CEnhancedContext::h_firstZombieAttack;
+    //m_handlers["h_firstZombieAttack"] = &CEnhancedContext::h_firstZombieAttack;
     m_handlers["h_moveToHospital"] = &CEnhancedContext::h_moveToHospital;
     m_handlers["h_exitTrainstation"] = &CEnhancedContext::h_exitTrainstation;
     m_handlers["h_thieve"] = &CEnhancedContext::h_thieve;
+    m_handlers["h_attack"] = &CEnhancedContext::h_attack;
 
     m_handlers["h_test"] = &CEnhancedContext::h_test;
 
@@ -215,7 +216,7 @@ void CEnhancedContext::initializeTemplates()
     m_templates["standard"] = {
                     {"name", "standard"}, {"permeable",false}, {"help","standard.txt"},   
                     {"handlers",{
-                        {"go", {"h_goTo", "h_firstZombieAttack"}},
+                        {"go", {"h_goTo"}},
                         {"show",{"h_show"}}, 
                         {"look",{"h_look"}}, 
                         {"talk",{"h_startDialog"}}, 
@@ -440,7 +441,12 @@ void CEnhancedContext::h_endDialog(std::string& sIdentifier, CPlayer* p) {
 }
 
 void CEnhancedContext::h_newFight(std::string& sIdentifier, CPlayer* p) {
-    p->setFight(new CFight(p, p->getWorld()->getCharacter(sIdentifier)));
+    auto lambda = [](CPerson* person){return person->getName(); };
+    std::string str = func::getObjectId(p->getRoom()->getCharacters(), str, lambda);
+   
+    if(p->getWorld()->getCharacter(str) != nullptr)
+        p->setFight(new CFight(p, p->getWorld()->getCharacter(str)));
+
     m_curPermeable=false;
 }
 
@@ -551,10 +557,8 @@ void CEnhancedContext::h_changeDialog(std::string& sIdentifier, CPlayer* p)
     }
 
     auto lambda = [](CPerson* person) { return person->getName(); };
-    std::string character = func::getObjectId(p->getRoom()->getCharacters(), atts[0], lambda);
-    if(character == "")
-        character = atts[0];
-    p->getWorld()->getCharacter(character)->setDialog(atts[1]);
+    std::string str = func::getObjectId(p->getRoom()->getCharacters(), atts[0], lambda);
+    p->getWorld()->getCharacter(str)->setDialog(atts[1]);
     
     m_curPermeable = false;
 }
@@ -779,8 +783,8 @@ void CEnhancedContext::h_thieve(std::string& sIdentifier, CPlayer* p)
 {
     if(m_jAttributes["infos"].count("h_thieve") > 0)
     {
-        std::string character = m_jAttributes["infos"]["h_thieve"];
-        p->startDialog(character, p->getWorld()->getCharacter(character)->getDialog("thieve"));
+        std::string str = m_jAttributes["infos"]["h_thieve"];
+        p->startDialog(str, p->getWorld()->getCharacter(str)->getDialog("thieve"));
     }
 
     else
@@ -788,6 +792,18 @@ void CEnhancedContext::h_thieve(std::string& sIdentifier, CPlayer* p)
     m_curPermeable = false;
 }
 
+void CEnhancedContext::h_attack(std::string& sIdentifier, CPlayer* p)
+{
+    std::cout << "h_attack: " << sIdentifier << std::endl;
+
+    if(m_jAttributes["infos"].count("h_attack") == 0)
+        return; 
+
+    std::string character = m_jAttributes["infos"]["h_attack"];
+    std::cout << "Infos: " << character << std::endl;
+    p->setFight(new CFight(p, p->getWorld()->getCharacter(character)));
+    m_curPermeable = false;
+}
 
 
 void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
