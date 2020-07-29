@@ -21,10 +21,10 @@ CEnhancedContext::CEnhancedContext(nlohmann::json jAttributes)
     {
         for(const auto &it : jAttributes["handlers"].get<std::map<string, vector<string>>>()) {
             for(size_t i=0; i<it.second.size(); i++)
-                add_listener(it.second[i], it.first, i+1);
+                add_listener(it.second[i], it.first, 0-i);
         }
     }
-    add_listener("h_help", "help", 0);
+    add_listener("h_help", "help");
 
     m_error = &CEnhancedContext::error;
 }
@@ -46,7 +46,7 @@ CEnhancedContext::CEnhancedContext(std::string sTemplate, nlohmann::json jAttrib
     {
         for(const auto &it : jAttributes["handlers"].get<std::map<string, vector<string>>>()) {
             for(size_t i=0; i<it.second.size(); i++)
-                add_listener(it.second[i], it.first, i+1);
+                add_listener(it.second[i], it.first, 0-i);
         }
     }
 
@@ -215,7 +215,7 @@ void CEnhancedContext::initializeTemplates()
     m_templates["standard"] = {
                     {"name", "standard"}, {"permeable",false}, {"help","standard.txt"},   
                     {"handlers",{
-                        {"go", {"h_goTo"}},
+                        {"go", {"h_goTo", "h_firstZombieAttack"}},
                         {"show",{"h_show"}}, 
                         {"look",{"h_look"}}, 
                         {"talk",{"h_startDialog"}}, 
@@ -257,27 +257,27 @@ void CEnhancedContext::initializeTemplates()
 void CEnhancedContext::add_listener(nlohmann::json j)
 {
     if(j.count("regex") > 0)
-        add_listener(j["id"], (std::regex)j["regex"], j.value("take", 1), 1); 
+        add_listener(j["id"], (std::regex)j["regex"], j.value("take", 1), j.value("priority", 0)); 
     else if(j.count("string") > 0)
         add_listener(j["id"], (std::string)j["string"], j.value("priority", 0));
 
 }
-void CEnhancedContext::add_listener(std::string sID, std::string sEventType, size_t priority)
+void CEnhancedContext::add_listener(std::string sID, std::string sEventType, int priority)
 {
     m_eventmanager.insert(new CListener(sID, sEventType), priority, sID);
 }
 
-void CEnhancedContext::add_listener(std::string sID, std::regex eventType, int pos, size_t priority)
+void CEnhancedContext::add_listener(std::string sID, std::regex eventType, int pos, int priority)
 {
     m_eventmanager.insert(new CListener(sID, eventType, pos), priority, sID);
 }
 
-void CEnhancedContext::add_listener(std::string sID, std::vector<std::string> eventType, size_t priority)
+void CEnhancedContext::add_listener(std::string sID, std::vector<std::string> eventType, int priority)
 {
     m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
 }
 
-void CEnhancedContext::add_listener(std::string sID, std::map<std::string, std::string> eventType, size_t priority)
+void CEnhancedContext::add_listener(std::string sID, std::map<std::string, std::string> eventType, int priority)
 {
     m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
 }
@@ -287,7 +287,7 @@ void CEnhancedContext::initializeHandlers(std::vector<nlohmann::json> listeners)
     for(auto it : listeners)
     {
         if(it.count("regex") > 0)
-            add_listener(it["id"], (std::regex)it["regex"], it.value("take", 1), 1); 
+            add_listener(it["id"], (std::regex)it["regex"], it.value("take", 1), it.value("priority", 0)); 
         else if(it.count("string") > 0)
             add_listener(it["id"], (std::string)it["string"], it.value("priority", 0));
     }
@@ -302,7 +302,6 @@ bool CEnhancedContext::throw_event(event e, CPlayer* p)
     bool called = false;
     
     std::deque<CListener*> sortedEventmanager = m_eventmanager.getSortedCtxList();
-    std::reverse(sortedEventmanager.begin(), sortedEventmanager.end());
     for(size_t i=0; i<sortedEventmanager.size() && m_block == false; i++)
     {
         if(sortedEventmanager[i]->checkMatch(e) == true) {
@@ -737,6 +736,7 @@ void CEnhancedContext::h_test(std::string& sIdentifier, CPlayer* p) {
 // **** SPECIAL HANDLER ***** //
 void CEnhancedContext::h_firstZombieAttack(std::string& sIdentifier, CPlayer* p)
 {
+    std::cout << "HAAAALOOOO.\n";
     //Get selected room
     if(p->getRoom()->getID() != "hospital_stairs")
         return;
@@ -804,7 +804,7 @@ void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
 // ***** ***** FIGHT CONTEXT ***** ***** //
 void CEnhancedContext::initializeFightListeners(std::map<std::string, std::string> mapAttacks)
 {
-    add_listener("h_fight", mapAttacks, 1);
+    add_listener("h_fight", mapAttacks);
 }
 
 void CEnhancedContext::h_fight(std::string& sIdentifier, CPlayer* p) {
@@ -834,7 +834,7 @@ void CEnhancedContext::initializeDialogListeners(std::string newState, CPlayer* 
     m_eventmanager.clear();
 
     //Add help listener 
-    add_listener("h_help", "help", 1);
+    add_listener("h_help", "help");
 
     //Add listener for each dialog option.
     std::vector<size_t> activeOptions = p->getDialog()->getState(newState)->getActiveOptions(p);
@@ -843,7 +843,7 @@ void CEnhancedContext::initializeDialogListeners(std::string newState, CPlayer* 
     for(auto opt : activeOptions)
     {
         mapOtptions[counter] = opt;
-        add_listener("h_call", std::to_string(counter), 1);
+        add_listener("h_call", std::to_string(counter));
         counter++;
     }
     setAttribute<std::map<size_t, size_t>>("mapOptions", mapOtptions);
@@ -965,7 +965,7 @@ void CEnhancedContext::initializeQuestListeners(map_type handler)
         if(m_handlers.count(it.first) == 0)
             std::cout << "FATAL ERROR, Quest-handler \"" << it.first << "\" does not exits!!\n";
         else
-            add_listener(it.first, it.second, 1);
+            add_listener(it.first, it.second);
     }
 }
 

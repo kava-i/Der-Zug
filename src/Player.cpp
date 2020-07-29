@@ -730,7 +730,7 @@ void CPlayer::updateStats(int numPoints)
         m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" + std::to_string(getStat(m_abbilities[i])) + ")\n";
 
     
-    context->add_listener("h_updateStats", m_abbilities, 1);
+    context->add_listener("h_updateStats", m_abbilities);
 
     m_sPrint += sError;
     m_contextStack.insert(context, 1, "updateStats");
@@ -906,7 +906,7 @@ void CPlayer::addSelectContest(std::map<std::string, std::string> mapObjects, st
     context->setErrorFunction(&CEnhancedContext::error_delete); 
 
     //Add listeners/ eventhandlers
-    context->add_listener("h_select", mapObjects, 1);
+    context->add_listener("h_select", mapObjects);
     
     //Insert context into context-stack.
     m_contextStack.insert(context, 1, "select");
@@ -920,7 +920,7 @@ void CPlayer::addChatContext(std::string sPartner)
 {
     CEnhancedContext* context = new CEnhancedContext("chat", {{"partner", sPartner}});
     std::regex reg("(.*)");
-    context->add_listener("h_send", reg, 1, 1);
+    context->add_listener("h_send", reg, 1);
     m_contextStack.insert(context, 1, "chat");
 }
 

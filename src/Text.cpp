@@ -115,7 +115,6 @@ bool COutput::checkDependencies(std::string& sSuccess, CPlayer* p)
 
 void COutput::updateAttrbutes(std::string& sUpdated, CPlayer* p)
 {
-    std::cout << "Checking ipdates\n";
     for(auto it=m_jUpdates.begin(); it!= m_jUpdates.end(); it++)
     {
         int val=it.value();
@@ -123,17 +122,16 @@ void COutput::updateAttrbutes(std::string& sUpdated, CPlayer* p)
         //Check updates for minds
         if(p->getMinds().count(it.key()) > 0) {
             p->getMind(it.key()).level += val;
-            sUpdated += p->getMind(it.key()).color + it.key()+ " updated!" + WHITE + "\n";
+            sUpdated += p->getMind(it.key()).color + it.key()+ " erhöhrt!" + WHITE + "\n";
         }
 
         //Check updates for abilities
         else if(p->attributeExists(it.key()) == true) {
             p->setStat(it.key(), p->getStat(it.key())+val);
-            sUpdated += GREEN + it.key() + " updated!" + WHITE + "\n";
+            sUpdated += GREEN + it.key() + " erhöht!" + WHITE + "\n";
         }
     }
 
-    std::cout << "Done.\n";
     m_jUpdates.clear();
 }
 

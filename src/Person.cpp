@@ -30,9 +30,6 @@ CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttac
     m_attacks = newAttacks;
     m_dialog = dialogue;
     m_dialogs = dialogs;
-    std::cout << "Dialogs: \n";
-    for(auto it : m_dialogs)
-        std::cout << it.first << std::endl;
 
     //Add items to inventory one by one
     for(auto &item : items)
