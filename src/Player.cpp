@@ -358,11 +358,10 @@ void CPlayer::startDialog(string sCharacter, CDialog* dialog)
 */
 void CPlayer::startChat(CPlayer* player)
 {
-    appendTechPrint("Sorry this option is currently not available\n");
-    appendStoryPrint("Du gehst auf " + player->getName() + " zu und räusperst dich... \n");
+    appendStoryPrint("Du gehst auf " + player->getName() + " zu und räusperst dich...\n");
 
     if(player->getContexts().nonPermeableContextInList() == true)
-        appendTechPrint(player->getName() + " ist zur Zeit beschäftigt.\n");
+        appendStoryPrint(player->getName() + " ist zur Zeit beschäftigt.\n");
     else
     {
         //Add Chat context for both players
@@ -919,8 +918,7 @@ void CPlayer::addSelectContest(std::map<std::string, std::string> mapObjects, st
 void CPlayer::addChatContext(std::string sPartner)
 {
     CEnhancedContext* context = new CEnhancedContext("chat", {{"partner", sPartner}});
-    std::regex reg("(.*)");
-    context->add_listener("h_send", reg, 1);
+    context->add_listener("h_send", (std::regex)"(.*)", 1);
     m_contextStack.insert(context, 1, "chat");
 }
 

@@ -72,7 +72,8 @@ bool CListener::regexCompare(event& e) {
     std::smatch m;
     if(std::regex_match(str, m, m_regexEventType))
     {
-        e.second = m[m_pos];
+        if(e.first != e.second)
+            e.second = m[m_pos];
         return true;
     }
     return false;

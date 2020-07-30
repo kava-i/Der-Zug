@@ -12,12 +12,11 @@ std::vector<CParser::event> CParser::parse(std::string sInput)
     
     for(auto command : vCommands)
     {
-        std::cout << command << std::endl;
+        //"translate" command set in config file 
         bool in_command=false;
         for(auto it : m_commands["commands"]) {
             std::smatch m;
-            std::regex r = it["regex"];
-            if(std::regex_match(command, m, r)) {
+            if(std::regex_match(command, m, (std::regex)it["regex"])) {
                 in_command=true;
                 events.push_back(std::make_pair(it["id"], m[it.value("take", 1)]));
             }
@@ -25,12 +24,12 @@ std::vector<CParser::event> CParser::parse(std::string sInput)
         if(in_command==true)
             continue;
 
+        //Iterate over command
         std::vector<std::string> vec = func::split(command, " ");
         size_t pos = command.find(" ");
         if(pos != std::string::npos)
         {
             std::string sSecond = command.substr(pos+1);
-            //Do some preprocessing
             if(sSecond.find("to ") == 0 || sSecond.find("up ") == 0)
                 sSecond.erase(0,3);
 
