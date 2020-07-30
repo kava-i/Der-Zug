@@ -165,7 +165,6 @@ public:
     void h_end(std::string&, CPlayer*);
 
     // *** QUESTS *** //
-    void initializeQuestListeners(std::map<std::string, std::string> handler);
     void h_ticketverkaeufer(std::string&, CPlayer*);
     void h_ticketverkauf(std::string&, CPlayer*);
     void h_zum_gleis(std::string&, CPlayer*);

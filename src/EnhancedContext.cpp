@@ -441,8 +441,9 @@ void CEnhancedContext::h_endDialog(std::string& sIdentifier, CPlayer* p) {
 }
 
 void CEnhancedContext::h_newFight(std::string& sIdentifier, CPlayer* p) {
+
     auto lambda = [](CPerson* person){return person->getName(); };
-    std::string str = func::getObjectId(p->getRoom()->getCharacters(), str, lambda);
+    std::string str =func::getObjectId(p->getRoom()->getCharacters(),sIdentifier,lambda);
    
     if(p->getWorld()->getCharacter(str) != nullptr)
         p->setFight(new CFight(p, p->getWorld()->getCharacter(str)));
@@ -974,18 +975,6 @@ void CEnhancedContext::h_end(string& sMessage, CPlayer* p)
 
 // ***** ***** QUEST CONTEXT ***** ***** //
 
-void CEnhancedContext::initializeQuestListeners(map_type handler)
-{
-    for(auto it : handler)
-    {
-        if(m_handlers.count(it.first) == 0)
-            std::cout << "FATAL ERROR, Quest-handler \"" << it.first << "\" does not exits!!\n";
-        else
-            add_listener(it.first, it.second);
-    }
-}
-
-
 // *** *** Tutorial *** *** //
 void CEnhancedContext::h_startTutorial(std::string&, CPlayer* p)
 {
@@ -1029,7 +1018,8 @@ void CEnhancedContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
 
     p->questSolved(getAttribute<std::string>("questID"), "3zum_gleis");
 
-    p->appendStoryPrint("Du siehst deinen Zug einfahren. Du bewegst dich auf ihn zu, zeigst dein Ticket, der Schaffner musstert dich kurz und lässt dich dann eintreten. Du suchst dir einen freien Platz, legst dein Bündel auf den sitz neben dich und schläfst ein...\n $ Nach einem scheinbar endlos langem schlaf wachst du wieder in deinem Abteil auf. Das Abteil ist leer. Leer bist auf einen geheimnisvollen Begleiter: Parsen.\n");
+    p->appendStoryPrint("Du siehst deinen Zug einfahren. Du bewegst dich auf ihn zu, zeigst dein Ticket, der Schaffner musstert dich kurz und lässt dich dann eintreten. Du suchst dir einen freien Platz, legst dein Bündel auf den sitz neben dich und schläfst ein...\n $");
+    p->appendStoryPrint("Nach einem scheinbar endlos langem schlaf wachst du wieder in deinem Abteil auf. Das Abteil ist leer. Leer bist auf einen geheimnisvollen Begleiter: Parsen.\n");
 
     p->setRoom(p->getWorld()->getRoom("compartment-a"));
     m_curPermeable = false;
