@@ -953,6 +953,13 @@ void CPlayer::throw_events(string sInput, std::string sMessage)
     //Check for time triggered events
     checkTimeEvents();
 
+    if(sInput == "")
+    {
+        throw_staged_events(m_staged_pre_events, "pre");
+        throw_staged_events(m_staged_post_events, "post"); 
+        return;
+    }
+
     //Parse command
     std::vector<std::pair<std::string, std::string>> events = m_parser->parse(sInput);
 

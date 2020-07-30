@@ -110,7 +110,8 @@ void CPerson::setDialog(CDialog* newDialog) {
 void CPerson::setDialog(std::string dialog) {
     if(m_dialogs.count(dialog) > 0)
         m_dialog = m_dialogs[dialog];
-    std::cout << "Dialog not found: " << dialog << ".\n";
+    else
+        std::cout << "Dialog not found: " << dialog << ".\n";
 }
 
 // *** ATTACKS *** //
