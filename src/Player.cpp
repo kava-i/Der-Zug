@@ -947,6 +947,7 @@ void CPlayer::printError(std::string sError)
 */
 void CPlayer::throw_events(string sInput, std::string sMessage)
 {
+    updateRoomContext();
     std::cout << cRED << "Events: " << sInput << ", from: " << sMessage << cCLEAR << std::endl;
     //Check for time triggered events
     checkTimeEvents();
