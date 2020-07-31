@@ -121,8 +121,11 @@ public:
     ///Return current fight.
     CFight* getFight();
 
-    //Return players context-stack 
+    ///Return players context-stack 
     CContextStack<CEnhancedContext>& getContexts();
+
+    ///Return a context from players context stack
+    CEnhancedContext* getContext(std::string);
 
     //Return map of players
     std::map<std::string, CPlayer*>& getMapOFOnlinePlayers();
@@ -410,19 +413,6 @@ public:
     * check if a time event is triggered.
     */
     void checkTimeEvents();
-
-    // ** Time handler ** //
-
-    /**
-    * Event triggered when highness decreases.
-    */
-    void t_highness(std::string);
-
-    /**
-    * Event to throw any event after a certain time.
-    */
-    void t_throwEvent(std::string);
-    
 };
 
 #endif

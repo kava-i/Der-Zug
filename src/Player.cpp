@@ -154,6 +154,16 @@ CContextStack<CEnhancedContext>& CPlayer::getContexts() {
     return m_contextStack; 
 }
 
+///Return a context from players context stack
+CEnhancedContext* CPlayer::getContext(std::string context)
+{
+    if(m_contextStack.getContext(context) != NULL)
+        return m_contextStack.getContext(context);
+    std::cout << cRED << "FATAL!!! Context not found: " << context << cCLEAR << std::endl;
+    return nullptr;
+}
+
+
 //Return map of players
 std::map<std::string, CPlayer*>& CPlayer::getMapOFOnlinePlayers()
 {
@@ -345,6 +355,11 @@ void CPlayer::startDialog(string sCharacter, CDialog* dialog)
     //Create context and add to context-stack.
     CEnhancedContext* context = new CEnhancedContext((std::string)"dialog", {{"partner", sCharacter}});
     context->initializeDialogListeners("START", this);
+
+    if(m_contextStack.getContext("dialog") == NULL)
+        std::cout << "Doesn't exist\n";
+    else
+        std::cout << "Exists\n";
     m_contextStack.insert(context, 1, "dialog");
 
     std::string newCommand = m_dialog->getState("START")->callState(this);
@@ -950,7 +965,7 @@ void CPlayer::throw_events(string sInput, std::string sMessage)
     updateRoomContext();
     std::cout << cRED << "Events: " << sInput << ", from: " << sMessage << cCLEAR << std::endl;
     //Check for time triggered events
-    checkTimeEvents();
+    getContext("standard")->throw_timeEvents(this);
 
     if(sInput == "")
     {
@@ -974,87 +989,3 @@ void CPlayer::throw_events(string sInput, std::string sMessage)
         }
     }
 }
-
-
-// ***** ***** TIME EVENTS ****** *****
-
-/**
-* Check if a time-bound event exists.
-* @param sType event type.
-*/
-bool CPlayer::checkEventExists(string sType)
-{
-    return m_timeEventes.count(sType) > 0;
-}
-
-/**
-* Add new time-bound event.
-* @param sType event type 
-* @param duration how long it takes till event will be triggered.
-* @param func function called when event is triggered.
-*/
-void CPlayer::addTimeEvent(string sType, double duration, void (CPlayer::*func)(std::string), std::string sInfos)
-{
-    auto start = std::chrono::system_clock::now();
-    m_timeEventes[sType].push_back(std::make_tuple(start, duration*60, func, sInfos));
-}
-
-/**
-* check if a time event is triggered.
-*/
-void CPlayer::checkTimeEvents()
-{
-    //Checl if player is currently occupied
-    if(m_contextStack.nonPermeableContextInList() == true)
-        return;
-
-    std::list<std::pair<std::string, size_t>> lExecute;
-
-    //Collect element to be executed
-    auto end = std::chrono::system_clock::now();
-    for(auto it : m_timeEventes)
-    {
-        size_t counter=0;
-        for(auto jt : m_timeEventes[it.first]) {
-            std::chrono::duration<double> diff = end - std::get<0>(jt);
-            if(diff.count() >= std::get<1>(jt))
-                lExecute.push_back(std::make_pair(it.first, counter));
-        }
-    }
-
-    //Execute events and delete afterwards
-    for(auto it : lExecute) 
-    {
-        std::cout << "TIMEEVENTCOUNTER: " << it.second << std::endl;
-        std::tuple curT = m_timeEventes[it.first][it.second];
-        (this->*std::get<2>(curT))(std::get<3>(curT));
-        m_timeEventes[it.first].erase(m_timeEventes[it.first].begin() + it.second);
-        if(m_timeEventes[it.first].size() == 0)
-            m_timeEventes.erase(it.first);
-    }
-}
-
-// *** Time handler *** //
-
-/**
-* Event triggered when highness decreases.
-*/
-void CPlayer::t_highness(std::string)
-{
-    if(m_stats["highness"]==0)
-        return;
-    appendStoryPrint("Time always comes to give you a hand; Things begin to become clearer again. Highness decreased by 1.\n");
-    m_stats["highness"]--;
-
-    if(m_stats["highness"]>0)
-        addTimeEvent("highness", 2, &CPlayer::t_highness);
-}
-
-/**
-* Event to throw any event after a certain time.
-*/
-void CPlayer::t_throwEvent(std::string sInfo)
-{
-    addPostEvent(sInfo);
-}
-

@@ -110,8 +110,11 @@ void CItem::consume(CPlayer* p)
     if(m_sType == "drug")
     {
         p->setStat("highness", p->getStat("highness") + getEffekt());
-        if(!p->checkEventExists("highness"))
-            p->addTimeEvent("highness", 2, &CPlayer::t_highness);
+        if(!p->getContext("standard")->timeevent_exists("highness"))
+        {
+            std::cout << "Timeevent \"highness\" added.\n";
+            p->getContext("standard")->add_timeEvent("highness","standard","t_highness","",0.2);
+        }
         if(m_useDescription != nullptr)
             p->appendPrint(m_useDescription->print());
         else

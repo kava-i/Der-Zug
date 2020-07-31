@@ -8,6 +8,7 @@
 #include "Webcmd.hpp"
 #include "SortedContext.hpp"
 #include "CListener.hpp"
+#include "CTimeEvent.hpp"
 #include "json.hpp"
 
 class CPlayer;
@@ -20,6 +21,7 @@ protected:
     typedef std::pair<std::string, std::string> event;
 
     CContextStack<CListener> m_eventmanager;
+    CContextStack<CTimeEvent> m_timeevents;
     
     nlohmann::json m_jAttributes;
     std::string m_sName;
@@ -74,6 +76,11 @@ public:
     static void initializeTemplates();
     
 
+    // *** Add and delete time events *** //
+    void add_timeEvent(std::string type, std::string scope, std::string func, std::string info, double duration, int priority=0);
+    bool timeevent_exists(std::string type);
+    void deleteTimeEvent(std::string);
+
     // *** Add and delete listeners *** //
     void add_listener(nlohmann::json);
     void add_listener(std::string sID, std::string sEventType, int priority=0);
@@ -85,6 +92,7 @@ public:
 
     // *** Throw events *** //
     bool throw_event(event newEvent, CPlayer* p);
+    void throw_timeEvents(CPlayer* p);
 
     // *** ERROR HANDLER *** //
     void error(CPlayer* p);
@@ -176,6 +184,10 @@ public:
     void h_select(std::string&, CPlayer*);
     void h_choose_equipe(std::string&, CPlayer*);
     void h_updateStats(std::string&, CPlayer*);
+
+    // ----- ***** TIME EVENTS ***** ------ //
+    void t_highness(std::string&, CPlayer*);
+    void t_throwEvent(std::string&, CPlayer*);
 };
     
 #endif 

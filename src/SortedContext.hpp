@@ -43,10 +43,10 @@ public:
         T* ctx = nullptr;
         try
         {
-        ctx = m_contextStack.at(name);
-        m_reloadQueue = true;
-        m_contextStack.erase(name);
-        m_sortedContexts.erase(std::remove_if(m_sortedContexts.begin(),m_sortedContexts.end(),[ctx](const std::pair<T*,int> &p){if(p.first==ctx)return true; else return false;}),m_sortedContexts.end());
+            ctx = m_contextStack.at(name);
+            m_reloadQueue = true;
+            m_contextStack.erase(name);
+            m_sortedContexts.erase(std::remove_if(m_sortedContexts.begin(),m_sortedContexts.end(),[ctx](const std::pair<T*,int> &p){if(p.first==ctx)return true; else return false;}),m_sortedContexts.end());
         }
         catch(...)
         {

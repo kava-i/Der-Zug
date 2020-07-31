@@ -176,7 +176,9 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_choose_equipe"] = &CEnhancedContext::h_choose_equipe;
     m_handlers["h_updateStats"] = &CEnhancedContext::h_updateStats;
 
-
+    // --- *** TIMEEVENTS *** --- //
+    m_handlers["t_highness"] = &CEnhancedContext::t_highness;
+    m_handlers["t_throwEvent"] = &CEnhancedContext::t_throwEvent;
 }
 
 void CEnhancedContext::initializeTemplates()
@@ -255,6 +257,26 @@ void CEnhancedContext::initializeTemplates()
 
 // ***** ***** FUNCTIONS ***** ****** // 
 
+
+// *** add and delete time events *** //
+void CEnhancedContext::add_timeEvent(std::string type,  std::string scope, std::string func, std::string info, double duration, int priority) {
+    m_timeevents.insert(new CTimeEvent(type, scope, func, info, duration), priority, type);
+}
+
+bool CEnhancedContext::timeevent_exists(std::string type)
+{
+    if(m_timeevents.getContext(type) != NULL)
+        return true;    
+    return false;
+}
+
+void CEnhancedContext::deleteTimeEvent(std::string name)
+{
+    m_timeevents.erase(name);
+}
+
+// *** add and delete listeners *** //
+
 void CEnhancedContext::add_listener(nlohmann::json j)
 {
     if(j.count("regex") > 0)
@@ -263,23 +285,19 @@ void CEnhancedContext::add_listener(nlohmann::json j)
         add_listener(j["id"], (std::string)j["string"], j.value("priority", 0));
 
 }
-void CEnhancedContext::add_listener(std::string sID, std::string sEventType, int priority)
-{
+void CEnhancedContext::add_listener(std::string sID, std::string sEventType, int priority) {
     m_eventmanager.insert(new CListener(sID, sEventType), priority, sID);
 }
 
-void CEnhancedContext::add_listener(std::string sID, std::regex eventType, int pos, int priority)
-{
+void CEnhancedContext::add_listener(std::string sID, std::regex eventType, int pos, int priority) {
     m_eventmanager.insert(new CListener(sID, eventType, pos), priority, sID);
 }
 
-void CEnhancedContext::add_listener(std::string sID, std::vector<std::string> eventType, int priority)
-{
+void CEnhancedContext::add_listener(std::string sID, std::vector<std::string> eventType, int priority) {
     m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
 }
 
-void CEnhancedContext::add_listener(std::string sID, std::map<std::string, std::string> eventType, int priority)
-{
+void CEnhancedContext::add_listener(std::string sID, std::map<std::string, std::string> eventType, int priority) {
     m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
 }
 
@@ -318,6 +336,31 @@ bool CEnhancedContext::throw_event(event e, CPlayer* p)
         error(p);
         
     return m_curPermeable;
+}
+
+void CEnhancedContext::throw_timeEvents(CPlayer* p)
+{
+    //Check if player is currently occupied.
+    if(p->getContexts().nonPermeableContextInList() == true)
+        return;
+
+    //Get current time.
+    auto end = std::chrono::system_clock::now();
+
+    //Check if a time event is ready to throw, then throw.
+    std::deque<CTimeEvent*> sortedEvents = m_timeevents.getSortedCtxList();
+    for(size_t i=0; i<sortedEvents.size(); i++)
+    {
+        std::chrono::duration<double> diff = end - sortedEvents[i]->getStart();
+        if(diff.count() >= sortedEvents[i]->getDuration())
+        {
+            std::string str = sortedEvents[i]->getInfo();
+            (this->*m_handlers[sortedEvents[i]->getFunction()])(str, p);
+            std::cout << "BACKPASS: " << str << std::endl;
+            if(str == "delete")
+                m_timeevents.erase(sortedEvents[i]->getType());
+        }
+    }
 }
 
 // ***** ERROR FUNCTIONS ****** ***** //
@@ -532,13 +575,21 @@ void CEnhancedContext::h_setNewAttribute(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_addTimeEvent(std::string& sIdentifier, CPlayer* p)
 {
+    srand(time(NULL));
     std::vector<std::string> atts = func::split(sIdentifier, ",");
 
     //Check if sIdentifier contains the fitting values
-    if(atts.size() != 2 || std::isdigit(atts[1][0]) == false)
-        std::cout << "Something went worng! Player Attribute could not be changed.\n";
+    if(atts.size()!=4 || std::isdigit(atts[3][0])==false || std::isdigit(atts[2][0])==false)
+        std::cout << "Something went worng! Time events could not be added.\n";
     else
-        p->addTimeEvent("e", std::stod(atts[1], nullptr), &CPlayer::t_throwEvent, atts[0]);
+    {
+        //Generate random id
+        size_t id = rand() % 1000;
+        while(p->getContext(atts[1])->timeevent_exists(std::to_string(id)) == true)
+            id = rand() % 1000;
+
+        p->getContext(atts[1])->add_timeEvent(std::to_string(id), atts[1], "t_throwEvent", atts[0], std::stod(atts[3], nullptr), stoi(atts[2]));
+    }
     m_curPermeable = false;
 }
 
@@ -1143,5 +1194,26 @@ void CEnhancedContext::h_updateStats(std::string& sIdentifier, CPlayer* p)
     p->getContexts().erase("updateStats");
     if(num>0)
         p->updateStats(num);
+}
+
+
+// ----- ***** TIME EVENTS ***** ------ //
+void CEnhancedContext::t_highness(std::string& str, CPlayer* p)
+{
+    if(p->getStat("highness")==0)
+        return;
+    p->appendStoryPrint("Time always comes to give you a hand; Things begin to become clearer again. Highness decreased by 1.\n");
+    p->setStat("highness", p->getStat("highness")-1);
+
+    p->getContext("standard")->deleteTimeEvent("highness");
+    if(p->getStat("highness") > 0)
+        add_timeEvent("highness", "standard", "t_highness", "", 0.2);
+}
+
+void CEnhancedContext::t_throwEvent(std::string& sInfo, CPlayer* p) 
+{
+    std::string str = sInfo;
+    p->addPostEvent(str);
+    str = "delete";
 }
 
