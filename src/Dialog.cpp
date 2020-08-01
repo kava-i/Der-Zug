@@ -171,10 +171,8 @@ void CDState::executeActions(CPlayer* p)
 // *** FUNCTION POINTER *** //
 string CDState::standard(CPlayer* p)
 {
-    std::cout << "Calling state...\n";
     string sOutput = m_text->print();
 
-    std::cout << "Creating option\n";
     std::vector<size_t> activeOptions = getActiveOptions(p);
     size_t counter = 1;
     for(auto opt : activeOptions)
@@ -185,7 +183,6 @@ string CDState::standard(CPlayer* p)
             sOutput += "(" + std::to_string(counter) + ": " + m_options[opt].sText + ")\n";
         counter++;
     }
-    std::cout << "done.\n";
     
     //Execute actions after this dialog state (f.e. delete options, change text etc.)
     executeActions(p);

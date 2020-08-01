@@ -259,8 +259,8 @@ void CEnhancedContext::initializeTemplates()
 
 
 // *** add and delete time events *** //
-void CEnhancedContext::add_timeEvent(std::string type,  std::string scope, std::string func, std::string info, double duration, int priority) {
-    m_timeevents.insert(new CTimeEvent(type, scope, func, info, duration), priority, type);
+void CEnhancedContext::add_timeEvent(std::string id, std::string scope, std::string info, double duration, int priority) {
+    m_timeevents.insert(new CTimeEvent(id, scope, info, duration), priority, id);
 }
 
 bool CEnhancedContext::timeevent_exists(std::string type)
@@ -355,10 +355,10 @@ void CEnhancedContext::throw_timeEvents(CPlayer* p)
         if(diff.count() >= sortedEvents[i]->getDuration())
         {
             std::string str = sortedEvents[i]->getInfo();
-            (this->*m_handlers[sortedEvents[i]->getFunction()])(str, p);
+            (this->*m_handlers[sortedEvents[i]->getID()])(str, p);
             std::cout << "BACKPASS: " << str << std::endl;
             if(str == "delete")
-                m_timeevents.erase(sortedEvents[i]->getType());
+                m_timeevents.eraseHighest(sortedEvents[i]->getID());
         }
     }
 }
@@ -583,12 +583,14 @@ void CEnhancedContext::h_addTimeEvent(std::string& sIdentifier, CPlayer* p)
         std::cout << "Something went worng! Time events could not be added.\n";
     else
     {
+        /*
         //Generate random id
         size_t id = rand() % 1000;
         while(p->getContext(atts[1])->timeevent_exists(std::to_string(id)) == true)
             id = rand() % 1000;
+        */
 
-        p->getContext(atts[1])->add_timeEvent(std::to_string(id), atts[1], "t_throwEvent", atts[0], std::stod(atts[3], nullptr), stoi(atts[2]));
+        p->getContext(atts[1])->add_timeEvent("t_throwEvent", atts[1], atts[0], std::stod(atts[3], nullptr), stoi(atts[2]));
     }
     m_curPermeable = false;
 }
@@ -915,7 +917,6 @@ void CEnhancedContext::initializeDialogListeners(std::string newState, CPlayer* 
         counter++;
     }
     setAttribute<std::map<size_t, size_t>>("mapOptions", mapOtptions);
-    std::cout << "Done.\n";
 }
 
 void CEnhancedContext::h_call(std::string& sIdentifier, CPlayer* p)
@@ -1205,15 +1206,15 @@ void CEnhancedContext::t_highness(std::string& str, CPlayer* p)
     p->appendStoryPrint("Time always comes to give you a hand; Things begin to become clearer again. Highness decreased by 1.\n");
     p->setStat("highness", p->getStat("highness")-1);
 
-    p->getContext("standard")->deleteTimeEvent("highness");
+    p->getContext("standard")->deleteTimeEvent("t_highness");
     if(p->getStat("highness") > 0)
-        add_timeEvent("highness", "standard", "t_highness", "", 0.2);
+        add_timeEvent("t_highness", "standard", "", 0.2);
 }
 
 void CEnhancedContext::t_throwEvent(std::string& sInfo, CPlayer* p) 
 {
+    std::cout << "t_throwEvent: " << sInfo << std::endl;
     std::string str = sInfo;
     p->addPostEvent(str);
-    str = "delete";
+    sInfo = "delete";
 }
-

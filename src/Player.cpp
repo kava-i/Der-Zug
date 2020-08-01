@@ -355,11 +355,6 @@ void CPlayer::startDialog(string sCharacter, CDialog* dialog)
     //Create context and add to context-stack.
     CEnhancedContext* context = new CEnhancedContext((std::string)"dialog", {{"partner", sCharacter}});
     context->initializeDialogListeners("START", this);
-
-    if(m_contextStack.getContext("dialog") == NULL)
-        std::cout << "Doesn't exist\n";
-    else
-        std::cout << "Exists\n";
     m_contextStack.insert(context, 1, "dialog");
 
     std::string newCommand = m_dialog->getState("START")->callState(this);

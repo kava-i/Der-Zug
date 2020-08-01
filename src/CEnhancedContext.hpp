@@ -77,7 +77,7 @@ public:
     
 
     // *** Add and delete time events *** //
-    void add_timeEvent(std::string type, std::string scope, std::string func, std::string info, double duration, int priority=0);
+    void add_timeEvent(std::string id, std::string scope, std::string info, double duration, int priority=0);
     bool timeevent_exists(std::string type);
     void deleteTimeEvent(std::string);
 
