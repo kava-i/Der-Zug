@@ -149,8 +149,9 @@ public:
     void appendErrorPrint(std::string sPrint);
     void appendTechPrint(std::string sPrint);
     void appendSpeackerPrint(std::string sSpeaker, std::string sPrint);
+    void appendBlackPrint(std::string sPrint);
     std::string returnSpeakerPrint(std::string sSpeaker, std::string sPrint);
-    void appendBlackPrint(std::string sSpeaker, std::string sPrint);
+    std::string returnBlackPrint(std::string sPrint);
     void appendSuccPrint(std::string sPrint);
 
     ///Add staged events to throw before printing

@@ -74,6 +74,10 @@ std::string COutput::print(CPlayer* p, bool events)
         addEvents(p);  
 
     //return text 
+    std::cout << "speaker: " << m_sSpeaker << std::endl;;
+    if(m_sSpeaker == "indent")
+        return p->returnBlackPrint(m_sText + "$" + sUpdated);
+
     return p->returnSpeakerPrint(m_sSpeaker + sSuccess, m_sText + "$" + sUpdated);
 }
 

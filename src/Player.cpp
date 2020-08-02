@@ -223,17 +223,12 @@ void CPlayer::appendTechPrint(string sPrint) {
     appendSpeackerPrint(m_world->getConfig()["printing"]["tech"], sPrint);
 }
 
-void CPlayer::appendSpeackerPrint(std::string sSpeaker, std::string sPrint) {
-    sPrint = func::returnSwapedString(sPrint, getStat("highness"));
-
-    if(sSpeaker != "")
-        appendPrint("<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>");
-    else
-        appendPrint(sPrint + "\n");
+void CPlayer::appendBlackPrint(std::string sPrint) {
+        appendPrint(returnBlackPrint(sPrint));
 }
 
-void CPlayer::appendBlackPrint(std::string, std::string sPrint) {
-        appendPrint("<div class='spoken'>" + BLACK + "DDDD" + " - " + WHITEDARK + sPrint + WHITE + "</div>");
+void CPlayer::appendSpeackerPrint(std::string sSpeaker, std::string sPrint) {
+    appendPrint(returnSpeakerPrint(sSpeaker, sPrint));
 }
 
 std::string CPlayer::returnSpeakerPrint(std::string sSpeaker, std::string sPrint) {
@@ -241,8 +236,11 @@ std::string CPlayer::returnSpeakerPrint(std::string sSpeaker, std::string sPrint
     
     if(sSpeaker != "")
         return "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
-    else
-        return sPrint + "\n";
+    return sPrint + "\n";
+}
+
+std::string CPlayer::returnBlackPrint(std::string sPrint) {
+    return "<div class='spoken2'>" + WHITEDARK + sPrint + WHITE + "</div>";
 }
 
 void CPlayer::appendSuccPrint(string sPrint) {
@@ -906,6 +904,15 @@ void CPlayer::checkCommands()
             pos+=it.first.length();
         }
     }
+
+    /* ----- idea to solve issue #
+    size_t pos=0;
+    if(m_sPrint.find("$", pos) != std::string::npos)
+    {
+        pos = m_sPrint.find("$");
+        m_sPrint.insert(pos, "</div>");
+        m_sPrint.insert(pos+8, "<div class='spoken2'>");
+    }*/
 }
 
 /**
