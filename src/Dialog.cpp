@@ -116,9 +116,10 @@ std::map<string, string (CDState::*)(CPlayer* p)> CDState::m_functions = {};
 void CDState::initializeFunctions()
 {
     m_functions["standard"]     = &CDState::standard;
+    m_functions["toeten"]       = &CDState::toeten;
     m_functions["keinTicket"]   = &CDState::keinTicket;
-    m_functions["strangeGuy1"]   = &CDState::strangeGuy1;
-    m_functions["strangeGuy2"]   = &CDState::strangeGuy2;
+    m_functions["strangeGuy1"]  = &CDState::strangeGuy1;
+    m_functions["strangeGuy2"]  = &CDState::strangeGuy2;
 }
 
 
@@ -210,6 +211,13 @@ std::vector<size_t> CDState::getActiveOptions(CPlayer* p)
 
 
 // ***** SPECIAL STATE FUNCTIONS ***** //
+
+string CDState::toeten(CPlayer* p)
+{
+    string sOutput=standard(p);
+    m_sEvents += ";killCharacter " + p->getCurDialogPartner()->getID();
+    return sOutput; 
+}
 
 string CDState::keinTicket(CPlayer* p)
 {

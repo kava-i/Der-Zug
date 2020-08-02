@@ -1,6 +1,5 @@
-#ifndef CPLAYER_H
+#ifndef CPLAYER_H 
 #define CPLAYER_H
-
 
 #include <iostream>
 #include <map>
@@ -62,7 +61,8 @@ private:
 
 
     // *** States, like current fight *** //
-    CFight* m_curFight;                         ///< Current fight player is engaged in (maybe NULL)
+    CFight* m_curFight;                         ///< Current fight player is engaged in
+    CPerson* m_curDialogPartner;                ///< Current dialog partner
 
     // *** Others *** //
     map<string, CPlayer*> m_players;                ///< List of all online players in game
@@ -120,6 +120,9 @@ public:
 
     ///Return current fight.
     CFight* getFight();
+
+    ///Return current dialog-partner
+    CPerson* getCurDialogPartner();
 
     ///Return players context-stack 
     CContextStack<CEnhancedContext>& getContexts();

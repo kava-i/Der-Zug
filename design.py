@@ -41,9 +41,9 @@ class GameDesigner:
         options = [{"id":0, "text":"", "to":""}]
         steps = [{"name":"", "id":"", "handler":"", "description":""}]
         self.attributes = {
-            "dialogs": {"id":"", "text":desc, "options":options, "actions":"", "events":""},
+            "dialogs": {"id":"", "text":desc, "options":options, "actions":"", "events":"", "function":""},
             "details": {"name":"", "id":"", "description":desc, "look":"", "items":[""], "defaultItems":""},
-            "characters": {"name":"", "id":"", "hp":0, "strength":0, "roomDescription":desc, "description":desc, "deadDescription":desc, "items":[""], "defaultDescription":"", "defaultDialog":"","attacks":{}, "dialog":"", "handlers":""},
+            "characters": {"name":"", "id":"", "hp":0, "strength":0, "faint":0, "roomDescription":desc, "description":desc, "deadDescription":desc, "items":[""], "defaultDescription":"", "defaultDialog":"","attacks":{}, "dialog":"", "handlers":""},
             "players": {"name":"", "id":"", "room":"", "hp":0, "strength":0, "attacks":[""]},
             "quests": {"name":"", "id":"", "description":"", "ep":0, "steps": steps},
             "items": {"name":"", "id":"", "category":"", "type":"", "attack":"", "value":0, "description":desc},

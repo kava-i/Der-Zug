@@ -24,6 +24,8 @@ protected:
     CText* m_roomDescription;           //< Player in room, sometimes as mind.
     CText* m_sShotDescription;          //< Brief description, never as mind.
     nlohmann::json m_deadDescription;   //< Description for when the character is dead.
+
+    bool m_faint;
     
     ///Stats, such as live points, strength, virtue etc.
     typedef map<string, int> stats;
@@ -65,6 +67,9 @@ public:
     * @return return given stat.
     */
     int getStat(std::string id);
+
+    ///return whether character can faint or dies immediately 
+    bool getFaint();
 
     ///Return person's attacks.
     attacks& getAttacks();

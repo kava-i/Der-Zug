@@ -104,6 +104,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_updateListeners"] = &CEnhancedContext::h_updatePlayers;
 
     // ***** WORLD CONTEXT ***** //
+    m_handlers["h_finishCharacter"] = &CEnhancedContext::h_finishCharacter;
     m_handlers["h_killCharacter"] = &CEnhancedContext::h_killCharacter;
     m_handlers["h_deleteCharacter"] = &CEnhancedContext::h_deleteCharacter;
     m_handlers["h_addItem"] = &CEnhancedContext::h_addItem;
@@ -198,6 +199,7 @@ void CEnhancedContext::initializeTemplates()
     m_templates["world"] = {
                     {"name", "world"}, {"permeable", true},
                     {"handlers",{
+                        {"finishCharacter", {"h_finishCharacter"}},
                         {"killCharacter", {"h_killCharacter"}},
                         {"deleteCharacter", {"h_deleteCharacter"}},
                         {"addItem", {"h_addItem"}},
@@ -451,6 +453,22 @@ void CEnhancedContext::h_updatePlayers(std::string&, CPlayer*p)
 
 // ***** ***** WORLD CONTEXT ***** ***** //
 
+void CEnhancedContext::h_finishCharacter(std::string& sIdentifier, CPlayer* p) {
+
+    //Get character
+    CPerson* person = p->getWorld()->getCharacter(sIdentifier);
+
+    if(person->getFaint() == false)
+        p->throw_events("killCharacter " + sIdentifier, "h_finishCharacter");
+    else
+    {
+        if(person->getDialog("faint") != nullptr)
+            person->setDialog("faint");
+        else
+            person->setDialog(p->getWorld()->getDialog("faintDialog"));
+    } 
+    m_curPermeable=false;
+}
 void CEnhancedContext::h_killCharacter(std::string& sIdentifier, CPlayer* p) {
 
     //Get character
@@ -460,8 +478,16 @@ void CEnhancedContext::h_killCharacter(std::string& sIdentifier, CPlayer* p) {
     nlohmann::json jDetail = {
                 {"id", person->getID()},  
                 {"name", person->getName()}, 
-                {"look", ""}, 
-                {"description", person->getDeadDescription()} };
+                {"look", ""}};
+
+    //Parse details-description
+    if(person->getDeadDescription().size() == 0)
+    {
+        nlohmann::json j = { {"speaker", "PERZEPTION"}, {"text", "Ein totes etwas?"} };
+        jDetail["description"].push_back(j);
+    }
+    else
+        jDetail["description"] = person->getDeadDescription();
 
     //Create new detail and add to room and map of details
     CDetail* detail = new CDetail(jDetail, p, person->getInventory().mapItems());

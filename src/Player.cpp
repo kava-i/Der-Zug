@@ -25,13 +25,10 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     m_abbilities = {"strength", "skill"};
 
     //Initiazize world
-    std::cout << "Creating world.\n";
     m_world = new CWorld(this);
-    std::cout << "Done.\n";
     m_parser = new CParser(m_world->getConfig());
     m_gramma = gramma;
     
-
     //Character and Level
     m_level = 0;
     m_ep = 0;
@@ -47,6 +44,10 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
         for(auto it : attributes)   
             m_stats[it] = 0;
     }
+
+    //States, f.e. current fight, Dialog-partner
+    m_curFight = nullptr;
+    m_curDialogPartner = nullptr;
 
     //Set current room
     m_room = room;
@@ -147,6 +148,11 @@ std::map<std::string, CItem*>& CPlayer::getEquipment() {
 ///Return current fight.
 CFight* CPlayer::getFight() { 
     return m_curFight; 
+}
+
+///Return current dialog-partner
+CPerson* CPlayer::getCurDialogPartner() {
+    return m_curDialogPartner;
 }
 
 //Return players context-stack 
@@ -358,10 +364,14 @@ void CPlayer::endFight() {
 */
 void CPlayer::startDialog(string sCharacter, CDialog* dialog)
 {
+    //Set current dialog
     if(dialog != nullptr)
         m_dialog = dialog;
     else
         m_dialog = m_world->getCharacter(sCharacter)->getDialog();
+
+    //Add person to current dialog partner
+    m_curDialogPartner = m_world->getCharacter(sCharacter);       
 
     //Create context and add to context-stack.
     CEnhancedContext* context = new CEnhancedContext((std::string)"dialog", {{"partner", sCharacter}});
@@ -860,8 +870,11 @@ void CPlayer::checkCommands()
         size_t pos2 = m_sPrint.find("}"); 
         std::string cmd = m_sPrint.substr(pos+1, pos2-(pos+1));
         std::string replace = "";
-        if(cmd.find("name") != std::string::npos)
+        if(cmd.find("cname") != std::string::npos && m_curDialogPartner != nullptr)
+            replace = m_curDialogPartner->getName();
+        else if(cmd.find("name") != std::string::npos)
             replace = getName();
+
         m_sPrint = m_sPrint.substr(0, pos) + replace + m_sPrint.substr(pos2+1);
     }
 

@@ -112,6 +112,7 @@ public:
     void h_updatePlayers(std::string&, CPlayer*);
 
     // *** WORLD CONTEXT *** //
+    void h_finishCharacter(std::string&, CPlayer*);
     void h_killCharacter(std::string&, CPlayer*);
     void h_deleteCharacter(std::string&, CPlayer*);
     void h_addItem(std::string&, CPlayer*);

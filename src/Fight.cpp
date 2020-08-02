@@ -30,7 +30,7 @@ string CFight::fightRound(string sPlayerChoice)
             m_player->appendSuccPrint("+ " + std::to_string(ep) + " EP\n");
             m_player->addEP(ep);
         }
-        return "endFight;killCharacter " + m_opponent->getID();
+        return "endFight;finishCharacter " + m_opponent->getID();
     }
     sOutput+=createFightingAgainst();
 

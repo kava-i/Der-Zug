@@ -103,6 +103,7 @@ public:
     void executeActions(CPlayer* P);
 
     // *** functions *** //
+    string toeten(CPlayer*);
     string standard(CPlayer*);
     string keinTicket(CPlayer*);
     string strangeGuy1(CPlayer*); 

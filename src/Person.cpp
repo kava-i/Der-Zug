@@ -19,6 +19,8 @@ CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttac
     m_stats["strength"] = jAttributes.value("strength", 8);
     m_stats["skill"]    = jAttributes.value("skill", 8);
     m_stats["ep"]	    = jAttributes.value("ep", 0);
+
+    m_faint = (bool)jAttributes.value("faint", 0);
     
     m_roomDescription = new CText(jAttributes.value("roomDescription", nlohmann::json::parse("{}")), p);
     m_deadDescription = jAttributes.value("deadDescription", nlohmann::json::parse("{}"));
@@ -54,6 +56,12 @@ int CPerson::getStat(std::string id) {
     std::cout << "Attribute accessed which does not exits.\n";
     return 999;
 }
+
+///return whether character can faint or dies immediately 
+bool CPerson::getFaint() {
+    return m_faint;
+}
+
 
 ///Return person's dialogue.
 CDialog* CPerson::getDialog() { 
