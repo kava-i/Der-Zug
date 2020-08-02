@@ -23,6 +23,9 @@ protected:
     ///Additional descriptions
     CText* m_roomDescription;           //< Player in room, sometimes as mind.
     CText* m_sShotDescription;          //< Brief description, never as mind.
+    nlohmann::json m_deadDescription;   //< Description for when the character is dead.
+
+    bool m_faint;
     
     ///Stats, such as live points, strength, virtue etc.
     typedef map<string, int> stats;
@@ -65,6 +68,9 @@ public:
     */
     int getStat(std::string id);
 
+    ///return whether character can faint or dies immediately 
+    bool getFaint();
+
     ///Return person's attacks.
     attacks& getAttacks();
     std::map<std::string, std::string> getAttacks2();
@@ -81,10 +87,11 @@ public:
     ///Description where the player is located in the room
     std::string getRoomDescription();    
 
-    /**
-    * get description of character, in non-spoken format.
-    */
+    ///Get description of character, in non-spoken format.
     std::string getReducedDescription();
+
+    ///Get description of character, when he is dead.
+    nlohmann::json getDeadDescription();
 
 
     // *** SETTER *** //

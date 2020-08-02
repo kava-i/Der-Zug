@@ -104,6 +104,8 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_updateListeners"] = &CEnhancedContext::h_updatePlayers;
 
     // ***** WORLD CONTEXT ***** //
+    m_handlers["h_finishCharacter"] = &CEnhancedContext::h_finishCharacter;
+    m_handlers["h_killCharacter"] = &CEnhancedContext::h_killCharacter;
     m_handlers["h_deleteCharacter"] = &CEnhancedContext::h_deleteCharacter;
     m_handlers["h_addItem"] = &CEnhancedContext::h_addItem;
     m_handlers["h_recieveMoney"] = &CEnhancedContext::h_recieveMoney;
@@ -126,6 +128,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_showExits"] = &CEnhancedContext::h_showExits;
     m_handlers["h_show"] = &CEnhancedContext::h_show;
     m_handlers["h_look"] = &CEnhancedContext::h_look;
+    m_handlers["h_search"] = &CEnhancedContext::h_search;
     m_handlers["h_take"] = &CEnhancedContext::h_take;
     m_handlers["h_goTo"] = &CEnhancedContext::h_goTo;
     m_handlers["h_consume"] = &CEnhancedContext::h_consume;
@@ -176,7 +179,9 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_choose_equipe"] = &CEnhancedContext::h_choose_equipe;
     m_handlers["h_updateStats"] = &CEnhancedContext::h_updateStats;
 
-
+    // --- *** TIMEEVENTS *** --- //
+    m_handlers["t_highness"] = &CEnhancedContext::t_highness;
+    m_handlers["t_throwEvent"] = &CEnhancedContext::t_throwEvent;
 }
 
 void CEnhancedContext::initializeTemplates()
@@ -194,6 +199,8 @@ void CEnhancedContext::initializeTemplates()
     m_templates["world"] = {
                     {"name", "world"}, {"permeable", true},
                     {"handlers",{
+                        {"finishCharacter", {"h_finishCharacter"}},
+                        {"killCharacter", {"h_killCharacter"}},
                         {"deleteCharacter", {"h_deleteCharacter"}},
                         {"addItem", {"h_addItem"}},
                         {"recieveMoney", {"h_recieveMoney"}},
@@ -219,6 +226,7 @@ void CEnhancedContext::initializeTemplates()
                         {"go", {"h_goTo"}},
                         {"show",{"h_show"}}, 
                         {"look",{"h_look"}}, 
+                        {"search",{"h_search"}}, 
                         {"talk",{"h_startDialog"}}, 
                         {"pick",{"h_take"}}, 
                         {"consume",{"h_consume"}}, 
@@ -255,6 +263,26 @@ void CEnhancedContext::initializeTemplates()
 
 // ***** ***** FUNCTIONS ***** ****** // 
 
+
+// *** add and delete time events *** //
+void CEnhancedContext::add_timeEvent(std::string id, std::string scope, std::string info, double duration, int priority) {
+    m_timeevents.insert(new CTimeEvent(id, scope, info, duration), priority, id);
+}
+
+bool CEnhancedContext::timeevent_exists(std::string type)
+{
+    if(m_timeevents.getContext(type) != NULL)
+        return true;    
+    return false;
+}
+
+void CEnhancedContext::deleteTimeEvent(std::string name)
+{
+    m_timeevents.erase(name);
+}
+
+// *** add and delete listeners *** //
+
 void CEnhancedContext::add_listener(nlohmann::json j)
 {
     if(j.count("regex") > 0)
@@ -263,23 +291,19 @@ void CEnhancedContext::add_listener(nlohmann::json j)
         add_listener(j["id"], (std::string)j["string"], j.value("priority", 0));
 
 }
-void CEnhancedContext::add_listener(std::string sID, std::string sEventType, int priority)
-{
+void CEnhancedContext::add_listener(std::string sID, std::string sEventType, int priority) {
     m_eventmanager.insert(new CListener(sID, sEventType), priority, sID);
 }
 
-void CEnhancedContext::add_listener(std::string sID, std::regex eventType, int pos, int priority)
-{
+void CEnhancedContext::add_listener(std::string sID, std::regex eventType, int pos, int priority) {
     m_eventmanager.insert(new CListener(sID, eventType, pos), priority, sID);
 }
 
-void CEnhancedContext::add_listener(std::string sID, std::vector<std::string> eventType, int priority)
-{
+void CEnhancedContext::add_listener(std::string sID, std::vector<std::string> eventType, int priority) {
     m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
 }
 
-void CEnhancedContext::add_listener(std::string sID, std::map<std::string, std::string> eventType, int priority)
-{
+void CEnhancedContext::add_listener(std::string sID, std::map<std::string, std::string> eventType, int priority) {
     m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
 }
 
@@ -318,6 +342,31 @@ bool CEnhancedContext::throw_event(event e, CPlayer* p)
         error(p);
         
     return m_curPermeable;
+}
+
+void CEnhancedContext::throw_timeEvents(CPlayer* p)
+{
+    //Check if player is currently occupied.
+    if(p->getContexts().nonPermeableContextInList() == true)
+        return;
+
+    //Get current time.
+    auto end = std::chrono::system_clock::now();
+
+    //Check if a time event is ready to throw, then throw.
+    std::deque<CTimeEvent*> sortedEvents = m_timeevents.getSortedCtxList();
+    for(size_t i=0; i<sortedEvents.size(); i++)
+    {
+        std::chrono::duration<double> diff = end - sortedEvents[i]->getStart();
+        if(diff.count() >= sortedEvents[i]->getDuration())
+        {
+            std::string str = sortedEvents[i]->getInfo();
+            (this->*m_handlers[sortedEvents[i]->getID()])(str, p);
+            std::cout << "BACKPASS: " << str << std::endl;
+            if(str == "delete")
+                m_timeevents.eraseHighest(sortedEvents[i]->getID());
+        }
+    }
 }
 
 // ***** ERROR FUNCTIONS ****** ***** //
@@ -404,6 +453,47 @@ void CEnhancedContext::h_updatePlayers(std::string&, CPlayer*p)
 
 // ***** ***** WORLD CONTEXT ***** ***** //
 
+void CEnhancedContext::h_finishCharacter(std::string& sIdentifier, CPlayer* p) {
+
+    //Get character
+    CPerson* person = p->getWorld()->getCharacter(sIdentifier);
+
+    if(person->getFaint() == false)
+        p->throw_events("killCharacter " + sIdentifier, "h_finishCharacter");
+    else
+    {
+        if(person->getDialog("faint") != nullptr)
+            person->setDialog("faint");
+        else
+            person->setDialog(p->getWorld()->getDialog("faintDialog"));
+    } 
+    m_curPermeable=false;
+}
+void CEnhancedContext::h_killCharacter(std::string& sIdentifier, CPlayer* p) {
+
+    //Get character
+    CPerson* person = p->getWorld()->getCharacter(sIdentifier);
+
+    //Create json for details
+    nlohmann::json jDetail = {
+                {"id", person->getID()},  
+                {"name", person->getName()}, 
+                {"look", ""}};
+
+    //Parse details-description
+    if(person->getDeadDescription().size() == 0)
+    {
+        nlohmann::json j = { {"speaker", "PERZEPTION"}, {"text", "Ein totes etwas?"} };
+        jDetail["description"].push_back(j);
+    }
+    else
+        jDetail["description"] = person->getDeadDescription();
+
+    //Create new detail and add to room and map of details
+    CDetail* detail = new CDetail(jDetail, p, person->getInventory().mapItems());
+    p->getRoom()->getDetails()[person->getID()] = detail;
+    h_deleteCharacter(sIdentifier, p);
+}
 void CEnhancedContext::h_deleteCharacter(std::string& sIdentifier, CPlayer* p) {
     p->getRoom()->getCharacters().erase(sIdentifier);
     delete p->getWorld()->getCharacter(sIdentifier);
@@ -441,8 +531,9 @@ void CEnhancedContext::h_endDialog(std::string& sIdentifier, CPlayer* p) {
 }
 
 void CEnhancedContext::h_newFight(std::string& sIdentifier, CPlayer* p) {
+
     auto lambda = [](CPerson* person){return person->getName(); };
-    std::string str = func::getObjectId(p->getRoom()->getCharacters(), str, lambda);
+    std::string str =func::getObjectId(p->getRoom()->getCharacters(),sIdentifier,lambda);
    
     if(p->getWorld()->getCharacter(str) != nullptr)
         p->setFight(new CFight(p, p->getWorld()->getCharacter(str)));
@@ -534,10 +625,14 @@ void CEnhancedContext::h_addTimeEvent(std::string& sIdentifier, CPlayer* p)
     std::vector<std::string> atts = func::split(sIdentifier, ",");
 
     //Check if sIdentifier contains the fitting values
-    if(atts.size() != 2 || std::isdigit(atts[1][0]) == false)
-        std::cout << "Something went worng! Player Attribute could not be changed.\n";
+    if(atts.size()!=4 || std::isdigit(atts[3][0])==false || std::isdigit(atts[2][0])==false)
+        std::cout << "Something went worng! Time events could not be added.\n";
     else
-        p->addTimeEvent("e", std::stod(atts[1], nullptr), &CPlayer::t_throwEvent, atts[0]);
+    {
+        std::cout << "Added to context: " << atts[1] << std::endl;
+        p->getContext(atts[1])->add_timeEvent("t_throwEvent", atts[1], atts[0], std::stod(atts[3], nullptr), stoi(atts[2]));
+    }
+
     m_curPermeable = false;
 }
 
@@ -625,7 +720,7 @@ void CEnhancedContext::h_look(std::string& sIdentifier, CPlayer* p)
     std::string sWhere = sIdentifier.substr(0, pos);
     std::string sWhat = sIdentifier.substr(pos+1);
     auto lambda = [](CDetail* detail) { return detail->getName();};
-    std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), sIdentifier, lambda);
+    std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), sWhat, lambda);
 
     //Check whether input is correct/ detail could be found.
     if(sDetail == "")
@@ -640,6 +735,27 @@ void CEnhancedContext::h_look(std::string& sIdentifier, CPlayer* p)
         p->appendDescPrint(p->getRoom()->look(sDetail, p->getMode(), p->getGramma()));
     else
         p->appendErrorPrint("Ich kann nicht " + sWhere + " " + detail->getName() + " schauen.\nSoll ich in, auf oder unter " + detail->getName() + " schauen?\n");
+}
+
+void CEnhancedContext::h_search(std::string& sIdentifier, CPlayer* p)
+{
+    auto lambda = [](CDetail* detail) { return detail->getName();};
+    std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), sIdentifier, lambda);
+
+    //Check whether input is correct/ detail could be found.
+    if(sDetail == "")
+    {
+        p->appendErrorPrint("Ich weiß nicht, was du durchsuchen willst.\n");
+        return;
+    }
+    
+    CDetail* detail  = p->getRoom()->getDetails()[sDetail];
+
+    //Check whether location is neccessary
+    if(detail->getLook() == "")
+        p->appendDescPrint(p->getRoom()->look(sDetail, p->getMode(), p->getGramma()));
+    else
+        p->appendDescPrint("Ich weiß nicht, wo ich suchen soll. Sag: \"schaue [in/ unter/ ...] [gegenstand]\"\n");
 }
 
 void CEnhancedContext::h_goTo(std::string& sIdentifier, CPlayer* p) {
@@ -808,11 +924,10 @@ void CEnhancedContext::h_attack(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
 {
-    p->throw_events("recieveMoney 4", "try");
     p->throw_events("go neben", "try");
     p->throw_events("go Toil", "try");
-    p->throw_events("gehe zur Männer", "try");
-    p->throw_events("spreche Ticket an", "try");
+    p->throw_events("go frauen", "try");
+    p->throw_events("2", "try");
 
 }
 
@@ -863,7 +978,6 @@ void CEnhancedContext::initializeDialogListeners(std::string newState, CPlayer* 
         counter++;
     }
     setAttribute<std::map<size_t, size_t>>("mapOptions", mapOtptions);
-    std::cout << "Done.\n";
 }
 
 void CEnhancedContext::h_call(std::string& sIdentifier, CPlayer* p)
@@ -974,18 +1088,6 @@ void CEnhancedContext::h_end(string& sMessage, CPlayer* p)
 
 // ***** ***** QUEST CONTEXT ***** ***** //
 
-void CEnhancedContext::initializeQuestListeners(map_type handler)
-{
-    for(auto it : handler)
-    {
-        if(m_handlers.count(it.first) == 0)
-            std::cout << "FATAL ERROR, Quest-handler \"" << it.first << "\" does not exits!!\n";
-        else
-            add_listener(it.first, it.second);
-    }
-}
-
-
 // *** *** Tutorial *** *** //
 void CEnhancedContext::h_startTutorial(std::string&, CPlayer* p)
 {
@@ -1026,7 +1128,8 @@ void CEnhancedContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
 
     p->questSolved(getAttribute<std::string>("questID"), "3zum_gleis");
 
-    p->appendStoryPrint("Du siehst deinen Zug einfahren. Du bewegst dich auf ihn zu, zeigst dein Ticket, der Schaffner musstert dich kurz und lässt dich dann eintreten. Du suchst dir einen freien Platz, legst dein Bündel auf den sitz neben dich und schläfst ein...\n $ Nach einem scheinbar endlos langem schlaf wachst du wieder in deinem Abteil auf. Das Abteil ist leer. Leer bist auf einen geheimnisvollen Begleiter: Parsen.\n");
+    p->appendStoryPrint("Du siehst deinen Zug einfahren. Du bewegst dich auf ihn zu, zeigst dein Ticket, der Schaffner musstert dich kurz und lässt dich dann eintreten. Du suchst dir einen freien Platz, legst dein Bündel auf den sitz neben dich und schläfst ein...\n $");
+    p->appendStoryPrint("Nach einem scheinbar endlos langem schlaf wachst du wieder in deinem Abteil auf. Das Abteil ist leer. Leer bist auf einen geheimnisvollen Begleiter: Parsen.\n");
 
     p->setRoom(p->getWorld()->getRoom("compartment-a"));
     m_curPermeable = false;
@@ -1152,3 +1255,24 @@ void CEnhancedContext::h_updateStats(std::string& sIdentifier, CPlayer* p)
         p->updateStats(num);
 }
 
+
+// ----- ***** TIME EVENTS ***** ------ //
+void CEnhancedContext::t_highness(std::string& str, CPlayer* p)
+{
+    if(p->getStat("highness")==0)
+        return;
+    p->appendStoryPrint("Time always comes to give you a hand; Things begin to become clearer again. Highness decreased by 1.\n");
+    p->setStat("highness", p->getStat("highness")-1);
+
+    p->getContext("standard")->deleteTimeEvent("t_highness");
+    if(p->getStat("highness") > 0)
+        add_timeEvent("t_highness", "standard", "", 0.2);
+}
+
+void CEnhancedContext::t_throwEvent(std::string& sInfo, CPlayer* p) 
+{
+    std::cout << "t_throwEvent: " << sInfo << std::endl;
+    std::string str = sInfo;
+    p->addPostEvent(str);
+    sInfo = "delete";
+}

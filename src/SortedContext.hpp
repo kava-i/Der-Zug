@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <map>
 #include <queue>
 #include <list>
@@ -43,15 +44,41 @@ public:
         T* ctx = nullptr;
         try
         {
-        ctx = m_contextStack.at(name);
-        m_reloadQueue = true;
-        m_contextStack.erase(name);
-        m_sortedContexts.erase(std::remove_if(m_sortedContexts.begin(),m_sortedContexts.end(),[ctx](const std::pair<T*,int> &p){if(p.first==ctx)return true; else return false;}),m_sortedContexts.end());
+            ctx = m_contextStack.at(name);
+            m_reloadQueue = true;
+            m_contextStack.erase(name);
+            m_sortedContexts.erase(std::remove_if(m_sortedContexts.begin(),m_sortedContexts.end(),[ctx](const std::pair<T*,int> &p){if(p.first==ctx)return true; else return false;}),m_sortedContexts.end());
         }
         catch(...)
         {
-        return;
+            return;
         }
+    }
+
+    /**
+    * erase highest priority from stack.
+    * @param[in] name
+    */
+    void eraseHighest(std::string name)
+    {
+        if(m_contextStack.count(name) == 0)
+            return;
+ 
+        //Make sure still sorted and set queue to relod
+         m_reloadQueue = true;
+        std::sort(m_sortedContexts.begin(),m_sortedContexts.end(),[](std::pair<T*,int>& a,std::pair<T*,int>& b){return a.second<b.second;});
+        std::reverse(m_sortedContexts.begin(), m_sortedContexts.end());
+
+        auto lambda = [&](std::pair<T*, int>& a) { return a.first->getID() == name; };
+
+        //Delete first occurance
+        auto it = std::find_if(m_sortedContexts.begin(), m_sortedContexts.end(), lambda);
+        if(it != m_sortedContexts.end())
+            m_sortedContexts.erase(it);
+
+        //Delete in map if empty
+        if(std::find_if(m_sortedContexts.begin(), m_sortedContexts.end(), lambda) == m_sortedContexts.end())
+            m_contextStack.erase(name);
     }
 
     /**
@@ -84,10 +111,10 @@ public:
     {
         if(m_reloadQueue)
         {
-        m_sortedQueue.clear();
-        for(auto &it : m_sortedContexts)
-            m_sortedQueue.push_front(it.first);
-        m_reloadQueue = false;
+            m_sortedQueue.clear();
+            for(auto &it : m_sortedContexts)
+                m_sortedQueue.push_front(it.first);
+            m_reloadQueue = false;
         }
         return m_sortedQueue;
     }

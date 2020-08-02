@@ -99,3 +99,18 @@ bool CInventory::empty()
     } 
     return empty;
 }
+
+
+std::map<std::string, CItem*> CInventory::mapItems()
+{
+    std::map<std::string, CItem*> mapItems;
+    for(auto it : m_inventory)
+    {
+        for(auto jt : it.second)
+        {
+            for(auto kt : jt.second)
+                mapItems[kt->getID()] = kt;
+        }
+    }
+    return mapItems;
+}

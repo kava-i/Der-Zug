@@ -21,9 +21,6 @@ std::string CText::print(bool events)
     for(size_t i=0; i<m_texts.size(); i++)
         sOutput += m_texts[i]->print(m_player, events);
 
-    //if(sOutput != "")
-    //    sOutput.pop_back();
-
     return sOutput;
 }
 

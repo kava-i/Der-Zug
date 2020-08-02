@@ -116,9 +116,10 @@ std::map<string, string (CDState::*)(CPlayer* p)> CDState::m_functions = {};
 void CDState::initializeFunctions()
 {
     m_functions["standard"]     = &CDState::standard;
+    m_functions["toeten"]       = &CDState::toeten;
     m_functions["keinTicket"]   = &CDState::keinTicket;
-    m_functions["strangeGuy1"]   = &CDState::strangeGuy1;
-    m_functions["strangeGuy2"]   = &CDState::strangeGuy2;
+    m_functions["strangeGuy1"]  = &CDState::strangeGuy1;
+    m_functions["strangeGuy2"]  = &CDState::strangeGuy2;
 }
 
 
@@ -171,10 +172,8 @@ void CDState::executeActions(CPlayer* p)
 // *** FUNCTION POINTER *** //
 string CDState::standard(CPlayer* p)
 {
-    std::cout << "Calling state...\n";
     string sOutput = m_text->print();
 
-    std::cout << "Creating option\n";
     std::vector<size_t> activeOptions = getActiveOptions(p);
     size_t counter = 1;
     for(auto opt : activeOptions)
@@ -185,7 +184,6 @@ string CDState::standard(CPlayer* p)
             sOutput += "(" + std::to_string(counter) + ": " + m_options[opt].sText + ")\n";
         counter++;
     }
-    std::cout << "done.\n";
     
     //Execute actions after this dialog state (f.e. delete options, change text etc.)
     executeActions(p);
@@ -213,6 +211,13 @@ std::vector<size_t> CDState::getActiveOptions(CPlayer* p)
 
 
 // ***** SPECIAL STATE FUNCTIONS ***** //
+
+string CDState::toeten(CPlayer* p)
+{
+    string sOutput=standard(p);
+    m_sEvents += ";killCharacter " + p->getCurDialogPartner()->getID();
+    return sOutput; 
+}
 
 string CDState::keinTicket(CPlayer* p)
 {

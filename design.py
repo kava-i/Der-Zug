@@ -27,6 +27,7 @@ class GameDesigner:
         self.fields = {
                 "text" : "list_object",
                 "roomDescription" : "list_object",
+                "deadDescription" : "list_object",
                 "description" : "list_object",
                 "options" : "list_object",
                 "steps" : "list_object",
@@ -40,9 +41,9 @@ class GameDesigner:
         options = [{"id":0, "text":"", "to":""}]
         steps = [{"name":"", "id":"", "handler":"", "description":""}]
         self.attributes = {
-            "dialogs": {"id":"", "text":desc, "options":options, "actions":"", "events":""},
+            "dialogs": {"id":"", "text":desc, "options":options, "actions":"", "events":"", "function":""},
             "details": {"name":"", "id":"", "description":desc, "look":"", "items":[""], "defaultItems":""},
-            "characters": {"name":"", "id":"", "hp":0, "strength":0, "roomDescription":desc, "description":desc, "defaultDescription":"", "defaultDialog":"","attacks":{}, "dialog":"", "handlers":""},
+            "characters": {"name":"", "id":"", "hp":0, "strength":0, "faint":0, "roomDescription":desc, "description":desc, "deadDescription":desc, "items":[""], "defaultDescription":"", "defaultDialog":"","attacks":{}, "dialog":"", "handlers":""},
             "players": {"name":"", "id":"", "room":"", "hp":0, "strength":0, "attacks":[""]},
             "quests": {"name":"", "id":"", "description":"", "ep":0, "steps": steps},
             "items": {"name":"", "id":"", "category":"", "type":"", "attack":"", "value":0, "description":desc},
@@ -55,6 +56,7 @@ class GameDesigner:
             "text" : description,
             "description" : description,
             "roomDescription" : description,
+            "deadDescription" : description,
             "options": {"id":0, "text":"", "to":"", "deps":""},
             "steps": steps[0]
             }
@@ -62,6 +64,7 @@ class GameDesigner:
             "text": {"speaker":"", "text":""},
             "description":{"speaker":"", "text":""},
             "roomDescription":{"speaker":"", "text":""},
+            "deadDescription":{"speaker":"", "text":""},
             "options":{"id":0, "text":"", "to":""},
             "steps": steps[0]
         }

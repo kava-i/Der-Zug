@@ -1,7 +1,8 @@
 Commands
 Zeige [Inventar, Personen, Gegenstände, Ausgänge, besuchte Räume]   z.B. "Zeige personen"
 Zeige (gelöste) Quests                              z.B. "Zeige quests" oder "zeige gelöste quests"
-Schaue [in, unter, auf, über] [mobeliar]            z.B. "schaue in der Kiste"
+Schaue [in, unter, auf, über] [detail]              z.B. "schaue in der Kiste"
+Durchsuche [detail]                                 z.B. "durchsuche leiche" (funktioniert nicht bei allen Details) 
 Gehe [Preposition] [Name des Ausgangs]              z.B. "Gehe auf den Flur"
 Gehe zurück
 Spreche [Name der Person] an                        z.B. "Spreche Alex an"

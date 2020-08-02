@@ -1,6 +1,5 @@
-#ifndef CPLAYER_H
+#ifndef CPLAYER_H 
 #define CPLAYER_H
-
 
 #include <iostream>
 #include <map>
@@ -62,7 +61,8 @@ private:
 
 
     // *** States, like current fight *** //
-    CFight* m_curFight;                         ///< Current fight player is engaged in (maybe NULL)
+    CFight* m_curFight;                         ///< Current fight player is engaged in
+    CPerson* m_curDialogPartner;                ///< Current dialog partner
 
     // *** Others *** //
     map<string, CPlayer*> m_players;                ///< List of all online players in game
@@ -121,8 +121,14 @@ public:
     ///Return current fight.
     CFight* getFight();
 
-    //Return players context-stack 
+    ///Return current dialog-partner
+    CPerson* getCurDialogPartner();
+
+    ///Return players context-stack 
     CContextStack<CEnhancedContext>& getContexts();
+
+    ///Return a context from players context stack
+    CEnhancedContext* getContext(std::string);
 
     //Return map of players
     std::map<std::string, CPlayer*>& getMapOFOnlinePlayers();
@@ -410,19 +416,6 @@ public:
     * check if a time event is triggered.
     */
     void checkTimeEvents();
-
-    // ** Time handler ** //
-
-    /**
-    * Event triggered when highness decreases.
-    */
-    void t_highness(std::string);
-
-    /**
-    * Event to throw any event after a certain time.
-    */
-    void t_throwEvent(std::string);
-    
 };
 
 #endif

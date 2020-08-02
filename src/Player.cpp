@@ -25,13 +25,10 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     m_abbilities = {"strength", "skill"};
 
     //Initiazize world
-    std::cout << "Creating world.\n";
     m_world = new CWorld(this);
-    std::cout << "Done.\n";
     m_parser = new CParser(m_world->getConfig());
     m_gramma = gramma;
     
-
     //Character and Level
     m_level = 0;
     m_ep = 0;
@@ -47,6 +44,10 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
         for(auto it : attributes)   
             m_stats[it] = 0;
     }
+
+    //States, f.e. current fight, Dialog-partner
+    m_curFight = nullptr;
+    m_curDialogPartner = nullptr;
 
     //Set current room
     m_room = room;
@@ -149,10 +150,25 @@ CFight* CPlayer::getFight() {
     return m_curFight; 
 }
 
+///Return current dialog-partner
+CPerson* CPlayer::getCurDialogPartner() {
+    return m_curDialogPartner;
+}
+
 //Return players context-stack 
 CContextStack<CEnhancedContext>& CPlayer::getContexts() { 
     return m_contextStack; 
 }
+
+///Return a context from players context stack
+CEnhancedContext* CPlayer::getContext(std::string context)
+{
+    if(m_contextStack.getContext(context) != NULL)
+        return m_contextStack.getContext(context);
+    std::cout << cRED << "FATAL!!! Context not found: " << context << cCLEAR << std::endl;
+    return nullptr;
+}
+
 
 //Return map of players
 std::map<std::string, CPlayer*>& CPlayer::getMapOFOnlinePlayers()
@@ -279,14 +295,25 @@ void CPlayer::setWobconsole(Webconsole* webconsole) {
 */
 void CPlayer::updateRoomContext()
 {
-    m_contextStack.erase("room");
+    //Create new room context
     CEnhancedContext* context = new CEnhancedContext((std::string)"room");
+
+    //Transer Time events if context exists
+    if(m_contextStack.getContext("room") != NULL)
+        context->setTimeEvents(m_contextStack.getContext("room")->getTimeEvents());
+
+    //Delete old room-context
+    m_contextStack.erase("room");
+
+    //Update handler
     for(auto it : m_room->getHandler())
     {
         context->add_listener(it);
         if(it.count("infos") > 0)
             context->getAttributes()["infos"][(std::string)it["id"]] = it["infos"];
     }
+    
+    //Insert new room-context into context-stack
     m_contextStack.insert(context, 0, "room");
 }
 
@@ -337,10 +364,14 @@ void CPlayer::endFight() {
 */
 void CPlayer::startDialog(string sCharacter, CDialog* dialog)
 {
+    //Set current dialog
     if(dialog != nullptr)
         m_dialog = dialog;
     else
         m_dialog = m_world->getCharacter(sCharacter)->getDialog();
+
+    //Add person to current dialog partner
+    m_curDialogPartner = m_world->getCharacter(sCharacter);       
 
     //Create context and add to context-stack.
     CEnhancedContext* context = new CEnhancedContext((std::string)"dialog", {{"partner", sCharacter}});
@@ -358,11 +389,10 @@ void CPlayer::startDialog(string sCharacter, CDialog* dialog)
 */
 void CPlayer::startChat(CPlayer* player)
 {
-    appendTechPrint("Sorry this option is currently not available\n");
-    appendStoryPrint("Du gehst auf " + player->getName() + " zu und räusperst dich... \n");
+    appendStoryPrint("Du gehst auf " + player->getName() + " zu und räusperst dich...\n");
 
     if(player->getContexts().nonPermeableContextInList() == true)
-        appendTechPrint(player->getName() + " ist zur Zeit beschäftigt.\n");
+        appendStoryPrint(player->getName() + " ist zur Zeit beschäftigt.\n");
     else
     {
         //Add Chat context for both players
@@ -840,8 +870,11 @@ void CPlayer::checkCommands()
         size_t pos2 = m_sPrint.find("}"); 
         std::string cmd = m_sPrint.substr(pos+1, pos2-(pos+1));
         std::string replace = "";
-        if(cmd.find("name") != std::string::npos)
+        if(cmd.find("cname") != std::string::npos && m_curDialogPartner != nullptr)
+            replace = m_curDialogPartner->getName();
+        else if(cmd.find("name") != std::string::npos)
             replace = getName();
+
         m_sPrint = m_sPrint.substr(0, pos) + replace + m_sPrint.substr(pos2+1);
     }
 
@@ -919,8 +952,7 @@ void CPlayer::addSelectContest(std::map<std::string, std::string> mapObjects, st
 void CPlayer::addChatContext(std::string sPartner)
 {
     CEnhancedContext* context = new CEnhancedContext("chat", {{"partner", sPartner}});
-    std::regex reg("(.*)");
-    context->add_listener("h_send", reg, 1);
+    context->add_listener("h_send", (std::regex)"(.*)", 1);
     m_contextStack.insert(context, 1, "chat");
 }
 
@@ -949,9 +981,19 @@ void CPlayer::printError(std::string sError)
 */
 void CPlayer::throw_events(string sInput, std::string sMessage)
 {
+    updateRoomContext();
     std::cout << cRED << "Events: " << sInput << ", from: " << sMessage << cCLEAR << std::endl;
+
     //Check for time triggered events
-    checkTimeEvents();
+    getContext("room")->throw_timeEvents(this);
+    getContext("standard")->throw_timeEvents(this);
+
+    if(sInput == "")
+    {
+        throw_staged_events(m_staged_pre_events, "pre");
+        throw_staged_events(m_staged_post_events, "post"); 
+        return;
+    }
 
     //Parse command
     std::vector<std::pair<std::string, std::string>> events = m_parser->parse(sInput);
@@ -968,87 +1010,3 @@ void CPlayer::throw_events(string sInput, std::string sMessage)
         }
     }
 }
-
-
-// ***** ***** TIME EVENTS ****** *****
-
-/**
-* Check if a time-bound event exists.
-* @param sType event type.
-*/
-bool CPlayer::checkEventExists(string sType)
-{
-    return m_timeEventes.count(sType) > 0;
-}
-
-/**
-* Add new time-bound event.
-* @param sType event type 
-* @param duration how long it takes till event will be triggered.
-* @param func function called when event is triggered.
-*/
-void CPlayer::addTimeEvent(string sType, double duration, void (CPlayer::*func)(std::string), std::string sInfos)
-{
-    auto start = std::chrono::system_clock::now();
-    m_timeEventes[sType].push_back(std::make_tuple(start, duration*60, func, sInfos));
-}
-
-/**
-* check if a time event is triggered.
-*/
-void CPlayer::checkTimeEvents()
-{
-    //Checl if player is currently occupied
-    if(m_contextStack.nonPermeableContextInList() == true)
-        return;
-
-    std::list<std::pair<std::string, size_t>> lExecute;
-
-    //Collect element to be executed
-    auto end = std::chrono::system_clock::now();
-    for(auto it : m_timeEventes)
-    {
-        size_t counter=0;
-        for(auto jt : m_timeEventes[it.first]) {
-            std::chrono::duration<double> diff = end - std::get<0>(jt);
-            if(diff.count() >= std::get<1>(jt))
-                lExecute.push_back(std::make_pair(it.first, counter));
-        }
-    }
-
-    //Execute events and delete afterwards
-    for(auto it : lExecute) 
-    {
-        std::cout << "TIMEEVENTCOUNTER: " << it.second << std::endl;
-        std::tuple curT = m_timeEventes[it.first][it.second];
-        (this->*std::get<2>(curT))(std::get<3>(curT));
-        m_timeEventes[it.first].erase(m_timeEventes[it.first].begin() + it.second);
-        if(m_timeEventes[it.first].size() == 0)
-            m_timeEventes.erase(it.first);
-    }
-}
-
-// *** Time handler *** //
-
-/**
-* Event triggered when highness decreases.
-*/
-void CPlayer::t_highness(std::string)
-{
-    if(m_stats["highness"]==0)
-        return;
-    appendStoryPrint("Time always comes to give you a hand; Things begin to become clearer again. Highness decreased by 1.\n");
-    m_stats["highness"]--;
-
-    if(m_stats["highness"]>0)
-        addTimeEvent("highness", 2, &CPlayer::t_highness);
-}
-
-/**
-* Event to throw any event after a certain time.
-*/
-void CPlayer::t_throwEvent(std::string sInfo)
-{
-    addPostEvent(sInfo);
-}
-

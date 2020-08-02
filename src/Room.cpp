@@ -143,7 +143,7 @@ string CRoom::look(string sDetail, std::string sMode, CGramma* gramma)
 
     //Print output
     if(sMode == "prosa")
-        sOutput = gramma->build(func::to_vector(detail->getItems(), lambda), "In der Kiste sind", "leider nichts.");
+        sOutput = gramma->build(func::to_vector(detail->getItems(), lambda), "Hier sind", "leider nichts.");
     else
         sOutput = detail->getName() + "\n" + func::printList(detail->getItems(), lambda);
 
