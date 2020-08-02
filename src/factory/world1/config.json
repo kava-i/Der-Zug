@@ -1,10 +1,18 @@
 {
     "printing":{
-        "story":"STORY TELLER", 
-        "error":"LOGIK",
-        "desc":"PERZEPTION",
-        "tech":"TECH GUY"
+        "story":"ERZÄHLER", 
+        "error":"",
+        "desc":"SINNLICHE GEWISSHEIT",
+        "tech":""
         },
+    "mind":[
+        {"id":"sinnliche gewissheit", "color":"blue", "level":1, "relevance":0.1},
+        {"id":"wahrnehmung", "color":"blue", "level":1, "relevance":0.2},
+        {"id":"vernunft", "color":"green", "level":0, "relevance":0.3},
+        {"id":"sittlichkeit", "color":"red", "level":0, "relevance":0.4},
+        {"id":"moralität", "color":"red", "level":0, "relevance":0.5},
+        {"id":"entfremdung", "color":"red", "level":0, "relevance":0.6}
+        ],
     "commands":[
         {"id":"show", "regex":"zeige (.*)"},
         {"id":"look", "regex":"schaue (.*)"},
@@ -16,7 +24,6 @@
         {"id":"dequipe", "regex":"rüste (.*) ab"},
         {"id":"examine", "regex":"(betrachte|beobachte) (.*)", "take":2}
         ],
-
     "attributes":[],
     "mapAttributes":{}
 }

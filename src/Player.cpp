@@ -35,10 +35,10 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     //Character and Level
     m_level = 0;
     m_ep = 0;
-    m_minds["perzeption"] = {"perzeption", BLUE, 1, 0.5};
-    m_minds["peddler"] = {"peddler", RED, 0, 0.4};
-    m_minds["drama"]  = {"drama", RED, 0, 0.3};
-    m_minds["logik"]  = {"logik", RED, 0, 0.2};
+    
+    std::map<std::string, std::string> colors = {{"blue", BLUE}, {"green", GREEN}, {"red", RED}};
+    for(auto it : m_world->getConfig()["minds"])
+        m_minds[it["id"]] = {it["id"], colors[it["color"]], it["level"], it["relevance"]};
 
     //Attributes
     if(m_world->getConfig().count("attributes")>0)

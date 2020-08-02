@@ -989,7 +989,7 @@ void CEnhancedContext::initializeQuestListeners(map_type handler)
 // *** *** Tutorial *** *** //
 void CEnhancedContext::h_startTutorial(std::string&, CPlayer* p)
 {
-    p->appendStoryPrint("Willkommen bei \"DER ZUG\"! Du befindest dich auf dem Weg nach Moskau. Dir fehlt dein Ticket. Tickets sind teuer. Glücklicherweise kennst du einen leicht verrückten, viel denkenden Mann, der sich \"Der Ticketverkäufer\" nennt. Suche ihn, er hat immer noch ein günsttiges Ticket für dich. Benutze die Befhelte \"go to [name des Ausgangs]\", um den Raum zu wechseln, um dir Personen und Ausgänge anzeigen zu lassen, nutze \"show people\", bzw. \"show exits\" oder auch \"show all\". Eine Liste mit allen Befhelen und zusätzlichen Hilfestellungen erhältst du, indem du \"help\" eingibst.$ ");
+    p->appendStoryPrint("Willkommen bei \"DER ZUG\"! Du befindest dich auf dem Weg nach Moskau. Dir fehlt dein Ticket. Tickets sind teuer. Glücklicherweise kennst du einen leicht verrückten, viel denkenden Mann, der sich \"Der Ticketverkäufer\" nennt. Suche ihn, er hat immer noch ein günstiges Ticket für dich. Benutze die Befehle \"gehe [name des Ausgangs]\", um den Raum zu wechseln, um dir Personen und Ausgänge anzeigen zu lassen, nutze \"Zeige Personen\", bzw. \"Zeige Ausgänge\" oder auch \"zeige alles\". Eine Liste mit allen Befehlen und zusätzlichen Hilfestellungen erhältst du, indem du \"help\" eingibst.$ ");
 
     p->setNewQuest("zug_nach_moskau");
     m_curPermeable = false;
@@ -998,11 +998,8 @@ void CEnhancedContext::h_startTutorial(std::string&, CPlayer* p)
 // *** *** Zug nach Moskau *** *** //
 void CEnhancedContext::h_ticketverkaeufer(std::string& sIdentifier, CPlayer* p)
 {
-    std::cout << "Called, with id: " << sIdentifier << std::endl;
     if(p->getRoom()->getID() != "bahnhof_toiletten")
         return;
-
-    std::cout << "Called, with id: " << sIdentifier << std::endl;
 
     if(sIdentifier == "bahnhof_maennerToilette" || fuzzy::fuzzy_cmp("zur männer-toilette", sIdentifier) <= 0.2) {
         p->questSolved(getAttribute<std::string>("questID"), "1ticketverkaeufer");
