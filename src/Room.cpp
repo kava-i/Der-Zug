@@ -49,6 +49,12 @@ std::vector<nlohmann::json> CRoom::getHandler() {
 
 // *** SETTER *** //
 void CRoom::setPlayers(objectmap& onlinePlayers) { m_players = onlinePlayers; }
+void CRoom::setShowMap(nlohmann::json j) {
+    std::cout << "setting....\n";
+    for(auto it = j.begin(); it!=j.end(); it++)
+        m_showMap[it.key()] = it.value().get<std::vector<string>>();
+    std::cout << "done.\n";
+}
 
 
 // *** VARIOUS FUNCTIONS *** //
@@ -77,13 +83,23 @@ string CRoom::showExits(std::string sMode, CGramma* gramma)
     if(sMode == "prosa")
     {
         auto lambda = [](CExit* exit) {return exit->getPrep() + " " + exit->getName();};
-        return gramma->build(func::to_vector(m_exits, lambda), "Hier geht es", "nirgends mehr hin.");
+        std::string pre = "Hier geht es";    
+        std::string post = "Nirgendwo hin.";
+        if(m_showMap.count("exits") > 0)
+        {
+            if(m_showMap["exits"].size() == 2)
+            {
+                pre = m_showMap["exits"][0];
+                post = m_showMap["exits"][1];
+            }
+            else
+                std::cout << "Wrong size!\n";
+        }
+        return gramma->build(func::to_vector(m_exits, lambda), pre, post);
     }
-    else
-    {
-        auto lamda = [](CExit* exit) {return exit->getName(); };
-        return "Exits: \n" + func::printList(m_exits, lamda);
-    }
+
+    auto lamda = [](CExit* exit) {return exit->getName(); };
+    return "Exits: \n" + func::printList(m_exits, lamda);
 }
 
 string CRoom::showCharacters(std::string sMode, CGramma* gramma)

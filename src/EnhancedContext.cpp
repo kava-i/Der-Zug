@@ -1091,7 +1091,8 @@ void CEnhancedContext::h_end(string& sMessage, CPlayer* p)
 // *** *** Tutorial *** *** //
 void CEnhancedContext::h_startTutorial(std::string&, CPlayer* p)
 {
-    p->appendStoryPrint("Willkommen bei \"DER ZUG\"! Du befindest dich auf dem Weg nach Moskau. Dir fehlt dein Ticket. Tickets sind teuer. Glücklicherweise kennst du einen leicht verrückten, viel denkenden Mann, der sich \"Der Ticketverkäufer\" nennt. Suche ihn, er hat immer noch ein günstiges Ticket für dich. Benutze die Befehle \"gehe [name des Ausgangs]\", um den Raum zu wechseln, um dir Personen und Ausgänge anzeigen zu lassen, nutze \"Zeige Personen\", bzw. \"Zeige Ausgänge\" oder auch \"zeige alles\". Eine Liste mit allen Befehlen und zusätzlichen Hilfestellungen erhältst du, indem du \"help\" eingibst.$ ");
+    p->appendStoryPrint("Willkommen bei \"DER ZUG\"! Du befindest dich auf dem Weg nach Moskau. Dir fehlt dein Ticket. Tickets sind teuer. Glücklicherweise kennst du einen leicht verrückten, viel denkenden Mann, der sich \"Der Ticketverkäufer\" nennt. Suche ihn, er hat immer noch ein günstiges Ticket für dich. $");
+    p->appendBlackPrint("ERZÄHLER", "Benutze die Befehle \"gehe [name des Ausgangs]\", um den Raum zu wechseln, um dir Personen und Ausgänge anzeigen zu lassen, nutze \"Zeige Personen\", bzw. \"Zeige Ausgänge\" oder auch \"zeige alles\". Eine Liste mit allen Befehlen und zusätzlichen Hilfestellungen erhältst du, indem du \"help\" eingibst.$ ");
 
     p->setNewQuest("zug_nach_moskau");
     m_curPermeable = false;
@@ -1143,7 +1144,7 @@ void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
 {
     auto lambda = [](CPerson* person) { return person->getName();};
     std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda);
-    if(character == "" || character.find("passant") == std::string::npos)
+    if(character == "" || character.find("passanten_gruppe") == std::string::npos)
         return;
 
     CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
@@ -1166,14 +1167,9 @@ void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
     if(step->getSolved() == true)
     {
         std::cout << "CHANGING DIALOGS OF PASSANTEN\n";
-        for(auto it : {"", "2", "3"})
-            p->getWorld()
-->getCharacter((string)"trainstation_bahnhof_eingangshalle_passant"+it)->setDialog("2");
-        for(auto it : {"", "2", "3"})
-            p->getWorld()->getCharacter((string)"trainstation_bahnhof_nebenhalle_passant"+it)->setDialog("2");
-        for(auto it : {"", "2", "3"})
-            p->getWorld()->getCharacter((string)"trainstation_gleis5_passant"+it)->setDialog("2");
-
+        p->getWorld()->getCharacter("trainstation_bahnhof_eingangshalle_passanten_gruppe")->setDialog("2");
+        p->getWorld()->getCharacter("trainstation_bahnhof_nebenhalle_passanten_gruppe")->setDialog("2");
+        p->getWorld()->getCharacter("trainstation_gleis5_passanten_gruppe")->setDialog("2");
         p->getContexts().erase(quest->getID());
     }
 }

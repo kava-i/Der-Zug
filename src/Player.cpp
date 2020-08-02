@@ -1,5 +1,6 @@
 #include "CPlayer.hpp"
 
+#define BLACK Webcmd::set_color(Webcmd::color::BLACK)
 #define GREEN Webcmd::set_color(Webcmd::color::GREEN)
 #define RED Webcmd::set_color(Webcmd::color::RED)
 #define BLUE Webcmd::set_color(Webcmd::color::BLUE)
@@ -33,9 +34,17 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     m_level = 0;
     m_ep = 0;
     
+    //Extract minds from config
     std::map<std::string, std::string> colors = {{"blue", BLUE}, {"green", GREEN}, {"red", RED}};
     for(auto it : m_world->getConfig()["minds"])
-        m_minds[it["id"]] = {it["id"], colors[it["color"]], it["level"], it["relevance"]};
+    {
+        SMind mind;
+        mind.sID = it["id"];
+        mind.color = colors[it["color"]];
+        mind.level = it["level"].get<int>();
+        mind.relevance = it["relevance"].get<double>();
+        m_minds[it["id"]] = mind;
+    }
 
     //Attributes
     if(m_world->getConfig().count("attributes")>0)
@@ -223,6 +232,10 @@ void CPlayer::appendSpeackerPrint(std::string sSpeaker, std::string sPrint) {
         appendPrint(sPrint + "\n");
 }
 
+void CPlayer::appendBlackPrint(std::string, std::string sPrint) {
+        appendPrint("<div class='spoken'>" + BLACK + "DDDD" + " - " + WHITEDARK + sPrint + WHITE + "</div>");
+}
+
 std::string CPlayer::returnSpeakerPrint(std::string sSpeaker, std::string sPrint) {
     sPrint = func::returnSwapedString(sPrint, getStat("highness"));
     
@@ -295,6 +308,8 @@ void CPlayer::setWobconsole(Webconsole* webconsole) {
 */
 void CPlayer::updateRoomContext()
 {
+    m_room->setShowMap(m_world->getConfig()["show"]);
+
     //Create new room context
     CEnhancedContext* context = new CEnhancedContext((std::string)"room");
 

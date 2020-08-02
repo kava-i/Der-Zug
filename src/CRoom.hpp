@@ -21,6 +21,8 @@ class CRoom : public CObject
 private:
     string m_sEntry;
     string m_sArea;
+
+    std::map<string, std::vector<string>> m_showMap;
     
     typedef std::map<string, std::string> objectmap;
     objectmap m_players;
@@ -59,6 +61,7 @@ public:
 
     // *** setter *** //
     void setPlayers(objectmap& m_players);
+    void setShowMap(nlohmann::json j);
 
     // *** various functions *** //
     string showDescription(std::map<std::string, CPerson*> mapCharacters);

@@ -5,14 +5,20 @@
         "desc":"SINNLICHE GEWISSHEIT",
         "tech":""
         },
-    "mind":[
+
+    "show":{
+        "exits":["Hier sehe ich", "nichts"],
+        "chars":["Hier sind", ""]},
+
+    "minds":[
         {"id":"sinnliche gewissheit", "color":"blue", "level":1, "relevance":0.1},
-        {"id":"wahrnehmung", "color":"blue", "level":1, "relevance":0.2},
+        {"id":"wahrnehmung", "color":"blue", "level":0, "relevance":0.2},
         {"id":"vernunft", "color":"green", "level":0, "relevance":0.3},
         {"id":"sittlichkeit", "color":"red", "level":0, "relevance":0.4},
         {"id":"moralität", "color":"red", "level":0, "relevance":0.5},
         {"id":"entfremdung", "color":"red", "level":0, "relevance":0.6}
         ],
+
     "commands":[
         {"id":"show", "regex":"zeige (.*)"},
         {"id":"look", "regex":"schaue (.*)"},
