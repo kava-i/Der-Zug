@@ -50,6 +50,8 @@ public:
     nlohmann::json getTemplate(std::string sTemplate);
     nlohmann::json& getAttributes();
 
+    CContextStack<CTimeEvent> getTimeEvents() { return m_timeevents; }
+
     template<typename T> 
     T getAttribute(std::string sAttribute)
     {
@@ -62,6 +64,7 @@ public:
     void setName(std::string sName);
     void setGame(CGame* game);
     void setErrorFunction(void(CEnhancedContext::*func)(CPlayer*));
+    void setTimeEvents(CContextStack<CTimeEvent> stack) { m_timeevents=stack; } 
 
     template<typename T> 
     T setAttribute(std::string sAttribute, T attribute)
@@ -109,6 +112,7 @@ public:
     void h_updatePlayers(std::string&, CPlayer*);
 
     // *** WORLD CONTEXT *** //
+    void h_killCharacter(std::string&, CPlayer*);
     void h_deleteCharacter(std::string&, CPlayer*);
     void h_addItem(std::string&, CPlayer*);
     void h_recieveMoney(std::string&, CPlayer*);
@@ -133,6 +137,7 @@ public:
     void h_showExits(std::string& sIdentifier, CPlayer* p);
     void h_show             (std::string&, CPlayer*);
     void h_look             (std::string&, CPlayer*);
+    void h_search           (std::string&, CPlayer*);
     void h_take             (std::string&, CPlayer*);
     void h_consume          (std::string&, CPlayer*);
     void h_equipe           (std::string&, CPlayer*);

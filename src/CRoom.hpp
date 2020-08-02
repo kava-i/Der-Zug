@@ -50,7 +50,6 @@ public:
     // *** getter *** // 
     string getEntry();
     string getArea(); 
-    //objectmap& getCharacters();
     std::map<string, CPerson*>& getCharacters();
     std::map<string, CExit*>& getExtits();
     objectmap getExtits2();

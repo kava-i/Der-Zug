@@ -289,14 +289,25 @@ void CPlayer::setWobconsole(Webconsole* webconsole) {
 */
 void CPlayer::updateRoomContext()
 {
-    m_contextStack.erase("room");
+    //Create new room context
     CEnhancedContext* context = new CEnhancedContext((std::string)"room");
+
+    //Transer Time events if context exists
+    if(m_contextStack.getContext("room") != NULL)
+        context->setTimeEvents(m_contextStack.getContext("room")->getTimeEvents());
+
+    //Delete old room-context
+    m_contextStack.erase("room");
+
+    //Update handler
     for(auto it : m_room->getHandler())
     {
         context->add_listener(it);
         if(it.count("infos") > 0)
             context->getAttributes()["infos"][(std::string)it["id"]] = it["infos"];
     }
+    
+    //Insert new room-context into context-stack
     m_contextStack.insert(context, 0, "room");
 }
 
@@ -959,7 +970,9 @@ void CPlayer::throw_events(string sInput, std::string sMessage)
 {
     updateRoomContext();
     std::cout << cRED << "Events: " << sInput << ", from: " << sMessage << cCLEAR << std::endl;
+
     //Check for time triggered events
+    getContext("room")->throw_timeEvents(this);
     getContext("standard")->throw_timeEvents(this);
 
     if(sInput == "")

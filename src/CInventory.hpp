@@ -27,6 +27,8 @@ public:
     CItem* getItem_byID(std::string sID);
     size_t getNumRomsInColum(size_t collum);
     bool empty();
+
+    std::map<std::string, CItem*> mapItems();
 };
 
 #endif
