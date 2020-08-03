@@ -21,14 +21,19 @@ private:
     std::map<std::string, CQuestStep*> m_questSteps;
     std::vector<nlohmann::json> m_handler;
 
+    bool m_sorted;
+    std::vector<std::string> m_sortedSteps;
+
 public:
     CQuest(nlohmann::json jAttributes);
 
     //Getter 
     std::string getID();
+    bool getSolved();
     bool getActive();
     std::map<std::string, CQuestStep*> getSteps();
     std::vector<nlohmann::json> getHandler();
+    CQuestStep* getFirst();
 
     //Setter
     void setSteps(std::map<std::string, CQuestStep*> steps);
@@ -39,6 +44,7 @@ public:
     //Functions
     std::string printQuest(bool solved);
     std::string checkSolved(int& ep);
+    void deleteFirst();
 };
 
 class CQuestStep
@@ -53,6 +59,9 @@ private:
     
     std::vector<std::string> m_linkedSteps;
 
+    std::string m_events;
+    std::string m_info;
+
     //Link to quest
     CQuest* m_quest;
  
@@ -60,6 +69,7 @@ public:
     CQuestStep(nlohmann::json jAttributes, CQuest* quest);
 
     //Getter
+    std::string getID();
     std::string getName();
     std::string getDescription();
     bool getActive();
@@ -67,6 +77,8 @@ public:
     int getSucc();
     int getCurSucc();
     std::vector<std::string>& getWhich();
+    std::string getEvents();
+    std::string getInfo();
 
     //Setter
     void setActive(bool);

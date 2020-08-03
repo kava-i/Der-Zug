@@ -133,6 +133,7 @@ public:
     void h_changeDialog(std::string&, CPlayer*);
     void h_thieve(std::string&, CPlayer*);
     void h_attack(std::string&, CPlayer*);
+    void h_printText(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
     void h_showExits(std::string& sIdentifier, CPlayer* p);
@@ -151,7 +152,6 @@ public:
     void h_test(std::string&, CPlayer*);
 
     //Rooms
-    void h_firstZombieAttack (std::string&, CPlayer*);
     void h_moveToHospital    (std::string&, CPlayer*);
     void h_exitTrainstation  (std::string&, CPlayer*);
 
@@ -179,6 +179,7 @@ public:
     void h_end(std::string&, CPlayer*);
 
     // *** QUESTS *** //
+    void h_react(std::string&, CPlayer*);
     void h_ticketverkaeufer(std::string&, CPlayer*);
     void h_ticketverkauf(std::string&, CPlayer*);
     void h_zum_gleis(std::string&, CPlayer*);

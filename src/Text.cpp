@@ -74,7 +74,6 @@ std::string COutput::print(CPlayer* p, bool events)
         addEvents(p);  
 
     //return text 
-    std::cout << "speaker: " << m_sSpeaker << std::endl;;
     if(m_sSpeaker == "indent")
         return p->returnBlackPrint(m_sText + "$" + sUpdated);
 
@@ -132,7 +131,6 @@ void COutput::updateAttrbutes(std::string& sUpdated, CPlayer* p)
             sUpdated += GREEN + it.key() + " erhöht!" + WHITE + "\n";
         }
     }
-
     m_jUpdates.clear();
 }
 

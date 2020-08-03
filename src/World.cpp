@@ -75,6 +75,11 @@ CPerson* CWorld::getCharacter(std::string sID) {
     return nullptr;
 }
 
+///Return map of all texts
+map<string, nlohmann::json>& CWorld::getTexts() {
+    return m_jTexts;
+}
+
 ///Return dictionary of all attacks in the game.
 map<string, CAttack*>& CWorld::getAttacks() { 
     return m_attacks; 
@@ -201,6 +206,9 @@ void CWorld::worldFactory(CPlayer* p)
 
     //Create rooms
     roomFactory(p);
+
+    //Load texts
+    textFactory();
 }
 
 void CWorld::roomFactory(CPlayer* player)
@@ -612,8 +620,6 @@ void CWorld::questFactory(std::string sPath)
             if(j_step.count("handler") > 0)
             {
                 nlohmann::json handler = j_step["handler"];
-                //if(handler.count("priority") == 0)
-                //    handler["priority"] = 1; 
                 listeners.push_back(handler);
             }
         }
@@ -624,6 +630,24 @@ void CWorld::questFactory(std::string sPath)
         m_quests[j_quest["id"]] = newQuest;
     }
     std::cout << "Done."<<std::endl;
+}
+
+void CWorld::textFactory()
+{
+    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/texts"))
+        textFactory(p.path()); 
+}
+
+void CWorld::textFactory(std::string sPath)
+{   
+    //Read json creating all quests
+    std::ifstream read(sPath);
+    nlohmann::json j_texts;
+    read >> j_texts;
+    read.close();
+
+    for(auto it=j_texts.begin(); it!=j_texts.end(); it++)
+        m_jTexts[it.key()] = it.value()["text"];
 }
 
 

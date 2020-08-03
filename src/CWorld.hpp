@@ -40,6 +40,7 @@ private:
     map<string, nlohmann::json> m_items;
     map<string, nlohmann::json> m_details;
     map<string, nlohmann::json> m_jCharacters;
+    map<string, nlohmann::json> m_jTexts;
 
     map<string, vector<CText*>> m_defaultDescriptions;
     map<string, vector<CDialog*>> m_defaultDialogs;
@@ -71,7 +72,10 @@ public:
 
     ///Get a character from world.
     CPerson* getCharacter(std::string sID);
-    
+
+    ///Return dictionary if all texts.
+    map<string, nlohmann::json>& getTexts();
+
     ///Return dictionary of all attacks in the game.
     map<string, CAttack*>& getAttacks();
 
@@ -154,4 +158,8 @@ public:
     void detailFactory(std::string sPath);
     map<string, CDetail*> parseRoomDetails(nlohmann::json j_room, CPlayer* p, std::string sArea);
     void parseRandomItemsToDetail(nlohmann::json& j_detail);
+
+    //Texts
+    void textFactory();
+    void textFactory(std::string);
 };

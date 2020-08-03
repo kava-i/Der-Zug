@@ -123,6 +123,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_addTimeEvent"] = &CEnhancedContext::h_addTimeEvent;
     m_handlers["h_setNewQuest"] = &CEnhancedContext::h_setNewQuest;
     m_handlers["h_changeDialog"] = &CEnhancedContext::h_changeDialog;
+    m_handlers["h_printText"] = &CEnhancedContext::h_printText;
 
     // ***** STANDARD CONTEXT ***** //
     m_handlers["h_showExits"] = &CEnhancedContext::h_showExits;
@@ -164,6 +165,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_end"] = &CEnhancedContext::h_end;
 
     // *** QUESTS *** //
+    m_handlers["h_react"] = &CEnhancedContext::h_react;
     m_handlers["0tut_hallo"] = &CEnhancedContext::h_startTutorial;
     m_handlers["1ticketverkaeufer"] = &CEnhancedContext::h_ticketverkaeufer;
     m_handlers["2ticketkauf"] = &CEnhancedContext::h_ticketverkauf;
@@ -217,7 +219,8 @@ void CEnhancedContext::initializeTemplates()
                         {"setNewAttribute", {"h_setNewAttribute"}}, 
                         {"addTimeEvent", {"h_addTimeEvent"}},
                         {"setNewQuest", {"h_setNewQuest"}},
-                        {"changeDialog", {"h_changeDialog"}} }}
+                        {"changeDialog", {"h_changeDialog"}},
+                        {"printText", {"h_printText"}} }}
                     };
 
     m_templates["standard"] = {
@@ -658,6 +661,21 @@ void CEnhancedContext::h_changeDialog(std::string& sIdentifier, CPlayer* p)
     m_curPermeable = false;
 }
 
+void CEnhancedContext::h_printText(std::string &sIdentifier, CPlayer* p)
+{
+    if(p->getWorld()->getTexts().count(sIdentifier) > 0)
+    {
+        std::cout << "creating text... \n";
+        CText text(p->getWorld()->getTexts()[sIdentifier], p);
+        std::cout << "printing tex... \n";
+        p->appendPrint(text.print());
+        std::cout << "done.\n";
+    }
+    else
+        std::cout << "Text not found!\n";
+    m_curPermeable = false;
+}
+
 // ***** ***** STANDARD CONTEXT ***** ***** //
 
 
@@ -854,20 +872,6 @@ void CEnhancedContext::h_test(std::string& sIdentifier, CPlayer* p) {
 
 
 // **** SPECIAL HANDLER ***** //
-void CEnhancedContext::h_firstZombieAttack(std::string& sIdentifier, CPlayer* p)
-{
-    std::cout << "HAAAALOOOO.\n";
-    //Get selected room
-    if(p->getRoom()->getID() != "hospital_stairs")
-        return;
-
-    p->appendPrint("$ ");
-    p->appendDescPrint("A zombie comes running down the stairs and attacks you!");
-
-    //Create fight
-    p->setFight(new CFight(p, p->getWorld()->getCharacter("hospital_hospital_stairs_zombie")));
-    m_eventmanager.erase("h_firstZombieAttack");
-}
 
 void CEnhancedContext::h_moveToHospital(std::string& sIdentifier, CPlayer* p)
 {
@@ -1088,19 +1092,40 @@ void CEnhancedContext::h_end(string& sMessage, CPlayer* p)
 
 // ***** ***** QUEST CONTEXT ***** ***** //
 
+void CEnhancedContext::h_react(std::string& sIdentifier, CPlayer* p)
+{
+    std::cout << "h_react: " << sIdentifier << std::endl;
+    CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
+    CQuestStep* step = quest->getFirst();
+    if(step == nullptr)
+        return;
+
+    std::cout << "Info: " << step->getInfo() << std::endl;
+    if(step->getInfo() != "")
+    {
+        if(sIdentifier != step->getInfo())
+            return;
+    }
+
+    quest->deleteFirst();
+    p->questSolved(quest->getID(), step->getID());
+    p->addPostEvent(step->getEvents());
+}
+
 // *** *** Tutorial *** *** //
 void CEnhancedContext::h_startTutorial(std::string&, CPlayer* p)
 {
-    std::cout << "Added.\n";
+    /*
     p->appendStoryPrint("Willkommen Neuling. Willkommen zu \"DER ZUG\". Du weiß vermutlich nicht, wer du bist und wo du hin willst und musst und kannst. Du weißt noch nicht, was <i>hier</i> ist, was <i>jetzt</i> ist.$");
     p->appendBlackPrint("Um dich zurecht zu finden. Die dir noch offene Fragen langsam <i>für dich</i> zu beantworten, nutze zunächst die Befehle \"zeige Ausgänge\", \"zeige Personen\", \"zeige Details\".$");
-    
+    */
+ 
     /*
     p->appendStoryPrint("Willkommen bei \"DER ZUG\"! Du befindest dich auf dem Weg nach Moskau. Dir fehlt dein Ticket. Tickets sind teuer. Glücklicherweise kennst du einen leicht verrückten, viel denkenden Mann, der sich \"Der Ticketverkäufer\" nennt. Suche ihn, er hat immer noch ein günstiges Ticket für dich.$");
     p->appendBlackPrint("Benutze die Befehle \"gehe [name des Ausgangs]\", um den Raum zu wechseln, um dir Personen und Ausgänge anzeigen zu lassen, nutze \"Zeige Personen\", bzw. \"Zeige Ausgänge\" oder auch \"zeige alles\". Eine Liste mit allen Befehlen und zusätzlichen Hilfestellungen erhältst du, indem du \"help\" eingibst.$");
    */
  
-    p->setNewQuest("zug_nach_moskau");
+    //p->setNewQuest("zug_nach_moskau");
     m_curPermeable = false;
 }
 
@@ -1126,8 +1151,8 @@ void CEnhancedContext::h_ticketverkauf(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
 {    
+    std::cout<< "h_zum_gleis: " << sIdentifier << std::endl;
     auto lamda= [](CExit* exit) {return exit->getPrep() + " " + exit->getName();};
-    std::cout<< "sIdentifier: " << sIdentifier << std::endl;
     std::string room = func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lamda);
 
     if(room != "gleis3" || p->getInventory().getItem_byID("ticket") == NULL)
@@ -1142,7 +1167,6 @@ void CEnhancedContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
     m_curPermeable = false;
     m_block = true;
     p->getContexts().erase(getAttribute<std::string>("questID"));
-    p->questSolved("tutorial", "1tutorial");
 }
 
 // *** *** Die komische Gruppe *** *** //

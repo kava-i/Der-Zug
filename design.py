@@ -39,16 +39,17 @@ class GameDesigner:
             }
         desc = [{"speaker":"", "text":""}]
         options = [{"id":0, "text":"", "to":""}]
-        steps = [{"name":"", "id":"", "handler":"", "description":""}]
+        steps = [{"name":"", "id":"", "handler":"", "description":"", "events":"", "info":""}]
         self.attributes = {
             "dialogs": {"id":"", "text":desc, "options":options, "actions":"", "events":"", "function":""},
             "details": {"name":"", "id":"", "description":desc, "look":"", "items":[""], "defaultItems":""},
             "characters": {"name":"", "id":"", "hp":0, "strength":0, "faint":0, "roomDescription":desc, "description":desc, "deadDescription":desc, "items":[""], "defaultDescription":"", "defaultDialog":"","attacks":{}, "dialog":"", "handlers":""},
             "players": {"name":"", "id":"", "room":"", "hp":0, "strength":0, "attacks":[""]},
-            "quests": {"name":"", "id":"", "description":"", "ep":0, "steps": steps},
+            "quests": {"name":"", "id":"", "description":"", "ep":0, "steps": steps, "sorted":1},
             "items": {"name":"", "id":"", "category":"", "type":"", "attack":"", "value":0, "description":desc},
             "rooms": {"name": "", "id":"", "description": desc, "entry" : "", "exits": {"":""}, "characters" : [""], "items" : [""], "details": [""], "handlers":""},
-            "attacks": {"name":"", "id":"", "description":"", "power":0}
+            "attacks": {"name":"", "id":"", "description":"", "power":0},
+            "texts":{"id": "", "text":desc}
         }
 
         description = {"speaker":"", "text":"", "pre_otEvents":"", "pre_pEvents":"", "post_otEvents":"", "post_pEvents":"", "deps":"", "updates":""}

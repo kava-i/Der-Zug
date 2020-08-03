@@ -712,6 +712,8 @@ void CPlayer::setNewQuest(std::string sQuestID)
 {
     int ep=0;
     appendSuccPrint(m_world->getQuest(sQuestID)->setActive(ep));
+    if(m_world->getQuest(sQuestID)->getSolved() == true)
+        m_contextStack.erase(sQuestID);
     addEP(ep);
 }
 
@@ -724,6 +726,8 @@ void CPlayer::questSolved(std::string sQuestID, std::string sStepID)
 {
     int ep=0;
     appendSuccPrint(m_world->getQuest(sQuestID)->getSteps()[sStepID]->solved(ep));
+    if(m_world->getQuest(sQuestID)->getSolved() == true)
+        m_contextStack.erase(sQuestID);
     addEP(ep);
 }
 

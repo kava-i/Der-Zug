@@ -14,6 +14,9 @@ CQuest::CQuest(nlohmann::json jAttributes)
 std::string CQuest::getID() {
     return m_sID;
 }
+bool CQuest::getSolved() {
+    return m_solved;
+}
 bool CQuest::getActive() {
     return m_active;
 }
@@ -26,9 +29,17 @@ std::vector<nlohmann::json> CQuest::getHandler() {
     return m_handler;
 }
 
+CQuestStep* CQuest::getFirst() {
+    if(m_active == true && m_questSteps.size() > 0)
+        return m_questSteps[m_sortedSteps[0]];
+    return nullptr;
+}
+
 // *** SETTER *** //
 void CQuest::setSteps(std::map<std::string, CQuestStep*> steps) {
     m_questSteps = steps;
+    for(auto it : m_questSteps)
+        m_sortedSteps.push_back(it.first);
 }
 void CQuest::setHandler(std::vector<nlohmann::json> handlers) {
     m_handler = handlers;
@@ -91,8 +102,11 @@ std::string CQuest::checkSolved(int& ep)
         ep = m_EP;
         return "Quest "+ m_sName + " abgeschlossen! + " + std::to_string(m_EP) + " EP\n";
     }
-    else
-        return "";
+    return "";
+}
+
+void CQuest::deleteFirst() {
+    m_sortedSteps.erase(m_sortedSteps.begin());
 }
 
 // ***** ***** CQUESTSTEP ***** ***** //
@@ -107,6 +121,9 @@ CQuestStep::CQuestStep(nlohmann::json jAttributes, CQuest* quest)
 
     m_succ = jAttributes.value("list", 0);
     m_curSucc = 0;
+   
+    m_events = jAttributes.value("events", "");
+    m_info = jAttributes.value("info", "");
     
     std::vector<std::string> linkedSteps;
     if(jAttributes.count("linkedSteps") != 0)
@@ -117,6 +134,9 @@ CQuestStep::CQuestStep(nlohmann::json jAttributes, CQuest* quest)
 
 
 // *** GETTER *** //
+std::string CQuestStep::getID() {
+    return m_sID;
+}
 std::string CQuestStep::getName() {
     return m_sName;
 }
@@ -137,6 +157,12 @@ int CQuestStep::getCurSucc() {
 }
 std::vector<std::string>& CQuestStep::getWhich() {
     return m_which;
+}
+std::string CQuestStep::getEvents() {
+    return m_events;
+}
+std::string CQuestStep::getInfo() {
+    return m_info;
 }
 
 // *** SETTER *** //
@@ -168,6 +194,8 @@ std::string CQuestStep::handleSolved()
 {
     for(auto step : m_linkedSteps)
         m_quest->getSteps()[step]->setActive(true);
+    if(m_quest->getFirst() != nullptr)
+        m_quest->getSteps()[m_quest->getFirst()->getID()]->setActive(true);
     return m_sName + " Erfolgreich!\n";
 }
 
