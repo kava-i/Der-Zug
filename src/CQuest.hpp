@@ -60,7 +60,7 @@ private:
     std::vector<std::string> m_linkedSteps;
 
     std::string m_events;
-    std::string m_info;
+    std::map<std::string,std::string> m_info;
 
     //Link to quest
     CQuest* m_quest;
@@ -78,7 +78,7 @@ public:
     int getCurSucc();
     std::vector<std::string>& getWhich();
     std::string getEvents();
-    std::string getInfo();
+    std::map<std::string, std::string> getInfo();
 
     //Setter
     void setActive(bool);

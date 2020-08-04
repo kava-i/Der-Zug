@@ -155,9 +155,6 @@ public:
     void h_moveToHospital    (std::string&, CPlayer*);
     void h_exitTrainstation  (std::string&, CPlayer*);
 
-    //Tuturial
-    void h_startTutorial     (std::string&, CPlayer*);
-
 
     // *** FIGHT CONTEXT *** //
     void initializeFightListeners(std::map<std::string, std::string> mapAttacks);
@@ -180,11 +177,8 @@ public:
 
     // *** QUESTS *** //
     void h_react(std::string&, CPlayer*);
-    void h_ticketverkaeufer(std::string&, CPlayer*);
-    void h_ticketverkauf(std::string&, CPlayer*);
     void h_zum_gleis(std::string&, CPlayer*);
     void h_reden(std::string&, CPlayer*);
-    void h_besiege_besoffene_frau(std::string&, CPlayer*);
     void h_geldauftreiben(std::string&, CPlayer*);
 
     // *** OTHER CONTEXTS *** //

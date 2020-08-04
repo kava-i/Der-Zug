@@ -30,7 +30,7 @@ std::vector<nlohmann::json> CQuest::getHandler() {
 }
 
 CQuestStep* CQuest::getFirst() {
-    if(m_active == true && m_questSteps.size() > 0)
+    if(m_active == true && m_sortedSteps.size() > 0)
         return m_questSteps[m_sortedSteps[0]];
     return nullptr;
 }
@@ -123,7 +123,7 @@ CQuestStep::CQuestStep(nlohmann::json jAttributes, CQuest* quest)
     m_curSucc = 0;
    
     m_events = jAttributes.value("events", "");
-    m_info = jAttributes.value("info", "");
+    m_info = jAttributes.value("info", std::map<std::string, std::string>());
     
     std::vector<std::string> linkedSteps;
     if(jAttributes.count("linkedSteps") != 0)
@@ -161,7 +161,7 @@ std::vector<std::string>& CQuestStep::getWhich() {
 std::string CQuestStep::getEvents() {
     return m_events;
 }
-std::string CQuestStep::getInfo() {
+std::map<std::string, std::string> CQuestStep::getInfo() {
     return m_info;
 }
 

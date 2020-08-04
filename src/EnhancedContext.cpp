@@ -166,12 +166,8 @@ void CEnhancedContext::initializeHanlders()
 
     // *** QUESTS *** //
     m_handlers["h_react"] = &CEnhancedContext::h_react;
-    m_handlers["0tut_hallo"] = &CEnhancedContext::h_startTutorial;
-    m_handlers["1ticketverkaeufer"] = &CEnhancedContext::h_ticketverkaeufer;
-    m_handlers["2ticketkauf"] = &CEnhancedContext::h_ticketverkauf;
     m_handlers["3zum_gleis"] = &CEnhancedContext::h_zum_gleis;
     m_handlers["1reden"] = &CEnhancedContext::h_reden;
-    m_handlers["1besiege_besoffene_frau"] = &CEnhancedContext::h_besiege_besoffene_frau;
     m_handlers["1geldauftreiben"] = &CEnhancedContext::h_geldauftreiben;
 
     // *** PROGRAMMER *** //
@@ -1098,14 +1094,25 @@ void CEnhancedContext::h_react(std::string& sIdentifier, CPlayer* p)
     CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
     CQuestStep* step = quest->getFirst();
     if(step == nullptr)
-        return;
-
-    std::cout << "Info: " << step->getInfo() << std::endl;
-    if(step->getInfo() != "")
     {
-        if(sIdentifier != step->getInfo())
-            return;
+        std::cout << "Quest probably not active, or completed, but not deleted.\n";
+        return;
     }
+
+    bool check = false;
+    std::map<std::string, std::string> infos = step->getInfo();
+    if((infos.count("string") > 0 && infos["string"] == sIdentifier) || (infos.count("fuzzy") > 0 && fuzzy::fuzzy_cmp(infos["fuzzy"], sIdentifier) <= 0.2))
+    {
+        std::cout << "Infos resolve to true" << std::endl;
+        check = true;
+    }
+    if(infos.count("location") > 0 && infos["location"] != p->getRoom()->getID())
+    {
+        std::cout << "location resolves to false" << std::endl;
+        check = false;
+    }
+    if(check == false)
+        return;
 
     quest->deleteFirst();
     p->questSolved(quest->getID(), step->getID());
@@ -1113,41 +1120,20 @@ void CEnhancedContext::h_react(std::string& sIdentifier, CPlayer* p)
 }
 
 // *** *** Tutorial *** *** //
+
+/*
 void CEnhancedContext::h_startTutorial(std::string&, CPlayer* p)
 {
-    /*
     p->appendStoryPrint("Willkommen Neuling. Willkommen zu \"DER ZUG\". Du weiß vermutlich nicht, wer du bist und wo du hin willst und musst und kannst. Du weißt noch nicht, was <i>hier</i> ist, was <i>jetzt</i> ist.$");
     p->appendBlackPrint("Um dich zurecht zu finden. Die dir noch offene Fragen langsam <i>für dich</i> zu beantworten, nutze zunächst die Befehle \"zeige Ausgänge\", \"zeige Personen\", \"zeige Details\".$");
-    */
  
-    /*
     p->appendStoryPrint("Willkommen bei \"DER ZUG\"! Du befindest dich auf dem Weg nach Moskau. Dir fehlt dein Ticket. Tickets sind teuer. Glücklicherweise kennst du einen leicht verrückten, viel denkenden Mann, der sich \"Der Ticketverkäufer\" nennt. Suche ihn, er hat immer noch ein günstiges Ticket für dich.$");
     p->appendBlackPrint("Benutze die Befehle \"gehe [name des Ausgangs]\", um den Raum zu wechseln, um dir Personen und Ausgänge anzeigen zu lassen, nutze \"Zeige Personen\", bzw. \"Zeige Ausgänge\" oder auch \"zeige alles\". Eine Liste mit allen Befehlen und zusätzlichen Hilfestellungen erhältst du, indem du \"help\" eingibst.$");
-   */
  
     //p->setNewQuest("zug_nach_moskau");
     m_curPermeable = false;
 }
-
-// *** *** Zug nach Moskau *** *** //
-void CEnhancedContext::h_ticketverkaeufer(std::string& sIdentifier, CPlayer* p)
-{
-    if(p->getRoom()->getID() != "bahnhof_toiletten")
-        return;
-
-    if(sIdentifier == "bahnhof_maennerToilette" || fuzzy::fuzzy_cmp("zur männer-toilette", sIdentifier) <= 0.2) {
-        p->questSolved(getAttribute<std::string>("questID"), "1ticketverkaeufer");
-        m_eventmanager.erase("1ticketverkaeufer");
-    }
-}
-
-
-void CEnhancedContext::h_ticketverkauf(std::string& sIdentifier, CPlayer* p)
-{
-    std::cout << "h_ticketverkauf, " << sIdentifier << std::endl;
-    if(sIdentifier == "ticket")
-        p->questSolved(getAttribute<std::string>("questID"), "2ticketkauf");
-}
+*/
 
 void CEnhancedContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
 {    
@@ -1202,18 +1188,6 @@ void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
         p->getWorld()->getCharacter("trainstation_gleis5_passanten_gruppe")->setDialog("2");
         p->getContexts().erase(quest->getID());
     }
-}
-
-// *** *** Besoffene Frau *** *** //
-void CEnhancedContext::h_besiege_besoffene_frau(std::string& sIdentifier, CPlayer* p)
-{
-    if(sIdentifier != "trainstation_bahnhof_frauenToilette_besoffene_frau")
-        return;
-
-    p->questSolved(getAttribute<std::string>("questID"), "1besiege_besoffene_frau");
-    p->appendDescPrint("Du suchst in den Taschen der Frau und findest drei Schillinge.\n");
-    p->throw_events("recieveMoney 3", "h_besiege_besoffene_frau");
-    p->getContexts().erase(getAttribute<std::string>("questID"));
 }
 
 // *** *** GELD AUFTREIBEN *** *** //

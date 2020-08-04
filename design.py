@@ -39,7 +39,7 @@ class GameDesigner:
             }
         desc = [{"speaker":"", "text":""}]
         options = [{"id":0, "text":"", "to":""}]
-        steps = [{"name":"", "id":"", "handler":"", "description":"", "events":"", "info":""}]
+        steps = [{"name":"", "id":"", "handler":"", "description":"", "events":"", "info":{"":""}}]
         self.attributes = {
             "dialogs": {"id":"", "text":desc, "options":options, "actions":"", "events":"", "function":""},
             "details": {"name":"", "id":"", "description":desc, "look":"", "items":[""], "defaultItems":""},
@@ -70,7 +70,7 @@ class GameDesigner:
             "steps": steps[0]
         }
 
-        self.jsonType = ["post_pEvents", "post_otEvents", "pre_pEvents", "pre_otEvents", "updates", "deps", "characters", "details", "items", "linkedSteps", "handler", "handlers"]
+        self.jsonType = ["post_pEvents", "post_otEvents", "pre_pEvents", "pre_otEvents", "updates", "deps", "characters", "details", "items", "linkedSteps", "handler", "handlers", "info"]
 
         self.helpDesc = {
             "name":"Name shown to the player",
