@@ -18,6 +18,7 @@ private:
     int m_EP;
     bool m_solved;
     bool m_active;
+    bool m_onlineFromBeginning;
     std::map<std::string, CQuestStep*> m_questSteps;
     std::vector<nlohmann::json> m_handler;
 
@@ -31,6 +32,7 @@ public:
     std::string getID();
     bool getSolved();
     bool getActive();
+    bool getOnlineFromBeginning();
     std::map<std::string, CQuestStep*> getSteps();
     std::vector<nlohmann::json> getHandler();
     CQuestStep* getFirst();

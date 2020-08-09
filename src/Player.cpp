@@ -76,9 +76,12 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     //Initialize context stack
     for(auto it : m_world->getQuests())
     {
-        CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"name", it.first}, {"permeable",true}, {"questID",it.first}});
-        context->initializeHandlers(it.second->getHandler());
-        m_contextStack.insert(context, 3, it.first);
+        if(it.second->getOnlineFromBeginning() == true)
+        {
+            CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"name", it.first}, {"permeable",true}, {"questID",it.first}});
+            context->initializeHandlers(it.second->getHandler());
+            m_contextStack.insert(context, 3, it.first);
+        }
     }
     std::cout << "Done.\n";
 
@@ -718,8 +721,16 @@ void CPlayer::showQuests(bool solved)
 void CPlayer::setNewQuest(std::string sQuestID)
 {
     int ep=0;
-    appendSuccPrint(m_world->getQuest(sQuestID)->setActive(ep));
-    if(m_world->getQuest(sQuestID)->getSolved() == true)
+    CQuest* quest = m_world->getQuest(sQuestID);
+    appendSuccPrint(quest->setActive(ep));
+    if(quest->getOnlineFromBeginning() == false)
+    {
+        CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"name", sQuestID}, {"permeable",true}, {"questID",sQuestID}});
+        context->initializeHandlers(quest->getHandler());
+        m_contextStack.insert(context, 3, sQuestID);
+    }
+    
+    if(quest->getSolved() == true)
         m_contextStack.erase(sQuestID);
     addEP(ep);
 }
@@ -916,14 +927,9 @@ void CPlayer::checkCommands()
         }
     }
 
-    /* ----- idea to solve issue #
-    size_t pos=0;
-    if(m_sPrint.find("$", pos) != std::string::npos)
-    {
-        pos = m_sPrint.find("$");
-        m_sPrint.insert(pos, "</div>");
-        m_sPrint.insert(pos+8, "<div class='spoken2'>");
-    }*/
+    size_t pos = m_sPrint.rfind("$");
+    if(pos != std::string::npos)
+        m_sPrint.erase(pos, 1);
 }
 
 /**

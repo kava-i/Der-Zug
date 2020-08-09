@@ -8,6 +8,7 @@ CQuest::CQuest(nlohmann::json jAttributes)
     m_EP = jAttributes.value("ep", 5);
     m_solved=false;
     m_active=false;
+    m_onlineFromBeginning = jAttributes.value("online", "true") == "true";
 }
 
 // *** GETTER *** //
@@ -19,6 +20,9 @@ bool CQuest::getSolved() {
 }
 bool CQuest::getActive() {
     return m_active;
+}
+bool CQuest::getOnlineFromBeginning() {
+    return m_onlineFromBeginning;
 }
 
 std::map<std::string, CQuestStep*> CQuest::getSteps() {

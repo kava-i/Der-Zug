@@ -397,27 +397,6 @@ public:
     * @param sInput
     */
     void throw_events(string sInput, std::string sMessage);
-    
-    // *** Time events *** //
-
-    /**
-    * Check if a time-bound event exists.
-    * @param sType event type.
-    */
-    bool checkEventExists(string sType);
-
-    /**
-    * Add new time-bound event.
-    * @param sType event type 
-    * @param duration how long it takes till event will be triggered.
-    * @param func function called when event is triggered.
-    */
-    void addTimeEvent(string sType, double duration, void(CPlayer::*func)(std::string), string i="");
-
-    /**
-    * check if a time event is triggered.
-    */
-    void checkTimeEvents();
 };
 
 #endif

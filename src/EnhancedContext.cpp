@@ -1105,14 +1105,15 @@ void CEnhancedContext::h_end(string& sMessage, CPlayer* p)
 void CEnhancedContext::h_react(std::string& sIdentifier, CPlayer* p)
 {
     std::cout << "h_react: " << sIdentifier << std::endl;
+    std::cout << "Quest: " << getAttribute<std::string>("questID") << std::endl;
     CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
     CQuestStep* step = quest->getFirst();
-    std::cout << "Quest: " << step->getID() << std::endl;
     if(step == nullptr)
     {
         std::cout << "Quest probably not active, or completed, but not deleted.\n";
         return;
     }
+    std::cout << "Queststep: " << step->getID() << std::endl;
 
     bool check = false;
     std::map<std::string, std::string> infos = step->getInfo();
@@ -1142,11 +1143,10 @@ void CEnhancedContext::h_react(std::string& sIdentifier, CPlayer* p)
     quest->deleteFirst();
     p->questSolved(quest->getID(), step->getID());
     p->addPostEvent(step->getEvents());
-    if(step->getPreEvents() != "")
-    {
+    if(infos.count("break") > 0)
         m_curPermeable = false;
+    if(step->getPreEvents() != "")
         p->throw_events(step->getPreEvents(), "h_react");
-    }
 }
 
 // *** *** Tutorial *** *** //

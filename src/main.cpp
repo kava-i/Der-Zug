@@ -47,6 +47,8 @@ class WebserverGame
 	    if(_name=="")
 	    {
             _name=sInput;
+            _cout->write(" " + sInput +"\n");
+            _cout->flush();
             if(_name=="")
             {
                 _cout->write(Webcmd::set_color(Webcmd::color::RED),"\nName: ");
@@ -61,6 +63,11 @@ class WebserverGame
 	    if(_password=="")
 	    {
             _password = sInput;
+            std::string str = "";
+            for(size_t i=0; i<sInput.length(); i++) 
+                str += "*";
+            _cout->write(" " + str + "\n");
+            _cout->flush();
             if(_password=="")
             {
                 _cout->write("\nPassword: ");
@@ -90,12 +97,7 @@ class WebserverGame
 		    _cout->flush();
 		    return;
 	    }
-	    else if(sInput == "change character")
-	    {
-		    _cout->write("Who do you want to play? (Anna, Jan)");
-		    _cout->flush();
-		    return;
-	    }
+	    
 
 	    std::list<std::string> lk;
 	    for(const auto &it : *ptr)
