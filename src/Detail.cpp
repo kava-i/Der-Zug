@@ -3,7 +3,7 @@
 
 CDetail::CDetail(nlohmann::json jAttributes, CPlayer* p, std::map<std::string, CItem*> items) : CObject{jAttributes, p}
 {
-    m_sLook = jAttributes.value("look", "in");
+    m_sLook = jAttributes.value("look", "");
     m_items = items;
 }
 

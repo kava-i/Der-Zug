@@ -28,7 +28,7 @@ class WebserverGame
 	    _password = "";
 	    _id = "";
 	    _cout = cout;
-	    _cout->write("Name: ");
+	    _cout->write(Webcmd::set_color(Webcmd::color::ORANGE), "Name: ");
 	    _cout->flush();
 	}
 
