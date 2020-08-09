@@ -124,6 +124,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_setNewQuest"] = &CEnhancedContext::h_setNewQuest;
     m_handlers["h_changeDialog"] = &CEnhancedContext::h_changeDialog;
     m_handlers["h_printText"] = &CEnhancedContext::h_printText;
+    m_handlers["h_changeRoom"] = &CEnhancedContext::h_changeRoom;
 
     // ***** STANDARD CONTEXT ***** //
     m_handlers["h_showExits"] = &CEnhancedContext::h_showExits;
@@ -166,7 +167,6 @@ void CEnhancedContext::initializeHanlders()
 
     // *** QUESTS *** //
     m_handlers["h_react"] = &CEnhancedContext::h_react;
-    m_handlers["3zum_gleis"] = &CEnhancedContext::h_zum_gleis;
     m_handlers["1reden"] = &CEnhancedContext::h_reden;
     m_handlers["1geldauftreiben"] = &CEnhancedContext::h_geldauftreiben;
 
@@ -216,7 +216,8 @@ void CEnhancedContext::initializeTemplates()
                         {"addTimeEvent", {"h_addTimeEvent"}},
                         {"setNewQuest", {"h_setNewQuest"}},
                         {"changeDialog", {"h_changeDialog"}},
-                        {"printText", {"h_printText"}} }}
+                        {"printText", {"h_printText"}},
+                        {"changeRoom", {"h_changeRoom"}} }}
                     };
 
     m_templates["standard"] = {
@@ -452,15 +453,21 @@ void CEnhancedContext::h_updatePlayers(std::string&, CPlayer*p)
 
 // ***** ***** WORLD CONTEXT ***** ***** //
 
-void CEnhancedContext::h_finishCharacter(std::string& sIdentifier, CPlayer* p) {
+void CEnhancedContext::h_finishCharacter(std::string& sIdentifier, CPlayer* p) 
+{
+    std::cout << "h_finishCharacter: " << sIdentifier << std::endl;
 
     //Get character
     CPerson* person = p->getWorld()->getCharacter(sIdentifier);
 
     if(person->getFaint() == false)
+    {
+        std::cout << "kill character\n";
         p->throw_events("killCharacter " + sIdentifier, "h_finishCharacter");
+    }
     else
     {
+        std::cout << "Character fainted.\n";
         if(person->getDialog("faint") != nullptr)
             person->setDialog("faint");
         else
@@ -661,14 +668,19 @@ void CEnhancedContext::h_printText(std::string &sIdentifier, CPlayer* p)
 {
     if(p->getWorld()->getTexts().count(sIdentifier) > 0)
     {
-        std::cout << "creating text... \n";
         CText text(p->getWorld()->getTexts()[sIdentifier], p);
-        std::cout << "printing tex... \n";
         p->appendPrint(text.print());
-        std::cout << "done.\n";
     }
     else
         std::cout << "Text not found!\n";
+    m_curPermeable = false;
+}
+
+void CEnhancedContext::h_changeRoom(std::string& sIdentifier, CPlayer* p)
+{
+    CRoom* room = p->getWorld()->getRoom(sIdentifier);
+    if(room != nullptr)
+        p->setRoom(p->getWorld()->getRoom(sIdentifier));
     m_curPermeable = false;
 }
 
@@ -873,7 +885,7 @@ void CEnhancedContext::h_moveToHospital(std::string& sIdentifier, CPlayer* p)
 {
     //Get selected room
     auto lambda = [](CExit* exit) { return exit->getPrep() + "_" + exit->getName();};
-    if(p->getRoom()->getID().find("compartment") == std::string::npos || func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lambda) != "trainCorridor")
+    if(p->getRoom()->getID().find("zug_compartment") == std::string::npos || func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lambda) != "zug_trainCorridor")
         return;
 
     p->changeRoom(p->getWorld()->getRoom("hospital_foyer"));
@@ -884,10 +896,9 @@ void CEnhancedContext::h_moveToHospital(std::string& sIdentifier, CPlayer* p)
 void CEnhancedContext::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
 {
     std::cout << "h_exitTrainstation, " << sIdentifier << std::endl;
-    std::cout << p->getRoom()->getID() << std::endl;
-    std::cout << "get id: " << func::getObjectId(p->getRoom()->getExtits2(), sIdentifier) << std::endl;
+
     auto lambda= [](CExit* exit) { return exit->getPrep() + " " + exit->getName(); };
-    if(p->getRoom()->getID() != "bahnhof_eingangshalle" || func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lambda) != "ausgang")
+    if(p->getRoom()->getID() != "trainstation_eingangshalle" || func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lambda) != "trainstation_ausgang")
         return;
 
     p->appendStoryPrint("Du drehst dich zum dem großen, offen stehenden Eingangstor der Bahnhofshalle. Und kurz kommt dir der Gedanke doch den Zug nicht zu nehmen, doch alles beim Alten zu belassen. Doch etwas sagt dir, dass es einen guten Grund gab das nicht zu tun, einen guten Grund nach Moskau zu fahren. Und auch, wenn du ihn gerade nicht mehr erkennst. Vielleicht ist gerade das der beste Grund: rausfinden, was dich dazu getrieben hat, diesen termin in Moskau zu vereinbaren.\n Du guckst dich wieder in der Halle um, und überlegst, wo du anfängst zu suchen.\n");
@@ -924,6 +935,9 @@ void CEnhancedContext::h_attack(std::string& sIdentifier, CPlayer* p)
 
 void CEnhancedContext::h_try(std::string& sIdentifier, CPlayer* p)
 {
+    p->throw_events("zeige details", "try");
+    p->throw_events("zeige personen", "try");
+    p->throw_events("zeige ausgänge", "try");
     p->throw_events("go neben", "try");
     p->throw_events("go Toil", "try");
     p->throw_events("go frauen", "try");
@@ -1093,6 +1107,7 @@ void CEnhancedContext::h_react(std::string& sIdentifier, CPlayer* p)
     std::cout << "h_react: " << sIdentifier << std::endl;
     CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
     CQuestStep* step = quest->getFirst();
+    std::cout << "Quest: " << step->getID() << std::endl;
     if(step == nullptr)
     {
         std::cout << "Quest probably not active, or completed, but not deleted.\n";
@@ -1101,22 +1116,37 @@ void CEnhancedContext::h_react(std::string& sIdentifier, CPlayer* p)
 
     bool check = false;
     std::map<std::string, std::string> infos = step->getInfo();
+
+    for(auto it : infos)
+        std::cout << it.first << ": " << it.second << std::endl;
+    
     if((infos.count("string") > 0 && infos["string"] == sIdentifier) || (infos.count("fuzzy") > 0 && fuzzy::fuzzy_cmp(infos["fuzzy"], sIdentifier) <= 0.2))
     {
         std::cout << "Infos resolve to true" << std::endl;
         check = true;
     }
+    if(infos.count("inventory") > 0 && p->getInventory().getItem_byID(infos["inventory"]) == NULL)
+    {
+        std::cout << "inventory resolves to false" << std::endl;
+        check = false;
+    }
+    std::cout << "Room: " << p->getRoom()->getID() << std::endl;
     if(infos.count("location") > 0 && infos["location"] != p->getRoom()->getID())
     {
         std::cout << "location resolves to false" << std::endl;
         check = false;
     }
-    if(check == false)
+    if(check == false && infos.count("pass")==0)
         return;
 
     quest->deleteFirst();
     p->questSolved(quest->getID(), step->getID());
     p->addPostEvent(step->getEvents());
+    if(step->getPreEvents() != "")
+    {
+        m_curPermeable = false;
+        p->throw_events(step->getPreEvents(), "h_react");
+    }
 }
 
 // *** *** Tutorial *** *** //
@@ -1135,25 +1165,6 @@ void CEnhancedContext::h_startTutorial(std::string&, CPlayer* p)
 }
 */
 
-void CEnhancedContext::h_zum_gleis(std::string& sIdentifier, CPlayer* p)
-{    
-    std::cout<< "h_zum_gleis: " << sIdentifier << std::endl;
-    auto lamda= [](CExit* exit) {return exit->getPrep() + " " + exit->getName();};
-    std::string room = func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lamda);
-
-    if(room != "gleis3" || p->getInventory().getItem_byID("ticket") == NULL)
-        return; 
-
-    p->questSolved(getAttribute<std::string>("questID"), "3zum_gleis");
-
-    p->appendStoryPrint("Du siehst deinen Zug einfahren. Du bewegst dich auf ihn zu, zeigst dein Ticket, der Schaffner musstert dich kurz und lässt dich dann eintreten. Du suchst dir einen freien Platz, legst dein Bündel auf den sitz neben dich und schläfst ein...\n $");
-    p->appendStoryPrint("Nach einem scheinbar endlos langem schlaf wachst du wieder in deinem Abteil auf. Das Abteil ist leer. Leer bist auf einen geheimnisvollen Begleiter: Parsen.\n");
-
-    p->setRoom(p->getWorld()->getRoom("compartment-a"));
-    m_curPermeable = false;
-    m_block = true;
-    p->getContexts().erase(getAttribute<std::string>("questID"));
-}
 
 // *** *** Die komische Gruppe *** *** //
 void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
@@ -1183,8 +1194,8 @@ void CEnhancedContext::h_reden(std::string& sIdentifier, CPlayer* p)
     if(step->getSolved() == true)
     {
         std::cout << "CHANGING DIALOGS OF PASSANTEN\n";
-        p->getWorld()->getCharacter("trainstation_bahnhof_eingangshalle_passanten_gruppe")->setDialog("2");
-        p->getWorld()->getCharacter("trainstation_bahnhof_nebenhalle_passanten_gruppe")->setDialog("2");
+        p->getWorld()->getCharacter("trainstation_eingangshalle_passanten_gruppe")->setDialog("2");
+        p->getWorld()->getCharacter("trainstation_nebenhalle_passanten_gruppe")->setDialog("2");
         p->getWorld()->getCharacter("trainstation_gleis5_passanten_gruppe")->setDialog("2");
         p->getContexts().erase(quest->getID());
     }

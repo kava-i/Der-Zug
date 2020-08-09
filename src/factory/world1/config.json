@@ -7,7 +7,7 @@
         },
 
     "show":{
-        "exits":["Hier sehe ich", "nichts"],
+        "exits":["Hier sehe ich einen Weg", "nichts"],
         "chars":["Hier sind", ""]},
 
     "minds":[

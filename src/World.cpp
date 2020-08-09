@@ -229,16 +229,17 @@ void CWorld::roomFactory(string sPath, CPlayer* p)
     
     for(auto j_room : j_rooms )
     {
+        j_room["id"] = sArea + "_" + j_room["id"].get<std::string>();
         std::cout << "Room: " << j_room["id"] << std::endl;
 
         //Parse characters
-        std::map<std::string, CPerson*> mapChars = parseRoomChars(j_room, sArea, p);
+        std::map<std::string, CPerson*> mapChars = parseRoomChars(j_room, p);
 
         //Parse items
-        map<string, CItem*> mapItems = parseRoomItems(j_room, sArea, p);
+        map<string, CItem*> mapItems = parseRoomItems(j_room, p);
 
         //Parse details
-        map<string, CDetail*> mapDetails = parseRoomDetails(j_room, p, sArea);
+        map<string, CDetail*> mapDetails = parseRoomDetails(j_room, p);
         
         //Create new room
         m_rooms[j_room["id"]] = new CRoom(sArea, j_room, mapChars, mapItems, mapDetails, p);
@@ -263,7 +264,7 @@ void CWorld::detailFactory(std::string sPath)
         m_details[j_detail["id"]] = j_detail;
 }
 
-map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p, std::string sArea)
+map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p)
 {
     std::cout << "Parsing details \n";
     map<string, CDetail*> mapDetails;
@@ -274,7 +275,7 @@ map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p
     {
         //Convert json array to pair and create id
         auto detail = it.get<std::pair<std::string, nlohmann::json>>();
-        std::string sID = sArea + "_" + j_room["id"].get<std::string>() + "_" + detail.first; 
+        std::string sID = j_room["id"].get<std::string>() + "_" + detail.first; 
 
         //Get basic json for construction
         nlohmann::json jBasic;
@@ -293,7 +294,7 @@ map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p
 
         //Create items
         parseRandomItemsToDetail(jBasic);
-        map<string, CItem*> mapItems = parseRoomItems(jBasic, jBasic["id"], p);
+        map<string, CItem*> mapItems = parseRoomItems(jBasic, p);
 
         //Create detail
         mapDetails[jBasic["id"]] = new CDetail(jBasic, p, mapItems);
@@ -349,7 +350,7 @@ void CWorld::itemFactory(std::string sPath) {
 }
 
 
-map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, std::string sArea, CPlayer* p)
+map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, CPlayer* p)
 {
     std::cout << "Parsing Items\n";
     map<string, CItem*> mapItems;
@@ -360,7 +361,7 @@ map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, std::string sA
     {
         //Convert json array to pair and create id
         auto item = it.get<std::pair<std::string, nlohmann::json>>();
-        std::string sID = sArea + "_" + j_room["id"].get<std::string>() + "_" + item.first; 
+        std::string sID = j_room["id"].get<std::string>() + "_" + item.first; 
 
         //Get basic json for construction
         nlohmann::json jBasic;
@@ -407,7 +408,7 @@ void CWorld::characterFactory(std::string sPath) {
         m_jCharacters[j_char["id"]] = j_char;
 }
 
-std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room, std::string sArea, CPlayer* p)
+std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room, CPlayer* p)
 {
     std::cout << "Parsing characters\n";
     std::map<std::string, CPerson*> mapCharacters;
@@ -418,7 +419,7 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room, st
     {
         //Convert json array to pair and create id
         auto character = it.get<std::pair<std::string, nlohmann::json>>();
-        std::string sID = sArea + "_" + j_room["id"].get<std::string>() + "_" + character.first;
+        std::string sID = j_room["id"].get<std::string>() + "_" + character.first;
 
         //Gett basic json for construction.
         nlohmann::json jBasic;
@@ -456,7 +457,7 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room, st
             newDialog = getDialog("defaultDialog"); //Load the standard default-dialogue
 
         //Create items and attacks
-        map<std::string, CItem*> items = parseRoomItems(jBasic, jBasic["id"], p);
+        map<std::string, CItem*> items = parseRoomItems(jBasic, p);
         map<string, CAttack*> attacks = parsePersonAttacks(jBasic);
         
         //Create text
@@ -491,7 +492,7 @@ void CWorld::attackFactory(std::string sPath) {
     read >> j_attacks;
     read.close();
 
-    for(auto j_attack : j_attacks) 
+    for(auto j_attack : j_attacks)
         m_attacks[j_attack["id"]] = new CAttack(j_attack["name"], j_attack["description"], j_attack["output"], j_attack["power"]);
 }
 

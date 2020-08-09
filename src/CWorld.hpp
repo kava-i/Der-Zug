@@ -135,12 +135,12 @@ public:
     //Items
     void itemFactory();
     void itemFactory(std::string sPath);
-    map<string, CItem*> parseRoomItems(nlohmann::json j_room, std::string sArea, CPlayer* p);
+    map<string, CItem*> parseRoomItems(nlohmann::json j_room, CPlayer* p);
 
     //Characters
     void characterFactory();
     void characterFactory(std::string sPath);
-    std::map<std::string, CPerson*> parseRoomChars(nlohmann::json j_room, std::string sArea, CPlayer* p);
+    std::map<std::string, CPerson*> parseRoomChars(nlohmann::json j_room, CPlayer* p);
 
     //Dialogs
     void dialogFactory(CPlayer* p);
@@ -156,7 +156,7 @@ public:
     //Details
     void detailFactory();
     void detailFactory(std::string sPath);
-    map<string, CDetail*> parseRoomDetails(nlohmann::json j_room, CPlayer* p, std::string sArea);
+    map<string, CDetail*> parseRoomDetails(nlohmann::json j_room, CPlayer* p);
     void parseRandomItemsToDetail(nlohmann::json& j_detail);
 
     //Texts

@@ -123,6 +123,7 @@ CQuestStep::CQuestStep(nlohmann::json jAttributes, CQuest* quest)
     m_curSucc = 0;
    
     m_events = jAttributes.value("events", "");
+    m_preEvents = jAttributes.value("_events", "");
     m_info = jAttributes.value("info", std::map<std::string, std::string>());
     
     std::vector<std::string> linkedSteps;
@@ -160,6 +161,9 @@ std::vector<std::string>& CQuestStep::getWhich() {
 }
 std::string CQuestStep::getEvents() {
     return m_events;
+}
+std::string CQuestStep::getPreEvents() {
+    return m_preEvents;
 }
 std::map<std::string, std::string> CQuestStep::getInfo() {
     return m_info;

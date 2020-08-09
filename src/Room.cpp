@@ -1,6 +1,34 @@
 #include "CRoom.hpp" 
 #include "CPerson.hpp"
 
+//Constructor
+CRoom::CRoom(string sArea, nlohmann::json jAtts, std::map<string, CPerson*> characters, std::map<string, CItem*> items, std::map<string, CDetail*> details, CPlayer* p) : CObject{jAtts, p}
+{
+    m_sArea = sArea;
+    m_sEntry = jAtts.value("entry", "");
+
+    std::map<std::string, nlohmann::json> mapExits;
+    if(jAtts.count("exits") > 0)
+        mapExits = jAtts["exits"].get<std::map<std::string, nlohmann::json>>();
+    for(const auto &it : mapExits) 
+    {
+        //Create id (target room)
+        std::string sID = it.first;
+        if(it.second.count("area") > 0)
+            sID.insert(0, it.second["area"].get<std::string>() + "_");
+        else
+            sID.insert(0, sArea+"_");
+
+        //Create exit.
+        m_exits[sID] = new CExit(sID, it.second, p);
+    }
+
+    m_characters = characters;
+    m_items = items;
+    m_details = details; 
+}
+
+
 // *** GETTER *** // 
 
 string CRoom::getEntry() { 
@@ -50,10 +78,8 @@ std::vector<nlohmann::json> CRoom::getHandler() {
 // *** SETTER *** //
 void CRoom::setPlayers(objectmap& onlinePlayers) { m_players = onlinePlayers; }
 void CRoom::setShowMap(nlohmann::json j) {
-    std::cout << "setting....\n";
     for(auto it = j.begin(); it!=j.end(); it++)
         m_showMap[it.key()] = it.value().get<std::vector<string>>();
-    std::cout << "done.\n";
 }
 
 

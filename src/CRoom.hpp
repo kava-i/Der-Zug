@@ -33,21 +33,7 @@ private:
     std::map<string, CDetail*> m_details;
 
 public:
-    CRoom(string sArea, nlohmann::json jAtts, std::map<string, CPerson*> characters, std::map<string, CItem*> items, std::map<string, CDetail*> details, CPlayer* p) : CObject{jAtts, p}
-    {
-        m_sArea = sArea;
-        m_sEntry = jAtts.value("entry", "");
-
-        std::map<std::string, nlohmann::json> mapExits;
-        if(jAtts.count("exits") > 0)
-            mapExits = jAtts["exits"].get<std::map<std::string, nlohmann::json>>();
-        for(const auto &it : mapExits) 
-            m_exits[it.first] = new CExit(it.first, it.second, p);
-
-        m_characters = characters;
-        m_items = items;
-        m_details = details; 
-    }
+    CRoom(string sArea, nlohmann::json jAtts, std::map<string, CPerson*> characters, std::map<string, CItem*> items, std::map<string, CDetail*> details, CPlayer* p);
 
     // *** getter *** // 
     string getEntry();

@@ -35,16 +35,17 @@ class GameDesigner:
                 "exits" : "object",
                 "attacks" : "object",
                 "items" : "list",
-                "details" : "list"
+                "details" : "list",
+                "quests" : "list"
             }
         desc = [{"speaker":"", "text":""}]
         options = [{"id":0, "text":"", "to":""}]
-        steps = [{"name":"", "id":"", "handler":"", "description":"", "events":"", "info":{"":""}}]
+        steps = [{"name":"", "id":"", "handler":"", "description":"", "events":"", "info":{"":""}, "_events":{"":""}}]
         self.attributes = {
             "dialogs": {"id":"", "text":desc, "options":options, "actions":"", "events":"", "function":""},
             "details": {"name":"", "id":"", "description":desc, "look":"", "items":[""], "defaultItems":""},
-            "characters": {"name":"", "id":"", "hp":0, "strength":0, "faint":0, "roomDescription":desc, "description":desc, "deadDescription":desc, "items":[""], "defaultDescription":"", "defaultDialog":"","attacks":{}, "dialog":"", "handlers":""},
-            "players": {"name":"", "id":"", "room":"", "hp":0, "strength":0, "attacks":[""]},
+            "characters": {"name":"", "id":"", "hp":0, "strength":0, "faint":0, "roomDescription":desc, "description":desc, "deadDescription":desc, "items":[""], "defaultDescription":"", "defaultDialog":"","attacks":{"":""}, "dialog":"", "handlers":""},
+            "players": {"name":"", "id":"", "room":"", "hp":0, "strength":0, "attacks":{"":""}, "quests":[""]},
             "quests": {"name":"", "id":"", "description":"", "ep":0, "steps": steps, "sorted":1},
             "items": {"name":"", "id":"", "category":"", "type":"", "attack":"", "value":0, "description":desc},
             "rooms": {"name": "", "id":"", "description": desc, "entry" : "", "exits": {"":""}, "characters" : [""], "items" : [""], "details": [""], "handlers":""},
@@ -108,21 +109,46 @@ class GameDesigner:
         self.inWorld = Tk()
         self.inWorld.title("Game-Designer: " + world)
         self.path = os.path.join(self.dirname, "src", "factory", world, "jsons")
+ 
+        #Create scrollable canvas
+        self.container = Frame(self.inWorld)
+        self.container.pack(anchor="nw", fill=BOTH, expand=True)
+
+        self.canvas = Canvas(self.container)
+        self.canvas.pack(side="left", fill="both", expand=True)
+
+        self.scrollbar = Scrollbar(self.container, orient="vertical", command=self.canvas.yview)
+
+        self.scrollable_frame = Frame(self.canvas)
+        #self.scrollable_frame.pack(fill=X)
+
+        
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(
+                scrollregion=self.canvas.bbox("all")
+            )
+        )
+
+        self.canvas.create_window((0,0), window=self.scrollable_frame, anchor="nw")
+        self.canvas.configure(yscrollcommand=self.scrollbar.set)
+        self.scrollbar.pack(side="right", fill="y")
+        
 
         #Create Main containers
-        self.selectionFrame = Frame(self.inWorld)
-        self.editFrame = Frame(self.inWorld)
-        self.overviewFrame = Frame(self.inWorld)
-        self.helpFrame = Frame(self.inWorld)
+        self.selectionFrame = Frame(self.scrollable_frame)
+        self.editFrame = Frame(self.scrollable_frame)
+        self.overviewFrame = Frame(self.scrollable_frame)
+        self.helpFrame = Frame(self.scrollable_frame)
         self.selectionFrame.grid(column=0, row=0, sticky="NW", padx=10, pady=15)
-        self.editFrame.grid(column=0, row=1, sticky="NW", padx=10, pady=15)
+        self.editFrame.grid(column=0, row=1, sticky="NW", padx=10, pady=15, columnspan=2)
+        self.helpFrame.grid(column=1, row=0, rowspan=4, pady=5, sticky="NW")
         self.overviewFrame.grid(column=2, row=0, rowspan=6, padx=10, sticky="N")
-        #self.helpFrame.grid(column=1, row=0, rowspan=4, pady=15, sticky="N")
 
         #Crete a label showing help informations
-        self.hlp = scrolledtext.ScrolledText(self.inWorld, width=30, height=7)
+        self.hlp = scrolledtext.ScrolledText(self.helpFrame, width=37, height=8)
         self.hlp.insert(INSERT, "Hover over label, or button to see help message.")
-        self.hlp.grid(column=1, pady=15, sticky="NW", row=0)
+        self.hlp.grid(column=1, sticky="NW", row=0)
         
         #Create label to show user to select 
         lbl = Label(self.selectionFrame, text="select category to edit")
@@ -629,7 +655,6 @@ class GameDesigner:
             #Normal attribute
             elif value.type == "txt":
                 otp = self.getAsType(value)  
-                print("Adding element: ", key, otp)
                 if self.isDefault(otp) == False:
                     self.curObject[key] = self.getAsType(value)
                 else:

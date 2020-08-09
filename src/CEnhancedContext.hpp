@@ -134,6 +134,7 @@ public:
     void h_thieve(std::string&, CPlayer*);
     void h_attack(std::string&, CPlayer*);
     void h_printText(std::string&, CPlayer*);
+    void h_changeRoom(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
     void h_showExits(std::string& sIdentifier, CPlayer* p);
@@ -177,7 +178,6 @@ public:
 
     // *** QUESTS *** //
     void h_react(std::string&, CPlayer*);
-    void h_zum_gleis(std::string&, CPlayer*);
     void h_reden(std::string&, CPlayer*);
     void h_geldauftreiben(std::string&, CPlayer*);
 

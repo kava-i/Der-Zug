@@ -72,6 +72,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
     m_vistited[m_room->getID()] = true;
 
 
+    std::cout << "initializing context stack.\n";
     //Initialize context stack
     for(auto it : m_world->getQuests())
     {
@@ -79,6 +80,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* g
         context->initializeHandlers(it.second->getHandler());
         m_contextStack.insert(context, 3, it.first);
     }
+    std::cout << "Done.\n";
 
     //Add eventhandler to eventmanager
     m_contextStack.insert(new CEnhancedContext((std::string)"world"), 2, "world");
@@ -449,6 +451,7 @@ void CPlayer::changeRoom(string sIdentifier)
     string room = func::getObjectId(getRoom()->getExtits(), sIdentifier, lamda1);
 
     if(room != "") {
+        std::cout << "Found next room: " << room << std::endl;
         changeRoom(getWorld()->getRooms()[room]);
         return;
     }
@@ -479,6 +482,9 @@ void CPlayer::changeRoom(string sIdentifier)
 */
 void CPlayer::changeRoom(CRoom* newRoom)
 {
+    std::cout << "Changing room\n";
+    std::cout << "new room: " << newRoom->getID() << std::endl;
+
     m_lastRoom = m_room; 
     m_room = newRoom;
     std::string entry = newRoom->getEntry();
@@ -488,6 +494,7 @@ void CPlayer::changeRoom(CRoom* newRoom)
     m_vistited[m_room->getID()] = true;
 
     updateRoomContext();
+    std::cout << "done.\n";
 }
 
 /**

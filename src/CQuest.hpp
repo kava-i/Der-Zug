@@ -60,6 +60,7 @@ private:
     std::vector<std::string> m_linkedSteps;
 
     std::string m_events;
+    std::string m_preEvents;
     std::map<std::string,std::string> m_info;
 
     //Link to quest
@@ -78,6 +79,7 @@ public:
     int getCurSucc();
     std::vector<std::string>& getWhich();
     std::string getEvents();
+    std::string getPreEvents();
     std::map<std::string, std::string> getInfo();
 
     //Setter
