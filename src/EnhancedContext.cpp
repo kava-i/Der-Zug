@@ -134,6 +134,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_take"] = &CEnhancedContext::h_take;
     m_handlers["h_goTo"] = &CEnhancedContext::h_goTo;
     m_handlers["h_consume"] = &CEnhancedContext::h_consume;
+    m_handlers["h_read"] = &CEnhancedContext::h_read;
     m_handlers["h_equipe"]  = &CEnhancedContext::h_equipe;
     m_handlers["h_dequipe"] = &CEnhancedContext::h_dequipe;
     m_handlers["h_examine"] = &CEnhancedContext::h_examine;
@@ -164,6 +165,16 @@ void CEnhancedContext::initializeHanlders()
     // *** CHATCONTEXT *** //
     m_handlers["h_send"] = &CEnhancedContext::h_send;
     m_handlers["h_end"] = &CEnhancedContext::h_end;
+
+    // *** READCONTEXT *** //
+    m_handlers["h_stop"] = &CEnhancedContext::h_stop;
+    m_handlers["h_next"] = &CEnhancedContext::h_next;
+    m_handlers["h_prev"] = &CEnhancedContext::h_prev;
+    m_handlers["h_mark"] = &CEnhancedContext::h_mark;
+    m_handlers["h_underline"] = &CEnhancedContext::h_underline;
+
+    m_handlers["h_next"] = &CEnhancedContext::h_next;
+
 
     // *** QUESTS *** //
     m_handlers["h_react"] = &CEnhancedContext::h_react;
@@ -230,6 +241,7 @@ void CEnhancedContext::initializeTemplates()
                         {"talk",{"h_startDialog"}}, 
                         {"pick",{"h_take"}}, 
                         {"consume",{"h_consume"}}, 
+                        {"read",{"h_read"}}, 
                         {"equipe",{"h_equipe"}}, 
                         {"dequipe",{"h_dequipe"}}, 
                         {"examine",{"h_examine"}}, 
@@ -256,6 +268,16 @@ void CEnhancedContext::initializeTemplates()
                     {"name", "chat"}, {"permeable", false}, {"help","chat.txt"},
                     {"handlers",{
                         {"[end]",{"h_end"}}}}
+                    };
+
+    m_templates["read"] = {
+                    {"name","read"}, {"permeable",false}, {"mark",0}, {"help","read.txt"},
+                    {"handlers",{
+                        {"next", {"h_next"}},
+                        {"previous", {"h_prev"}},
+                        {"mark", {"h_mark"}},
+                        {"underline", {"h_underline"}},
+                        {"end",{"h_stop"}}}}
                     };
 
     m_templates["room"] = {{"name", "room"}, {"permeable", true,}, {"infos", {}}};
@@ -325,6 +347,7 @@ bool CEnhancedContext::throw_event(event e, CPlayer* p)
     m_curPermeable = m_permeable;
     m_block = false;
     bool called = false;
+    m_curEvent = e;
     
     std::deque<CListener*> sortedEventmanager = m_eventmanager.getSortedCtxList();
     for(size_t i=0; i<sortedEventmanager.size() && m_block == false; i++)
@@ -829,6 +852,15 @@ void CEnhancedContext::h_consume(std::string& sIdentifier, CPlayer* p) {
         p->appendErrorPrint("Gegenstand nicht in deinem Inventar! (benutze \"zeige Inventar\" um deine Items zu sehen.)\n");
 }
 
+void CEnhancedContext::h_read(std::string& sIdentifier, CPlayer* p) {
+    if(p->getInventory().getItem(sIdentifier) != NULL) {
+        if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
+            p->appendTechPrint("Dieser Gegenstand kann nicht gelesen werden.\n");
+    }
+    else
+        p->appendErrorPrint("Gegenstand nicht in deinem Inventar! (benutze \"zeige Inventar\" um alle deine Gegenstande zu sehen.)\n");
+}
+
 void CEnhancedContext::h_equipe(std::string& sIdentifier, CPlayer* p) {
     if(p->getInventory().getItem(sIdentifier) != NULL) {
         if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
@@ -1100,51 +1132,130 @@ void CEnhancedContext::h_end(string& sMessage, CPlayer* p)
 }
 
 
+// ***** ***** CHAT CONTEXT ***** ***** //
+
+void CEnhancedContext::h_next(std::string&, CPlayer* p)
+{
+    std::cout << "h_next\n";
+    std::cout << "Item: " << m_jAttributes["item"] << std::endl;
+    CItem* item = p->getInventory().getItem_byID(m_jAttributes["item"]);
+
+    std::cout << "Mark: " << m_jAttributes["mark"] << std::endl;
+    std::cout << "Pages.size(): " << item->getPages()->getNumPages() << std::endl;
+    if(m_jAttributes["mark"] == item->getPages()->getNumPages()-1)
+        p->appendDescPrint("Das Buch ist zuende.");
+    else
+    {
+        m_jAttributes["mark"] = m_jAttributes["mark"].get<size_t>()+1;
+        p->appendPrint(
+              "Seite: " + std::to_string(m_jAttributes["mark"].get<int>()+1) + ": \n"
+            + item->getPages()->pagePrint(m_jAttributes["mark"]) + "\n");
+    }
+}
+
+void CEnhancedContext::h_prev(std::string&, CPlayer* p)
+{
+    std::cout << "h_prev\n";
+    std::cout << "Item: " << m_jAttributes["item"] << std::endl;
+    CItem* item = p->getInventory().getItem_byID(m_jAttributes["item"]);
+    if(m_jAttributes["mark"] == 0)
+        p->appendDescPrint("Das Buch ist bereits auf der ersten Seite aufgeschlagen.");
+    else
+    {
+        m_jAttributes["mark"] = m_jAttributes["mark"].get<size_t>() -1;
+        p->appendPrint(
+              "Seite: " + std::to_string(m_jAttributes["mark"].get<int>()+1) + ": \n"
+            + item->getPages()->pagePrint(m_jAttributes["mark"]) + "\n");
+    }
+}
+
+void CEnhancedContext::h_mark(std::string&, CPlayer* p)
+{
+    std::cout << "h_mark\n";
+    std::cout << "Item: " << m_jAttributes["item"] << std::endl;
+
+    p->getInventory().getItem_byID(m_jAttributes["item"])->setMark(m_jAttributes["mark"]);
+    size_t mark = m_jAttributes["mark"];
+    p->appendPrint("Leesezeichen auf Seite " + std::to_string(mark+1) + " gesetzt.");
+}
+
+void CEnhancedContext::h_underline(std::string& sIdentifier, CPlayer* p)
+{
+    if(sIdentifier.find(",") == std::string::npos)
+    {
+        p->appendErrorPrint("Leider nicht das richtige Format \"[von], [bis]\"");
+        return;
+    }
+    std::string str1 = func::split(sIdentifier, ", ")[0];
+    std::string str2 = func::split(sIdentifier, ", ")[1];
+    
+    CItem* item = p->getInventory().getItem_byID(m_jAttributes["item"]);
+    bool success = item->getPages()->underline(m_jAttributes["mark"], str1, str2);
+    if(success == false)
+        p->appendErrorPrint("Eines der Wörter konnte nicht gefunden werden.");
+    else
+        p->appendPrint(item->getPages()->pagePrint(m_jAttributes["mark"]));
+}
+
+void CEnhancedContext::h_stop(std::string&, CPlayer* p)
+{
+    p->appendDescPrint("Ich habe das Buch wieder zugeschlagen.\n");
+    p->getContexts().erase("read"); 
+}
+
+
 // ***** ***** QUEST CONTEXT ***** ***** //
 
 void CEnhancedContext::h_react(std::string& sIdentifier, CPlayer* p)
 {
     std::cout << "h_react: " << sIdentifier << std::endl;
     std::cout << "Quest: " << getAttribute<std::string>("questID") << std::endl;
+
+    //Obtain quest and quest-step
     CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
     CQuestStep* step = quest->getFirst();
+
+    //Check if quest is currently active.
     if(step == nullptr)
-    {
-        std::cout << "Quest probably not active, or completed, but not deleted.\n";
         return;
-    }
     std::cout << "Queststep: " << step->getID() << std::endl;
 
+    // --- Check if player-situation/ -input matches with quest-step --- //
     bool check = false;
     std::map<std::string, std::string> infos = step->getInfo();
 
-    for(auto it : infos)
-        std::cout << it.first << ": " << it.second << std::endl;
-    
+    //(fuzzy-)Compare identifier ("string"/ "fuzzy").
     if((infos.count("string") > 0 && infos["string"] == sIdentifier) || (infos.count("fuzzy") > 0 && fuzzy::fuzzy_cmp(infos["fuzzy"], sIdentifier) <= 0.2))
-    {
-        std::cout << "Infos resolve to true" << std::endl;
         check = true;
-    }
-    if(infos.count("inventory") > 0 && p->getInventory().getItem_byID(infos["inventory"]) == NULL)
-    {
-        std::cout << "inventory resolves to false" << std::endl;
+
+    //Check for items in inventory ("inventory").
+    if(infos.count("inventory")>0 && !p->getInventory().getItem_byID(infos["inventory"]))
         check = false;
-    }
-    std::cout << "Room: " << p->getRoom()->getID() << std::endl;
+
+    //Check for current room ("location").
     if(infos.count("location") > 0 && infos["location"] != p->getRoom()->getID())
-    {
-        std::cout << "location resolves to false" << std::endl;
         check = false;
-    }
-    if(check == false && infos.count("pass")==0)
+
+    //Check if function simply passes, if yes, compare with player-command ("pass"). 
+    if(infos.count("pass") > 0 && infos["pass"] == m_curEvent.first)
+        check = true; 
+
+    //Exit function if "check" resolves to false.
+    if(check == false)
         return;
 
+    //Delete current first step, check if quest is solved 
     quest->deleteFirst();
     p->questSolved(quest->getID(), step->getID());
+
+    //Add events triggered after next output.
     p->addPostEvent(step->getEvents());
+
+    //Check if player command shall not be executed.
     if(infos.count("break") > 0)
         m_curPermeable = false;
+
+    //Check for event to directly trigger.
     if(step->getPreEvents() != "")
         p->throw_events(step->getPreEvents(), "h_react");
 }

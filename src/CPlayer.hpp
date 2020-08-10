@@ -200,7 +200,7 @@ public:
     void endFight();
 
 
-    // ** Dialog + Chat ** //
+    // ** Dialog + Chat + Read ** //
 
     /**
     * Set current (new) Dialog player and add a Dialog-context to context-stack.
@@ -229,6 +229,11 @@ public:
     */
     void send(string sMessage);
 
+    /**
+    * Add read context.
+    * @param sItem (id of book which to read)
+    */
+    void addReadContext(std::string sID);
 
     // ** Room ** //
 

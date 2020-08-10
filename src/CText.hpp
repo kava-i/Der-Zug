@@ -22,6 +22,9 @@ public:
 
     std::string print(bool events=true);
     std::string reducedPrint(bool events=true);
+    std::string pagePrint(size_t page);
+    size_t getNumPages();
+    bool underline(size_t page, std::string str1, std::string str2);
 };
 
 class COutput
@@ -37,19 +40,26 @@ private:
     std::vector<std::string> m_post_permanentEvents;
     std::vector<std::string> m_post_oneTimeEvents;
 
+    //In case of book, or read-item
+    size_t m_page;
+
 public:
-    COutput(nlohmann::json jAttributes, CPlayer*);
+    COutput(nlohmann::json jAttributes);
 
     // *** getter *** //
     std::string getText();
     std::string getSpeaker();
+    size_t getPage();
 
     std::string print(CPlayer* p, bool events=true);
     std::string reducedPrint(CPlayer* p, bool events=false);
 
     bool checkDependencies(std::string& sSuccess, CPlayer* p);
-    void updateAttrbutes(std::string& sUpdated, CPlayer* p);
+    void updateAttrbutes(CPlayer* p, std::string& sUpdated);
+    void updateAttrbutes(CPlayer* p);
     void addEvents(CPlayer* p);
+
+    bool underline(std::string str1, std::string str2);
 };
 
 #endif

@@ -422,6 +422,17 @@ void CPlayer::startChat(CPlayer* player)
     }
 }
 
+/**
+* Add chat context.
+* @param sPlayer (chat partner (other player))
+*/
+void CPlayer::addChatContext(std::string sPartner)
+{
+    CEnhancedContext* context = new CEnhancedContext("chat", {{"partner", sPartner}});
+    context->add_listener("h_send", (std::regex)"(.*)", 1);
+    m_contextStack.insert(context, 1, "chat");
+}
+
 
 /**
 * Direct print of message to web-console. Used when chatting and usually call in chat-context
@@ -433,6 +444,18 @@ void CPlayer::send(string sMessage)
     _cout->write(sMessage);
     _cout->flush(); 
 }
+
+/**
+* Add read context.
+* @param sItem (id of book which to read)
+*/
+void CPlayer::addReadContext(std::string sID)
+{
+    //Create context and add to context-stack.
+    CEnhancedContext* context = new CEnhancedContext((std::string)"read", {{"mark", 0},{"item",sID}});
+    m_contextStack.insert(context, 1, "read");
+}
+
 
 // *** Room *** 
 
@@ -982,17 +1005,6 @@ void CPlayer::addSelectContest(std::map<std::string, std::string> mapObjects, st
     
     //Insert context into context-stack.
     m_contextStack.insert(context, 1, "select");
-}
-
-/**
-* Add chat context.
-* @param sPlayer (chat partner (other player))
-*/
-void CPlayer::addChatContext(std::string sPartner)
-{
-    CEnhancedContext* context = new CEnhancedContext("chat", {{"partner", sPartner}});
-    context->add_listener("h_send", (std::regex)"(.*)", 1);
-    m_contextStack.insert(context, 1, "chat");
 }
 
 /**

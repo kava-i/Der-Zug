@@ -36,9 +36,12 @@ class GameDesigner:
                 "attacks" : "object",
                 "items" : "list",
                 "details" : "list",
-                "quests" : "list"
+                "quests" : "list",
+                "pages" : "list_object"
             }
         desc = [{"speaker":"", "text":""}]
+        pages = [{"speaker":"", "text":"", "page":0}]
+
         options = [{"id":0, "text":"", "to":""}]
         steps = [{"name":"", "id":"", "handler":"", "description":"", "events":"", "info":{"":""}, "_events":{"":""}}]
         self.attributes = {
@@ -47,18 +50,20 @@ class GameDesigner:
             "characters": {"name":"", "id":"", "hp":0, "strength":0, "faint":0, "roomDescription":desc, "description":desc, "deadDescription":desc, "items":[""], "defaultDescription":"", "defaultDialog":"","attacks":{"":""}, "dialog":"", "handlers":""},
             "players": {"name":"", "id":"", "room":"", "hp":0, "strength":0, "attacks":{"":""}, "quests":[""]},
             "quests": {"name":"", "id":"", "description":"", "ep":0, "steps": steps, "sorted":1},
-            "items": {"name":"", "id":"", "category":"", "type":"", "attack":"", "value":0, "description":desc},
+            "items": {"name":"", "id":"", "category":"", "type":"", "attack":"", "value":0, "description":desc, "pages":pages},
             "rooms": {"name": "", "id":"", "description": desc, "entry" : "", "exits": {"":""}, "characters" : [""], "items" : [""], "details": [""], "handlers":""},
             "attacks": {"name":"", "id":"", "description":"", "power":0},
             "texts":{"id": "", "text":desc}
         }
 
         description = {"speaker":"", "text":"", "pre_otEvents":"", "pre_pEvents":"", "post_otEvents":"", "post_pEvents":"", "deps":"", "updates":""}
+        description_pages = {"speaker":"", "text":"", "pre_otEvents":"", "pre_pEvents":"", "post_otEvents":"", "post_pEvents":"", "deps":"", "updates":"", "page":1}
         self.subAttributes = {
             "text" : description,
             "description" : description,
             "roomDescription" : description,
             "deadDescription" : description,
+            "pages" : description_pages,
             "options": {"id":0, "text":"", "to":"", "deps":""},
             "steps": steps[0]
             }
@@ -67,6 +72,7 @@ class GameDesigner:
             "description":{"speaker":"", "text":""},
             "roomDescription":{"speaker":"", "text":""},
             "deadDescription":{"speaker":"", "text":""},
+            "pages":{"speaker":"", "text":"", "page":0},
             "options":{"id":0, "text":"", "to":""},
             "steps": steps[0]
         }
@@ -307,7 +313,7 @@ class GameDesigner:
         lbl = Label(self.selectionFrame, text = "select object to edit, or show json.")
         lbl.grid(column=0, row=4)
 
-        #List all objects in json
+        #descList all objects in json
         objects = Combobox(self.selectionFrame)
         objects_list = list()
         for key, value in data.items():
@@ -518,7 +524,7 @@ class GameDesigner:
         frame2.grid(column=2, row=frame.counter, columnspan=1)
         self.curObject[key].append(dict())
 
-        #Iterate ober attributes
+        #Iterate over attributes
         frame2.counter=0
         for k, v in value.items():
 
@@ -768,11 +774,13 @@ class GameDesigner:
         return False
 
     def getType2(self, key, value):
+        r = "str"
         if isinstance(value, int):
-            return "int"
+            r = "int"
         elif key in self.jsonType:
-            return "json"
-        return "str"
+            r = "json"
+        print(key, r)
+        return r 
 
     def getAsType(self, elem):
         if elem.type2 == "int":
@@ -852,8 +860,6 @@ class GameDesigner:
                 files.append(filename)
         files.sort()
         return files 
-
-
 
 
 designer = GameDesigner()

@@ -19,6 +19,7 @@ class CEnhancedContext
 protected:
     typedef std::map<std::string, std::string> map_type; 
     typedef std::pair<std::string, std::string> event;
+    event m_curEvent;
 
     CContextStack<CListener> m_eventmanager;
     CContextStack<CTimeEvent> m_timeevents;
@@ -143,6 +144,7 @@ public:
     void h_search           (std::string&, CPlayer*);
     void h_take             (std::string&, CPlayer*);
     void h_consume          (std::string&, CPlayer*);
+    void h_read             (std::string&, CPlayer*);
     void h_equipe           (std::string&, CPlayer*);
     void h_dequipe          (std::string&, CPlayer*);
     void h_examine          (std::string&, CPlayer*);
@@ -175,6 +177,14 @@ public:
     // *** CHATCONTEXT *** //
     void h_send(std::string&, CPlayer*);
     void h_end(std::string&, CPlayer*);
+
+    // *** READCONTEXT *** //
+    void h_stop(std::string&, CPlayer*);
+    void h_next(std::string&, CPlayer*);
+    void h_prev(std::string&, CPlayer*);
+    void h_mark(std::string&, CPlayer*);
+    void h_underline(std::string&, CPlayer*);
+    
 
     // *** QUESTS *** //
     void h_react(std::string&, CPlayer*);

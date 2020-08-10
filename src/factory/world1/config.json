@@ -29,7 +29,12 @@
         {"id":"consume", "regex":"(trinke|rauche|esse) (.*)", "take":2},
         {"id":"equipe", "regex":"rüste (.*) aus"},
         {"id":"dequipe", "regex":"rüste (.*) ab"},
-        {"id":"examine", "regex":"(betrachte|beobachte) (.*)", "take":2}
+        {"id":"read", "regex":"lese (.*)"},
+        {"id":"examine", "regex":"(betrachte|beobachte) (.*)", "take":2},
+        {"id":"next", "regex":"weiter"},
+        {"id":"previous", "regex":"zurück"},
+        {"id":"mark", "regex":"lesezeichen"},
+        {"id":"underline", "regex":"unterstreiche (.*)"}
         ],
     "attributes":[],
     "mapAttributes":{}

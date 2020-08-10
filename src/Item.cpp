@@ -23,6 +23,10 @@ CItem::CItem(nlohmann::json jBasic, CPlayer* p) : CObject{jBasic, p}
     m_effekt = jBasic.value("effekt", 0);
     m_value = jBasic.value("value", 1);
     m_hidden = jBasic.value("hidden", false);
+
+    //Set extra variables for books
+    m_mark = 0;
+    m_pages = new CText(m_jAttributes.value("pages", nlohmann::json()), p);
 }
 
 // *** GETTTER *** //
@@ -50,6 +54,12 @@ int CItem::getValue() {
 bool CItem::getHidden() {
     return m_hidden;
 }
+size_t CItem::getMark() {
+    return m_mark;
+}
+CText* CItem::getPages() {
+    return m_pages;
+}
 
 // *** SETTER *** //
 void CItem::setCategory(std::string sCategory) {
@@ -73,6 +83,9 @@ void CItem::setValue(int value) {
 void CItem::setHidden(bool hidden) {
     m_hidden = hidden;
 }
+void CItem::setMark(size_t mark) {
+    m_mark = mark;
+}
 
 
 // Initialize Functions 
@@ -81,6 +94,9 @@ void CItem::initializeFunctions()
 {
     //Consume-functions
     m_functions["consume"] = &CItem::consume;
+
+    //Read-functions
+    m_functions["read"] = &CItem::read;
 
     //Equipe-functions
     m_functions["equipe"] = &CItem::equipe;
@@ -127,4 +143,11 @@ void CItem::equipe(CPlayer* p)
     p->equipeItem(this, m_sType);
 }
 
+// ***** READ-FUNCTIONS ***** //
+void CItem::read(CPlayer* p)
+{
+    p->appendDescPrint("Du schlägst das Buch auf der ersten Seite auf.");
+    p->appendPrint(m_pages->pagePrint(m_mark) + "\n");
+    p->addReadContext(m_sID);
+}
 

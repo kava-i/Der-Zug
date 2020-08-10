@@ -23,6 +23,10 @@ protected:
     int m_value;
     bool m_hidden;
 
+    //Book
+    size_t m_mark;
+    CText* m_pages;
+
     ///Static map f all state-functions
     static std::map<std::string, void (CItem::*)(CPlayer*)> m_functions;
 
@@ -43,6 +47,10 @@ public:
     size_t getEffekt();
     int getValue();
     bool getHidden();
+
+    //Book
+    size_t getMark();
+    CText* getPages();
     
     // *** SETTER *** //
     void setCategory(std::string sCategory);
@@ -52,6 +60,7 @@ public:
     void setEffekt(size_t effekt);
     void setValue(int value);
     void setHidden(bool hidden); 
+    void setMark(size_t mark);
 
     std::string getAllInfos(); 
     
@@ -61,6 +70,7 @@ public:
     // *** FUNCTIONS *** //
     void equipe(CPlayer*);
     void consume(CPlayer*);
+    void read(CPlayer*);
 };
 
 #endif

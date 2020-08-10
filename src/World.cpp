@@ -289,10 +289,10 @@ map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p
 
         //Update id
         auto lambda = [](CDetail* detail) { return detail->getName(); };
-        jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapDetails, lambda), sID);
-
+        jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapDetails,lambda), sID);
 
         //Create items
+        std::cout << jBasic["id"] << std::endl;
         parseRandomItemsToDetail(jBasic);
         map<string, CItem*> mapItems = parseRoomItems(jBasic, p);
 
@@ -431,7 +431,6 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room, CP
         //Update basic with specific json
         func::updateJson(jBasic, character.second);     
     
-        std::cout << "2.\n";
         //Update id
         auto lambda = [] (CPerson* person) { return person->getName(); };
         jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapCharacters, lambda), sID);
