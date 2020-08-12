@@ -435,7 +435,8 @@ void CPlayer::addChatContext(std::string sPartner)
 
 
 /**
-* Direct print of message to web-console. Used when chatting and usually call in chat-context
+* Direct print of message to web-console. 
+* Used when chatting and usually call in chat-context
 * of the Dialog partner, printing, what he said.
 * @param sMessage message to print to console
 */
@@ -452,7 +453,9 @@ void CPlayer::send(string sMessage)
 void CPlayer::addReadContext(std::string sID)
 {
     //Create context and add to context-stack.
-    CEnhancedContext* context = new CEnhancedContext((std::string)"read", {{"mark", 0},{"item",sID}});
+    CItem* item = m_inventory.getItem_byID(sID);
+    CEnhancedContext* context = new CEnhancedContext((std::string)"read", 
+                                    {{"mark", item->getMark()},{"item",sID}});
     m_contextStack.insert(context, 1, "read");
 }
 
@@ -460,9 +463,11 @@ void CPlayer::addReadContext(std::string sID)
 // *** Room *** 
 
 /**
-* Check player input, whether 1. player wants to go back, 2. player wants to use an exit in current
+* Check player input, whether 1. player wants to go back, 2. player wants 
+* to use an exit in current
 * room, or 3. player wants to go to a room already visited.
-* @param sIdentifier player input (room id, exit of current room, or room already visited)
+* @param sIdentifier player input (room id, exit of current room, or room al-
+* redy visited)
 */
 void CPlayer::changeRoom(string sIdentifier)
 {

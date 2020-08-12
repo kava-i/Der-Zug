@@ -275,7 +275,7 @@ void CEnhancedContext::initializeTemplates()
                     };
 
     m_templates["read"] = {
-                    {"name","read"}, {"permeable",false}, {"mark",0}, {"help","read.txt"},
+                    {"name","read"}, {"permeable",false}, {"help","read.txt"},
                     {"handlers",{
                         {"next", {"h_next"}},
                         {"previous", {"h_prev"}},
