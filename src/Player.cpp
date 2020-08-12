@@ -745,7 +745,7 @@ void CPlayer::setNewQuest(std::string sQuestID)
 {
     int ep=0;
     CQuest* quest = m_world->getQuest(sQuestID);
-    appendSuccPrint(quest->setActive(ep));
+    appendSuccPrint(quest->setActive(ep, this));
     if(quest->getOnlineFromBeginning() == false)
     {
         CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"name", sQuestID}, {"permeable",true}, {"questID",sQuestID}});
@@ -766,7 +766,7 @@ void CPlayer::setNewQuest(std::string sQuestID)
 void CPlayer::questSolved(std::string sQuestID, std::string sStepID)
 {
     int ep=0;
-    appendSuccPrint(m_world->getQuest(sQuestID)->getSteps()[sStepID]->solved(ep));
+    appendSuccPrint(m_world->getQuest(sQuestID)->getSteps()[sStepID]->solved(ep, this));
     if(m_world->getQuest(sQuestID)->getSolved() == true)
         m_contextStack.erase(sQuestID);
     addEP(ep);
@@ -905,6 +905,7 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps)
             if(operators[sOpt](m_stats[it.key()], value) == false)
                 return false;
         }
+
         else {
             std::cout << cRED << "Error in document: " << it.key() << cCLEAR << std::endl;
             return false;

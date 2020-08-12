@@ -9,6 +9,7 @@
 #include "Webcmd.hpp"
 
 class CQuestStep;
+class CPlayer;
 
 class CQuest {
 private:
@@ -22,9 +23,6 @@ private:
     std::map<std::string, CQuestStep*> m_questSteps;
     std::vector<nlohmann::json> m_handler;
 
-    bool m_sorted;
-    std::vector<std::string> m_sortedSteps;
-
 public:
     CQuest(nlohmann::json jAttributes);
 
@@ -35,24 +33,24 @@ public:
     bool getOnlineFromBeginning();
     std::map<std::string, CQuestStep*> getSteps();
     std::vector<nlohmann::json> getHandler();
-    CQuestStep* getFirst();
 
     //Setter
     void setSteps(std::map<std::string, CQuestStep*> steps);
     void setHandler(std::vector<nlohmann::json> handlers);
 
-    std::string setActive(int& ep);
+    std::string setActive(int& ep, CPlayer* p);
 
     //Functions
     std::string printQuest(bool solved);
     std::string checkSolved(int& ep);
-    void deleteFirst();
 };
 
 class CQuestStep
 {
 private:
-    std::string m_sName, m_sID, m_sDescription;
+    std::string m_sName; 
+    std::string m_sID;
+    std::string m_sDescription;
     bool m_solved, m_active;
 
     int m_succ;
@@ -85,13 +83,14 @@ public:
     std::map<std::string, std::string> getInfo();
 
     //Setter
-    void setActive(bool);
+    void setActive(bool, CPlayer*);
     void setCurSucc(int x);
     void incSucc(int x);
 
     //Functions
-    std::string solved(int& ep);
-    std::string handleSolved();
+    std::string solved(int& ep, CPlayer*);
+    std::string handleSolved(CPlayer*);
+    void handle_events(CPlayer* p);
 };
 
 #endif

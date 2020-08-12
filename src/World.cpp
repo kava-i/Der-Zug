@@ -629,7 +629,6 @@ void CWorld::questFactory(std::string sPath)
         newQuest->setHandler(listeners);
         m_quests[j_quest["id"]] = newQuest;
     }
-    std::cout << "Done."<<std::endl;
 }
 
 void CWorld::textFactory()
@@ -649,5 +648,3 @@ void CWorld::textFactory(std::string sPath)
     for(auto it=j_texts.begin(); it!=j_texts.end(); it++)
         m_jTexts[it.key()] = it.value()["text"];
 }
-
-

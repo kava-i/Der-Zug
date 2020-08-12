@@ -1,4 +1,5 @@
 #include "CQuest.hpp"
+#include "CPlayer.hpp"
 
 CQuest::CQuest(nlohmann::json jAttributes)
 {
@@ -33,18 +34,12 @@ std::vector<nlohmann::json> CQuest::getHandler() {
     return m_handler;
 }
 
-CQuestStep* CQuest::getFirst() {
-    if(m_active == true && m_sortedSteps.size() > 0)
-        return m_questSteps[m_sortedSteps[0]];
-    return nullptr;
-}
 
 // *** SETTER *** //
 void CQuest::setSteps(std::map<std::string, CQuestStep*> steps) {
     m_questSteps = steps;
-    for(auto it : m_questSteps)
-        m_sortedSteps.push_back(it.first);
 }
+
 void CQuest::setHandler(std::vector<nlohmann::json> handlers) {
     m_handler = handlers;
 }
@@ -52,16 +47,16 @@ void CQuest::setHandler(std::vector<nlohmann::json> handlers) {
 
 // *** FUNCTIONS *** //
 
-std::string CQuest::setActive(int& ep) {
+std::string CQuest::setActive(int& ep, CPlayer* p) {
     m_active = true;
-    m_questSteps.begin()->second->setActive(true);
+    m_questSteps.begin()->second->setActive(true, p);
 
-    std::string sOutput = "Neue Quest: <b>" + m_sName + "</b>: <i>" + m_sDescription + "</i>\n";
+    std::string sOutput = "Neue Quest: <b>"+m_sName + "</b>: <i>"+m_sDescription+"</i>\n";
 
     for(auto it : m_questSteps)
     {
         if(it.second->getSolved() == true)
-            sOutput += it.second->handleSolved();
+            sOutput += it.second->handleSolved(p);
     }
     sOutput += checkSolved(ep);
     return sOutput;
@@ -107,10 +102,6 @@ std::string CQuest::checkSolved(int& ep)
         return "Quest "+ m_sName + " abgeschlossen! + " + std::to_string(m_EP) + " EP\n";
     }
     return "";
-}
-
-void CQuest::deleteFirst() {
-    m_sortedSteps.erase(m_sortedSteps.begin());
 }
 
 // ***** ***** CQUESTSTEP ***** ***** //
@@ -174,8 +165,10 @@ std::map<std::string, std::string> CQuestStep::getInfo() {
 }
 
 // *** SETTER *** //
-void CQuestStep::setActive(bool active) {
+void CQuestStep::setActive(bool active, CPlayer* p) {
     m_active = active;
+    if(m_solved==true)
+        handle_events(p);
 }
 void CQuestStep::setCurSucc(int x) {
     m_curSucc = x;
@@ -184,7 +177,7 @@ void CQuestStep::incSucc(int x) {
     m_curSucc += x;
 }
 
-std::string CQuestStep::solved(int& ep)
+std::string CQuestStep::solved(int& ep, CPlayer* p)
 {
     std::string sOutput = "";
     if(m_succ != m_curSucc)
@@ -192,18 +185,32 @@ std::string CQuestStep::solved(int& ep)
 
     m_solved = true;
     if(m_active == true)
-        sOutput += handleSolved();
+    {
+        sOutput += handleSolved(p);
+        handle_events(p);
+    }
     sOutput += m_quest->checkSolved(ep);
 
     return sOutput;
 }
 
-std::string CQuestStep::handleSolved()
+std::string CQuestStep::handleSolved(CPlayer* p)
 {
     for(auto step : m_linkedSteps)
-        m_quest->getSteps()[step]->setActive(true);
-    if(m_quest->getFirst() != nullptr)
-        m_quest->getSteps()[m_quest->getFirst()->getID()]->setActive(true);
+        m_quest->getSteps()[step]->setActive(true, p);
     return m_sName + " Erfolgreich!\n";
 }
 
+void CQuestStep::handle_events(CPlayer* p)
+{
+    //Add events triggered after next output.
+    p->addPostEvent(m_events);
+
+    //Check if player command shall not be executed.
+    if(m_info.count("break") > 0)
+        p->getContext(m_quest->getID())->setCurPermeable(false);
+
+    //Check for event to directly trigger.
+    if(m_preEvents != "")
+        p->throw_events(m_preEvents, "quest/ step: " + m_quest->getID() + "/" + m_sID);
+}

@@ -150,4 +150,3 @@ void CItem::read(CPlayer* p)
     p->appendPrint(m_pages->pagePrint(m_mark) + "\n");
     p->addReadContext(m_sID);
 }
-

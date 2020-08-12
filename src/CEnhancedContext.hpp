@@ -66,6 +66,7 @@ public:
     void setGame(CGame* game);
     void setErrorFunction(void(CEnhancedContext::*func)(CPlayer*));
     void setTimeEvents(CContextStack<CTimeEvent> stack) { m_timeevents=stack; } 
+    void setCurPermeable(bool permeable);
 
     template<typename T> 
     T setAttribute(std::string sAttribute, T attribute)

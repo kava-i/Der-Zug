@@ -90,6 +90,10 @@ void CEnhancedContext::setErrorFunction(void(CEnhancedContext::*func)(CPlayer* p
     m_error = func;
 }
 
+void CEnhancedContext::setCurPermeable(bool permeable) {
+    m_curPermeable = permeable;
+}
+
 // ***** ***** INITIALIZERS ***** ***** //
 void CEnhancedContext::initializeHanlders()
 {
@@ -1213,51 +1217,41 @@ void CEnhancedContext::h_react(std::string& sIdentifier, CPlayer* p)
 
     //Obtain quest and quest-step
     CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
-    CQuestStep* step = quest->getFirst();
 
-    //Check if quest is currently active.
-    if(step == nullptr)
-        return;
-    std::cout << "Queststep: " << step->getID() << std::endl;
+    for(auto it: quest->getSteps())
+    {
+        std::cout << it.first << std::endl;
+        //If quest is already solved, skip.
+        if(it.second->getSolved() == true)
+            continue;
 
-    // --- Check if player-situation/ -input matches with quest-step --- //
-    bool check = false;
-    std::map<std::string, std::string> infos = step->getInfo();
+        // --- Check if player-situation/ -input matches with quest-step --- //
+        bool check = false;
+        std::map<std::string, std::string> infos = it.second->getInfo();
 
-    //(fuzzy-)Compare identifier ("string"/ "fuzzy").
-    if((infos.count("string") > 0 && infos["string"] == sIdentifier) || (infos.count("fuzzy") > 0 && fuzzy::fuzzy_cmp(infos["fuzzy"], sIdentifier) <= 0.2))
-        check = true;
+        //(fuzzy-)Compare identifier ("string"/ "fuzzy").
+        if((infos.count("string") > 0 && infos["string"] == sIdentifier) || (infos.count("fuzzy") > 0 && fuzzy::fuzzy_cmp(infos["fuzzy"], sIdentifier) <= 0.2))
+            check = true;
 
-    //Check for items in inventory ("inventory").
-    if(infos.count("inventory")>0 && !p->getInventory().getItem_byID(infos["inventory"]))
-        check = false;
+        //Check for items in inventory ("inventory").
+        if(infos.count("inventory")>0 && !p->getInventory().getItem_byID(infos["inventory"]))
+            check = false;
 
-    //Check for current room ("location").
-    if(infos.count("location") > 0 && infos["location"] != p->getRoom()->getID())
-        check = false;
+        //Check for current room ("location").
+        if(infos.count("location") > 0 && infos["location"] != p->getRoom()->getID())
+            check = false;
 
-    //Check if function simply passes, if yes, compare with player-command ("pass"). 
-    if(infos.count("pass") > 0 && infos["pass"] == m_curEvent.first)
-        check = true; 
+        //Check if function simply passes, if yes, compare with player-command ("pass"). 
+        if(infos.count("pass") > 0 && infos["pass"] == m_curEvent.first)
+            check = true; 
 
-    //Exit function if "check" resolves to false.
-    if(check == false)
-        return;
+        //Exit function if "check" resolves to false.
+        if(check == false)
+            continue;
 
-    //Delete current first step, check if quest is solved 
-    quest->deleteFirst();
-    p->questSolved(quest->getID(), step->getID());
-
-    //Add events triggered after next output.
-    p->addPostEvent(step->getEvents());
-
-    //Check if player command shall not be executed.
-    if(infos.count("break") > 0)
-        m_curPermeable = false;
-
-    //Check for event to directly trigger.
-    if(step->getPreEvents() != "")
-        p->throw_events(step->getPreEvents(), "h_react");
+        //Check if quest is solved 
+        p->questSolved(quest->getID(), it.first);
+    }
 }
 
 // *** *** Tutorial *** *** //
