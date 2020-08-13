@@ -193,6 +193,9 @@ namespace func
         if(mapObjects.count(sName) > 0)
             return sName;
 
+        if(sName == "")
+            return "";
+
         //Iterate over map and use fuzzy comparison to find matching name. Add all matches
         // to array of matches including the exact score.
         std::vector<std::pair<std::string, double>> matches;

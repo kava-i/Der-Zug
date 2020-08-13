@@ -249,7 +249,7 @@ std::string CPlayer::returnBlackPrint(std::string sPrint) {
 }
 
 void CPlayer::appendSuccPrint(string sPrint) {
-    m_sPrint += GREEN + sPrint + WHITE;
+    appendPrint(GREEN + sPrint + WHITE);
 }
 
 ///Add staged events to throw before printing
@@ -771,9 +771,9 @@ void CPlayer::setNewQuest(std::string sQuestID)
 void CPlayer::questSolved(std::string sQuestID, std::string sStepID)
 {
     int ep=0;
-    appendSuccPrint(m_world->getQuest(sQuestID)->getSteps()[sStepID]->solved(ep, this));
-    if(m_world->getQuest(sQuestID)->getSolved() == true)
-        m_contextStack.erase(sQuestID);
+    m_world->getQuest(sQuestID)->getSteps()[sStepID]->solved(ep, this);
+    //if(m_world->getQuest(sQuestID)->getSolved() == true)
+    //    m_contextStack.erase(sQuestID);
     addEP(ep);
 }
 

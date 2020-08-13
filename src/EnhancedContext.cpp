@@ -565,6 +565,7 @@ void CEnhancedContext::h_endDialog(std::string& sIdentifier, CPlayer* p) {
 
 void CEnhancedContext::h_newFight(std::string& sIdentifier, CPlayer* p) {
 
+    std::cout << "h_newFight: " << sIdentifier << std::endl;
     auto lambda = [](CPerson* person){return person->getName(); };
     std::string str =func::getObjectId(p->getRoom()->getCharacters(),sIdentifier,lambda);
    

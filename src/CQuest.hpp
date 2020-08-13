@@ -78,6 +78,7 @@ public:
     int getSucc();
     int getCurSucc();
     std::vector<std::string>& getWhich();
+    std::vector<std::string>& getLinkedSteps();
     std::string getEvents();
     std::string getPreEvents();
     std::map<std::string, std::string> getInfo();
@@ -88,9 +89,7 @@ public:
     void incSucc(int x);
 
     //Functions
-    std::string solved(int& ep, CPlayer*);
-    std::string handleSolved(CPlayer*);
-    void handle_events(CPlayer* p);
+    void solved(int& ep, CPlayer*);
 };
 
 #endif
