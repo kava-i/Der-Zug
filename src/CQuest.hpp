@@ -62,6 +62,8 @@ private:
     std::string m_events;
     std::string m_preEvents;
     std::map<std::string,std::string> m_info;
+    nlohmann::json deps_;
+    nlohmann::json updates_;
 
     //Link to quest
     CQuest* m_quest;
@@ -82,6 +84,7 @@ public:
     std::string getEvents();
     std::string getPreEvents();
     std::map<std::string, std::string> getInfo();
+    nlohmann::json& getDependencies();
 
     //Setter
     void setActive(bool, CPlayer*);
@@ -90,6 +93,7 @@ public:
 
     //Functions
     void solved(int& ep, CPlayer*);
+    std::string UpdateAttributes(CPlayer* p);
 };
 
 #endif

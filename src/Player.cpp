@@ -16,87 +16,87 @@
 * @param room current room of payer
 * @param newAttacks attacks of player
 */
-CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, CGramma* gramma) : CPerson(jAtts, nullptr, lAttacks, nullptr, this, std::map<std::string, CDialog*>())
-{
-    //Set login data and player information
-    func::convertToUpper(m_sName);
-    m_sPassword = jAtts["password"];
-    m_firstLogin = true; 
-    m_sMode = jAtts.value("mode", "prosa"); 
-    m_abbilities = {"strength", "skill"};
+CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, 
+    CGramma* gramma) : CPerson(jAtts, nullptr, lAttacks, nullptr, this, 
+      std::map<std::string, CDialog*>()) {
+  //Set login data and player information
+  func::convertToUpper(m_sName);
+  m_sPassword = jAtts["password"];
+  m_firstLogin = true; 
+  m_sMode = jAtts.value("mode", "prosa"); 
+  m_abbilities = {"strength", "skill"};
 
-    //Initiazize world
-    m_world = new CWorld(this);
-    m_parser = new CParser(m_world->getConfig());
-    m_gramma = gramma;
-    
-    //Character and Level
-    m_level = 0;
-    m_ep = 0;
-    
-    //Extract minds from config
-    std::map<std::string, std::string> colors = {{"blue", BLUE}, {"green", GREEN}, {"red", RED}};
-    for(auto it : m_world->getConfig()["minds"])
-    {
-        SMind mind;
-        mind.sID = it["id"];
-        mind.color = colors[it["color"]];
-        mind.level = it["level"].get<int>();
-        mind.relevance = it["relevance"].get<double>();
-        m_minds[it["id"]] = mind;
+  //Initiazize world
+  m_world = new CWorld(this);
+  m_parser = new CParser(m_world->getConfig());
+  m_gramma = gramma;
+  
+  //Character and Level
+  m_level = 0;
+  m_ep = 0;
+  
+  //Extract minds from config
+  std::map<std::string, std::string> colors = {{"blue", BLUE}, 
+    {"green", GREEN}, {"red", RED}};
+  for(auto it : m_world->getConfig()["minds"]) {
+    SMind mind;
+    mind.sID = it["id"];
+    mind.color = colors[it["color"]];
+    mind.level = it["level"].get<int>();
+    mind.relevance = it["relevance"].get<double>();
+    m_minds[it["id"]] = mind;
+  }
+
+  //Attributes
+  if(m_world->getConfig().count("attributes")>0) {
+    std::vector<std::string> attributes = m_world->getConfig()["attributes"];
+    for(auto it : attributes)   
+        m_stats[it] = 0;
+  }
+
+  //States, f.e. current fight, Dialog-partner
+  m_curFight = nullptr;
+  m_curDialogPartner = nullptr;
+
+  //Set current room
+  m_room = room;
+
+  //Set player's equipment (no equipment at the beginning)
+  m_equipment["weapon"] = NULL;
+  m_equipment["armor"]  = NULL;
+  
+  //Initialize all rooms as not visited
+  for(const auto& it : m_world->getRooms())
+    m_vistited[it.second->getID()] = false;
+  m_room = m_world->getRoom(m_room->getID());
+  m_vistited[m_room->getID()] = true;
+
+
+  std::cout << "initializing context stack.\n";
+  //Initialize context stack
+  for(auto it : m_world->getQuests()) {
+    if(it.second->getOnlineFromBeginning() == true) {
+      CEnhancedContext* context = new CEnhancedContext(
+          (nlohmann::json){{"name", it.first}, {"permeable",true}, 
+          {"questID",it.first}});
+      context->initializeHandlers(it.second->getHandler());
+      m_contextStack.insert(context, 3, it.first);
     }
+  }
+  std::cout << "Done.\n";
 
-    //Attributes
-    if(m_world->getConfig().count("attributes")>0)
-    {
-        std::vector<std::string> attributes = m_world->getConfig()["attributes"];
-        for(auto it : attributes)   
-            m_stats[it] = 0;
-    }
+  //Add eventhandler to eventmanager
+  m_contextStack.insert(new CEnhancedContext((std::string)"first"), 9, "first");
+  m_contextStack.insert(new CEnhancedContext((std::string)"world"), 2, "world");
+  CEnhancedContext* context = new CEnhancedContext((std::string)"standard");
+  m_contextStack.insert(context, 0 , "standard");
+  updateRoomContext();
 
-    //States, f.e. current fight, Dialog-partner
-    m_curFight = nullptr;
-    m_curDialogPartner = nullptr;
-
-    //Set current room
-    m_room = room;
-
-    //Set player's equipment (no equipment at the beginning)
-    m_equipment["weapon"] = NULL;
-    m_equipment["armor"]  = NULL;
-    
-    //Initialize all rooms as not visited
-    for(const auto& it : m_world->getRooms())
-        m_vistited[it.second->getID()] = false;
-    m_room = m_world->getRoom(m_room->getID());
-    m_vistited[m_room->getID()] = true;
-
-
-    std::cout << "initializing context stack.\n";
-    //Initialize context stack
-    for(auto it : m_world->getQuests())
-    {
-        if(it.second->getOnlineFromBeginning() == true)
-        {
-            CEnhancedContext* context = new CEnhancedContext((nlohmann::json){{"name", it.first}, {"permeable",true}, {"questID",it.first}});
-            context->initializeHandlers(it.second->getHandler());
-            m_contextStack.insert(context, 3, it.first);
-        }
-    }
-    std::cout << "Done.\n";
-
-    //Add eventhandler to eventmanager
-    m_contextStack.insert(new CEnhancedContext((std::string)"world"), 2, "world");
-    CEnhancedContext* context = new CEnhancedContext((std::string)"standard");
-    m_contextStack.insert(context, 0 , "standard");
-    updateRoomContext();
-
-    //Add quests
-    if(jAtts.count("quests") > 0)
-    {
-        for(const auto& it : jAtts["quests"])
-            setNewQuest(it);
-    }
+  //Add quests
+  if(jAtts.count("quests") > 0) {
+    for(const auto& it : jAtts["quests"])
+      setNewQuest(it);
+  }
 }
 
 CPlayer::~CPlayer()
@@ -262,12 +262,11 @@ void CPlayer::addPreEvent(std::string sNewEvent)
 }
 
 ///Add staged events to throw after printing
-void CPlayer::addPostEvent(std::string sNewEvent)
-{
-    if(m_staged_post_events == "")
-        m_staged_post_events = sNewEvent;
-    else
-        m_staged_post_events += ";"+sNewEvent;
+void CPlayer::addPostEvent(std::string sNewEvent) {
+  if(m_staged_post_events == "")
+    m_staged_post_events = sNewEvent;
+  else
+    m_staged_post_events += ";"+sNewEvent;
 }
 
 //Throw staged events and clear events afterwards
@@ -768,13 +767,12 @@ void CPlayer::setNewQuest(std::string sQuestID)
 * @param sQuestID identifier to quest.
 * @param sStepID identifier to quest-step.
 */
-void CPlayer::questSolved(std::string sQuestID, std::string sStepID)
-{
-    int ep=0;
-    m_world->getQuest(sQuestID)->getSteps()[sStepID]->solved(ep, this);
-    //if(m_world->getQuest(sQuestID)->getSolved() == true)
-    //    m_contextStack.erase(sQuestID);
-    addEP(ep);
+void CPlayer::questSolved(std::string sQuestID, std::string sStepID) {
+  int ep=0;
+  m_world->getQuest(sQuestID)->getSteps()[sStepID]->solved(ep, this);
+  //if(m_world->getQuest(sQuestID)->getSolved() == true)
+  //    m_contextStack.erase(sQuestID);
+  addEP(ep);
 }
 
 
@@ -784,27 +782,28 @@ void CPlayer::questSolved(std::string sQuestID, std::string sStepID)
 * Add experience points and call update-stats function if a new level is reached.
 * @param ep experience points to be added.
 */
-void CPlayer::addEP(int ep)
-{
-    m_ep+=ep;
-    size_t counter=0;
-    for(;m_ep>=20; m_ep-=20, counter++, m_level++)
-        appendSuccPrint("Level Up!\n");
+void CPlayer::addEP(int ep) {
+  m_ep+=ep;
+  size_t counter=0;
+  for (;m_ep>=20; m_ep-=20, counter++, m_level++)
+    appendSuccPrint("Level Up!\n");
 
-    if(counter > 0)
-    {
-        CEnhancedContext* context = m_contextStack.getContext("updateStats");
-        if(context == NULL)
-            updateStats(counter);
-        else
-        {
-            context->setAttribute<int>("numPoints", context->getAttribute<int>("numPoints")+counter);
-            m_sPrint+= "Du hast " + std::to_string(context->getAttribute<int>("numPoints")) + " Punkte zu vergeben!\n";
-            for(size_t i=0; i<m_abbilities.size(); i++)
-                m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" + std::to_string(getStat(m_abbilities[i])) + ")\n";
-            m_sPrint += "Wähle eine Zahl geben den Namen des Attributes aus.\n";
-        }
+  if (counter > 0) {
+    CEnhancedContext* context = m_contextStack.getContext("updateStats");
+    if (context == NULL)
+      updateStats(counter);
+    else {
+      context->setAttribute<int>("numPoints", context->getAttribute<int>
+          ("numPoints")+counter);
+      m_sPrint += "Du hast " + std::to_string(context->getAttribute<int>
+          ("numPoints")) + " Punkte zu vergeben!\n";
+      for(size_t i=0; i<m_abbilities.size(); i++) {
+          m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" 
+            + std::to_string(getStat(m_abbilities[i])) + ")\n";
+      }
+      m_sPrint += "Wähle eine Zahl geben den Namen des Attributes aus.\n";
     }
+  }
 }
 
 /**
@@ -1036,34 +1035,44 @@ void CPlayer::printError(std::string sError)
 * loop breaks.
 * @param sInput
 */
-void CPlayer::throw_events(string sInput, std::string sMessage)
-{
-    updateRoomContext();
-    std::cout << cRED << "Events: " << sInput << ", from: " << sMessage << cCLEAR << std::endl;
+void CPlayer::throw_events(string sInput, std::string sMessage) {
+  updateRoomContext();
+  std::cout << cRED << "Events: " << sInput << ", from: " << sMessage << cCLEAR << std::endl;
 
-    //Check for time triggered events
-    getContext("room")->throw_timeEvents(this);
-    getContext("standard")->throw_timeEvents(this);
+  //Check for time triggered events
+  getContext("room")->throw_timeEvents(this);
+  getContext("standard")->throw_timeEvents(this);
 
-    if(sInput == "")
-    {
-        throw_staged_events(m_staged_pre_events, "pre");
-        throw_staged_events(m_staged_post_events, "post"); 
-        return;
+  if (sInput == "") {
+    throw_staged_events(m_staged_pre_events, "pre");
+    throw_staged_events(m_staged_post_events, "post"); 
+    return;
+  }
+
+  //Parse command
+  std::vector<std::pair<std::string, std::string>> events = m_parser->parse(sInput);
+
+  //Iterate over parsed events and call throw_event for each context and each event
+  std::deque<CEnhancedContext*> sortedCtxList = m_contextStack.getSortedCtxList();
+  for (size_t i=0; i<events.size(); i++) {
+    std::cout << cRED << events[i].first << ", " << events[i].second << cCLEAR <<"\n";
+
+    /*
+    if (events[i].first == "printText") {
+      if(m_world->getTexts().count(events[i].second) > 0) {
+        CText text(m_world->getTexts()[events[i].second], this);
+        appendPrint(text.print());
+      }
+      else
+        std::cout << "Text not found!\n";
+      continue;
     }
+    */
 
-    //Parse command
-    std::vector<std::pair<std::string, std::string>> events = m_parser->parse(sInput);
 
-    //Iterate over parsed events and call throw_event for each context and each event
-    std::deque<CEnhancedContext*> sortedCtxList = m_contextStack.getSortedCtxList();
-    for(size_t i=0; i<events.size(); i++)
-    {
-        std::cout << cRED << events[i].first << ", " << events[i].second << cCLEAR <<"\n";
-
-        for(size_t j=0; j<sortedCtxList.size(); j++) {
-            if(sortedCtxList[j]->throw_event(events[i], this) == false)
-                break;
-        }
+    for (size_t j=0; j<sortedCtxList.size(); j++) {
+      if (sortedCtxList[j]->throw_event(events[i], this) == false)
+        break;
     }
+  }
 }

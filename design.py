@@ -43,7 +43,7 @@ class GameDesigner:
         pages = [{"speaker":"", "text":"", "page":0}]
 
         options = [{"id":0, "text":"", "to":""}]
-        steps = [{"name":"", "id":"", "handler":"", "description":"", "events":"", "info":{"":""}, "_events":{"":""}, "linkedSteps":[""]}]
+        steps = [{"name":"", "id":"", "handler":"", "description":"", "events":"", "info":{"":""}, "deps":"", "updates":"", "_events":{"":""}, "linkedSteps":[""]}]
         self.attributes = {
             "dialogs": {"id":"", "text":desc, "options":options, "actions":"", "events":"", "function":""},
             "details": {"name":"", "id":"", "description":desc, "look":"", "items":[""], "defaultItems":""},

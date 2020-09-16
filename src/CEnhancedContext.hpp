@@ -9,6 +9,7 @@
 #include "SortedContext.hpp"
 #include "CListener.hpp"
 #include "CTimeEvent.hpp"
+#include "CQuest.hpp"
 #include "json.hpp"
 
 class CPlayer;
@@ -139,6 +140,7 @@ public:
     void h_changeRoom(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
+    void h_ignore(std::string&, CPlayer*);
     void h_showExits(std::string& sIdentifier, CPlayer* p);
     void h_show             (std::string&, CPlayer*);
     void h_look             (std::string&, CPlayer*);
@@ -191,6 +193,8 @@ public:
     void h_react(std::string&, CPlayer*);
     void h_reden(std::string&, CPlayer*);
     void h_geldauftreiben(std::string&, CPlayer*);
+
+    bool CheckQuestStep(CQuestStep*, std::string, CPlayer*);
 
     // *** OTHER CONTEXTS *** //
     void h_select(std::string&, CPlayer*);

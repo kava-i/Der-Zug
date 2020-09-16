@@ -7,26 +7,25 @@
 std::map<std::string, void (CEnhancedContext::*)(std::string&, CPlayer* p)> CEnhancedContext::m_handlers = {};
 std::map<std::string, nlohmann::json> CEnhancedContext::m_templates = {};
 
-CEnhancedContext::CEnhancedContext(nlohmann::json jAttributes)
-{
-    m_jAttributes = jAttributes;
-    m_sName = jAttributes.value("name", "context");
-    m_permeable = jAttributes.value("permeable", false);
-    m_curPermeable = m_permeable;
-    m_block = false;
-    m_sHelp = jAttributes.value("help", "");
-    m_sError = jAttributes.value("error", "");
+CEnhancedContext::CEnhancedContext(nlohmann::json jAttributes) {
+  m_jAttributes = jAttributes;
+  m_sName = jAttributes.value("name", "context");
+  m_permeable = jAttributes.value("permeable", false);
+  m_curPermeable = m_permeable;
+  m_block = false;
+  m_sHelp = jAttributes.value("help", "");
+  m_sError = jAttributes.value("error", "");
 
-    if(jAttributes.count("handlers") > 0)
-    {
-        for(const auto &it : jAttributes["handlers"].get<std::map<string, vector<string>>>()) {
-            for(size_t i=0; i<it.second.size(); i++)
-                add_listener(it.second[i], it.first, 0-i);
-        }
+  if(jAttributes.count("handlers") > 0) {
+    for(const auto &it : jAttributes["handlers"].get<std::map<string, 
+        vector<string>>>()) {
+      for(size_t i=0; i<it.second.size(); i++)
+        add_listener(it.second[i], it.first, 0-i);
     }
-    add_listener("h_help", "help");
+  }
+  add_listener("h_help", "help");
 
-    m_error = &CEnhancedContext::error;
+  m_error = &CEnhancedContext::error;
 }
  
 CEnhancedContext::CEnhancedContext(std::string sTemplate) : CEnhancedContext(getTemplate(sTemplate))
@@ -144,6 +143,7 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["h_examine"] = &CEnhancedContext::h_examine;
     m_handlers["h_startDialog"] = &CEnhancedContext::h_startDialog;
     m_handlers["h_changeMode"]  = &CEnhancedContext::h_changeMode;
+    m_handlers["h_ignore"] = &CEnhancedContext::h_ignore;
     m_handlers["h_try"] = &CEnhancedContext::h_try;
 
     //m_handlers["h_firstZombieAttack"] = &CEnhancedContext::h_firstZombieAttack;
@@ -197,11 +197,10 @@ void CEnhancedContext::initializeHanlders()
     m_handlers["t_throwEvent"] = &CEnhancedContext::t_throwEvent;
 }
 
-void CEnhancedContext::initializeTemplates()
-{
+void CEnhancedContext::initializeTemplates() {
     m_templates["game"] = {
                     {"name", "game"}, {"permeable", true}, 
-                    {"handlers",{
+                    {"handlers", {
                         {"reload_game",{"h_reloadGame"}},
                         {"reload_player",{"h_reloadPlayer"}},
                         {"reload_world", {"h_reloadWorld"}},
@@ -209,9 +208,17 @@ void CEnhancedContext::initializeTemplates()
                         {"update_players",{"h_updatePlayers"}}}}
                     };
 
+    m_templates["first"] = {
+                    {"name", "first"}, {"permeable", true},
+                    {"handlers", {
+                        {"printText", {"h_printText"}},
+                        {"show",{"h_show"}}, 
+                        {"examine",{"h_examine"}} }}
+                    };
+
     m_templates["world"] = {
                     {"name", "world"}, {"permeable", true},
-                    {"handlers",{
+                    {"handlers", {
                         {"finishCharacter", {"h_finishCharacter"}},
                         {"killCharacter", {"h_killCharacter"}},
                         {"deleteCharacter", {"h_deleteCharacter"}},
@@ -231,7 +238,6 @@ void CEnhancedContext::initializeTemplates()
                         {"addTimeEvent", {"h_addTimeEvent"}},
                         {"setNewQuest", {"h_setNewQuest"}},
                         {"changeDialog", {"h_changeDialog"}},
-                        {"printText", {"h_printText"}},
                         {"changeRoom", {"h_changeRoom"}} }}
                     };
 
@@ -239,7 +245,6 @@ void CEnhancedContext::initializeTemplates()
                     {"name", "standard"}, {"permeable",false}, {"help","standard.txt"},   
                     {"handlers",{
                         {"go", {"h_goTo"}},
-                        {"show",{"h_show"}}, 
                         {"look",{"h_look"}}, 
                         {"search",{"h_search"}}, 
                         {"talk",{"h_startDialog"}}, 
@@ -248,8 +253,10 @@ void CEnhancedContext::initializeTemplates()
                         {"read",{"h_read"}}, 
                         {"equipe",{"h_equipe"}}, 
                         {"dequipe",{"h_dequipe"}}, 
-                        {"examine",{"h_examine"}}, 
                         {"mode",{"h_changeMode"}}, 
+                        {"printText", {"h_ignore"}},
+                        {"show",{"h_ignore"}}, 
+                        {"examine",{"h_ignore"}},
                         {"try", {"h_try"}}}},
                     };
 
@@ -333,42 +340,44 @@ void CEnhancedContext::add_listener(std::string sID, std::map<std::string, std::
     m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
 }
 
-void CEnhancedContext::initializeHandlers(std::vector<nlohmann::json> listeners)
-{
-    for(auto it : listeners)
-    {
-        if(it.count("regex") > 0)
-            add_listener(it["id"], (std::regex)it["regex"], it.value("take", 1), it.value("priority", 0)); 
-        else if(it.count("string") > 0)
-            add_listener(it["id"], (std::string)it["string"], it.value("priority", 0));
+void CEnhancedContext::initializeHandlers(std::vector<nlohmann::json> 
+    listeners) {
+  for (auto it : listeners) {
+    if (it.count("regex") > 0) {
+      add_listener(it["id"], (std::regex)it["regex"], it.value("take", 1), 
+          it.value("priority", 0)); 
     }
+    else if (it.count("string") > 0)
+      add_listener(it["id"], (std::string)it["string"], it.value("priority", 0));
+  }
 }
 
 
 // *** Throw events *** //
-bool CEnhancedContext::throw_event(event e, CPlayer* p)
-{    
-    m_curPermeable = m_permeable;
-    m_block = false;
-    bool called = false;
-    m_curEvent = e;
-    
-    std::deque<CListener*> sortedEventmanager = m_eventmanager.getSortedCtxList();
-    for(size_t i=0; i<sortedEventmanager.size() && m_block == false; i++)
-    {
-        if(sortedEventmanager[i]->checkMatch(e) == true) {
-            if(m_handlers.count(sortedEventmanager[i]->getID()) > 0)
-                (this->*m_handlers[sortedEventmanager[i]->getID()])(e.second, p);
-            else
-                p->printError("ERROR, given handler not found: " + sortedEventmanager[i]->getID() + "\n");
-            called = true;
-        }
-    }   
- 
-    if(called == false)
-        error(p);
-        
-    return m_curPermeable;
+bool CEnhancedContext::throw_event(event e, CPlayer* p) {
+  m_curPermeable = m_permeable;
+  m_block = false;
+  bool called = false;
+  m_curEvent = e;
+  
+  std::deque<CListener*> sortedEventmanager = m_eventmanager.getSortedCtxList();
+  for (size_t i=0; i<sortedEventmanager.size() && m_block == false; i++) {
+    event cur_event = m_curEvent;
+    if (sortedEventmanager[i]->checkMatch(cur_event) == true) {
+      if (m_handlers.count(sortedEventmanager[i]->getID()) > 0)
+        (this->*m_handlers[sortedEventmanager[i]->getID()])(cur_event.second, p);
+      else {
+        p->printError("ERROR, given handler not found: " 
+            + sortedEventmanager[i]->getID() + "\n");
+      }
+      called = true;
+    }
+  }   
+
+  if (called == false)
+    error(p);
+      
+  return m_curPermeable;
 }
 
 void CEnhancedContext::throw_timeEvents(CPlayer* p)
@@ -692,16 +701,13 @@ void CEnhancedContext::h_changeDialog(std::string& sIdentifier, CPlayer* p)
     m_curPermeable = false;
 }
 
-void CEnhancedContext::h_printText(std::string &sIdentifier, CPlayer* p)
-{
-    if(p->getWorld()->getTexts().count(sIdentifier) > 0)
-    {
-        CText text(p->getWorld()->getTexts()[sIdentifier], p);
-        p->appendPrint(text.print());
-    }
-    else
-        std::cout << "Text not found!\n";
-    m_curPermeable = false;
+void CEnhancedContext::h_printText(std::string &sIdentifier, CPlayer* p) {
+  if(p->getWorld()->getTexts().count(sIdentifier) > 0) {
+    CText text(p->getWorld()->getTexts()[sIdentifier], p);
+    p->appendPrint(text.print());
+  }
+  else
+    std::cout << "Text not found!\n";
 }
 
 void CEnhancedContext::h_changeRoom(std::string& sIdentifier, CPlayer* p)
@@ -714,6 +720,7 @@ void CEnhancedContext::h_changeRoom(std::string& sIdentifier, CPlayer* p)
 
 // ***** ***** STANDARD CONTEXT ***** ***** //
 
+void CEnhancedContext::h_ignore(std::string&, CPlayer*) {}
 
 void CEnhancedContext::h_showExits(std::string& sIdentifier, CPlayer* p) {
     p->appendDescPrint(p->getRoom()->showExits(p->getMode(), p->getGramma())+"\n");
@@ -1211,48 +1218,75 @@ void CEnhancedContext::h_stop(std::string&, CPlayer* p)
 
 // ***** ***** QUEST CONTEXT ***** ***** //
 
-void CEnhancedContext::h_react(std::string& sIdentifier, CPlayer* p)
-{
-    std::cout << "h_react: " << sIdentifier << std::endl;
-    std::cout << "Quest: " << getAttribute<std::string>("questID") << std::endl;
+void CEnhancedContext::h_react(std::string& sIdentifier, CPlayer* p) {
+  std::cout << "h_react: " << sIdentifier << std::endl;
+  std::cout << "Quest: " << getAttribute<std::string>("questID") << std::endl;
 
-    //Obtain quest and quest-step
-    CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
+  //Obtain quest and quest-step
+  CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
 
-    for(auto it: quest->getSteps())
-    {
-        std::cout << it.first << std::endl;
-        //If quest is already solved, skip.
-        if(it.second->getSolved() == true)
-            continue;
+  for (auto it : quest->getSteps()) {
+    std::cout << it.first << std::endl;
+    
+    //If quest infos don't block, solve quest.
+    if (CheckQuestStep(it.second, sIdentifier, p) == true)
+      p->questSolved(quest->getID(), it.first);
+  }
+}
 
-        // --- Check if player-situation/ -input matches with quest-step --- //
-        bool check = false;
-        std::map<std::string, std::string> infos = it.second->getInfo();
+bool CEnhancedContext::CheckQuestStep(CQuestStep* step, std::string sIdentifier,
+    CPlayer* p) {
+  //If quest is already solved, skip.
+  if (step->getSolved() == true)
+    return false;
 
-        //(fuzzy-)Compare identifier ("string"/ "fuzzy").
-        if((infos.count("string") > 0 && infos["string"] == sIdentifier) || (infos.count("fuzzy") > 0 && fuzzy::fuzzy_cmp(infos["fuzzy"], sIdentifier) <= 0.2))
-            check = true;
+  // --- Check if player-situation/ -input matches with quest-step --- //
+  std::map<std::string, std::string> infos = step->getInfo();
+  
+  //Check if function simply passes, if yes, compare with player-command ("pass"). 
+  if (infos.count("pass") > 0 && infos["pass"] == m_curEvent.first)
+    return true; 
 
-        //Check for items in inventory ("inventory").
-        if(infos.count("inventory")>0 && !p->getInventory().getItem_byID(infos["inventory"]))
-            check = false;
-
-        //Check for current room ("location").
-        if(infos.count("location") > 0 && infos["location"] != p->getRoom()->getID())
-            check = false;
-
-        //Check if function simply passes, if yes, compare with player-command ("pass"). 
-        if(infos.count("pass") > 0 && infos["pass"] == m_curEvent.first)
-            check = true; 
-
-        //Exit function if "check" resolves to false.
-        if(check == false)
-            continue;
-
-        //Check if quest is solved 
-        p->questSolved(quest->getID(), it.first);
+  //Check for items in inventory ("inventory").
+  if (infos.count("inventory")>0) {
+    bool nor = false;
+    for (auto it : func::split(infos["inventory"], "|")) {
+      if (p->getInventory().getItem_byID(it))
+        nor = true;
     }
+    if (nor == false) return false; 
+
+    for (auto it : func::split(infos["inventory"], "&")) {
+      if (!p->getInventory().getItem_byID(it))
+        return false;
+    }
+  }
+
+  //Check for current room ("location").
+  if (infos.count("location") > 0) {
+    bool nor = false;
+    for (auto it : func::split(infos["location"], "|")) {
+      if (p->getInventory().getItem_byID(it))
+        nor = true;
+    }
+    if (nor == false) return false; 
+  }
+
+  //Check for dependencies 
+  if (p->checkDependencies(step->getDependencies()) == false)
+    return false;
+
+  //(fuzzy-)Compare identifier ("string"/ "fuzzy").
+  if ((infos.count("string") > 0 && infos["string"] == sIdentifier) 
+      || (infos.count("fuzzy") > 0 && fuzzy::fuzzy_cmp(infos["fuzzy"], 
+          sIdentifier) <= 0.2))
+    return true;
+  
+  //Check if function simply passes, if yes, compare with player-command ("pass"). 
+  if (infos.count("pass") > 0 && infos["pass"] == "anything")
+    return true; 
+
+  return false;
 }
 
 // *** *** Tutorial *** *** //

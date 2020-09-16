@@ -82,7 +82,7 @@ COutput::COutput(nlohmann::json jAttributes)
     m_post_oneTimeEvents = jAttributes.value("post_otEvents", std::vector<std::string>());
 
     //In case of book, or read-item
-    m_page= stoi(jAttributes.value("page", (std::string)"0")); 
+    m_page = stoi(jAttributes.value("page", (std::string)"0")); 
 }
 
 std::string COutput::getSpeaker() {
