@@ -11,7 +11,7 @@
         "chars":["Hier sind", ""]},
 
     "minds":[
-        {"id":"sinnliche gewissheit", "color":"blue", "level":1, "relevance":0.1},
+        {"id":"sinnliche gewissheit", "color":"blue", "level":10, "relevance":0.1},
         {"id":"wahrnehmung", "color":"blue", "level":0, "relevance":0.2},
         {"id":"vernunft", "color":"green", "level":0, "relevance":0.3},
         {"id":"sittlichkeit", "color":"red", "level":0, "relevance":0.4},

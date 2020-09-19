@@ -20,6 +20,7 @@ private:
     bool m_solved;
     bool m_active;
     bool m_onlineFromBeginning;
+    std::vector<std::string> m_first_active_steps;
     std::map<std::string, CQuestStep*> m_questSteps;
     std::vector<nlohmann::json> m_handler;
 

@@ -9,6 +9,8 @@ CQuest::CQuest(nlohmann::json jAttributes) {
   m_solved=false;
   m_active=false;
   m_onlineFromBeginning = jAttributes.value("online", "true") == "true";
+  m_first_active_steps = jAttributes["active_from_beginning"].
+    get<std::vector<std::string>>();
 }
 
 // *** GETTER *** //
@@ -48,7 +50,8 @@ void CQuest::setHandler(std::vector<nlohmann::json> handlers) {
 
 std::string CQuest::setActive(int& ep, CPlayer* p) {
   m_active = true;
-  m_questSteps.begin()->second->setActive(true, p);
+  for (auto step : m_first_active_steps)
+    m_questSteps[step]->setActive(true, p);
 
   std::string sOutput = "Neue Quest: <b>"+m_sName + "</b>: <i>"+m_sDescription+"</i>\n";
 

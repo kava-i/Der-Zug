@@ -597,38 +597,35 @@ void CWorld::questFactory()
         questFactory(p.path());
 }
 
-void CWorld::questFactory(std::string sPath)
-{
-    std::cout << "QuestFactory"<<std::endl;
-    //Read json creating all quests
-    std::ifstream read(sPath);
-    nlohmann::json j_quests;
-    read >> j_quests;
-    read.close();
+void CWorld::questFactory(std::string sPath) {
+  std::cout << "QuestFactory"<<std::endl;
+  //Read json creating all quests
+  std::ifstream read(sPath);
+  nlohmann::json j_quests;
+  read >> j_quests;
+  read.close();
 
-    for(auto j_quest : j_quests)
-    {
-        //Create new Quest
-        std::map<std::string, CQuestStep*> mapSteps;
-        std::vector<nlohmann::json> listeners;
-        CQuest* newQuest = new CQuest(j_quest);
-    
-        //Create steps
-        for(auto j_step : j_quest["steps"]) {
-            std::cout << j_step["id"] << std::endl;
-            mapSteps[j_step["id"]] = new CQuestStep(j_step, newQuest);
-            if(j_step.count("handler") > 0)
-            {
-                nlohmann::json handler = j_step["handler"];
-                listeners.push_back(handler);
-            }
-        }
+  for (auto j_quest : j_quests) {
+    //Create new Quest
+    std::map<std::string, CQuestStep*> mapSteps;
+    std::vector<nlohmann::json> listeners;
+    CQuest* newQuest = new CQuest(j_quest);
 
-        //Update quest info
-        newQuest->setSteps(mapSteps);
-        newQuest->setHandler(listeners);
-        m_quests[j_quest["id"]] = newQuest;
+    //Create steps
+    for (auto j_step : j_quest["steps"]) {
+      std::cout << j_step["id"] << std::endl;
+      mapSteps[j_step["id"]] = new CQuestStep(j_step, newQuest);
+      if(j_step.count("handler") > 0) {
+        nlohmann::json handler = j_step["handler"];
+        listeners.push_back(handler);
+      }
     }
+
+    //Update quest info
+    newQuest->setSteps(mapSteps);
+    newQuest->setHandler(listeners);
+    m_quests[j_quest["id"]] = newQuest;
+  }
 }
 
 void CWorld::textFactory()

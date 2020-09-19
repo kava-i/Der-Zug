@@ -182,8 +182,8 @@ void Context::initializeHanlders()
 
     // *** QUESTS *** //
     m_handlers["h_react"] = &Context::h_react;
-    m_handlers["1reden"] = &Context::h_reden;
-    m_handlers["1geldauftreiben"] = &Context::h_geldauftreiben;
+    m_handlers["reden"] = &Context::h_reden;
+    m_handlers["geldauftreiben"] = &Context::h_geldauftreiben;
 
     // *** PROGRAMMER *** //
 

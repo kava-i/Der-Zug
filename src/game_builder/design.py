@@ -22,8 +22,7 @@ class GameDesigner:
 
         self.window = Tk()
         self.window.title("Game designer")
-        self.dirname = os.path.dirname(__file__)
-        self.path = os.path.join(self.dirname, "src/factory/")
+        self.path = "factory/"
         self.fields = {
                 "text" : "list_object",
                 "roomDescription" : "list_object",
@@ -49,7 +48,7 @@ class GameDesigner:
             "details": {"name":"", "id":"", "description":desc, "look":"", "items":[""], "defaultItems":""},
             "characters": {"name":"", "id":"", "hp":0, "strength":0, "faint":0, "roomDescription":desc, "description":desc, "deadDescription":desc, "items":[""], "defaultDescription":"", "defaultDialog":"","attacks":{"":""}, "dialog":"", "handlers":""},
             "players": {"name":"", "id":"", "room":"", "hp":0, "strength":0, "attacks":{"":""}, "quests":[""]},
-            "quests": {"name":"", "id":"", "description":"", "ep":0, "steps": steps, "sorted":1},
+            "quests": {"name":"", "id":"", "description":"", "ep":0, "steps": steps, "active_from_beginning":[""]},
             "items": {"name":"", "id":"", "category":"", "type":"", "attack":"", "value":0, "description":desc, "pages":pages},
             "rooms": {"name": "", "id":"", "description": desc, "entry" : "", "exits": {"":""}, "characters" : [""], "items" : [""], "details": [""], "handlers":""},
             "attacks": {"name":"", "id":"", "description":"", "power":0},
@@ -77,7 +76,7 @@ class GameDesigner:
             "steps": steps[0]
         }
 
-        self.jsonType = ["post_pEvents", "post_otEvents", "pre_pEvents", "pre_otEvents", "updates", "deps", "characters", "details", "items", "linkedSteps", "handler", "handlers", "info"]
+        self.jsonType = ["post_pEvents", "post_otEvents", "pre_pEvents", "pre_otEvents", "updates", "deps", "characters", "details", "items", "linkedSteps", "handler", "handlers", "info", "active_from_beginning"]
 
         self.helpDesc = {
             "name":"Name shown to the player",
@@ -114,7 +113,7 @@ class GameDesigner:
         #Create new window
         self.inWorld = Tk()
         self.inWorld.title("Game-Designer: " + world)
-        self.path = os.path.join(self.dirname, "src", "factory", world, "jsons")
+        self.path = "factory/" + world + "/jsons"
  
         #Create scrollable canvas
         self.container = Frame(self.inWorld)
