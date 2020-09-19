@@ -1,5 +1,0 @@
-/home/leonce/Documents/C++ Projects/bebarengan-sepur/Der-Zug/src/build/CMakeFiles/rebuild_cache.dir
-/home/leonce/Documents/C++ Projects/bebarengan-sepur/Der-Zug/src/build/CMakeFiles/edit_cache.dir
-/home/leonce/Documents/C++ Projects/bebarengan-sepur/Der-Zug/src/build/CMakeFiles/txtadventure_server.dir
-/home/leonce/Documents/C++ Projects/bebarengan-sepur/Der-Zug/src/build/CMakeFiles/txtadventure.dir
-/home/leonce/Documents/C++ Projects/bebarengan-sepur/Der-Zug/src/build/CMakeFiles/unittest.dir
