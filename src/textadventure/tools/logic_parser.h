@@ -13,32 +13,27 @@
 
 class LogicParser{
   public:
-    LogicParser() {
-      substitue_ = {
-        {"cmd", "show"},
-        {"input", "zu gleis"},
-        {"room", "h_trainstation"}, 
-        {"logic", "5"}};
-
-    };
+    LogicParser() {};
+    LogicParser(std::map<std::string, std::string> substitute) {
+      substitue_ = substitute;
+    }
 
     bool Success(std::string input) {
       if (input.find("(") == std::string::npos) {
-        return Calc(Split2(input)[0], Split2(input)[1], 
-            Split2(input)[2]);
+        auto vec = Split2(input);
+        return Calc(vec[0], vec[1], vec[2]);
       }
-      std::string str1 = GetBetween(input)[0];
-      std::string opt  = GetBetween(input)[1];
-      std::string str2 = GetBetween(input)[2];
-        
-      if (str1.find("(") == std::string::npos && str2.find("(") == std::string::npos)
-        return Evaluate(str1, opt, str2);
-      if (str1.find("(") == std::string::npos)
-        return Evaluate(str1, opt, Success(str2)); 
-      else if (str2.find("(") == std::string::npos)
-        return Evaluate(Success(str1), opt, str2);
+
+      auto vec = GetBetween(input);
+      if (vec[0].find("(") == std::string::npos && vec[2].find("(") 
+          == std::string::npos)
+        return Evaluate(vec[0], vec[1], vec[2]);
+      if (vec[0].find("(") == std::string::npos)
+        return Evaluate(vec[0], vec[1], Success(vec[2])); 
+      else if (vec[2].find("(") == std::string::npos)
+        return Evaluate(Success(vec[0]), vec[1], vec[2]);
       else 
-        return Evaluate(Success(str1), opt, Success(str2));
+        return Evaluate(Success(vec[0]), vec[1], Success(vec[2]));
     }
 
   private:
@@ -53,7 +48,7 @@ class LogicParser{
       if (opt == "~") return fuzzy::fuzzy_cmp(str1, str2) <= 0.2;
       if (opt == ">") return std::stoi(str1) > std::stoi(str2);
       if (opt == "<") return std::stoi(str1) < std::stoi(str2);
-      std::cout << "Wrong operand" << std::endl;
+      std::cout << "Wrong operand (=, ~, >, <)!" << std::endl;
       return true;
     }
     bool Evaluate(std::string str1, std::string opt, std::string str2) { 
@@ -74,7 +69,7 @@ class LogicParser{
     bool Evaluate(bool x, std::string opt, bool y) { 
       if (opt == "|") return x || y;
       if (opt == "&") return x && y;
-      std::cout << "Wrong operand! (|, &)" << std::endl;
+      std::cout << "Wrong operand! (|, &)!" << std::endl;
       return true; 
     }
 
@@ -118,13 +113,12 @@ class LogicParser{
     * @return vector
     */
     std::vector<std::string> Split2(std::string str) {
-      std::vector<char> operands = {'>', '<', '=', '~'};
+      std::vector<char> opts = {'>', '<', '=', '~'};
       std::string opt = "";
       size_t pos = 0;
-      for (size_t i; i<str.length(); i++) {
-        if (std::find(operands.begin(), operands.end(), str[i]) != operands.end()) {
-          opt = str[i];
-          pos = i;
+      for (pos=0; pos<str.length(); pos++) {
+        if (std::find(opts.begin(), opts.end(), str[pos]) != opts.end()) {
+          opt = str[pos];
           break;
         }
       }
