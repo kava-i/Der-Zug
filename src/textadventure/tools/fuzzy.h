@@ -3,11 +3,9 @@
 #include <iostream>
 #include <string>
 #include <cstring>
-#include <string.h>
 #include <list>
 #include <map>
 #include <algorithm>
-#include <codecvt>
 
 namespace fuzzy
 {
