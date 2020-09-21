@@ -101,6 +101,13 @@ bool CInventory::empty()
 }
 
 
+std::string CInventory::getItemList() {
+  std::string items = "";
+  for (auto it : mapItems())
+    items+=it.first + ";";
+  return items.substr(0, items.length()-1);
+}
+
 std::map<std::string, CItem*> CInventory::mapItems()
 {
     std::map<std::string, CItem*> mapItems;

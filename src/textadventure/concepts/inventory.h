@@ -29,6 +29,7 @@ public:
     bool empty();
 
     std::map<std::string, CItem*> mapItems();
+    std::string getItemList();
 };
 
 #endif

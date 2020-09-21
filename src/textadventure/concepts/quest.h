@@ -63,6 +63,7 @@ private:
     std::string m_events;
     std::string m_preEvents;
     std::map<std::string,std::string> m_info;
+    std::string logic_;
     nlohmann::json deps_;
     nlohmann::json updates_;
 
@@ -85,6 +86,7 @@ public:
     std::string getEvents();
     std::string getPreEvents();
     std::map<std::string, std::string> getInfo();
+    std::string logic();
     nlohmann::json& getDependencies();
 
     //Setter

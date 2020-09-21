@@ -12,6 +12,7 @@
 #include "sorted_context.h"
 #include "time_event.h"
 #include "tools/func.h"
+#include "tools/logic_parser.h"
 #include "tools/webcmd.h"
 
 class CPlayer;

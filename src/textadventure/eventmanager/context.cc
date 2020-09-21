@@ -1228,9 +1228,21 @@ void Context::h_react(std::string& sIdentifier, CPlayer* p) {
   for (auto it : quest->getSteps()) {
     std::cout << it.first << std::endl;
     
+
+    LogicParser logic({{"room", p->getRoom()->getID()}, {"inventory", 
+        p->getInventory().getItemList()}, {"cmd", m_curEvent.first}, 
+        {"input", sIdentifier}});
+    if (logic.Success(it.second->logic()) == true 
+        && p->checkDependencies(it.second->getDependencies()) == true) {
+      p->questSolved(quest->getID(), it.first);
+    }
+
+    /**
+     * old check function.
     //If quest infos don't block, solve quest.
     if (CheckQuestStep(it.second, sIdentifier, p) == true)
       p->questSolved(quest->getID(), it.first);
+    */
   }
 }
 
