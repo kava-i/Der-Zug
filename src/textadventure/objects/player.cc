@@ -869,54 +869,49 @@ void CPlayer::showStats() {
 * minds or stats.
 * @param jDeps json with dependencies
 */
-bool CPlayer::checkDependencies(nlohmann::json jDeps)
-{
-    std::map<std::string , std::function<bool(int, int)>> operators;
-    operators["="] = [](int a, int b) { return a=b; };
-    operators[">"] = [](int a, int b) { return a>b; };
-    operators[">="] = [](int a, int b) { return a>=b; };
-    operators["<"] = [](int a, int b) { return a<b; };
-    operators["<="] = [](int a, int b) { return a<=b; };
-    operators["!="] = [](int a, int b) { return a!=b; };
-    operators["&"] = [](int a, int b) { return true; };
+bool CPlayer::checkDependencies(nlohmann::json jDeps) {
+  std::map<std::string , std::function<bool(int, int)>> operators;
+  operators["="] = [](int a, int b) { return a=b; };
+  operators[">"] = [](int a, int b) { return a>b; };
+  operators[">="] = [](int a, int b) { return a>=b; };
+  operators["<"] = [](int a, int b) { return a<b; };
+  operators["<="] = [](int a, int b) { return a<=b; };
+  operators["!="] = [](int a, int b) { return a!=b; };
+  operators["&"] = [](int a, int b) { return true; };
 
-    if(jDeps.size() == 0)
-        return true;
-    for(auto it=jDeps.begin(); it!=jDeps.end(); it++)
-    {
-        //Assign value with position 0 = operator
-        std::string sOpt = func::extractLeadingChars(it.value());
-        int value = func::getNumFromBack(it.value());
-
-        if(sOpt == "&")
-        {
-            double level = m_minds[it.key()].level + m_minds[it.key()].relevance;
-            for(const auto& mind : m_minds)
-            {
-                if(mind.first != it.key() && mind.second.level + mind.second.relevance > level)
-                    return false;
-            }
-        }
-
-        //Check dependency in mind
-        if(m_minds.count(it.key()) > 0) {
-            if(operators[sOpt](m_minds[it.key()].level, value) == false)
-                return false;
-        }
-
-        //Check dependency in stats
-        else if(m_stats.count(it.key()) > 0) {
-            if(operators[sOpt](m_stats[it.key()], value) == false)
-                return false;
-        }
-
-        else {
-            std::cout << cRED << "Error in document: " << it.key() << cCLEAR << std::endl;
-            return false;
-        }
-    } 
-
+  if(jDeps.size() == 0)
     return true;
+  for(auto it=jDeps.begin(); it!=jDeps.end(); it++) {
+    //Assign value with position 0 = operator
+    std::string sOpt = func::extractLeadingChars(it.value());
+    int value = func::getNumFromBack(it.value());
+
+    if(sOpt == "&") {
+      double level = m_minds[it.key()].level + m_minds[it.key()].relevance;
+      for(const auto& mind : m_minds) {
+        if(mind.first != it.key() && mind.second.level + mind.second.relevance > level)
+          return false;
+      }
+    }
+
+    //Check dependency in mind
+    if(m_minds.count(it.key()) > 0) {
+      if(operators[sOpt](m_minds[it.key()].level, value) == false)
+        return false;
+    }
+
+    //Check dependency in stats
+    else if(m_stats.count(it.key()) > 0) {
+      if(operators[sOpt](m_stats[it.key()], value) == false)
+        return false;
+    }
+    else {
+      std::cout << cRED << "Error in document: " << it.key() << cCLEAR << std::endl;
+      return false;
+    }
+  } 
+
+  return true;
 }
 
 

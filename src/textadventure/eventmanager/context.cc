@@ -615,18 +615,18 @@ void Context::h_showItemInfo(std::string& sIdentifier, CPlayer* p)
         p->appendPrint("Item not found.\n");
     m_curPermeable=false;
 }
-void Context::h_changeName(std::string& sIdentifier, CPlayer* p)
-{
-    std::vector<std::string> v_atts = func::split(sIdentifier, "|");
-    if(v_atts[0] == "character")
-    {
-        if(p->getWorld()->getCharacter(v_atts[1]) != NULL)
-        {
-            p->getWorld()->getCharacter(v_atts[1])->setName(v_atts[2]);
-            std::cout << "Name changed to: " << p->getWorld()->getCharacter(v_atts[1])->getName() << std::endl;
-        }
+void Context::h_changeName(std::string& sIdentifier, CPlayer* p) {
+
+  std::vector<std::string> v_atts = func::split(sIdentifier, "|");
+  if(v_atts[0] == "character") {
+    if(p->getWorld()->getCharacter(v_atts[1]) != NULL) {
+        p->getWorld()->getCharacter(v_atts[1])->setName(v_atts[2]);
+        std::cout << "Name changed to: " << v_atts[2] << std::endl;
     }
-    m_curPermeable=false;
+    else
+      std::cout << "Character not found: " << v_atts[1] << std::endl;
+  }
+  m_curPermeable=false;
 }
 
 void Context::h_setAttribute(std::string& sIdentifier, CPlayer* p)
@@ -1229,10 +1229,13 @@ void Context::h_react(std::string& sIdentifier, CPlayer* p) {
     std::cout << it.first << std::endl;
     
 
-    LogicParser logic({{"room", p->getRoom()->getID()}, {"inventory", 
-        p->getInventory().getItemList()}, {"cmd", m_curEvent.first}, 
+    LogicParser logic({
+        {"room", p->getRoom()->getID()}, 
+        {"inventory", p->getInventory().getItemList()}, 
+        {"cmd", m_curEvent.first}, 
         {"input", sIdentifier}});
-    if (logic.Success(it.second->logic()) == true 
+    if (it.second->getSolved() == false
+        && logic.Success(it.second->logic()) == true 
         && p->checkDependencies(it.second->getDependencies()) == true) {
       p->questSolved(quest->getID(), it.first);
     }
