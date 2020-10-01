@@ -75,7 +75,7 @@ bool LogicParser::Calc(std::string str1, std::string opt, std::string str2) {
   bool result = true;
   if (opt == "=") result =str1 == str2;
   else if (opt == "~") 
-    result = fuzzy::fuzzy_cmp(str1, str2) <= 0.2;
+    result = fuzzy::fuzzy_cmp(str2, str1) <= 0.2;
   else if (opt == ">") 
     result = std::stoi(str1) > std::stoi(str2);
   else if (opt == "<") 
