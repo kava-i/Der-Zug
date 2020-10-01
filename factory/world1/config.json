@@ -22,7 +22,7 @@
     "commands":[
         {"id":"show", "regex":"zeige (.*)"},
         {"id":"look", "regex":"schaue (.*)"},
-        {"id":"search", "regex":"durchsuche (.*)"},
+        {"id":"search", "regex":"(durchsuche|untersuche) (.*)", "take":2},
         {"id":"go", "regex":"gehe (.*)"},
         {"id":"talk", "regex":"spreche (.*) an"},
         {"id":"pick", "regex":"hebe (.*) auf"},

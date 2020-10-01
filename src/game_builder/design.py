@@ -64,7 +64,7 @@ class GameDesigner:
             "roomDescription" : description,
             "deadDescription" : description,
             "pages" : description_pages,
-            "options": {"id":0, "text":"", "to":"", "deps":""},
+            "options": {"id":0, "text":"", "to":"", "logic":""},
             "steps": steps[0]
             }
         self.initialSubAttributes = {

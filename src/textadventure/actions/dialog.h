@@ -64,7 +64,7 @@ public:
 
 struct SDOption {
     string sText;
-    nlohmann::json jDependencys;
+    string logic_;
     string sTarget;
     bool visited;
 };
