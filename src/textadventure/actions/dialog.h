@@ -43,6 +43,8 @@ public:
 
 
     // *** various functions *** //
+    
+    std::string visited();
 
     ///Function changing the text of a state.
     void changeStateText(string sStateID, size_t text);
@@ -77,6 +79,8 @@ private:
     string m_sActions;  //< Actions executed after call.
     string m_sEvents;  //< string holding a list of events, which will be executed.
 
+    bool visited_;
+
     //Map of options 
     typedef std::map<int, SDOption> dialogoptions;
     dialogoptions m_options;
@@ -93,6 +97,7 @@ public:
     // *** GETTER *** // 
     string getText();
     dialogoptions& getOptions();
+    bool visited();
 
     // *** SETTER *** //
 

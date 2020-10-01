@@ -38,6 +38,7 @@ private:
     std::string m_sPassword;  ///< Password for login
     bool m_firstLogin;  ///< Indicate whether this is the players first login.
     string m_sPrint;  ///< Text printing after throwing events
+    std::map<std::string, std::string> subsitutes_;
 
     //*** Stagged Events *** //
     std::string m_staged_pre_events;  ///< Events thrown before printing
@@ -133,8 +134,7 @@ public:
     std::map<std::string, CPlayer*>& getMapOFOnlinePlayers();
 
     //Get current status
-    std::map<std::string, std::string> GetCurrentStatus(std::string in, 
-        std::string cmd);
+    std::map<std::string, std::string> GetCurrentStatus();
  
 
     // *** SETTER *** //
@@ -144,6 +144,9 @@ public:
 
     ///Set new output for player.
     void setPrint(string newPrint);
+
+    ///Set extra substitues
+    void set_subsitues(std::map<std::string, std::string> subsitutes);
 
     //No-event type commands
     void printText(std::string text);

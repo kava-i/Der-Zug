@@ -64,7 +64,7 @@ bool LogicParser::Calc(std::string str1, std::string opt, std::string str2) {
   //Substitut first or second literal
   if (str1.front() == '"')
     str1.erase(0,1);
-  else if (substitue_.count(str1) > 0) 
+  else if (substitue_.count(str1) > 0)
     str1 = substitue_[str1];
   if (str2.front() == '"')
     str2.erase(0,1);

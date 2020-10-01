@@ -1199,7 +1199,8 @@ void Context::h_react(std::string& sIdentifier, CPlayer* p) {
   CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
 
   for (auto it : quest->getSteps()) {
-    LogicParser logic(p->GetCurrentStatus(sIdentifier, m_curEvent.first));
+    p->set_subsitues({{"cmd", m_curEvent.first}, {"input", sIdentifier}});
+    LogicParser logic(p->GetCurrentStatus());
     if (it.second->getSolved() == false && logic.Success(it.second->logic()) 
         == true) {
       p->questSolved(quest->getID(), it.first);

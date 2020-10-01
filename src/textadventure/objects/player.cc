@@ -170,12 +170,13 @@ std::map<std::string, CPlayer*>& CPlayer::getMapOFOnlinePlayers() {
   return m_players;
 }
 
-std::map<std::string, std::string> CPlayer::GetCurrentStatus(std::string in, 
-    std::string cmd) {
+std::map<std::string, std::string> CPlayer::GetCurrentStatus() {
   //Setup basic elements
-  std::map<std::string, std::string> status = {{"input", (std::string)in}, 
-    {"cmd", (std::string)cmd}, {"room", (std::string)m_room->getID()}, 
-    {"inventory", (std::string)m_inventory.getItemList()}};
+  std::map<std::string, std::string> status = {{"room", (std::string)m_room
+    ->getID()}, {"inventory", (std::string)m_inventory.getItemList()}};
+
+  //Add extra substitutes
+  status.insert(subsitutes_.begin(), subsitutes_.end());
 
   //Get highest mind
   int max = 0;
@@ -217,6 +218,10 @@ void CPlayer::setFirstLogin(bool val) {
 
 void CPlayer::setPrint(string newPrint) { 
   m_sPrint = newPrint; 
+}
+
+void CPlayer::set_subsitues(std::map<std::string, std::string> subsitutes) {
+  subsitutes_ = subsitutes;
 }
 
 void CPlayer::printText(std::string text) {

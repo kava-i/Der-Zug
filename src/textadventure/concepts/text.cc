@@ -136,7 +136,7 @@ std::string COutput::reducedPrint(CPlayer* p, bool events) {
 bool COutput::checkDependencies(std::string& sSuccess, CPlayer* p) {
 
   //Check dependencies
-  LogicParser logic(p->GetCurrentStatus("", ""));
+  LogicParser logic(p->GetCurrentStatus());
   if(logic.Success(logic_) == false)
     return false;
   

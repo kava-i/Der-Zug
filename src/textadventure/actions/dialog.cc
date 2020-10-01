@@ -35,6 +35,16 @@ void CDialog::setStates(std::map<std::string, CDState*> states) {
 
 // *** VARIOUS FUNCTIONS *** // 
 
+std::string CDialog::visited() {
+  std::string str = "";
+  for (auto it : m_states) {
+    if (it.second->visited() == true)
+      str += it.first + ";";
+  }
+  return str.substr(0, str.length()-1);
+}
+
+
 void CDialog::addDialogOption(string sStateID, size_t optID) {
   m_states[sStateID]->getOptions()[m_states[sStateID]->numOptions()+1] = 
     m_states[sStateID]->getOptions()[-1];
@@ -74,6 +84,7 @@ CDState::CDState(nlohmann::json jAtts, dialogoptions opts, CDialog* dia,
   m_sEvents = jAtts.value("events", "");
   m_options = opts;
   m_dialog = dia;
+  visited_ = false;
 }
 
 // *** GETTER *** //
@@ -84,6 +95,10 @@ string CDState::getText() {
 
 CDState::dialogoptions& CDState::getOptions() { 
   return m_options; 
+}
+
+bool CDState::visited() {
+  return visited_;
 }
 
 // *** SETTER *** //
@@ -100,11 +115,13 @@ void CDState::initializeFunctions() {
 }
 
 string CDState::callState(CPlayer* p) {
+  visited_ = true;
   return (this->*m_functions[m_sFunction])(p) + m_sEvents;
 }
 
 string CDState::getNextState(string sPlayerChoice, CPlayer* p) {
-  LogicParser logic(p->GetCurrentStatus("",""));
+  p->set_subsitues({{"visited", m_dialog->visited()}});
+  LogicParser logic(p->GetCurrentStatus());
   if(numOptions() < stoi(sPlayerChoice))
     return "";
   else if(logic.Success(m_options[stoi(sPlayerChoice)].logic_) == false)
@@ -141,6 +158,7 @@ void CDState::executeActions(CPlayer* p) {
 
 // *** FUNCTION POINTER *** //
 string CDState::standard(CPlayer* p) {
+  p->set_subsitues({{"visited", m_dialog->visited()}});
   string sOutput = m_text->print();
 
   std::vector<size_t> activeOptions = getActiveOptions(p);
@@ -168,8 +186,9 @@ string CDState::standard(CPlayer* p) {
 std::vector<size_t> CDState::getActiveOptions(CPlayer* p) {
   std::vector<size_t> activeOptions;
   size_t numOpts = numOptions();
+  p->set_subsitues({{"visited", m_dialog->visited()}});
+  LogicParser logic(p->GetCurrentStatus());
   for(size_t i=1; i<numOpts+1; i++) {
-    LogicParser logic(p->GetCurrentStatus("", ""));
     if(logic.Success(m_options[i].logic_) == true)
       activeOptions.push_back(i);
   }
