@@ -608,18 +608,18 @@ void CWorld::questFactory(std::string sPath) {
   for (auto j_quest : j_quests) {
     //Create new Quest
     std::map<std::string, CQuestStep*> mapSteps;
-    std::vector<nlohmann::json> listeners;
     CQuest* newQuest = new CQuest(j_quest);
 
     //Create steps
     for (auto j_step : j_quest["steps"]) {
       std::cout << j_step["id"] << std::endl;
       mapSteps[j_step["id"]] = new CQuestStep(j_step, newQuest);
-      if(j_step.count("handler") > 0) {
-        nlohmann::json handler = j_step["handler"];
-        listeners.push_back(handler);
-      }
     }
+
+    //Get listeners for this quest.
+    std::vector<nlohmann::json> listeners;
+    if (j_quest.count("listener") > 0 && j_quest["listener"].size() > 0)
+      listeners = j_quest["listener"].get<std::vector<nlohmann::json>>();
 
     //Update quest info
     newQuest->setSteps(mapSteps);
@@ -628,20 +628,18 @@ void CWorld::questFactory(std::string sPath) {
   }
 }
 
-void CWorld::textFactory()
-{
-    for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/texts"))
-        textFactory(p.path()); 
+void CWorld::textFactory() {
+  for(auto& p : fs::directory_iterator(m_path_to_world + "jsons/texts"))
+    textFactory(p.path()); 
 }
 
-void CWorld::textFactory(std::string sPath)
-{   
-    //Read json creating all quests
-    std::ifstream read(sPath);
-    nlohmann::json j_texts;
-    read >> j_texts;
-    read.close();
+void CWorld::textFactory(std::string sPath) {
+  //Read json creating all quests
+  std::ifstream read(sPath);
+  nlohmann::json j_texts;
+  read >> j_texts;
+  read.close();
 
-    for(auto it=j_texts.begin(); it!=j_texts.end(); it++)
-        m_jTexts[it.key()] = it.value()["text"];
+  for(auto it=j_texts.begin(); it!=j_texts.end(); it++)
+    m_jTexts[it.key()] = it.value()["text"];
 }

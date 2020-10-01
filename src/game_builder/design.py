@@ -30,6 +30,7 @@ class GameDesigner:
                 "description" : "list_object",
                 "options" : "list_object",
                 "steps" : "list_object",
+                "listener":"list",
                 "characters" : "list",
                 "exits" : "object",
                 "attacks" : "object",
@@ -42,13 +43,13 @@ class GameDesigner:
         pages = [{"speaker":"", "text":"", "page":0}]
 
         options = [{"id":0, "text":"", "to":""}]
-        steps = [{"name":"", "id":"", "handler":"", "description":"", "events":"", "info":{"":""}, "deps":"", "updates":"", "_events":{"":""}, "linkedSteps":[], "logic":""}]
+        steps = [{"name":"", "id":"", "handler":"", "description":"", "events":"", "info":{"":""}, "updates":"", "_events":{"":""}, "linkedSteps":[], "logic":""}]
         self.attributes = {
             "dialogs": {"id":"", "text":desc, "options":options, "actions":"", "events":"", "function":""},
             "details": {"name":"", "id":"", "description":desc, "look":"", "items":[""], "defaultItems":""},
             "characters": {"name":"", "id":"", "hp":0, "strength":0, "faint":0, "roomDescription":desc, "description":desc, "deadDescription":desc, "items":[""], "defaultDescription":"", "defaultDialog":"","attacks":{"":""}, "dialog":"", "handlers":""},
             "players": {"name":"", "id":"", "room":"", "hp":0, "strength":0, "attacks":{"":""}, "quests":[""]},
-            "quests": {"name":"", "id":"", "description":"", "ep":0, "steps": steps, "active_from_beginning":[""]},
+            "quests": {"name":"", "id":"", "description":"", "listener":[""], "ep":0, "steps": steps, "active_from_beginning":[""]},
             "items": {"name":"", "id":"", "category":"", "type":"", "attack":"", "value":0, "description":desc, "pages":pages},
             "rooms": {"name": "", "id":"", "description": desc, "entry" : "", "exits": {"":""}, "characters" : [""], "items" : [""], "details": [""], "handlers":""},
             "attacks": {"name":"", "id":"", "description":"", "power":0},
@@ -76,7 +77,7 @@ class GameDesigner:
             "steps": steps[0]
         }
 
-        self.jsonType = ["post_pEvents", "post_otEvents", "pre_pEvents", "pre_otEvents", "updates", "deps", "characters", "details", "items", "linkedSteps", "handler", "handlers", "info", "active_from_beginning"]
+        self.jsonType = ["post_pEvents", "post_otEvents", "pre_pEvents", "pre_otEvents", "updates", "deps", "characters", "details", "items", "linkedSteps", "handler", "handlers", "listener", "info", "active_from_beginning"]
 
         self.helpDesc = {
             "name":"Name shown to the player",

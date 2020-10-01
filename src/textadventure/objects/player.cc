@@ -103,92 +103,101 @@ CPlayer::~CPlayer() {
 
 // *** GETTER *** // 
 
-///Return first login (yes, no)
 bool CPlayer::getFirstLogin() { 
   return m_firstLogin; 
 }
 
-///Return output for player (Append newline)
 string CPlayer::getPrint()  { 
+  if (m_staged_post_events != "")
+    throw_staged_events(m_staged_post_events, "post");
   checkCommands();
   return m_sPrint + "\n";
 }
 
-///Return pointer to players world (all rooms, chars, etc.)
 CWorld* CPlayer::getWorld() { 
-    return m_world; 
+  return m_world; 
 }
 
-///Return pointer to gramma-class
 CGramma* CPlayer::getGramma() {
-    return m_gramma;
+  return m_gramma;
 }
 
-///Return current room.
 CRoom* CPlayer::getRoom() { 
-    return m_room; 
+  return m_room; 
 }
 
-///Return dictionary of player's minds.
 std::map<std::string, SMind>& CPlayer::getMinds() { 
-    return m_minds; 
+  return m_minds; 
 }
 
 SMind& CPlayer::getMind(std::string sMind) {
-    if(m_minds.count(func::returnToLower(sMind)) > 0)
-        return m_minds[func::returnToLower(sMind)];
-    std::cout << cRED << "FATAL Error! Requested mind does not exist: " << sMind << std::endl;
-    return m_minds["logik"]; 
+  if(m_minds.count(func::returnToLower(sMind)) > 0)
+      return m_minds[func::returnToLower(sMind)];
+  std::cout << cRED << "FATAL Error! Requested mind does not exist: " 
+    << sMind << std::endl;
+  return m_minds["logik"]; 
 }
 
-///Return players abilities (strength, moral, etc.)
 std::vector<std::string> CPlayer::getAbbilities() { 
-    return m_abbilities; 
+  return m_abbilities; 
 }
 
-///Return players equipment (weapons, clothing etc.)
 std::map<std::string, CItem*>& CPlayer::getEquipment() { 
-    return m_equipment; 
+  return m_equipment; 
 }
 
-///Return current fight.
 CFight* CPlayer::getFight() { 
-    return m_curFight; 
+  return m_curFight; 
 }
 
-///Return current dialog-partner
 CPerson* CPlayer::getCurDialogPartner() {
-    return m_curDialogPartner;
+  return m_curDialogPartner;
 }
 
-//Return players context-stack 
 CContextStack<Context>& CPlayer::getContexts() { 
-    return m_contextStack; 
+  return m_contextStack; 
 }
 
-///Return a context from players context stack
-Context* CPlayer::getContext(std::string context)
-{
-    if(m_contextStack.getContext(context) != NULL)
-        return m_contextStack.getContext(context);
-    std::cout << cRED << "FATAL!!! Context not found: " << context << cCLEAR << std::endl;
-    return nullptr;
+Context* CPlayer::getContext(std::string context) {
+  if(m_contextStack.getContext(context) != NULL)
+    return m_contextStack.getContext(context);
+  std::cout << cRED << "FATAL!!! Context not found: " << context << cCLEAR << std::endl;
+  return nullptr;
 }
 
 
-//Return map of players
 std::map<std::string, CPlayer*>& CPlayer::getMapOFOnlinePlayers() {
   return m_players;
 }
 
+std::map<std::string, std::string> CPlayer::GetCurrentStatus(std::string in, 
+    std::string cmd) {
+  //Setup basic elements
+  std::map<std::string, std::string> status = {{"input", (std::string)in}, 
+    {"cmd", (std::string)cmd}, {"room", (std::string)m_room->getID()}, 
+    {"inventory", (std::string)m_inventory.getItemList()}};
+
+  //Add attributes
+  auto lambda1 = [](int x) { return std::to_string(x); };
+  std::map<std::string, std::string> attributes = 
+      func::convertToObjectmap(m_stats, lambda1);
+  status.insert(attributes.begin(), attributes.end());
+
+  //Add minds
+  auto lambda2 = [](SMind mind) { return std::to_string(mind.level); };
+  std::map<std::string, std::string> minds = 
+      func::convertToObjectmap(m_minds, lambda2);
+  status.insert(minds.begin(), minds.end());
+
+  return status;
+}
+
 // *** SETTER *** // 
 
-///Set first login.
 void CPlayer::setFirstLogin(bool val) { 
   m_firstLogin = val; 
 }
 
-///Set new output for player.
 void CPlayer::setPrint(string newPrint) { 
   m_sPrint = newPrint; 
 }
@@ -203,7 +212,6 @@ void CPlayer::printText(std::string text) {
     std::cout << cRED << "Text not found!" << cCLEAR << std::endl;
 }
 
-///Append to current player output and throw staged events if exists.
 void CPlayer::appendPrint(std::string sPrint) {
   throw_staged_events(m_staged_pre_events, "pre");
   if(m_staged_pre_events != "")
@@ -252,7 +260,6 @@ void CPlayer::appendSuccPrint(string sPrint) {
   appendPrint(GREEN + sPrint + WHITE);
 }
 
-///Add staged events to throw before printing
 void CPlayer::addPreEvent(std::string sNewEvent) {
   if(m_staged_pre_events == "")
     m_staged_pre_events = sNewEvent;
@@ -260,7 +267,6 @@ void CPlayer::addPreEvent(std::string sNewEvent) {
     m_staged_pre_events += ";"+sNewEvent;
 }
 
-///Add staged events to throw after printing
 void CPlayer::addPostEvent(std::string sNewEvent) {
   if(m_staged_post_events == "")
     m_staged_post_events = sNewEvent;

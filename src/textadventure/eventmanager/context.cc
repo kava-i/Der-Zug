@@ -1199,71 +1199,14 @@ void Context::h_react(std::string& sIdentifier, CPlayer* p) {
   CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
 
   for (auto it : quest->getSteps()) {
-    LogicParser logic({{"room", p->getRoom()->getID()}, {"inventory", 
-        p->getInventory().getItemList()}, {"cmd", m_curEvent.first}, {"input", 
-        sIdentifier}});
-    if (it.second->getSolved() == false
-        && logic.Success(it.second->logic()) == true 
-        && p->checkDependencies(it.second->getDependencies()) == true) {
+    LogicParser logic(p->GetCurrentStatus(sIdentifier, m_curEvent.first));
+    if (it.second->getSolved() == false && logic.Success(it.second->logic()) 
+        == true) {
       p->questSolved(quest->getID(), it.first);
     }
   }
 }
 
-bool Context::CheckQuestStep(CQuestStep* step, std::string sIdentifier,
-    CPlayer* p) {
-  //If quest is already solved, skip.
-  if (step->getSolved() == true)
-    return false;
-
-  // --- Check if player-situation/ -input matches with quest-step --- //
-  std::map<std::string, std::string> infos = step->getInfo();
-  
-  //Check if function simply passes, if yes, compare with player-command ("pass"). 
-  if (infos.count("pass") > 0 && infos["pass"] == m_curEvent.first)
-    return true; 
-
-  //Check for items in inventory ("inventory").
-  if (infos.count("inventory")>0) {
-    bool nor = false;
-    for (auto it : func::split(infos["inventory"], "|")) {
-      if (p->getInventory().getItem_byID(it))
-        nor = true;
-    }
-    if (nor == false) return false; 
-
-    for (auto it : func::split(infos["inventory"], "&")) {
-      if (!p->getInventory().getItem_byID(it))
-        return false;
-    }
-  }
-
-  //Check for current room ("location").
-  if (infos.count("location") > 0) {
-    bool nor = false;
-    for (auto it : func::split(infos["location"], "|")) {
-      if (p->getInventory().getItem_byID(it))
-        nor = true;
-    }
-    if (nor == false) return false; 
-  }
-
-  //Check for dependencies 
-  if (p->checkDependencies(step->getDependencies()) == false)
-    return false;
-
-  //(fuzzy-)Compare identifier ("string"/ "fuzzy").
-  if ((infos.count("string") > 0 && infos["string"] == sIdentifier) 
-      || (infos.count("fuzzy") > 0 && fuzzy::fuzzy_cmp(infos["fuzzy"], 
-          sIdentifier) <= 0.2))
-    return true;
-  
-  //Check if function simply passes, if yes, compare with player-command ("pass"). 
-  if (infos.count("pass") > 0 && infos["pass"] == "anything")
-    return true; 
-
-  return false;
-}
 
 // *** *** Tutorial *** *** //
 

@@ -129,7 +129,6 @@ CQuestStep::CQuestStep(nlohmann::json jAttributes, CQuest* quest) {
   m_preEvents = jAttributes.value("_events", "");
   m_info = jAttributes.value("info", std::map<std::string, std::string>());
   logic_ = jAttributes.value("logic", "");
-  deps_ = jAttributes.value("deps", nlohmann::json::object());
   updates_ = jAttributes.value("updates", nlohmann::json::object());
   
   std::vector<std::string> linkedSteps;
@@ -179,9 +178,6 @@ std::map<std::string, std::string> CQuestStep::getInfo() {
 }
 std::string CQuestStep::logic() {
   return logic_;
-}
-nlohmann::json& CQuestStep::getDependencies() {
-  return deps_;
 }
 
 // *** SETTER *** //

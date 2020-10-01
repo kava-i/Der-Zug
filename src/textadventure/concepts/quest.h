@@ -87,7 +87,6 @@ public:
     std::string getPreEvents();
     std::map<std::string, std::string> getInfo();
     std::string logic();
-    nlohmann::json& getDependencies();
 
     //Setter
     void setActive(bool, CPlayer*);

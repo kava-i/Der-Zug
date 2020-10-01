@@ -131,6 +131,10 @@ public:
 
     //Return map of players
     std::map<std::string, CPlayer*>& getMapOFOnlinePlayers();
+
+    //Get current status
+    std::map<std::string, std::string> GetCurrentStatus(std::string in, 
+        std::string cmd);
  
 
     // *** SETTER *** //

@@ -139,7 +139,6 @@ public:
     void h_changeDialog(std::string&, CPlayer*);
     void h_thieve(std::string&, CPlayer*);
     void h_attack(std::string&, CPlayer*);
-    void h_printText(std::string&, CPlayer*);
     void h_changeRoom(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
@@ -156,7 +155,6 @@ public:
     void h_examine          (std::string&, CPlayer*);
     void h_goTo             (std::string&, CPlayer*);
     void h_startDialog      (std::string&, CPlayer*);
-    void h_changeMode       (std::string&, CPlayer*);
     void h_try(std::string&, CPlayer*);                 ///< PRogrammer function for testing
     void h_test(std::string&, CPlayer*);
 
@@ -196,8 +194,6 @@ public:
     void h_react(std::string&, CPlayer*);
     void h_reden(std::string&, CPlayer*);
     void h_geldauftreiben(std::string&, CPlayer*);
-
-    bool CheckQuestStep(CQuestStep*, std::string, CPlayer*);
 
     // *** OTHER CONTEXTS *** //
     void h_select(std::string&, CPlayer*);
