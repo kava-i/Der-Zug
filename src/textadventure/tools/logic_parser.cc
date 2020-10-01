@@ -56,7 +56,6 @@ bool LogicParser::Calc(std::string str1, std::string opt, std::string str2) {
 
   //Calculate value.
   if (substitue_.count(str1) > 0) str1 = substitue_[str1];
-  if (substitue_.count(str2) > 0) str2 = substitue_[str2];
   if (opt == "=") return str1 == str2;
   if (opt == "~") return fuzzy::fuzzy_cmp(str1, str2) <= 0.2;
   if (opt == ">") return std::stoi(str1) > std::stoi(str2);

@@ -177,6 +177,23 @@ std::map<std::string, std::string> CPlayer::GetCurrentStatus(std::string in,
     {"cmd", (std::string)cmd}, {"room", (std::string)m_room->getID()}, 
     {"inventory", (std::string)m_inventory.getItemList()}};
 
+  //Get highest mind
+  int max = 0;
+  std::string max_mind = "";
+  std::string max_minds = "";
+  for (auto it : m_minds) {
+    if (it.second.level > max) {
+      max = it.second.level;
+      max_mind = it.first;
+      max_minds = it.first;
+    }
+    if (it.second.level == max)
+      max_minds+=";"+it.first;
+  }
+  status["max_mind"] = max_mind;
+  status["max_minds"] = max_minds;
+
+
   //Add attributes
   auto lambda1 = [](int x) { return std::to_string(x); };
   std::map<std::string, std::string> attributes = 
@@ -480,7 +497,7 @@ void CPlayer::changeRoom(string sIdentifier) {
   if(path.size() > 0) {
     std::string events;
     for(const auto& it : path)
-        events += "go " + it + ";";
+      events += "go " + it + ";";
     events.pop_back();
     throw_events(events, "CPlayer::changeRoom");
   }

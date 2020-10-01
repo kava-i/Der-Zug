@@ -64,7 +64,6 @@ private:
     std::string m_preEvents;
     std::map<std::string,std::string> m_info;
     std::string logic_;
-    nlohmann::json deps_;
     nlohmann::json updates_;
 
     //Link to quest

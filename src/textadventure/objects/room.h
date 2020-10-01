@@ -33,7 +33,8 @@ private:
     std::map<string, CDetail*> m_details;
 
 public:
-    CRoom(string sArea, nlohmann::json jAtts, std::map<string, CPerson*> characters, std::map<string, CItem*> items, std::map<string, CDetail*> details, CPlayer* p);
+    CRoom(string sArea, nlohmann::json jAtts, std::map<string, CPerson*> characters, 
+        std::map<string, CItem*> items, std::map<string, CDetail*> details, CPlayer* p);
 
     // *** getter *** // 
     string getEntry();
