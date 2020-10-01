@@ -101,79 +101,6 @@ namespace func
     */
     std::string incIDNumber(std::map<std::string, std::string> mapObjects, std::string sID);
     
-    /**
-    *                   ***     printList       ***
-    * Print all elements from a directory with any type. Pass lambda function to specify 
-    * out put for type apart from string, integer etc. It is also possible to pass a 
-    * lambda function, as a condition, return either true or false, depending of whether
-    * the objects meets certain criteria.
-    * The objects will be printed as a list.
-    * @param[in] std::map<std::string T1> map of elements
-    * @param[in] std::function<T1(T1)> (optional lambda function - for printing custom objects)
-    * @param[in] std::function<bool(T1)> (optional lambda function - condition)
-    * @return list of elements as a list.
-    */
-    template <typename T1, typename T2=std::function<T1(T1)>, typename T3=std::function<bool(T1)>> 
-    std::string printList(  std::map<std::string, T1> &list, 
-                                T2 print = [](T1 t) -> T1 { return t; },
-                                T3 condition = [](T1 t) -> bool { return true; }    )
-    {
-        std::string sOutput = "";
-
-        //Iterate over map. When condition is met add word to output.
-        for(auto [i, it] = std::tuple{1, list.begin()}; it!=list.end(); i++, it++)
-        {
-            //Check whether condition is met.
-            if(condition(it->second) == true)
-                sOutput += std::to_string(i) + ": " + print(it->second) + "\n";
-            else
-                --i;
-        }
-        return sOutput;
-    }
-
-    /**
-    *                   ***     printProsa      ***
-    * Tries to print objects of any type from a dictionary as a text. Optional extra 
-    * lambda functions can be added, to changed what is printed for each objects, or only
-    * print an object on certain conditions.
-    * @param[in] std::map<std::string T1> map of elements
-    * @param[in] std::function<T1(T1)> (optional lambda function - for printing custom objects)
-    * @param[in] std::function<bool(T1)> (optional lambda function - condition)
-    * @return List of elements in map as a text.
-    */
-    template<typename T1, typename T2=std::function<T1(T1)>, typename T3=std::function<bool(T1)>> 
-        std::string printProsa( std::map<std::string, T1> &list,
-                                T2 print = [](T1 t) -> T1 { return t; },
-                                T3 condition = [](T1 t) -> bool {return true; } )
-    {
-        std::string sOutput = "";
-        //Iterate over map. When condition is met, add "[word], " to output.
-        for(auto [i, it] = std::tuple(0, list.begin()); it!=list.end(); i+=2, it++)
-        {
-            if(condition(it->second) == true)
-                sOutput += print(it->second) + ", ";
-        }
-
-        //Erase last comma. 
-        if(sOutput.rfind(",") != std::string::npos)
-            sOutput.erase(sOutput.end()-2);
-
-        //Replace last comma with "und"
-        if(sOutput.rfind(",") != std::string::npos)
-            sOutput.replace(sOutput.rfind(","), 2, " und ");
-
-        //Erase last element (I don't now why this is necessary actually :D
-        if(sOutput.back() == ' ')
-            sOutput.pop_back();
-
-        //Add dot at the end of text.
-        if(sOutput.size() > 1)
-            sOutput += ".";
-
-        //Return string
-        return sOutput;
-    }
 
     
     /**
@@ -230,12 +157,12 @@ namespace func
     * @return converted map.
     */
     template<typename T1, typename T2 > 
-    std::map<std::string, std::string> convertToObjectmap(std::map<std::string, T1> in, T2 lambda)
-    {
-        std::map<std::string, std::string> out;
-        for(const auto &it : in)
-            out[it.first] = lambda(it.second);
-        return out;
+    std::map<std::string, std::string> convertToObjectmap(std::map<std::string, 
+        T1> in, T2 lambda) {
+      std::map<std::string, std::string> out;
+      for(const auto &it : in)
+        out[it.first] = lambda(it.second);
+      return out;
     }
 
     /**
@@ -243,12 +170,11 @@ namespace func
     */
     template<typename T1, typename T2=std::function<std::string(T1)>>
     std::vector<std::string> to_vector(std::map<std::string, T1> map, 
-                                        T2 lambda = [](T1 t) -> std::string { return t; })
-    {
-        std::vector<std::string> vec;
-        for(const auto& it : map)
-            vec.push_back(lambda(it.second));
-        return vec;
+        T2 lambda = [](T1 t) -> std::string { return t; }) {
+      std::vector<std::string> vec;
+      for(const auto& it : map)
+        vec.push_back(lambda(it.second));
+      return vec;
     }
     
 
@@ -260,21 +186,22 @@ namespace func
     * @return html table as string.
     */
     template <typename T1, typename T2> 
-    std::string table(std::map<std::string, T1> in, T2 &lambda, std::string style="width:10%")
-    {
-        //Generate html table.
-        std::string str ="<table style='"+style+"'>";
-        for(auto it : in) {
-            str += "<tr><td>" + it.first + ":</td><td>";
-            str += lambda(it.second);
-            str += "</td></tr>";
-        }
-        str+="</table>";
-        return str; 
+    std::string table(std::map<std::string, T1> in, T2 &lambda, 
+        std::string style="width:10%") {
+      //Generate html table.
+      std::string str ="<table style='"+style+"'>";
+      for(auto it : in) {
+        str += "<tr><td>" + it.first + ":</td><td>";
+        str += lambda(it.second);
+        str += "</td></tr>";
+      }
+      str+="</table>";
+      return str; 
     }
 
     /**
-    * Print a given dictionary of dictionaries  as a table. With the option to highlight a certain
+    * Print a given dictionary of dictionaries  as a table. 
+    * With the option to highlight a certain
     * column in the table.
     * @param[in] in dictionary to print as html table.
     * @param[in] lambda1 function to indicate, which attribute to print.
@@ -284,47 +211,48 @@ namespace func
     * @return html table as string.
     */
     template <typename T1, typename T2, typename T3> 
-    std::string table(std::map<std::string, std::map<std::string, T1>> in, T2 &lamda1, T3 &lamda2, std::string style="width:10%", int highlight=-1)
-    {
-        //Generate table
-        std::string str = "<table style='"+style+"'<tr>", color = "", white = Webcmd::set_color(Webcmd::color::WHITE);
+    std::string table(std::map<std::string, std::map<std::string, T1>> in, 
+        T2 &lamda1, T3 &lamda2, std::string style="width:10%", int highlight=-1) {
+      //Generate table
+      std::string str = "<table style='"+style+"'<tr>", color = "", white = Webcmd::set_color(Webcmd::color::WHITE);
 
-        //Generate first row
-        int counter = 0; size_t max = 0;
-        for(auto& it : in){
-            color = ""; 
-            if(it.second.size() > max)
-                max = it.second.size();
-            if(counter == highlight)
-                color = Webcmd::set_color(Webcmd::color::GREEN);
-            str += "<th>" + color + it.first + "</th><th></th>";
-            str += Webcmd::set_color(Webcmd::color::WHITE);
-            counter++;
+      //Generate first row
+      int counter = 0; size_t max = 0;
+      for(auto& it : in){
+        color = ""; 
+        if(it.second.size() > max)
+            max = it.second.size();
+        if(counter == highlight)
+            color = Webcmd::set_color(Webcmd::color::GREEN);
+        str += "<th>" + color + it.first + "</th><th></th>";
+        str += Webcmd::set_color(Webcmd::color::WHITE);
+        counter++;
+      }
+      str += "</tr>";
+
+      //Generate other rows
+      for(size_t i=0; i<max; i++) {
+        counter = 0; str += "<tr>";
+        for(auto it : in) {
+          if(counter == highlight) 
+            color = Webcmd::set_color(Webcmd::color::GREEN);
+          else 
+            color = "";
+
+          //Check if current column is empty
+          if(it.second.size() <= i)
+            str +="<td></td><td></td>";
+          else {
+            auto jt = it.second.begin(); std::advance(jt, i);
+            str += "<td>" + color + lamda1(jt->first, jt->second) +  ":</td>"
+                 + "<td>" + color + lamda2(jt->first, jt->second) + "</td>";
+          }
+          str += Webcmd::set_color(Webcmd::color::WHITE);
+          counter++;
         }
         str += "</tr>";
-
-        //Generate other rows
-        for(size_t i=0; i<max; i++)
-        {
-            counter = 0; str += "<tr>";
-            for(auto it : in) {
-                if(counter == highlight) color = Webcmd::set_color(Webcmd::color::GREEN);
-                else color = "";
-
-                //Check if current column is empty
-                if(it.second.size() <= i)
-                    str +="<td></td><td></td>";
-                else {
-                    auto jt = it.second.begin(); std::advance(jt, i);
-                    str += "<td>" + color + lamda1(jt->first, jt->second) +  ":</td>"
-                         + "<td>" + color + lamda2(jt->first, jt->second) + "</td>";
-                }
-                str += Webcmd::set_color(Webcmd::color::WHITE);
-                counter++;
-            }
-            str += "</tr>";
-        }
-        return str + "</table>"; 
+      }
+      return str + "</table>"; 
     }
 }
 

@@ -51,12 +51,12 @@ public:
 
     // *** various functions *** //
     string showDescription(std::map<std::string, CPerson*> mapCharacters);
-    string showAll(std::string sMode, CGramma* gramma);
-    string showExits(std::string sMode, CGramma* gramma);
-    string showCharacters(std::string sMode, CGramma* gramma);
-    string showItems(std::string sMode, CGramma* gramma);
-    string showDetails(std::string sMode, CGramma*);
-    string look(std::string sDetail, std::string sMode, CGramma* gramma);
+    string showAll(CGramma* gramma);
+    string showExits(CGramma* gramma);
+    string showCharacters(CGramma* gramma);
+    string showItems(CGramma* gramma);
+    string showDetails(CGramma*);
+    string look(std::string sDetail, CGramma* gramma);
     CItem* getItem(string sPlayerChoice);
 };
     

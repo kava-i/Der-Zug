@@ -23,7 +23,6 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks,
   func::convertToUpper(m_sName);
   m_sPassword = jAtts["password"];
   m_firstLogin = true; 
-  m_sMode = jAtts.value("mode", "prosa"); 
   m_abbilities = {"strength", "skill"};
 
   //Initiazize world
@@ -107,11 +106,6 @@ CPlayer::~CPlayer() {
 ///Return first login (yes, no)
 bool CPlayer::getFirstLogin() { 
   return m_firstLogin; 
-}
-
-///Return mode (Prosa or List) 
-std::string CPlayer::getMode() { 
-  return m_sMode; 
 }
 
 ///Return output for player (Append newline)
@@ -206,7 +200,7 @@ void CPlayer::printText(std::string text) {
     m_sPrint += text.print();
   }
   else
-    std::cout << cRed "Text not found!" << cCLEAR << std::endl;
+    std::cout << cRED << "Text not found!" << cCLEAR << std::endl;
 }
 
 ///Append to current player output and throw staged events if exists.
@@ -311,42 +305,28 @@ void CPlayer::setWobconsole(Webconsole* webconsole) {
 /**
 * Update room context after changing location
 */
-void CPlayer::updateRoomContext()
-{
-    m_room->setShowMap(m_world->getConfig()["show"]);
+void CPlayer::updateRoomContext() {
+  m_room->setShowMap(m_world->getConfig()["show"]);
 
-    //Create new room context
-    Context* context = new Context((std::string)"room");
+  //Create new room context
+  Context* context = new Context((std::string)"room");
 
-    //Transer Time events if context exists
-    if(m_contextStack.getContext("room") != NULL)
-        context->setTimeEvents(m_contextStack.getContext("room")->getTimeEvents());
+  //Transfer Time events if context exists
+  if(m_contextStack.getContext("room") != NULL)
+    context->setTimeEvents(m_contextStack.getContext("room")->getTimeEvents());
 
-    //Delete old room-context
-    m_contextStack.erase("room");
+  //Delete old room-context
+  m_contextStack.erase("room");
 
-    //Update handler
-    for(auto it : m_room->getHandler())
-    {
-        context->add_listener(it);
-        if(it.count("infos") > 0)
-            context->getAttributes()["infos"][(std::string)it["id"]] = it["infos"];
-    }
-    
-    //Insert new room-context into context-stack
-    m_contextStack.insert(context, 0, "room");
-}
-
-/**
-* Change mode to 'prosa' or 'list' mode and print change
-*/
-void CPlayer::changeMode()
-{
-    if(m_sMode == "prosa")
-        m_sMode = "list";
-    else
-        m_sMode = "prosa";
-    appendTechPrint("\"Mode\" wurde auf '" + m_sMode + "' gesetzt.\n");
+  //Update handler
+  for(auto it : m_room->getHandler()) {
+    context->add_listener(it);
+    if(it.count("infos") > 0)
+      context->getAttributes()["infos"][(std::string)it["id"]] = it["infos"];
+  }
+  
+  //Insert new room-context into context-stack
+  m_contextStack.insert(context, 0, "room");
 }
 
 // *** Fight *** //
@@ -524,21 +504,15 @@ void CPlayer::changeRoom(CRoom* newRoom) {
 /**
 * Print all already visited rooms.
 */
-void CPlayer::showVisited()
-{
-    std::map<std::string, std::string> mapRooms;
-    for(auto const& it : m_vistited)
-    {
-        if(it.second == true)
-            mapRooms[it.first] = m_world->getRoom(it.first)->getName();
-    }
-    std::string sOutput = "";
-
-    if(m_sMode == "prosa")
-        sOutput = m_gramma->build(func::to_vector(mapRooms), "Du warst schon in", "keinem anderen Raum.");
-    else
-        sOutput = "Räume in denen du schon warst: \n" + func::printList(mapRooms);
-    appendDescPrint(sOutput + "\nGebe \"gehe [name des Raumes]\" ein, um direkt dort hinzugelangen.\n");
+void CPlayer::showVisited() {
+  std::map<std::string, std::string> mapRooms;
+  for(auto const& it : m_vistited) {
+    if(it.second == true)
+      mapRooms[it.first] = m_world->getRoom(it.first)->getName();
+  }
+  appendDescPrint(m_gramma->build(func::to_vector(mapRooms), "Du warst schon in",
+        "keinem anderen Raum.") + "\nGebe \"gehe [name des Raumes]\" ein, um "
+        "direkt dort hinzugelangen.\n");
 }
 
 
@@ -548,53 +522,50 @@ void CPlayer::showVisited()
 * @param roomID id of desired target-room
 * @return vector with way to target.
 */
-std::vector<std::string> CPlayer::findWay(CRoom* room, std::string roomID)
-{
-    //Check whether current room is target room
-    if(room->getID() == roomID)
-        return {};
+std::vector<std::string> CPlayer::findWay(CRoom* room, std::string roomID) {
+  //Check whether current room is target room
+  if(room->getID() == roomID)
+    return {};
 
-    //Set variables
-    std::queue<CRoom*> q;
-    std::map<std::string, std::string> parents;
+  //Set variables
+  std::queue<CRoom*> q;
+  std::map<std::string, std::string> parents;
 
-    //Set parent of every room to ""
-    for(auto it : m_world->getRooms())
-        parents[it.second->getID()] = "";
+  //Set parent of every room to ""
+  for(auto it : m_world->getRooms())
+    parents[it.second->getID()] = "";
 
-    //Normal breadth-first search
-    q.push(room);
-    parents[room->getID()] = room->getID();
-    while(!q.empty())
-    {
-        CRoom* node = q.front(); 
-        q.pop();
-        if(node->getID() == roomID)
-            break;
-        for(auto& it : node->getExtits())
-        {
-            //Also check, that target-room is visited and in the same area as current room.
-            if(parents[it.first] == "" && m_vistited[it.first] == true && node->getArea() == m_room->getArea())
-            {
-                q.push(m_world->getRoom(it.first));
-                parents[it.first] = node->getID();
-            }
-        } 
-    }
+  //Normal breadth-first search
+  q.push(room);
+  parents[room->getID()] = room->getID();
+  while(!q.empty()) {
+    CRoom* node = q.front(); 
+    q.pop();
+    if(node->getID() == roomID)
+      break;
+    for(auto& it : node->getExtits()) {
+      //Also check, that target-room is visited and in the same area as current room.
+      if(parents[it.first] == "" && m_vistited[it.first] == true 
+          && node->getArea() == m_room->getArea()) {
+        q.push(m_world->getRoom(it.first));
+        parents[it.first] = node->getID();
+      }
+    } 
+  }
 
-    //Check whether rooom has been found, if not, return empty array.
-    if(parents[roomID] == "") 
-        return {};
+  //Check whether rooom has been found, if not, return empty array.
+  if(parents[roomID] == "") 
+    return {};
 
-    //Create path from parents.  
-    std::vector<std::string> path = { roomID };
-    while(path.back() != room->getID())
-        path.push_back(parents[path.back()]);
-    path.pop_back();
+  //Create path from parents.  
+  std::vector<std::string> path = { roomID };
+  while(path.back() != room->getID())
+    path.push_back(parents[path.back()]);
+  path.pop_back();
 
-    //Reverse path and return.
-    std::reverse(std::begin(path), std::end(path));
-    return path;
+  //Reverse path and return.
+  std::reverse(std::begin(path), std::end(path));
+  return path;
 }
 
 
@@ -603,59 +574,54 @@ std::vector<std::string> CPlayer::findWay(CRoom* room, std::string roomID)
 /**
 * Adding all (non-hidden) items in room to players inventory.
 */
-void CPlayer::addAll()
-{
-    std::vector<std::string> items_names;
-    for(auto it = m_room->getItems().begin(); it != m_room->getItems().end();)
-    {
-        if((*it).second->getHidden() == false) 
-	    {
-            m_inventory.addItem((*it).second);
-            items_names.push_back((*it).second->getName());
-            m_room->getItems().erase((*(it++)).second->getID());
-	        continue;
-	    }
-	    ++it;
+void CPlayer::addAll() {
+  std::vector<std::string> items_names;
+  for(auto it = m_room->getItems().begin(); it != m_room->getItems().end();) {
+    if((*it).second->getHidden() == false)  {
+      m_inventory.addItem((*it).second);
+      items_names.push_back((*it).second->getName());
+      m_room->getItems().erase((*(it++)).second->getID());
+      continue;
     }
-
-    appendDescPrint(m_gramma->build(items_names, "Du findest", "keine Gegenstände."));
+    ++it;
+  }
+  appendDescPrint(m_gramma->build(items_names, "Du findest", "keine Gegenstände."));
 }
 
 /**
 * Add given item to player's inventory and print message.
 * @param item given item/ item to add to inventory.
 */
-void CPlayer::addItem(CItem* item)
-{
-    m_inventory.addItem(item);
-    appendDescPrint("<b> "+item->getName() + "</b> zu {name}'s Inventar hinzugefügt.\n");
-    m_room->getItems().erase(item->getID());
+void CPlayer::addItem(CItem* item) {
+  m_inventory.addItem(item);
+  appendDescPrint("<b> "+item->getName() + "</b> zu {name}'s Inventar hinzugefügt.\n");
+  m_room->getItems().erase(item->getID());
 }
 
 /**
 * Start a trade. Add a trade-context to player's context stack.
 * @param partner Player's trading partner add to context-information.
 */
-void CPlayer::startTrade(std::string partner)
-{
-    appendDescPrint("Started to trade with " + partner + ".\n");
+void CPlayer::startTrade(std::string partner) {
+  appendDescPrint("Started to trade with " + partner + ".\n");
 
-    //Create trade-context and add to context-stack
-    Context* context = new Context((std::string)"trade", {{"partner", partner}});
-    context->print(this);
-    m_contextStack.insert(context, 1, "trade");
+  //Create trade-context and add to context-stack
+  Context* context = new Context((std::string)"trade", {{"partner", partner}});
+  context->print(this);
+  m_contextStack.insert(context, 1, "trade");
 }
 
 /**
 * Add all equipped items to player's output.
 */
 void CPlayer::printEquiped() {
-
     auto getElem = [](CItem* item){ 
-        std::string str; 
-        if(item) str = item->getName(); 
-        else str="nichts ausgerüstet.";
-        return str;
+      std::string str; 
+      if(item) 
+        str = item->getName(); 
+      else 
+        str="nichts ausgerüstet.";
+      return str;
     };
     appendPrint(func::table(m_equipment, getElem, "width:20%"));
 }
@@ -666,34 +632,34 @@ void CPlayer::printEquiped() {
 * @param item given item.
 * @param sType type of item indicating category.
 */
-void CPlayer::equipeItem(CItem* item, string sType)
-{
-    //If nothing is equipped in this category -> equip.
-    if(m_equipment[sType] == NULL)
-    {
-        appendDescPrint("Du hast " + item->getName() + " als " + sType + " ausgerüstet.\n");
-        string sAttack = item->getAttack();
+void CPlayer::equipeItem(CItem* item, string sType) {
+  //If nothing is equipped in this category -> equip.
+  if(m_equipment[sType] == NULL) {
+    appendDescPrint("Du hast " + item->getName() + " als " + sType + " ausgerüstet.\n");
+    string sAttack = item->getAttack();
 
-        //Check for new attack
-        if(sAttack != "") {
-            m_attacks[sAttack] = m_world->getAttack(sAttack);
-            appendDescPrint("Neue Attacke: \"" + m_attacks[sAttack]->getName() + "\".\n");
-        }
-        m_equipment[sType] = item;
+    //Check for new attack
+    if(sAttack != "") {
+      m_attacks[sAttack] = m_world->getAttack(sAttack);
+      appendDescPrint("Neue Attacke: \"" + m_attacks[sAttack]->getName() + "\".\n");
     }
+    m_equipment[sType] = item;
+  }
 
-    //If this item is already equipped -> print error message.
-    else if(m_equipment[sType]->getID() == item->getID())
-        appendErrorPrint(sType + " bereits ausgerüstet.\n");
+  //If this item is already equipped -> print error message.
+  else if(m_equipment[sType]->getID() == item->getID())
+    appendErrorPrint(sType + " bereits ausgerüstet.\n");
 
-    //If another item is equipped in this category -> add choice-context
-    else
-    {
-        appendErrorPrint("Bereits ein " + sType + " ausgerüstet. Austauschen? (ja/nein)\n");
+  //If another item is equipped in this category -> add choice-context
+  else {
+    appendErrorPrint("Bereits ein " + sType + " ausgerüstet. Austauschen? (ja/nein)\n");
 
-        //Create Choice-Context
-        m_contextStack.insert(new Context((nlohmann::json){{"name", "equipe"}, {"permeable", false},{"error", "Wähle ja oder nein\n"},{"itemID", item->getID()},{"handlers",{{"ja",{ "h_choose_equipe"}},{"nein",{"h_choose_equipe"}}}}}), 1, "equipe");
-    }
+    //Create Choice-Context
+    m_contextStack.insert(new Context((nlohmann::json){{"name", "equipe"}, 
+          {"permeable", false},{"error", "Wähle ja oder nein\n"},{"itemID", 
+          item->getID()},{"handlers",{{"ja",{ "h_choose_equipe"}},{"nein",
+          {"h_choose_equipe"}}}}}), 1, "equipe");
+  }
 }
 
 /**
@@ -701,18 +667,18 @@ void CPlayer::equipeItem(CItem* item, string sType)
 * @param sType item type (weapon, clothing etc.)
 */
 void CPlayer::dequipeItem(string sType) {
-    if(m_equipment.count(sType) == 0)
-        appendErrorPrint("Nothing to dequipe.\n");
-    else if(m_equipment[sType] == NULL)
-        appendErrorPrint("Nothing to dequipe.\n");
-    else {
-        appendDescPrint(sType + " " + m_equipment[sType]->getName() + " abgelegt.\n");
+  if(m_equipment.count(sType) == 0)
+    appendErrorPrint("Nothing to dequipe.\n");
+  else if(m_equipment[sType] == NULL)
+    appendErrorPrint("Nothing to dequipe.\n");
+  else {
+    appendDescPrint(sType + " " + m_equipment[sType]->getName() + " abgelegt.\n");
 
-        //Erase attack
-        if(m_equipment[sType]->getAttack() != "")
-            m_attacks.erase(m_equipment[sType]->getAttack());
-        m_equipment[sType] = NULL;
-    }
+    //Erase attack
+    if(m_equipment[sType]->getAttack() != "")
+      m_attacks.erase(m_equipment[sType]->getAttack());
+    m_equipment[sType] = NULL;
+  }
 }
 
 // *** QUESTS *** //
@@ -737,21 +703,20 @@ void CPlayer::showQuests(bool solved) {
 * Add new quest by setting quest active.
 * @param sQuestID id to given quest.
 */
-void CPlayer::setNewQuest(std::string sQuestID)
-{
-    int ep=0;
-    CQuest* quest = m_world->getQuest(sQuestID);
-    appendSuccPrint(quest->setActive(ep, this));
-    if(quest->getOnlineFromBeginning() == false)
-    {
-        Context* context = new Context((nlohmann::json){{"name", sQuestID}, {"permeable",true}, {"questID",sQuestID}});
-        context->initializeHandlers(quest->getHandler());
-        m_contextStack.insert(context, 3, sQuestID);
-    }
-    
-    if(quest->getSolved() == true)
-        m_contextStack.erase(sQuestID);
-    addEP(ep);
+void CPlayer::setNewQuest(std::string sQuestID) {
+  int ep=0;
+  CQuest* quest = m_world->getQuest(sQuestID);
+  appendSuccPrint(quest->setActive(ep, this));
+  if(quest->getOnlineFromBeginning() == false) {
+    Context* context = new Context((nlohmann::json){{"name", sQuestID}, 
+        {"permeable",true}, {"questID",sQuestID}});
+    context->initializeHandlers(quest->getHandler());
+    m_contextStack.insert(context, 3, sQuestID);
+  }
+  
+  if(quest->getSolved() == true)
+    m_contextStack.erase(sQuestID);
+  addEP(ep);
 }
 
 /**

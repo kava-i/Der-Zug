@@ -35,44 +35,45 @@ private:
     
     // *** General attributes *** //
     // m_sName, m_sID (from CPerson)
-    std::string m_sPassword;                    ///< Password for login
-    bool m_firstLogin;                          ///< Indicate whether this is the players first login.
-    std::string m_sMode;                        ///< Print modes: "Prosa", "List" 
-    string m_sPrint;                            ///< Text printing after throwing events
+    std::string m_sPassword;  ///< Password for login
+    bool m_firstLogin;  ///< Indicate whether this is the players first login.
+    string m_sPrint;  ///< Text printing after throwing events
 
     //*** Stagged Events *** //
-    std::string m_staged_pre_events;            ///< Events thrown before printing
-    std::string m_staged_post_events;           ///< Events thrown after printing
+    std::string m_staged_pre_events;  ///< Events thrown before printing
+    std::string m_staged_post_events;  ///< Events thrown after printing
 
     // *** Attributes concerning game world *** //
-    CWorld* m_world;                            ///< Pointer to players world (all rooms, chars, etc.)
+    CWorld* m_world;  ///< Pointer to players world (all rooms, chars, etc.)
     CParser* m_parser;
-    CGramma* m_gramma;                          ///< Pointer to the gramma-class
+    CGramma* m_gramma;  ///< Pointer to the gramma-class
 
-    CRoom* m_room;                              ///< Pointer to current room
-    CRoom* m_lastRoom;                          ///< Pointer to last room visited
+    CRoom* m_room;  ///< Pointer to current room
+    CRoom* m_lastRoom;  ///< Pointer to last room visited
 
     // *** Levels & Ep, Items, Equipment etc. *** //
-    int m_ep;                                   ///< Current experience points
-    int m_level;                                ///< Current level
-    std::map<std::string, SMind> m_minds;       ///< Characters in unconsciousness (auto skilled)
-    std::vector<std::string> m_abbilities;      ///< Skillable abilities, like strength etc.
+    int m_ep;  ///< Current experience points
+    int m_level;  ///< Current level
+    std::map<std::string, SMind> m_minds; ///< Characters in unconsciousness 
+                                          ///< (auto skilled)
+    std::vector<std::string> m_abbilities;  ///< Skillable abilities, like 
+                                            ///< strength etc.
     std::map<std::string, CItem*> m_equipment;  ///< Equipped weapons, clothing etc.
     //m_inventory, m_attacks (from CPerson)
 
 
     // *** States, like current fight *** //
-    CFight* m_curFight;                         ///< Current fight player is engaged in
-    CPerson* m_curDialogPartner;                ///< Current dialog partner
+    CFight* m_curFight;  ///< Current fight player is engaged in
+    CPerson* m_curDialogPartner;  ///< Current dialog partner
 
     // *** Others *** //
-    map<string, CPlayer*> m_players;                ///< List of all online players in game
-    std::map<std::string, bool> m_vistited;         ///< List of all visited rooms
-    CContextStack<Context> m_contextStack; ///< List of all current contexts
-    Webconsole* _cout;                              ///< Pointer to the console
+    map<string, CPlayer*> m_players;  ///< List of all online players in game
+    std::map<std::string, bool> m_vistited;  ///< List of all visited rooms
+    CContextStack<Context> m_contextStack;  ///< List of all current contexts
+    Webconsole* _cout;  ///< Pointer to the console
 
     typedef map<string, vector<std::tuple<std::chrono::system_clock::time_point, double, void(CPlayer::*)(std::string), std::string>> > timeEvents;
-    timeEvents m_timeEventes;                   ///< List of all events triggered by time
+    timeEvents m_timeEventes;  ///< List of all events triggered by time
 
 public:
 
@@ -91,9 +92,6 @@ public:
     // *** GETTER *** // 
     ///Return first login (yes, no)
     bool getFirstLogin();
-
-    ///Return mode (Prosa or List) 
-    std::string getMode(); 
 
     ///Return output for player (Append newline)
     string getPrint();
@@ -186,9 +184,6 @@ public:
     */
     void updateRoomContext();
     
-
-    ///Change mode to 'prosa' or 'list' mode and print change
-    void changeMode();
 
     // ** Fight ** //
 

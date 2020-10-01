@@ -128,7 +128,6 @@ void Context::initializeHanlders() {
   m_handlers["h_addTimeEvent"] = &Context::h_addTimeEvent;
   m_handlers["h_setNewQuest"] = &Context::h_setNewQuest;
   m_handlers["h_changeDialog"] = &Context::h_changeDialog;
-  m_handlers["h_printText"] = &Context::h_printText;
   m_handlers["h_changeRoom"] = &Context::h_changeRoom;
 
   // ***** STANDARD CONTEXT ***** //
@@ -144,7 +143,6 @@ void Context::initializeHanlders() {
   m_handlers["h_dequipe"] = &Context::h_dequipe;
   m_handlers["h_examine"] = &Context::h_examine;
   m_handlers["h_startDialog"] = &Context::h_startDialog;
-  m_handlers["h_changeMode"]  = &Context::h_changeMode;
   m_handlers["h_ignore"] = &Context::h_ignore;
   m_handlers["h_try"] = &Context::h_try;
 
@@ -255,7 +253,6 @@ void Context::initializeTemplates() {
                         {"read",{"h_read"}}, 
                         {"equipe",{"h_equipe"}}, 
                         {"dequipe",{"h_dequipe"}}, 
-                        {"mode",{"h_changeMode"}}, 
                         {"show",{"h_ignore"}}, 
                         {"examine",{"h_ignore"}},
                         {"try", {"h_try"}}}},
@@ -655,38 +652,36 @@ void Context::h_setAttribute(std::string& sIdentifier, CPlayer* p)
     m_curPermeable=false;
 }
 
-void Context::h_setNewAttribute(std::string& sIdentifier, CPlayer* p)
-{
-    std::vector<std::string> atts = func::split(sIdentifier, "|");
-    
-    //Check if sIdentifier contains the fitting values
-    if(atts.size() != 2 || std::isdigit(atts[1][0]) == false)
-        std::cout << "Something went worng! Player Attribute could not be changed.\n";
-    else
-        p->getStats()[atts[0]] = stoi(atts[1]);
-    m_curPermeable=false;
+void Context::h_setNewAttribute(std::string& sIdentifier, CPlayer* p) {
+  std::vector<std::string> atts = func::split(sIdentifier, "|");
+  
+  //Check if sIdentifier contains the fitting values
+  if(atts.size() != 2 || std::isdigit(atts[1][0]) == false)
+      std::cout << "Something went worng! Player Attribute could not be changed.\n";
+  else
+      p->getStats()[atts[0]] = stoi(atts[1]);
+  m_curPermeable=false;
 }
 
-void Context::h_addTimeEvent(std::string& sIdentifier, CPlayer* p)
-{
-    std::vector<std::string> atts = func::split(sIdentifier, ",");
+void Context::h_addTimeEvent(std::string& sIdentifier, CPlayer* p) {
+  std::vector<std::string> atts = func::split(sIdentifier, ",");
 
-    //Check if sIdentifier contains the fitting values
-    if(atts.size()!=4 || std::isdigit(atts[3][0])==false || std::isdigit(atts[2][0])==false)
-        std::cout << "Something went worng! Time events could not be added.\n";
-    else
-    {
-        std::cout << "Added to context: " << atts[1] << std::endl;
-        p->getContext(atts[1])->add_timeEvent("t_throwEvent", atts[1], atts[0], std::stod(atts[3], nullptr), stoi(atts[2]));
-    }
+  //Check if sIdentifier contains the fitting values
+  if(atts.size()!=4 || std::isdigit(atts[3][0])==false || 
+      std::isdigit(atts[2][0])==false)
+    std::cout << "Something went worng! Time events could not be added.\n";
+  else {
+    std::cout << "Added to context: " << atts[1] << std::endl;
+    p->getContext(atts[1])->add_timeEvent("t_throwEvent", atts[1], atts[0], 
+        std::stod(atts[3], nullptr), stoi(atts[2]));
+  }
 
-    m_curPermeable = false;
+  m_curPermeable = false;
 }
 
-void Context::h_setNewQuest(std::string& sIdentifier, CPlayer* p)
-{
-    p->setNewQuest(sIdentifier);
-    m_curPermeable = false;
+void Context::h_setNewQuest(std::string& sIdentifier, CPlayer* p) {
+  p->setNewQuest(sIdentifier);
+  m_curPermeable = false;
 }
 
 void Context::h_changeDialog(std::string& sIdentifier, CPlayer* p) {
@@ -704,21 +699,12 @@ void Context::h_changeDialog(std::string& sIdentifier, CPlayer* p) {
   m_curPermeable = false;
 }
 
-void Context::h_printText(std::string &sIdentifier, CPlayer* p) {
-  if(p->getWorld()->getTexts().count(sIdentifier) > 0) {
-    CText text(p->getWorld()->getTexts()[sIdentifier], p);
-    p->appendPrint(text.print());
-  }
-  else
-    std::cout << "Text not found!\n";
-}
 
-void Context::h_changeRoom(std::string& sIdentifier, CPlayer* p)
-{
-    CRoom* room = p->getWorld()->getRoom(sIdentifier);
-    if(room != nullptr)
-        p->setRoom(p->getWorld()->getRoom(sIdentifier));
-    m_curPermeable = false;
+void Context::h_changeRoom(std::string& sIdentifier, CPlayer* p) {
+  CRoom* room = p->getWorld()->getRoom(sIdentifier);
+  if(room != nullptr)
+      p->setRoom(p->getWorld()->getRoom(sIdentifier));
+  m_curPermeable = false;
 }
 
 // ***** ***** STANDARD CONTEXT ***** ***** //
@@ -726,104 +712,100 @@ void Context::h_changeRoom(std::string& sIdentifier, CPlayer* p)
 void Context::h_ignore(std::string&, CPlayer*) {}
 
 void Context::h_showExits(std::string& sIdentifier, CPlayer* p) {
-    p->appendDescPrint(p->getRoom()->showExits(p->getMode(), p->getGramma())+"\n");
-        p->addSelectContest(p->getRoom()->getExtits2(), "go");
+  p->appendDescPrint(p->getRoom()->showExits(p->getGramma())+"\n");
+  p->addSelectContest(p->getRoom()->getExtits2(), "go");
 }
 
 
 void Context::h_show(std::string& sIdentifier, CPlayer* p) {
-    if(sIdentifier == "exits" || sIdentifier == "ausgänge")
-    {
-        p->appendDescPrint(p->getRoom()->showExits(p->getMode(), p->getGramma())+"\n");
-        p->addSelectContest(p->getRoom()->getExtits2(), "go");
-    }
-    else if(sIdentifier == "visited" || sIdentifier == "besuchte räume")
-        p->showVisited();
-    else if(sIdentifier == "people" || sIdentifier == "personen")
-    {
-        p->appendDescPrint(p->getRoom()->showCharacters(p->getMode(), p->getGramma()) + "\n"); 
-        auto lambda = [](CPerson* person) {return person->getName();};
-        p->addSelectContest(func::convertToObjectmap(p->getRoom()->getCharacters(), lambda) , "talk");
-    }
-    else if(sIdentifier == "room")
-        p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
-    else if(sIdentifier == "items" || sIdentifier == "gegenstände")
-        p->appendDescPrint(p->getRoom()->showItems(p->getMode(), p->getGramma()) + "\n");
-    else if(sIdentifier == "details" || sIdentifier == "mobiliar")
-        p->appendDescPrint(p->getRoom()->showDetails(p->getMode(), p->getGramma()) + "\n");
-    else if(sIdentifier == "inventory" || sIdentifier == "inventar")
-        p->appendPrint(p->getInventory().printInventory());
-    else if(sIdentifier == "equiped" || sIdentifier == "ausrüstung")
-        p->printEquiped();
-    else if(sIdentifier == "quests")
-        p->showQuests(false);
-    else if(sIdentifier == "solved quests" || sIdentifier == "gelöste quests")
-        p->showQuests(true);
-    else if(sIdentifier == "stats")
-        p->showStats();
-    else if(sIdentifier == "mind")
-        p->showMinds();
-    else if(sIdentifier == "attacks" || sIdentifier == "attacken")
-        p->appendPrint(p->printAttacks());
-    else if(sIdentifier == "all" || sIdentifier == "alles")
-        p->appendDescPrint(p->getRoom()->showAll(p->getMode(), p->getGramma()));
-    else
-        p->appendErrorPrint("Unbekannte \"zeige-function\"\n"); 
+  if(sIdentifier == "exits" || sIdentifier == "ausgänge") {
+    p->appendDescPrint(p->getRoom()->showExits(p->getGramma())+"\n");
+    p->addSelectContest(p->getRoom()->getExtits2(), "go");
+  }
+  else if(sIdentifier == "visited" || sIdentifier == "besuchte räume")
+    p->showVisited();
+  else if(sIdentifier == "people" || sIdentifier == "personen") {
+    p->appendDescPrint(p->getRoom()->showCharacters(p->getGramma()) + "\n"); 
+    auto lambda = [](CPerson* person) {return person->getName();};
+    p->addSelectContest(func::convertToObjectmap(p->getRoom()->getCharacters(), 
+          lambda) , "talk");
+  }
+  else if(sIdentifier == "room")
+    p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
+  else if(sIdentifier == "items" || sIdentifier == "gegenstände")
+    p->appendDescPrint(p->getRoom()->showItems(p->getGramma()) + "\n");
+  else if(sIdentifier == "details" || sIdentifier == "mobiliar")
+    p->appendDescPrint(p->getRoom()->showDetails(p->getGramma()) + "\n");
+  else if(sIdentifier == "inventory" || sIdentifier == "inventar")
+    p->appendPrint(p->getInventory().printInventory());
+  else if(sIdentifier == "equiped" || sIdentifier == "ausrüstung")
+    p->printEquiped();
+  else if(sIdentifier == "quests")
+    p->showQuests(false);
+  else if(sIdentifier == "solved quests" || sIdentifier == "gelöste quests")
+    p->showQuests(true);
+  else if(sIdentifier == "stats")
+    p->showStats();
+  else if(sIdentifier == "mind")
+    p->showMinds();
+  else if(sIdentifier == "attacks" || sIdentifier == "attacken")
+    p->appendPrint(p->printAttacks());
+  else if(sIdentifier == "all" || sIdentifier == "alles")
+    p->appendDescPrint(p->getRoom()->showAll(p->getGramma()));
+  else
+    p->appendErrorPrint("Unbekannte \"zeige-function\"\n"); 
 }
 
-void Context::h_look(std::string& sIdentifier, CPlayer* p) 
-{
-    //Extract details (sWhat) and where to look (sWhere) from identifier
-    size_t pos = sIdentifier.find(" ");
-    if(pos == std::string::npos)
-    {
-        p->appendErrorPrint("Ich weiß nicht, was du durchsuchen willst.\n");
-        return;
-    }
-    
-    std::string sWhere = sIdentifier.substr(0, pos);
-    std::string sWhat = sIdentifier.substr(pos+1);
-    auto lambda = [](CDetail* detail) { return detail->getName();};
-    std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), sWhat, lambda);
+void Context::h_look(std::string& sIdentifier, CPlayer* p) {
+  //Extract details (sWhat) and where to look (sWhere) from identifier
+  size_t pos = sIdentifier.find(" ");
+  if(pos == std::string::npos) {
+    p->appendErrorPrint("Ich weiß nicht, was du durchsuchen willst.\n");
+    return;
+  }
+  
+  std::string sWhere = sIdentifier.substr(0, pos);
+  std::string sWhat = sIdentifier.substr(pos+1);
+  auto lambda = [](CDetail* detail) { return detail->getName();};
+  std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), sWhat, lambda);
 
-    //Check whether input is correct/ detail could be found.
-    if(sDetail == "")
-    {
-        p->appendErrorPrint("Ich weiß nicht, was du durchsuchen willst.\n");
-        return;
-    }
+  //Check whether input is correct/ detail could be found.
+  if(sDetail == "") {
+    p->appendErrorPrint("Ich weiß nicht, was du durchsuchen willst.\n");
+    return;
+  }
 
-    //Check whether sWhere matched with detail
-    CDetail* detail  = p->getRoom()->getDetails()[sDetail];
-    if(detail->getLook() == sWhere)
-        p->appendDescPrint(p->getRoom()->look(sDetail, p->getMode(), p->getGramma()));
-    else
-        p->appendErrorPrint("Ich kann nicht " + sWhere + " " + detail->getName() + " schauen.\nSoll ich in, auf oder unter " + detail->getName() + " schauen?\n");
+  //Check whether sWhere matched with detail
+  CDetail* detail  = p->getRoom()->getDetails()[sDetail];
+  if(detail->getLook() == sWhere)
+    p->appendDescPrint(p->getRoom()->look(sDetail, p->getGramma()));
+  else
+    p->appendErrorPrint("Ich kann nicht " + sWhere + " " + detail->getName() + " schauen.\nSoll ich in, auf oder unter " + detail->getName() + " schauen?\n");
 }
 
-void Context::h_search(std::string& sIdentifier, CPlayer* p)
-{
-    auto lambda = [](CDetail* detail) { return detail->getName();};
-    std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), sIdentifier, lambda);
+void Context::h_search(std::string& sIdentifier, CPlayer* p) {
+  auto lambda = [](CDetail* detail) { return detail->getName();};
+  std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), 
+      sIdentifier, lambda);
 
-    //Check whether input is correct/ detail could be found.
-    if(sDetail == "")
-    {
-        p->appendErrorPrint("Ich weiß nicht, was du durchsuchen willst.\n");
-        return;
-    }
-    
-    CDetail* detail  = p->getRoom()->getDetails()[sDetail];
+  //Check whether input is correct/ detail could be found.
+  if(sDetail == "") {
+    p->appendErrorPrint("Ich weiß nicht, was du durchsuchen willst.\n");
+    return;
+  }
+  
+  CDetail* detail  = p->getRoom()->getDetails()[sDetail];
 
-    //Check whether location is neccessary
-    if(detail->getLook() == "")
-        p->appendDescPrint(p->getRoom()->look(sDetail, p->getMode(), p->getGramma()));
-    else
-        p->appendDescPrint("Ich weiß nicht, wo ich suchen soll. Sag: \"schaue [in/ unter/ ...] [gegenstand]\"\n");
+  //Check whether location is neccessary
+  if(detail->getLook() == "")
+    p->appendDescPrint(p->getRoom()->look(sDetail, p->getGramma()));
+  else
+    p->appendDescPrint("Ich weiß nicht, wo ich suchen soll. Sag: \"schaue "
+        "[in/ unter/ ...] [gegenstand]\"\n");
 }
 
 void Context::h_goTo(std::string& sIdentifier, CPlayer* p) {
-    p->changeRoom(sIdentifier);
+  p->changeRoom(sIdentifier);
 }
 
 void Context::h_startDialog(std::string& sIdentifier, CPlayer* p)
@@ -915,10 +897,6 @@ void Context::h_examine(std::string &sIdentifier, CPlayer*p) {
     //Check for item
     if(sObject != "")
         p->appendPrint(p->getWorld()->getCharacter(sObject)->getDescription());
-}
-
-void Context::h_changeMode(std::string& sIdentifier, CPlayer* p) {
-    p->changeMode();
 }
 
 void Context::h_test(std::string& sIdentifier, CPlayer* p) {

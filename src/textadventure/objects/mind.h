@@ -6,10 +6,10 @@
 
 struct SMind
 {
-    std::string sID;
-    std::string color;
-    int level;
-    double relevance;
+  std::string sID;
+  std::string color;
+  int level;
+  double relevance;
 };
 
 #endif
