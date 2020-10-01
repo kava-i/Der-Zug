@@ -201,18 +201,17 @@ void COutput::updateAttrbutes(CPlayer* p)
 /**
 * Add events to player staged events.
 */
-void COutput::addEvents(CPlayer* p)
-{
-    for(const auto &it : m_pre_permanentEvents)
-        p->addPreEvent(it);
-    for(const auto &it : m_pre_oneTimeEvents)
-        p->addPreEvent(it);
-    m_pre_oneTimeEvents.clear();
-    for(const auto &it : m_post_permanentEvents)
-        p->addPostEvent(it);
-    for(const auto &it : m_post_oneTimeEvents)
-        p->addPostEvent(it);
-    m_post_oneTimeEvents.clear(); 
+void COutput::addEvents(CPlayer* p) {
+  for(const auto &it : m_pre_permanentEvents)
+    p->addPreEvent(it);
+  for(const auto &it : m_pre_oneTimeEvents)
+    p->addPreEvent(it);
+  m_pre_oneTimeEvents.clear();
+  for(const auto &it : m_post_permanentEvents)
+    p->addPostEvent(it);
+  for(const auto &it : m_post_oneTimeEvents)
+    p->addPostEvent(it);
+  m_post_oneTimeEvents.clear(); 
 }
 
 /**

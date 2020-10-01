@@ -224,7 +224,7 @@ void CQuestStep::solved(int& ep, CPlayer* p) {
   }
 
   //Set all linked steps to active (this might trigger success-messages or events)
-  for (auto step : m_linkedSteps)
+  for (auto step : m_linkedSteps) 
     m_quest->getSteps()[step]->setActive(true, p);
 
   //If quest is solved, print alltogether success-message

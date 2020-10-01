@@ -88,8 +88,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks,
   //Add eventhandler to eventmanager
   m_contextStack.insert(new Context((std::string)"first"), 9, "first");
   m_contextStack.insert(new Context((std::string)"world"), 2, "world");
-  Context* context = new Context((std::string)"standard");
-  m_contextStack.insert(context, 0 , "standard");
+  m_contextStack.insert(new Context((std::string)"standard"), 0, "standard");
   updateRoomContext();
 
   //Add quests
@@ -99,27 +98,26 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks,
   }
 }
 
-CPlayer::~CPlayer()
-{
-    delete m_world;
+CPlayer::~CPlayer() {
+  delete m_world;
 } 
 
 // *** GETTER *** // 
 
 ///Return first login (yes, no)
 bool CPlayer::getFirstLogin() { 
-    return m_firstLogin; 
+  return m_firstLogin; 
 }
 
 ///Return mode (Prosa or List) 
 std::string CPlayer::getMode() { 
-    return m_sMode; 
+  return m_sMode; 
 }
 
 ///Return output for player (Append newline)
 string CPlayer::getPrint()  { 
-    checkCommands();
-    return m_sPrint + "\n";
+  checkCommands();
+  return m_sPrint + "\n";
 }
 
 ///Return pointer to players world (all rooms, chars, etc.)
@@ -185,80 +183,77 @@ Context* CPlayer::getContext(std::string context)
 
 
 //Return map of players
-std::map<std::string, CPlayer*>& CPlayer::getMapOFOnlinePlayers()
-{
-    return m_players;
+std::map<std::string, CPlayer*>& CPlayer::getMapOFOnlinePlayers() {
+  return m_players;
 }
 
 // *** SETTER *** // 
 
 ///Set first login.
 void CPlayer::setFirstLogin(bool val) { 
-    m_firstLogin = val; 
+  m_firstLogin = val; 
 }
 
 ///Set new output for player.
 void CPlayer::setPrint(string newPrint) { 
-    m_sPrint = newPrint; 
+  m_sPrint = newPrint; 
 }
 
 ///Append to current player output and throw staged events if exists.
-void CPlayer::appendPrint(std::string sPrint) 
-{
-    throw_staged_events(m_staged_pre_events, "pre");
-    if(m_staged_pre_events != "")
-        m_sPrint += "\n";
-    m_sPrint += sPrint;
-    throw_staged_events(m_staged_post_events, "post"); 
+void CPlayer::appendPrint(std::string sPrint) {
+  throw_staged_events(m_staged_pre_events, "pre");
+  if(m_staged_pre_events != "")
+    m_sPrint += "\n";
+  m_sPrint += sPrint;
+  throw_staged_events(m_staged_post_events, "post"); 
 }
 
 void CPlayer::appendStoryPrint(string sPrint) { 
-    appendSpeackerPrint(m_world->getConfig()["printing"]["story"], sPrint);
+  appendSpeackerPrint(m_world->getConfig()["printing"]["story"], sPrint);
 }
 
 void CPlayer::appendDescPrint(string sPrint) {
-    appendSpeackerPrint(m_world->getConfig()["printing"]["desc"], sPrint);
+  appendSpeackerPrint(m_world->getConfig()["printing"]["desc"], sPrint);
 }
 
 void CPlayer::appendErrorPrint(string sPrint) {
-    appendSpeackerPrint(m_world->getConfig()["printing"]["error"], sPrint);
+  appendSpeackerPrint(m_world->getConfig()["printing"]["error"], sPrint);
 }
 
 void CPlayer::appendTechPrint(string sPrint) {
-    appendSpeackerPrint(m_world->getConfig()["printing"]["tech"], sPrint);
+  appendSpeackerPrint(m_world->getConfig()["printing"]["tech"], sPrint);
 }
 
 void CPlayer::appendBlackPrint(std::string sPrint) {
-        appendPrint(returnBlackPrint(sPrint));
+  appendPrint(returnBlackPrint(sPrint));
 }
 
 void CPlayer::appendSpeackerPrint(std::string sSpeaker, std::string sPrint) {
-    appendPrint(returnSpeakerPrint(sSpeaker, sPrint));
+  appendPrint(returnSpeakerPrint(sSpeaker, sPrint));
 }
 
 std::string CPlayer::returnSpeakerPrint(std::string sSpeaker, std::string sPrint) {
-    sPrint = func::returnSwapedString(sPrint, getStat("highness"));
-    
-    if(sSpeaker != "")
-        return "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
-    return sPrint + "\n";
+  sPrint = func::returnSwapedString(sPrint, getStat("highness"));
+  if(sSpeaker != "")
+    return "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint 
+      + WHITE + "</div>";
+  return sPrint + "\n";
 }
 
 std::string CPlayer::returnBlackPrint(std::string sPrint) {
-    return "<div class='spoken2'>" + WHITEDARK + sPrint + WHITE + "</div>";
+  return "<div class='spoken2'>" + WHITEDARK + sPrint + WHITE + "</div>";
 }
 
 void CPlayer::appendSuccPrint(string sPrint) {
-    appendPrint(GREEN + sPrint + WHITE);
+  appendPrint(GREEN + sPrint + WHITE);
 }
 
 ///Add staged events to throw before printing
-void CPlayer::addPreEvent(std::string sNewEvent)
-{
-    if(m_staged_pre_events == "")
-        m_staged_pre_events = sNewEvent;
-    else
-        m_staged_pre_events += ";"+sNewEvent;
+void CPlayer::addPreEvent(std::string sNewEvent) {
+  if(m_staged_pre_events == "")
+    m_staged_pre_events = sNewEvent;
+  else
+    m_staged_pre_events += ";"+sNewEvent;
 }
 
 ///Add staged events to throw after printing
@@ -270,14 +265,12 @@ void CPlayer::addPostEvent(std::string sNewEvent) {
 }
 
 //Throw staged events and clear events afterwards
-void CPlayer::throw_staged_events(std::string& events, std::string sMessage) 
-{
-    if(events == "")
-        return;
-
-    std::string newEvents = events;
-    events = "";
-    throw_events(newEvents, sMessage+"-events"); 
+void CPlayer::throw_staged_events(std::string& events, std::string sMessage)  {
+  if(events == "") 
+    return;
+  std::string newEvents = events;
+  events = "";
+  throw_events(newEvents, sMessage+"-events"); 
 }
 
 
@@ -379,46 +372,44 @@ void CPlayer::endFight() {
 * Set current (new) Dialog player and add a Dialog-context to context-stack.
 * @param sCharacter id of dialogpartner and throw event to start Dialog.
 */
-void CPlayer::startDialog(string sCharacter, CDialog* dialog)
-{
-    //Set current dialog
-    if(dialog != nullptr)
-        m_dialog = dialog;
-    else
-        m_dialog = m_world->getCharacter(sCharacter)->getDialog();
+void CPlayer::startDialog(string sCharacter, CDialog* dialog) {
+  //Set current dialog
+  if(dialog != nullptr)
+    m_dialog = dialog;
+  else
+    m_dialog = m_world->getCharacter(sCharacter)->getDialog();
 
-    //Add person to current dialog partner
-    m_curDialogPartner = m_world->getCharacter(sCharacter);       
+  //Add person to current dialog partner
+  m_curDialogPartner = m_world->getCharacter(sCharacter);       
 
-    //Create context and add to context-stack.
-    Context* context = new Context((std::string)"dialog", {{"partner", sCharacter}});
-    context->initializeDialogListeners("START", this);
-    m_contextStack.insert(context, 1, "dialog");
+  //Create context and add to context-stack.
+  Context* context = new Context((std::string)"dialog", {{"partner", sCharacter}});
+  context->initializeDialogListeners("START", this);
+  m_contextStack.insert(context, 1, "dialog");
 
-    std::string newCommand = m_dialog->getState("START")->callState(this);
-    if(newCommand != "")
-        throw_events(newCommand, "CPlayer::startDialog");
+  std::string newCommand = m_dialog->getState("START")->callState(this);
+  if(newCommand != "")
+    throw_events(newCommand, "CPlayer::startDialog");
 }
 
 /**
 * Try to start chatting. If player is busy, print error message, else add chat-context to 
 * context-stack and throw event 'Hey + player-name'.
 */
-void CPlayer::startChat(CPlayer* player)
-{
-    appendStoryPrint("Du gehst auf " + player->getName() + " zu und räusperst dich...\n");
+void CPlayer::startChat(CPlayer* player) {
+  appendStoryPrint("Du gehst auf " + player->getName() + 
+      " zu und räusperst dich...\n");
 
-    if(player->getContexts().nonPermeableContextInList() == true)
-        appendStoryPrint(player->getName() + " ist zur Zeit beschäftigt.\n");
-    else
-    {
-        //Add Chat context for both players
-        addChatContext(player->getID());
-        player->addChatContext(m_sID);
-        
-        //Send text by throwing event
-        throw_events("Hey " + player->getName() + ".", "CPlayer::startChat");
-    }
+  if(player->getContexts().nonPermeableContextInList() == true)
+    appendStoryPrint(player->getName() + " ist zur Zeit beschäftigt.\n");
+  else { 
+    //Add Chat context for both players
+    addChatContext(player->getID());
+    player->addChatContext(m_sID);
+    
+    //Send text by throwing event
+    throw_events("Hey " + player->getName() + ".", "CPlayer::startChat");
+  }
 }
 
 /**
@@ -468,63 +459,56 @@ void CPlayer::addReadContext(std::string sID)
 * @param sIdentifier player input (room id, exit of current room, or room al-
 * redy visited)
 */
-void CPlayer::changeRoom(string sIdentifier)
-{
-    //Check if player wants to go back.
-    if(sIdentifier == "back" || sIdentifier == "zurück") {
-        changeRoom(m_lastRoom);
-        return;
-    }
+void CPlayer::changeRoom(string sIdentifier) {
+  //Check if player wants to go back.
+  if(sIdentifier == "back" || sIdentifier == "zurück") {
+    changeRoom(m_lastRoom);
+    return;
+  }
 
-    //Get selected room, checking exits in current room.
-    auto lamda1= [](CExit* exit) { return exit->getPrep() + " " + exit->getName(); };
-    string room = func::getObjectId(getRoom()->getExtits(), sIdentifier, lamda1);
+  //Get selected room, checking exits in current room.
+  auto lamda1= [](CExit* exit) { return exit->getPrep() + " " + exit->getName(); };
+  string room = func::getObjectId(getRoom()->getExtits(), sIdentifier, lamda1);
 
-    if(room != "") {
-        std::cout << "Found next room: " << room << std::endl;
-        changeRoom(getWorld()->getRooms()[room]);
-        return;
-    }
+  if(room != "") {
+    changeRoom(getWorld()->getRooms()[room]);
+    return;
+  }
 
-    //Check all rooms already visited.
-    auto lamda2 = [](CRoom* room) { return room->getName(); };
-    room = func::getObjectId(m_world->getRooms(), sIdentifier, lamda2);
-    std::vector<std::string> path = findWay(m_room, room);
+  //Check all rooms already visited.
+  auto lamda2 = [](CRoom* room) { return room->getName(); };
+  room = func::getObjectId(m_world->getRooms(), sIdentifier, lamda2);
+  std::vector<std::string> path = findWay(m_room, room);
 
-    //If a path was found, add events to go to each room in path.
-    if(path.size() > 0)
-    {
-        std::string events;
-        for(const auto& it : path)
-            events += "go " + it + ";";
-        events.pop_back();
-        throw_events(events, "CPlayer::changeRoom");
-    }
-    
-    //Print error message.
-    else
-        appendErrorPrint("Room not found.\n");
+  //If a path was found, add events to go to each room in path.
+  if(path.size() > 0) {
+    std::string events;
+    for(const auto& it : path)
+        events += "go " + it + ";";
+    events.pop_back();
+    throw_events(events, "CPlayer::changeRoom");
+  }
+  
+  //Print error message.
+  else
+    appendErrorPrint("Room not found.\n");
 }
 
 /**
 * Change room to given room and print entry description. Set last room to current room.
 * @param newRoom new room the player changes to
 */
-void CPlayer::changeRoom(CRoom* newRoom)
-{
-    std::cout << "Changing room\n";
-    std::cout << "new room: " << newRoom->getID() << std::endl;
+void CPlayer::changeRoom(CRoom* newRoom) {
+  m_lastRoom = m_room; 
+  m_room = newRoom;
+  std::string entry = newRoom->getEntry();
+  if(entry != "")
+    appendDescPrint(entry);
+  appendPrint(m_room->showDescription(m_world->getCharacters()));
+  m_vistited[m_room->getID()] = true;
 
-    m_lastRoom = m_room; 
-    m_room = newRoom;
-    std::string entry = newRoom->getEntry();
-    if(entry != "")
-        appendDescPrint(entry);
-    appendPrint(m_room->showDescription(m_world->getCharacters()));
-    m_vistited[m_room->getID()] = true;
-
-    updateRoomContext();
-    std::cout << "done.\n";
+  updateRoomContext();
+  std::cout << "done.\n";
 }
 
 /**
@@ -727,18 +711,16 @@ void CPlayer::dequipeItem(string sType) {
 * show all active or solved quest depending on 'solved'
 * @param solved indicating, whether to show solved or active quests.
 */
-void CPlayer::showQuests(bool solved)
-{
+void CPlayer::showQuests(bool solved) {
+  if(solved == false)
+    m_sPrint += "Active quests: \n";
+  else
+    m_sPrint += "Solved quests: \n";
 
-    if(solved == false)
-        m_sPrint += "Active quests: \n";
-    else
-        m_sPrint += "Solved quests: \n";
-
-    for(auto it : m_world->getQuests()) {
-        if(it.second->getActive() == true)
-            m_sPrint += "\n" + it.second->printQuest(solved);
-    }
+  for(auto it : m_world->getQuests()) {
+    if(it.second->getActive() == true)
+      m_sPrint += "\n" + it.second->printQuest(solved);
+  }
 }
 
 /**
@@ -770,8 +752,8 @@ void CPlayer::setNewQuest(std::string sQuestID)
 void CPlayer::questSolved(std::string sQuestID, std::string sStepID) {
   int ep=0;
   m_world->getQuest(sQuestID)->getSteps()[sStepID]->solved(ep, this);
-  //if(m_world->getQuest(sQuestID)->getSolved() == true)
-  //    m_contextStack.erase(sQuestID);
+  if(m_world->getQuest(sQuestID)->getSolved() == true)
+      m_contextStack.erase(sQuestID);
   addEP(ep);
 }
 
@@ -1032,7 +1014,8 @@ void CPlayer::printError(std::string sError)
 */
 void CPlayer::throw_events(string sInput, std::string sMessage) {
   updateRoomContext();
-  std::cout << cRED << "Events: " << sInput << ", from: " << sMessage << cCLEAR << std::endl;
+  std::cout << cRED << "Events: " << sInput << ", from: " << sMessage 
+    << cCLEAR << std::endl;
 
   //Check for time triggered events
   getContext("room")->throw_timeEvents(this);
@@ -1052,22 +1035,14 @@ void CPlayer::throw_events(string sInput, std::string sMessage) {
   for (size_t i=0; i<events.size(); i++) {
     std::cout << cRED << events[i].first << ", " << events[i].second << cCLEAR <<"\n";
 
-    /*
-    if (events[i].first == "printText") {
-      if(m_world->getTexts().count(events[i].second) > 0) {
-        CText text(m_world->getTexts()[events[i].second], this);
-        appendPrint(text.print());
+    //Check for non-event type commands
+    if (events[i].first == "printText") 
+      m_contextStack.getContext("standard")->h_printText(events[i].second, this);
+    else {
+      for (size_t j=0; j<sortedCtxList.size(); j++) {
+        if (sortedCtxList[j]->throw_event(events[i], this) == false)
+          break;
       }
-      else
-        std::cout << "Text not found!\n";
-      continue;
-    }
-    */
-
-
-    for (size_t j=0; j<sortedCtxList.size(); j++) {
-      if (sortedCtxList[j]->throw_event(events[i], this) == false)
-        break;
     }
   }
 }

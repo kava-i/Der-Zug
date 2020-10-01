@@ -238,6 +238,6 @@ string CDState::strangeGuy1(CPlayer* p)
 string CDState::strangeGuy2(CPlayer* p)
 {
     string sOutput = standard(p);
-    p->questSolved("komische_gruppe", "2hilfe");
+    p->questSolved("komische_gruppe", "hilfe");
     return sOutput;
 }
