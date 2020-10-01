@@ -199,6 +199,16 @@ void CPlayer::setPrint(string newPrint) {
   m_sPrint = newPrint; 
 }
 
+void CPlayer::printText(std::string text) {
+  if (m_world->getTexts().count(text) > 0) {
+    nlohmann::json j_text = m_world->getTexts().at(text);
+    CText text(j_text, this);
+    m_sPrint += text.print();
+  }
+  else
+    std::cout << cRed "Text not found!" << cCLEAR << std::endl;
+}
+
 ///Append to current player output and throw staged events if exists.
 void CPlayer::appendPrint(std::string sPrint) {
   throw_staged_events(m_staged_pre_events, "pre");
@@ -1037,7 +1047,7 @@ void CPlayer::throw_events(string sInput, std::string sMessage) {
 
     //Check for non-event type commands
     if (events[i].first == "printText") 
-      m_contextStack.getContext("standard")->h_printText(events[i].second, this);
+      printText(events[i].second);
     else {
       for (size_t j=0; j<sortedCtxList.size(); j++) {
         if (sortedCtxList[j]->throw_event(events[i], this) == false)

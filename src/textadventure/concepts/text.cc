@@ -181,21 +181,19 @@ void COutput::updateAttrbutes(CPlayer* p, std::string& sUpdated)
     m_jUpdates.clear();
 }
 
-void COutput::updateAttrbutes(CPlayer* p)
-{
-    for(auto it=m_jUpdates.begin(); it!= m_jUpdates.end(); it++)
-    {
-        int val=it.value();
+void COutput::updateAttrbutes(CPlayer* p) {
+  for(auto it=m_jUpdates.begin(); it!= m_jUpdates.end(); it++) {
+    int val=it.value();
 
-        //Check updates for minds
-        if(p->getMinds().count(it.key()) > 0) 
-            p->getMind(it.key()).level += val;
+    //Check updates for minds
+    if(p->getMinds().count(it.key()) > 0) 
+      p->getMind(it.key()).level += val;
 
-        //Check updates for abilities
-        else if(p->attributeExists(it.key()) == true)
-            p->setStat(it.key(), p->getStat(it.key())+val);
-    }
-    m_jUpdates.clear();
+    //Check updates for abilities
+    else if(p->attributeExists(it.key()) == true)
+      p->setStat(it.key(), p->getStat(it.key())+val);
+  }
+  m_jUpdates.clear();
 }
 
 /**
@@ -217,16 +215,15 @@ void COutput::addEvents(CPlayer* p) {
 /**
 * Try to underline text.
 */
-bool COutput::underline(std::string str1, std::string str2)
-{
-    std::string str = m_sText;
-    func::convertToLower(str);
-    size_t pos1 = str.find(str1);
-    size_t pos2 = str.find(str2);
-    if(pos1 == std::string::npos || pos2 == std::string::npos)
-        return false;
-    m_sText.insert(pos1-1, "<u>");
-    m_sText.insert(pos2+3, "</u>");
-    return true;
+bool COutput::underline(std::string str1, std::string str2) {
+  std::string str = m_sText;
+  func::convertToLower(str);
+  size_t pos1 = str.find(str1);
+  size_t pos2 = str.find(str2);
+  if(pos1 == std::string::npos || pos2 == std::string::npos)
+    return false;
+  m_sText.insert(pos1-1, "<u>");
+  m_sText.insert(pos2+3, "</u>");
+  return true;
 }
 

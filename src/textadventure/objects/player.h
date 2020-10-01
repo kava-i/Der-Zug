@@ -143,6 +143,9 @@ public:
     ///Set new output for player.
     void setPrint(string newPrint);
 
+    //No-event type commands
+    void printText(std::string text);
+
     ///Append to current player output.
     void appendPrint(string newPrint);
     void appendStoryPrint(std::string sPrint);
