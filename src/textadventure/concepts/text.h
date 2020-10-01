@@ -34,7 +34,7 @@ private:
     std::string m_sSpeaker;
     std::string m_sText;
 
-    nlohmann::json m_jDeps;
+    std::string logic_;
     nlohmann::json m_jUpdates;
     std::vector<std::string> m_pre_permanentEvents;
     std::vector<std::string> m_pre_oneTimeEvents;

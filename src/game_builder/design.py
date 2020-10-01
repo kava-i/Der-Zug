@@ -56,7 +56,7 @@ class GameDesigner:
             "texts":{"id": "", "text":desc}
         }
 
-        description = {"speaker":"", "text":"", "pre_otEvents":"", "pre_pEvents":"", "post_otEvents":"", "post_pEvents":"", "deps":"", "updates":""}
+        description = {"speaker":"", "text":"", "pre_otEvents":"", "pre_pEvents":"", "post_otEvents":"", "post_pEvents":"", "deps":"", "updates":"", "logic":""}
         description_pages = {"speaker":"", "text":"", "pre_otEvents":"", "pre_pEvents":"", "post_otEvents":"", "post_pEvents":"", "deps":"", "updates":"", "page":1}
         self.subAttributes = {
             "text" : description,
