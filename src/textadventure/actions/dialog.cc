@@ -35,9 +35,6 @@ void CDialog::setStates(std::map<std::string, CDState*> states) {
 
 // *** VARIOUS FUNCTIONS *** // 
 
-void CDialog::changeStateText(string sStateID, size_t text) {
-  m_states[sStateID]->setText(text);
-}
 void CDialog::addDialogOption(string sStateID, size_t optID) {
   m_states[sStateID]->getOptions()[m_states[sStateID]->numOptions()+1] = 
     m_states[sStateID]->getOptions()[-1];
@@ -75,14 +72,6 @@ CDState::CDState(nlohmann::json jAtts, dialogoptions opts, CDialog* dia,
   m_sFunction = jAtts.value("function", "standard");
   m_sActions = jAtts.value("actions", "");
   m_sEvents = jAtts.value("events", "");
-
-  //Parse alternative texts
-  std::vector<CText*> altTexts;
-  if(jAtts.count("altTexts") > 0) {
-    for(auto text : jAtts["altTexts"])
-      altTexts.push_back(new CText(text, p));
-  }
-  m_alternativeTexts = altTexts;
   m_options = opts;
   m_dialog = dia;
 }
@@ -98,10 +87,6 @@ CDState::dialogoptions& CDState::getOptions() {
 }
 
 // *** SETTER *** //
-
-void CDState::setText(size_t text) { 
-  m_text = m_alternativeTexts[text]; 
-}
 
 // *** FUNCTIONS *** // 
 
@@ -147,8 +132,6 @@ void CDState::executeActions(CPlayer* p) {
       m_dialog->addDialogOption(parameters[1], std::stoi(parameters[2]));
     else if(parameters[0] == "deleteDialogOption")
       m_dialog->deleteDialogOption(parameters[1], std::stoi(parameters[2]));
-    else if(parameters[0] == "changeStateText")
-      m_dialog->changeStateText(parameters[1], std::stoi(parameters[2]));
     else if(parameters[0] == "changeDialog")
       m_dialog->changeDialog(parameters[1], parameters[2], p);
     else if(parameters[0] == "moveStart")

@@ -54,7 +54,14 @@ bool LogicParser::Calc(std::string str1, std::string opt, std::string str2) {
       Calc(str1, opt, str2.substr(str2.find("&")+1));
   }
 
-  //Calculate value.
+  //Check if term shall be negated
+  bool negation = true;
+  if (str1.front() == '!') {
+    negation = false;
+    str1.erase(0,1);
+  }
+
+  //Substitut first or second literal
   if (str1.front() == '"')
     str1.erase(0,1);
   else if (substitue_.count(str1) > 0) 
@@ -63,16 +70,25 @@ bool LogicParser::Calc(std::string str1, std::string opt, std::string str2) {
     str2.erase(0,1);
   else if (substitue_.count(str2) > 0) 
     str2 = substitue_[str2];
-  if (opt == "=") return str1 == str2;
-  if (opt == "~") return fuzzy::fuzzy_cmp(str1, str2) <= 0.2;
-  if (opt == ">") return std::stoi(str1) > std::stoi(str2);
-  if (opt == "<") return std::stoi(str1) < std::stoi(str2);
-  if(opt == ":") {
+
+  //Calculate value.
+  bool result = true;
+  if (opt == "=") result =str1 == str2;
+  else if (opt == "~") 
+    result = fuzzy::fuzzy_cmp(str1, str2) <= 0.2;
+  else if (opt == ">") 
+    result = std::stoi(str1) > std::stoi(str2);
+  else if (opt == "<") 
+    result = std::stoi(str1) < std::stoi(str2);
+  else if(opt == ":") {
     auto vec = Split(str1, ";");
-    return std::find(vec.begin(), vec.end(), str2) != vec.end();
+    result = std::find(vec.begin(), vec.end(), str2) != vec.end();
   }
-  std::cout << "Wrong operand (=, ~, >, <)!" << std::endl;
-  return true;
+  else
+    std::cout << "Wrong operand (=, ~, >, <)!" << std::endl;
+
+  if (negation == true) return result;
+  return !result;
 }
 
 bool LogicParser::Evaluate(std::string str1, std::string opt, std::string str2) {

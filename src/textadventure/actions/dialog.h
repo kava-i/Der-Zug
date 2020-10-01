@@ -72,11 +72,10 @@ struct SDOption {
 class CDState {
 private:
 
-    CText* m_text;                      //< Text which will be printed after call.
-    string m_sFunction;                 //< Function called when calling state.
-    string m_sActions;                  //< Actions executed after call.
-    string m_sEvents;                   //< string holding a list of events, which will be executed.
-    vector<CText*> m_alternativeTexts;  //< Map of alternative texts 
+    CText* m_text;  //< Text which will be printed after call.
+    string m_sFunction;  //< Function called when calling state.
+    string m_sActions;  //< Actions executed after call.
+    string m_sEvents;  //< string holding a list of events, which will be executed.
 
     //Map of options 
     typedef std::map<int, SDOption> dialogoptions;
@@ -96,7 +95,6 @@ public:
     dialogoptions& getOptions();
 
     // *** SETTER *** //
-    void setText(size_t text);
 
     static void initializeFunctions();
     string callState(CPlayer*);
