@@ -1,0 +1,3 @@
+/home/fux/Documents/programming/Der-Zug/src/gui/build/CMakeFiles/rebuild_cache.dir
+/home/fux/Documents/programming/Der-Zug/src/gui/build/CMakeFiles/edit_cache.dir
+/home/fux/Documents/programming/Der-Zug/src/gui/build/CMakeFiles/game_builder.o.dir

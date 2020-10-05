@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Game*Creator - {{name}}</title>
+
+    <link href="/favicon.png" rel="icon" type="image/png"/>
+
+    <!-- <link rel="stylesheet", href="bootstrap/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link href="web/general.css" rel="stylesheet">
+    <link href="web/object.css" rel="stylesheet">
+
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+</head>
+
+<body>
+<nav aria-label="breadcrumb">
+    <ol class=breadcrumb>
+        <li class="breadcrumb-item"><a href="/">Game*Creator</a></li>
+        <li class="breadcrumb-item"><a href="login">Login</a></li>
+        <li class="breadcrumb-item"><a href="overview">Overview</a></li>
+        <li class="breadcrumb-item"><a href="world_{{header.world}}">{{header.world}}</a></li>
+        <li class="breadcrumb-item"><a href="world_{{header.world}}_category_{{header.category}}">{{header.category}}</a></li>
+        <li class="breadcrumb-item"><a href="world_{{header.world}}_category_{{header.category}}_sub_{{header.sub}}">{{header.sub}}</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a>{{id}}</a></li>
+    </ol>
+</nav>
+
+<div class="top_right">
+  <img src="web/logo.png" style="margin-bottom:0.5em;"><br>
+</div>
+
+<div class="box_overview center_in_box">
+  <h1>{{name}}</h1>
+    <div class="object">
+      <ul>
+        <li><label>Name:</label> <input id="name" value="{{name}}">
+        <li><label>Id:</label> <input id="id" value="{{id}}">
+        <li><label>Description:</label> 
+          <ul id="description">
+            {% if exists("description") == true %}
+            {% for text in description %}
+              <li>
+              <ul>
+                <li><label>Speaker:</label> 
+                  <input id="speaker" value="{{text.speaker}}"></li>
+                <li><label>Text:</label>
+                  <textarea id="text">{{text.text}}</textarea></li>
+                {% if existsIn(text, "logic") == true %}
+                <li><label>Logic:</label>
+                  <input class="small" id="logic" value="{{text.logic}}"></li>
+                {% endif %}
+                {% if existsIn(text, "post_pEvents") == true %}
+                <li><label>Post pEvents:</label>
+                  <ul id="post_otEvents">
+                  {% for event in text.post_pEvents %}
+                    <li><input class="small" value="{{event}}"></li>
+                  {% endfor %}
+                  </ul>
+                </li>
+                {% endif %}
+                {% if existsIn(text, "post_otEvents") == true %}
+                <li><label>Post otEvents:</label>
+                  <ul id="post_otEvents">
+                  {% for event in text.post_otEvents %}
+                    <li><input class="small" value="{{event}}"></li>
+                  {% endfor %}
+                  </ul>
+                </li>
+                {% endif %}
+                {% if existsIn(text, "pre_pEvents") == true %}
+                <li><label>Pre pEvents:</label>
+                  <ul id="pre_pEvents">
+                  {% for event in text.pre_pEvents %}
+                    <li><input class="small" value="{{event}}"></li>
+                  {% endfor %}
+                  </ul>
+                </li>
+                {% endif %}
+                {% if existsIn(text, "pre_otEvents") == true %}
+                <li><label>Pre otEvents:</label>
+                  <ul id="pre_otEvents">
+                  {% for event in text.pre_otEvents %}
+                    <input class="small" value="{{event}}"></li>
+                  {% endfor %}
+                  </ul>
+                </li>
+                {% endif %}
+              </ul>
+              </li>
+            {% endfor %}
+            {% else %}
+              <li>
+              <ul>
+                <li><label>Speaker:</label> 
+                  <input id="speaker" placeholder="speaker"></li>
+                <li><label>Text:</label>
+                  <textarea id="text"></textarea></li>
+              </ul>
+              </li>
+            {% endif %}
+          </ul>
+      </li>
+      <li><label>Characters:</label>
+        <ul id="characters">
+          {% if exists("characters") == true %}
+          {% for char in characters %}
+            <li>
+              {%for attr in char %}
+                <input value={{attr}}>
+              {% endfor %}
+            </li>
+          {% endfor %}
+          {% else %}
+            <input placeholder="character id" value="">
+            <input value="{}">
+          {% endif %}
+         </ul>
+      </li>
+          
+        <li><label>Details:</label>
+          <ul id="details">
+            {% for detail in details %}
+            <li>
+              {% for attr in detail %}
+                <input value={{attr}}>
+              {% endfor %}
+            </li>
+            {% endfor %}
+          </ul>
+        </li>
+        <li><label>Exits:</label>
+          <ul id="exits">
+            {% for key, val in exits %}
+            <li>
+                <input id="exit" value="{{ key }}">
+                <input id="exit" value="{{ val.name }}">
+                <input style="width: 3em;" id="exit" value="{{ val.prep }}">
+            </li>
+            {% endfor %}
+          </ul>
+        </li>
+      </ul>
+    </div>
+</div>

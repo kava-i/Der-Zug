@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Game*Creator - Worlds</title>
+
+    <link href="/favicon.png" rel="icon" type="image/png"/>
+
+    <!-- <link rel="stylesheet", href="bootstrap/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link href="web/general.css" rel="stylesheet">
+
+    <script src="web/overview.js"></script>
+    <script src="web/general.js"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+</head>
+
+<body>
+<nav aria-label="breadcrumb">
+    <ol class=breadcrumb>
+        <li class="breadcrumb-item"><a href="/">Game*Creator</a></li>
+        <li class="breadcrumb-item"><a href="login">Login</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a>Overview</a></li>
+    </ol>
+</nav>
+
+<div class="top_right">
+  <img src="web/logo.png" style="margin-bottom:0.5em;"><br>
+</div>
+
+<div class="notification-bar">
+  <div class="notice">
+    <button type="button" class="pure-button-def">
+      <i style='font-size:24px' class='far'>&#xf2bd;</i>
+      <i class="arrow down"></i>
+    </button>
+    <div class="notice_container">
+      <a>Logged in as <b>{{username}}</b>.</a><br>
+        <a id="confirmed" style="color: green;">Account confirmed.</a>
+      <span onclick="DoLogout()">Logout</span><br>
+      <span onclick="OpenDelUserModal()">Delete</button><br> 
+    </div>
+  </div>
+</div>
+
+<div class="box_overview center_in_box">
+    <h1>YOUR WORLDS</h1>
+    <div class="controlers">
+        <table id="controller">
+          {% for world in worlds %}
+            <tr>
+              <td>
+                <a class="medium" href="world_{{world}}">{{world}}</a>
+              </td>
+              <td>
+                <i class="fas fa-minus button2" onclick="OpenDelElemModal('{{world}}');return true"></i>
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+    </div>
+    <i class="fas fa-plus button" onclick="OpenAddElemModal();return true"></i>
+</div>
+
+<div id="modal_del_user" class="modal">
+  <div class="modal-content">
+    <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
+    <div class="content_center">
+      <div class="item"><p>Are you 100% sure you want to delete your
+        account on this server? All data will be lost and <i>can't ever be restored</i>.</div>
+      <div class="item"><p class="user_error"></p></div>
+      <div><button type="button" class="pure-button" id="btn_del_user"
+                                 onclick="DelUser()">Delete</button></div>
+    </div>
+  </div>
+</div>
+
+
+<div id="modal_del_elem" class="modal">
+  <div class="modal-content">
+    <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
+    <div class="content_center">
+      <div class="item"><p id="check_msg" elem_name=""></div>
+      <div class="item"><p class="user_error"></p></div>
+      <div><button type="button" class="pure-button" id="btn_del_elem"
+                                 onclick="DelElem()">Delete</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="modal_add_elem" class="modal">
+  <div class="modal-content">
+    <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
+    <div class="content_center">
+      <div class="item"><input id="name" placeholder="name"></div>
+      <div class="item"><p class="user_error"></p></div>
+      <div><button type="button" class="pure-button" id="btn_add_elem"
+                                 onclick="AddElem()">Add</button></div>
+    </div>
+  </div>
+</div>
+</body>

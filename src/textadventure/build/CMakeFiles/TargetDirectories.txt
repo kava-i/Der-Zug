@@ -1,0 +1,5 @@
+/home/fux/Documents/programming/Der-Zug/src/textadventure/build/CMakeFiles/rebuild_cache.dir
+/home/fux/Documents/programming/Der-Zug/src/textadventure/build/CMakeFiles/edit_cache.dir
+/home/fux/Documents/programming/Der-Zug/src/textadventure/build/CMakeFiles/test.dir
+/home/fux/Documents/programming/Der-Zug/src/textadventure/build/CMakeFiles/txtadventure_server.dir
+/home/fux/Documents/programming/Der-Zug/src/textadventure/build/CMakeFiles/txtadventure.dir
