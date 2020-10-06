@@ -15,7 +15,7 @@
 #include <vector>
 
 #include <nlohmann/json.hpp>
-#include <inja/inja.hpp>
+#include "inja.hpp"
 #include <stdlib.h>
 
 class User {

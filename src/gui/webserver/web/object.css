@@ -5,7 +5,7 @@
 .object li{
   margin-bottom: 0.2em;
 }
-.object a{
+.object label{
   width: 5em;
   display:inline-block;
 }
@@ -15,6 +15,7 @@
   border: none;
   border-radius: 5px;
   text-align:center;
+  font-size: 0.7em;
 }
 
 .object textarea{
@@ -27,8 +28,29 @@
   height: 5em;
   font-size: 0.7em;
 }
-.small {
-  width: 32em;
+.free_width {
+  width: auto;
+}
+.full_length input {
+  text-align: left;
+  width: 30em;
   font-size: 0.7em;
 }
 
+.expand {
+  text-align: center;
+}
+.expand span {
+  padding: 0.6em;
+  font-size: 20px;
+}
+.expand span:hover {
+  cursor: pointer;
+}
+
+.add_elem {
+  padding:1em;
+}
+.add_elem:hover {
+  cursor: pointer;
+}

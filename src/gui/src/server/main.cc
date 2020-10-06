@@ -70,7 +70,9 @@ int main() {
   srv.Get("/web/object.css", [&](const Request& req, Response& resp) {
       resp.set_content(func::GetPage("web/object.css"), "text/css"); });
   srv.Get("/web/general.js", [&](const Request& req, Response& resp) {
-      resp.set_content(func::GetPage("web/general.js"), "application/js"); });
+      resp.set_content(func::GetPage("web/general.js"), "application/javascript"); });
+  srv.Get("/web/object.js", [&](const Request& req, Response& resp) {
+      resp.set_content(func::GetPage("web/object.js"), "application/javascript"); });
   srv.Get("/web/registration.js", [](const Request& req, Response& resp)
       { resp.set_content(func::GetPage("web/registration.js"), 
           "application/javascript");});

@@ -7,12 +7,12 @@
 
     <link href="/favicon.png" rel="icon" type="image/png"/>
 
-    <!-- <link rel="stylesheet", href="bootstrap/css/bootstrap.min.css"> -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
     <link href="web/general.css" rel="stylesheet">
     <link href="web/object.css" rel="stylesheet">
 
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script src='web/object.js'></script>
 </head>
 
 <body>
@@ -36,110 +36,120 @@
   <h1>{{name}}</h1>
     <div class="object">
       <ul>
-        <li><label>Name:</label> <input id="name" value="{{name}}">
-        <li><label>Id:</label> <input id="id" value="{{id}}">
+
+        <!-- Name and ID (default value for non-set-values -->
+        <li><label>Name:</label> <input id="name" value="{{ default(name, "") }}">
+        <li><label>Id:</label> <input id="id" value="{{ default(id, "") }}">
+
+        <!-- Description (added by include) expand non-set optional values -->
         <li><label>Description:</label> 
-          <ul id="description">
-            {% if exists("description") == true %}
-            {% for text in description %}
+          {% include "temp_description" %}
+        </li>
+
+        <!-- Exits (default value for non-set-values) -->
+        <li><label>Exits:</label>
+          <ul id="exits">
+            {% for key, val in default(exits, {"": {}}) %}
+            <li>
+                <input value="{{ key }}">
+                <input value="{{ default(val.name, "") }}">
+                <input style="width: 3em;" value="{{ default(val.prep, "") }}">
+            </li>
+            {% if loop.is_last == true %}
+              <span class="fas fa-plus add_elem" onclick="add_exit()">
+            {% endif %}
+            {% endfor %}
+          </ul>
+        </li>
+
+        <!-- Characters (placeholders for non-set-values) -->
+        <li><label>Characters:</label>
+          <ul id="characters">
+            {% if exists("characters") == true %}
+            {% for char in characters %}
               <li>
-              <ul>
-                <li><label>Speaker:</label> 
-                  <input id="speaker" value="{{text.speaker}}"></li>
-                <li><label>Text:</label>
-                  <textarea id="text">{{text.text}}</textarea></li>
-                {% if existsIn(text, "logic") == true %}
-                <li><label>Logic:</label>
-                  <input class="small" id="logic" value="{{text.logic}}"></li>
+                {%for attr in char %}
+                  <input value={{attr}}>
+                {% endfor %}
+                {% if loop.is_last == true %}
+                  <span class="fas fa-plus add_elem" onclick="add_elem1('characters')">
                 {% endif %}
-                {% if existsIn(text, "post_pEvents") == true %}
-                <li><label>Post pEvents:</label>
-                  <ul id="post_otEvents">
-                  {% for event in text.post_pEvents %}
-                    <li><input class="small" value="{{event}}"></li>
-                  {% endfor %}
-                  </ul>
-                </li>
-                {% endif %}
-                {% if existsIn(text, "post_otEvents") == true %}
-                <li><label>Post otEvents:</label>
-                  <ul id="post_otEvents">
-                  {% for event in text.post_otEvents %}
-                    <li><input class="small" value="{{event}}"></li>
-                  {% endfor %}
-                  </ul>
-                </li>
-                {% endif %}
-                {% if existsIn(text, "pre_pEvents") == true %}
-                <li><label>Pre pEvents:</label>
-                  <ul id="pre_pEvents">
-                  {% for event in text.pre_pEvents %}
-                    <li><input class="small" value="{{event}}"></li>
-                  {% endfor %}
-                  </ul>
-                </li>
-                {% endif %}
-                {% if existsIn(text, "pre_otEvents") == true %}
-                <li><label>Pre otEvents:</label>
-                  <ul id="pre_otEvents">
-                  {% for event in text.pre_otEvents %}
-                    <input class="small" value="{{event}}"></li>
-                  {% endfor %}
-                  </ul>
-                </li>
-                {% endif %}
-              </ul>
               </li>
             {% endfor %}
             {% else %}
               <li>
-              <ul>
-                <li><label>Speaker:</label> 
-                  <input id="speaker" placeholder="speaker"></li>
-                <li><label>Text:</label>
-                  <textarea id="text"></textarea></li>
-              </ul>
+                <input placeholder="character id">
+                <input value="{}">
+                <span class="fas fa-plus add_elem" onclick="add_elem1()">
               </li>
             {% endif %}
-          </ul>
-      </li>
-      <li><label>Characters:</label>
-        <ul id="characters">
-          {% if exists("characters") == true %}
-          {% for char in characters %}
-            <li>
-              {%for attr in char %}
-                <input value={{attr}}>
-              {% endfor %}
-            </li>
-          {% endfor %}
-          {% else %}
-            <input placeholder="character id" value="">
-            <input value="{}">
-          {% endif %}
-         </ul>
-      </li>
+           </ul>
+        </li>
           
+        <!-- Details (placeholders for non-set-values) -->
         <li><label>Details:</label>
           <ul id="details">
+            {% if exists("details") == true %}
             {% for detail in details %}
             <li>
               {% for attr in detail %}
                 <input value={{attr}}>
               {% endfor %}
+              {% if loop.is_last == true %}
+                  <span class="fas fa-plus add_elem" onclick="add_elem1('details')">
+              {% endif %}
             </li>
             {% endfor %}
+            {% else %}
+              <li>
+                <input placeholder="detail id">
+                <input value="{}">
+                <span class="fas fa-plus add_elem" onclick="add_elem1('details')">
+              </li>
+            {% endif %}
           </ul>
         </li>
-        <li><label>Exits:</label>
-          <ul id="exits">
-            {% for key, val in exits %}
+
+        <!-- Items (placeholders for non-set-values) -->
+        <li><label>Items:</label>
+          <ul id="items">
+            {% if exists("items") == true %}
+            {% for item in items %}
             <li>
-                <input id="exit" value="{{ key }}">
-                <input id="exit" value="{{ val.name }}">
-                <input style="width: 3em;" id="exit" value="{{ val.prep }}">
+              {% for attr in item %}
+                <input value={{attr}}>
+              {% endfor %}
+              {% if loop.is_last == true %}
+                  <span class="fas fa-plus add_elem" onclick="add_elem1('items')">
+              {% endif %}
             </li>
             {% endfor %}
+            {% else %}
+              <li>
+                <input placeholder="item id">
+                <input value="{}">
+                <span class="fas fa-plus add_elem" onclick="add_elem1('items')">
+              </li>
+            {% endif %}
+          </ul>
+        </li>
+        
+        <!-- Handlers (placeholders for non-set-values) -->
+        <li><label>Handlers:</label>
+          <ul id="handlers">
+            {% for handler in default(handlers, [{}]) %}
+            <li>
+                {% if existsIn(handler, "id") == true %}
+                  <input id="id" value="{{handler.id)}}">
+                  <input id="id" value="{{handler.string)}}">
+                  <input id="id" value="{{default(handler.priority, 0)}}">
+                {% else %}
+                  <input id="id" placeholder="function">
+                  <input id="id" placeholder="command">
+                  <input id="id" placeholder="priority">
+                {% endif %}
+            </li>
+          {% endfor %}
           </ul>
         </li>
       </ul>
