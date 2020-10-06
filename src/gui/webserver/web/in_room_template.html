@@ -1,36 +1,4 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="utf-8">
-    <title>Game*Creator - {{name}}</title>
-
-    <link href="/favicon.png" rel="icon" type="image/png"/>
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-    <link href="web/general.css" rel="stylesheet">
-    <link href="web/object.css" rel="stylesheet">
-
-    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
-    <script src='web/object.js'></script>
-</head>
-
-<body>
-<nav aria-label="breadcrumb">
-    <ol class=breadcrumb>
-        <li class="breadcrumb-item"><a href="/">Game*Creator</a></li>
-        <li class="breadcrumb-item"><a href="login">Login</a></li>
-        <li class="breadcrumb-item"><a href="overview">Overview</a></li>
-        <li class="breadcrumb-item"><a href="world_{{header.world}}">{{header.world}}</a></li>
-        <li class="breadcrumb-item"><a href="world_{{header.world}}_category_{{header.category}}">{{header.category}}</a></li>
-        <li class="breadcrumb-item"><a href="world_{{header.world}}_category_{{header.category}}_sub_{{header.sub}}">{{header.sub}}</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><a>{{id}}</a></li>
-    </ol>
-</nav>
-
-<div class="top_right">
-  <img src="web/logo.png" style="margin-bottom:0.5em;"><br>
-</div>
+{% include "temp_header" %}
 
 <div class="box_overview center_in_box">
   <h1>{{name}}</h1>
@@ -50,106 +18,78 @@
         <li><label>Exits:</label>
           <ul id="exits">
             {% for key, val in default(exits, {"": {}}) %}
-            <li>
-                <input value="{{ key }}">
-                <input value="{{ default(val.name, "") }}">
-                <input style="width: 3em;" value="{{ default(val.prep, "") }}">
-            </li>
-            {% if loop.is_last == true %}
-              <span class="fas fa-plus add_elem" onclick="add_exit()">
-            {% endif %}
+              <li>
+                <input placeholder="linked_room id" value="{{ key }}">
+                <input placeholder="name" value="{{ default(val.name, "") }}">
+                <input placeholder="preposition"style="width: 4em;"value="{{default(val.prep,"")}}">
+                <span class="del_elem" onclick="del_elem('exits', '{{loop.index}}')">-</span>
+              {% if loop.is_last == true %}
+                <span class="add_elem" onclick="add_elem2('exits', '{{loop.index}}')">+</span>
+              {% endif %}
+              </li>
             {% endfor %}
           </ul>
         </li>
 
-        <!-- Characters (placeholders for non-set-values) -->
+        <!-- Characters (default value for non-set-values) -->
         <li><label>Characters:</label>
           <ul id="characters">
-            {% if exists("characters") == true %}
-            {% for char in characters %}
+            {% for char in default(characters, [["", {}]]) %}
               <li>
-                {%for attr in char %}
-                  <input value={{attr}}>
-                {% endfor %}
+                <input placeholder="character id" value={{char.0}}>
+                <input placeholder="custom attributes" value={{char.1}}>
                 {% if loop.is_last == true %}
-                  <span class="fas fa-plus add_elem" onclick="add_elem1('characters')">
+                  <span class="add_elem" onclick="add_elem1('characters')">+</span>
                 {% endif %}
               </li>
             {% endfor %}
-            {% else %}
-              <li>
-                <input placeholder="character id">
-                <input value="{}">
-                <span class="fas fa-plus add_elem" onclick="add_elem1()">
-              </li>
-            {% endif %}
-           </ul>
+          </ul>
         </li>
           
-        <!-- Details (placeholders for non-set-values) -->
+        <!-- Details (default value for non-set-values) -->
         <li><label>Details:</label>
           <ul id="details">
-            {% if exists("details") == true %}
-            {% for detail in details %}
-            <li>
-              {% for attr in detail %}
-                <input value={{attr}}>
-              {% endfor %}
-              {% if loop.is_last == true %}
-                  <span class="fas fa-plus add_elem" onclick="add_elem1('details')">
-              {% endif %}
-            </li>
-            {% endfor %}
-            {% else %}
+            {% for detail in default(details, [["", {}]]) %}
               <li>
-                <input placeholder="detail id">
-                <input value="{}">
-                <span class="fas fa-plus add_elem" onclick="add_elem1('details')">
+                <input placeholder="detail id" value={{detail.0}}>
+                <input placeholder="custom attributes" value={{detail.1}}>
+                {% if loop.is_last == true %}
+                  <span class="add_elem" onclick="add_elem1('details')">+</span>
+                {% endif %}
               </li>
-            {% endif %}
+            {% endfor %}
           </ul>
         </li>
 
-        <!-- Items (placeholders for non-set-values) -->
+        <!-- Items (default value for non-set-values) -->
         <li><label>Items:</label>
           <ul id="items">
-            {% if exists("items") == true %}
-            {% for item in items %}
-            <li>
-              {% for attr in item %}
-                <input value={{attr}}>
-              {% endfor %}
-              {% if loop.is_last == true %}
-                  <span class="fas fa-plus add_elem" onclick="add_elem1('items')">
-              {% endif %}
-            </li>
-            {% endfor %}
-            {% else %}
+            {% for item in default(items, [["", {}]]) %}
               <li>
-                <input placeholder="item id">
-                <input value="{}">
-                <span class="fas fa-plus add_elem" onclick="add_elem1('items')">
+                <input placeholder="item id" value={{item.0}}>
+                <input placeholder="custom attributes" value={{item.1}}>
+                {% if loop.is_last == true %}
+                  <span class="add_elem" onclick="add_elem1('items')">+</span>
+                {% endif %}
               </li>
-            {% endif %}
+            {% endfor %}
           </ul>
         </li>
         
-        <!-- Handlers (placeholders for non-set-values) -->
+        <!-- Handlers (default value for non-set-values) -->
         <li><label>Handlers:</label>
           <ul id="handlers">
             {% for handler in default(handlers, [{}]) %}
-            <li>
-                {% if existsIn(handler, "id") == true %}
-                  <input id="id" value="{{handler.id)}}">
-                  <input id="id" value="{{handler.string)}}">
-                  <input id="id" value="{{default(handler.priority, 0)}}">
-                {% else %}
-                  <input id="id" placeholder="function">
-                  <input id="id" placeholder="command">
-                  <input id="id" placeholder="priority">
+              <li>
+                <input id="id" placeholder="function" value="{{default(handler.id, "")}}">
+                <input id="id" placeholder="command" value="{{default(handler.string, "")}}">
+                <input id="id" placeholder="priority" style="width: 3em;" 
+                    value="{{default(handler.priority, 0)}}">
+                {% if loop.is_last == true %}
+                <span class="add_elem" onclick="add_elem2('handlers')">+</span>
                 {% endif %}
-            </li>
-          {% endfor %}
+              </li>
+            {% endfor %}
           </ul>
         </li>
       </ul>
