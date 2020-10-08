@@ -52,9 +52,9 @@
   cursor: pointer;
 }
 
-.add_elem {
+.mod_elem {
   padding: 0.5em;
 }
-.add_elem:hover {
+.mod_elem:hover {
   cursor: pointer;
 }

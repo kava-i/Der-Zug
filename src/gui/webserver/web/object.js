@@ -1,15 +1,15 @@
 
 function expand(element) {
   var ul = document.getElementById(element);
-  var childern = ul.children;
-  for (var i=0; i<childern.length; i++) {
-    var elem = childern[i];
+  var children = ul.children;
+  for (var i=0; i<children.length; i++) {
+    var elem = children[i];
     var elem_input = elem.getElementsByTagName("input")[0];
     console.log(elem.id, ", ", elem.value); 
     if (elem.style.display == "none" && elem.id=="optional" && elem_input.value == "")
-      childern[i].style.display = "block";
+      children[i].style.display = "block";
     else if(elem.id == "optional" && elem_input.value == "")
-      childern[i].style.display = "none";
+      children[i].style.display = "none";
   }
 }
 
@@ -22,15 +22,37 @@ function ChangeIndexOfClick(elem, x) {
   elem.setAttribute("onclick", new_onclick );
 }
 
-function del_elem(element, num) {
-  console.log("Deleting element: ", element, ", number: ", num);
-  var ul = document.getElementById(element);
-  ul.removeChild(ul.children[num]);
+function CreateModElemButton(func, element, index) {
+  var sp = document.createElement("span");
+  sp.setAttribute("class", "mod_elem");
+  sp.setAttribute("onclick", func + "('" + element + "', " + index + ")");
+  if (func.indexOf("del") != -1) 
+    sp.innerHTML = "-";
+  else if (func.indexOf("add") != -1) 
+    sp.innerHTML = "+";
+  return sp;
+}
 
-  //Decrease values of elements after deleted elements
-  for (var i=num; i<ul.children.length; i++) {
-    ChangeIndexOfClick(ul.children[i].getElementsByTagName("span")[0], -1)
+function del_elem(element, index) {
+  console.log("Deleting element: ", element, ", number: ", index);
+  //Get list and childern
+  var ul = document.getElementById(element)
+  var list_elems = ul.children;
+  
+  //If last element, move "add-elem"-span to prior element and change onclick function
+  console.log(list_elems.length, ", ", index);
+  if (list_elems.length > 1 && list_elems.length-1 == index) {
+    var new_index = parseInt(index) -1;
+    var func = "add_elem_list";
+    if (element == "exits" || element == "handlers")
+      func = "add_elem_map";
+    list_elems[new_index].appendChild(CreateModElemButton(func, element, new_index));
   }
+
+  //Remove element and decrease values of elements after deleted element
+  ul.removeChild(list_elems[index]);
+  for (var i=index; i<list_elems.length; i++)
+    ChangeIndexOfClick(list_elems[i].getElementsByTagName("span")[0], -1);
 }
 
 function add_elem_list(element) {
@@ -62,18 +84,11 @@ function add_elem_map(element, index) {
     li.appendChild(inp);
   }
 
-  //Get "old" "add-elem" span and change onclick function
-  ChangeIndexOfClick(document.getElementById(element).children[index].
-    getElementsByTagName("span")[1], 1);
-
-  //Create "del-elem" span.
-  var sp = document.createElement("span");
-  sp.setAttribute("class", "add_elem");
-  sp.setAttribute("onclick", "del_elem('" + element + "', " + new_index + ")");
-  sp.innerHTML = "-";
-
-  //Add both to list-element. Then add element to list.
-  li.appendChild(sp);
-  li.appendChild(add_elem);
+  //Delete old "add-elem" button, and add a new one. Also add "del-elem"-button
+  var old_del_btn=document.getElementById(element).children[index].getElementsByTagName("span")[1];
+  old_del_btn.parentNode.removeChild(old_del_btn);
+  var new_index = parseInt(index)+1;
+  li.appendChild(CreateModElemButton("del_elem", element, new_index));
+  li.appendChild(CreateModElemButton("add_elem_map", element, new_index));
   document.getElementById(element).appendChild(li);
 }

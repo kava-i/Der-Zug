@@ -8,3 +8,5 @@
 0	4414	1601978446883122258	CMakeFiles/game_builder.o.dir/src/users/user_manager.cc.o	5956fa62506304bf
 1	5368	1601988961302679266	CMakeFiles/game_builder.o.dir/src/users/user.cc.o	23336bd69f1d1f5f
 5368	5990	1601988961926676428	../webserver/game_builder.o	d169a3b8112219ca
+3	3736	1602173951348086881	CMakeFiles/game_builder.o.dir/src/users/user.cc.o	23336bd69f1d1f5f
+3736	4080	1602173951692077870	../webserver/game_builder.o	d169a3b8112219ca
