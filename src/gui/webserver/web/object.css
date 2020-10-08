@@ -28,6 +28,10 @@
   height: 5em;
   font-size: 0.7em;
 }
+
+.m_input {
+  margin-right: 0.9em;
+}
 .free_width {
   width: auto;
 }
@@ -49,7 +53,7 @@
 }
 
 .add_elem {
-  padding:1em;
+  padding: 0.5em;
 }
 .add_elem:hover {
   cursor: pointer;

@@ -13,6 +13,15 @@ function expand(element) {
   }
 }
 
+function ChangeIndexOfClick(elem, x) {
+  var onclick = elem.getAttribute("onclick") 
+  var firstDigit = onclick.match(/\d/);
+  var new_num = parseInt(firstDigit) + x;
+  var pos = onclick.indexOf(firstDigit);
+  var new_onclick = onclick.substr(0, pos) + new_num + onclick.substr(pos+1)
+  elem.setAttribute("onclick", new_onclick );
+}
+
 function del_elem(element, num) {
   console.log("Deleting element: ", element, ", number: ", num);
   var ul = document.getElementById(element);
@@ -20,17 +29,11 @@ function del_elem(element, num) {
 
   //Decrease values of elements after deleted elements
   for (var i=num; i<ul.children.length; i++) {
-    var elem_del = ul.children[i].getElementsByTagName("span")[0];
-    var onclick = elem_del.getAttribute("onclick") 
-    var firstDigit = onclick.match(/\d/);
-    var new_num = parseInt(firstDigit)-1;
-    var pos = onclick.indexOf(firstDigit);
-    var new_onclick = onclick.substr(0, pos) + new_num + onclick.substr(pos+1)
-    elem_del.setAttribute("onclick", new_onclick );
+    ChangeIndexOfClick(ul.children[i].getElementsByTagName("span")[0], -1)
   }
 }
 
-function add_elem1(element) {
+function add_elem_list(element) {
   var li = document.createElement("li");
   var id = document.createElement("input");
   id.placeholder = element.substr(0, element.length-1) + " id";
@@ -42,27 +45,35 @@ function add_elem1(element) {
   document.getElementById(element).appendChild(li);
 }
 
-function add_elem2(element, index) {
+function add_elem_map(element, index) {
   var placeholders = [];
   if (element == "exits")
     placeholders = ["linked_room id", "name", "preposition"];
   else if (element == "handlers")
     placeholders = ["function", "command", "priority"];
 
+  //Add input fields matching element-type
   var li = document.createElement("li");
   for (var i = 0; i<3; i++) {
     var inp = document.createElement("input");
-    if (i!=2) inp.style="margin-right: 1em;";
+    inp.setAttribute("class", "m_input");
     if (i==2) inp.style="width: 4em;";
     inp.placeholder = placeholders[i];
     li.appendChild(inp);
   }
+
+  //Get "old" "add-elem" span and change onclick function
+  ChangeIndexOfClick(document.getElementById(element).children[index].
+    getElementsByTagName("span")[1], 1);
+
+  //Create "del-elem" span.
   var sp = document.createElement("span");
-  sp.setAttribute("class", "del_elem");
-  index+=1;
-  sp.setAttribute("onclick", "del_elem('element', index)");
+  sp.setAttribute("class", "add_elem");
+  sp.setAttribute("onclick", "del_elem('" + element + "', " + new_index + ")");
   sp.innerHTML = "-";
-  sp.style="margin-left: 0.5em;";
+
+  //Add both to list-element. Then add element to list.
   li.appendChild(sp);
+  li.appendChild(add_elem);
   document.getElementById(element).appendChild(li);
 }

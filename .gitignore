@@ -1,6 +1,8 @@
 bin/*
 Testing/*
 build/*
+src/textadventure/build/
+src/gui/build/
 dictionary.txt
 src/dictionary.txt
 EIG.txt

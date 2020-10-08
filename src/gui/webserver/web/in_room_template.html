@@ -22,9 +22,9 @@
                 <input placeholder="linked_room id" value="{{ key }}">
                 <input placeholder="name" value="{{ default(val.name, "") }}">
                 <input placeholder="preposition"style="width: 4em;"value="{{default(val.prep,"")}}">
-                <span class="del_elem" onclick="del_elem('exits', '{{loop.index}}')">-</span>
+                <span class="add_elem" onclick="del_elem('exits', '{{loop.index}}')">-</span>
               {% if loop.is_last == true %}
-                <span class="add_elem" onclick="add_elem2('exits', '{{loop.index}}')">+</span>
+                <span class="add_elem" onclick="add_elem_map('exits', '{{loop.index}}')">+</span>
               {% endif %}
               </li>
             {% endfor %}
@@ -39,7 +39,7 @@
                 <input placeholder="character id" value={{char.0}}>
                 <input placeholder="custom attributes" value={{char.1}}>
                 {% if loop.is_last == true %}
-                  <span class="add_elem" onclick="add_elem1('characters')">+</span>
+                  <span class="add_elem" onclick="add_elem_list('characters')">+</span>
                 {% endif %}
               </li>
             {% endfor %}
@@ -54,7 +54,7 @@
                 <input placeholder="detail id" value={{detail.0}}>
                 <input placeholder="custom attributes" value={{detail.1}}>
                 {% if loop.is_last == true %}
-                  <span class="add_elem" onclick="add_elem1('details')">+</span>
+                  <span class="add_elem" onclick="add_elem_list('details')">+</span>
                 {% endif %}
               </li>
             {% endfor %}
@@ -69,7 +69,7 @@
                 <input placeholder="item id" value={{item.0}}>
                 <input placeholder="custom attributes" value={{item.1}}>
                 {% if loop.is_last == true %}
-                  <span class="add_elem" onclick="add_elem1('items')">+</span>
+                  <span class="add_elem" onclick="add_elem_list('items')">+</span>
                 {% endif %}
               </li>
             {% endfor %}
@@ -86,7 +86,7 @@
                 <input id="id" placeholder="priority" style="width: 3em;" 
                     value="{{default(handler.priority, 0)}}">
                 {% if loop.is_last == true %}
-                <span class="add_elem" onclick="add_elem2('handlers')">+</span>
+                <span class="add_elem" onclick="add_elem_map('handlers')">+</span>
                 {% endif %}
               </li>
             {% endfor %}
