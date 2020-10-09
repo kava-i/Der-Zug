@@ -13,26 +13,6 @@ function expand(element) {
   }
 }
 
-function ChangeIndexOfClick(elem, x) {
-  var onclick = elem.getAttribute("onclick") 
-  var firstDigit = onclick.match(/\d/);
-  var new_num = parseInt(firstDigit) + x;
-  var pos = onclick.indexOf(firstDigit);
-  var new_onclick = onclick.substr(0, pos) + new_num + onclick.substr(pos+1)
-  elem.setAttribute("onclick", new_onclick );
-}
-
-function CreateModElemButton(func, element, index) {
-  var sp = document.createElement("span");
-  sp.setAttribute("class", "mod_elem");
-  sp.setAttribute("onclick", func + "('" + element + "', " + index + ")");
-  if (func.indexOf("del") != -1) 
-    sp.innerHTML = "-";
-  else if (func.indexOf("add") != -1) 
-    sp.innerHTML = "+";
-  return sp;
-}
-
 function del_elem(element, index) {
   console.log("Deleting element: ", element, ", number: ", index);
   //Get list and childern
@@ -55,40 +35,73 @@ function del_elem(element, index) {
     ChangeIndexOfClick(list_elems[i].getElementsByTagName("span")[0], -1);
 }
 
-function add_elem_list(element) {
+function add_elem_list(element, index) {
   var li = document.createElement("li");
-  var id = document.createElement("input");
-  id.placeholder = element.substr(0, element.length-1) + " id";
-  id.style="margin-right:1em";
-  var val = document.createElement("input");
-  val.value = "{}";
-  li.appendChild(id);
-  li.appendChild(val);
+
+  //Create input fields (id, value/ attributes).
+  li.appendChild(CreateInput(element.substr(0, element.length-1) + " id", "", ""));
+  li.appendChild(CreateInput("custom attributes", "{}", ""));
+
+  //Delete old "add-elem" button, and add a new one. Also add "del-elem"-button
+  DelElem(element, index, "span", 1);
+  li.appendChild(CreateModElemButton("del_elem", element, index+1));
+  li.appendChild(CreateModElemButton("add_elem_list", element, index+1));
   document.getElementById(element).appendChild(li);
 }
 
 function add_elem_map(element, index) {
-  var placeholders = [];
-  if (element == "exits")
-    placeholders = ["linked_room id", "name", "preposition"];
-  else if (element == "handlers")
+  var placeholders = ["linked_room id", "name", "preposition"];
+  if (element == "handlers")
     placeholders = ["function", "command", "priority"];
 
   //Add input fields matching element-type
   var li = document.createElement("li");
   for (var i = 0; i<3; i++) {
-    var inp = document.createElement("input");
-    inp.setAttribute("class", "m_input");
-    if (i==2) inp.style="width: 4em;";
-    inp.placeholder = placeholders[i];
-    li.appendChild(inp);
+    if (i==2)
+      li.appendChild(CreateInput(placeholders[i], "", "width: 4em"));
+    else 
+      li.appendChild(CreateInput(placeholders[i], "", ""));
   }
 
   //Delete old "add-elem" button, and add a new one. Also add "del-elem"-button
-  var old_del_btn=document.getElementById(element).children[index].getElementsByTagName("span")[1];
-  old_del_btn.parentNode.removeChild(old_del_btn);
-  var new_index = parseInt(index)+1;
-  li.appendChild(CreateModElemButton("del_elem", element, new_index));
-  li.appendChild(CreateModElemButton("add_elem_map", element, new_index));
+  DelElem(element, index, "span", 1);
+  li.appendChild(CreateModElemButton("del_elem", element, index+1));
+  li.appendChild(CreateModElemButton("add_elem_map", element, index+1));
   document.getElementById(element).appendChild(li);
 }
+
+function CreateInput(placeholder, value, style) {
+  var inp = document.createElement("input");
+  inp.setAttribute("class", "m_input");
+  inp.placeholder = placeholder;
+  inp.value = value;
+  if (style != "") inp.style = style;
+  return inp;
+}
+
+function ChangeIndexOfClick(elem, x) {
+  var onclick = elem.getAttribute("onclick") 
+  var firstDigit = onclick.match(/\d/);
+  var new_num = parseInt(firstDigit) + x;
+  var pos = onclick.indexOf(firstDigit);
+  var new_onclick = onclick.substr(0, pos) + new_num + onclick.substr(pos+1)
+  elem.setAttribute("onclick", new_onclick );
+}
+
+function CreateModElemButton(func, element, index) {
+  var sp = document.createElement("span");
+  sp.setAttribute("class", "mod_elem");
+  sp.setAttribute("onclick", func + "('" + element + "', " + index + ")");
+  if (func.indexOf("del") != -1) 
+    sp.innerHTML = "-";
+  else if (func.indexOf("add") != -1) 
+    sp.innerHTML = "+";
+  return sp;
+}
+
+function DelElem(element, index, tag, num) {
+  var elem =document.getElementById(element).children[index].
+    getElementsByTagName(tag)[num];
+  elem.parentNode.removeChild(elem);
+}
+

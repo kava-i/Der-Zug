@@ -22,9 +22,9 @@
                 <input placeholder="linked_room id" value="{{ key }}">
                 <input placeholder="name" value="{{ default(val.name, "") }}">
                 <input placeholder="preposition"style="width: 4em;"value="{{default(val.prep,"")}}">
-                <span class="mod_elem" onclick="del_elem('exits', '{{loop.index}}')">-</span>
+                <span class="mod_elem" onclick="del_elem('exits',{{loop.index}})">-</span>
               {% if loop.is_last == true %}
-                <span class="mod_elem" onclick="add_elem_map('exits', '{{loop.index}}')">+</span>
+                <span class="mod_elem" onclick="add_elem_map('exits',{{loop.index}})">+</span>
               {% endif %}
               </li>
             {% endfor %}
@@ -38,9 +38,9 @@
               <li>
                 <input placeholder="character id" value={{char.0}}>
                 <input placeholder="custom attributes" value={{char.1}}>
-                <span class="mod_elem" onclick="del_elem('exits', '{{loop.index}}')">-</span>
+                <span class="mod_elem" onclick="del_elem('characters',{{loop.index}})">-</span>
                 {% if loop.is_last == true %}
-                  <span class="mod_elem" onclick="add_elem_list('characters')">+</span>
+                <span class="mod_elem" onclick="add_elem_list('characters',{{loop.index}})">+</span>
                 {% endif %}
               </li>
             {% endfor %}
@@ -54,9 +54,9 @@
               <li>
                 <input placeholder="detail id" value={{detail.0}}>
                 <input placeholder="custom attributes" value={{detail.1}}>
-                <span class="add_elem" onclick="del_elem('exits', '{{loop.index}}')">-</span>
+                <span class="mod_elem" onclick="del_elem('details',{{loop.index}})">-</span>
                 {% if loop.is_last == true %}
-                  <span class="add_elem" onclick="add_elem_list('details')">+</span>
+                <span class="mod_elem" onclick="add_elem_list('details',{{loop.index}})">+</span>
                 {% endif %}
               </li>
             {% endfor %}
@@ -70,9 +70,9 @@
               <li>
                 <input placeholder="item id" value={{item.0}}>
                 <input placeholder="custom attributes" value={{item.1}}>
-                <span class="mod_elem" onclick="del_elem('exits', '{{loop.index}}')">-</span>
+                <span class="mod_elem" onclick="del_elem('items',{{loop.index}})">-</span>
                 {% if loop.is_last == true %}
-                  <span class="mod_elem" onclick="add_elem_list('items')">+</span>
+                <span class="mod_elem" onclick="add_elem_list('items',{{loop.index}})">+</span>
                 {% endif %}
               </li>
             {% endfor %}
@@ -88,9 +88,9 @@
                 <input placeholder="command" value="{{default(handler.string, "")}}">
                 <input placeholder="priority" style="width: 4em;" 
                     value="{{default(handler.priority, 0)}}">
-                <span class="mod_elem" onclick="del_elem('handlers','{{loop.index}}')">-</span>
+                <span class="mod_elem" onclick="del_elem('handlers',{{loop.index}})">-</span>
                 {% if loop.is_last == true %}
-                <span class="mod_elem" onclick="add_elem_map('handlers','{{loop.index}}')">+</span>
+                <span class="mod_elem" onclick="add_elem_map('handlers',{{loop.index}})">+</span>
                 {% endif %}
               </li>
             {% endfor %}
