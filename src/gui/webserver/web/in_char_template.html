@@ -1,0 +1,72 @@
+{% include "temp_header" %}
+
+<div class="box_overview center_in_box">
+  <h1>{{name}}</h1>
+    <div class="object">
+      <ul>
+
+        <!-- Name and ID (default value for non-set-values) -->
+        <li><label>Name:</label> <input id="name" value="{{ default(name, "") }}">
+        <li><label>Id:</label> <input id="id" value="{{ default(id, "") }}">
+
+        <!-- Description (added by include) expand non-set optional values -->
+        <li id=description"><label>Description:</label> 
+          {% include "temp_description" %}
+        </li>
+
+        <!-- Attributes (default value for non-set-values) -->
+        <li><label>HP:</label> <input id="hp" value="{{ default(hp, 10) }}">
+        <li><label>Strength:</label> <input id="id" value="{{ default(strength, 10) }}">
+
+        <!-- Items (default value for non-set-values) -->
+        <li><label>Items:</label>
+          <ul id="items">
+            {% for item in default(items, [["", {}]]) %}
+              <li>
+                <input placeholder="item id" value={{item.0}}>
+                <input placeholder="custom attributes" value={{item.1}}>
+                <span class="mod_elem" onclick="del_elem('items',{{loop.index}})">-</span>
+                {% if loop.is_last == true %}
+                <span class="mod_elem" onclick="add_elem_list('items',{{loop.index}})">+</span>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </li>
+        
+        <!-- Handlers (default value for non-set-values) -->
+        <li><label>Handlers:</label>
+          <ul id="handlers">
+            {% for handler in default(handlers, [{}]) %}
+              <li>
+                <input placeholder="function" value="{{default(handler.id, "")}}">
+                <input placeholder="command" value="{{default(handler.string, "")}}">
+                <input placeholder="priority" style="width: 4em;" 
+                    value="{{default(handler.priority, 0)}}">
+                <span class="mod_elem" onclick="del_elem('handlers',{{loop.index}})">-</span>
+                {% if loop.is_last == true %}
+                <span class="mod_elem" onclick="add_elem_map('handlers',{{loop.index}})">+</span>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        </li>
+      </ul>
+
+      <button id="write" class="pure-button" onclick="OpenWriteModal('{{name}}')">Write</button>
+
+    </div>
+    <div id="modal_write" class="modal">
+      <div class="modal-content">
+        <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
+        <div class="content_center">
+          <div class="item"><p id="check_msg" elem_json=""></div>
+          <div class="item"><p id="display_json">
+          <div class="item"><p class="user_error"></p></div>
+          <div><button type="button" class="pure-button" id="btn_del_elem"
+                                     onclick="WriteElem()">Write</button></div>
+        </div>
+      </div>
+    </div>
+
+</div>
