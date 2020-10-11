@@ -147,7 +147,7 @@ std::string User::GetObject(std::string world, std::string category,
   inja::Environment env;
   inja::Template temp;
   if (category == "rooms") {
-    inja::Template description_template = env.parse_template("web/text_template.html");
+    inja::Template description_template = env.parse_template("web/description_template.html");
     env.include_template("web/temp_description", description_template);
 
     inja::Template object_header_template = env.parse_template("web/object_header_template.html");
