@@ -75,7 +75,9 @@ body {
 
 .pure-button:hover{
   cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.5);
 }
+
 .pure-button-def:active {
   background-color: green;
 }

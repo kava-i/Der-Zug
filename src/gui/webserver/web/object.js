@@ -2,6 +2,131 @@
  * @author fux (georgbuechner)
  */
 
+// ***** ***** GENERATE JSONS ***** ***** //
+
+function GenerateJson() {
+  var json = new Object();
+  json.name = document.getElementById("name").value;
+  json.id = document.getElementById("id").value;
+  json.description = GenerateText();
+  json.exits = GenerateExits();
+  json.handlers = GenerateHandler();
+  json.characters = GenerateListTypes2("characters");
+  json.details = GenerateListTypes2("details");
+  json.items = GenerateListTypes2("items");
+  console.log(json);
+  return json;
+}
+
+function GenerateText() {
+  var json = []
+  var texts = document.getElementById("description");
+  for (var i=0; i<texts.children.length; i++) {
+    var ul = document.getElementById("description_"+i);
+    var text = new Object();
+    text.speaker = ul.children[0].getElementsByTagName("input")[0].value;
+    text.text = ul.children[1].getElementsByTagName("textarea")[0].value;
+    var logic = ul.children[2].getElementsByTagName("input")[0].value;
+    if (logic != "") text.logic = logic;
+    var updates = ul.children[3].getElementsByTagName("input")[0].value;
+    console.log("UPDATES: ", updates);
+    if (updates != "{}") text.updates = JSON.parse(updates);
+    var pre_pEvents = GenerateListTypes1(ul.children[4].getElementsByTagName("ul")[0]);
+    if (pre_pEvents.length > 0) text.pre_pEvents = pre_pEvents;
+    var pre_otEvents = GenerateListTypes1(ul.children[5].getElementsByTagName("ul")[0]);
+    if (pre_otEvents.length > 0) text.pre_otEvents = pre_otEvents;
+    var post_pEvents = GenerateListTypes1(ul.children[6].getElementsByTagName("ul")[0]);
+    if (post_pEvents.length > 0) text.post_pEvents = post_pEvents;
+    var post_otEvents = GenerateListTypes1(ul.children[7].getElementsByTagName("ul")[0]);
+    if (post_otEvents.length > 0) text.post_otEvents = post_otEvents;
+    json.push(text);
+  }
+  return json;
+}
+
+function GenerateExits() {
+  var json = {}; 
+  var elem = document.getElementById("exits");
+  for (var i=0; i<elem.children.length; i++) {
+    var obj = new Object();
+    var elems = elem.children[i].getElementsByTagName("input");
+    obj["id"] = elems[0].value;
+    obj["name"] = elems[1].value;
+    obj["prep"] = elems[2].value;
+    json[obj.id] = obj;
+  }
+  return json;
+}
+
+function GenerateHandler() {
+  var json = {}; 
+  var elem = document.getElementById("handlers");
+  for (var i=0; i<elem.children.length; i++) {
+    var obj = new Object();
+    var elems = elem.children[i].getElementsByTagName("input");
+    obj["id"] = elems[0].value;
+    obj["string"] = elems[1].value;
+    obj["priority"] = parseInt(elems[2].value);
+    json[obj.id] = obj;
+  }
+  return json;
+}
+
+function GenerateListTypes1(elem) {
+  var json = []; 
+  for (var i=0; i<elem.children.length; i++) {
+    var str = elem.children[i].getElementsByTagName("input")[0].value;
+    if (str != "") json.push(str);
+  }
+  return json;
+}
+
+function GenerateListTypes2(element) {
+  var json = []; 
+  var elem = document.getElementById(element);
+  for (var i=0; i<elem.children.length; i++) {
+    var obj = [];
+    var elems = elem.children[i].getElementsByTagName("input");
+    if (elems[0].value == "") continue;
+    obj.push(elems[0].value);
+    obj.push(JSON.parse(elems[1].value));
+    json.push(obj);
+  }
+  return json;
+}
+
+// ***** ***** OPEN/ CLOSE MODALS, WRITE JSON ***** ***** //
+
+//Close modal when users clicks anywhere outside of the modal. (works for both)
+window.onclick = function(event)  {
+  let modal = document.getElementById("modal_write");
+  if (event.target == modal)
+    modal.style.display = "none";
+  else
+    return;
+}
+
+//Close modal, when close-span is clicked (works for both moduls)
+function CloseModul() {
+  document.getElementById("modal_write").style.display = "none";
+  window.location = window.location;
+}
+
+/**
+ * Open write modal.
+ */
+function OpenWriteModal(name) {
+  document.getElementById("modal_write").style.display = "block";
+
+  var json = GenerateJson();
+  document.getElementById("check_msg").innerHTML = "Are you sure you want to override the "
+    + " current room (" + name + ") with following json:";
+  document.getElementById("display_json").innerHTML = JSON.stringify(json, null, 4);
+  document.getElementById("check_msg").elem_json = json;
+}
+
+// ***** ***** ADD/ DELETE/ EXPAND/ ELEMENTS ***** ***** //
+
 //Expand optional values for text-elements.
 function expand(index) {
   var children = document.getElementById("description_" + index).children;
@@ -235,7 +360,7 @@ function CreateEmptyDescriptionElement(index) {
   ul.appendChild(lists[1]);
   lists[2].appendChild(CreateInput("logic", "", ""));         //Logic
   ul.appendChild(lists[2]);
-  lists[3].appendChild(CreateInput("updates", "{}", ""));       //Updates
+  lists[3].appendChild(CreateInput("updates", "{}", ""));     //Updates
   ul.appendChild(lists[3]);
   lists[4].appendChild(CreateEventType("pre_pEvents"));       //Pre_pEvents
   ul.appendChild(lists[4]);

@@ -2,6 +2,7 @@
 function CloseModul() {
   document.getElementById("modal_add_elem").style.display = "none";
   document.getElementById("modal_del_elem").style.display = "none";
+  document.getElementById("modal_write").style.display = "none";
   window.location=window.location;
 }
 
@@ -9,10 +10,13 @@ function CloseModul() {
 window.onclick = function(event)  {
   let modal1 = document.getElementById("modal_add_elem");
   let modal2 = document.getElementById("modal_del_elem");
+  let modal3 = document.getElementById("modal_write");
   if (event.target == modal1) 
     modal1.style.display = "none";
   else if (event.target == modal2)
     modal2.style.display = "none";
+  else if (event.target == modal3)
+    modal3.style.display = "none";
   else
     return;
   window.location=window.location;
@@ -24,7 +28,6 @@ window.onclick = function(event)  {
 window.onload = function() {
   if (document.getElementById("modal_add_elem").style.display == "none")
     return;
-
   var r_input_pw2 = document.getElementById("name");
   r_input_pw2.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
@@ -48,6 +51,19 @@ function OpenDelElemModal(name) {
   document.getElementById("modal_del_elem").style.display = "block";
   document.getElementById("check_msg").innerHTML = "Are you 100% sure "
     + "you want to delete <i>" + name + "</i>?";
+  document.getElementById("check_msg").elem_name=name;
+}
+
+/**
+ * Open modal to delete controller. 
+ * Modal asks user, whether he/she really wants to delete controller.
+ */
+function OpenWriteModal(name) {
+  document.getElementById("modal_write").style.display = "block";
+
+  var json = GenerateJson();
+  document.getElementById("check_msg").innerHTML = "Are you sure you want to override the "
+    + " current room (" + name + ") with following json:" + json;
   document.getElementById("check_msg").elem_name=name;
 }
 
