@@ -51,11 +51,13 @@
           </ul>
         </li>
       </ul>
-      <div id="div_text_expand_{{loop.index}}" class="expand">
-        <span title="Delete this element." onclick="del_text({{loop.index}})">-</span>
+      <div id="description_div_text_expand_{{loop.index}}" class="expand">
+        <span title="Delete this element." 
+          onclick="del_text('description',{{loop.index}})">-</span>
         <span id="description_text_expand_{{loop.index}}" class="fas fa-caret-down" 
           title="Expand optional values." onclick="expand('description',{{loop.index}})"></span>
-        <span title="Add new element here." onclick="add_text({{loop.index}})">+</span>
+        <span title="Add new element here." 
+          onclick="add_text('description',{{loop.index}})">+</span>
       </div>
     </li>
   {% endfor %}

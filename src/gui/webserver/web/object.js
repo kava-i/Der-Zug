@@ -152,9 +152,9 @@ function expand(element, index) {
 }
 
 //Delete text element from description.
-function del_text(index) {
+function del_text(element, index) {
   //Change index of following elements and delet element.
-  var elem = document.getElementById("li_description_" + index);
+  var elem = document.getElementById("li_" + element + "_" + index);
   ChangeIdOfTextElements(index+1, -1);  
   elem.parentNode.removeChild(elem);
 
@@ -164,14 +164,14 @@ function del_text(index) {
     var span = MyCreateElement("span",{"title":"Add new element here.","onclick":"add_text(-1)"});
     span.innerHTML = "+";
     div.appendChild(span);
-    document.getElementById("description").parentNode.appendChild(div); 
+    document.getElementById(element).parentNode.appendChild(div); 
   }
 }
 
 //Add a new text-element to description.
-function add_text(index) {
+function add_text(element, index) {
   //Change index of following elements, if not last.
-  var ul = document.getElementById("description");
+  var ul = document.getElementById(element);
   if (index+1 < ul.children.length)
     ChangeIdOfTextElements(index+1, 1);  
 
@@ -268,18 +268,18 @@ function ChangeIndexOfClick(elem, x) {
 }
 
 //Change all set indexes inside a text element (add value of x to index)
-function ChangeIdOfTextElements(start, x) {
-  ul = document.getElementById("description");
+function ChangeIdOfTextElements(element, start, x) {
+  ul = document.getElementById(element);
   console.log(ul);
   console.log("Starting with: ", start, ul.children.length);
   for (var i=start; i<ul.children.length; i++) {
     var new_num = i+x;
     console.log("Changed ", i, "to: ", new_num);
-    ul.children[i].id = "li_description_" + new_num;
-    ul.children[i].children[0].id = "description_" + new_num;
+    ul.children[i].id = "li_" + element + "_" + new_num;
+    ul.children[i].children[0].id = element + "_" + new_num;
     var expand_div = ul.children[i].children[1];
-    expand_div.id = "div_text_expand_" + new_num;
-    expand_div.children[1].id = "description_text_expand_" + new_num;
+    expand_div.id = element + "_div_text_expand_" + new_num;
+    expand_div.children[1].id = element + "_text_expand_" + new_num;
     ChangeIndexOfClick(expand_div.children[0], x);
     ChangeIndexOfClick(expand_div.children[1], x);
     ChangeIndexOfClick(expand_div.children[3], x);
