@@ -128,16 +128,24 @@ function OpenWriteModal(name) {
 // ***** ***** ADD/ DELETE/ EXPAND/ ELEMENTS ***** ***** //
 
 //Expand optional values for text-elements.
-function expand(index) {
-  var children = document.getElementById("description_" + index).children;
+function expand(element, index) {
+  var id_parent = element;
+  if (index === 0 ) id_parent += "_"+index;
+  var id_expand_div = element + "_text_expand";
+  if (index === 0) id_expand_div += "_"+index;
+
+  console.log(id_parent, id_expand_div);
+
+  var children = document.getElementById(id_parent).children;
   for (var i=0; i<children.length; i++) {
     var elem = children[i];
+    //console.log(elem);
     if (elem.style.display == "none" && elem.id=="optional") {
-      document.getElementById("text_expand_"+index).setAttribute("class", "fas fa-caret-up");
+      document.getElementById(id_expand_div).setAttribute("class", "fas fa-caret-up");
       elem.style.display = "block";
     }
     else if(elem.style.display != "none" && elem.id == "optional") {
-      document.getElementById("text_expand_"+index).setAttribute("class", "fas fa-caret-down");
+      document.getElementById(id_expand_div).setAttribute("class", "fas fa-caret-down");
       elem.style.display = "none";
     }
   }
@@ -262,6 +270,8 @@ function ChangeIndexOfClick(elem, x) {
 //Change all set indexes inside a text element (add value of x to index)
 function ChangeIdOfTextElements(start, x) {
   ul = document.getElementById("description");
+  console.log(ul);
+  console.log("Starting with: ", start, ul.children.length);
   for (var i=start; i<ul.children.length; i++) {
     var new_num = i+x;
     console.log("Changed ", i, "to: ", new_num);
@@ -269,7 +279,7 @@ function ChangeIdOfTextElements(start, x) {
     ul.children[i].children[0].id = "description_" + new_num;
     var expand_div = ul.children[i].children[1];
     expand_div.id = "div_text_expand_" + new_num;
-    expand_div.children[1].id = "text_expand_" + new_num;
+    expand_div.children[1].id = "description_text_expand_" + new_num;
     ChangeIndexOfClick(expand_div.children[0], x);
     ChangeIndexOfClick(expand_div.children[1], x);
     ChangeIndexOfClick(expand_div.children[3], x);
@@ -378,8 +388,8 @@ function CreateEmptyDescriptionElement(index) {
       "onclick":"del_text("+index+")"});
   span1.innerHTML = "-";
   div.appendChild(span1);
-  var span2 = MyCreateElement("span", {"id":"text_expand_"+index,"title":"Delete this element.",
-    "class":"fas fa-caret-down","onclick":"expand("+index+")"});
+  var span2 = MyCreateElement("span", {"id":"description_text_expand_"+index,"title":"Delete this element.",
+    "class":"fas fa-caret-down","onclick":"expand('description',"+index+")"});
   div.appendChild(span2);
   var span3 = MyCreateElement("span", {"title":"Add new element here.", 
     "onclick":"add_text("+index+")"});
