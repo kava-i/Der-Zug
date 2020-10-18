@@ -16,8 +16,11 @@ UserManager::UserManager(std::string main_path, std::vector<std::string> cats)
     read >> user;
     
     std::cout << p.path() << std::endl;
+    std::string backups = path_.substr(0, path.find("users"));
+    backups += "backups/" + user["username"].get<std::string>();
+    std::cout << "Backup path: " << backups << std::endl;
     users_[user["username"]] = new User(user["username"], user["password"], 
-        p.path(), categories_);
+        path, backups, categories_);
   }
   
   std::cout << users_.size() << " users initialized!" << std::endl;
@@ -45,8 +48,11 @@ void UserManager::AddUser(std::string username, std::string password) {
   nlohmann::json user;
   user["password"] = password;
   user["username"] = username;
+  std::string backups = path_.substr(0, path_.find("users"));
+  backups += "backups/" + user["username"].get<std::string>();
   std::unique_lock ul(shared_mutex_users_);
-  users_[username] = new User(username, user, path_+"/"+username, categories_);
+  users_[username] = new User(username, user, path_+"/"+username, backups, 
+      categories_);
   users_[username]->SafeUser();
 }
 

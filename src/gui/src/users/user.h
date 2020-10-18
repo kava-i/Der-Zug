@@ -5,9 +5,10 @@
 #ifndef SRC_SERVER_USER_H_
 #define SRC_SERVER_USER_H_
 
-#include <iostream>
+#include <chrono>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <map>
 #include <mutex>
 #include <shared_mutex>
@@ -16,7 +17,9 @@
 
 #include <nlohmann/json.hpp>
 #include "inja.hpp"
+
 #include <stdlib.h>
+#include <time.h>
 
 class User {
   public:
@@ -26,8 +29,8 @@ class User {
      * @param[in] username (name of user).
      * @param[in] user (json with user-data).
     */
-    User(std::string username, std::string pw, std::string path, 
-        std::vector<std::string> categories);
+    User(std::string username, std::string pw, std::string path,
+        std::string path_backup, std::vector<std::string> categories);
 
     // ** getter ** //
     std::string password() const;
@@ -55,6 +58,12 @@ class User {
     std::string GetCategory(std::string world, std::string category);
 
     /**
+     * Get Overview of a backups. 
+     * (f.e. world1/rooms = trainstation, hospital...)
+     */
+    std::string GetBackups(std::string world);
+
+    /**
      * Get Overview of a SubCategory.
      * (f.e. world1/rooms/trainstation = platform a, great_hall ...)
      */
@@ -75,11 +84,26 @@ class User {
      */
     void SafeUser() const;
 
+    /**
+     * Create a backup of given world.
+     * @param[in] world (given world)
+     * @return boolean to indicate success.
+     */
+    bool CreateBackup(std::string world);
+
+    /**
+     * Restores a backup of given world.
+     * @param[in] world (given world)
+     * @return boolean to indicate success.
+     */
+    bool RestoreBackup(std::string backup);
+
   private:
     const std::string username_;  ///< username (should be unique!)
     std::string password_;  ///< password 
     mutable std::shared_mutex shared_mtx_password_;
     const std::string path_;
+    const std::string path_backup_;
     const std::vector<std::string> categories_;
     /**
      * Construct a json with all the values from user.

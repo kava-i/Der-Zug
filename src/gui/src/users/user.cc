@@ -6,8 +6,9 @@
 
 namespace fs = std::filesystem;
 
-User::User(std::string name, std::string pw, std::string path, std::vector
-    <std::string> cats) : username_(name), path_(path), categories_(cats) {
+User::User(std::string name, std::string pw, std::string path, std::string 
+    path_backup, std::vector<std::string> cats) : username_(name), 
+    path_(path), path_backup_(path_backup), categories_(cats) {
   password_ = pw;
 }
 
@@ -49,6 +50,24 @@ std::string User::GetWorld(std::string world) {
   //Parse overview page. 
   inja::Environment env;                                                                  
   inja::Template temp = env.parse_template("web/in_world_template.html");
+  return env.render(temp, j);
+}
+
+std::string User::GetBackups(std::string world) {
+
+  //Get all backups for this world.
+  std::vector<std::string> backups;
+  for (auto& p  : fs::directory_iterator(path_backup_)) {
+    std::string backup = p.path().filename();
+    if (backup.find(world) == 0) {
+      backups.push_back(backup);
+    }
+  }
+
+  //Parse overview page. 
+  nlohmann::json j = nlohmann::json({{"world", world}, {"backups", backups}});
+  inja::Environment env;                                                                  
+  inja::Template temp = env.parse_template("web/backups_template.html");
   return env.render(temp, j);
 }
 
@@ -188,4 +207,61 @@ nlohmann::json User::ConstructJson() const {
   user["username"] = username_;
   user["password"] = password_;
   return user;
+}
+
+bool demo_exists(const fs::path& p, fs::file_status s = fs::file_status{}) {
+  if (fs::status_known(s) ? fs::exists(s) : fs::exists(p)) 
+    return true;
+  else
+    return false;
+}
+
+bool User::CreateBackup(std::string world) {
+  std::string path = path_ + "/" + world;
+  
+  if (!demo_exists(path)) return false;
+
+  //Create backup name ([word]_[YYYY-mm-dd_HH-MM-ss])
+  time_t now;
+  std::time(&now);
+  char buf_human[sizeof("YYYY-mm-dd_HH-MM-ss")];
+  strftime(buf_human, sizeof(buf_human), "%F_%T", localtime(&now));
+  std::string path_backup = path_backup_ + "/" + world + "_" + buf_human;
+  std::replace(path_backup.begin(), path_backup.end(), ':', '-');
+  std::cout << "Creating backup: " << path_backup << std::endl;
+
+  //Check if folder for this user already exists
+  if (!demo_exists(path_backup_)) {
+    std::cout << "Created path for backups: " << path_backup_ << std::endl;
+    fs::create_directory(path_backup_);
+  }
+  std::cout << "Creating backup..." << std::endl;
+  try { fs::copy(path, path_backup, fs::copy_options::recursive); }
+  catch (std::exception& e) { 
+    std::cout << "Copying failed: " << e.what() << std::endl; 
+    return false;}
+  
+  std::cout << "Done." << std::endl;
+  return true;
+}
+
+bool User::RestoreBackup(std::string backup) {
+  std::string path = path_backup_ + "/" + backup;
+  std::string path_to_world = "???";
+
+  if (!demo_exists(path)) {
+    std::cout << "Backup " << path << " does not exist!" << std::endl;
+    return false;
+  }
+
+  std::cout << "Creating backup..." << std::endl;
+  const auto copy_options = fs::copy_options::update_existing
+                          | fs::copy_options::recursive;
+  try { fs::copy(path, path_to_world , copy_options); }
+  catch (std::exception& e) { 
+    std::cout << "Copying failed: " << e.what() << std::endl; 
+    return false;}
+  
+  std::cout << "Done." << std::endl;
+  return true;
 }

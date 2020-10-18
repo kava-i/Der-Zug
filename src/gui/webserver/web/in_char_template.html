@@ -3,109 +3,104 @@
 <div class="box_overview center_in_box">
   <h1>{{name}}</h1>
     <div class="object">
-      <ul>
+      <ul id="object">
 
         <!-- Name and ID (default value for non-set-values) -->
-        <li><label>Name:</label> <input id="name" value="{{ default(name, "") }}">
-        <li><label>Id:</label> <input id="id" value="{{ default(id, "") }}">
+        <li><label>Name:</label><input id="name" value="{{ default(name, "") }}">
+        <li><label>Id:</label><input id="id" value="{{ default(id, "") }}">
 
         <!-- Description (added by include) expand non-set optional values -->
-        <li id=description"><label>Description:</label> 
+        <li custom="list">
+          <label>Description:</label> 
           {% include "temp_description" %}
         </li>
         
         <!-- Room Description (added by include) expand non-set optional values -->
-        <li id=description"><label>Room Description:</label> 
+        <li custom="list">
+          <label>Room Description:</label> 
           {% include "temp_room_description" %}
         </li>
 
+
+        <!-- Attributes like (hp, money, experience etc. -->
+        <li><label>HP:</label>
+          <input id="hp" custom="int" value="{{ default(hp, 10) }}"></li>
+        <li><label>Strength:</label>
+          <input id="strength" custom="int" value="{{ default(strength, 10) }}"></li>
+        <li><label>EP:</label>
+          <input id="hp" custom="int" value="{{ default(ep, 10) }}"></li>
+
+        <!-- Others (default value for non-set-values) -->
+        <li>
+          <label title="Characters faints, instead to die instantly.">Faint</label>
+          {% if default(faint, 1) == 1) %} 
+          <input id="faint" custom="bool" value="yes">
+          {% else %} 
+          <input id="faint" custom="bool" value="no"> 
+          {% endif %}
+        </li>
+
         <!-- Items (default value for non-set-values) -->
-        <li><label>Items:</label>
+        <li custom="list">
+          <label>Items:</label>
           <ul id="items">
             {% for item in default(items, [["", {}]]) %}
-              <li>
+              <li custom="list">
                 <input placeholder="item id" value={{item.0}}>
-                <input placeholder="custom attributes" value={{item.1}}>
+                <input custom="json" placeholder="custom attributes" value={{item.1}}>
                 <span class="mod_elem" onclick="del_elem('items',{{loop.index}})">-</span>
-                {% if loop.is_last == true %}
-                <span class="mod_elem" onclick="add_elem_list('items',{{loop.index}})">+</span>
-                {% endif %}
+                <span class="mod_elem" onclick="add_elem('items',{{loop.index}})">+</span>
               </li>
             {% endfor %}
           </ul>
         </li>
         
         <!-- Attacks (default value for non-set-values) -->
-        <li><label>Attacks:</label>
+        <li custom="map">
+          <label>Attacks:</label>
           <ul id="attacks">
             {% for key, value in default(attacks, {"":""}) %}
-              <li>
+              <li custom="pair">
                 <input placeholder="id" value="{{default(key, "")}}">
                 <input placeholder="name" value="{{default(value, "")}}">
                 <span class="mod_elem" onclick="del_elem('handlers',{{loop.index}})">-</span>
-                {% if loop.is_last == true %}
-                <span class="mod_elem" onclick="add_elem_map('handlers',{{loop.index}})">+</span>
-                {% endif %}
+                <span class="mod_elem" onclick="add_elem('handlers',{{loop.index}})">+</span>
+              </li>
+            {% endfor %}
+          </ul>
+        </li>
+        
+        <!-- Handlers (default value for non-set-values) -->
+        <li custom="list">
+          <label>Handlers:</label>
+          <ul id="handlers">
+            {% for handler in default(handlers, [{}]) %}
+              <li custom="object">
+                <input id="id" placeholder="function" value="{{default(handler.id, "")}}">
+                <input id="string" placeholder="command" value="{{default(handler.string, "")}}">
+                <input id="priority" custom="int" placeholder="priority" style="width: 4em;" 
+                    value="{{default(handler.priority, 0)}}">
+                <span class="mod_elem" onclick="del_elem('handlers',{{loop.index}})">-</span>
+                <span class="mod_elem" onclick="add_elem('handlers',{{loop.index}})">+</span>
               </li>
             {% endfor %}
           </ul>
         </li>
 
-        <!-- Optional Values -->
-        <div id="char_div_text_expand" class="expand">
-          <span id="char_text_expand" class="fas fa-caret-down" 
-                title="Expand optional values." onclick="expand('char', '')"></span>
-        </div>
-        <!-- Attributes (default value for non-set-values) -->
-        <div id="char">
-          <li id="optional" style="display:none">
-            <label>HP:</label><input id="hp" value="{{ default(hp, 10) }}"></li>
-          <li id="optional" style="display:none">
-            <label>Strength:</label><input id="id" value="{{ default(strength, 10) }}"></li>
-          <li id="optional" style="display:none">
-            <label>EP:</label><input id="hp" value="{{ default(ep, 10) }}"></li>
+        <!-- Default dialogs/ descriptions -->
+        <li>
+          <label title="only needed when no description is given. Loads a random
+            description from selected default descriptions" style="margin-right:3em;"
+            >Default Descriptions:</label>
+          <input id="defaultDescription" placeholder="default description" 
+            value="{{ default(defaultDescription, "") }}"></li>
+        <li>
+          <label title="only needed when no dialog is created. Loads a random
+            dialog from selected default dialogs" style="margin-right:3em;"
+            >Default Dialogs:</label>
+          <input id="defaultDialogs" placeholder="default dialogs" 
+            value="{{ default(defaultDialogs, "") }}"></li>
 
-
-          <!-- Default dialogs/ descriptions -->
-          <li id="optional" style="display:none">
-            <label title="only needed when no description is given. Loads a random
-              description from selected default descriptions">Default Descriptions:</label>
-            <input id="defaultDescription" value="{{ default(defaultDescription, "") }}"></li>
-            <li id="optional" style="display:none">
-            <label title="only needed when no dialog is created. Loads a random
-              dialog from selected default dialogs">Default Dialogs:</label>
-            <input id="defaultDescription" value="{{ default(defaultDialogs, "") }}"></li>
-
-          <!-- Others (default value for non-set-values) -->
-          {% if default(faint, 1) == 1) %}
-            <li id="optional" style="display:none">
-              <label title="characters faints, instead to die instantly.">Faint</label> 
-              <input id="faint" value="yes"></li>
-          {% else %}
-            <li id="optional" style="display:none">
-              <label title="characters faints, instead to die instantly.">Faint</label> 
-              <input id="faint" value="no"></li>
-          {% endif %}
-
-          <!-- Handlers (default value for non-set-values) -->
-          <li id="optional" style="display:none">
-            <label>Handlers:</label>
-            <ul id="handlers">
-              {% for handler in default(handlers, [{}]) %}
-                <li>
-                  <input placeholder="function" value="{{default(handler.id, "")}}">
-                  <input placeholder="command" value="{{default(handler.string, "")}}">
-                  <input placeholder="priority" style="width: 4em;" 
-                      value="{{default(handler.priority, 0)}}">
-                  <span class="mod_elem" onclick="del_elem('handlers',{{loop.index}})">-</span>
-                  {% if loop.is_last == true %}
-                  <span class="mod_elem" onclick="add_elem_map('handlers',{{loop.index}})">+</span>
-                  {% endif %}
-                </li>
-              {% endfor %}
-            </ul>
-          </li>
-        </div>
       </ul>
 
     <button id="write" class="pure-button" onclick="OpenWriteModal('{{name}}')">Write</button>
@@ -116,7 +111,7 @@
         <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
         <div class="content_center">
           <div class="item"><p id="check_msg" elem_json=""></div>
-          <div class="item"><p id="display_json">
+          <div class="item" style="text-align: left;"><pre id="display_json">
           <div class="item"><p class="user_error"></p></div>
           <div><button type="button" class="pure-button" id="btn_del_elem"
                                      onclick="WriteElem()">Write</button></div>

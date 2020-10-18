@@ -41,7 +41,9 @@ int main() {
   srv.Get("/world_(.*)_category_(.*)", [&](const Request& req, Response& resp) { 
       try{srv_frame.Category(req, resp); }
       catch(std::exception& e) {std::cout << e.what() << std::endl;} });
-
+  srv.Get("/backups_(.*)", [&](const Request& req, Response& resp) { 
+      try{srv_frame.Backup(req, resp); }
+      catch(std::exception& e) {std::cout << e.what() << std::endl;} });
   srv.Get("/world_(.*)", [&](const Request& req, Response& resp) { 
       try{srv_frame.World(req, resp); }
       catch(std::exception& e) {std::cout << e.what() << std::endl;} });
@@ -55,6 +57,11 @@ int main() {
       });
   srv.Post("/api/user_logout", [&](const Request& req, Response& resp)
       { srv_frame.DoLogout(req, resp); });
+  srv.Post("/api/create_backup", [&](const Request& req, Response& resp)
+      { srv_frame.RestoreCreateBackup(req, resp, true); });
+  srv.Post("/api/restor_backup", [&](const Request& req, Response& resp)
+      { srv_frame.RestoreCreateBackup(req, resp, false); });
+
 
   //html
   srv.Get("/", [&](const Request& req, Response& resp) {
@@ -73,6 +80,8 @@ int main() {
       resp.set_content(func::GetPage("web/general.js"), "application/javascript"); });
   srv.Get("/web/object.js", [&](const Request& req, Response& resp) {
       resp.set_content(func::GetPage("web/object.js"), "application/javascript"); });
+  srv.Get("/web/backup.js", [&](const Request& req, Response& resp) {
+      resp.set_content(func::GetPage("web/backup.js"), "application/javascript"); });
   srv.Get("/web/registration.js", [](const Request& req, Response& resp)
       { resp.set_content(func::GetPage("web/registration.js"), 
           "application/javascript");});

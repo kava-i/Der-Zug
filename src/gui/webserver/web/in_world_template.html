@@ -9,7 +9,10 @@
     <!-- <link rel="stylesheet", href="bootstrap/css/bootstrap.min.css"> -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
     <link href="web/general.css" rel="stylesheet">
-
+   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="web/backup.js">
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 </head>
 
@@ -39,6 +42,13 @@
             <td><a class="medium" href="world_{{world}}_category_{{cat}}">{{cat}}</a></td>
           </tr>
         {% endfor %}
+      </table>
+
+      <button class="pure-button" style="margin-bottom:0.5em;" onclick="create_backup();">
+        Create Backup</button><br>
+      <span id="create_backup_error" style="display: none;"></span><br>
+      <button class="pure-button" onclick="window.location.href='/backups_{{world}}'">
+        Show Backups</button>
     </div>
 </div>
 

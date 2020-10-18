@@ -1,6 +1,6 @@
 <ul id="roomDescription">
   {% for desc in default(description, [{"speaker":"", "text":"", "logic":"", "updates":"{}", "pre_pEvents":[], "pre_otEvents":[], "post_pEvents":[], "post_otEvents":[]}]) %}
-    <li id="li_roomDescription_{{loop.index}}">
+    <li id="li_roomDescription_{{loop.index}}" custom="list_object">
       <ul id="roomDescription_{{loop.index}}">
         <li>
           <label>Speaker:</label>
@@ -16,9 +16,10 @@
         </li>
         <li id="optional" class="full_length" style="display: none;">
           <label>Updates:</label>
-          <input id="updates" placeholder="updates" value="{{default(desc.updates, "{}")}}">
+          <input id="updates" placeholder="updates" custom="json" 
+             value="{{default(desc.updates, "{}")}}">
         </li>
-        <li id="optional" style="display: none;">
+        <li id="optional" style="display: none;" custom="list">
           <label style="width:auto;">Pre permanent Events:</label>
           <ul id="pre_pEvents">
           {% for event in default(desc.pre_pEvents, [""]) %}
@@ -26,7 +27,7 @@
           {% endfor %}
           </ul>
         </li>
-        <li id="optional" style="display: none;">
+        <li id="optional" style="display: none;" custom="list">
           <label style="width:auto;">Pre one-time Events:</label>
           <ul id="pre_otEvents">
           {% for event in default(desc.pre_otEvents, [""]) %}
@@ -34,7 +35,7 @@
           {% endfor %}
           </ul>
         </li>
-        <li id="optional" style="display: none;">
+        <li id="optional" style="display: none;" custom="list">
           <label style="width:auto;">Post permanent Events:</label>
           <ul id="post_pEvents">
           {% for event in default(desc.post_pEvents, [""])%}
@@ -42,7 +43,7 @@
           {% endfor %}
           </ul>
         </li>
-        <li id="optional" style="display: none;">
+        <li id="optional" style="display: none;" custom="list">
           <label style="width:auto;">Post one-time Events:</label>
           <ul id="post_otEvents">
           {% for event in default(desc.post_otEvents, [""]) %}
@@ -53,11 +54,11 @@
       </ul>
       <div id="roomDescription_div_text_expand_{{loop.index}}" class="expand">
         <span title="Delete this element." 
-          onclick="del_text('roomDescription',{{loop.index}})">-</span>
+          onclick="del_elem('roomDescription',{{loop.index}})">-</span>
         <span id="roomDescription_text_expand_{{loop.index}}" class="fas fa-caret-down" 
           title="Expand optional values." onclick="expand('roomDescription',{{loop.index}})"></span>
         <span title="Add new element here." 
-          onclick="add_text('roomDescription',{{loop.index}})">+</span>
+          onclick="add_elem('roomDescription',{{loop.index}})">+</span>
       </div>
     </li>
   {% endfor %}

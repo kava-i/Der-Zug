@@ -92,6 +92,27 @@ void ServerFrame::Category(const Request& req, Response& resp) const {
   }
 }
 
+void ServerFrame::Backup(const Request& req, Response& resp) const {
+  std::cout << "Category" << std::endl;
+  //Try to get username from cookie
+  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::shared_lock sl(shared_mtx_user_manager_);
+  std::string username = user_manager_.GetUserFromCookie(ptr);
+  sl.unlock();
+
+  //If user does not exist, redirect to login-page.
+  if (username == "") {
+    resp.status = 302;
+    resp.set_header("Location", "/login");
+  }
+  else {
+    sl.lock();
+    std::string page = user_manager_.GetUser(username)->GetBackups(req.matches[1]);
+    sl.unlock();
+    resp.set_content(page.c_str(), "text/html");
+  }
+}
+
 void ServerFrame::SubCategory(const Request& req, Response& resp) const {
   std::cout << "SubCategory" << std::endl;
   //Try to get username from cookie
@@ -232,3 +253,30 @@ void ServerFrame::DelUser(const Request& req, Response& resp) {
   }
 }
 
+void ServerFrame::RestoreCreateBackup(const Request& req, Response& resp, bool create) {
+  std::cout << "CreateBackup: " << req.body << std::endl;
+  //Try to get username from cookie
+  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::shared_lock sl(shared_mtx_user_manager_);
+  std::string username = user_manager_.GetUserFromCookie(ptr);
+  sl.unlock();
+
+  //If user does not exist, redirect to login-page.
+  if (username == "") {
+    resp.status = 302;
+    resp.set_header("Location", "/login");
+  }
+  else {
+    sl.lock();
+    bool success = false;
+    if (create == true)
+      success = user_manager_.GetUser(username)->CreateBackup(req.body);
+    else 
+      success = user_manager_.GetUser(username)->RestoreBackup(req.body);
+    sl.unlock();
+    if (success == true)
+      resp.status = 200;
+    else
+      resp.status = 401;
+  }
+}

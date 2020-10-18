@@ -58,6 +58,15 @@ class ServerFrame {
     void Category(const httplib::Request& req, httplib::Response& resp) const;
 
     /**
+    * Function to send backup page, redirect to login depending on status:
+    * logged in/ not logged in.
+    * f.e. world1, world2
+    * @param[in] req (reference to request)
+    * @param[in, out] resp (server response)
+    */
+    void Backup(const httplib::Request& req, httplib::Response& resp) const;
+
+    /**
     * Function to send sub_catorypage, redirect to login depending on status:
     * logged in/ not logged in.
     * f.e. bathroom, corridor...
@@ -101,6 +110,15 @@ class ServerFrame {
      * @param[in, out] resp (reference to response)
      */
     void DelUser(const httplib::Request& req, httplib::Response& resp);
+
+    /**
+     * @brief Creates a backup of the selected world.
+     * @param[in] req (reference to request)
+     * @param[in, out] resp (reference to response)
+     */
+    void RestoreCreateBackup(const httplib::Request& req, httplib::Response& resp, 
+        bool create);
+
 
   private: 
 

@@ -3,96 +3,91 @@
 <div class="box_overview center_in_box">
   <h1>{{name}}</h1>
     <div class="object">
-      <ul>
-
+      <ul id="object">
         <!-- Name and ID (default value for non-set-values -->
-        <li><label>Name:</label> <input id="name" value="{{ default(name, "") }}">
-        <li><label>Id:</label> <input id="id" value="{{ default(id, "") }}">
+        <li><label>Name:</label><input id="name" value="{{ default(name, "") }}">
+        <li><label>Id:</label><input id="id" value="{{ default(id, "") }}">
 
         <!-- Description (added by include) expand non-set optional values -->
-        <li id=description"><label>Description:</label> 
+        <li custom="list">
+          <label>Description:</label> 
           {% include "temp_description" %}
         </li>
 
         <!-- Exits (default value for non-set-values) -->
-        <li><label>Exits:</label>
+        <li custom="map">
+          <label>Exits:</label>
           <ul id="exits">
             {% for key, val in default(exits, {"": {}}) %}
-              <li>
+              <li custom="key_object">
                 <input id="id" placeholder="linked_room id" value="{{ key }}">
                 <input id="name"placeholder="name" value="{{ default(val.name, "") }}">
                 <input id="prep" placeholder="preposition" style="width: 4em;"
                     value="{{default(val.prep,"")}}">
                 <span class="mod_elem" onclick="del_elem('exits',{{loop.index}})">-</span>
-              {% if loop.is_last == true %}
-                <span class="mod_elem" onclick="add_elem_map('exits',{{loop.index}})">+</span>
-              {% endif %}
+                <span class="mod_elem" onclick="add_elem('exits',{{loop.index}})">+</span>
               </li>
             {% endfor %}
           </ul>
         </li>
 
         <!-- Characters (default value for non-set-values) -->
-        <li><label>Characters:</label>
+        <li custom="list">
+          <label>Characters:</label>
           <ul id="characters">
             {% for char in default(characters, [["", {}]]) %}
-              <li>
-                <input placeholder="character id" value={{char.0}}>
-                <input placeholder="custom attributes" value={{char.1}}>
+              <li custom="list">
+                <input id="id" placeholder="character id" value={{char.0}}>
+                <input id="attributes" custom="json" placeholder="custom attributes" value={{char.1}}>
                 <span class="mod_elem" onclick="del_elem('characters',{{loop.index}})">-</span>
-                {% if loop.is_last == true %}
-                <span class="mod_elem" onclick="add_elem_list('characters',{{loop.index}})">+</span>
-                {% endif %}
+                <span class="mod_elem" onclick="add_elem('characters',{{loop.index}})">+</span>
               </li>
             {% endfor %}
           </ul>
         </li>
           
         <!-- Details (default value for non-set-values) -->
-        <li><label>Details:</label>
+        <li custom="list">
+          <label>Details:</label>
           <ul id="details">
             {% for detail in default(details, [["", {}]]) %}
-              <li>
-                <input placeholder="detail id" value={{detail.0}}>
-                <input placeholder="custom attributes" value={{detail.1}}>
+              <li custom="list">
+                <input id="id" placeholder="detail id" value={{detail.0}}>
+                <input id="attribues" custom="json" placeholder="custom attributes" value={{detail.1}}>
                 <span class="mod_elem" onclick="del_elem('details',{{loop.index}})">-</span>
-                {% if loop.is_last == true %}
-                <span class="mod_elem" onclick="add_elem_list('details',{{loop.index}})">+</span>
-                {% endif %}
+                <span class="mod_elem" onclick="add_elem('details',{{loop.index}})">+</span>
               </li>
             {% endfor %}
           </ul>
         </li>
 
         <!-- Items (default value for non-set-values) -->
-        <li><label>Items:</label>
+        <li custom="list">
+          <label>Items:</label>
           <ul id="items">
             {% for item in default(items, [["", {}]]) %}
-              <li>
+              <li custom="list">
                 <input placeholder="item id" value={{item.0}}>
-                <input placeholder="custom attributes" value={{item.1}}>
+                <input custom="json" placeholder="custom attributes" value={{item.1}}>
                 <span class="mod_elem" onclick="del_elem('items',{{loop.index}})">-</span>
-                {% if loop.is_last == true %}
-                <span class="mod_elem" onclick="add_elem_list('items',{{loop.index}})">+</span>
-                {% endif %}
+                <span class="mod_elem" onclick="add_elem('items',{{loop.index}})">+</span>
               </li>
             {% endfor %}
           </ul>
         </li>
         
         <!-- Handlers (default value for non-set-values) -->
-        <li><label>Handlers:</label>
+        <li custom="list">
+          <label>Handlers:</label>
           <ul id="handlers">
             {% for handler in default(handlers, [{}]) %}
-              <li>
-                <input placeholder="function" value="{{default(handler.id, "")}}">
-                <input placeholder="command" value="{{default(handler.string, "")}}">
-                <input placeholder="priority" style="width: 4em;" 
+              <li custom="object">
+                <input id="id" placeholder="function" value="{{default(handler.id, "")}}">
+                <input id="string" placeholder="command" value="{{default(handler.string, "")}}">
+                <input custom="int" id="priority" placeholder="priority" style="width: 4em;" 
                     value="{{default(handler.priority, 0)}}">
                 <span class="mod_elem" onclick="del_elem('handlers',{{loop.index}})">-</span>
-                {% if loop.is_last == true %}
-                <span class="mod_elem" onclick="add_elem_map('handlers',{{loop.index}})">+</span>
-                {% endif %}
+                <span class="mod_elem" onclick="add_elem('handlers',{{loop.index}})">+</span>
               </li>
             {% endfor %}
           </ul>
@@ -107,7 +102,7 @@
         <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
         <div class="content_center">
           <div class="item"><p id="check_msg" elem_json=""></div>
-          <div class="item"><p id="display_json">
+          <div class="item" style="text-align: left;"><pre id="display_json">
           <div class="item"><p class="user_error"></p></div>
           <div><button type="button" class="pure-button" id="btn_del_elem"
                                      onclick="WriteElem()">Write</button></div>

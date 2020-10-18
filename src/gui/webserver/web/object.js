@@ -4,95 +4,154 @@
 
 // ***** ***** GENERATE JSONS ***** ***** //
 
-function GenerateJson() {
+//Generate json of an object.
+function GenerateJson(element) {
+
+  //Get list of elements and create empty json.
   var json = new Object();
-  json.name = document.getElementById("name").value;
-  json.id = document.getElementById("id").value;
-  json.description = GenerateText();
-  json.exits = GenerateExits();
-  json.handlers = GenerateHandler();
-  json.characters = GenerateListTypes2("characters");
-  json.details = GenerateListTypes2("details");
-  json.items = GenerateListTypes2("items");
-  console.log(json);
-  return json;
-}
+  var object_list = document.getElementById(element).children;
 
-function GenerateText() {
-  var json = []
-  var texts = document.getElementById("description");
-  for (var i=0; i<texts.children.length; i++) {
-    var ul = document.getElementById("description_"+i);
-    var text = new Object();
-    text.speaker = ul.children[0].getElementsByTagName("input")[0].value;
-    text.text = ul.children[1].getElementsByTagName("textarea")[0].value;
-    var logic = ul.children[2].getElementsByTagName("input")[0].value;
-    if (logic != "") text.logic = logic;
-    var updates = ul.children[3].getElementsByTagName("input")[0].value;
-    console.log("UPDATES: ", updates);
-    if (updates != "{}") text.updates = JSON.parse(updates);
-    var pre_pEvents = GenerateListTypes1(ul.children[4].getElementsByTagName("ul")[0]);
-    if (pre_pEvents.length > 0) text.pre_pEvents = pre_pEvents;
-    var pre_otEvents = GenerateListTypes1(ul.children[5].getElementsByTagName("ul")[0]);
-    if (pre_otEvents.length > 0) text.pre_otEvents = pre_otEvents;
-    var post_pEvents = GenerateListTypes1(ul.children[6].getElementsByTagName("ul")[0]);
-    if (post_pEvents.length > 0) text.post_pEvents = post_pEvents;
-    var post_otEvents = GenerateListTypes1(ul.children[7].getElementsByTagName("ul")[0]);
-    if (post_otEvents.length > 0) text.post_otEvents = post_otEvents;
-    json.push(text);
+  //Iterate over all elements and create json depending on "custom"-attribute.
+  for (var i=0; i<object_list.length; i++) {
+    //Simple input fields (f.e. name, id, ...).
+    if (object_list[i].hasAttribute("custom") == false)
+      AddJsons(json, CreateObject(object_list[i]));
+    //List of objects (f.e. items, handlers, descriptions...).
+    else if (object_list[i].getAttribute("custom") == "list")
+      AddJsons(json, CreateList(object_list[i]));
+    //Dictionary of objects (f.e. exits, attacks, ...).
+    else if (object_list[i].getAttribute("custom") == "map") {
+      AddJsons(json, CreateMap(object_list[i]));
+    }
+    else
+      console.log("Unkown attribute in 'GenerateJson': ", object_list[i].getAttribute("custom"));
   }
   return json;
 }
 
-function GenerateExits() {
-  var json = {}; 
-  var elem = document.getElementById("exits");
-  for (var i=0; i<elem.children.length; i++) {
-    var obj = new Object();
-    var elems = elem.children[i].getElementsByTagName("input");
-    obj["id"] = elems[0].value;
-    obj["name"] = elems[1].value;
-    obj["prep"] = elems[2].value;
-    json[obj.id] = obj;
+//Parse a list of inputs to a json list.
+function CreateList(elem) {
+
+  //Create empty list, get list of elements and array of all fields.
+  var ul = elem.getElementsByTagName("ul")[0];
+  var elems = ul.children;
+  var list = [];
+
+  //Itarate over all elements and create specific json to add to list
+  for (var i=0; i<elems.length; i++) {
+    console.log(elems[i].getAttribute("custom"));
+    //Skip empty fields.
+    if (GetValueFields(elems[i])[0].value == "")
+      continue;
+    //Simple string
+    if (elems[i].hasAttribute("custom") == false) {
+      list.push(GetAsType(GetValueFields(elems[i])[0]));
+    }
+    //Parse a list in a list (f.e. items, characters, details, ...).
+    if (elems[i].getAttribute("custom") == "list") {
+      var json = [];
+      var inputs = GetValueFields(elems[i]);
+      for (var j=0; j<inputs.length; j++)
+        json.push(GetAsType(inputs[j]));
+      list.push(json);
+    }
+    //Parse an object in a list (f.e. handlers, ...).
+    else if (elems[i].getAttribute("custom") == "object") 
+      list.push(CreateObject(elems[i]));
+    //Parse an object whcih input fields are inside another ul (f.e. descriptions).
+    else if (elems[i].getAttribute("custom") == "list_object") {
+      var id = elems[i].getElementsByTagName("ul")[0].id;
+      console.log(id);
+      var json = GenerateJson(id);
+      list.push(json);
+    }
+    else
+      console.log("Unkown attribute in 'CreateList': ", elems[i].getAttribute("custom"));
+  }
+
+  //Create json "{ id:[...] }" and return 
+  var json = new Object();
+  if (list.length > 0)
+    json[ul.id] = list;
+  return json;
+}
+
+//Parse a list of inputs to a json map.
+function CreateMap(elem) {
+
+  //Create empty map, get list of elements and array of all fields.
+  var ul = elem.getElementsByTagName("ul")[0];
+  var elems = ul.children;
+  var map = new Object();
+  
+  //Itarate over all elements and create specific json to add to map
+  for (var i=0; i<elems.length; i++) {
+    console.log(elems[i].getAttribute("custom"));
+    //Skip empty fields.
+    if (GetValueFields(elems[i])[0].value == "")
+      continue;
+    //Parse an key, object pair ("{id:{}}") (f.e. exits).
+    if (elems[i].getAttribute("custom") == "key_object") {
+      var json = CreateObject(elems[i]);
+      map[json.id] = json;
+      delete map[json.id].id;
+    }
+    //Parse a simple key, value pair, where value is a string (json, or int).
+    else if (elems[i].getAttribute("custom") == "pair") {
+      map[GetAsType(GetValueFields(elems[i])[0])] = GetAsType(GetValueFields(elems[i])[1]);
+    }
+    else
+      console.log("Unkown attribute in 'CreateMap': ", elems[i].getAttribute("custom"));
+  }
+  
+  //Create json "{ id:{...} }" and return 
+  var json = new Object();
+  if (Object.keys(map).length > 0)
+    json[ul.id] = map;
+  return json;
+}
+
+//Iterate over input fields and create a json object.
+function CreateObject(elem) {
+  var json = new Object();
+  var inputs = GetValueFields(elem);
+  for (var i=0; i<inputs.length; i++) {
+    if (inputs[i].value == "") 
+      continue;
+    json[inputs[i].id] = GetAsType(inputs[i]);
   }
   return json;
 }
 
-function GenerateHandler() {
-  var json = {}; 
-  var elem = document.getElementById("handlers");
-  for (var i=0; i<elem.children.length; i++) {
-    var obj = new Object();
-    var elems = elem.children[i].getElementsByTagName("input");
-    obj["id"] = elems[0].value;
-    obj["string"] = elems[1].value;
-    obj["priority"] = parseInt(elems[2].value);
-    json[obj.id] = obj;
+//Get value of an input fields as a specific type (string, json, int, bool).
+function GetAsType(elem) {
+  if (elem.hasAttribute("custom") == false)
+    return elem.value;
+  else if (elem.getAttribute("custom") == "int")
+    return parseInt(elem.value);
+  else if (elem.getAttribute("custom") == "json")
+    return JSON.parse(elem.value);
+  else if (elem.getAttribute("custom") == "bool" && elem.value == "yes") 
+    return 1;
+  else if (elem.getAttribute("custom") == "bool" && elem.value == "no") 
+    return 0;
+  else {
+    console.log("Problem parsing: ", elem.id, elem.getAttribute("custom"), elem.value);
+    return "";
   }
-  return json;
 }
 
-function GenerateListTypes1(elem) {
-  var json = []; 
-  for (var i=0; i<elem.children.length; i++) {
-    var str = elem.children[i].getElementsByTagName("input")[0].value;
-    if (str != "") json.push(str);
-  }
-  return json;
+//get all input fields (input + textarea)
+function GetValueFields(elem) {
+  var inputs = [];
+  inputs.push(...elem.getElementsByTagName("input"));
+  inputs.push(...elem.getElementsByTagName("textarea"));
+  return inputs;
 }
 
-function GenerateListTypes2(element) {
-  var json = []; 
-  var elem = document.getElementById(element);
-  for (var i=0; i<elem.children.length; i++) {
-    var obj = [];
-    var elems = elem.children[i].getElementsByTagName("input");
-    if (elems[0].value == "") continue;
-    obj.push(elems[0].value);
-    obj.push(JSON.parse(elems[1].value));
-    json.push(obj);
-  }
-  return json;
+//Concanate two jsons
+function AddJsons(a, b) {
+  Object.keys(b).forEach(function(key) { a[key] = b[key];});
 }
 
 // ***** ***** OPEN/ CLOSE MODALS, WRITE JSON ***** ***** //
@@ -102,8 +161,6 @@ window.onclick = function(event)  {
   let modal = document.getElementById("modal_write");
   if (event.target == modal)
     modal.style.display = "none";
-  else
-    return;
 }
 
 //Close modal, when close-span is clicked (works for both moduls)
@@ -112,34 +169,68 @@ function CloseModul() {
   window.location = window.location;
 }
 
-/**
- * Open write modal.
- */
+//Open write modal.
 function OpenWriteModal(name) {
   document.getElementById("modal_write").style.display = "block";
 
-  var json = GenerateJson();
+  var json = GenerateJson("object");
   document.getElementById("check_msg").innerHTML = "Are you sure you want to override the "
     + " current room (" + name + ") with following json:";
   document.getElementById("display_json").innerHTML = JSON.stringify(json, null, 4);
   document.getElementById("check_msg").elem_json = json;
 }
 
-// ***** ***** ADD/ DELETE/ EXPAND/ ELEMENTS ***** ***** //
+// ***** ***** DELETE/ ADD/ EXPAND/ ELEMENTS ***** ***** //
+
+//Deletes a given element.
+function del_elem(element, index) {
+  var ul = document.getElementById(element);
+  var li_old = ul.children[index];
+
+  //If element is only element in list, empty values, instead of deleteing.
+  if (index == 0 && ul.children.length==1)
+    EmptyValues(li_old);
+
+  //Delete element and change index of all the following elements in list.
+  else {
+    ul.removeChild(li_old);
+    for (var i=index; i<ul.children.length; i++) 
+      ChangeIndex(ul.children[i], i);
+  }
+}
+
+//Adds a new element to any sort of lists
+function add_elem(element, index) {
+  //Get old element and copy to new element
+  var ul = document.getElementById(element);
+  var li_old = ul.children[ul.children.length-1];
+  var li_new = li_old.cloneNode(true); 
+
+  //Empty values and change index
+  EmptyValues(li_new);
+  ChangeIndex(li_new, index+1);
+
+  //Change index of all following elements in list.
+  for (var i=index+1; i<ul.children.length; i++)
+    ChangeIndex(ul.children[i], i+1);
+  
+  //Insert element at given position.
+  InsertIntoList(ul, li_new, index);
+}
 
 //Expand optional values for text-elements.
 function expand(element, index) {
+
+  //Crate element ids suiting index value (set or not set).
   var id_parent = element;
-  if (index === 0 ) id_parent += "_"+index;
+  if (!(index === "")) id_parent += "_"+index;
   var id_expand_div = element + "_text_expand";
-  if (index === 0) id_expand_div += "_"+index;
+  if (!(index === "")) id_expand_div += "_"+index;
 
-  console.log(id_parent, id_expand_div);
-
+  //Iterate over all elements and check if they are "optional".
   var children = document.getElementById(id_parent).children;
   for (var i=0; i<children.length; i++) {
     var elem = children[i];
-    //console.log(elem);
     if (elem.style.display == "none" && elem.id=="optional") {
       document.getElementById(id_expand_div).setAttribute("class", "fas fa-caret-up");
       elem.style.display = "block";
@@ -151,140 +242,8 @@ function expand(element, index) {
   }
 }
 
-//Delete text element from description.
-function del_text(element, index) {
-  //Change index of following elements and delet element.
-  var elem = document.getElementById("li_" + element + "_" + index);
-  ChangeIdOfTextElements(index+1, -1);  
-  elem.parentNode.removeChild(elem);
-
-  //Add special "add_text"-button in case last element was deleted.
-  if (document.getElementById("description").children.length==0) {
-    var div = MyCreateElement("div", {"id":"div_add_text", "class":"expand"});
-    var span = MyCreateElement("span",{"title":"Add new element here.","onclick":"add_text(-1)"});
-    span.innerHTML = "+";
-    div.appendChild(span);
-    document.getElementById(element).parentNode.appendChild(div); 
-  }
-}
-
-//Add a new text-element to description.
-function add_text(element, index) {
-  //Change index of following elements, if not last.
-  var ul = document.getElementById(element);
-  if (index+1 < ul.children.length)
-    ChangeIdOfTextElements(index+1, 1);  
-
-  //Add element at given position.
-  InsertIntoList(ul, CreateEmptyDescriptionElement(index+1), index);
-
-  //If called with special "add_text"-button, delete this button.
-  if (index==-1)
-    DelElem("div_add_text");
-}
-
-//Delete element (currently any none-description element in a room)
-function del_elem(element, index) {
-  //Get list and childern, new index and the matching "add_elem"-function.
-  var ul = document.getElementById(element)
-  var list_elems = ul.children;
-  var new_index = parseInt(index) -1;
-  var func = "add_elem_list";
-  if (element == "exits" || element == "handlers")
-    func = "add_elem_map";
-
-  //If last element, add special "add_elem"-button
-  if (list_elems.length == 1) {
-    var div = MyCreateElement("div", {"id":"div_add_"+element, "class":"expand"});
-    div.appendChild(CreateModElemButton(func, element, -1));
-    document.getElementById(element).parentNode.appendChild(div);
-  }
-
-  //If last element, move "add-elem"-span to prior element and change onclick function
-  if (list_elems.length > 1 && list_elems.length-1 == index)
-    list_elems[new_index].appendChild(CreateModElemButton(func, element, new_index));
-
-  //Remove element and decrease values of elements after deleted element
-  ul.removeChild(list_elems[index]);
-  for (var i=index; i<list_elems.length; i++) {
-    ChangeIndexOfClick(list_elems[i].getElementsByTagName("span")[0], -1);
-    if (i==list_elems.length-1) 
-      ChangeIndexOfClick(list_elems[i].getElementsByTagName("span")[1], -1);
-  }
-}
-
-//Add list-type element (currently any non-description elements in room (no handlers/ exits))
-function add_elem_list(element, index) {
-  //Create input fields (id, value/ attributes).
-  var li = document.createElement("li");
-  li.appendChild(CreateInput(element.substr(0, element.length-1)+" id", "", ""));
-  li.appendChild(CreateInput("custom attributes", "{}", ""));
-
-  //Delete old "add-elem" button, and add a new one. Also add "del-elem"-button
-  if (index==-1)
-    DelElem("div_add_"+element);
-  else
-    DelElem(element, {"index":index, "tag":"span", "num":1});
-  li.appendChild(CreateModElemButton("del_elem", element, index+1));
-  li.appendChild(CreateModElemButton("add_elem_list", element, index+1));
-  document.getElementById(element).appendChild(li);
-}
-
-//Add list-type element (currently only handlers and exits).
-function add_elem_map(element, index) {
-  var placeholders = ["linked_room id", "name", "preposition"];
-  if (element == "handlers")
-    placeholders = ["function", "command", "priority"];
-
-  //Add input fields matching element-type
-  var li = document.createElement("li");
-  for (var i = 0; i<3; i++) {
-    if (i==2)
-      li.appendChild(CreateInput(placeholders[i], "", "width: 4em"));
-    else 
-      li.appendChild(CreateInput(placeholders[i], "", ""));
-  }
-
-  //Delete old "add-elem" button, and add a new one. Also add "del-elem"-button
-  if (index == -1) 
-    DelElem("div_add_" + element);
-  else
-    DelElem(element, {"index":index, "tag":"span", "num":1});
-  li.appendChild(CreateModElemButton("del_elem", element, index+1));
-  li.appendChild(CreateModElemButton("add_elem_map", element, index+1));
-  document.getElementById(element).appendChild(li);
-}
 
 // ***** ***** SUPPORTING FUNCTIONS ***** ***** //
-
-//Change index given to a onclick function (add value of x to index)
-function ChangeIndexOfClick(elem, x) {
-  var onclick = elem.getAttribute("onclick");
-  var firstDigit = onclick.match(/\d/);
-  var new_num = parseInt(firstDigit) + x;
-  var pos = onclick.indexOf(firstDigit);
-  var new_onclick = onclick.substr(0, pos) + new_num + onclick.substr(pos+1)
-  elem.setAttribute("onclick", new_onclick );
-}
-
-//Change all set indexes inside a text element (add value of x to index)
-function ChangeIdOfTextElements(element, start, x) {
-  ul = document.getElementById(element);
-  console.log(ul);
-  console.log("Starting with: ", start, ul.children.length);
-  for (var i=start; i<ul.children.length; i++) {
-    var new_num = i+x;
-    console.log("Changed ", i, "to: ", new_num);
-    ul.children[i].id = "li_" + element + "_" + new_num;
-    ul.children[i].children[0].id = element + "_" + new_num;
-    var expand_div = ul.children[i].children[1];
-    expand_div.id = element + "_div_text_expand_" + new_num;
-    expand_div.children[1].id = element + "_text_expand_" + new_num;
-    ChangeIndexOfClick(expand_div.children[0], x);
-    ChangeIndexOfClick(expand_div.children[1], x);
-    ChangeIndexOfClick(expand_div.children[3], x);
-  }
-}
 
 //Insert element at a given position.
 function InsertIntoList(list, elem, pos) {
@@ -293,13 +252,11 @@ function InsertIntoList(list, elem, pos) {
     list.appendChild(elem);
     return;
   }
-
   //Copy children and empty children lest.
   var children = [];
   for (var i=0; i<list.children.length; i++)
     children.push(list.children[i]);
   list.children = [];
-
   //Add children and new element
   for (var i=0; i<children.length; i++) {
     list.appendChild(children[i]);
@@ -307,13 +264,57 @@ function InsertIntoList(list, elem, pos) {
       list.appendChild(elem);
   }
 }
+//Empties all values of input- and textarea-fields
+function EmptyValues(element) {
+  //If anaother list, call "EmptyValues" for each element
+  if (element.getElementsByTagName("ul").length != 0) {
+    var ul = element.getElementsByTagName("ul")[0];
+    for (var i=0; i<ul.children.length; i++)
+      EmptyValues(ul.children[i]);
+  }
+  //Empty all input-fields 
+  var list_inputs = element.getElementsByTagName("input")
+  for (var i=0; i<list_inputs.length; i++)
+    list_inputs[i].value = "";
+  //Empty all textarea-fields
+  var list_inputs = element.getElementsByTagName("textarea")
+  for (var i=0; i<list_inputs.length; i++)
+    list_inputs[i].value = "";
+}
 
-//Delete and element given by id or "deeper" access (children, tagname...)
-function DelElem(id, opts={}) {
-  var elem = document.getElementById(id);
-  if (opts['index']) elem = elem.children[opts['index']];
-  if (opts['tag'] && opts['num']) elem = elem.getElementsByTagName(opts['tag'])[opts['num']];
-  elem.parentNode.removeChild(elem);
+//Changing the index of all attributes needing index-change in element
+function ChangeIndex(element, index) {
+
+  //Element with additional list inside element. (descriptions)
+  if (element.getElementsByTagName("ul").length != 0) {
+    ChangeIndexOfAttribute(element, "id", index);
+    ChangeIndexOfAttribute(element.children[0], "id", index);
+    var div = element.children[1];
+    ChangeIndexOfAttribute(div, "id", index);
+    var list_span = div.getElementsByTagName("span");
+    for (var i=0; i<list_span.length; i++) {
+      ChangeIndex(div, index);
+    }
+  }
+  //No extra list inside element.
+  else {
+    var list_span = element.getElementsByTagName("span");
+    for (var i=0; i<list_span.length; i++) {
+      ChangeIndexOfAttribute(list_span[i], "onclick", index);
+      ChangeIndexOfAttribute(list_span[i], "id", index);
+    }
+  }
+}
+
+//Changing index of a particular attribute of a given element.
+function ChangeIndexOfAttribute(elem, attribute, new_index) {
+  var elem_attr = elem.getAttribute(attribute);
+  if (elem_attr == null) return;
+  var firstDigit = elem_attr.match(/\d/);
+  var pos = elem_attr.indexOf(firstDigit);
+  var new_attribute = elem_attr.substr(0, pos) + new_index + elem_attr.substr(pos+1)
+  console.log(attribute, new_attribute);
+  elem.setAttribute(attribute, new_attribute);
 }
 
 // ***** ***** ELEMENT CREATORS ***** ***** //
@@ -324,98 +325,4 @@ function MyCreateElement(type, attrs={}) {
   for (var key in attrs)
     elem.setAttribute(key, attrs[key]);
   return elem;
-}
-
-//Create input field and set attributes (placeholders, value, style).
-function CreateInput(placeholder, value, style) {
-  var inp = MyCreateElement("input",{"placeholder":placeholder,"value":value,"class":"m_input"});
-  if (style != "") 
-    inp.style = style;
-  return inp;
-}
-
-//Create empty description.
-function CreateEmptyDescriptionElement(index) {
-  var text = MyCreateElement("li", {"id":"li_description_" + index});
-  var ul = MyCreateElement("ul", {"id":"description_" + index});
-
-  //Create all labels
-  var label_content = ["Speaker", "Text", "Logic", "Updates", "Pre permanent Events",
-    "Pre one-time Events", "Post permanent Events", "Post one-time Events"];
-  var labels = [];
-  for (var i=0; i<8; i++) {
-    var l = document.createElement("label");
-    l.innerHTML = label_content[i] + ":";
-    if (i>3) l.style="width:auto;";
-    labels.push(l);
-  }
-  
-  //Create all li elements and add label.
-  var lists = [];
-  for (var i=0; i<8; i++) {
-    var li = document.createElement("li");
-    if (i>1) {
-      li.style="display:none;";
-      li.id = "optional";
-    }
-    if (i==2 || i==3) li.setAttribute("class", "full_length");
-    li.appendChild(labels[i]);
-    lists.push(li);
-  }
-
-  //Create all input fields.
-  lists[0].appendChild(CreateInput("speaker", "", ""));       //Speaker
-  ul.appendChild(lists[0]);
-  lists[1].appendChild(document.createElement("textarea"));   //Text
-  ul.appendChild(lists[1]);
-  lists[2].appendChild(CreateInput("logic", "", ""));         //Logic
-  ul.appendChild(lists[2]);
-  lists[3].appendChild(CreateInput("updates", "{}", ""));     //Updates
-  ul.appendChild(lists[3]);
-  lists[4].appendChild(CreateEventType("pre_pEvents"));       //Pre_pEvents
-  ul.appendChild(lists[4]);
-  lists[5].appendChild(CreateEventType("pre_otEvents"));      //Pre_otEvents
-  ul.appendChild(lists[5]);
-  lists[6].appendChild(CreateEventType("post_pEvents"));      //Post_pEvents
-  ul.appendChild(lists[6]);
-  lists[7].appendChild(CreateEventType("post_otEvents"));     //Post_otEvents
-  ul.appendChild(lists[7]);
-  text.appendChild(ul);
-
-  //Create function-bar (add-, delete- and expand-buttons)
-  var div = MyCreateElement("div", {"id":"div_text_expand_"+index, "class":"expand"});
-  var span1 = MyCreateElement("span", {"title":"Delete this element.", 
-      "onclick":"del_text("+index+")"});
-  span1.innerHTML = "-";
-  div.appendChild(span1);
-  var span2 = MyCreateElement("span", {"id":"description_text_expand_"+index,"title":"Delete this element.",
-    "class":"fas fa-caret-down","onclick":"expand('description',"+index+")"});
-  div.appendChild(span2);
-  var span3 = MyCreateElement("span", {"title":"Add new element here.", 
-    "onclick":"add_text("+index+")"});
-  span3.innerHTML = "+";
-  div.appendChild(span3);
-  text.appendChild(div);
-
-  return text;
-}
-
-//Create an empty event-field
-function CreateEventType(id) {
-  var ul = MyCreateElement("ul", {"id":id});
-  var li = document.createElement("li");
-  li.appendChild(CreateInput("event", ""));
-  ul.appendChild(li);
-  return ul;
-}
-
-//Create a "mod-element"/button (add_elem_list, add_elem_map, del_elem)
-function CreateModElemButton(func, element, index) {
-  var sp = MyCreateElement("span", {"class":"mod_elem"});
-  sp.setAttribute("onclick", func + "('" + element + "', " + index + ")");
-  if (func.indexOf("del") != -1) 
-    sp.innerHTML = "-";
-  else if (func.indexOf("add") != -1) 
-    sp.innerHTML = "+";
-  return sp;
 }
