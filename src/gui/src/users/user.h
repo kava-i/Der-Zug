@@ -98,6 +98,14 @@ class User {
      */
     bool RestoreBackup(std::string backup);
 
+    /**
+     * Delete a backup of given world.
+     * @param[in] world (given world)
+     * @return boolean to indicate success.
+     */
+    bool DeleteBackup(std::string backup);
+
+
   private:
     const std::string username_;  ///< username (should be unique!)
     std::string password_;  ///< password 

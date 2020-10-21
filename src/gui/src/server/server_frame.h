@@ -116,8 +116,8 @@ class ServerFrame {
      * @param[in] req (reference to request)
      * @param[in, out] resp (reference to response)
      */
-    void RestoreCreateBackup(const httplib::Request& req, httplib::Response& resp, 
-        bool create);
+    void Backups(const httplib::Request& req, httplib::Response& resp, 
+        std::string action);
 
 
   private: 

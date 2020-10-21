@@ -58,10 +58,11 @@ int main() {
   srv.Post("/api/user_logout", [&](const Request& req, Response& resp)
       { srv_frame.DoLogout(req, resp); });
   srv.Post("/api/create_backup", [&](const Request& req, Response& resp)
-      { srv_frame.RestoreCreateBackup(req, resp, true); });
-  srv.Post("/api/restor_backup", [&](const Request& req, Response& resp)
-      { srv_frame.RestoreCreateBackup(req, resp, false); });
-
+      { srv_frame.Backups(req, resp, "create"); });
+  srv.Post("/api/restore_backup", [&](const Request& req, Response& resp)
+      { srv_frame.Backups(req, resp, "restore"); });
+  srv.Post("/api/delete_backup", [&](const Request& req, Response& resp)
+      { srv_frame.Backups(req, resp, "delete"); });
 
   //html
   srv.Get("/", [&](const Request& req, Response& resp) {

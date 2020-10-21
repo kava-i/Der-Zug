@@ -37,9 +37,10 @@
         {% for backup in backups %}
           <tr>
             <td><a class="medium" href="/">{{backup}}</a></td>
-            <td><i class="fas fa-minus button2" onclick="DelBackup('{{backup}}');return true"></i>
+            <td><i class="fas fa-minus button2" style="font-size: 1.5em;" 
+                      onclick="delete_backup('{{backup}}');return true">-</i>
               </td>
-            <td><i class="button2" onclick="RestoreBackup('{{backup}}');return true">Restore</i>
+            <td><i class="button2" onclick="restore_backup('{{backup}}');return true">Restore</i>
               </td>
           </tr>
         {% endfor %}

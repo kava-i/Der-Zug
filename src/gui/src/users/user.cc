@@ -228,40 +228,70 @@ bool User::CreateBackup(std::string world) {
   strftime(buf_human, sizeof(buf_human), "%F_%T", localtime(&now));
   std::string path_backup = path_backup_ + "/" + world + "_" + buf_human;
   std::replace(path_backup.begin(), path_backup.end(), ':', '-');
-  std::cout << "Creating backup: " << path_backup << std::endl;
 
   //Check if folder for this user already exists
   if (!demo_exists(path_backup_)) {
     std::cout << "Created path for backups: " << path_backup_ << std::endl;
     fs::create_directory(path_backup_);
   }
-  std::cout << "Creating backup..." << std::endl;
-  try { fs::copy(path, path_backup, fs::copy_options::recursive); }
+  try { 
+    fs::copy(path, path_backup, fs::copy_options::recursive); 
+  }
   catch (std::exception& e) { 
     std::cout << "Copying failed: " << e.what() << std::endl; 
-    return false;}
+    return false;
+  }
   
+  return true;
+}
+
+bool User::RestoreBackup(std::string request) {
+  nlohmann::json json;
+  try {
+    json = nlohmann::json::parse(request);
+    if (json.count("world") == 0 || json.count("backup") == 0) 
+      std::cout << "\"world\" or \"backup\" not found!" << std::endl;
+  }
+  catch (std::exception& e) {
+    std::cout << "RestoreBackup: Problem parsing request: " << e.what() << "\n";
+    return false;
+  }
+  std::string path = path_backup_ + "/" + json["backup"].get<std::string>();
+  std::string path_to_world = path_ + "/" + json["world"].get<std::string>();
+
+  if (!demo_exists(path) || !demo_exists(path_to_world)) {
+    std::cout << "Backup " << path << " doesn't exist! Or ";
+    std::cout << "World " << path_to_world << " doesn't exist!" << std::endl;
+    return false;
+  }
+
+
+  std::cout << "Restoring backup... " << path << " -> " << path_to_world << std::endl;
+  const auto copy_options = fs::copy_options::update_existing
+                          | fs::copy_options::recursive;
+  try {
+    std::uintmax_t n = fs::remove_all(path_to_world);
+    fs::copy(path, path_to_world, copy_options);
+  }
+  catch (std::exception& e) { 
+    std::cout << "Copying failed: " << e.what() << std::endl; 
+    return false;
+  }
+
   std::cout << "Done." << std::endl;
   return true;
 }
 
-bool User::RestoreBackup(std::string backup) {
+bool User::DeleteBackup(std::string backup) {
   std::string path = path_backup_ + "/" + backup;
-  std::string path_to_world = "???";
 
   if (!demo_exists(path)) {
     std::cout << "Backup " << path << " does not exist!" << std::endl;
     return false;
   }
 
-  std::cout << "Creating backup..." << std::endl;
-  const auto copy_options = fs::copy_options::update_existing
-                          | fs::copy_options::recursive;
-  try { fs::copy(path, path_to_world , copy_options); }
-  catch (std::exception& e) { 
-    std::cout << "Copying failed: " << e.what() << std::endl; 
-    return false;}
-  
-  std::cout << "Done." << std::endl;
+  std::cout << "Deleting backup... " << path << std::endl;
+  std::uintmax_t n = fs::remove_all(path);
+  std::cout << "Done. Deleted " << n << " files or directories." << std::endl;
   return true;
 }

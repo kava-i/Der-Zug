@@ -253,8 +253,9 @@ void ServerFrame::DelUser(const Request& req, Response& resp) {
   }
 }
 
-void ServerFrame::RestoreCreateBackup(const Request& req, Response& resp, bool create) {
-  std::cout << "CreateBackup: " << req.body << std::endl;
+void ServerFrame::Backups(const Request& req, Response& resp, std::string action) {
+  std::cout << "Backups (" << action << ": " << req.body << std::endl;
+
   //Try to get username from cookie
   const char* ptr = get_header_value(req.headers, "Cookie");
   std::shared_lock sl(shared_mtx_user_manager_);
@@ -269,10 +270,15 @@ void ServerFrame::RestoreCreateBackup(const Request& req, Response& resp, bool c
   else {
     sl.lock();
     bool success = false;
-    if (create == true)
+    if (action == "create")
       success = user_manager_.GetUser(username)->CreateBackup(req.body);
-    else 
+    else if (action == "restore") 
       success = user_manager_.GetUser(username)->RestoreBackup(req.body);
+    else if (action == "delete")
+      success = user_manager_.GetUser(username)->DeleteBackup(req.body);
+    else
+      success = false;
+
     sl.unlock();
     if (success == true)
       resp.status = 200;
