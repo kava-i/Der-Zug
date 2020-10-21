@@ -254,7 +254,6 @@ void ServerFrame::DelUser(const Request& req, Response& resp) {
 }
 
 void ServerFrame::Backups(const Request& req, Response& resp, std::string action) {
-  std::cout << "Backups (" << action << ": " << req.body << std::endl;
 
   //Try to get username from cookie
   const char* ptr = get_header_value(req.headers, "Cookie");
@@ -269,6 +268,7 @@ void ServerFrame::Backups(const Request& req, Response& resp, std::string action
   }
   else {
     sl.lock();
+    //Call matching function.
     bool success = false;
     if (action == "create")
       success = user_manager_.GetUser(username)->CreateBackup(req.body);
@@ -278,8 +278,8 @@ void ServerFrame::Backups(const Request& req, Response& resp, std::string action
       success = user_manager_.GetUser(username)->DeleteBackup(req.body);
     else
       success = false;
-
     sl.unlock();
+
     if (success == true)
       resp.status = 200;
     else

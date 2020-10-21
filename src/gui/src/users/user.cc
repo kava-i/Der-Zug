@@ -230,10 +230,10 @@ bool User::CreateBackup(std::string world) {
   std::replace(path_backup.begin(), path_backup.end(), ':', '-');
 
   //Check if folder for this user already exists
-  if (!demo_exists(path_backup_)) {
-    std::cout << "Created path for backups: " << path_backup_ << std::endl;
+  if (!demo_exists(path_backup_))
     fs::create_directory(path_backup_);
-  }
+
+  //Create backup, by copying all files to selected directory
   try { 
     fs::copy(path, path_backup, fs::copy_options::recursive); 
   }
@@ -241,11 +241,12 @@ bool User::CreateBackup(std::string world) {
     std::cout << "Copying failed: " << e.what() << std::endl; 
     return false;
   }
-  
   return true;
 }
 
 bool User::RestoreBackup(std::string request) {
+
+  //Try to parse json and check if "world" and "backup" fields exist.
   nlohmann::json json;
   try {
     json = nlohmann::json::parse(request);
@@ -256,42 +257,42 @@ bool User::RestoreBackup(std::string request) {
     std::cout << "RestoreBackup: Problem parsing request: " << e.what() << "\n";
     return false;
   }
+  //
+  //Create path to selected backup and world.
   std::string path = path_backup_ + "/" + json["backup"].get<std::string>();
   std::string path_to_world = path_ + "/" + json["world"].get<std::string>();
 
+  //Check if both paths exist.
   if (!demo_exists(path) || !demo_exists(path_to_world)) {
     std::cout << "Backup " << path << " doesn't exist! Or ";
     std::cout << "World " << path_to_world << " doesn't exist!" << std::endl;
     return false;
   }
 
-
-  std::cout << "Restoring backup... " << path << " -> " << path_to_world << std::endl;
+  //Restore backup.
   const auto copy_options = fs::copy_options::update_existing
                           | fs::copy_options::recursive;
   try {
-    std::uintmax_t n = fs::remove_all(path_to_world);
-    fs::copy(path, path_to_world, copy_options);
+    std::uintmax_t n = fs::remove_all(path_to_world);  //Delete original
+    fs::copy(path, path_to_world, copy_options);  //Copy files to original location
   }
   catch (std::exception& e) { 
     std::cout << "Copying failed: " << e.what() << std::endl; 
     return false;
   }
-
-  std::cout << "Done." << std::endl;
   return true;
 }
 
 bool User::DeleteBackup(std::string backup) {
-  std::string path = path_backup_ + "/" + backup;
 
+  //Build path, then check if path exists.
+  std::string path = path_backup_ + "/" + backup;
   if (!demo_exists(path)) {
     std::cout << "Backup " << path << " does not exist!" << std::endl;
     return false;
   }
 
-  std::cout << "Deleting backup... " << path << std::endl;
+  //Remove backup.
   std::uintmax_t n = fs::remove_all(path);
-  std::cout << "Done. Deleted " << n << " files or directories." << std::endl;
   return true;
 }
