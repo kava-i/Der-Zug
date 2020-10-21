@@ -29,7 +29,8 @@ void ServerFrame::LoginPage(const Request& req, Response& resp) const {
     resp.set_content(func::GetPage("web/login.html"), "text/html");
 }
 
-void ServerFrame::Overview(const Request& req, Response& resp) const {
+void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup) 
+    const {
   //Try to get username from cookie
   const char* ptr = get_header_value(req.headers, "Cookie");
   std::shared_lock sl(shared_mtx_user_manager_);
@@ -43,119 +44,27 @@ void ServerFrame::Overview(const Request& req, Response& resp) const {
   }
   else {
     sl.lock();
-    std::string page = user_manager_.GetUser(username)->GetOverview();
+    User* user = user_manager_.GetUser(username);
+    std::string page = "";
+    if (req.matches.size() == 1)
+      page = user->GetOverview();
+    else if (req.matches.size() == 2 && backup == false)
+      page = user->GetWorld(req.matches[1]);
+    else if (req.matches.size() == 2 && backup == true)
+      page = user->GetBackups(req.matches[1]);
+    else if (req.matches.size() == 3)
+      page = user->GetCategory(req.matches[1], req.matches[2]);
+    else if (req.matches.size() == 4)
+      page = user->GetObjects(req.matches[1], req.matches[2], req.matches[3]);
+    else if (req.matches.size() == 5) {
+      page = user->GetObject(req.matches[1], req.matches[2], req.matches[3], 
+          req.matches[4]);
+    }
     sl.unlock();
     resp.set_content(page.c_str(), "text/html");
   }
 }
 
-void ServerFrame::World(const Request& req, Response& resp) const {
-  std::cout << "World" << std::endl;
-  //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-  }
-  else {
-    sl.lock();
-    std::string page = user_manager_.GetUser(username)->GetWorld(req.matches[1]);
-    sl.unlock();
-    resp.set_content(page.c_str(), "text/html");
-  }
-}
-
-void ServerFrame::Category(const Request& req, Response& resp) const {
-  std::cout << "Category" << std::endl;
-  //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-  }
-  else {
-    sl.lock();
-    std::string page = user_manager_.GetUser(username)->GetCategory(
-        req.matches[1], req.matches[2]);
-    sl.unlock();
-    resp.set_content(page.c_str(), "text/html");
-  }
-}
-
-void ServerFrame::Backup(const Request& req, Response& resp) const {
-  std::cout << "Category" << std::endl;
-  //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-  }
-  else {
-    sl.lock();
-    std::string page = user_manager_.GetUser(username)->GetBackups(req.matches[1]);
-    sl.unlock();
-    resp.set_content(page.c_str(), "text/html");
-  }
-}
-
-void ServerFrame::SubCategory(const Request& req, Response& resp) const {
-  std::cout << "SubCategory" << std::endl;
-  //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-  }
-  else {
-    sl.lock();
-    std::string page = user_manager_.GetUser(username)->GetObjects(
-        req.matches[1], req.matches[2], req.matches[3]);
-    sl.unlock();
-    resp.set_content(page.c_str(), "text/html");
-  }
-}
-
-void ServerFrame::Object(const Request& req, Response& resp) const {
-  std::cout << "SubCategory" << std::endl;
-  //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-  }
-  else {
-    sl.lock();
-    std::string page = user_manager_.GetUser(username)->GetObject(
-        req.matches[1], req.matches[2], req.matches[3], req.matches[4]);
-    sl.unlock();
-    resp.set_content(page.c_str(), "text/html");
-  }
-}
 
 void ServerFrame::DoLogin(const Request& req, Response& resp) {
   std::string username = "", pw = "";

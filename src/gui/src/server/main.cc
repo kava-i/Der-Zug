@@ -26,26 +26,29 @@ int main() {
   //Pages
   srv.Get("/login", [&](const Request& req, Response& resp) { 
         srv_frame.LoginPage(req, resp);});
+
   srv.Get("/overview", [&](const Request& req, Response& resp) { 
-      srv_frame.Overview(req, resp); });
+      srv_frame.ServeFile(req, resp); });
 
   srv.Get("/world_(.*)_category_(.*)_sub_(.*)_obj_(.*)", 
       [&](const Request& req, Response& resp) { 
-      try{srv_frame.Object(req, resp); }
+      try{srv_frame.ServeFile(req, resp); }
       catch(std::exception& e) {std::cout << e.what() << std::endl;} });
 
   srv.Get("/world_(.*)_category_(.*)_sub_(.*)", [&](const Request& req, Response& resp) { 
-      try{srv_frame.SubCategory(req, resp); }
+      try{srv_frame.ServeFile(req, resp); }
       catch(std::exception& e) {std::cout << e.what() << std::endl;} });
 
   srv.Get("/world_(.*)_category_(.*)", [&](const Request& req, Response& resp) { 
-      try{srv_frame.Category(req, resp); }
+      try{srv_frame.ServeFile(req, resp); }
       catch(std::exception& e) {std::cout << e.what() << std::endl;} });
+
   srv.Get("/backups_(.*)", [&](const Request& req, Response& resp) { 
-      try{srv_frame.Backup(req, resp); }
+      try{srv_frame.ServeFile(req, resp, true); }
       catch(std::exception& e) {std::cout << e.what() << std::endl;} });
+
   srv.Get("/world_(.*)", [&](const Request& req, Response& resp) { 
-      try{srv_frame.World(req, resp); }
+      try{srv_frame.ServeFile(req, resp); }
       catch(std::exception& e) {std::cout << e.what() << std::endl;} });
 
   //Actions

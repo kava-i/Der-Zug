@@ -32,56 +32,14 @@ class ServerFrame {
     void LoginPage(const httplib::Request& req, httplib::Response& resp) const;
 
    /**
-    * Function to send overview page, redirect to login depending on status:
-    * logged in/ not logged in.
+    * Function to send all pages (except login and start page).
+    * Redirect to login depending on status: logged in/ not logged in.
     * @param[in] req (reference to request)
     * @param[in, out] resp (server response)
     */
-    void Overview(const httplib::Request& req, httplib::Response& resp) const;
-
-   /**
-    * Function to send world page, redirect to login depending on status:
-    * logged in/ not logged in.
-    * f.e. world1, world2
-    * @param[in] req (reference to request)
-    * @param[in, out] resp (server response)
-    */
-    void World(const httplib::Request& req, httplib::Response& resp) const;
-
-   /**
-    * Function to send category page, redirect to login depending on status:
-    * logged in/ not logged in.
-    * f.e. attacks, config, ...
-    * @param[in] req (reference to request)
-    * @param[in, out] resp (server response)
-    */
-    void Category(const httplib::Request& req, httplib::Response& resp) const;
-
-    /**
-    * Function to send backup page, redirect to login depending on status:
-    * logged in/ not logged in.
-    * f.e. world1, world2
-    * @param[in] req (reference to request)
-    * @param[in, out] resp (server response)
-    */
-    void Backup(const httplib::Request& req, httplib::Response& resp) const;
-
-    /**
-    * Function to send sub_catorypage, redirect to login depending on status:
-    * logged in/ not logged in.
-    * f.e. bathroom, corridor...
-    * @param[in] req (reference to request)
-    * @param[in, out] resp (server response)
-    */
-    void SubCategory(const httplib::Request& req, httplib::Response& resp) const;
-
-    /**
-    * Function to send details of one object
-    * @param[in] req (reference to request)
-    * @param[in, out] resp (server response)
-    */
-    void Object(const httplib::Request& req, httplib::Response& resp) const;
-
+    void ServeFile(const httplib::Request& req, httplib::Response& resp,
+        bool backup=false) const;
+   
     /**
      * function to handle login
      * @param[in] req (reference to request)
@@ -118,7 +76,6 @@ class ServerFrame {
      */
     void Backups(const httplib::Request& req, httplib::Response& resp, 
         std::string action);
-
 
   private: 
 

@@ -29,8 +29,10 @@ void User::set_password(std::string password) {
 // ** Serve an generate pages ** //
 
 std::string User::GetOverview() {
-  nlohmann::json worlds;
-  worlds["username"] = username_;
+  //Create initial json with username.
+  nlohmann::json worlds = nlohmann::json({{"username", username_}});
+
+  //Add all dictionaries of this user to json.
   for (auto& p : fs::directory_iterator(path_)) {
     if (p.path().stem() != "user")
       worlds["worlds"].push_back(p.path().stem());
@@ -43,18 +45,21 @@ std::string User::GetOverview() {
 }
 
 std::string User::GetWorld(std::string world) {
-  nlohmann::json j = nlohmann::json({{"world", world}, {"categories", categories_}});
+  //Create initial json with world and all categories.
+  nlohmann::json j = nlohmann::json({{"world", world}, {"categories", 
+      categories_}});
+
+  //Create dictionaries for all categories, if they do not exist.
   for (auto cat : categories_)
     fs::create_directory(path_+"/"+world+"/"+cat);
 
-  //Parse overview page. 
+  //Parse world page. 
   inja::Environment env;                                                                  
   inja::Template temp = env.parse_template("web/in_world_template.html");
   return env.render(temp, j);
 }
 
 std::string User::GetBackups(std::string world) {
-
   //Get all backups for this world.
   std::vector<std::string> backups;
   for (auto& p  : fs::directory_iterator(path_backup_)) {
@@ -64,7 +69,7 @@ std::string User::GetBackups(std::string world) {
     }
   }
 
-  //Parse overview page. 
+  //Parse backup page. 
   nlohmann::json j = nlohmann::json({{"world", world}, {"backups", backups}});
   inja::Environment env;                                                                  
   inja::Template temp = env.parse_template("web/backups_template.html");
@@ -72,34 +77,39 @@ std::string User::GetBackups(std::string world) {
 }
 
 std::string User::GetCategory(std::string world, std::string category) {
+  //Build path to category and create initial json.
   std::string path = path_+"/"+world+"/"+category;
   nlohmann::json j_category = nlohmann::json({{"world", world}, 
       {"category", category}});
+
+  inja::Environment env;
+  inja::Template temp;
+
+  //Directly parse config page.
   if (category == "config") {
     std::ifstream read(path+".json");
     nlohmann::json j;
     read >> j;
     read.close();
     j_category["json"] = j;
-    inja::Environment env;
-    inja::Template temp = env.parse_template("web/in_json_template.html");
-    return env.render(temp, j_category);
+    temp = env.parse_template("web/in_json_template.html");
   }
 
-  j_category["sub_categories"] = nlohmann::json::array();
-  for (auto p : fs::directory_iterator(path+"/")) 
-    j_category["sub_categories"].push_back(p.path().stem());
-
-  inja::Environment env;
-  inja::Template temp = env.parse_template("web/in_category_template.html");
+  //Add all files in category to json and parse json.
+  else {
+    j_category["sub_categories"] = nlohmann::json::array();
+    for (auto p : fs::directory_iterator(path+"/")) 
+      j_category["sub_categories"].push_back(p.path().stem());
+    temp = env.parse_template("web/in_category_template.html");
+  }
   return env.render(temp, j_category);
 }
 
 std::string User::GetObjects(std::string world, std::string category, 
       std::string sub) {
+  //Create path and trying to load into json 
+  std::string path = path_+"/"+world+"/"+category+"/"+sub+".json";
   nlohmann::json objects;
-  std::string path = path_+"/"+world+"/"+category+"/"
-    +sub+".json";
   try{ 
     std::ifstream read(path);
     read>>objects;
@@ -125,6 +135,7 @@ std::string User::GetObjects(std::string world, std::string category,
       couter++;
     }
   }
+  
   //Style for defaultDialogs, array of arrays
   else {
     for (size_t i=1; i<=objects.size(); i++) 
@@ -136,9 +147,10 @@ std::string User::GetObjects(std::string world, std::string category,
 
 std::string User::GetObject(std::string world, std::string category, 
         std::string sub, std::string obj) {
-  nlohmann::json objects;
+  //Create path and trying to load into json 
   std::string path = path_+"/"+world+"/"+category+"/"
     +sub+".json";
+  nlohmann::json objects;
   try{ 
     std::ifstream read(path);
     read>>objects;
@@ -150,10 +162,12 @@ std::string User::GetObject(std::string world, std::string category,
   }
 
   nlohmann::json overview;   
+  //Load object by id
   if (objects.is_array() == false) {
     if (objects.count(obj) > 0)
       overview = objects[obj];
   }
+  //Load object by number
   else {
     int num = std::stoi(obj.substr(obj.length()-1))-1;
     if (objects.size() > num)
@@ -165,6 +179,7 @@ std::string User::GetObject(std::string world, std::string category,
   inja::Environment env;
   inja::Template temp;
 
+  //Parse standard templates for descriptions and the header.
   inja::Template description_template = env.parse_template("web/description_template.html");
   env.include_template("web/temp_description", description_template);
   inja::Template room_description_template = 
@@ -173,6 +188,7 @@ std::string User::GetObject(std::string world, std::string category,
   inja::Template object_header_template = env.parse_template("web/object_header_template.html");
   env.include_template("web/temp_header", object_header_template);
 
+  //Parse different objects.
   if (category == "rooms")
     temp = env.parse_template("web/in_room_template.html");
   else if (category == "characters")
