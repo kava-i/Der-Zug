@@ -70,6 +70,13 @@ class ServerFrame {
     void DelUser(const httplib::Request& req, httplib::Response& resp);
 
     /**
+     * @brief Write (modified) object.
+     * @param[in] req (reference to request)
+     * @param[in, out] resp (reference to response)
+     */
+    void WriteObject(const httplib::Request& req, httplib::Response& resp);
+
+    /**
      * @brief Creates a backup of the selected world.
      * @param[in] req (reference to request)
      * @param[in, out] resp (reference to response)

@@ -260,8 +260,26 @@ bool User::CreateBackup(std::string world) {
   return true;
 }
 
-bool User::RestoreBackup(std::string request) {
+bool User::WriteObject(std::string request) {
+  //Get values from request
+  nlohmann::json json;
+  try {
+    json = nlohmann::json::parse(request);
+    if (json.count("json") == 0 || json.count("path") == 0) 
+      std::cout << "\"json\" or \"path\" not found!" << std::endl;
+  }
+  catch (std::exception& e) {
+    std::cout << "WriteObject: Problem parsing request: " << e.what() << "\n";
+    return false;
+  }
 
+  //Parse path.
+  std::cout << "Path:" << std::endl;
+  std::cout << json["path"] << std::endl;
+  return true;
+}
+
+bool User::RestoreBackup(std::string request) {
   //Try to parse json and check if "world" and "backup" fields exist.
   nlohmann::json json;
   try {

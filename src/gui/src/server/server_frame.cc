@@ -162,8 +162,32 @@ void ServerFrame::DelUser(const Request& req, Response& resp) {
   }
 }
 
-void ServerFrame::Backups(const Request& req, Response& resp, std::string action) {
+void ServerFrame::WriteObject(const Request& req, Response& resp) {
+  //Try to get username from cookie
+  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::shared_lock sl(shared_mtx_user_manager_);
+  std::string username = user_manager_.GetUserFromCookie(ptr);
+  sl.unlock();
 
+  //If user does not exist, redirect to login-page.
+  if (username == "") {
+    resp.status = 302;
+    resp.set_header("Location", "/login");
+  }
+  else {
+    sl.lock();
+    //Call matching function.
+    bool success = user_manager_.GetUser(username)->WriteObject(req.body);
+    sl.unlock();
+
+    if (success == true)
+      resp.status = 200;
+    else
+      resp.status = 401;
+  }
+}
+
+void ServerFrame::Backups(const Request& req, Response& resp, std::string action) {
   //Try to get username from cookie
   const char* ptr = get_header_value(req.headers, "Cookie");
   std::shared_lock sl(shared_mtx_user_manager_);

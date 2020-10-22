@@ -85,6 +85,13 @@ class User {
     void SafeUser() const;
 
     /**
+     * Write json to disc.
+     * @param[in] world (given world)
+     * @return boolean to indicate success.
+     */
+    bool WriteObject(std::string request);
+
+    /**
      * Create a backup of given world.
      * @param[in] world (given world)
      * @return boolean to indicate success.

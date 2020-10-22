@@ -29,43 +29,33 @@ int main() {
 
   srv.Get("/overview", [&](const Request& req, Response& resp) { 
       srv_frame.ServeFile(req, resp); });
-
-  srv.Get("/world_(.*)_category_(.*)_sub_(.*)_obj_(.*)", 
+  srv.Get("/world_(.*)/category_(.*)/sub_(.*)/obj_(.*)", 
       [&](const Request& req, Response& resp) { 
-      try{srv_frame.ServeFile(req, resp); }
-      catch(std::exception& e) {std::cout << e.what() << std::endl;} });
-
-  srv.Get("/world_(.*)_category_(.*)_sub_(.*)", [&](const Request& req, Response& resp) { 
-      try{srv_frame.ServeFile(req, resp); }
-      catch(std::exception& e) {std::cout << e.what() << std::endl;} });
-
-  srv.Get("/world_(.*)_category_(.*)", [&](const Request& req, Response& resp) { 
-      try{srv_frame.ServeFile(req, resp); }
-      catch(std::exception& e) {std::cout << e.what() << std::endl;} });
-
+    srv_frame.ServeFile(req, resp);});
+  srv.Get("/world_(.*)/category_(.*)/sub_(.*)", [&](const Request& req, Response& resp) { 
+    srv_frame.ServeFile(req, resp); });
+  srv.Get("/world_(.*)/category_(.*)", [&](const Request& req, Response& resp) { 
+    srv_frame.ServeFile(req, resp); });
   srv.Get("/backups_(.*)", [&](const Request& req, Response& resp) { 
-      try{srv_frame.ServeFile(req, resp, true); }
-      catch(std::exception& e) {std::cout << e.what() << std::endl;} });
-
+    srv_frame.ServeFile(req, resp, true); });
   srv.Get("/world_(.*)", [&](const Request& req, Response& resp) { 
-      try{srv_frame.ServeFile(req, resp); }
-      catch(std::exception& e) {std::cout << e.what() << std::endl;} });
+    srv_frame.ServeFile(req, resp); });
 
   //Actions
-  srv.Post("/api/user_login", [&](const Request& req, Response& resp) 
-      { srv_frame.DoLogin(req, resp); });
+  srv.Post("/api/user_login", [&](const Request& req, Response& resp) {
+    srv_frame.DoLogin(req, resp); });
   srv.Post("/api/user_registration", [&](const Request& req, Response& resp) {
-        try{srv_frame.DoRegistration(req, resp);}
-        catch(std::exception& e) {std::cout << e.what() << std::endl;}
-      });
-  srv.Post("/api/user_logout", [&](const Request& req, Response& resp)
-      { srv_frame.DoLogout(req, resp); });
-  srv.Post("/api/create_backup", [&](const Request& req, Response& resp)
-      { srv_frame.Backups(req, resp, "create"); });
-  srv.Post("/api/restore_backup", [&](const Request& req, Response& resp)
-      { srv_frame.Backups(req, resp, "restore"); });
-  srv.Post("/api/delete_backup", [&](const Request& req, Response& resp)
-      { srv_frame.Backups(req, resp, "delete"); });
+    srv_frame.DoRegistration(req, resp); });
+  srv.Post("/api/user_logout", [&](const Request& req, Response& resp) {
+    srv_frame.DoLogout(req, resp); });
+  srv.Post("/api/create_backup", [&](const Request& req, Response& resp) {
+    srv_frame.Backups(req, resp, "create"); });
+  srv.Post("/api/restore_backup", [&](const Request& req, Response& resp) {
+    srv_frame.Backups(req, resp, "restore"); });
+  srv.Post("/api/delete_backup", [&](const Request& req, Response& resp) {
+    srv_frame.Backups(req, resp, "delete"); });
+  srv.Post("/api/write_object", [&](const Request& req, Response& resp) {
+    srv_frame.WriteObject(req, resp); });
 
   //html
   srv.Get("/", [&](const Request& req, Response& resp) {

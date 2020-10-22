@@ -37,11 +37,12 @@ function CreateList(elem) {
   var elems = ul.children;
   var list = [];
 
-  //Itarate over all elements and create specific json to add to list
+  //Iterate over all elements and create specific json to add to list
   for (var i=0; i<elems.length; i++) {
     console.log(elems[i].getAttribute("custom"));
     //Skip empty fields.
-    if (GetValueFields(elems[i])[0].value == "")
+    if (GetValueFields(elems[i]).length == 0 || 
+        GetValueFields(elems[i])[0].value == "")
       continue;
     //Simple string
     if (elems[i].hasAttribute("custom") == false) {
@@ -116,7 +117,8 @@ function CreateObject(elem) {
   var json = new Object();
   var inputs = GetValueFields(elem);
   for (var i=0; i<inputs.length; i++) {
-    if (inputs[i].value == "") 
+    var val = inputs[i].value;
+    if (val == "" || (inputs[i].getAttribute("custom")=="json" && val=="{}"))
       continue;
     json[inputs[i].id] = GetAsType(inputs[i]);
   }
@@ -178,6 +180,31 @@ function OpenWriteModal(name) {
     + " current room (" + name + ") with following json:";
   document.getElementById("display_json").innerHTML = JSON.stringify(json, null, 4);
   document.getElementById("check_msg").elem_json = json;
+}
+
+//Write elemenet into json
+function WriteElem() {
+  console.log("Writing json");
+  //Send request
+  var request = new Object;
+  request.json = GenerateJson("object"); 
+  request.path = window.location.pathname;
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/api/write_object");
+  xhttp.send(JSON.stringify(request));
+
+  //Function to handle request 
+  xhttp.onload = function(event){
+    //If request fails, display message to user.
+    let msg = document.getElementsByClassName("user_error")[1];
+    if (xhttp.status != 200) {
+      alert("Problem writing json!");
+    }
+    //Display success message to user.
+    else {
+      window.location=window.location;
+    }
+  }
 }
 
 // ***** ***** DELETE/ ADD/ EXPAND/ ELEMENTS ***** ***** //
