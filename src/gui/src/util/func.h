@@ -6,6 +6,7 @@
 
 #include <chrono>
 #include <codecvt>
+#include <filesystem>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -16,6 +17,8 @@
 
 #include <string.h>
 #include <time.h>
+
+#include <nlohmann/json.hpp>
 
 namespace func 
 {
@@ -47,6 +50,16 @@ namespace func
    * @param[in] mime (immage type (jpg, png...)    
    */    
   std::string GetImage(std::string path);
+
+  bool demo_exists(const std::filesystem::path& p, 
+      std::filesystem::file_status s = std::filesystem::file_status{});
+
+  /*
+   * Load json from disc
+   * @param[in] path to file
+   * @return json
+   */
+  nlohmann::json LoadJsonFromDisc(std::string path);
 
   /**
    * Get current time in illiseconds.

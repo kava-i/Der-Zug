@@ -4,6 +4,8 @@
 #include <openssl/evp.h>
 #include <openssl/sha.h>
 
+namespace fs = std::filesystem;
+
 namespace func 
 {
 
@@ -58,6 +60,23 @@ std::string GetImage(std::string path) {
       
   std::string s(buffer.begin(), buffer.end());    
   return s;
+}
+
+bool demo_exists(const fs::path& p, fs::file_status s) {
+  if (fs::status_known(s) ? fs::exists(s) : fs::exists(p)) 
+    return true;
+  else
+    return false;
+}
+
+nlohmann::json LoadJsonFromDisc(std::string path) {
+  if (!demo_exists(path))
+    return nlohmann::json({{"error", "path not found!"}});
+  nlohmann::json json;
+  std::ifstream read(path);
+  read >> json;
+  read.close();
+  return json;
 }
 
 int TimeSinceEpoch() {

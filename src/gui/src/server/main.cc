@@ -29,16 +29,16 @@ int main() {
 
   srv.Get("/overview", [&](const Request& req, Response& resp) { 
       srv_frame.ServeFile(req, resp); });
-  srv.Get("/world_(.*)/category_(.*)/sub_(.*)/obj_(.*)", 
+  srv.Get("/files/(.*)/(.*)/(.*)/(.*)", 
       [&](const Request& req, Response& resp) { 
     srv_frame.ServeFile(req, resp);});
-  srv.Get("/world_(.*)/category_(.*)/sub_(.*)", [&](const Request& req, Response& resp) { 
+  srv.Get("/files/(.*)/(.*)/(.*)", [&](const Request& req, Response& resp) { 
     srv_frame.ServeFile(req, resp); });
-  srv.Get("/world_(.*)/category_(.*)", [&](const Request& req, Response& resp) { 
+  srv.Get("/files/(.*)/(.*)", [&](const Request& req, Response& resp) { 
     srv_frame.ServeFile(req, resp); });
   srv.Get("/backups_(.*)", [&](const Request& req, Response& resp) { 
     srv_frame.ServeFile(req, resp, true); });
-  srv.Get("/world_(.*)", [&](const Request& req, Response& resp) { 
+  srv.Get("/files/(.*)", [&](const Request& req, Response& resp) { 
     srv_frame.ServeFile(req, resp); });
 
   //Actions

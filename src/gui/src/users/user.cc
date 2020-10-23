@@ -225,17 +225,12 @@ nlohmann::json User::ConstructJson() const {
   return user;
 }
 
-bool demo_exists(const fs::path& p, fs::file_status s = fs::file_status{}) {
-  if (fs::status_known(s) ? fs::exists(s) : fs::exists(p)) 
-    return true;
-  else
-    return false;
-}
+
 
 bool User::CreateBackup(std::string world) {
   std::string path = path_ + "/" + world;
   
-  if (!demo_exists(path)) return false;
+  if (!func::demo_exists(path)) return false;
 
   //Create backup name ([word]_[YYYY-mm-dd_HH-MM-ss])
   time_t now;
@@ -246,7 +241,7 @@ bool User::CreateBackup(std::string world) {
   std::replace(path_backup.begin(), path_backup.end(), ':', '-');
 
   //Check if folder for this user already exists
-  if (!demo_exists(path_backup_))
+  if (!func::demo_exists(path_backup_))
     fs::create_directory(path_backup_);
 
   //Create backup, by copying all files to selected directory
@@ -263,10 +258,11 @@ bool User::CreateBackup(std::string world) {
 bool User::WriteObject(std::string request) {
   //Get values from request
   nlohmann::json json;
+  std::string path;
   try {
-    json = nlohmann::json::parse(request);
-    if (json.count("json") == 0 || json.count("path") == 0) 
-      std::cout << "\"json\" or \"path\" not found!" << std::endl;
+    nlohmann::json j = nlohmann::json::parse(request);
+    json = j["json"];
+    path = j["path"];
   }
   catch (std::exception& e) {
     std::cout << "WriteObject: Problem parsing request: " << e.what() << "\n";
@@ -274,8 +270,22 @@ bool User::WriteObject(std::string request) {
   }
 
   //Parse path.
-  std::cout << "Path:" << std::endl;
-  std::cout << json["path"] << std::endl;
+  std::string path_to_object = path_ + "/" + path.substr(7, path.rfind("/")-7) 
+    + ".json";
+
+  //Read json
+  std::cout << "Reading json\n";
+  if (!func::demo_exists(path_to_object)) {
+    std::cout << "Path: " << path_to_object << " don't exist!\n";
+    return false;
+  }
+  nlohmann::json object = func::LoadJsonFromDisc(path_to_object);
+  
+  //Modify and write object.
+  object[json["id"].get<std::string>()] = json;
+  std::ofstream write(path_to_object);
+  write << object;
+  write.close();
   return true;
 }
 
@@ -297,7 +307,7 @@ bool User::RestoreBackup(std::string request) {
   std::string path_to_world = path_ + "/" + json["world"].get<std::string>();
 
   //Check if both paths exist.
-  if (!demo_exists(path) || !demo_exists(path_to_world)) {
+  if (!func::demo_exists(path) || !func::demo_exists(path_to_world)) {
     std::cout << "Backup " << path << " doesn't exist! Or ";
     std::cout << "World " << path_to_world << " doesn't exist!" << std::endl;
     return false;
@@ -321,7 +331,7 @@ bool User::DeleteBackup(std::string backup) {
 
   //Build path, then check if path exists.
   std::string path = path_backup_ + "/" + backup;
-  if (!demo_exists(path)) {
+  if (!func::demo_exists(path)) {
     std::cout << "Backup " << path << " does not exist!" << std::endl;
     return false;
   }
