@@ -22,13 +22,13 @@
         <li class="breadcrumb-item"><a href="/">Game*Creator</a></li>
         <li class="breadcrumb-item"><a href="/login">Login</a></li>
         <li class="breadcrumb-item"><a href="/overview">Overview</a></li>
-        <li class="breadcrumb-item"><a href="/files/{{world}}">{{world}}</a></li>
+        <li class="breadcrumb-item"><a href="/{{user}}/files/{{world}}">{{world}}</a></li>
         <li class="breadcrumb-item active" aria-current="page"><a>{{category}}</a></li>
     </ol>
 </nav>
 
 <div class="top_right">
-  <img src="web/logo.png" style="margin-bottom:0.5em;"><br>
+  <img src="/web/logo.png" style="margin-bottom:0.5em;"><br>
 </div>
 
 <div class="box_overview center_in_box">
@@ -37,7 +37,7 @@
         <table id="controller">
           {% for sub in sub_categories %}
             <tr>
-              <td><a class="medium" href="/files/{{world}}/{{category}}/{{sub}}">
+              <td><a class="medium" href="/{{user}}/files/{{world}}/{{category}}/{{sub}}">
                   {{sub}}</a>
               </td>
             <td>

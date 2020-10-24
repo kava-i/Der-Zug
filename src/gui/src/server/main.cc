@@ -29,16 +29,16 @@ int main() {
 
   srv.Get("/overview", [&](const Request& req, Response& resp) { 
       srv_frame.ServeFile(req, resp); });
-  srv.Get("/files/(.*)/(.*)/(.*)/(.*)", 
+  srv.Get("/(.*)/files/(.*)/(.*)/(.*)/(.*)", 
       [&](const Request& req, Response& resp) { 
     srv_frame.ServeFile(req, resp);});
-  srv.Get("/files/(.*)/(.*)/(.*)", [&](const Request& req, Response& resp) { 
+  srv.Get("/(.*)/files/(.*)/(.*)/(.*)", [&](const Request& req, Response& resp) { 
     srv_frame.ServeFile(req, resp); });
-  srv.Get("/files/(.*)/(.*)", [&](const Request& req, Response& resp) { 
+  srv.Get("/(.*)/files/(.*)/(.*)", [&](const Request& req, Response& resp) { 
     srv_frame.ServeFile(req, resp); });
-  srv.Get("/backups_(.*)", [&](const Request& req, Response& resp) { 
+  srv.Get("/(.*)/backups/(.*)", [&](const Request& req, Response& resp) { 
     srv_frame.ServeFile(req, resp, true); });
-  srv.Get("/files/(.*)", [&](const Request& req, Response& resp) { 
+  srv.Get("/(.*)/files/(.*)", [&](const Request& req, Response& resp) { 
     srv_frame.ServeFile(req, resp); });
 
   //Actions

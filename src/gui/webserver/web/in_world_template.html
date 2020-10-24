@@ -27,7 +27,7 @@
 </nav>
 
 <div class="top_right">
-  <img src="web/logo.png" style="margin-bottom:0.5em;"><br>
+  <img src="/web/logo.png" style="margin-bottom:0.5em;"><br>
 </div>
 
 <div class="box_overview center_in_box">
@@ -35,20 +35,18 @@
     <div class="controlers">
       <table id="categorys">
         <tr>
-          <td><a class="medium" href="/files/{{world}}/category_config">Config</a></td>
+          <td><a class="medium" href="/{{user}}/files/{{world}}/category_config">Config</a></td>
         </tr>
         {% for cat in categories %}
           <tr>
-            <td><a class="medium" href="/files/{{world}}/{{cat}}">{{cat}}</a></td>
+            <td><a class="medium" href="/{{user}}/files/{{world}}/{{cat}}">{{cat}}</a></td>
           </tr>
         {% endfor %}
       </table>
 
       <button class="pure-button" style="margin-bottom:0.5em;" onclick="create_backup();">
         Create Backup</button><br>
-      <button class="pure-button" onclick="window.location.href='/backups_{{world}}'">
+      <button class="pure-button" onclick="window.location.href='/{{user}}/backups/{{world}}'">
         Show Backups</button>
     </div>
 </div>
-
-

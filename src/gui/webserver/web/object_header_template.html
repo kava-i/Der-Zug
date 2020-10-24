@@ -21,18 +21,18 @@
         <li class="breadcrumb-item"><a href="/">Game*Creator</a></li>
         <li class="breadcrumb-item"><a href="/login">Login</a></li>
         <li class="breadcrumb-item"><a href="/overview">Overview</a></li>
-        <li class="breadcrumb-item"><a href="/files/{{header.world}}">{{header.world}}</a></li>
+        <li class="breadcrumb-item"><a href="/{{header.user}}/files/{{header.world}}">{{header.world}}</a></li>
         <li class="breadcrumb-item"><a 
-            href="/files/{{header.world}}/{{header.category}}">{{header.category}}</a></li>
+            href="/{{header.user}}/files/{{header.world}}/{{header.category}}">{{header.category}}</a></li>
         <li class="breadcrumb-item"><a 
-            href="/files/{{header.world}}/{{header.category}}/{{header.sub}}"
+            href="/{{header.user}}/files/{{header.world}}/{{header.category}}/{{header.sub}}"
             >{{header.sub}}</a></li>
         <li class="breadcrumb-item active" aria-current="page"><a>{{id}}</a></li>
     </ol>
 </nav>
 
 <div class="top_right">
-  <img src="web/logo.png" style="margin-bottom:0.5em;"><br>
+  <img src="/web/logo.png" style="margin-bottom:0.5em;"><br>
 </div>
 
 

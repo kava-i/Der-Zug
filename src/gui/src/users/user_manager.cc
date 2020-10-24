@@ -10,17 +10,21 @@ UserManager::UserManager(std::string main_path, std::vector<std::string> cats)
   : path_(main_path), categories_(cats) {
   //Iterate over users and create user.
   for (auto& p : fs::directory_iterator(path_)) {
+    std::cout << "Loading... " << p.path() << std::endl;
     std::string path = p.path();
     std::ifstream read(path +"/user.json");
     nlohmann::json user;
     read >> user;
     
-    std::cout << p.path() << std::endl;
-    std::string backups = path_.substr(0, path.find("users"));
-    backups += "backups/" + user["username"].get<std::string>();
-    std::cout << "Backup path: " << backups << std::endl;
-    users_[user["username"]] = new User(user["username"], user["password"], 
-        path, backups, categories_);
+    try {
+      std::cout << "Creating user..." << std::endl;
+      users_[user["username"]] = new User(user["username"], user["password"], 
+        path_, user["locations"], categories_);
+      std::cout << "User " << user["username"] << " created." << std::endl;
+    }
+    catch(std::exception& e) {
+      std::cout << "Creating user at path: " << p.path() << " failed!\n";
+    }
   }
   
   std::cout << users_.size() << " users initialized!" << std::endl;
@@ -48,11 +52,8 @@ void UserManager::AddUser(std::string username, std::string password) {
   nlohmann::json user;
   user["password"] = password;
   user["username"] = username;
-  std::string backups = path_.substr(0, path_.find("users"));
-  backups += "backups/" + user["username"].get<std::string>();
   std::unique_lock ul(shared_mutex_users_);
-  users_[username] = new User(username, user, path_+"/"+username, backups, 
-      categories_);
+  users_[username] = new User(username, user, path_, categories_);
   users_[username]->SafeUser();
 }
 

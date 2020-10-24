@@ -35,6 +35,7 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
   const char* ptr = get_header_value(req.headers, "Cookie");
   std::shared_lock sl(shared_mtx_user_manager_);
   std::string username = user_manager_.GetUserFromCookie(ptr);
+  User* user = user_manager_.GetUser(username);
   sl.unlock();
 
   //If user does not exist, redirect to login-page.
@@ -42,25 +43,31 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
     resp.status = 302;
     resp.set_header("Location", "/login");
   }
+  else if (user->CheckAccessToLocations(req.matches[0]) == false) {
+    resp.status = 302;
+    resp.set_header("Location", "/overview");
+  }
   else {
-    sl.lock();
-    User* user = user_manager_.GetUser(username);
     std::string page = "";
-    if (req.matches.size() == 1)
-      page = user->GetOverview();
-    else if (req.matches.size() == 2 && backup == false)
-      page = user->GetWorld(req.matches[1]);
-    else if (req.matches.size() == 2 && backup == true)
-      page = user->GetBackups(req.matches[1]);
-    else if (req.matches.size() == 3)
-      page = user->GetCategory(req.matches[1], req.matches[2]);
-    else if (req.matches.size() == 4)
-      page = user->GetObjects(req.matches[1], req.matches[2], req.matches[3]);
-    else if (req.matches.size() == 5) {
-      page = user->GetObject(req.matches[1], req.matches[2], req.matches[3], 
-          req.matches[4]);
+    try {
+      if (req.matches.size() == 1)
+        page = user->GetOverview();
+      else if (req.matches.size() == 3 && backup == false)
+        page = user->GetWorld(req.matches[0], req.matches[2]);
+      else if (req.matches.size() == 3 && backup == true)
+        page = user->GetBackups(req.matches[2]);
+      else if (req.matches.size() == 4)
+        page = user->GetCategory(req.matches[2], req.matches[3]);
+      else if (req.matches.size() == 5)
+        page = user->GetObjects(req.matches[2], req.matches[3], req.matches[4]);
+      else if (req.matches.size() == 6) {
+        page = user->GetObject(req.matches[2], req.matches[3], 
+            req.matches[4], req.matches[5]);
+      }
     }
-    sl.unlock();
+    catch (std::exception& e) {
+      std::cout << "ServeFile: " << e.what() << std::endl;
+    }
     resp.set_content(page.c_str(), "text/html");
   }
 }

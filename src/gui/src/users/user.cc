@@ -6,12 +6,18 @@
 
 namespace fs = std::filesystem;
 
-User::User(std::string name, std::string pw, std::string path, std::string 
-    path_backup, std::vector<std::string> cats) : username_(name), 
-    path_(path), path_backup_(path_backup), categories_(cats) {
+User::User(std::string name, std::string pw, std::string path, std::vector
+    <std::string> cats) : username_(name), path_(path), categories_(cats) {
   password_ = pw;
+  locations_.push_back(username_ + "/");
 }
 
+User::User(std::string name, std::string pw, std::string path, 
+    std::vector<std::string> locations, std::vector
+    <std::string> cats) : username_(name), path_(path), categories_(cats) {
+  password_ = pw;
+  locations_ = locations;
+}
 //** Getter ** //
 
 std::string User::password() const {
@@ -29,13 +35,17 @@ void User::set_password(std::string password) {
 // ** Serve an generate pages ** //
 
 std::string User::GetOverview() {
+  std::cout << "GetOverview" << std::endl;
   //Create initial json with username.
   nlohmann::json worlds = nlohmann::json({{"username", username_}});
 
   //Add all dictionaries of this user to json.
-  for (auto& p : fs::directory_iterator(path_)) {
+  for (auto& p : fs::directory_iterator(path_ + "/" + username_ + "/files")) {
     if (p.path().stem() != "user")
       worlds["worlds"].push_back(p.path().stem());
+  }
+  for (size_t i=1; i<locations_.size(); i++) {
+    worlds["worlds"].push_back(locations_[i]);
   }
     
   //Parse overview page. 
@@ -44,14 +54,15 @@ std::string User::GetOverview() {
   return env.render(temp, worlds);
 }
 
-std::string User::GetWorld(std::string world) {
+std::string User::GetWorld(std::string path, std::string world) {
+  std::cout << "GetWorld" << std::endl;
   //Create initial json with world and all categories.
-  nlohmann::json j = nlohmann::json({{"world", world}, {"categories", 
-      categories_}});
+  nlohmann::json j = nlohmann::json({{"user", username_}, {"world", world}, 
+      {"categories", categories_}});
 
   //Create dictionaries for all categories, if they do not exist.
   for (auto cat : categories_)
-    fs::create_directory(path_+"/"+world+"/"+cat);
+    fs::create_directory(path_+path+"/"+cat);
 
   //Parse world page. 
   inja::Environment env;                                                                  
@@ -60,9 +71,10 @@ std::string User::GetWorld(std::string world) {
 }
 
 std::string User::GetBackups(std::string world) {
+  std::cout << "GetBackups" << std::endl;
   //Get all backups for this world.
   std::vector<std::string> backups;
-  for (auto& p  : fs::directory_iterator(path_backup_)) {
+  for (auto& p  : fs::directory_iterator(path_ + "/backups")) {
     std::string backup = p.path().filename();
     if (backup.find(world) == 0) {
       backups.push_back(backup);
@@ -70,16 +82,18 @@ std::string User::GetBackups(std::string world) {
   }
 
   //Parse backup page. 
-  nlohmann::json j = nlohmann::json({{"world", world}, {"backups", backups}});
+  nlohmann::json j = nlohmann::json({{"user", username_}, {"world", world}, 
+      {"backups", backups}});
   inja::Environment env;                                                                  
   inja::Template temp = env.parse_template("web/backups_template.html");
   return env.render(temp, j);
 }
 
 std::string User::GetCategory(std::string world, std::string category) {
+  std::cout << "GetCategory" << std::endl;
   //Build path to category and create initial json.
-  std::string path = path_+"/"+world+"/"+category;
-  nlohmann::json j_category = nlohmann::json({{"world", world}, 
+  std::string path = path_+"/files/"+world+"/"+category;
+  nlohmann::json j_category = nlohmann::json({{"user", username_}, {"world", world}, 
       {"category", category}});
 
   inja::Environment env;
@@ -107,8 +121,9 @@ std::string User::GetCategory(std::string world, std::string category) {
 
 std::string User::GetObjects(std::string world, std::string category, 
       std::string sub) {
+  std::cout << "GetObjects" << std::endl;
   //Create path and trying to load into json 
-  std::string path = path_+"/"+world+"/"+category+"/"+sub+".json";
+  std::string path = path_+"/files/"+world+"/"+category+"/"+sub+".json";
   nlohmann::json objects;
   try{ 
     std::ifstream read(path);
@@ -121,8 +136,9 @@ std::string User::GetObjects(std::string world, std::string category,
   }
 
   inja::Environment env;
-  nlohmann::json overview = nlohmann::json({{"world", world}, {"category", category},
-        {"sub", sub}, {"objects", nlohmann::json::array()}});
+  nlohmann::json overview = nlohmann::json({{"user", username_}, 
+      {"world", world}, {"category", category}, {"sub", sub}, 
+      {"objects", nlohmann::json::array()}});
   
   //Standard style, for rooms, items, ... Dictionary or dictionaries
   if (objects.is_array() == false) {
@@ -147,9 +163,9 @@ std::string User::GetObjects(std::string world, std::string category,
 
 std::string User::GetObject(std::string world, std::string category, 
         std::string sub, std::string obj) {
+  std::cout << "GetObject" << std::endl;
   //Create path and trying to load into json 
-  std::string path = path_+"/"+world+"/"+category+"/"
-    +sub+".json";
+  std::string path = path_+"/files/"+world+"/"+category+"/"+sub+".json";
   nlohmann::json objects;
   try{ 
     std::ifstream read(path);
@@ -173,8 +189,8 @@ std::string User::GetObject(std::string world, std::string category,
     if (objects.size() > num)
       overview["json"] = objects[num];
   }
-  overview["header"] = nlohmann::json({{"world", world}, {"category", category},
-      {"sub", sub}, {"obj",obj}});
+  overview["header"] = nlohmann::json({{"user", username_}, {"world", world}, 
+      {"category", category}, {"sub", sub}, {"obj",obj}});
 
   inja::Environment env;
   inja::Template temp;
@@ -200,12 +216,17 @@ std::string User::GetObject(std::string world, std::string category,
 
 // ** Functions ** //
 
+bool User::CheckAccessToLocations(std::string path) { 
+  std::cout << "CheckAccessToLocations: " << path << std::endl; 
+  return true; 
+}
+
 void User::SafeUser() const {
   try { 
-    fs::create_directory(path_);
+    fs::create_directory(path_ + "/" + username_);
   }
   catch(...) {}
-  std::string path = path_ + "/user.json";  
+  std::string path = path_ + "/" + username_ + "/user.json";  
   std::ofstream write(path);
   if (!write) {
     std::cout << "Serious error: json not found: " << path << std::endl;
@@ -222,13 +243,14 @@ nlohmann::json User::ConstructJson() const {
   nlohmann::json user;
   user["username"] = username_;
   user["password"] = password_;
+  user["locations"] = locations_;
   return user;
 }
 
 
 
 bool User::CreateBackup(std::string world) {
-  std::string path = path_ + "/" + world;
+  std::string path = path_ + "/files/" + world;
   
   if (!func::demo_exists(path)) return false;
 
@@ -237,12 +259,8 @@ bool User::CreateBackup(std::string world) {
   std::time(&now);
   char buf_human[sizeof("YYYY-mm-dd_HH-MM-ss")];
   strftime(buf_human, sizeof(buf_human), "%F_%T", localtime(&now));
-  std::string path_backup = path_backup_ + "/" + world + "_" + buf_human;
+  std::string path_backup = path_ + "/backups/" + world + "_" + buf_human;
   std::replace(path_backup.begin(), path_backup.end(), ':', '-');
-
-  //Check if folder for this user already exists
-  if (!func::demo_exists(path_backup_))
-    fs::create_directory(path_backup_);
 
   //Create backup, by copying all files to selected directory
   try { 
@@ -270,6 +288,11 @@ bool User::WriteObject(std::string request) {
   }
 
   //Parse path.
+  //TODO (fux): Here different paths are needed:
+  //paths_[0] = ../../data/users/
+  //paths_[1] = ../../data/users/[username]/  (path to one folder)
+  //paths_[2] = ../../data/users/[user]/      (path to shared folder
+  //...                                       (additional shared folders)
   std::string path_to_object = path_ + "/" + path.substr(7, path.rfind("/")-7) 
     + ".json";
 
@@ -303,8 +326,8 @@ bool User::RestoreBackup(std::string request) {
   }
   //
   //Create path to selected backup and world.
-  std::string path = path_backup_ + "/" + json["backup"].get<std::string>();
-  std::string path_to_world = path_ + "/" + json["world"].get<std::string>();
+  std::string path = path_ + "/backups/" + json["backup"].get<std::string>();
+  std::string path_to_world = path_ + "/files/" + json["world"].get<std::string>();
 
   //Check if both paths exist.
   if (!func::demo_exists(path) || !func::demo_exists(path_to_world)) {
@@ -330,7 +353,7 @@ bool User::RestoreBackup(std::string request) {
 bool User::DeleteBackup(std::string backup) {
 
   //Build path, then check if path exists.
-  std::string path = path_backup_ + "/" + backup;
+  std::string path = path_ + "/backups/" + backup;
   if (!func::demo_exists(path)) {
     std::cout << "Backup " << path << " does not exist!" << std::endl;
     return false;

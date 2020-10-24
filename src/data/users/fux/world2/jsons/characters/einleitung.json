@@ -1,2 +1,0 @@
-
-{"taxifahrer": {"name": "Taxifahrer", "id": "taxifahrer", "roomDescription": [{"text": "Gelangweilt sitz vorne ein Taxifahrer."}], "handlers": [{"id": "h_thieve", "string": "pick", "priority": 0, "infos": ""}]}, "jan": {"name": "mysteri\u00f6se gestalt im kofferraum", "id": "jan", "hp": 9001, "strength": 9001}}

@@ -26,11 +26,25 @@ class User {
 
     /**
      * Constructor creating a (new) user.
-     * @param[in] username (name of user).
-     * @param[in] user (json with user-data).
+     * @param[in] username.
+     * @param[in] pw (password).
+     * @param[in] path (path to folders).
+     * @param[in] categories (all currently available categories)
     */
-    User(std::string username, std::string pw, std::string path,
-        std::string path_backup, std::vector<std::string> categories);
+    User(std::string username, std::string pw, std::string path, std::vector
+        <std::string> categories);
+
+    /**
+     * Constructor creating a (new) user.
+     * @param[in] username.
+     * @param[in] pw (password).
+     * @param[in] path (path to folders).
+     * @param[in] locations (locations available for this user).
+     * @param[in] categories (all currently available categories)
+    */
+    User(std::string username, std::string pw, std::string path, std::vector
+        <std::string> locations, std::vector<std::string> categories);
+
 
     // ** getter ** //
     std::string password() const;
@@ -49,13 +63,14 @@ class User {
     /**
      * Get Overview of one world. (f.e. world1)
      */
-    std::string GetWorld(std::string world);
+    std::string GetWorld(std::string path, std::string world);
 
     /**
      * Get Overview of a category. 
      * (f.e. world1/rooms = trainstation, hospital...)
      */
-    std::string GetCategory(std::string world, std::string category);
+    std::string GetCategory(std::string world, 
+        std::string category);
 
     /**
      * Get Overview of a backups. 
@@ -67,14 +82,14 @@ class User {
      * Get Overview of a SubCategory.
      * (f.e. world1/rooms/trainstation = platform a, great_hall ...)
      */
-    std::string GetObjects(std::string world, std::string category, 
-        std::string sub);
+    std::string GetObjects(std::string world, std::string 
+        category, std::string sub);
 
     /*
      * Get one object.
      */
-    std::string GetObject(std::string world, std::string category, 
-        std::string sub, std::string obj);
+    std::string GetObject(std::string world, std::string 
+        category, std::string sub, std::string obj);
 
 
     // ** functions ** //
@@ -83,6 +98,12 @@ class User {
      * Write users jsons to disc.
      */
     void SafeUser() const;
+
+    /**
+     * Check whether user has access to given path.
+     * @param[in] path.
+     */
+    bool CheckAccessToLocations(std::string path);
 
     /**
      * Write json to disc.
@@ -118,13 +139,16 @@ class User {
     std::string password_;  ///< password 
     mutable std::shared_mutex shared_mtx_password_;
     const std::string path_;
-    const std::string path_backup_;
+    std::vector<std::string> locations_;
+    mutable std::shared_mutex shared_mtx_locations_;
     const std::vector<std::string> categories_;
+
     /**
      * Construct a json with all the values from user.
      * @return return json of user.
      */
     nlohmann::json ConstructJson() const;
+
 };
 
 #endif
