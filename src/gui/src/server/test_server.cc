@@ -3,7 +3,7 @@
  */
 #define CATCH_CONFIG_MAIN
 
-#include <opstream>
+#include <iostream>
 #include <thread>
 
 #include <catch2/catch.hpp>
