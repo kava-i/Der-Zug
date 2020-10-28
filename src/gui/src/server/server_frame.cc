@@ -13,6 +13,73 @@ ServerFrame::ServerFrame() : user_manager_("../../data/users/", {"attacks",
 void ServerFrame::Start(int port) {
   std::cout << "Starting on Port: " << port << std::endl;
 
+  //Pages
+  server_.Get("/login", [&](const Request& req, Response& resp) { 
+      LoginPage(req, resp);});
+  server_.Get("/overview", [&](const Request& req, Response& resp) { 
+      ServeFile(req, resp); });
+  server_.Get("/(.*)/files/(.*)/(.*)/(.*)/(.*)", [&](const Request& req, 
+        Response& resp) { 
+      ServeFile(req, resp);});
+  server_.Get("/(.*)/files/(.*)/(.*)/(.*)", [&](const Request& req, 
+        Response& resp) { 
+      ServeFile(req, resp); });
+  server_.Get("/(.*)/files/(.*)/(.*)", [&](const Request& req, Response& resp) { 
+      ServeFile(req, resp); });
+  server_.Get("/(.*)/backups/(.*)", [&](const Request& req, Response& resp) { 
+      ServeFile(req, resp, true); });
+  server_.Get("/(.*)/files/(.*)", [&](const Request& req, Response& resp) { 
+      ServeFile(req, resp); });
+
+  //Actions
+  server_.Post("/api/user_login", [&](const Request& req, Response& resp) {
+      DoLogin(req, resp); });
+  server_.Post("/api/user_registration", [&](const Request& req, Response& resp) {
+      DoRegistration(req, resp); });
+  server_.Post("/api/user_logout", [&](const Request& req, Response& resp) {
+      DoLogout(req, resp); });
+  server_.Post("/api/create_backup", [&](const Request& req, Response& resp) {
+      Backups(req, resp, "create"); });
+  server_.Post("/api/restore_backup", [&](const Request& req, Response& resp) {
+      Backups(req, resp, "restore"); });
+  server_.Post("/api/delete_backup", [&](const Request& req, Response& resp) {
+      Backups(req, resp, "delete"); });
+  server_.Post("/api/write_object", [&](const Request& req, Response& resp) {
+      WriteObject(req, resp); });
+
+  //html
+  server_.Get("/", [&](const Request& req, Response& resp) {
+      resp.set_content(func::GetPage("web/main.html"), "text/html"); });
+  server_.Get("/login", [&](const Request& req, Response& resp) {
+      resp.set_content(func::GetPage("web/login.html"), "text/html"); });
+  server_.Get("/registration", [](const Request& req, Response& resp)
+      { resp.set_content(func::GetPage("web/registration.html"), "text/html"); });
+
+  //javascript/ css
+  server_.Get("/web/general.css", [&](const Request& req, Response& resp) {
+      resp.set_content(func::GetPage("web/general.css"), "text/css"); });
+  server_.Get("/web/object.css", [&](const Request& req, Response& resp) {
+      resp.set_content(func::GetPage("web/object.css"), "text/css"); });
+  server_.Get("/web/general.js", [&](const Request& req, Response& resp) {
+      resp.set_content(func::GetPage("web/general.js"), "application/javascript"); });
+  server_.Get("/web/object.js", [&](const Request& req, Response& resp) {
+      resp.set_content(func::GetPage("web/object.js"), "application/javascript"); });
+  server_.Get("/web/backup.js", [&](const Request& req, Response& resp) {
+      resp.set_content(func::GetPage("web/backup.js"), "application/javascript"); });
+  server_.Get("/web/registration.js", [](const Request& req, Response& resp)
+      { resp.set_content(func::GetPage("web/registration.js"), 
+          "application/javascript");});
+  server_.Get("/web/login.js", [](const Request& req, Response& resp)
+      { resp.set_content(func::GetPage("web/login.js"), 
+          "application/javascript");});
+  server_.Get("/web/overview.js", [](const Request& req, Response& resp)
+      { resp.set_content(func::GetPage("web/overview.js"), 
+          "application/javascript");});
+
+  //Images
+  server_.Get("/web/background.jpg", [](const Request& req, Response& resp) {
+      resp.set_content(func::GetImage("web/images/background.jpg"), "image/jpg");});
+
   std::cout << "C++ Api server startup successfull!" << std::endl;
   server_.listen("0.0.0.0", port);
 }
@@ -233,4 +300,16 @@ void ServerFrame::Backups(const Request& req, Response& resp, std::string action
     else
       resp.status = 401;
   }
+}
+
+bool ServerFrame::IsRunning() {
+  return server_.is_running();
+}
+
+void ServerFrame::Stop() {
+  server_.stop();
+}
+
+ServerFrame::~ServerFrame() {
+  Stop();
 }
