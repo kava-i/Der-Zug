@@ -18,25 +18,36 @@
 class ServerFrame {
   public: 
 
-    //Constructor
+    /**
+     * Constructor. 
+     * Creating user_manager with path to user-data and possible categories.
+     */
     ServerFrame();
-  
+
+    /**
+     * Starts server. 
+     * Server is started on given port. Also handlers are initialized.
+     * @param[in] port (Port to start server on)
+     */
+    void Start(int port);
+
+
     //Handler
 
-   /**
-    * Function to send login page, or overview page, depending on status:
-    * logged in/ not logged in.
-    * @param[in] req (reference to request)
-    * @param[in, out] resp (server response)
-    */
+    /**
+     * Function to send login page, or overview page, depending on status:
+     * logged in/ not logged in.
+     * @param[in] req (reference to request)
+     * @param[in, out] resp (server response)
+     */
     void LoginPage(const httplib::Request& req, httplib::Response& resp) const;
 
-   /**
-    * Function to send all pages (except login and start page).
-    * Redirect to login depending on status: logged in/ not logged in.
-    * @param[in] req (reference to request)
-    * @param[in, out] resp (server response)
-    */
+    /**
+      * Function to send all pages (except login and start page).
+      * Redirect to login depending on status: logged in/ not logged in.
+      * @param[in] req (reference to request)
+      * @param[in, out] resp (server response)
+      */
     void ServeFile(const httplib::Request& req, httplib::Response& resp,
         bool backup=false) const;
    
@@ -84,9 +95,26 @@ class ServerFrame {
     void Backups(const httplib::Request& req, httplib::Response& resp, 
         std::string action);
 
+    /**    
+     * @brief Gives feedback on whether server is still running    
+     * @return boolean    
+     */    
+    bool IsRunning();    
+    
+    /**    
+     * @brief Makes server stop running.    
+     */    
+    void Stop();    
+    
+    /**    
+     * @brief Destructor, which stops server.    
+     */    
+    ~ServerFrame();
+
   private: 
 
     //Member
+    httplib::Server server_;  //Server
     UserManager user_manager_;  ///< currently class, later database with all users
     mutable std::shared_mutex shared_mtx_user_manager_;
 };

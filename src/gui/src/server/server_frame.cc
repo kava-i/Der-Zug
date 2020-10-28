@@ -10,6 +10,14 @@ ServerFrame::ServerFrame() : user_manager_("../../data/users/", {"attacks",
     "defaultDescriptions", "details", "items", "quests", "texts"})
 {}
 
+void ServerFrame::Start(int port) {
+  std::cout << "Starting on Port: " << port << std::endl;
+
+  std::cout << "C++ Api server startup successfull!" << std::endl;
+  server_.listen("0.0.0.0", port);
+}
+
+
 //Handler
 
 void ServerFrame::LoginPage(const Request& req, Response& resp) const {
