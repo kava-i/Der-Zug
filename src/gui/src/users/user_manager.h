@@ -34,13 +34,7 @@ class UserManager {
      */
     User* GetUser(std::string username) const;
 
-    /**
-    * Adds new user
-    * @param[in] username
-    * @param[in] password
-    */
-    void AddUser(std::string username, std::string password);
-
+    
     /**
      * detele user.
      * deletes object, erases from map and delete users jsons file.
@@ -114,6 +108,14 @@ class UserManager {
     mutable std::shared_mutex shared_mutex_cookies_;
     const std::string path_;
     const std::vector<std::string> categories_;
+
+    /**
+     * Adds new user
+     * @param[in] username
+     * @param[in] password
+     */
+    void AddUser(std::string username, std::string password);
+
 };
 
 #endif
