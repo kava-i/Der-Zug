@@ -43,4 +43,8 @@ TEST_CASE ("Registering, loading and removing users works", "[creating]") {
     "defaultDialogs", "dialogs", "players", "rooms", "characters", 
     "defaultDescriptions", "details", "items", "quests", "texts"});
   REQUIRE(user_manager.GetUser("test_manager") != nullptr);
+
+  //Delete users.
+  user_manager2.DeleteUser("test_manager");
+  REQUIRE(user_manager2.GetUser("test_manager") == nullptr);
 }
