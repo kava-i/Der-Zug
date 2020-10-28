@@ -63,7 +63,7 @@ namespace func
   nlohmann::json LoadJsonFromDisc(std::string path);
 
   /**
-   * Get current time in illiseconds.
+   * Get current time in milliseconds.
    * @return long int (time in milliseconds)
    */
   int TimeSinceEpoch();

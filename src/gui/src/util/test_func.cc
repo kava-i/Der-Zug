@@ -43,8 +43,24 @@ TEST_CASE ("Loading pages from disc is working", "[get_page]") {
 }
 
 
-TEST_CASE ("Loading images from disc is working", "[get_page]") {
+TEST_CASE ("Loading images from disc is working", "[get_image]") {
   REQUIRE(func::GetImage("humbug") == "");
   REQUIRE(func::GetImage("web/images/background.jpg").length() > 0);
+}
+
+TEST_CASE ("Checking if file exists is working", "[file_exists]") {
+  REQUIRE(func::demo_exists("humbug") == false);
+  REQUIRE(func::demo_exists("web/images/background.jpg") == true);
+}
+
+TEST_CASE("Checking if TimeSinceEpoch returns a value", "[time]") {
+  REQUIRE(func::TimeSinceEpoch() > 0);
+}
+
+TEST_CASE("hashing returns a value, leaves passed string unchanged", "[hass]") {
+  std::string str = "mypassword12§ß";
+  std::string check_str = str;
+  REQUIRE(func::hash_sha3_512(str).length() > 0);
+  REQUIRE(str == check_str);
 }
 
