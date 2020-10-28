@@ -11,10 +11,13 @@
 
 TEST_CASE ("Registering, loading and removing users works", "[creating]") {
   //If already exists, delete test user.
+  std::string path_to_test_user = "../../data/users/test_manager";
   try {
-    std::filesystem::remove_all ("../../data/test_manager");
+    std::filesystem::remove_all (path_to_test_user);
   }
-  catch (...) {}
+  catch (...) {
+    std::cout << path_to_test_user << " not found!" << std::endl;
+  }
   
   //Create user manager.
   UserManager user_manager("../../data/users/", {"attacks", 

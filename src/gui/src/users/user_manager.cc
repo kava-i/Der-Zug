@@ -45,11 +45,8 @@ User* UserManager::GetUser(std::string username) const {
 * @param[in] password
 */
 void UserManager::AddUser(std::string username, std::string password) {
-  nlohmann::json user;
-  user["password"] = password;
-  user["username"] = username;
   std::unique_lock ul(shared_mutex_users_);
-  users_[username] = new User(username, user, path_, categories_);
+  users_[username] = new User(username, password, path_, categories_);
   users_[username]->SafeUser();
 }
 
