@@ -10,23 +10,19 @@ UserManager::UserManager(std::string main_path, std::vector<std::string> cats)
   : path_(main_path), categories_(cats) {
   //Iterate over users and create user.
   for (auto& p : fs::directory_iterator(path_)) {
-    std::cout << "Loading... " << p.path() << std::endl;
     std::string path = p.path();
-    std::ifstream read(path +"/user.json");
+    std::ifstream read(path + "/user.json");
     nlohmann::json user;
     read >> user;
     
     try {
-      std::cout << "Creating user..." << std::endl;
       users_[user["username"]] = new User(user["username"], user["password"], 
         path_, user["locations"], categories_);
-      std::cout << "User " << user["username"] << " created." << std::endl;
     }
     catch(std::exception& e) {
       std::cout << "Creating user at path: " << p.path() << " failed!\n";
     }
   }
-  
   std::cout << users_.size() << " users initialized!" << std::endl;
 }
 
