@@ -185,7 +185,7 @@ std::string User::GetObject(std::string world, std::string category,
   }
   //Load object by number
   else {
-    int num = std::stoi(obj.substr(obj.length()-1))-1;
+    unsigned int num = std::stoi(obj.substr(obj.length()-1))-1;
     if (objects.size() > num)
       overview["json"] = objects[num];
   }
@@ -340,7 +340,7 @@ bool User::RestoreBackup(std::string request) {
   const auto copy_options = fs::copy_options::update_existing
                           | fs::copy_options::recursive;
   try {
-    std::uintmax_t n = fs::remove_all(path_to_world);  //Delete original
+    fs::remove_all(path_to_world);  //Delete original
     fs::copy(path, path_to_world, copy_options);  //Copy files to original location
   }
   catch (std::exception& e) { 
@@ -360,6 +360,6 @@ bool User::DeleteBackup(std::string backup) {
   }
 
   //Remove backup.
-  std::uintmax_t n = fs::remove_all(path);
+  fs::remove_all(path);
   return true;
 }

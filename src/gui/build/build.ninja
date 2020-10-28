@@ -63,35 +63,35 @@ build cmake_object_order_depends_target_game_builder.o: phony || CMakeFiles/game
 
 build CMakeFiles/game_builder.o.dir/src/server/main.cc.o: CXX_COMPILER__game_builder.2eo ../src/server/main.cc || cmake_object_order_depends_target_game_builder.o
   DEP_FILE = CMakeFiles/game_builder.o.dir/src/server/main.cc.o.d
-  FLAGS = -DJSON_USE_IMPLICIT_CONVERSIONS=1 -std=gnu++17
+  FLAGS = -Wall -Werror -O3   -DJSON_USE_IMPLICIT_CONVERSIONS=1 -fdiagnostics-color=always -std=gnu++17
   INCLUDES = -I/home/fux/.conan/data/cpp-httplib/0.7.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -I/home/fux/.conan/data/cpp-httplib/0.7.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include/httplib -I/home/fux/.conan/data/inja/3.0.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -I/home/fux/.conan/data/openssl/1.1.1g/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include -I/home/fux/.conan/data/nlohmann_json/3.9.1/_/_/package/d1091b2ed420e6d287293709a907ae824d5de508/include -I../src
   OBJECT_DIR = CMakeFiles/game_builder.o.dir
   OBJECT_FILE_DIR = CMakeFiles/game_builder.o.dir/src/server
 
 build CMakeFiles/game_builder.o.dir/src/server/server_frame.cc.o: CXX_COMPILER__game_builder.2eo ../src/server/server_frame.cc || cmake_object_order_depends_target_game_builder.o
   DEP_FILE = CMakeFiles/game_builder.o.dir/src/server/server_frame.cc.o.d
-  FLAGS = -DJSON_USE_IMPLICIT_CONVERSIONS=1 -std=gnu++17
+  FLAGS = -Wall -Werror -O3   -DJSON_USE_IMPLICIT_CONVERSIONS=1 -fdiagnostics-color=always -std=gnu++17
   INCLUDES = -I/home/fux/.conan/data/cpp-httplib/0.7.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -I/home/fux/.conan/data/cpp-httplib/0.7.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include/httplib -I/home/fux/.conan/data/inja/3.0.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -I/home/fux/.conan/data/openssl/1.1.1g/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include -I/home/fux/.conan/data/nlohmann_json/3.9.1/_/_/package/d1091b2ed420e6d287293709a907ae824d5de508/include -I../src
   OBJECT_DIR = CMakeFiles/game_builder.o.dir
   OBJECT_FILE_DIR = CMakeFiles/game_builder.o.dir/src/server
 
 build CMakeFiles/game_builder.o.dir/src/users/user_manager.cc.o: CXX_COMPILER__game_builder.2eo ../src/users/user_manager.cc || cmake_object_order_depends_target_game_builder.o
   DEP_FILE = CMakeFiles/game_builder.o.dir/src/users/user_manager.cc.o.d
-  FLAGS = -DJSON_USE_IMPLICIT_CONVERSIONS=1 -std=gnu++17
+  FLAGS = -Wall -Werror -O3   -DJSON_USE_IMPLICIT_CONVERSIONS=1 -fdiagnostics-color=always -std=gnu++17
   INCLUDES = -I/home/fux/.conan/data/cpp-httplib/0.7.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -I/home/fux/.conan/data/cpp-httplib/0.7.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include/httplib -I/home/fux/.conan/data/inja/3.0.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -I/home/fux/.conan/data/openssl/1.1.1g/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include -I/home/fux/.conan/data/nlohmann_json/3.9.1/_/_/package/d1091b2ed420e6d287293709a907ae824d5de508/include -I../src
   OBJECT_DIR = CMakeFiles/game_builder.o.dir
   OBJECT_FILE_DIR = CMakeFiles/game_builder.o.dir/src/users
 
 build CMakeFiles/game_builder.o.dir/src/users/user.cc.o: CXX_COMPILER__game_builder.2eo ../src/users/user.cc || cmake_object_order_depends_target_game_builder.o
   DEP_FILE = CMakeFiles/game_builder.o.dir/src/users/user.cc.o.d
-  FLAGS = -DJSON_USE_IMPLICIT_CONVERSIONS=1 -std=gnu++17
+  FLAGS = -Wall -Werror -O3   -DJSON_USE_IMPLICIT_CONVERSIONS=1 -fdiagnostics-color=always -std=gnu++17
   INCLUDES = -I/home/fux/.conan/data/cpp-httplib/0.7.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -I/home/fux/.conan/data/cpp-httplib/0.7.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include/httplib -I/home/fux/.conan/data/inja/3.0.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -I/home/fux/.conan/data/openssl/1.1.1g/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include -I/home/fux/.conan/data/nlohmann_json/3.9.1/_/_/package/d1091b2ed420e6d287293709a907ae824d5de508/include -I../src
   OBJECT_DIR = CMakeFiles/game_builder.o.dir
   OBJECT_FILE_DIR = CMakeFiles/game_builder.o.dir/src/users
 
 build CMakeFiles/game_builder.o.dir/src/util/func.cc.o: CXX_COMPILER__game_builder.2eo ../src/util/func.cc || cmake_object_order_depends_target_game_builder.o
   DEP_FILE = CMakeFiles/game_builder.o.dir/src/util/func.cc.o.d
-  FLAGS = -DJSON_USE_IMPLICIT_CONVERSIONS=1 -std=gnu++17
+  FLAGS = -Wall -Werror -O3   -DJSON_USE_IMPLICIT_CONVERSIONS=1 -fdiagnostics-color=always -std=gnu++17
   INCLUDES = -I/home/fux/.conan/data/cpp-httplib/0.7.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -I/home/fux/.conan/data/cpp-httplib/0.7.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include/httplib -I/home/fux/.conan/data/inja/3.0.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -I/home/fux/.conan/data/openssl/1.1.1g/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/include -I/home/fux/.conan/data/nlohmann_json/3.9.1/_/_/package/d1091b2ed420e6d287293709a907ae824d5de508/include -I../src
   OBJECT_DIR = CMakeFiles/game_builder.o.dir
   OBJECT_FILE_DIR = CMakeFiles/game_builder.o.dir/src/util
@@ -105,6 +105,7 @@ build CMakeFiles/game_builder.o.dir/src/util/func.cc.o: CXX_COMPILER__game_build
 # Link the executable ../webserver/game_builder.o
 
 build ../webserver/game_builder.o: CXX_EXECUTABLE_LINKER__game_builder.2eo CMakeFiles/game_builder.o.dir/src/server/main.cc.o CMakeFiles/game_builder.o.dir/src/server/server_frame.cc.o CMakeFiles/game_builder.o.dir/src/users/user_manager.cc.o CMakeFiles/game_builder.o.dir/src/users/user.cc.o CMakeFiles/game_builder.o.dir/src/util/func.cc.o
+  FLAGS = -Wall -Werror -O3
   LINK_FLAGS = -rdynamic
   LINK_LIBRARIES = -Wl,-rpath,/home/fux/.conan/data/openssl/1.1.1g/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib  -lssl  -lcrypto  -ldl  -lpthread
   LINK_PATH = -L/home/fux/.conan/data/openssl/1.1.1g/_/_/package/6af9cc7cb931c5ad942174fd7838eb655717c709/lib
