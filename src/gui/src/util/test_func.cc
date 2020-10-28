@@ -24,6 +24,11 @@ TEST_CASE ("Return to lower", "[to_lower]") {
   }
 }
 
+TEST_CASE ("Split works as expected", "[split]") {
+  REQUIRE(func::split("Hello;hello") == {"Hello", "hello"};
+}
+
+
 TEST_CASE ("Loading images from disc is working", "[get_page]") {
 
 }

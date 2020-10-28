@@ -1,5 +1,7 @@
 #include "func.h"
 #include "cleanup_dtor.h"
+
+#include <codecvt>
  
 #include <openssl/evp.h>
 #include <openssl/sha.h>
@@ -10,10 +12,14 @@ namespace func
 {
 
 std::string ReturnToLower(std::string &str) {
-  std::string str2;
-  for (unsigned int i=0; i<str.length(); i++)
-    str2 += tolower(str[i]);
+  std::locale loc("de_DE.UTF-8");
+  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+  std::wstring wide = converter.from_bytes(str);
+  std::wstring wide2;
+  for (unsigned int i=0; i<wide.length(); i++)
+    wide2 += tolower(wide[i], loc);
 
+  std::string str2 = converter.to_bytes(wide2);
   return str2;
 }
 
