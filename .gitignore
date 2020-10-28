@@ -1,9 +1,3 @@
 bin/*
-Testing/*
-build/*
-src/textadventure/build/
-src/gui/build/
-dictionary.txt
-src/dictionary.txt
-EIG.txt
-src/EIG.txt
+src/textadventure/build/*
+src/gui/build/*
