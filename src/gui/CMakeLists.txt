@@ -14,7 +14,7 @@ add_compile_options(-fdiagnostics-color=always)
 
 # Add source-files for server
 set(SRC_FILES 
-  src/server/main.cc 
+  src/main.cc 
   src/server/server_frame.cc 
   src/users/user_manager.cc 
   src/users/user.cc 

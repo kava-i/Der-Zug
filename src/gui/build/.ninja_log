@@ -57,3 +57,6 @@
 1	6628	1603883680912856576	CMakeFiles/game_builder.o.dir/src/server/main.cc.o	a219f8bf73bf049d
 2	8429	1603883682712839082	CMakeFiles/game_builder.o.dir/src/server/server_frame.cc.o	e0abdd28ece20f
 8429	8575	1603883682860837644	../webserver/game_builder.o	624af88c8765d18c
+0	33	1603883927922538994	build.ninja	75f2969638250d65
+1	6568	1603883934498479236	CMakeFiles/game_builder.o.dir/src/main.cc.o	c26ead7205a9de92
+6568	6713	1603883934642477928	../webserver/game_builder.o	9c1ca830b5ff95c9
