@@ -24,14 +24,23 @@ TEST_CASE ("Registering, loading and removing users works", "[creating]") {
     "defaultDialogs", "dialogs", "players", "rooms", "characters", 
     "defaultDescriptions", "details", "items", "quests", "texts"});
 
-  SECTION ("Registering user works") {
-        REQUIRE(user_manager.DoRegistration("test_manager", "pw", 
-          "pw") == "Strength insufficient!");
-    REQUIRE(user_manager.DoRegistration("test_manager", "password1234", 
-          "password1235") == "Passwords do not match!");
-    REQUIRE(user_manager.DoRegistration("test_manager", "password1234", 
-          "password1234") == "");
-    REQUIRE(user_manager.DoRegistration("test_manager", "password1234", 
-          "password1234") == "Username already exists!");
-  }
+  //Tries registering a user.
+  REQUIRE(user_manager.DoRegistration("test_manager", "pw", 
+        "pw") == "Strength insufficient!");
+  REQUIRE(user_manager.DoRegistration("test_manager", "password1234", 
+        "password1235") == "Passwords do not match!");
+  REQUIRE(user_manager.DoRegistration("test_manager", "password1234", 
+        "password1234") == "");
+  REQUIRE(user_manager.DoRegistration("test_manager", "password1234", 
+        "password1234") == "Username already exists!");
+
+  //Tries to get a user.
+  REQUIRE(user_manager.GetUser("humbug") == nullptr);
+  REQUIRE(user_manager.GetUser("test_manager") != nullptr);
+
+  //Reloads manager and sees whether test-user was found.
+  UserManager user_manager2("../../data/users/", {"attacks", 
+    "defaultDialogs", "dialogs", "players", "rooms", "characters", 
+    "defaultDescriptions", "details", "items", "quests", "texts"});
+  REQUIRE(user_manager.GetUser("test_manager") != nullptr);
 }
