@@ -6,7 +6,7 @@
 
 #include <catch2/catch.hpp>
 
-#include <func.h>
+#include "func.h"
 
 TEST_CASE ("Loading pages from disc is working", "[get_page]") {
 
