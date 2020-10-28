@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include <catch2/catch.hpp>
 
@@ -25,7 +26,9 @@ TEST_CASE ("Return to lower", "[to_lower]") {
 }
 
 TEST_CASE ("Split works as expected", "[split]") {
-  REQUIRE(func::split("Hello;hello") == {"Hello", "hello"};
+  std::vector<std::string> vec = func::Split("Hello;hello", ";");
+  REQUIRE(vec[0] == "Hello");
+  REQUIRE(vec[1] == "hello");
 }
 
 
