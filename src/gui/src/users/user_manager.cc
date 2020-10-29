@@ -27,11 +27,6 @@ UserManager::UserManager(std::string main_path, std::vector<std::string> cats)
 }
 
 
-/**
- * Returns given user, if exists
- * @param[in] username
- * @return user, if exists, nullptr otherwise
- */
 User* UserManager::GetUser(std::string username) const {
   std::shared_lock sl(shared_mutex_users_);
   if (users_.count(username) > 0)
@@ -39,22 +34,12 @@ User* UserManager::GetUser(std::string username) const {
   return nullptr;
 }
 
-/**
-* Adds new user.
-* @param[in] username
-* @param[in] password
-*/
 void UserManager::AddUser(std::string username, std::string password) {
   std::unique_lock ul(shared_mutex_users_);
   users_[username] = new User(username, password, path_, categories_);
   users_[username]->SafeUser();
 }
 
-/**
- * Detele user.
- * Deletes object, erases from map and delete users jsons file.
- * @param[in] username
- */
 void UserManager::DeleteUser(std::string username) {
   std::unique_lock ul_users(shared_mutex_users_);
   //TODO (fux): how do I handle thread safty here?
@@ -74,14 +59,6 @@ void UserManager::DeleteUser(std::string username) {
   std::cout << "User " << username << " deleted." << std::endl;
 }
 
- /**
- * Logout user. 
- * try to get user from cookie. Logout user, reset controller update 
- * interval and erase cookie. If user does not exist, try only to delete 
- * cookie from map.
- * @param[in] cookie.
- * @return false if cookie does not exist in map.
- */
 bool UserManager::DoLogout(const char* ptr) {
   if (!ptr) return false;
 
@@ -98,12 +75,6 @@ bool UserManager::DoLogout(const char* ptr) {
   return true;
 }
 
-/**
- * Check whether login was successful. Return error if not. 
- * @param username
- * @param password
- * @return error or empty string
- */
 std::string UserManager::DoLogin(std::string username, std::string password) {
   //Check if logging succeeds 
   nlohmann::json login_success = CheckLogin(username, password);
@@ -115,13 +86,6 @@ std::string UserManager::DoLogin(std::string username, std::string password) {
   return ""; 
 }
 
-/**
- * Check if username and password match/ exist. Return error-code if not.
- * Return empty json if login succeeded. 
- * @param[in] username
- * @param[in] password (Already hashed!!)
- * @return json with error code if no success.
- */
 nlohmann::json UserManager::CheckLogin(std::string username, std::string password) const {
   //hash password
   password = func::hash_sha3_512(password);
@@ -137,13 +101,6 @@ nlohmann::json UserManager::CheckLogin(std::string username, std::string passwor
   return nlohmann::json();
 }
 
-/**
- * Check whether registration was successful. Return error or empty string. 
- * @param username
- * @param pw1
- * @param pw2
- * @return error code or empty string.
- */
 std::string UserManager::DoRegistration(std::string username, std::string pw1, 
     std::string pw2) {
   if (!CheckPasswordStrength(pw1)) 
@@ -164,12 +121,6 @@ std::string UserManager::DoRegistration(std::string username, std::string pw1,
   return "";
 }
 
-/**
- * @brief checking password strength
- * Either 15 characters long, or 8 characters + 1 lowercase + 1 digit.
- * @param password (given password to check)
- * @return whether strength is sufficient.
- */
 bool UserManager::CheckPasswordStrength(std::string password) const {
   if (password.length() >= 15) return true;
   if (password.length() < 8) return false;
@@ -185,12 +136,6 @@ bool UserManager::CheckPasswordStrength(std::string password) const {
   return false;
 }
 
-/**
- * Create random 32 characters to generates cookie. And maps cookie and given
- * user.
- * @param[in] username (username which is mapped on cookie)
- * @return returns cookie as string.
- */
 std::string UserManager::GenerateCookie(std::string username) {
   //Collect 32 random bytes in Linux provided by /dev/urandom
 	std::ifstream ifs("/dev/urandom", std::ios::in|std::ios::binary);
@@ -214,11 +159,6 @@ std::string UserManager::GenerateCookie(std::string username) {
 }
 
 
-/**
- * Get user from cookie.
- * @param[in] resp (reference to response)
- * @return username, "$no_cookie" or "$no_user"
- */
 std::string UserManager::GetUserFromCookie(const char* ptr) const {
   if (!ptr) 
     return "";
