@@ -88,4 +88,8 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->GetCategory(path+"/rooms", world, "rooms").find("test_house") 
       != std::string::npos);
 
+  //Check that accessing objects inside subcategory works
+  path+="/rooms/test_house";
+  REQUIRE(user->GetObjects("hum/bug/quatsch", "hum", "bug", "quatsch") != "");
+  REQUIRE(user->GetObjects(path, world, "rooms", "test_house") != "");
 }
