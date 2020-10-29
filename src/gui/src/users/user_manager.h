@@ -58,7 +58,6 @@ class UserManager {
      * @return error or empty string
      */
     std::string DoLogin(std::string username, std::string password);
-
     
     /**
      * Check whether registration was successful. Return error or empty string. 
@@ -69,15 +68,7 @@ class UserManager {
      */
     std::string DoRegistration(std::string username, std::string pw1, 
         std::string pw2);
-
-    /**
-     * @brief checking password strength
-     * Either 15 characters long, or 8 characters + 1 lowercase + 1 digit.
-     * @param password (given password to check)
-     * @return whether strength is sufficient.
-     */
-    bool CheckPasswordStrength(std::string password) const;
-
+    
     /**
      * Create random 32 characters to generates cookie. And maps cookie and given
      * user.
@@ -116,6 +107,14 @@ class UserManager {
      * @return json with error code if no success.
      */
     nlohmann::json CheckLogin(std::string username, std::string password) const;
+
+    /**
+     * @brief checking password strength
+     * Either 15 characters long, or 8 characters + 1 lowercase + 1 digit.
+     * @param password (given password to check)
+     * @return whether strength is sufficient.
+     */
+    bool CheckPasswordStrength(std::string password) const;
 };
 
 #endif
