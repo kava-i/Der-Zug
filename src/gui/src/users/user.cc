@@ -262,6 +262,7 @@ std::string User::CreateNewWorld(std::string name) {
 }
 
 std::string User::AddFile(std::string path, std::string name) {
+  std::cout << "AddFile: " << path << std::endl;
   //Check if path exists
   if (!func::demo_exists(path)) 
     return "Path to not found.";
@@ -284,6 +285,7 @@ std::string User::AddFile(std::string path, std::string name) {
     file = nlohmann::json::object();
   
   try {
+    std::cout << "Writing: " << path + "/" + name + ".json" << std::endl;
     std::ofstream write(path + "/" + name + ".json");
     write << file;
     write.close();

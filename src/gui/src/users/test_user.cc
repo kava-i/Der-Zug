@@ -6,8 +6,9 @@
 
 #include <catch2/catch.hpp>
 
-#include "user_manager.h"
+#include "util/func.h"
 #include "user.h"
+#include "user_manager.h"
 
 TEST_CASE ("Loading pages from user works", "[user_pages]") {
   
@@ -48,5 +49,11 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   path += "/rooms";
   REQUIRE(user->GetCategory("hum/bug", "hum", "bug") == "");
   REQUIRE(user->GetCategory(path, world, "rooms") != "");
-  REQUIRE(user->AddFile(path, "test_house") != "");
+
+  //Check adding files is working.
+  REQUIRE(user->AddFile("hum/bug", "humbug") != "Path not found.");
+  REQUIRE(user->AddFile(path, "../test_house") != "Wrong format.");
+  REQUIRE(user->AddFile(path, "test_house") == "");
+  REQUIRE(user->AddFile(path, "test_house") != "File already exists.");
+  REQUIRE(func::demo_exists(path + "/test_house.json") == true);
 }
