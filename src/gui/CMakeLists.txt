@@ -26,8 +26,9 @@ set(SRC_FILES_TESTING
   src/server/server_frame.cc
   src/server/test_server.cc
   src/users/user_manager.cc
-  src/users/user.cc
   src/users/test_user_manager.cc
+  src/users/user.cc
+  src/users/test_user.cc
   src/util/func.cc
   src/util/test_func.cc
 )
