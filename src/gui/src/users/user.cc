@@ -216,6 +216,35 @@ std::string User::GetObject(std::string world, std::string category,
 
 // ** Functions ** //
 
+
+std::string User::CreateNewWorld(std::string name) {
+  std::string path = path_ + "/" + username_ + "/" + name;
+  if (func::demo_exists(path) == true)
+    return "World already exists.";
+
+  //Try creating world and all categories.
+  try {
+    //Create directory for world
+    fs::create_directory(path);
+    std::cout << "Created directory." << std::endl;
+
+    //Create all subcategories.
+    for (const auto& category : categories_) {
+      std::cout << "Creating: " << path << "/" << category << std::endl;
+      fs::create_directory(path + "/" + category);
+    }
+  }
+
+  //Return error code and delete all already created directories.
+  catch (std::exception& e) {
+    std::cout << "Error creating new world or subdirectories: ";
+    std::cout << e.what() << std::endl;
+    fs::remove_all(path);
+    return "Error creating world.";
+  }
+  return "";
+}
+
 bool User::CheckAccessToLocations(std::string path) { 
   std::cout << "CheckAccessToLocations: " << path << std::endl; 
   return true; 

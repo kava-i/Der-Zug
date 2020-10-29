@@ -31,5 +31,5 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user != nullptr);
 
   //Create empty world.
-  REQUIRE(user->CreateNewWorld("Test_World") == true); 
+  REQUIRE(user->CreateNewWorld("Test_World") == ""); 
 }

@@ -93,6 +93,13 @@ class User {
 
 
     // ** functions ** //
+    
+    /**
+     * @brief Creates a new world for this user
+     * @param name (Name of the world)
+     * @return Success code.
+     */
+    std::string CreateNewWorld(std::string name); 
 
     /**
      * Write users jsons to disc.
