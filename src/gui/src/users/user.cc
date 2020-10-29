@@ -249,6 +249,15 @@ std::string User::CreateNewWorld(std::string name) {
       std::cout << "Creating: " << path << "/" << category << std::endl;
       fs::create_directory(path + "/" + category);
     }
+
+    //Copy default config to world.
+    fs::copy("../../data/default_jsons/config.json", path); 
+
+    //Copy default room to world.
+    fs::copy("../../data/default_jsons/test.json", path + "/rooms/"); 
+
+    //Copy default player-file to world.
+    fs::copy("../../data/default_jsons/players.json", path + "/players/"); 
   }
 
   //Return error code and delete all already created directories.

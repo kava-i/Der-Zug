@@ -33,15 +33,19 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
 
   //Create empty world.
   std::string world = "Test_World";
+  std::string full_path = "../../data/users/";
+  std::string path = "test_manager/files/" + world;
   REQUIRE(user->CreateNewWorld(world) == ""); 
   REQUIRE(user->CreateNewWorld(world) == "World already exists."); 
   REQUIRE(user->CreateNewWorld("../Test_World") == "Wrong format."); 
+  REQUIRE(func::demo_exists(full_path + path + "/config.json"));
+  REQUIRE(func::demo_exists(full_path + path + "/rooms/test.json"));
+  REQUIRE(func::demo_exists(full_path + path + "/players/players.json"));
 
   //GetOverview: Check if world is found on overview page.
   REQUIRE(user->GetOverview().find(world) != std::string::npos);
   
   //GetWorld: Check if basic categories are found and func react to wrong path.
-  std::string path = "test_manager/files/" + world;
   REQUIRE(user->GetWorld("humbug", "humbug") == "");
   REQUIRE(user->GetWorld(path, world).find("attacks") != std::string::npos);
  
