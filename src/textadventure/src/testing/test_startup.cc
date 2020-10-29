@@ -1,18 +1,19 @@
 /**
  * @author georgbuechner
  */
-#define CATCH_CONFIG_MAIN
-
 #include <iostream>
 
 #include <catch2/catch.hpp>
 
 #include "game/game.h"
+#include "test_params.h"
 
 TEST_CASE("Testadventure is starting", "[startup]") {
+  
+  TestParameters* params = params->getInstance();
 
   //Create game and all worlds.
-  CGame game("../../data/users/test_manager/files/Test_World/");
+  CGame game(params->txtad_path());
 
   //Check that starting the game returns output.
   REQUIRE(game.startGame("", "test", nullptr) != "");

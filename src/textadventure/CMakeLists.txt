@@ -64,6 +64,7 @@ set(SRC_FILES_TESTING
     src/game/game.cc
     src/game/world.cc
 
+    src/testing/main.cc
     src/testing/test_startup.cc
 )
 
