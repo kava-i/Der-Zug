@@ -262,10 +262,11 @@ std::string User::CreateNewWorld(std::string name) {
 }
 
 std::string User::AddFile(std::string path, std::string name) {
+  path = path_ + path;
   std::cout << "AddFile: " << path << std::endl;
   //Check if path exists
   if (!func::demo_exists(path)) 
-    return "Path to not found.";
+    return "Path not found.";
   //Check for wrong format
   if (name.find("/") != std::string::npos)
     return "Wrong format.";

@@ -51,9 +51,10 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->GetCategory(path, world, "rooms") != "");
 
   //Check adding files is working.
-  REQUIRE(user->AddFile("hum/bug", "humbug") != "Path not found.");
-  REQUIRE(user->AddFile(path, "../test_house") != "Wrong format.");
+  REQUIRE(user->AddFile("hum/bug", "humbug") == "Path not found.");
+  REQUIRE(user->AddFile(path, "../test_house") == "Wrong format.");
   REQUIRE(user->AddFile(path, "test_house") == "");
-  REQUIRE(user->AddFile(path, "test_house") != "File already exists.");
-  REQUIRE(func::demo_exists(path + "/test_house.json") == true);
+  REQUIRE(user->AddFile(path, "test_house") == "File already exists.");
+  REQUIRE(func::demo_exists("../../data/users/" + path + "/test_house.json") 
+      == true);
 }
