@@ -112,6 +112,23 @@ class User {
      */
     std::string AddFile(std::string path, std::string name);
     
+
+    /**
+     * @brief Adds a new empty object
+     * @param path
+     * @param id
+     * @return error code.
+     */
+    std::string AddNewObject(std::string path, std::string id);
+
+    /**
+     * Write json to disc.
+     * @param[in] world (given world)
+     * @return boolean to indicate success.
+     */
+    bool WriteObject(std::string request);
+
+
     // ** functions ** //
     
     /**
@@ -124,13 +141,6 @@ class User {
      * @param[in] path.
      */
     bool CheckAccessToLocations(std::string path);
-
-    /**
-     * Write json to disc.
-     * @param[in] world (given world)
-     * @return boolean to indicate success.
-     */
-    bool WriteObject(std::string request);
 
     /**
      * Create a backup of given world.

@@ -272,7 +272,6 @@ std::string User::CreateNewWorld(std::string name) {
 
 std::string User::AddFile(std::string path, std::string name) {
   path = path_ + path;
-  std::cout << "AddFile: " << path << std::endl;
   //Check if path exists
   if (!func::demo_exists(path)) 
     return "Path not found.";
@@ -311,6 +310,90 @@ std::string User::AddFile(std::string path, std::string name) {
   return "";
 }
 
+std::string User::AddNewObject(std::string path, std::string id) {
+  std::string full_path = path_ + path;
+  std::cout << "AddNewObject: " << path << std::endl;
+  //Check if path exists
+  if (!func::demo_exists(full_path)) 
+    return "Path not found.";
+  //Check for wrong format
+  if (id.find("/") != std::string::npos)
+    return "Wrong format.";
+  //Replace space by underscore and check if file already exists.
+  std::replace(id.begin(), id.end(), ' ', '_');
+  if (func::demo_exists(full_path + "/" + id + ".json"))
+    return "Object already exists.";
+
+  //Get Category
+  std::vector<std::string> elements = func::Split(path, "/");
+  if (elements.size() >= 2)
+    return "Category could not be parsed.";
+  std::string category = elements[elements.size()-2];
+  std::cout << category << std::endl;
+  
+  //Load empty object of category
+  nlohmann::json new_object;
+  try {
+    std::ifstream read(".../data/default_jsons/" + category + ".json");
+    read >> new_object;
+    read.close();
+  }
+  catch (std::exception& e) {
+    std::cout << "Problem reading default category: " << e.what() << std::endl;
+    return "Problem reading default category!";
+  }
+  new_object["id"] = id;
+  nlohmann::json request;
+  request["path"] = path;
+  request["json"] = new_object;
+  try {
+    WriteObject(request.dump());
+  }
+  catch (std::exception& e) {
+    std::cout << "Problem writing new object: " << e.what() << std::endl;
+    return "Problem writing new object.";
+  }
+  return "";
+}
+
+bool User::WriteObject(std::string request) {
+  //Get values from request
+  nlohmann::json json;
+  std::string path;
+  try {
+    nlohmann::json j = nlohmann::json::parse(request);
+    json = j["json"];
+    path = j["path"];
+  }
+  catch (std::exception& e) {
+    std::cout << "WriteObject: Problem parsing request: " << e.what() << "\n";
+    return false;
+  }
+
+  //Parse path.
+  //TODO (fux): Here different paths are needed:
+  //paths_[0] = ../../data/users/
+  //paths_[1] = ../../data/users/[username]/  (path to one folder)
+  //paths_[2] = ../../data/users/[user]/      (path to shared folder
+  //...                                       (additional shared folders)
+  std::string path_to_object = path_ + "/" + path.substr(7, path.rfind("/")-7) 
+    + ".json";
+
+  //Read json
+  std::cout << "Reading json\n";
+  if (!func::demo_exists(path_to_object)) {
+    std::cout << "Path: " << path_to_object << " don't exist!\n";
+    return false;
+  }
+  nlohmann::json object = func::LoadJsonFromDisc(path_to_object);
+  
+  //Modify and write object.
+  object[json["id"].get<std::string>()] = json;
+  std::ofstream write(path_to_object);
+  write << object;
+  write.close();
+  return true;
+}
 bool User::CheckAccessToLocations(std::string path) { 
   std::cout << "CheckAccessToLocations: " << path << std::endl; 
   return true; 
@@ -368,44 +451,6 @@ bool User::CreateBackup(std::string world) {
   return true;
 }
 
-bool User::WriteObject(std::string request) {
-  //Get values from request
-  nlohmann::json json;
-  std::string path;
-  try {
-    nlohmann::json j = nlohmann::json::parse(request);
-    json = j["json"];
-    path = j["path"];
-  }
-  catch (std::exception& e) {
-    std::cout << "WriteObject: Problem parsing request: " << e.what() << "\n";
-    return false;
-  }
-
-  //Parse path.
-  //TODO (fux): Here different paths are needed:
-  //paths_[0] = ../../data/users/
-  //paths_[1] = ../../data/users/[username]/  (path to one folder)
-  //paths_[2] = ../../data/users/[user]/      (path to shared folder
-  //...                                       (additional shared folders)
-  std::string path_to_object = path_ + "/" + path.substr(7, path.rfind("/")-7) 
-    + ".json";
-
-  //Read json
-  std::cout << "Reading json\n";
-  if (!func::demo_exists(path_to_object)) {
-    std::cout << "Path: " << path_to_object << " don't exist!\n";
-    return false;
-  }
-  nlohmann::json object = func::LoadJsonFromDisc(path_to_object);
-  
-  //Modify and write object.
-  object[json["id"].get<std::string>()] = json;
-  std::ofstream write(path_to_object);
-  write << object;
-  write.close();
-  return true;
-}
 
 bool User::RestoreBackup(std::string request) {
   //Try to parse json and check if "world" and "backup" fields exist.
