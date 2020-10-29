@@ -55,13 +55,16 @@ class User {
     // ** Serve an generate pages ** //
     
     /**
-     * Gets all words and parses them into the overview page.
+     * Gets all worlds and parses them into the overview page.
      * @return overview-page.
      */
     std::string GetOverview();
 
     /**
-     * Get Overview of one world. (f.e. world1)
+     * @brief Get Overview of categories in one world.
+     * @param path (path to current world)
+     * @param world (name of accessed world)
+     * @return HTML page or empty string.
      */
     std::string GetWorld(std::string path, std::string world);
 

@@ -56,6 +56,11 @@ std::string User::GetOverview() {
 
 std::string User::GetWorld(std::string path, std::string world) {
   std::cout << "GetWorld" << std::endl;
+  //Check if path to given world can be found
+  if (!func::demo_exists(path_+path) || !func::demo_exists(path_+path+"/"
+        +world))
+    return "";
+
   //Create initial json with world and all categories.
   nlohmann::json j = nlohmann::json({{"user", username_}, {"world", world}, 
       {"categories", categories_}});
