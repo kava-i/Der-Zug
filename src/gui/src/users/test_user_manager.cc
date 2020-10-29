@@ -48,3 +48,13 @@ TEST_CASE ("Registering, loading and removing users works", "[creating]") {
   user_manager2.DeleteUser("test_manager");
   REQUIRE(user_manager2.GetUser("test_manager") == nullptr);
 }
+
+TEST_CASE ("Login and Logout user", "[logging]") {
+  //Create user manager.
+  UserManager user_manager("../../data/users/", {"attacks", 
+    "defaultDialogs", "dialogs", "players", "rooms", "characters", 
+    "defaultDescriptions", "details", "items", "quests", "texts"});
+
+  //Prior created user still exists.
+  REQUIRE(user_manager.GetUser("test_manager") != nullptr);
+}

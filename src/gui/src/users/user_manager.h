@@ -34,7 +34,6 @@ class UserManager {
      */
     User* GetUser(std::string username) const;
 
-    
     /**
      * detele user.
      * deletes object, erases from map and delete users jsons file.
@@ -60,15 +59,7 @@ class UserManager {
      */
     std::string DoLogin(std::string username, std::string password);
 
-    /**
-     * Check if username and password match/ exist. Return error-code if not.
-     * Return empty json if login succeeded. 
-     * @param[in] username
-     * @param[in] password
-     * @return json with error code if no success.
-     */
-    nlohmann::json CheckLogin(std::string username, std::string password) const;
-
+    
     /**
      * Check whether registration was successful. Return error or empty string. 
      * @param username
@@ -116,6 +107,14 @@ class UserManager {
      */
     void AddUser(std::string username, std::string password);
 
+    /**
+     * Check if username and password match/ exist. Return error-code if not.
+     * Return empty json if login succeeded. 
+     * @param[in] username
+     * @param[in] password
+     * @return json with error code if no success.
+     */
+    nlohmann::json CheckLogin(std::string username, std::string password) const;
 };
 
 #endif
