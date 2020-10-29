@@ -285,8 +285,12 @@ std::string User::AddFile(std::string path, std::string name) {
     return "File already exists.";
 
   //Get Category from string
-  std::string category = path.substr(path.rfind("/"));
+  std::string category = path.substr(path.rfind("/") + 1);
   std::cout << category << std::endl;
+
+  //Check for not supported categories
+  if (category == "players")
+    return "Not supported category.";
 
   nlohmann::json file;
   if (category == "defaultDialogs")
