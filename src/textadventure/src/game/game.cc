@@ -71,18 +71,18 @@ string CGame::checkLogin(string sName, string sPassword) {
 
 // ****************** FUNCTIONS CALLER ********************** //
 
-string CGame::startGame(string sInput, string sPasswordID, Webconsole* _cout) {
-  if (m_players.count(sPasswordID) > 0)
-    m_players[sPasswordID]->setWebconsole(_cout);
+string CGame::startGame(string sInput, string player_id, Webconsole* _cout) {
+  if (m_players.count(player_id) > 0)
+    m_players[player_id]->setWebconsole(_cout);
   else {
-    std::cout << "Player " << sPasswordID << " not found." << std::endl;
+    std::cout << "Player " << player_id << " not found." << std::endl;
     return "";
   }
-  if(m_players[sPasswordID]->getFirstLogin() == true)
-    m_players[sPasswordID]->setFirstLogin(false);
-  m_players[sPasswordID]->throw_events("show room", "startGame");
+  if(m_players[player_id]->getFirstLogin() == true)
+    m_players[player_id]->setFirstLogin(false);
+  m_players[player_id]->throw_events("show room", "startGame");
 
-  return m_players[sPasswordID]->getPrint();
+  return m_players[player_id]->getPrint();
 }
 
 string CGame::play(string sInput, string sPlayerID, std::list<string>& 
