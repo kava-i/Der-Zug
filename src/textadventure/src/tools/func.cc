@@ -1,5 +1,4 @@
 #include "func.h"
-#include <catch2/catch.hpp>
 
 /**
 * @param[in] str string to be splitet
@@ -195,30 +194,4 @@ std::string func::incIDNumber(std::map<std::string, std::string> mapObjects, std
         return sID + "2";
     else
         return sID + std::to_string(max+1);
-}
-
-TEST_CASE("Testing func::split functionality","[func::split]")
-{
-    std::string lk="Hallo ich funktioniere";
-    auto vec = func::split(lk," ");
-    REQUIRE(vec.size() == 3);
-    REQUIRE(vec[0] == "Hallo");
-    REQUIRE(vec[1] == "ich");
-    REQUIRE(vec[2] == "funktioniere");
-
-    vec = func::split(lk,"ich");
-    REQUIRE(vec.size() == 2);
-    REQUIRE(vec[0] == "Hallo ");
-    REQUIRE(vec[1] == " funktioniere");
-}
-
-TEST_CASE("Testing func::convertToLower","[func::overtToLower]")
-{
-    std::string main="Alex";
-    func::convertToLower(main);
-    REQUIRE(main=="alex");
-
-    main="AlExAnDeR";
-    func::convertToLower(main);
-    REQUIRE(main=="alexander");
 }

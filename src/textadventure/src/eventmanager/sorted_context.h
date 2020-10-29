@@ -3,7 +3,6 @@
 #include <map>
 #include <queue>
 #include <list>
-#include <catch2/catch.hpp>
 
 template<class T>
 class CContextStack
