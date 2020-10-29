@@ -148,7 +148,6 @@ class User {
      * @return return json of user.
      */
     nlohmann::json ConstructJson() const;
-
 };
 
 #endif
