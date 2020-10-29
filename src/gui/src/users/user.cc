@@ -218,6 +218,12 @@ std::string User::GetObject(std::string world, std::string category,
 
 
 std::string User::CreateNewWorld(std::string name) {
+
+  //Check for "/" which is considered bad format!
+  if (name.find("/") != std::string::npos)
+    return "Wrong format.";
+
+  //Create path to new world and check whether world already exists.
   std::string path = path_ + "/" + username_ + "/files/" + name;
   if (func::demo_exists(path) == true)
     return "World already exists.";
@@ -225,7 +231,7 @@ std::string User::CreateNewWorld(std::string name) {
   //Try creating world and all categories.
   try {
     //Create directory for world
-    fs::create_directory(path);
+    fs::create_directories(path);
     std::cout << "Created directory." << std::endl;
 
     //Create all subcategories.

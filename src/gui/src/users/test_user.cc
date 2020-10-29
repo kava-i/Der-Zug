@@ -32,4 +32,6 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
 
   //Create empty world.
   REQUIRE(user->CreateNewWorld("Test_World") == ""); 
+  REQUIRE(user->CreateNewWorld("Test_World") == "World already exists."); 
+  REQUIRE(user->CreateNewWorld("../Test_World") == "Wrong format."); 
 }
