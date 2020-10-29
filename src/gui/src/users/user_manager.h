@@ -85,6 +85,7 @@ class UserManager {
      * @return returns cookie as string.
      */
     std::string GenerateCookie(std::string username);
+
     /**
      * Get user from cookie.
      * @param[in] resp (reference to response)

@@ -57,4 +57,14 @@ TEST_CASE ("Login and Logout user", "[logging]") {
 
   //Prior created user still exists.
   REQUIRE(user_manager.GetUser("test_manager") != nullptr);
+
+  //Try to log random user in
+  REQUIRE(user_manager.DoLogin("humbug", "1312") == "Username does not exist.");
+  REQUIRE(user_manager.DoLogin("test_manager", "1312") == "Incorrect password.");
+
+  //Try to log existing user in and "fake" cookie creation.
+  REQUIRE(user_manager.DoLogin("test_manager", "password1234") == "");
+  std::string cookie = "SESSID=" + user_manager.GenerateCookie("test_manager");
+
+  REQUIRE(user_manager.GetUserFromCookie(cookie.c_str()) == "test_manager");
 }
