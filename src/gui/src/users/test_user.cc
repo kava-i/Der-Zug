@@ -84,7 +84,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->AddFile(path+"/players", "test_house") == 
       "Not supported category.");
 
-  //Check that newly added subcategories should be found in category
+  //Check that newly added subcategories are be found in category
   REQUIRE(user->GetCategory(path+"/rooms", world, "rooms").find("test_house") 
       != std::string::npos);
 
@@ -92,4 +92,12 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   path+="/rooms/test_house";
   REQUIRE(user->GetObjects("hum/bug/quatsch", "hum", "bug", "quatsch") == "");
   REQUIRE(user->GetObjects(path, world, "rooms", "test_house") != "");
+
+  //Check that accessing object is working
+  path+="/rooms/test_house";
+  REQUIRE(user->GetObjects("hum/bug/quatsch", "hum", "bug", "quatsch") == "");
+  REQUIRE(user->GetObjects(path, world, "rooms", "test_house") != "");
+
+  //Check that adding a new empty room is working
+  REQUIRE(user->AddNewObject(path, "test_room") == "");
 }
