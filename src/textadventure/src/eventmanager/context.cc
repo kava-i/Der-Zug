@@ -719,6 +719,7 @@ void Context::h_showExits(std::string& sIdentifier, CPlayer* p) {
 
 void Context::h_show(std::string& sIdentifier, CPlayer* p) {
   if(sIdentifier == "exits" || sIdentifier == "ausgänge") {
+    std::cout << "Calling: " << " show exits!" << std::endl;
     p->appendDescPrint(p->getRoom()->showExits(p->getGramma())+"\n");
     p->addSelectContest(p->getRoom()->getExtits2(), "go");
   }

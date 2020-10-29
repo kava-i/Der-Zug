@@ -242,19 +242,23 @@ void CPlayer::appendPrint(std::string sPrint) {
 }
 
 void CPlayer::appendStoryPrint(string sPrint) { 
-  appendSpeackerPrint(m_world->getConfig()["printing"]["story"], sPrint);
+  appendSpeackerPrint(m_world->getConfig()["printing"].value("story", ""), 
+      sPrint);
 }
 
 void CPlayer::appendDescPrint(string sPrint) {
-  appendSpeackerPrint(m_world->getConfig()["printing"]["desc"], sPrint);
+  appendSpeackerPrint(m_world->getConfig()["printing"].value("desc", ""), 
+      sPrint);
 }
 
 void CPlayer::appendErrorPrint(string sPrint) {
-  appendSpeackerPrint(m_world->getConfig()["printing"]["error"], sPrint);
+  appendSpeackerPrint(m_world->getConfig()["printing"].value("error", ""), 
+      sPrint);
 }
 
 void CPlayer::appendTechPrint(string sPrint) {
-  appendSpeackerPrint(m_world->getConfig()["printing"]["tech"], sPrint);
+  appendSpeackerPrint(m_world->getConfig()["printing"].value("tech", "")
+      , sPrint);
 }
 
 void CPlayer::appendBlackPrint(std::string sPrint) {

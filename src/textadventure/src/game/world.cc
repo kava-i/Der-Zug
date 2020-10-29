@@ -197,6 +197,7 @@ void CWorld::worldFactory(CPlayer* p)
 
     //Load texts
     textFactory();
+    std::cout << "worldFactory: done." << std::endl;
 }
 
 void CWorld::roomFactory(CPlayer* player) {
@@ -222,7 +223,9 @@ void CWorld::roomFactory(string sPath, CPlayer* p) {
     map<string, CItem*> mapItems = parseRoomItems(j_room, p);
     map<string, CDetail*> mapDetails = parseRoomDetails(j_room, p);
     m_rooms[j_room["id"]] = new CRoom(sArea, j_room, mapChars, mapItems, mapDetails, p);
+    std::cout << "Create room: " << j_room["id"] << std::endl;
   }
+  std::cout << "Created all rooms " << std::endl;
 }
 
 void CWorld::detailFactory() {
