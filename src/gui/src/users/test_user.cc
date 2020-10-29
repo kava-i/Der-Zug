@@ -48,4 +48,5 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   path += "/rooms";
   REQUIRE(user->GetCategory("hum/bug", "hum", "bug") == "");
   REQUIRE(user->GetCategory(path, world, "rooms") != "");
+  REQUIRE(user->AddFile(path, "test_house") != "");
 }
