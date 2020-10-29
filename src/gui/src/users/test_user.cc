@@ -41,6 +41,8 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(func::demo_exists(full_path + path + "/config.json"));
   REQUIRE(func::demo_exists(full_path + path + "/rooms/test.json"));
   REQUIRE(func::demo_exists(full_path + path + "/players/players.json"));
+
+  //Check that newly build world is starting and basic command are running.
   std::string command = "./../../textadventure/build/bin/testing.o "
     "--path ../../data/users/test_manager/files/Test_World/ -p test";
   REQUIRE(system(command.c_str()) == 0);
@@ -53,15 +55,32 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->GetWorld(path, world).find("attacks") != std::string::npos);
  
   //GetCategory: Check if page is returned, and func reacts to wrong path.
-  path += "/rooms";
   REQUIRE(user->GetCategory("hum/bug", "hum", "bug") == "");
-  REQUIRE(user->GetCategory(path, world, "rooms") != "");
+  REQUIRE(user->GetCategory(path+"/rooms", world, "rooms") != "");
 
   //Check adding files is working.
   REQUIRE(user->AddFile("hum/bug", "humbug") == "Path not found.");
-  REQUIRE(user->AddFile(path, "../test_house") == "Wrong format.");
-  REQUIRE(user->AddFile(path, "test_house") == "");
-  REQUIRE(user->AddFile(path, "test_house") == "File already exists.");
-  REQUIRE(func::demo_exists("../../data/users/" + path + "/test_house.json") 
+  REQUIRE(user->AddFile(path+"/rooms", "../test_house") == "Wrong format.");
+  REQUIRE(user->AddFile(path+"/rooms", "test_house") == "");
+  REQUIRE(user->AddFile(path+"/rooms", "test_house") == "File already exists.");
+  REQUIRE(func::demo_exists("../../data/users/"+path+"/rooms/test_house.json") 
       == true);
+  
+  //Check that world is still starting and basic command are running.
+  REQUIRE(system(command.c_str()) == 0);
+
+  //Add a new file in every category and check that game is still running.
+  REQUIRE(user->AddFile(path+"/attacks", "test_attacks") == "");
+  REQUIRE(user->AddFile(path+"/defaultDialogs", "test_default_dialogs") == "");
+  REQUIRE(user->AddFile(path+"/dialogs", "test_dialogs") == "");
+  REQUIRE(user->AddFile(path+"/characters", "test_characters") == "");
+  REQUIRE(user->AddFile(path+"/defaultDescriptions", "test_default_descs") 
+      == "");
+  REQUIRE(user->AddFile(path+"/items", "test_items") == "");
+  REQUIRE(user->AddFile(path+"/details", "test_details") == "");
+  REQUIRE(user->AddFile(path+"/quests", "test_quests") == "");
+  REQUIRE(user->AddFile(path+"/texts", "test_texts") == "");
+  REQUIRE(system(command.c_str()) == 0);
+  REQUIRE(user->AddFile(path+"/players", "test_house") == 
+      "Not supported category.");
 }
