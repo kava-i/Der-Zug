@@ -85,7 +85,7 @@ class User {
      * Get Overview of a SubCategory.
      * (f.e. world1/rooms/trainstation = platform a, great_hall ...)
      */
-    std::string GetObjects(std::string world, std::string 
+    std::string GetObjects(std::string path, std::string world, std::string 
         category, std::string sub);
 
     /*

@@ -129,11 +129,11 @@ std::string User::GetCategory(std::string path, std::string world,
   return env.render(temp, j_category);
 }
 
-std::string User::GetObjects(std::string world, std::string category, 
-      std::string sub) {
+std::string User::GetObjects(std::string path, std::string world, std::string 
+    category, std::string sub) {
   std::cout << "GetObjects" << std::endl;
   //Create path and trying to load into json 
-  std::string path = path_+"/files/"+world+"/"+category+"/"+sub+".json";
+  path = path_ + "/" + path + ".json";
   nlohmann::json objects;
   try{ 
     std::ifstream read(path);
@@ -141,7 +141,7 @@ std::string User::GetObjects(std::string world, std::string category,
     read.close();
   }
   catch(...) { 
-    std::cout << "file: " << path << "not found.";
+    std::cout << "file: " << path << " not found.";
     return "";
   }
 
