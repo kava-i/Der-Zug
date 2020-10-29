@@ -218,7 +218,7 @@ std::string User::GetObject(std::string world, std::string category,
 
 
 std::string User::CreateNewWorld(std::string name) {
-  std::string path = path_ + "/" + username_ + "/" + name;
+  std::string path = path_ + "/" + username_ + "/files/" + name;
   if (func::demo_exists(path) == true)
     return "World already exists.";
 
