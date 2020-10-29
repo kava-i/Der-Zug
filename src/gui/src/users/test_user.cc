@@ -65,7 +65,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->AddFile(path+"/rooms", "test_house") == "File already exists.");
   REQUIRE(func::demo_exists("../../data/users/"+path+"/rooms/test_house.json") 
       == true);
-  
+
   //Check that world is still starting and basic command are running.
   REQUIRE(system(command.c_str()) == 0);
 
@@ -83,4 +83,9 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(system(command.c_str()) == 0);
   REQUIRE(user->AddFile(path+"/players", "test_house") == 
       "Not supported category.");
+
+  //Check that newly added subcategories should be found in category
+  REQUIRE(user->GetCategory(path+"/rooms", world, "rooms").find("test_house") 
+      != std::string::npos);
+
 }
