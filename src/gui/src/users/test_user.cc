@@ -38,8 +38,14 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
 
   //GetOverview: Check if world is found on overview page.
   REQUIRE(user->GetOverview().find(world) != std::string::npos);
-  //GetWorld: Check if basic categories are found, react to wrong path.
+  
+  //GetWorld: Check if basic categories are found and func react to wrong path.
+  std::string path = "test_manager/files/"+world;
   REQUIRE(user->GetWorld("humbug", "humbug") == "");
-  REQUIRE(user->GetWorld("test_manager/files", world).find("attacks") 
-      != std::string::npos);
+  REQUIRE(user->GetWorld(path, world).find("attacks") != std::string::npos);
+ 
+  //GetCategory: Check if page is returned, and func reacts to wrong path.
+  path += "/rooms";
+  REQUIRE(user->GetCategory("humbug", "humbug") == "");
+  REQUIRE(user->GetWorld(path, world, "rooms") != "");
 }
