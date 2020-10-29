@@ -261,6 +261,40 @@ std::string User::CreateNewWorld(std::string name) {
   return "";
 }
 
+std::string User::AddFile(std::string path, std::string name) {
+  //Check if path exists
+  if (!func::demo_exists(path)) 
+    return "Path to not found.";
+  //Check for wrong format
+  if (name.find("/") != std::string::npos)
+    return "Wrong format.";
+  //Replace space by underscore and check if file already exists.
+  std::replace(name.begin(), name.end(), ' ', '_');
+  if (func::demo_exists(path + "/" + name + ".json"))
+    return "File already exists.";
+
+  //Get Category from string
+  std::string category = path.substr(path.rfind("/"));
+  std::cout << category << std::endl;
+
+  nlohmann::json file;
+  if (category == "defaultDialogs")
+    file = nlohmann::json::array();
+  else 
+    file = nlohmann::json::object();
+  
+  try {
+    std::ofstream write(path + "/" + name + ".json");
+    write << file;
+    write.close();
+  }
+  catch (std::exception& e) {
+    std::cout << "Adding new file failed!: " << e.what() << std::endl;
+    return "Adding file failed!";
+  }
+  return "";
+}
+
 bool User::CheckAccessToLocations(std::string path) { 
   std::cout << "CheckAccessToLocations: " << path << std::endl; 
   return true; 

@@ -94,9 +94,8 @@ class User {
     std::string GetObject(std::string world, std::string 
         category, std::string sub, std::string obj);
 
+    // ** Create New Files/ Folders ** //
 
-    // ** functions ** //
-    
     /**
      * @brief Creates a new world for this user
      * @param name (Name of the world)
@@ -104,6 +103,17 @@ class User {
      */
     std::string CreateNewWorld(std::string name); 
 
+    /**
+     * @brief Adds new file to category
+     * Adds new file and tries to create json matching category. 
+     * @param path
+     * @param name
+     * @return error code.
+     */
+    std::string AddFile(std::string path, std::string name);
+    
+    // ** functions ** //
+    
     /**
      * Write users jsons to disc.
      */
