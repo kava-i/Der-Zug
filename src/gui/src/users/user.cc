@@ -133,7 +133,7 @@ std::string User::GetObjects(std::string path, std::string world, std::string
     category, std::string sub) {
   std::cout << "GetObjects" << std::endl;
   //Create path and trying to load into json 
-  path = path_ + "/" + path + ".json";
+  path = path_ + path + ".json";
   nlohmann::json objects;
   try{ 
     std::ifstream read(path);
@@ -311,7 +311,7 @@ std::string User::AddFile(std::string path, std::string name) {
 }
 
 std::string User::AddNewObject(std::string path, std::string id) {
-  std::string full_path = path_ + path;
+  std::string full_path = path_ + path + ".json";
   std::cout << "AddNewObject: " << path << std::endl;
   //Check if path exists
   if (!func::demo_exists(full_path)) 
@@ -326,13 +326,13 @@ std::string User::AddNewObject(std::string path, std::string id) {
 
   //Get Category
   std::vector<std::string> elements = func::Split(path, "/");
-  if (elements.size() >= 2)
+  if (elements.size() < 2)
     return "Category could not be parsed.";
   std::string category = elements[elements.size()-2];
-  std::cout << category << std::endl;
   
   //Load empty object of category
   nlohmann::json new_object;
+  /*
   try {
     std::ifstream read(".../data/default_jsons/" + category + ".json");
     read >> new_object;
@@ -341,7 +341,7 @@ std::string User::AddNewObject(std::string path, std::string id) {
   catch (std::exception& e) {
     std::cout << "Problem reading default category: " << e.what() << std::endl;
     return "Problem reading default category!";
-  }
+  }*/
   new_object["id"] = id;
   nlohmann::json request;
   request["path"] = path;

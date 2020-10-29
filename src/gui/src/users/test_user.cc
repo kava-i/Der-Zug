@@ -63,7 +63,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->AddFile(path+"/rooms", "../test_house") == "Wrong format.");
   REQUIRE(user->AddFile(path+"/rooms", "test_house") == "");
   REQUIRE(user->AddFile(path+"/rooms", "test_house") == "File already exists.");
-  REQUIRE(func::demo_exists("../../data/users/"+path+"/rooms/test_house.json") 
+  REQUIRE(func::demo_exists(full_path + path + "/rooms/test_house.json") 
       == true);
 
   //Check that world is still starting and basic command are running.
@@ -89,15 +89,27 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
       != std::string::npos);
 
   //Check that accessing objects inside subcategory works
-  path+="/rooms/test_house";
+  std::string room_path = path + "/rooms/test_house";
   REQUIRE(user->GetObjects("hum/bug/quatsch", "hum", "bug", "quatsch") == "");
-  REQUIRE(user->GetObjects(path, world, "rooms", "test_house") != "");
+  REQUIRE(user->GetObjects(room_path, world, "rooms", "test_house") != "");
 
   //Check that accessing object is working
-  path+="/rooms/test_house";
   REQUIRE(user->GetObjects("hum/bug/quatsch", "hum", "bug", "quatsch") == "");
-  REQUIRE(user->GetObjects(path, world, "rooms", "test_house") != "");
+  REQUIRE(user->GetObjects(room_path, world, "rooms", "test_house") != "");
 
   //Check that adding a new empty room is working
-  REQUIRE(user->AddNewObject(path, "test_room") == "");
+  REQUIRE(user->AddNewObject(room_path, "test_room") == "");
+  REQUIRE(user->AddNewObject(path+"/attacks/test_attacks","test_attack") == "");
+  REQUIRE(user->AddNewObject(path+"/dialogs/test_dialogs","test_dialog") == "");
+  REQUIRE(user->AddNewObject(path+"/characters/test_characters", 
+        "test_character") == "");
+  REQUIRE(user->AddNewObject(path+"/items/test_items", "test_item") == "");
+  REQUIRE(user->AddNewObject(path+"/details/test_details","test_details")=="");
+  REQUIRE(user->AddNewObject(path+"/quests/test_quests", "test_quest") == "");
+  REQUIRE(user->AddNewObject(path+"/texts/test_texts", "test_text") == "");
+  REQUIRE(user->AddNewObject(path+"/defaultDescriptions/test_default_descs",
+        "test_desc") == "");
+  REQUIRE(user->AddNewObject(path+"/defaultDialogs/test_default_dialogs",
+        "test_dialog") == "");
+  REQUIRE(system(command.c_str()) == 0);
 }
