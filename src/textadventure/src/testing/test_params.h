@@ -23,12 +23,21 @@ class TestParameters{
       txtad_path_ = path;
     }
 
+    std::string txtad_player() {
+      return txtad_player_;
+    }
+
+    void set_txtad_player(std::string player) {
+      txtad_player_ = player;
+    }
   private:
     static TestParameters *instance;
     std::string txtad_path_;
+    std::string txtad_player_;
     
     TestParameters() {
       txtad_path_ = "";
+      txtad_player_ = "";
     }
 };
 
