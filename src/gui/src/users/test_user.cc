@@ -41,11 +41,9 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(func::demo_exists(full_path + path + "/config.json"));
   REQUIRE(func::demo_exists(full_path + path + "/rooms/test.json"));
   REQUIRE(func::demo_exists(full_path + path + "/players/players.json"));
-  std::string command = "./../../textadventure/build/bin/testing.o";
-  bool success = system(command.c_str());
-  REQUIRE(success == 0);
-  std::cout << "SUCCESS: " << success << std::endl;
-
+  std::string command = "./../../textadventure/build/bin/testing.o "
+    "--path ../../data/users/test_manager/files/Test_World/ -p test";
+  REQUIRE(system(command.c_str()) == 0);
 
   //GetOverview: Check if world is found on overview page.
   REQUIRE(user->GetOverview().find(world) != std::string::npos);
