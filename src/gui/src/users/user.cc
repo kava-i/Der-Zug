@@ -57,8 +57,7 @@ std::string User::GetOverview() {
 std::string User::GetWorld(std::string path, std::string world) {
   std::cout << "GetWorld" << std::endl;
   //Check if path to given world can be found
-  if (!func::demo_exists(path_+path) || !func::demo_exists(path_+path+"/"
-        +world))
+  if (!func::demo_exists(path_+path))
     return "";
 
   //Create initial json with world and all categories.
@@ -94,10 +93,16 @@ std::string User::GetBackups(std::string world) {
   return env.render(temp, j);
 }
 
-std::string User::GetCategory(std::string world, std::string category) {
+std::string User::GetCategory(std::string path, std::string world, 
+    std::string category) {
   std::cout << "GetCategory" << std::endl;
-  //Build path to category and create initial json.
-  std::string path = path_+"/files/"+world+"/"+category;
+  
+  //Check if path to given category exists 
+  path = path_ + path;
+  if (!func::demo_exists(path))
+    return "";
+
+  //Create initial json.
   nlohmann::json j_category = nlohmann::json({{"user", username_}, {"world", world}, 
       {"category", category}});
 

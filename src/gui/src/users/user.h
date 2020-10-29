@@ -72,7 +72,7 @@ class User {
      * Get Overview of a category. 
      * (f.e. world1/rooms = trainstation, hospital...)
      */
-    std::string GetCategory(std::string world, 
+    std::string GetCategory(std::string path, std::string world, 
         std::string category);
 
     /**
