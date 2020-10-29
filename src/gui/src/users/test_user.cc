@@ -31,7 +31,15 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user != nullptr);
 
   //Create empty world.
-  REQUIRE(user->CreateNewWorld("Test_World") == ""); 
-  REQUIRE(user->CreateNewWorld("Test_World") == "World already exists."); 
+  std::string world = "Test_World";
+  REQUIRE(user->CreateNewWorld(world) == ""); 
+  REQUIRE(user->CreateNewWorld(world) == "World already exists."); 
   REQUIRE(user->CreateNewWorld("../Test_World") == "Wrong format."); 
+
+  //GetOverview: Check if world is found on overview page.
+  REQUIRE(user->GetOverview().find(world) != std::string::npos);
+  //GetWorld: Check if basic categories are found, react to wrong path.
+  REQUIRE(user->GetWorld("humbug", "humbug") == "");
+  REQUIRE(user->GetWorld("test_manager/files", world).find("attacks") 
+      != std::string::npos);
 }
