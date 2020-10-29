@@ -3,4 +3,4 @@ src/textadventure/build/*
 src/gui/build/*
 src/gui/webserver/builder_tests.o
 src/gui/webserver/game_builder.o
-
+src/data/users/test_manager
