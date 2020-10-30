@@ -98,7 +98,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->GetObjects(room_path, world, "rooms", "test_house") != "");
 
   //Check that adding a new empty room is working
-  REQUIRE(user->AddNewObject(room_path, "test_house") == "");
+  REQUIRE(user->AddNewObject(room_path, "test_room") == "");
   REQUIRE(system(command.c_str()) == 0);
   REQUIRE(user->AddNewObject(path+"/attacks/test_attacks","test_attack") == "");
   REQUIRE(user->AddNewObject(path+"/dialogs/test_dialogs","test_dialog") == "");
@@ -116,4 +116,8 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->AddNewObject(path+"/defaultDialogs/test_default_dialogs",
         "test_dialog") == "");
   REQUIRE(system(command.c_str()) == 0);
+
+  //Check if newly create objects can be found.
+  REQUIRE(user->GetObjects(room_path, world, "rooms", "test_house")
+      .find("test_room") != std::string::npos);
 }
