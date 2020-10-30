@@ -2,15 +2,15 @@
 #include "objects/player.h"
 
 CQuest::CQuest(nlohmann::json jAttributes) {
-  m_sName = jAttributes["name"];
-  m_sID = jAttributes["id"];
-  m_sDescription = jAttributes["description"];
+  m_sName = jAttributes.value("name", "");
+  m_sID = jAttributes.value("id", "");
+  m_sDescription = jAttributes.value("description", "");
   m_EP = jAttributes.value("ep", 5);
   m_solved=false;
   m_active=false;
   m_onlineFromBeginning = jAttributes.value("online", "true") == "true";
-  m_first_active_steps = jAttributes["active_from_beginning"].
-    get<std::vector<std::string>>();
+  m_first_active_steps = jAttributes.value("active_from_beginning", 
+    std::vector<std::string>());
 }
 
 // *** GETTER *** //
