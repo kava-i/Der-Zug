@@ -171,11 +171,11 @@ std::string User::GetObjects(std::string path, std::string world, std::string
   return env.render(temp, overview);
 }
 
-std::string User::GetObject(std::string world, std::string category, 
-        std::string sub, std::string obj) {
+std::string User::GetObject(std::string path, std::string world, std::string 
+    category, std::string sub, std::string obj) {
   std::cout << "GetObject" << std::endl;
   //Create path and trying to load into json 
-  std::string path = path_+"/files/"+world+"/"+category+"/"+sub+".json";
+  path = path_ + path + ".json";
   nlohmann::json objects;
   try{ 
     std::ifstream read(path);
@@ -184,7 +184,7 @@ std::string User::GetObject(std::string world, std::string category,
   }
   catch(...) { 
     std::cout << "file: " << path << "not found.";
-    return "";
+    return "File not found.";
   }
 
   nlohmann::json overview;   
@@ -220,7 +220,7 @@ std::string User::GetObject(std::string world, std::string category,
   else if (category == "characters")
     temp = env.parse_template("web/in_char_template.html");
   else
-    temp = env.parse_template("web/config_template.html");
+    return "Object can't be parsed yet.";
   return env.render(temp, overview);
 }
 

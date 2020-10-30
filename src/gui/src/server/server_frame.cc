@@ -138,7 +138,7 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
         page = user->GetObjects(req.matches[0], req.matches[2], req.matches[3], 
             req.matches[4]);
       else if (req.matches.size() == 6) {
-        page = user->GetObject(req.matches[2], req.matches[3], 
+        page = user->GetObject(req.matches[0], req.matches[2], req.matches[3], 
             req.matches[4], req.matches[5]);
       }
     }

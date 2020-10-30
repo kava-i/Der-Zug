@@ -91,7 +91,7 @@ class User {
     /*
      * Get one object.
      */
-    std::string GetObject(std::string world, std::string 
+    std::string GetObject(std::string path, std::string world, std::string 
         category, std::string sub, std::string obj);
 
     // ** Create New Files/ Folders ** //
