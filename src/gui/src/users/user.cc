@@ -331,23 +331,17 @@ std::string User::AddNewObject(std::string path, std::string id) {
   std::string category = elements[elements.size()-2];
   
   //Load empty object of category
-  nlohmann::json new_object;
-  /*
-  try {
-    std::ifstream read(".../data/default_jsons/" + category + ".json");
-    read >> new_object;
-    read.close();
-  }
-  catch (std::exception& e) {
-    std::cout << "Problem reading default category: " << e.what() << std::endl;
-    return "Problem reading default category!";
-  }*/
-  new_object["id"] = id;
   nlohmann::json request;
-  request["path"] = path;
-  request["json"] = new_object;
+  request["correct_path"] = path;
+  if (category == "defaultDialogs") 
+    request["json"] = nlohmann::json::array();
+  else if (category == "defaultDescriptions")
+    request["json"] = nlohmann::json::array();
+  else
+    request["json"] = nlohmann::json{{"id", id}};
   try {
-    WriteObject(request.dump());
+    if (WriteObject(request.dump()) == false)
+      return "Problem with writing object.";
   }
   catch (std::exception& e) {
     std::cout << "Problem writing new object: " << e.what() << std::endl;
@@ -363,7 +357,7 @@ bool User::WriteObject(std::string request) {
   try {
     nlohmann::json j = nlohmann::json::parse(request);
     json = j["json"];
-    path = j["path"];
+    path = j.value("path", j["correct_path"].get<std::string>());
   }
   catch (std::exception& e) {
     std::cout << "WriteObject: Problem parsing request: " << e.what() << "\n";
@@ -376,8 +370,12 @@ bool User::WriteObject(std::string request) {
   //paths_[1] = ../../data/users/[username]/  (path to one folder)
   //paths_[2] = ../../data/users/[user]/      (path to shared folder
   //...                                       (additional shared folders)
-  std::string path_to_object = path_ + "/" + path.substr(7, path.rfind("/")-7) 
-    + ".json";
+  //Use different parsing, when coming from user, or from AddNewObject().
+  std::string path_to_object = path_;
+  if (json.count("path") > 0)
+    path_to_object += path.substr(7, path.rfind("/")-7) + ".json";
+  else
+    path_to_object += path + ".json";
 
   //Read json
   std::cout << "Reading json\n";
@@ -388,7 +386,12 @@ bool User::WriteObject(std::string request) {
   nlohmann::json object = func::LoadJsonFromDisc(path_to_object);
   
   //Modify and write object.
-  object[json["id"].get<std::string>()] = json;
+  if (json.is_array() == true && object.is_array() == true)
+    object.push_back(json);
+  else if (json.is_array() == true)
+    object[std::to_string(object.size())] = json;
+  else
+    object[json["id"].get<std::string>()] = json;
   std::ofstream write(path_to_object);
   write << object;
   write.close();
