@@ -122,28 +122,28 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
       .find("test_room") != std::string::npos);
 
   //Check if object pages can be reached
-  REQUIRE(user->GetObject(path+"/rooms/test_house/test_room/", "rooms", 
+  REQUIRE(user->GetObject(path+"/rooms/test_house/test_room/", world, "rooms", 
         "test_house","test_room") != "Object can't be viewed yet.");
-  REQUIRE(user->GetObject(path+"/attacks/test_attacks/test_attack/", "attacks", 
+  REQUIRE(user->GetObject(path+"/attacks/test_attacks/test_attack/", world, "attacks", 
         "test_attacks","test_attack") != "Object can't be viewed yet.");
-  REQUIRE(user->GetObject(path+"/dialogs/test_dialogs/test_dialog/", "dialogs", 
+  REQUIRE(user->GetObject(path+"/dialogs/test_dialogs/test_dialog/", world "dialogs", 
         "test_dialogs","test_dialog") != "Object can't be viewed yet.");
-  REQUIRE(user->GetObject(path+"/characters/test_characters/test_character/", "characters", 
-        "test_characters","test_character") != "Object can't be viewed yet.");
-  REQUIRE(user->GetObject(path+"/items/test_items/test_item/", "items", 
+  REQUIRE(user->GetObject(path+"/characters/test_characters/test_character/", world, 
+        "characters", "test_characters","test_character") != "Object can't be viewed yet.");
+  REQUIRE(user->GetObject(path+"/items/test_items/test_item/", world, "items", 
         "test_items","test_item") != "Object can't be viewed yet.");
-  REQUIRE(user->GetObject(path+"/details/test_details/test_detail/", "details", 
+  REQUIRE(user->GetObject(path+"/details/test_details/test_detail/", world, "details", 
         "test_details","test_detail") != "Object can't be viewed yet.");
-  REQUIRE(user->GetObject(path+"/details/test_details/test_detail/", "details", 
+  REQUIRE(user->GetObject(path+"/details/test_details/test_detail/", world, "details", 
         "test_details","test_detail") != "Object can't be viewed yet.");
-  REQUIRE(user->GetObject(path+"/quests/test_quests/test_quest/", "quests", 
+  REQUIRE(user->GetObject(path+"/quests/test_quests/test_quest/", world, "quests", 
           "test_quests","test_quest") != "Object can't be viewed yet.");
-  REQUIRE(user->GetObject(path+"/texts/test_texts/test_text/", "details", 
+  REQUIRE(user->GetObject(path+"/texts/test_texts/test_text/", world, "details", 
           "test_texts","test_text") != "Object can't be viewed yet.");
   REQUIRE(user->GetObject(path+"/defaultDescriptions/test_default_descs/test_desc/", 
-        "defaultDescriptions", "test_default_descs","test_desc") 
+        world, "defaultDescriptions", "test_default_descs","test_desc") 
       != "Object can't be viewed yet.");
   REQUIRE(user->GetObject(path+"/defaultDialogs/test_default_dialogs/test_dialog/", 
-        "defaultDialogs", "test_default_dialogs","test_dialog") 
+        world, "defaultDialogs", "test_default_dialogs","test_dialog") 
       != "Object can't be viewed yet.");
 }
