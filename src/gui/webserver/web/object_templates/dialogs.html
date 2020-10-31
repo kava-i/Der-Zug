@@ -1,1 +1,27 @@
-{% include temp_header %}
+{% include "temp_header" %}
+
+  <li><label>Id:</label><input id="id" value="{{ id }}"></li> 
+
+  <li custom="list">
+    <label>Text</label>
+    {% include "temp_description" %}
+  </li>
+
+  <li custom="map">
+    <label>Option</label>
+    <ul id="options">
+      {% for key, val in default(options, {"": {}}) %}
+        <li custom"key_object">
+          <input id="id" custom="int" placeholder="id (number)" value="{{default(val.id,'0')}}">
+          <input id="text" placeholder="text" value="{{default(val.text, "")}}">
+          <input id="to" placeholder="linked step" value="{{default(val.to, "")}}">
+          <input id="logic" placeholder="logic" value="{{default(val.logic, "") }}">
+        </li>
+      {% endfor %}
+    </ul>
+  </li>
+
+  <li><label>Events:</label><input id="events" value="{{ default(events, "") }}"></li>
+  <li><label>Actions:</label><input id="actions" value="{{ default(actions, "") }}"></li>
+
+{% include "temp_footer" %}
