@@ -219,8 +219,10 @@ std::string User::GetObject(std::string path, std::string world, std::string
     temp = env.parse_template("web/in_room_template.html");
   else if (category == "characters")
     temp = env.parse_template("web/in_char_template.html");
-  else
-    return "Object can't be parsed yet.";
+  else {
+    std::cout << "No html page for this category yet!" << std::endl;
+    return "File not found.";
+  }
   return env.render(temp, overview);
 }
 

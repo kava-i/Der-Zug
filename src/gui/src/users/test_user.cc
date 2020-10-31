@@ -123,27 +123,27 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
 
   //Check if object pages can be reached
   REQUIRE(user->GetObject(path+"/rooms/test_house/test_room", world, "rooms", 
-        "test_house","test_room") != "Object can't be viewed yet.");
+        "test_house","test_room") != "File not found.");
   REQUIRE(user->GetObject(path+"/attacks/test_attacks/test_attack", world, "attacks", 
-        "test_attacks","test_attack") != "Object can't be viewed yet.");
+        "test_attacks","test_attack") != "File not found.");
   REQUIRE(user->GetObject(path+"/dialogs/test_dialogs/test_dialog", world, "dialogs", 
-        "test_dialogs","test_dialog") != "Object can't be viewed yet.");
+        "test_dialogs","test_dialog") != "File not found.");
   REQUIRE(user->GetObject(path+"/characters/test_characters/test_character", world, 
-        "characters", "test_characters","test_character") != "Object can't be viewed yet.");
+        "characters", "test_characters","test_character") != "File not found.");
   REQUIRE(user->GetObject(path+"/items/test_items/test_item", world, "items", 
-        "test_items","test_item") != "Object can't be viewed yet.");
+        "test_items","test_item") != "File not found.");
   REQUIRE(user->GetObject(path+"/details/test_details/test_detail", world, "details", 
-        "test_details","test_detail") != "Object can't be viewed yet.");
+        "test_details","test_detail") != "File not found.");
   REQUIRE(user->GetObject(path+"/details/test_details/test_detail", world, "details", 
-        "test_details","test_detail") != "Object can't be viewed yet.");
+        "test_details","test_detail") != "File not found.");
   REQUIRE(user->GetObject(path+"/quests/test_quests/test_quest", world, "quests", 
-          "test_quests","test_quest") != "Object can't be viewed yet.");
+          "test_quests","test_quest") != "File not found.");
   REQUIRE(user->GetObject(path+"/texts/test_texts/test_text", world, "details", 
-          "test_texts","test_text") != "Object can't be viewed yet.");
+          "test_texts","test_text") != "File not found.");
   REQUIRE(user->GetObject(path+"/defaultDescriptions/test_default_descs/test_desc", 
         world, "defaultDescriptions", "test_default_descs","test_desc") 
-      != "Object can't be viewed yet.");
+      != "File not found.");
   REQUIRE(user->GetObject(path+"/defaultDialogs/test_default_dialogs/test_dialog", 
         world, "defaultDialogs", "test_default_dialogs","test_dialog") 
-      != "Object can't be viewed yet.");
+      != "File not found.");
 }
