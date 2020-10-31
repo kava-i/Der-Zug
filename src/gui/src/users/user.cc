@@ -116,7 +116,7 @@ std::string User::GetCategory(std::string path, std::string world,
     read >> j;
     read.close();
     j_category["json"] = j;
-    temp = env.parse_template("web/in_json_template.html");
+    temp = env.parse_template("web/object_templates/config.html");
   }
 
   //Add all files in category to json and parse json.
@@ -207,17 +207,21 @@ std::string User::GetObject(std::string path, std::string world, std::string
   inja::Template temp;
 
   //Parse standard templates for descriptions and the header.
-  inja::Template description_template = env.parse_template("web/description_template.html");
-  env.include_template("web/temp_description", description_template);
-  inja::Template room_description_template = 
-    env.parse_template("web/room_description_template.html");
-  env.include_template("web/temp_room_description", room_description_template);
-  inja::Template object_header_template = env.parse_template("web/object_header_template.html");
-  env.include_template("web/temp_header", object_header_template);
+  inja::Template description = env.parse_template(
+      "web/object_templates/description.html");
+  env.include_template("web/object_templates/temp_description", description);
+
+  inja::Template room_description = env.parse_template(
+      "web/object_templates/room_description.html");
+  env.include_template("web/object_templates/temp_room_description", 
+      room_description);
+
+  inja::Template header = env.parse_template("web/object_templates/header.html");
+  env.include_template("web/temp_header", header);
 
   //Parse different objects.
   try {
-    temp = env.parse_template("web/"+category+"_template.html");
+    temp = env.parse_template("web/parse_templates/"+category+".html");
   }
   catch (std::exception& e) {
     std::cout << "No html page for this category yet!:" << e.what() << std::endl;
