@@ -57,6 +57,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   //GetCategory: Check if page is returned, and func reacts to wrong path.
   REQUIRE(user->GetCategory("hum/bug", "hum", "bug") == "");
   REQUIRE(user->GetCategory(path+"/rooms", world, "rooms") != "");
+  REQUIRE(user->GetCategory(path+"/config", world, "config") != "");
 
   //Check adding files is working.
   REQUIRE(user->AddFile("hum/bug", "humbug") == "Path not found.");
