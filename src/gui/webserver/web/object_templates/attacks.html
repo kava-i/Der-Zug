@@ -1,15 +1,10 @@
 {% include "temp_header" %}
 
-<div class="box_overview center_in_box">
-  <h1>{{ default(name, id) }}</h1>
-    <div class="object">
-      <ul id="object">
-        <li><label>Name:</label><input id="name" value="{{ default(name, "") }}"><li>
-        <li><label>ID:</label><input id="id" value="{{ default(id, "") }}"><li>
-            <li><label>description:</label><input id="description" 
-              value="{{ default(description, "") }}"><li>
-        <li><label>Output:</label><input id="output" value="{{ default(output, "") }}"><li>
-        <li><label>Power:</label><input id="power" custom="int" value="{{ default(power, 0) }}"><li>
-      </ul>
+  <li><label>Name:</label><input id="name" value="{{ default(name, "") }}"><li>
+  <li><label>ID:</label><input id="id" value="{{ default(id, "") }}"><li>
+      <li><label>description:</label><input id="description" 
+        value="{{ default(description, "") }}"><li>
+  <li><label>Output:</label><input id="output" value="{{ default(output, "") }}"><li>
+  <li><label>Power:</label><input id="power" custom="int" value="{{ default(power, 0) }}"><li>
 
 {% include "temp_footer" %}
