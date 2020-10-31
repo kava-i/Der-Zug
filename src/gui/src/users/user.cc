@@ -216,6 +216,19 @@ std::string User::GetObject(std::string path, std::string world, std::string
   env.include_template("web/object_templates/temp_room_description", 
       room_description);
 
+  inja::Template dead_description = env.parse_template(
+      "web/object_templates/dead_description.html");
+  env.include_template("web/object_templates/temp_dead_description", 
+      dead_description);
+
+  inja::Template use_description = env.parse_template(
+      "web/object_templates/use_description.html");
+  env.include_template("web/object_templates/temp_use_description", 
+      use_description);
+
+  inja::Template pages = env.parse_template("web/object_templates/pages.html");
+  env.include_template("web/object_templates/temp_pages", pages);
+
   inja::Template header = env.parse_template("web/object_templates/header.html");
   env.include_template("web/object_templates/temp_header", header);
   inja::Template footer = env.parse_template("web/object_templates/footer.html");
