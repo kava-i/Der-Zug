@@ -205,7 +205,8 @@ std::string User::GetObject(std::string path, std::string world, std::string
   inja::Environment env;
   inja::Template temp;
 
-  //Parse standard templates for descriptions and the header.
+  //Parse standard templates for descriptions and header and footer included 
+  //in every object.
   inja::Template description = env.parse_template(
       "web/object_templates/description.html");
   env.include_template("web/object_templates/temp_description", description);
@@ -217,13 +218,15 @@ std::string User::GetObject(std::string path, std::string world, std::string
 
   inja::Template header = env.parse_template("web/object_templates/header.html");
   env.include_template("web/object_templates/temp_header", header);
+  inja::Template footer = env.parse_template("web/object_templates/footer.html");
+  env.include_template("web/object_templates/temp_footer", footer);
 
   //Parse different objects.
   try {
     temp = env.parse_template("web/object_templates/"+category+".html");
   }
   catch (std::exception& e) {
-    std::cout << "No html page for this category yet!:" << e.what() << std::endl;
+    std::cout << "Problem parsing object html: " << e.what() << std::endl;
     return "File not found.";
   }
   return env.render(temp, overview);
