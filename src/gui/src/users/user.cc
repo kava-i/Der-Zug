@@ -97,35 +97,34 @@ std::string User::GetCategory(std::string path, std::string world,
     std::string category) {
   std::cout << "GetCategory" << std::endl;
   
-  //Check if path to given category exists 
+  //Create path, inja Environment and initial json.
   path = path_ + path;
-  if (!func::demo_exists(path))
-    return "";
-
-  //Create initial json.
-  nlohmann::json j_category = nlohmann::json({{"user", username_}, {"world", world}, 
-      {"category", category}});
-
   inja::Environment env;
-  inja::Template temp;
+  nlohmann::json j_category = nlohmann::json({{"user", username_}, 
+      {"world", world}, {"category", category}});
 
   //Directly parse config page.
   if (category == "config") {
-    std::ifstream read(path+".json");
-    nlohmann::json j;
-    read >> j;
-    read.close();
-    j_category["json"] = j;
-    temp = env.parse_template("web/object_templates/config.html");
+    if (!func::demo_exists(path + ".json")) {
+      std::cout << "Path to config not found! " << path + ".json" << std::endl;
+      return "";
+    }
+    j_category["json"] = func::LoadJsonFromDisc(path + ".json");
+    inja::Template temp = env.parse_template("web/object_templates/config.html");
+    return env.render(temp, j_category);
   }
 
-  //Add all files in category to json and parse json.
-  else {
-    j_category["sub_categories"] = nlohmann::json::array();
-    for (auto p : fs::directory_iterator(path+"/")) 
-      j_category["sub_categories"].push_back(p.path().stem());
-    temp = env.parse_template("web/in_category_template.html");
+  //Check if path to given category exists 
+  if (!func::demo_exists(path)) {
+    std::cout << "Path: " << path << " does not exist!" << std::endl;
+    return "";
   }
+  
+  //Add all files in category to json and parse json.
+  j_category["sub_categories"] = nlohmann::json::array();
+  for (auto p : fs::directory_iterator(path+"/")) 
+    j_category["sub_categories"].push_back(p.path().stem());
+  inja::Template temp = env.parse_template("web/in_category_template.html");
   return env.render(temp, j_category);
 }
 
