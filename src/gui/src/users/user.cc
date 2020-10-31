@@ -216,12 +216,11 @@ std::string User::GetObject(std::string path, std::string world, std::string
   env.include_template("web/temp_header", object_header_template);
 
   //Parse different objects.
-  if (category == "rooms")
-    temp = env.parse_template("web/in_room_template.html");
-  else if (category == "characters")
-    temp = env.parse_template("web/in_char_template.html");
-  else {
-    std::cout << "No html page for this category yet!" << std::endl;
+  try {
+    temp = env.parse_template("web/"+category+"_template.html");
+  }
+  catch (std::exception& e) {
+    std::cout << "No html page for this category yet!:" << e.what() << std::endl;
     return "File not found.";
   }
   return env.render(temp, overview);
