@@ -217,11 +217,11 @@ std::string User::GetObject(std::string path, std::string world, std::string
       room_description);
 
   inja::Template header = env.parse_template("web/object_templates/header.html");
-  env.include_template("web/temp_header", header);
+  env.include_template("web/object_templates/temp_header", header);
 
   //Parse different objects.
   try {
-    temp = env.parse_template("web/parse_templates/"+category+".html");
+    temp = env.parse_template("web/object_templates/"+category+".html");
   }
   catch (std::exception& e) {
     std::cout << "No html page for this category yet!:" << e.what() << std::endl;
