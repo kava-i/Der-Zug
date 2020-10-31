@@ -1,1 +1,153 @@
-{"besoffene_frau":{"attacks":{"kick":"Normal Kick","punsch":"Punsch"},"deadDescription":[{"speaker":"PERZEPTION","text":"Die leiche einer toten Frau, die vor ihrem Tod klarerweise sturz besoffen war."}],"description":[{"post_pEvents":["talk besoffene frau"],"speaker":"PERZEPTION","text":"Eine betrunkene Frau. Sie sieht von Alkohol mitgenommen aus, aber dahinter erkennt man, etwas von einer beeindruckenden Schönheit... und Stärker."}],"faint":1,"hp":40,"id":"besoffene_frau","items":[["basic_wine",{"amount":3}]],"name":"eine besoffene Frau","roomDescription":[{"post_otEvents":["talk besoffene frau"],"speaker":"PERZEPTION","text":"Eine anscheinend bewusstlose Frau liegt in einer Alkoholpfütze, eine noch glühene, halb abgebrannte Zigarette befindet sich zwischen ihren Fingern."}],"strength":16},"cho_chikun":{"description":[{"speaker":"LOGIK","text":"Ein verrück aussehender Mann, irgendwie kommt er mir bekannt vor"},{"speaker":"desc","text":"Man kann in seinen Gesichtszügen erkennen, dass er Go-Spieler ist. Aber was bedeutet das alles nur?! "}],"faint":1,"handlers":[{"id":"h_thieve","priority":0,"string":"pick"}],"hp":10,"id":"cho_chikun","name":"Cho Chikun","roomDescription":[{"speaker":"LOGIK","text":"Ein verrück aussehender Mann, irgendwie kommt er mir bekannt vor"}],"strength":10},"konstantin_thron":{"description":[{"speaker":"desc","text":"Herr Thron wirkt etwas eingebildet."}],"handlers":[{"id":"h_thieve","infos":"konstantin_thron","priority":0,"string":"pick"}],"id":"konstantin_thron","items":[["basic_cigaretts",{}],["basic_wine",{}]],"name":"Schick gekleideter Mann","roomDescription":[{"speaker":"desc","text":"Ein Mann steht an eine Wand gelehnt, ließt Zeitung und raucht Pfeife."},{"logic":"(wahrnehmung>1)","pre_otEvents":["changeName character|trainstation_nebenhalle_konstantin_thron|Konstantin Thron"],"speaker":"WAHRNEHMUNG","text":"Das ist Konstantin Thron, der berühmte Architekt dieses Bahnhofs."}]},"passanten_gruppe":{"description":[{"speaker":"SINNLICHE GEWISSHEIT","text":"Eine Gruppe komischer Passanten, die wild in der Gegen umherzeigen. Sie tragen komische Klamotten."}],"id":"passanten_gruppe","name":"eine komische Gruppe von drei Passanten","roomDescription":[{"speaker":"SINNLICHE GEWISSHEIT","text":"Eine komische Gruppe an Passanten, die wild in der Gegen umherzeigen."}]},"ticketVerkäufer":{"id":"ticketVerkäufer","name":"der Ticketverkäufer"},"verrückte_wache":{"description":[{"speaker":"PERZEPTION","text":"Der Mann sieht nach verfallenem Adel aus. Seine Rüstung zeugt noch von der Kraft seiner Ahnen, die in ihm als nur vorsichtiger Schimmer, ein leichtes Funkeln von sich gibt."}],"id":"verrückte_wache","name":"Die verrückte Wache","roomDescription":[{"speaker":"PERZEPTION","text":"Eine Mann sitzt mit gebeugtem Kopf dort. "}]}}
+{
+  "besoffene_frau": {
+    "attacks": {
+      "kick": "Normal Kick",
+      "punsch": "Punsch"
+    },
+    "deadDescription": [
+      {
+        "speaker": "PERZEPTION",
+        "text": "Die leiche einer toten Frau, die vor ihrem Tod klarerweise sturz besoffen war."
+      }
+    ],
+    "description": [
+      {
+        "post_pEvents": [
+          "talk besoffene frau"
+        ],
+        "speaker": "PERZEPTION",
+        "text": "Eine betrunkene Frau. Sie sieht von Alkohol mitgenommen aus, aber dahinter erkennt man, etwas von einer beeindruckenden Schönheit... und Stärker."
+      }
+    ],
+    "faint": 1,
+    "hp": 40,
+    "id": "besoffene_frau",
+    "items": [
+      [
+        "basic_wine",
+        {
+          "amount": 3
+        }
+      ]
+    ],
+    "name": "eine besoffene Frau",
+    "roomDescription": [
+      {
+        "post_otEvents": [
+          "talk besoffene frau"
+        ],
+        "speaker": "PERZEPTION",
+        "text": "Eine anscheinend bewusstlose Frau liegt in einer Alkoholpfütze, eine noch glühene, halb abgebrannte Zigarette befindet sich zwischen ihren Fingern."
+      }
+    ],
+    "strength": 16
+  },
+  "cho_chikun": {
+    "description": [
+      {
+        "speaker": "LOGIK",
+        "text": "Ein verrück aussehender Mann, irgendwie kommt er mir bekannt vor"
+      },
+      {
+        "speaker": "desc",
+        "text": "Man kann in seinen Gesichtszügen erkennen, dass er Go-Spieler ist. Aber was bedeutet das alles nur?! "
+      }
+    ],
+    "faint": 1,
+    "handlers": [
+      {
+        "id": "h_thieve",
+        "priority": 0,
+        "string": "pick"
+      }
+    ],
+    "hp": 10,
+    "id": "cho_chikun",
+    "name": "Cho Chikun",
+    "roomDescription": [
+      {
+        "speaker": "LOGIK",
+        "text": "Ein verrück aussehender Mann, irgendwie kommt er mir bekannt vor"
+      }
+    ],
+    "strength": 10
+  },
+  "konstantin_thron": {
+    "description": [
+      {
+        "speaker": "desc",
+        "text": "Herr Thron wirkt etwas eingebildet."
+      }
+    ],
+    "handlers": [
+      {
+        "id": "h_thieve",
+        "infos": "konstantin_thron",
+        "priority": 0,
+        "string": "pick"
+      }
+    ],
+    "id": "konstantin_thron",
+    "items": [
+      [
+        "basic_cigaretts",
+        {}
+      ],
+      [
+        "basic_wine",
+        {}
+      ]
+    ],
+    "name": "Schick gekleideter Mann",
+    "roomDescription": [
+      {
+        "speaker": "desc",
+        "text": "Ein Mann steht an eine Wand gelehnt, ließt Zeitung und raucht Pfeife."
+      },
+      {
+        "logic": "(wahrnehmung>1)",
+        "pre_otEvents": [
+          "changeName character|trainstation_nebenhalle_konstantin_thron|Konstantin Thron"
+        ],
+        "speaker": "WAHRNEHMUNG",
+        "text": "Das ist Konstantin Thron, der berühmte Architekt dieses Bahnhofs."
+      }
+    ]
+  },
+  "passanten_gruppe": {
+    "description": [
+      {
+        "speaker": "SINNLICHE GEWISSHEIT",
+        "text": "Eine Gruppe komischer Passanten, die wild in der Gegen umherzeigen. Sie tragen komische Klamotten."
+      }
+    ],
+    "id": "passanten_gruppe",
+    "name": "eine komische Gruppe von drei Passanten",
+    "roomDescription": [
+      {
+        "speaker": "SINNLICHE GEWISSHEIT",
+        "text": "Eine komische Gruppe an Passanten, die wild in der Gegen umherzeigen."
+      }
+    ]
+  },
+  "ticketVerkäufer": {
+    "id": "ticketVerkäufer",
+    "name": "der Ticketverkäufer"
+  },
+  "verrückte_wache": {
+    "description": [
+      {
+        "speaker": "PERZEPTION",
+        "text": "Der Mann sieht nach verfallenem Adel aus. Seine Rüstung zeugt noch von der Kraft seiner Ahnen, die in ihm als nur vorsichtiger Schimmer, ein leichtes Funkeln von sich gibt."
+      }
+    ],
+    "id": "verrückte_wache",
+    "name": "Die verrückte Wache",
+    "roomDescription": [
+      {
+        "speaker": "PERZEPTION",
+        "text": "Eine Mann sitzt mit gebeugtem Kopf dort. "
+      }
+    ]
+  }
+}
