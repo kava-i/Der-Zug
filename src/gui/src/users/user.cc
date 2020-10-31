@@ -175,7 +175,8 @@ std::string User::GetObject(std::string path, std::string world, std::string
     category, std::string sub, std::string obj) {
   std::cout << "GetObject" << std::endl;
   //Create path and trying to load into json 
-  path = path_ + path + ".json";
+  path = path_ + path.substr(0, path.rfind("/")) + ".json";
+  std::cout << "Created path: " << path << std::endl;
   nlohmann::json objects;
   try{ 
     std::ifstream read(path);

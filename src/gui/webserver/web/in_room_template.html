@@ -1,12 +1,12 @@
 {% include "temp_header" %}
 
 <div class="box_overview center_in_box">
-  <h1>{{name}}</h1>
+  <h1>{{ default(name, id) }}</h1>
     <div class="object">
       <ul id="object">
         <!-- Name and ID (default value for non-set-values -->
         <li><label>Name:</label><input id="name" value="{{ default(name, "") }}">
-        <li><label>Id:</label><input id="id" value="{{ default(id, "") }}">
+        <li><label>Id:</label><input id="id" value="{{ id }}">
 
         <!-- Description (added by include) expand non-set optional values -->
         <li custom="list">
@@ -94,7 +94,8 @@
         </li>
       </ul>
 
-      <button id="write" class="pure-button" onclick="OpenWriteModal('{{name}}')">Write</button>
+      <button id="write" class="pure-button" 
+        onclick="OpenWriteModal('{{default(name, id)}}')">Write</button>
 
     </div>
     <div id="modal_write" class="modal">
