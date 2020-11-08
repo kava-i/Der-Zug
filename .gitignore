@@ -1,4 +1,5 @@
 bin/*
+*.idx
 src/textadventure/build/*
 src/gui/build/*
 src/gui/webserver/builder_tests.o
