@@ -47,3 +47,5 @@ target_include_directories(builder_tests.o PUBLIC "src")
 # Link conan imports.
 target_link_libraries(game_builder.o ${CONAN_LIBS})
 target_link_libraries(builder_tests.o ${CONAN_LIBS})
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
