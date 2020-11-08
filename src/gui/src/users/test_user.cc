@@ -107,7 +107,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
         "test_character") == "");
   REQUIRE(system(command.c_str()) == 0);
   REQUIRE(user->AddNewObject(path+"/items/test_items", "test_item") == "");
-  REQUIRE(user->AddNewObject(path+"/details/test_details","test_details")=="");
+  REQUIRE(user->AddNewObject(path+"/details/test_details","test_detail")=="");
   REQUIRE(user->AddNewObject(path+"/quests/test_quests", "test_quest") == "");
   REQUIRE(user->AddNewObject(path+"/texts/test_texts", "test_text") == "");
   REQUIRE(system(command.c_str()) == 0);

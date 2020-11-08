@@ -1,0 +1,46 @@
+{% include "temp_header" %}
+
+  <!-- Name and ID (default value for non-set-values) -->
+  <li><label>Name:</label><input id="name" value="{{ default(name, "") }}">
+  <li><label>Id:</label><input id="id" value="{{ default(id, "") }}">
+  <li><label>Look:</label><input id="look" value="{{ default(look, "") }}">
+
+  <!-- Description (added by include) expand non-set optional values -->
+  <li custom="list">
+    <label>Description:</label> 
+    {% include "temp_description" %}
+  </li>
+
+  <!-- Items (default value for non-set-values)  -->
+  <li custom="list">
+    <label>Items:</label>
+    <ul id="items">
+      {% for item in default(items, [["", {}]]) %}
+        <li custom="list">
+          <input placeholder="item id" value={{item.0}}>
+          <input custom="json" placeholder="custom attributes" value={{item.1}}>
+          <span class="mod_elem" onclick="del_elem('items',{{loop.index}})">-</span>
+          <span class="mod_elem" onclick="add_elem('items',{{loop.index}})">+</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </li>
+  
+  <!-- Default items(default value for non-set-values) -->
+  <li custom="map">
+    <label title="Select items to automatically be added.">Default Items:</label>
+    <ul id="defaultItems">
+      {% for key, val in default(exits, {"": {}}) %}
+        <li custom="key_object">
+          <input id="value" custom="int" placeholder="total value" value="{{
+                     default(val.value, "0") }}">
+          <input id="types" custom="json" placeholder="item types" value="{{
+                     default(val.types, "[]") }}">
+          <span class="mod_elem" onclick="del_elem('defaultItems',{{loop.index}})">-</span>
+          <span class="mod_elem" onclick="add_elem('defaultItems',{{loop.index}})">+</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </li>
+
+{% include "temp_footer" %}

@@ -18,6 +18,7 @@ User::User(std::string name, std::string pw, std::string path,
   password_ = pw;
   locations_ = locations;
 }
+
 //** Getter ** //
 
 std::string User::password() const {
