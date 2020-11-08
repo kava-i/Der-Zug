@@ -414,6 +414,7 @@ bool User::WriteObject(std::string request) {
     object[std::to_string(object.size())] = json;
   else
     object[json["id"].get<std::string>()] = json;
+
   std::ofstream write(path_to_object);
   write << object;
   write.close();

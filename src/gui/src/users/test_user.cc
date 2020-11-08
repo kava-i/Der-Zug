@@ -13,7 +13,7 @@
 TEST_CASE ("Loading pages from user works", "[user_pages]") {
   
   //If already exists, delete test user.
-  std::string path_to_test_user = "../../data/users/test_manager";
+  std::string path_to_test_user = "../../data/users/test";
   try {
     std::filesystem::remove_all (path_to_test_user);
   }
@@ -27,14 +27,14 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
     "defaultDescriptions", "details", "items", "quests", "texts"});
 
   //Create new user
-  user_manager.DoRegistration("test_manager", "password1234", "password1234");
-  User* user = user_manager.GetUser("test_manager");
+  user_manager.DoRegistration("test", "password1234", "password1234");
+  User* user = user_manager.GetUser("test");
   REQUIRE(user != nullptr);
 
   //Create empty world.
   std::string world = "Test_World";
   std::string full_path = "../../data/users/";
-  std::string path = "test_manager/files/" + world;
+  std::string path = "test/files/" + world;
   REQUIRE(user->CreateNewWorld(world) == ""); 
   REQUIRE(user->CreateNewWorld(world) == "World already exists."); 
   REQUIRE(user->CreateNewWorld("../Test_World") == "Wrong format."); 
@@ -44,7 +44,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
 
   //Check that newly build world is starting and basic command are running.
   std::string command = "./../../textadventure/build/bin/testing.o "
-    "--path ../../data/users/test_manager/files/Test_World/ -p test";
+    "--path ../../data/users/test/files/Test_World/ -p test";
   REQUIRE(system(command.c_str()) == 0);
 
   //GetOverview: Check if world is found on overview page.
