@@ -129,7 +129,6 @@
         "logic": "(wahrnehmung>1)"
       }
     ],
-    "sorted": 1,
     "active_from_beginning": [
       "details",
       "ende"
