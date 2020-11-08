@@ -22,7 +22,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   }
   
   //Create user manager.
-  UserManager user_manager("../../data/users/", {"attacks", 
+  UserManager user_manager("../../data/users", {"attacks", 
     "defaultDialogs", "dialogs", "players", "rooms", "characters", 
     "defaultDescriptions", "details", "items", "quests", "texts"});
 
@@ -33,8 +33,8 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
 
   //Create empty world.
   std::string world = "Test_World";
-  std::string full_path = "../../data/users/";
-  std::string path = "test/files/" + world;
+  std::string full_path = "../../data/users";
+  std::string path = "/test/files/" + world;
   REQUIRE(user->CreateNewWorld(world) == ""); 
   REQUIRE(user->CreateNewWorld(world) == "World already exists."); 
   REQUIRE(user->CreateNewWorld("../Test_World") == "Wrong format."); 

@@ -5,7 +5,7 @@ using namespace httplib;
 
 
 //Constructor
-ServerFrame::ServerFrame() : user_manager_("../../data/users/", {"attacks", 
+ServerFrame::ServerFrame() : user_manager_("../../data/users", {"attacks", 
     "defaultDialogs", "dialogs", "players", "rooms", "characters", 
     "defaultDescriptions", "details", "items", "quests", "texts"})
 {}

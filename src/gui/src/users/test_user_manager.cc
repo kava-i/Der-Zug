@@ -20,7 +20,7 @@ TEST_CASE ("Registering, loading and removing users works", "[creating]") {
   }
   
   //Create user manager.
-  UserManager user_manager("../../data/users/", {"attacks", 
+  UserManager user_manager("../../data/users", {"attacks", 
     "defaultDialogs", "dialogs", "players", "rooms", "characters", 
     "defaultDescriptions", "details", "items", "quests", "texts"});
 
@@ -51,7 +51,7 @@ TEST_CASE ("Registering, loading and removing users works", "[creating]") {
 
 TEST_CASE ("Login and Logout user", "[logging]") {
   //Create user manager.
-  UserManager user_manager("../../data/users/", {"attacks", 
+  UserManager user_manager("../../data/users", {"attacks", 
     "defaultDialogs", "dialogs", "players", "rooms", "characters", 
     "defaultDescriptions", "details", "items", "quests", "texts"});
 
