@@ -85,7 +85,7 @@ nlohmann::json LoadJsonFromDisc(std::string path) {
   return json;
 }
 
-int TimeSinceEpoch() {
+long int TimeSinceEpoch() {
   std::chrono::milliseconds ms = std::chrono::duration_cast
     <std::chrono::milliseconds >
     (std::chrono::system_clock::now().time_since_epoch());

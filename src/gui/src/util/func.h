@@ -66,7 +66,7 @@ namespace func
    * Get current time in milliseconds.
    * @return long int (time in milliseconds)
    */
-  int TimeSinceEpoch();
+  long int TimeSinceEpoch();
 
   /**
    * @brief Implements a cryptographic hash function, uses the slower but better
