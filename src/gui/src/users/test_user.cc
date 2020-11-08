@@ -141,10 +141,10 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
           "test_quests","test_quest") != "File not found.");
   REQUIRE(user->GetObject(path+"/texts/test_texts/test_text", world, "details", 
           "test_texts","test_text") != "File not found.");
-  REQUIRE(user->GetObject(path+"/defaultDescriptions/test_default_descs/test_desc", 
+  /*REQUIRE(user->GetObject(path+"/defaultDescriptions/test_default_descs/test_desc", 
         world, "defaultDescriptions", "test_default_descs","test_desc") 
       != "File not found.");
   REQUIRE(user->GetObject(path+"/defaultDialogs/test_default_dialogs/test_dialog", 
         world, "defaultDialogs", "test_default_dialogs","test_dialog") 
-      != "File not found.");
+      != "File not found.");*/
 }
