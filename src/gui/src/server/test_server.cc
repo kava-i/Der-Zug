@@ -14,15 +14,15 @@
 void del_test_user(std::string username) {
   //If already exists, delete test data.
   try{
-    std::filesystem::remove("../data/users/" + username + ".json");
+    std::filesystem::remove_all("../../data/users/" + username);
+    std::cout << username << " deleted." << std::endl;
   }
   catch(...) {return; }
-  std::cout << username << " deleted." << std::endl;
 }
 
 TEST_CASE("Server is working as expected", "[server]") {
   
-  del_test_user("test");
+  del_test_user("test1");
  
   ServerFrame server;
 
@@ -47,6 +47,34 @@ TEST_CASE("Server is working as expected", "[server]") {
           resp = cl.Get("/");
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body.length() > 0);
+        }
+
+        SECTION("Registering, Deleting and accessing user works.") {
+          //Check for correkt response when sending registration-request.
+          //try to create test-user (fail)
+          nlohmann::json request;
+          request["id"] = "test1";
+          request["pw1"] = "password";
+          request["pw2"] = "password0408";
+          auto resp = cl.Post("/api/user_registration", {}, request.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 401);
+          request["pw1"] = "password0408";
+
+          //Create test user (success)
+          resp = cl.Post("/api/user_registration", {}, request.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+
+          //Check if cookie has been sent, extract cookie and add to headers.
+          REQUIRE(resp->get_header_value("Set-Cookie").length() > 32);
+          std::string cookie = resp->get_header_value("Set-Cookie");
+          cookie = cookie.substr(0, cookie.find(";"));
+          httplib::Headers headers = { { "Cookie", cookie } };
+
+          resp = cl.Get("/overview", headers);
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body != "");
         }
         server.Stop();
     });

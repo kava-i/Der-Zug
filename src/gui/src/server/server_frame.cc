@@ -200,11 +200,13 @@ void ServerFrame::DoRegistration(const Request& req, Response& resp) {
   ul.unlock();
 
   if (error != "") {
+    std::cout << "ERROR: " << error << std::endl;
     resp.status = 401;
     resp.set_content(error, "application/json");
   }
   //If exists, log user in, by adding cookie.
   else {
+    std::cout << "SUCCESS (1)!!" << std::endl;
     ul.lock();
     std::string cookie = "SESSID=" + user_manager_.GenerateCookie(username) 
       + "; Path=/";
