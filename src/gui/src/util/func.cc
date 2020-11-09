@@ -76,9 +76,11 @@ bool demo_exists(const fs::path& p, fs::file_status s) {
     return false;
 }
 
-bool LoadJsonFromDisc(std::string path, nlohmann::json json) {
-  if (!demo_exists(path))
+bool LoadJsonFromDisc(std::string path, nlohmann::json& json) {
+  if (!demo_exists(path)) {
+    std::cout << "Path: " << path << " not found!" << std::endl; 
     return false;
+  }
   try {
     std::ifstream read(path);
     read >> json;

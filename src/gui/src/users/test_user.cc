@@ -39,6 +39,10 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   std::string full_path = "../../data/users";
   std::string path = "/test/files/" + world;
   REQUIRE(user->CreateNewWorld(world) == ""); 
+  nlohmann::json players_json;
+  REQUIRE(func::LoadJsonFromDisc(full_path+path+"/players/players.json", 
+        players_json) == true);
+  REQUIRE(players_json.size() != 0);
   REQUIRE(user->CreateNewWorld(world) == "World already exists."); 
   REQUIRE(user->CreateNewWorld("../Test_World") == "Wrong format."); 
   REQUIRE(func::demo_exists(full_path + path + "/config.json"));

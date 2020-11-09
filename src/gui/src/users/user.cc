@@ -439,9 +439,6 @@ bool User::WriteObject(std::string request, bool force) {
   std::ofstream write_backup(path_to_object);
   write_backup << obj_backup;
   write_backup.close();
-
-
-  
   return true;
 }
 
@@ -556,14 +553,17 @@ bool User::DeleteBackup(std::string backup) {
 }
 
 bool User::CheckGameRunning(std::string path) {
+  std::cout << "!!! CheckGameRunning !!!" << std::endl;
 
   //Try to extract information (user and world, complete path)
-  std::vector<std::string> vec = func::Split(path, ";");
+  std::vector<std::string> vec = func::Split(path, "/");
+  std::cout << "Path: " << path << std::endl;
+  std::cout << "Size: " << vec.size() << std::endl;
   if (vec.size() < 3) return false;
-  std::string user = vec[1];
+  std::string user = vec[0];
   std::string world = vec[2];
   std::string path_to_txtad = path_+path;
-  std::cout << "Go user: " << user << ", world:" << world << std::endl;
+  std::cout << "Got user: " << user << ", world:" << world << std::endl;
   std::cout << "Path: " << path_to_txtad << std::endl;
 
   //Create command
@@ -572,23 +572,26 @@ bool User::CheckGameRunning(std::string path) {
 
   //Get players from players.json
   nlohmann::json players;
-  if (func::LoadJsonFromDisc(path_to_txtad, players) == false)
+  std::string path_to_players = path_+"/"+user+"/files/"+world
+    +"/players/players.json";
+  if (func::LoadJsonFromDisc(path_to_players, players) == false) {
+    std::cout << "Failed loading players json" << std::endl;
     return false;
+  }
   
+  std::cout << "Path to players: " << path_to_players << std::endl;
+  std::cout << "Players json: " << players << std::endl;
+
   bool success = true;
   for (auto it=players.begin(); it!=players.end(); it++) {
-    std::cout << it.key() << std::endl;
     
-    /*
-      std::string test_p = command + " -p " + it.key();
-      if (system(command.c_str()) != 0)
-        std::cout << " failed." << std::endl;
-        success = false;
-
-      else
-        std::cout << " success." << std::endl;
-    */
+    std::string test_p = command + " -p " + it.key();
+    if (system(test_p.c_str()) != 0) {
+      std::cout << it.key() << " failed." << std::endl;
+      success = false;
+    }
+    else
+      std::cout << it.key() << " success." << std::endl;
   }
-
   return success;
 }
