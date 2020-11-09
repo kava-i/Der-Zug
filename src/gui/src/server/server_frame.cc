@@ -36,6 +36,8 @@ void ServerFrame::Start(int port) {
       DoLogin(req, resp); });
   server_.Post("/api/user_registration", [&](const Request& req, Response& resp) {
       DoRegistration(req, resp); });
+  server_.Post("/api/user_delete", [&](const Request& req, Response& resp) {
+      DelUser(req, resp); });
   server_.Post("/api/user_logout", [&](const Request& req, Response& resp) {
       DoLogout(req, resp); });
   server_.Post("/api/create_backup", [&](const Request& req, Response& resp) {

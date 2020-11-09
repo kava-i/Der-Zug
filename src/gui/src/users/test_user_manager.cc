@@ -55,6 +55,9 @@ TEST_CASE ("Login and Logout user", "[logging]") {
     "defaultDialogs", "dialogs", "players", "rooms", "characters", 
     "defaultDescriptions", "details", "items", "quests", "texts"});
 
+  REQUIRE(user_manager.DoRegistration("test", "password1234", 
+        "password1234") == "");
+
   //Prior created user still exists.
   REQUIRE(user_manager.GetUser("test") != nullptr);
 

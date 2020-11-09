@@ -4,6 +4,7 @@
 
 #include "user_manager.h"
 #include "util/func.h"
+#include <exception>
 namespace fs = std::filesystem;
 
 UserManager::UserManager(std::string main_path, std::vector<std::string> cats) 
@@ -55,8 +56,14 @@ void UserManager::DeleteUser(std::string username) {
   }
   ul_cookies.unlock();
 
-  fs::remove(path_ + username + ".json");
-  std::cout << "User " << username << " deleted." << std::endl;
+  try {
+    fs::remove_all(path_ + "/" + username);
+    std::cout << "User " << username << " deleted." << std::endl;
+  }
+  catch (std::exception& e) {
+    std::cout << "Deleting user " << username << " failed: " << e.what() 
+      << std::endl;
+  }
 }
 
 bool UserManager::DoLogout(const char* ptr) {
