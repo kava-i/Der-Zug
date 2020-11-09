@@ -81,6 +81,13 @@ class ServerFrame {
     void DelUser(const httplib::Request& req, httplib::Response& resp);
 
     /**
+     * @brief Add new element (world, subcategory).
+     * @param[in] req (reference to request)
+     * @param[in, out] resp (reference to response)
+     */
+    void AddElem(const httplib::Request& req, httplib::Response& resp);
+
+    /**
      * @brief Write (modified) object.
      * @param[in] req (reference to request)
      * @param[in, out] resp (reference to response)

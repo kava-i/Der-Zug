@@ -2,6 +2,7 @@
  * @author georgbuechner
  */
 #include "util/func.h"
+#include <string>
 #define CATCH_CONFIG_MAIN
 
 #include <iostream>
@@ -130,6 +131,43 @@ TEST_CASE("Server is working as expected", "[server]") {
           resp = cl.Get("/overview", headers);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
+        }
+
+        SECTION("Accessing and creating files works") {
+          //Register new test user
+          nlohmann::json request;
+          request["id"] = "test1";
+          request["pw1"] = "password0408";
+          request["pw2"] = "password0408";
+          auto resp = cl.Post("/api/user_registration", {}, request.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+          
+          //Check if cookie has been sent, extract cookie and add to headers.
+          REQUIRE(resp->get_header_value("Set-Cookie").length() > 32);
+          std::string cookie = resp->get_header_value("Set-Cookie");
+          cookie = cookie.substr(0, cookie.find(";"));
+          httplib::Headers headers = { { "Cookie", cookie } };
+          //Check that overview page can be accessed
+          resp = cl.Get("/overview", headers);
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body != "");
+
+          //Create a new world
+          request["world"] = "new_world";
+          resp = cl.Post("/api/add_world", headers, request.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+          resp = cl.Get("/overview", headers);
+          REQUIRE(resp->body.find("new_world") != std::string::npos);
+
+          //Check accessing categories
+          std::string path = "/test1/files/new_world";
+          resp = cl.Get(path.c_str(), headers);
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body.find("config") != std::string::npos);
+          REQUIRE(resp->body.find("rooms") != std::string::npos);
+          REQUIRE(resp->body.find("attacks") != std::string::npos);
         }
         server.Stop();
     });

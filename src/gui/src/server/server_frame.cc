@@ -1,5 +1,10 @@
 #include "server_frame.h"
+#include "httplib.h"
+#include "nlohmann/json.hpp"
+#include "users/user.h"
 #include "util/func.h"
+#include <exception>
+#include <iostream>
 
 using namespace httplib;
 
@@ -46,6 +51,8 @@ void ServerFrame::Start(int port) {
       Backups(req, resp, "restore"); });
   server_.Post("/api/delete_backup", [&](const Request& req, Response& resp) {
       Backups(req, resp, "delete"); });
+  server_.Post("/api/add_(.*)", [&](const Request& req, Response& resp) {
+      AddElem(req, resp); });
   server_.Post("/api/write_object", [&](const Request& req, Response& resp) {
       WriteObject(req, resp); });
 
@@ -247,6 +254,52 @@ void ServerFrame::DelUser(const Request& req, Response& resp) {
     resp.status = 302;
     resp.set_header("Location", "/login");
     return;
+  }
+}
+
+void ServerFrame::AddElem(const Request& req, Response& resp) {
+  //Try to get username from cookie
+  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::shared_lock sl(shared_mtx_user_manager_);
+  std::string username = user_manager_.GetUserFromCookie(ptr);
+  sl.unlock();
+
+  //If user does not exist, redirect to login-page.
+  if (username == "") {
+    resp.status = 302;
+    resp.set_header("Location", "/login");
+    return;
+  }
+
+  //Try to parse json
+  std::string world, category, subcategory;
+  try {
+    nlohmann::json request = nlohmann::json::parse(req.body);
+    world = request.value("world", "");
+    category = request.value("category", "");
+    subcategory = request.value("subcategory", "");
+  }
+  catch (std::exception& e) {
+    std::cout << "Parsing json failed: " << e.what() << std::endl;
+    resp.status = 401;
+    return;
+  }
+  
+  std::string error = "";
+  //Get user
+  sl.lock();
+  User* user = user_manager_.GetUser(username);
+  sl.unlock();
+  if (req.matches.size() > 1 && req.matches[1] == "world") {
+    error = user->CreateNewWorld(world);
+  }
+
+  //Check whether action succeeded
+  if (error == "")
+    resp.status = 200;
+  else {
+    std::cout << "Error adding elem: " << error << std::endl;
+    resp.status = 401;
   }
 }
 
