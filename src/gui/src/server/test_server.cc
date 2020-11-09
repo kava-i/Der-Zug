@@ -161,13 +161,17 @@ TEST_CASE("Server is working as expected", "[server]") {
           resp = cl.Get("/overview", headers);
           REQUIRE(resp->body.find("new_world") != std::string::npos);
 
-          //Check accessing categories
-          std::string path = "/test1/files/new_world";
-          resp = cl.Get(path.c_str(), headers);
+          //Check accessing categories-page
+          resp = cl.Get("/test1/files/new_world", headers);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body.find("config") != std::string::npos);
-          REQUIRE(resp->body.find("rooms") != std::string::npos);
           REQUIRE(resp->body.find("attacks") != std::string::npos);
+
+          //Check accessing categories
+          resp = cl.Get("/test1/files/new_world/config", headers);
+          REQUIRE(resp->status == 200);
+          resp = cl.Get("/test1/files/new_world/rooms", headers);
+          REQUIRE(resp->status == 200);
         }
         server.Stop();
     });
