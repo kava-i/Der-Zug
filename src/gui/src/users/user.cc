@@ -52,6 +52,7 @@ std::string User::GetOverview() {
   nlohmann::json worlds = nlohmann::json({{"username", username_}});
 
   //Add all dictionaries of this user to json.
+  worlds["worlds"] = nlohmann::json::array();
   for (auto& p : fs::directory_iterator(path_ + "/" + username_ + "/files")) {
     if (p.path().stem() != "user")
       worlds["worlds"].push_back(p.path().stem());
