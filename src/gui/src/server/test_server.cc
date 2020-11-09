@@ -2,6 +2,7 @@
  * @author georgbuechner
  */
 #include "util/func.h"
+#include "nlohmann/json.hpp"
 #include <string>
 #define CATCH_CONFIG_MAIN
 
@@ -154,8 +155,9 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->body != "");
 
           //Create a new world
-          request["world"] = "new_world";
-          resp = cl.Post("/api/add_world", headers, request.dump(), 
+          nlohmann::json new_world;
+          new_world["world"] = "new_world";
+          resp = cl.Post("/api/add_world", headers, new_world.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
           resp = cl.Get("/overview", headers);
@@ -172,6 +174,43 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->status == 200);
           resp = cl.Get("/test1/files/new_world/rooms", headers);
           REQUIRE(resp->status == 200);
+          REQUIRE(resp->body.find("test") != std::string::npos);
+
+          //The test-room-file should already exist
+          resp = cl.Get("/test1/files/new_world/rooms/test", headers);
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body.find("test_room") != std::string::npos);
+
+          //Add a few new files to categories
+          nlohmann::json new_sub;
+          new_sub["subcategory"] = "test_attacks";
+          new_sub["path"] = "/test1/files/new_world/attacks";
+          resp = cl.Post("/api/add_subcategory", headers, new_sub.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+          //test_attacks can be found on page
+          resp = cl.Get("/test1/files/new_world/attacks", headers);
+          REQUIRE(resp->body.find("test_attacks") != std::string::npos);
+          //test attacks can be found
+          resp = cl.Get("/test1/files/new_world/attacks/test_attacks", headers);
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body != "");
+
+          //Add a new object
+          nlohmann::json new_obj;
+          new_obj["name"] = "test_attack";
+          new_obj["path"] = "/test1/files/new_world/attacks/test_attacks";
+          resp = cl.Post("/api/add_object", headers, new_obj.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+          //test_attacks can be found on page
+          resp = cl.Get("/test1/files/new_world/attacks/test_attacks", headers);
+          REQUIRE(resp->body.find("test_attack") != std::string::npos);
+          //test attacks can be found
+          resp = cl.Get("/test1/files/new_world/attacks/test_attacks/test_attack", 
+              headers);
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body != "");
         }
         server.Stop();
     });

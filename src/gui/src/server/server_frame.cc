@@ -272,12 +272,12 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
   }
 
   //Try to parse json
-  std::string world, category, subcategory;
+  std::string name, path;
   try {
     nlohmann::json request = nlohmann::json::parse(req.body);
-    world = request.value("world", "");
-    category = request.value("category", "");
-    subcategory = request.value("subcategory", "");
+    name = request.value("world", request.value("subcategory", 
+          request.value("name", "")));
+    path = request.value("path", "");
   }
   catch (std::exception& e) {
     std::cout << "Parsing json failed: " << e.what() << std::endl;
@@ -285,13 +285,19 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
     return;
   }
   
-  std::string error = "";
   //Get user
   sl.lock();
   User* user = user_manager_.GetUser(username);
   sl.unlock();
+  std::string error = "wrong select";
   if (req.matches.size() > 1 && req.matches[1] == "world") {
-    error = user->CreateNewWorld(world);
+    error = user->CreateNewWorld(name);
+  }
+  else if (req.matches.size() > 1 && req.matches[1] == "subcategory") {
+    error = user->AddFile(path, name);
+  }
+  else if (req.matches.size() > 1 && req.matches[1] == "object") {
+    error = user->AddNewObject(path, name);
   }
 
   //Check whether action succeeded
