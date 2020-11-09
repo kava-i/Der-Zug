@@ -1,6 +1,7 @@
 /**
  * @author georgbuechner
  */
+#include "util/func.h"
 #define CATCH_CONFIG_MAIN
 
 #include <iostream>
@@ -10,6 +11,7 @@
 #include <httplib.h>
 
 #include "server_frame.h"
+#include "util/func.h"
 
 void del_test_user(std::string username) {
   //If already exists, delete test data.
@@ -75,6 +77,14 @@ TEST_CASE("Server is working as expected", "[server]") {
           resp = cl.Get("/overview", headers);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
+
+          //Test deleting user
+          resp = cl.Post("/api/user_delete", headers, "",
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+          REQUIRE(func::demo_exists("../../data/users/test1") == false);
+          resp = cl.Get("/overview", headers);
+          REQUIRE(resp->status == 302);
         }
         server.Stop();
     });
