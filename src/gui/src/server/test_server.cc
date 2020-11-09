@@ -102,6 +102,7 @@ TEST_CASE("Server is working as expected", "[server]") {
           std::string cookie = resp->get_header_value("Set-Cookie");
           cookie = cookie.substr(0, cookie.find(";"));
           httplib::Headers headers = { { "Cookie", cookie } };
+          //Check that overview page can be accessed
           resp = cl.Get("/overview", headers);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
@@ -113,6 +114,22 @@ TEST_CASE("Server is working as expected", "[server]") {
           //Now, overview page should not be accessable anymore
           resp = cl.Get("/overview", headers);
           REQUIRE(resp->status == 302);
+
+          //Log user in.
+          request["username"] = "test1";
+          request["password"] = "password0408";
+          resp = cl.Post("/api/user_login", {}, request.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+          
+          //Check if cookie has been sent, extract cookie and add to headers.
+          REQUIRE(resp->get_header_value("Set-Cookie").length() > 32);
+          cookie = resp->get_header_value("Set-Cookie");
+          cookie = cookie.substr(0, cookie.find(";"));
+          headers = { { "Cookie", cookie } };
+          resp = cl.Get("/overview", headers);
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body != "");
         }
         server.Stop();
     });
