@@ -3,6 +3,8 @@
 */
 #include "user.h"
 #include "util/func.h"
+#include <exception>
+#include <filesystem>
 
 namespace fs = std::filesystem;
 
@@ -10,6 +12,15 @@ User::User(std::string name, std::string pw, std::string path, std::vector
     <std::string> cats) : username_(name), path_(path), categories_(cats) {
   password_ = pw;
   locations_.push_back(username_ + "/");
+
+  try {
+    fs::create_directory(path_+"/"+username_);
+    fs::create_directory(path_+"/"+username_+"/files");
+    fs::create_directory(path_+"/"+username_+"/backups");
+  }
+  catch (std::exception& e) {
+    std::cout << "Creating essential files failed: " << e.what() << std::endl;
+  }
 }
 
 User::User(std::string name, std::string pw, std::string path, 
