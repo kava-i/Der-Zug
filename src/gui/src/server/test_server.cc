@@ -86,6 +86,34 @@ TEST_CASE("Server is working as expected", "[server]") {
           resp = cl.Get("/overview", headers);
           REQUIRE(resp->status == 302);
         }
+
+        SECTION("Loging in and out is working") {
+          //Register new test user
+          nlohmann::json request;
+          request["id"] = "test1";
+          request["pw1"] = "password0408";
+          request["pw2"] = "password0408";
+          auto resp = cl.Post("/api/user_registration", {}, request.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+          
+          //Check if cookie has been sent, extract cookie and add to headers.
+          REQUIRE(resp->get_header_value("Set-Cookie").length() > 32);
+          std::string cookie = resp->get_header_value("Set-Cookie");
+          cookie = cookie.substr(0, cookie.find(";"));
+          httplib::Headers headers = { { "Cookie", cookie } };
+          resp = cl.Get("/overview", headers);
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body != "");
+
+          resp = cl.Post("/api/user_logout", headers, request.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+
+          //Now, overview page should not be accessable anymore
+          resp = cl.Get("/overview", headers);
+          REQUIRE(resp->status == 302);
+        }
         server.Stop();
     });
   t1.join();
