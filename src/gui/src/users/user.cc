@@ -118,11 +118,10 @@ std::string User::GetCategory(std::string path, std::string world,
 
   //Directly parse config page.
   if (category == "config") {
-    if (!func::demo_exists(path + ".json")) {
-      std::cout << "Path to config not found! " << path + ".json" << std::endl;
+    nlohmann::json config_json;
+    if (!func::LoadJsonFromDisc((path+".json"), config_json))
       return "";
-    }
-    j_category["json"] = func::LoadJsonFromDisc(path + ".json");
+    j_category["json"] = config_json;
     inja::Template temp = env.parse_template("web/object_templates/config.html");
     return env.render(temp, j_category);
   }
@@ -384,7 +383,7 @@ std::string User::AddNewObject(std::string path, std::string id) {
   return "";
 }
 
-bool User::WriteObject(std::string request) {
+bool User::WriteObject(std::string request, bool force) {
   //Get values from request
   nlohmann::json json;
   std::string path;
@@ -413,11 +412,12 @@ bool User::WriteObject(std::string request) {
 
   //Read json
   std::cout << "Reading json\n";
-  if (!func::demo_exists(path_to_object)) {
-    std::cout << "Path: " << path_to_object << " don't exist!\n";
-    return false;
-  }
-  nlohmann::json object = func::LoadJsonFromDisc(path_to_object);
+  nlohmann::json object;
+  if (!func::LoadJsonFromDisc(path_to_object, object))
+    return "";
+
+  //Backup old object
+  nlohmann::json obj_backup = object;
   
   //Modify and write object.
   if (json.is_array() == true && object.is_array() == true)
@@ -430,8 +430,21 @@ bool User::WriteObject(std::string request) {
   std::ofstream write(path_to_object);
   write << object;
   write.close();
+
+  //Check if game is still running and return true if yes, are forcing is true
+  if (CheckGameRunning(path) == true || force == true)
+    return true;
+  
+  //If not and forcing to write is set to false
+  std::ofstream write_backup(path_to_object);
+  write_backup << obj_backup;
+  write_backup.close();
+
+
+  
   return true;
 }
+
 bool User::CheckAccessToLocations(std::string path) { 
   std::cout << "CheckAccessToLocations: " << path << std::endl; 
   return true; 
@@ -540,4 +553,42 @@ bool User::DeleteBackup(std::string backup) {
   //Remove backup.
   fs::remove_all(path);
   return true;
+}
+
+bool User::CheckGameRunning(std::string path) {
+
+  //Try to extract information (user and world, complete path)
+  std::vector<std::string> vec = func::Split(path, ";");
+  if (vec.size() < 3) return false;
+  std::string user = vec[1];
+  std::string world = vec[2];
+  std::string path_to_txtad = path_+path;
+  std::cout << "Go user: " << user << ", world:" << world << std::endl;
+  std::cout << "Path: " << path_to_txtad << std::endl;
+
+  //Create command
+  std::string command = "./../../textadventure/build/bin/testing.o "
+    "--path ../../data/users/test/files/Test_World/";
+
+  //Get players from players.json
+  nlohmann::json players;
+  if (func::LoadJsonFromDisc(path_to_txtad, players) == false)
+    return false;
+  
+  bool success = true;
+  for (auto it=players.begin(); it!=players.end(); it++) {
+    std::cout << it.key() << std::endl;
+    
+    /*
+      std::string test_p = command + " -p " + it.key();
+      if (system(command.c_str()) != 0)
+        std::cout << " failed." << std::endl;
+        success = false;
+
+      else
+        std::cout << " success." << std::endl;
+    */
+  }
+
+  return success;
 }

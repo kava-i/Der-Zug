@@ -57,10 +57,11 @@ namespace func
 
   /*
    * Load json from disc
-   * @param[in] path to file
-   * @return json
+   * @param[in] path (path to file)
+   * @param[out] json (json to write data to)
+   * @return boolean indicating success.
    */
-  nlohmann::json LoadJsonFromDisc(std::string path);
+  bool LoadJsonFromDisc(std::string path, nlohmann::json json);
 
   /**
    * Get current time in milliseconds.

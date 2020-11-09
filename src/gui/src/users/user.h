@@ -123,11 +123,13 @@ class User {
 
     /**
      * Write json to disc.
-     * @param[in] world (given world)
+     * Used to create a new object or overwrite an existsing object.
+     * @param[in] request (request to create new, or change existsing)
+     * @param[in] force (If true, then writing is set even if game is not
+     * running.)
      * @return boolean to indicate success.
      */
-    bool WriteObject(std::string request);
-
+    bool WriteObject(std::string request, bool force=false);
 
     // ** functions ** //
     
@@ -178,6 +180,16 @@ class User {
      * @return return json of user.
      */
     nlohmann::json ConstructJson() const;
+
+    /**
+     * Tries to run game.
+     * Extracts user and world from path and tries to run game with all existing
+     * players.
+     * @param[in] path (path to extract information from)
+     * @param[in] number (of players to check)
+     * @return boolean indicating success.
+     */
+    bool CheckGameRunning(std::string path);
 };
 
 #endif

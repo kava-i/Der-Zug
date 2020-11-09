@@ -3,6 +3,7 @@
 
 #include <codecvt>
  
+#include <exception>
 #include <openssl/evp.h>
 #include <openssl/sha.h>
 
@@ -75,14 +76,19 @@ bool demo_exists(const fs::path& p, fs::file_status s) {
     return false;
 }
 
-nlohmann::json LoadJsonFromDisc(std::string path) {
+bool LoadJsonFromDisc(std::string path, nlohmann::json json) {
   if (!demo_exists(path))
-    return nlohmann::json({{"error", "path not found!"}});
-  nlohmann::json json;
-  std::ifstream read(path);
-  read >> json;
-  read.close();
-  return json;
+    return false;
+  try {
+    std::ifstream read(path);
+    read >> json;
+    read.close();
+    return true;
+  }
+  catch (std::exception& e) {
+    std::cout << "Failed loading object: " << e.what() << std::endl;
+    return false;
+  }
 }
 
 long int TimeSinceEpoch() {
