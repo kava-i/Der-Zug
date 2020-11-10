@@ -164,7 +164,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
     
   //Modify objects and test if this works
   nlohmann::json test_room_fail;
-  REQUIRE(func::LoadJsonFromDisc("../../default_jsons/test_room_fail.json", 
+  REQUIRE(func::LoadJsonFromDisc("../../data/default_jsons/test_room_fail.json", 
         test_room_fail) == true);
   nlohmann::json write_room;
   write_room["path"] = path+"/rooms/test_house/test_room";
@@ -187,7 +187,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->RestoreBackup("test", backup));
   //No test, that game is running again.
   REQUIRE(system(command.c_str()) == 0);
-  REQUIRE(user->DeleteBackup(user, backup) == true);
+  REQUIRE(user->DeleteBackup("test", backup) == true);
   //Check that backup is acctually deleted
   REQUIRE(func::demo_exists(full_path+"/test/backups/"+backup) == false);
   //Test updating a file

@@ -146,24 +146,27 @@ class User {
 
     /**
      * Create a backup of given world.
-     * @param[in] world (given world)
+     * @param[in] user 
+     * @param[in] world 
      * @return boolean to indicate success.
      */
-    bool CreateBackup(std::string world);
+    bool CreateBackup(std::string user, std::string world);
 
     /**
      * Restores a backup of given world.
-     * @param[in] world (given world)
+     * @param[in] user 
+     * @param[in] backup (given backup to restore)
      * @return boolean to indicate success.
      */
-    bool RestoreBackup(std::string backup);
+    bool RestoreBackup(std::string user, std::string backup);
 
     /**
      * Delete a backup of given world.
-     * @param[in] world (given world)
+     * @param[in] user 
+     * @param[in] backup 
      * @return boolean to indicate success.
      */
-    bool DeleteBackup(std::string backup);
+    bool DeleteBackup(std::string user, std::string backup);
 
 
   private:

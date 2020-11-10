@@ -488,8 +488,8 @@ nlohmann::json User::ConstructJson() const {
 
 
 
-bool User::CreateBackup(std::string world) {
-  std::string path = path_ + "/files/" + world;
+bool User::CreateBackup(std::string user, std::string world) {
+  std::string path = path_ + "/" + user + "/files/" + world;
   
   if (!func::demo_exists(path)) return false;
 
@@ -498,7 +498,7 @@ bool User::CreateBackup(std::string world) {
   std::time(&now);
   char buf_human[sizeof("YYYY-mm-dd_HH-MM-ss")];
   strftime(buf_human, sizeof(buf_human), "%F_%T", localtime(&now));
-  std::string path_backup = path_ + "/backups/" + world + "_" + buf_human;
+  std::string path_backup = path_+"/"+user+"/backups/"+world+"_"+buf_human;
   std::replace(path_backup.begin(), path_backup.end(), ':', '-');
 
   //Create backup, by copying all files to selected directory
@@ -513,22 +513,15 @@ bool User::CreateBackup(std::string world) {
 }
 
 
-bool User::RestoreBackup(std::string request) {
-  //Try to parse json and check if "world" and "backup" fields exist.
-  nlohmann::json json;
-  try {
-    json = nlohmann::json::parse(request);
-    if (json.count("world") == 0 || json.count("backup") == 0) 
-      std::cout << "\"world\" or \"backup\" not found!" << std::endl;
-  }
-  catch (std::exception& e) {
-    std::cout << "RestoreBackup: Problem parsing request: " << e.what() << "\n";
-    return false;
-  }
-  //
+bool User::RestoreBackup(std::string user, std::string backup) {
+  //Extract world from backup
+  std::string world = backup.substr(backup.rfind("_"));
+  world = world.substr(world.rfind("_"));
+  std::cout << "Extracted World: " << world << std::endl;
+
   //Create path to selected backup and world.
-  std::string path = path_ + "/backups/" + json["backup"].get<std::string>();
-  std::string path_to_world = path_ + "/files/" + json["world"].get<std::string>();
+  std::string path = path_+"/"+user+"/backups/"+backup;
+  std::string path_to_world = path_+"/"+user+"/files/"+world;
 
   //Check if both paths exist.
   if (!func::demo_exists(path) || !func::demo_exists(path_to_world)) {
@@ -551,10 +544,10 @@ bool User::RestoreBackup(std::string request) {
   return true;
 }
 
-bool User::DeleteBackup(std::string backup) {
+bool User::DeleteBackup(std::string user, std::string backup) {
 
   //Build path, then check if path exists.
-  std::string path = path_ + "/backups/" + backup;
+  std::string path = path_+"/"+user+"/backups/"+backup;
   if (!func::demo_exists(path)) {
     std::cout << "Backup " << path << " does not exist!" << std::endl;
     return false;

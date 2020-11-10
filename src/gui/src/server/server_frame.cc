@@ -343,26 +343,40 @@ void ServerFrame::Backups(const Request& req, Response& resp, std::string action
   if (username == "") {
     resp.status = 302;
     resp.set_header("Location", "/login");
+    return;
   }
-  else {
-    sl.lock();
-    //Call matching function.
-    bool success = false;
-    if (action == "create")
-      success = user_manager_.GetUser(username)->CreateBackup(req.body);
-    else if (action == "restore") 
-      success = user_manager_.GetUser(username)->RestoreBackup(req.body);
-    else if (action == "delete")
-      success = user_manager_.GetUser(username)->DeleteBackup(req.body);
-    else
-      success = false;
-    sl.unlock();
 
-    if (success == true)
-      resp.status = 200;
-    else
-      resp.status = 401;
+  //Parse user, backup and world from request
+  std::string user, world, backup;
+  try {
+    nlohmann::json json = nlohmann::json::parse(req.body);
+    user = json["user"];
+    world = json.value("world", "");
+    backup = json.value("backup", "");
+  } 
+  catch (std::exception& e) {
+    std::cout << "Parsing values from request failed: " << e.what() << std::endl;
+    resp.status = 401;
+    return;
   }
+
+  sl.lock();
+  //Call matching function.
+  bool success = false;
+  if (action == "create")
+    success = user_manager_.GetUser(username)->CreateBackup(user, world);
+  else if (action == "restore") 
+    success = user_manager_.GetUser(username)->RestoreBackup(user, backup);
+  else if (action == "delete")
+    success = user_manager_.GetUser(username)->DeleteBackup(user, backup);
+  else
+    success = false;
+  sl.unlock();
+
+  if (success == true)
+    resp.status = 200;
+  else
+    resp.status = 401;
 }
 
 bool ServerFrame::IsRunning() {
