@@ -169,7 +169,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   nlohmann::json write_room;
   write_room["path"] = path+"/rooms/test_house/test_room";
   write_room["json"] = test_room_fail;
-  REQUIRE(user->WriteObject(test_room_fail) == false);
+  REQUIRE(user->WriteObject(write_room.dump()) == false);
   //Test that game is still running
   REQUIRE(system(command.c_str()) == 0);
   //Force to write corrupter json
@@ -190,4 +190,14 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->DeleteBackup(user, backup) == true);
   //Check that backup is acctually deleted
   REQUIRE(func::demo_exists(full_path+"/test/backups/"+backup) == false);
+  //Test updating a file
+  nlohmann::json test_room;
+  REQUIRE(func::LoadJsonFromDisc("../../default_jsons/test_room.json", 
+        test_room_fail) == true);
+  nlohmann::json write_room_good;
+  write_room["path"] = path+"/rooms/test_house/test_room";
+  write_room["json"] = test_room_fail;
+  REQUIRE(user->WriteObject(write_room_good.dump()) == true);
+  //Check that game is still running
+  REQUIRE(system(command.c_str()) == 0);
 }
