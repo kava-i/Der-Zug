@@ -169,11 +169,11 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   nlohmann::json write_room;
   write_room["path"] = path+"/rooms/test_house/test_room";
   write_room["json"] = test_room_fail;
-  REQUIRE(user->WriteObject(write_room.dump()) == false);
+  REQUIRE(user->WriteObject(write_room.dump()) == "Game not runnding!");
   //Test that game is still running
   REQUIRE(system(command.c_str()) == 0);
   //Force to write corrupter json
-  REQUIRE(user->WriteObject(write_room.dump(), true) == true);
+  REQUIRE(user->WriteObject(write_room.dump(), true) == "");
   //Double check by testing whether game now does not start
   REQUIRE(system(command.c_str()) != 0);
   //Get backup from folder
@@ -197,7 +197,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   nlohmann::json write_room_good;
   write_room_good["path"] = path+"/rooms/test_house/test_room";
   write_room_good["json"] = test_room;
-  REQUIRE(user->WriteObject(write_room_good.dump()) == true);
+  REQUIRE(user->WriteObject(write_room_good.dump()) == "");
   //Check that game is still running
   REQUIRE(system(command.c_str()) == 0);
 }
