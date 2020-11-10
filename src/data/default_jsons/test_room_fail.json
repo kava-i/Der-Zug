@@ -1,0 +1,14 @@
+{
+  "test_room": {
+    "id":"test_room",
+    "name":"Test Room",
+    "description": [
+      {
+        "speacker":"TUTORIAL MASTER",
+        "text":"You#re in the first test-room with nothing in it whatsoevenr!"
+      }]
+    },
+    "characters": [
+      ["test", "{}"]
+    ]
+}
