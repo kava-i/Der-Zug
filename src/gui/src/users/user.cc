@@ -197,10 +197,8 @@ std::string User::GetObjects(std::string path, std::string world, std::string
 
 std::string User::GetObject(std::string path, std::string world, std::string 
     category, std::string sub, std::string obj) {
-  std::cout << "GetObject" << std::endl;
   //Create path and trying to load into json 
   path = path_ + path.substr(0, path.rfind("/")) + ".json";
-  std::cout << "Created path: " << path << std::endl;
   nlohmann::json objects;
   try{ 
     std::ifstream read(path);
@@ -378,12 +376,12 @@ std::string User::AddNewObject(std::string path, std::string id) {
   
   //Load empty object of category
   nlohmann::json request;
-  request["correct_path"] = path;
+  request["path"] = path+"/"+id;
   if (category == "defaultDialogs") 
     request["json"] = nlohmann::json::array();
   else if (category == "defaultDescriptions")
     request["json"] = nlohmann::json::array();
-  else
+  else 
     request["json"] = nlohmann::json{{"id", id}};
   try {
     if (WriteObject(request.dump()) == false)
@@ -400,59 +398,53 @@ bool User::WriteObject(std::string request, bool force) {
   //Get values from request
   nlohmann::json json;
   std::string path;
+  std::cout << "reading data." << std::endl;
   try {
     nlohmann::json j = nlohmann::json::parse(request);
     json = j["json"];
-    path = j.value("path", j["correct_path"].get<std::string>());
+    path = j["path"];
+    std::cout << "Json:"  << json << std::endl; 
   }
   catch (std::exception& e) {
     std::cout << "WriteObject: Problem parsing request: " << e.what() << "\n";
     return false;
   }
+  std::cout << "Reading object." << std::endl;
 
-  //Parse path.
-  //TODO (fux): Here different paths are needed:
-  //paths_[0] = ../../data/users/
-  //paths_[1] = ../../data/users/[username]/  (path to one folder)
-  //paths_[2] = ../../data/users/[user]/      (path to shared folder
-  //...                                       (additional shared folders)
-  //Use different parsing, when coming from user, or from AddNewObject().
-  std::string path_to_object = path_;
-  if (json.count("path") > 0)
-    path_to_object += path.substr(7, path.rfind("/")-7) + ".json";
-  else
-    path_to_object += path + ".json";
-
-  //Read json
-  std::cout << "Reading json\n";
+  //Parse path, read json and create doublicate (backup)
+  std::string path_to_object = path_ + path.substr(0, path.rfind("/")) + ".json";
   nlohmann::json object;
   if (!func::LoadJsonFromDisc(path_to_object, object))
-    return "";
-
-  //Backup old object
+    return false;
   nlohmann::json obj_backup = object;
+  std::cout << "Adding to object." << std::endl;
   
   //Modify and write object.
   if (json.is_array() == true && object.is_array() == true)
     object.push_back(json);
   else if (json.is_array() == true)
     object[std::to_string(object.size())] = json;
-  else
+  else {
+    std::cout << "Adding now!" << std::endl;
     object[json["id"].get<std::string>()] = json;
+  }
 
+  std::cout << "writing data." << std::endl;
   std::ofstream write(path_to_object);
   write << object;
   write.close();
 
+  std::cout << "checking game." << std::endl;
   //Check if game is still running and return true if yes, are forcing is true
   if (CheckGameRunning(path) == true || force == true)
     return true;
-  
+
+  std::cout << "reading data." << std::endl;
   //If not and forcing to write is set to false
   std::ofstream write_backup(path_to_object);
   write_backup << obj_backup;
   write_backup.close();
-  return true;
+  return false;
 }
 
 bool User::CheckAccessToLocations(std::string path) { 
@@ -515,9 +507,8 @@ bool User::CreateBackup(std::string user, std::string world) {
 
 bool User::RestoreBackup(std::string user, std::string backup) {
   //Extract world from backup
-  std::string world = backup.substr(backup.rfind("_"));
-  world = world.substr(world.rfind("_"));
-  std::cout << "Extracted World: " << world << std::endl;
+  std::string world = backup.substr(0, backup.rfind("_"));
+  world = world.substr(0, world.rfind("_"));
 
   //Create path to selected backup and world.
   std::string path = path_+"/"+user+"/backups/"+backup;
@@ -563,18 +554,14 @@ bool User::CheckGameRunning(std::string path) {
 
   //Try to extract information (user and world, complete path)
   std::vector<std::string> vec = func::Split(path, "/");
-  std::cout << "Path: " << path << std::endl;
-  std::cout << "Size: " << vec.size() << std::endl;
   if (vec.size() < 3) return false;
   std::string user = vec[0];
   std::string world = vec[2];
   std::string path_to_txtad = path_+path;
-  std::cout << "Got user: " << user << ", world:" << world << std::endl;
-  std::cout << "Path: " << path_to_txtad << std::endl;
 
   //Create command
   std::string command = "./../../textadventure/build/bin/testing.o "
-    "--path ../../data/users/test/files/Test_World/";
+    "--path ../../data/users/"+user+"/files/"+world+"/";
 
   //Get players from players.json
   nlohmann::json players;
@@ -585,20 +572,14 @@ bool User::CheckGameRunning(std::string path) {
     return false;
   }
   
-  std::cout << "Path to players: " << path_to_players << std::endl;
-  std::cout << "Players json: " << players << std::endl;
-
+  //Run game with every existing player.
   bool success = true;
   for (auto it=players.begin(); it!=players.end(); it++) {
-    
     std::string test_p = command + " -p " + it.key() + 
       " > ../../data/users/"+user+"/logs/"+world+".txt";
-    if (system(test_p.c_str()) != 0) {
-      std::cout << it.key() << " failed." << std::endl;
+    if (system(test_p.c_str()) != 0) 
       success = false;
-    }
-    else
-      std::cout << it.key() << " success." << std::endl;
+    std::cout << "Running with player \"" << it.key() << "\": " << success << std::endl;
   }
   return success;
 }

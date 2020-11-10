@@ -55,7 +55,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   std::string command = "./../../textadventure/build/bin/testing.o"
     " --path ../../data/users/test/files/Test_World/"
     " -p test"
-    " > ../../data/users/test/logs/test_world.txt";
+    " > ../../data/users/test/logs/Test_World.txt";
   REQUIRE(system(command.c_str()) == 0);
 
   //GetOverview: Check if world is found on overview page.
@@ -173,8 +173,8 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   //Test that game is still running
   REQUIRE(system(command.c_str()) == 0);
   //Force to write corrupter json
-  REQUIRE(user->WriteObject(test_room_fail, true) == true);
-  //Double check by testing wther game now does not start
+  REQUIRE(user->WriteObject(write_room.dump(), true) == true);
+  //Double check by testing whether game now does not start
   REQUIRE(system(command.c_str()) != 0);
   //Get backup from folder
   std::string backup = "";
@@ -192,11 +192,11 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(func::demo_exists(full_path+"/test/backups/"+backup) == false);
   //Test updating a file
   nlohmann::json test_room;
-  REQUIRE(func::LoadJsonFromDisc("../../default_jsons/test_room.json", 
-        test_room_fail) == true);
+  REQUIRE(func::LoadJsonFromDisc("../../data/default_jsons/test_room.json", 
+        test_room) == true);
   nlohmann::json write_room_good;
-  write_room["path"] = path+"/rooms/test_house/test_room";
-  write_room["json"] = test_room_fail;
+  write_room_good["path"] = path+"/rooms/test_house/test_room";
+  write_room_good["json"] = test_room;
   REQUIRE(user->WriteObject(write_room_good.dump()) == true);
   //Check that game is still running
   REQUIRE(system(command.c_str()) == 0);

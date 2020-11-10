@@ -25,7 +25,6 @@ void del_test_user(std::string username) {
 }
 
 TEST_CASE("Server is working as expected", "[server]") {
-  
   del_test_user("test1");
  
   ServerFrame server;
@@ -162,6 +161,13 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->status == 200);
           resp = cl.Get("/overview", headers);
           REQUIRE(resp->body.find("new_world") != std::string::npos);
+          
+          //Check that newly build world is starting and basic command are running.
+          std::string command = "./../../textadventure/build/bin/testing.o"
+              " --path ../../data/users/test1/files/new_world/"
+              " -p test"
+              " > ../../data/users/test1/logs/new_world.txt";
+          REQUIRE(system(command.c_str()) == 0);
 
           //Check accessing categories-page
           resp = cl.Get("/test1/files/new_world", headers);
@@ -195,6 +201,9 @@ TEST_CASE("Server is working as expected", "[server]") {
           resp = cl.Get("/test1/files/new_world/attacks/test_attacks", headers);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
+
+          //Check that game is still running.
+          REQUIRE(system(command.c_str()) == 0);
 
           //Add a new object
           nlohmann::json new_obj;
