@@ -50,8 +50,10 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(func::demo_exists(full_path + path + "/players/players.json"));
 
   //Check that newly build world is starting and basic command are running.
-  std::string command = "./../../textadventure/build/bin/testing.o "
-    "--path ../../data/users/test/files/Test_World/ -p test";
+  std::string command = "./../../textadventure/build/bin/testing.o"
+    " --path ../../data/users/test/files/Test_World/"
+    " -p test"
+    " > ../../data/users/test/logs/test_world.txt";
   REQUIRE(system(command.c_str()) == 0);
 
   //GetOverview: Check if world is found on overview page.

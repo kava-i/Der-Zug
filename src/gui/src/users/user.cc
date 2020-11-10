@@ -17,6 +17,7 @@ User::User(std::string name, std::string pw, std::string path, std::vector
     fs::create_directory(path_+"/"+username_);
     fs::create_directory(path_+"/"+username_+"/files");
     fs::create_directory(path_+"/"+username_+"/backups");
+    fs::create_directory(path_+"/"+username_+"/logs");
   }
   catch (std::exception& e) {
     std::cout << "Creating essential files failed: " << e.what() << std::endl;
@@ -28,6 +29,16 @@ User::User(std::string name, std::string pw, std::string path,
     <std::string> cats) : username_(name), path_(path), categories_(cats) {
   password_ = pw;
   locations_ = locations;
+
+  try {
+    fs::create_directory(path_+"/"+username_);
+    fs::create_directory(path_+"/"+username_+"/files");
+    fs::create_directory(path_+"/"+username_+"/backups");
+    fs::create_directory(path_+"/"+username_+"/logs");
+  }
+  catch (std::exception& e) {
+    std::cout << "Creating essential files failed: " << e.what() << std::endl;
+  }
 }
 
 //** Getter ** //
@@ -36,6 +47,8 @@ std::string User::password() const {
   std::shared_lock sl(shared_mtx_password_);
   return password_;
 }
+
+
 
 // ** Setter ** //
 
@@ -585,7 +598,8 @@ bool User::CheckGameRunning(std::string path) {
   bool success = true;
   for (auto it=players.begin(); it!=players.end(); it++) {
     
-    std::string test_p = command + " -p " + it.key();
+    std::string test_p = command + " -p " + it.key() + 
+      " > ../../data/users/"+user+"/logs/"+world+".txt";
     if (system(test_p.c_str()) != 0) {
       std::cout << it.key() << " failed." << std::endl;
       success = false;
