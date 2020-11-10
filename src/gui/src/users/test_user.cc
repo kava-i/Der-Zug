@@ -10,6 +10,8 @@
 #include "user.h"
 #include "user_manager.h"
 
+namespace fs = std::filesystem;
+
 TEST_CASE ("Loading pages from user works", "[user_pages]") {
   
   //If already exists, delete test user.
@@ -156,4 +158,36 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->GetObject(path+"/defaultDialogs/test_default_dialogs/test_dialog", 
         world, "defaultDialogs", "test_default_dialogs","test_dialog") 
       != "File not found.");*/
+
+  //Test Creating backups
+  REQUIRE(user->CreateBackup("test", "Test_World") == true);
+    
+  //Modify objects and test if this works
+  nlohmann::json test_room_fail;
+  REQUIRE(func::LoadJsonFromDisc("../../default_jsons/test_room_fail.json", 
+        test_room_fail) == true);
+  nlohmann::json write_room;
+  write_room["path"] = path+"/rooms/test_house/test_room";
+  write_room["json"] = test_room_fail;
+  REQUIRE(user->WriteObject(test_room_fail) == false);
+  //Test that game is still running
+  REQUIRE(system(command.c_str()) == 0);
+  //Force to write corrupter json
+  REQUIRE(user->WriteObject(test_room_fail, true) == true);
+  //Double check by testing wther game now does not start
+  REQUIRE(system(command.c_str()) != 0);
+  //Get backup from folder
+  std::string backup = "";
+  for (auto p : fs::directory_iterator(full_path+"/test/backups/")) {
+    backup = p.path();
+    if (backup.find("Test_World") != std::string::npos) break;
+  }
+  backup = backup.substr(backup.rfind("/"));
+  //Restore backup
+  REQUIRE(user->RestoreBackup("test", backup));
+  //No test, that game is running again.
+  REQUIRE(system(command.c_str()) == 0);
+  REQUIRE(user->DeleteBackup(user, backup) == true);
+  //Check that backup is acctually deleted
+  REQUIRE(func::demo_exists(full_path+"/test/backups/"+backup) == false);
 }
