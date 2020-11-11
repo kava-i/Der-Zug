@@ -28,7 +28,7 @@ void del_test_user(std::string username) {
 }
 
 TEST_CASE("Server is working as expected", "[server]") {
-  del_test_user("test1");
+  del_test_user("test");
  
   ServerFrame server;
 
@@ -59,7 +59,7 @@ TEST_CASE("Server is working as expected", "[server]") {
           //Check for correkt response when sending registration-request.
           //try to create test-user (fail)
           nlohmann::json request;
-          request["id"] = "test1";
+          request["id"] = "test";
           request["pw1"] = "password";
           request["pw2"] = "password0408";
           auto resp = cl.Post("/api/user_registration", {}, request.dump(), 
@@ -86,7 +86,7 @@ TEST_CASE("Server is working as expected", "[server]") {
           resp = cl.Post("/api/user_delete", headers, "",
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
-          REQUIRE(func::demo_exists("../../data/users/test1") == false);
+          REQUIRE(func::demo_exists("../../data/users/test") == false);
           resp = cl.Get("/overview", headers);
           REQUIRE(resp->status == 302);
         }
@@ -94,7 +94,7 @@ TEST_CASE("Server is working as expected", "[server]") {
         SECTION("Loging in and out is working") {
           //Register new test user
           nlohmann::json request;
-          request["id"] = "test1";
+          request["id"] = "test";
           request["pw1"] = "password0408";
           request["pw2"] = "password0408";
           auto resp = cl.Post("/api/user_registration", {}, request.dump(), 
@@ -120,7 +120,7 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->status == 302);
 
           //Log user in.
-          request["username"] = "test1";
+          request["username"] = "test";
           request["password"] = "password0408";
           resp = cl.Post("/api/user_login", {}, request.dump(), 
               "application/x-www-form-urlencoded");
@@ -139,7 +139,7 @@ TEST_CASE("Server is working as expected", "[server]") {
         SECTION("Accessing and creating files works") {
           //Register new test user
           nlohmann::json request;
-          request["id"] = "test1";
+          request["id"] = "test";
           request["pw1"] = "password0408";
           request["pw2"] = "password0408";
           auto resp = cl.Post("/api/user_registration", {}, request.dump(), 
@@ -167,41 +167,41 @@ TEST_CASE("Server is working as expected", "[server]") {
           
           //Check that newly build world is starting and basic command are running.
           std::string command = "./../../textadventure/build/bin/testing.o"
-              " --path ../../data/users/test1/files/new_world/"
+              " --path ../../data/users/test/files/new_world/"
               " -p test"
-              " > ../../data/users/test1/logs/new_world.txt";
+              " > ../../data/users/test/logs/new_world.txt";
           REQUIRE(system(command.c_str()) == 0);
 
           //Check accessing categories-page
-          resp = cl.Get("/test1/files/new_world", headers);
+          resp = cl.Get("/test/files/new_world", headers);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body.find("config") != std::string::npos);
           REQUIRE(resp->body.find("attacks") != std::string::npos);
 
           //Check accessing categories
-          resp = cl.Get("/test1/files/new_world/config", headers);
+          resp = cl.Get("/test/files/new_world/config", headers);
           REQUIRE(resp->status == 200);
-          resp = cl.Get("/test1/files/new_world/rooms", headers);
+          resp = cl.Get("/test/files/new_world/rooms", headers);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body.find("test") != std::string::npos);
 
           //The test-room-file should already exist
-          resp = cl.Get("/test1/files/new_world/rooms/test", headers);
+          resp = cl.Get("/test/files/new_world/rooms/test", headers);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body.find("test_room") != std::string::npos);
 
           //Add a few new files to categories
           nlohmann::json new_sub;
           new_sub["subcategory"] = "test_attacks";
-          new_sub["path"] = "/test1/files/new_world/attacks";
+          new_sub["path"] = "/test/files/new_world/attacks";
           resp = cl.Post("/api/add_subcategory", headers, new_sub.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
           //test_attacks can be found on page
-          resp = cl.Get("/test1/files/new_world/attacks", headers);
+          resp = cl.Get("/test/files/new_world/attacks", headers);
           REQUIRE(resp->body.find("test_attacks") != std::string::npos);
           //test attacks can be found
-          resp = cl.Get("/test1/files/new_world/attacks/test_attacks", headers);
+          resp = cl.Get("/test/files/new_world/attacks/test_attacks", headers);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
 
@@ -211,15 +211,15 @@ TEST_CASE("Server is working as expected", "[server]") {
           //Add a new object
           nlohmann::json new_obj;
           new_obj["name"] = "test_attack";
-          new_obj["path"] = "/test1/files/new_world/attacks/test_attacks";
+          new_obj["path"] = "/test/files/new_world/attacks/test_attacks";
           resp = cl.Post("/api/add_object", headers, new_obj.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
           //test_attacks can be found on page
-          resp = cl.Get("/test1/files/new_world/attacks/test_attacks", headers);
+          resp = cl.Get("/test/files/new_world/attacks/test_attacks", headers);
           REQUIRE(resp->body.find("test_attack") != std::string::npos);
           //test attacks can be found
-          resp = cl.Get("/test1/files/new_world/attacks/test_attacks/test_attack", 
+          resp = cl.Get("/test/files/new_world/attacks/test_attacks/test_attack", 
               headers);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
@@ -227,7 +227,7 @@ TEST_CASE("Server is working as expected", "[server]") {
           //Create backup
           nlohmann::json create_backup;
           create_backup["world"] = "new_world";
-          create_backup["user"] = "test1";
+          create_backup["user"] = "test";
           resp = cl.Post("/api/create_backup", headers, create_backup.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
@@ -238,7 +238,7 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(func::LoadJsonFromDisc("../../data/default_jsons/test_room_fail.json", 
                 test_room_fail) == true);
           nlohmann::json write_room_bad;
-          write_room_bad["path"] = "/test1/files/new_world/rooms/test/test_room";
+          write_room_bad["path"] = "/test/files/new_world/rooms/test/test_room";
           write_room_bad["json"] = test_room_fail;
           //Write object.
           resp = cl.Post("/api/write_object", headers, write_room_bad.dump(), 
@@ -252,14 +252,14 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
           //Get backup from folder
           std::string backup = "";
-          for (auto p : fs::directory_iterator("../../data/users/test1/backups/")) {
+          for (auto p : fs::directory_iterator("../../data/users/test/backups/")) {
             backup = p.path();
             if (backup.find("Test_World") != std::string::npos) break;
           }
           backup = backup.substr(backup.rfind("/"));
           //Restore backup
           nlohmann::json restore_backup;
-          restore_backup["user"] = "test1";
+          restore_backup["user"] = "test";
           restore_backup["backup"] = backup;
           resp = cl.Post("/api/restore_backup", headers, restore_backup.dump(), 
               "application/x-www-form-urlencoded");
@@ -269,7 +269,7 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(func::LoadJsonFromDisc("../../data/default_jsons/test_room.json", 
                 test_room) == true);
           nlohmann::json write_room_good;
-          write_room_good["path"] = "/test1/files/new_world/rooms/test/test_room";
+          write_room_good["path"] = "/test/files/new_world/rooms/test/test_room";
           write_room_good["json"] = test_room;
           resp = cl.Post("/api/write_object", headers, write_room_good.dump(), 
               "application/x-www-form-urlencoded");
@@ -277,7 +277,7 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
           //Test deleting backup
           nlohmann::json delete_backup;
-          delete_backup["user"] = "test1";
+          delete_backup["user"] = "test";
           delete_backup["backup"] = backup;
           resp = cl.Post("/api/delete_backup", headers, delete_backup.dump(),
               "application/x-www-form-urlencoded");
