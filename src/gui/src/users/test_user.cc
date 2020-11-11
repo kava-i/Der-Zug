@@ -167,15 +167,15 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   nlohmann::json test_room_fail;
   REQUIRE(func::LoadJsonFromDisc("../../data/default_jsons/test_room_fail.json", 
         test_room_fail) == true);
-  nlohmann::json write_room;
-  write_room["path"] = path+"/rooms/test_house/test_room";
-  write_room["json"] = test_room_fail;
-  REQUIRE(user->WriteObject(write_room.dump()) == ErrorCodes::GAME_NOT_RUNNING);
+  nlohmann::json write_room_bad;
+  write_room_bad["path"] = path+"/rooms/test_house/test_room";
+  write_room_bad["json"] = test_room_fail;
+  REQUIRE(user->WriteObject(write_room_bad.dump()) == ErrorCodes::GAME_NOT_RUNNING);
   //Test that game is still running
   REQUIRE(system(command.c_str()) == 0);
   //Force to write corrupter json
-  write_room["force"] = true;
-  REQUIRE(user->WriteObject(write_room.dump()) == ErrorCodes::SUCCESS);
+  write_room_bad["force"] = true;
+  REQUIRE(user->WriteObject(write_room_bad.dump()) == ErrorCodes::SUCCESS);
   //Double check by testing whether game now does not start
   REQUIRE(system(command.c_str()) != 0);
   //Get backup from folder
