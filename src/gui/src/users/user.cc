@@ -379,15 +379,16 @@ int User::AddNewObject(std::string path, std::string id) {
   return WriteObject(request.dump());
 }
 
-int User::WriteObject(std::string request, bool force) {
+int User::WriteObject(std::string request) {
   //Get values from request
   nlohmann::json json;
   std::string path;
-  std::cout << "reading data." << std::endl;
+  bool force = false;
   try {
     nlohmann::json j = nlohmann::json::parse(request);
     json = j["json"];
     path = j["path"];
+    force = j.value("force", false);
     std::cout << "Json:"  << json << std::endl; 
   }
   catch (std::exception& e) {
@@ -410,7 +411,6 @@ int User::WriteObject(std::string request, bool force) {
   else 
     object[json["id"].get<std::string>()] = json;
 
-  std::cout << "writing data." << std::endl;
   std::ofstream write(path_to_object);
   write << object;
   write.close();

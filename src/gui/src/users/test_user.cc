@@ -174,7 +174,8 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   //Test that game is still running
   REQUIRE(system(command.c_str()) == 0);
   //Force to write corrupter json
-  REQUIRE(user->WriteObject(write_room.dump(), true) == ErrorCodes::SUCCESS);
+  write_room["force"] = true;
+  REQUIRE(user->WriteObject(write_room.dump()) == ErrorCodes::SUCCESS);
   //Double check by testing whether game now does not start
   REQUIRE(system(command.c_str()) != 0);
   //Get backup from folder

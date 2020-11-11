@@ -3,6 +3,7 @@
  */
 #include "util/func.h"
 #include "nlohmann/json.hpp"
+#include "util/error_codes.h"
 #include <string>
 #define CATCH_CONFIG_MAIN
 
@@ -15,10 +16,12 @@
 #include "server_frame.h"
 #include "util/func.h"
 
+namespace fs=std::filesystem;
+
 void del_test_user(std::string username) {
   //If already exists, delete test data.
   try{
-    std::filesystem::remove_all("../../data/users/" + username);
+    fs::remove_all("../../data/users/" + username);
     std::cout << username << " deleted." << std::endl;
   }
   catch(...) {return; }
@@ -220,6 +223,67 @@ TEST_CASE("Server is working as expected", "[server]") {
               headers);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
+
+          //Create backup
+          nlohmann::json create_backup;
+          create_backup["world"] = "new_world";
+          create_backup["user"] = "test1";
+          resp = cl.Post("/api/create_backup", headers, create_backup.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
+          
+          //Modify objects and test if this works
+          nlohmann::json test_room_fail;
+          REQUIRE(func::LoadJsonFromDisc("../../data/default_jsons/test_room_fail.json", 
+                test_room_fail) == true);
+          nlohmann::json write_room_bad;
+          write_room_bad["path"] = "/test1/files/new_world/rooms/test/test_room";
+          write_room_bad["json"] = test_room_fail;
+          //Write object.
+          resp = cl.Post("/api/write_object", headers, write_room_bad.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 401);
+          REQUIRE(resp->body == std::to_string(ErrorCodes::GAME_NOT_RUNNING));
+          write_room_bad["force"] = true;
+          resp = cl.Post("/api/write_object", headers, write_room_bad.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
+          //Get backup from folder
+          std::string backup = "";
+          for (auto p : fs::directory_iterator("../../data/users/test1/backups/")) {
+            backup = p.path();
+            if (backup.find("Test_World") != std::string::npos) break;
+          }
+          backup = backup.substr(backup.rfind("/"));
+          //Restore backup
+          nlohmann::json restore_backup;
+          restore_backup["user"] = "test1";
+          restore_backup["backup"] = backup;
+          resp = cl.Post("/api/restore_backup", headers, restore_backup.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
+          nlohmann::json test_room;
+          REQUIRE(func::LoadJsonFromDisc("../../data/default_jsons/test_room.json", 
+                test_room) == true);
+          nlohmann::json write_room_good;
+          write_room_good["path"] = "/test1/files/new_world/rooms/test/test_room";
+          write_room_good["json"] = test_room;
+          resp = cl.Post("/api/write_object", headers, write_room_good.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
+          //Test deleting backup
+          nlohmann::json delete_backup;
+          delete_backup["user"] = "test1";
+          delete_backup["backup"] = backup;
+          resp = cl.Post("/api/delete_backup", headers, delete_backup.dump(),
+              "application/x-www-form-urlencoded");
+          std::cout << "Error code: " << resp->body << std::endl; 
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
         }
         server.Stop();
     });

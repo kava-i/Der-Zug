@@ -1,9 +1,15 @@
+/**
+ * @author georgbuechner
+ */
+
 #include "server_frame.h"
-#include "httplib.h"
-#include "nlohmann/json.hpp"
 #include "users/user.h"
 #include "util/error_codes.h"
 #include "util/func.h"
+
+#include "httplib.h"
+#include "nlohmann/json.hpp"
+
 #include <exception>
 #include <iostream>
 #include <string>
@@ -374,7 +380,7 @@ void ServerFrame::Backups(const Request& req, Response& resp, std::string action
     error_code = false;
   sl.unlock();
 
-  if (error_code== true)
+  if (error_code == ErrorCodes::SUCCESS)
     resp.status = 200;
   else
     resp.status = 401;

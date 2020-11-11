@@ -129,7 +129,7 @@ class User {
      * running.)
      * @return ErrorCode.
      */
-    int WriteObject(std::string request, bool force=false);
+    int WriteObject(std::string request);
 
     // ** functions ** //
     
