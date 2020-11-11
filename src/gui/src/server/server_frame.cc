@@ -135,7 +135,8 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
     resp.status = 302;
     resp.set_header("Location", "/login");
   }
-  else if (user->CheckAccessToLocations(req.matches[0]) == false) {
+  else if (user->CheckAccessToLocations(req.matches[0]) == false &&
+      req.matches.size() > 1) {
     resp.status = 302;
     resp.set_header("Location", "/overview");
   }
@@ -213,6 +214,7 @@ void ServerFrame::DoRegistration(const Request& req, Response& resp) {
 
   //Try to register user. Send error code if not possible.
   std::unique_lock ul(shared_mtx_user_manager_);
+  std::cout << "Registering user: " << username << std::endl;
   std::string error = user_manager_.DoRegistration(username, pw1, pw2);
   ul.unlock();
 
@@ -276,7 +278,7 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
     resp.set_header("Location", "/login");
     return;
   }
-
+  
   //Try to parse json
   std::string name, path;
   try {
@@ -295,9 +297,15 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
   //Get user
   sl.lock();
   User* user = user_manager_.GetUser(username);
+
   sl.unlock();
   int error_code = ErrorCodes::WRONG_FORMAT;
-  if (req.matches.size() > 1 && req.matches[1] == "world")
+  //Check whether user has access to this location
+  if (user->CheckAccessToLocations(path) == false &&
+      req.matches.size() > 1 && req.matches[1] != "world") {
+    error_code = ErrorCodes::ACCESS_DENIED;
+  }
+  else if (req.matches.size() > 1 && req.matches[1] == "world")
     error_code = user->CreateNewWorld(name);
   else if (req.matches.size() > 1 && req.matches[1] == "subcategory") 
     error_code = user->AddFile(path, name);
@@ -329,7 +337,6 @@ void ServerFrame::WriteObject(const Request& req, Response& resp) {
     //Call matching function.
     int error_code = user_manager_.GetUser(username)->WriteObject(req.body);
     sl.unlock();
-
     if (error_code == ErrorCodes::SUCCESS)
       resp.status = 200;
     else

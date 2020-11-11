@@ -7,6 +7,7 @@
 
 #include <exception>
 #include <filesystem>
+#include <iterator>
 
 namespace fs = std::filesystem;
 
@@ -396,6 +397,10 @@ int User::WriteObject(std::string request) {
     return ErrorCodes::WRONG_FORMAT;
   }
 
+  //Check is user has access
+  if (CheckAccessToLocations(path) == false)
+    return ErrorCodes::ACCESS_DENIED;
+
   //Parse path, read json and create doublicate (backup)
   std::string path_to_object = path_ + path.substr(0, path.rfind("/")) + ".json";
   nlohmann::json object;
@@ -428,7 +433,11 @@ int User::WriteObject(std::string request) {
 
 bool User::CheckAccessToLocations(std::string path) { 
   std::cout << "CheckAccessToLocations: " << path << std::endl; 
-  return true; 
+  for (const auto& it : locations_) {
+    std::cout << "Location: " << it << std::endl;
+    if (path.find("/"+it) == 0) return true;
+  }
+  return false; 
 }
 
 void User::SafeUser() const {

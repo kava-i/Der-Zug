@@ -29,6 +29,7 @@ void del_test_user(std::string username) {
 
 TEST_CASE("Server is working as expected", "[server]") {
   del_test_user("test");
+  del_test_user("test2");
  
   ServerFrame server;
 
@@ -281,9 +282,43 @@ TEST_CASE("Server is working as expected", "[server]") {
           delete_backup["backup"] = backup;
           resp = cl.Post("/api/delete_backup", headers, delete_backup.dump(),
               "application/x-www-form-urlencoded");
-          std::cout << "Error code: " << resp->body << std::endl; 
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
+
+          // *** ACCESS TESTS *** //
+          //
+          //Register new test user
+          nlohmann::json new_user;
+          new_user["id"] = "test2";
+          new_user["pw1"] = "password0408";
+          new_user["pw2"] = "password0408";
+          resp = cl.Post("/api/user_registration", {}, new_user.dump(), 
+              "application/x-www-form-urlencoded");
+          std::cout << "ErrorCode: " << resp->body << std::endl;
+          REQUIRE(resp->status == 200);
+          
+          //Check if cookie has been sent, extract cookie and add to headers.
+          REQUIRE(resp->get_header_value("Set-Cookie").length() > 32);
+          cookie = resp->get_header_value("Set-Cookie");
+          cookie = cookie.substr(0, cookie.find(";"));
+          headers = { { "Cookie", cookie } };
+          //Check that overview page can be accessed
+          resp = cl.Get("/overview", headers);
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body != "");
+
+          resp = cl.Get("/test/files/new_world", headers);
+          REQUIRE(resp->status == 302);
+          resp = cl.Post("/api/add_object", headers, new_obj.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->body == std::to_string(ErrorCodes::ACCESS_DENIED));
+          resp = cl.Post("/api/add_subcategory", headers, new_sub.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->body == std::to_string(ErrorCodes::ACCESS_DENIED));
+
+          resp = cl.Post("/api/write_object", headers, write_room_good.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->body == std::to_string(ErrorCodes::ACCESS_DENIED));
         }
         server.Stop();
     });
