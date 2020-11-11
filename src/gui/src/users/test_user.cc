@@ -6,9 +6,10 @@
 
 #include <catch2/catch.hpp>
 
-#include "util/func.h"
 #include "user.h"
 #include "user_manager.h"
+#include "util//error_codes.h"
+#include "util/func.h"
 
 namespace fs = std::filesystem;
 
@@ -40,13 +41,13 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   std::string world = "Test_World";
   std::string full_path = "../../data/users";
   std::string path = "/test/files/" + world;
-  REQUIRE(user->CreateNewWorld(world) == ""); 
+  REQUIRE(user->CreateNewWorld(world) == ErrorCodes::SUCCESS); 
   nlohmann::json players_json;
   REQUIRE(func::LoadJsonFromDisc(full_path+path+"/players/players.json", 
         players_json) == true);
   REQUIRE(players_json.size() != 0);
-  REQUIRE(user->CreateNewWorld(world) == "World already exists."); 
-  REQUIRE(user->CreateNewWorld("../Test_World") == "Wrong format."); 
+  REQUIRE(user->CreateNewWorld(world) == ErrorCodes::ALREADY_EXISTS); 
+  REQUIRE(user->CreateNewWorld("../Test_World") == ErrorCodes::WRONG_FORMAT); 
   REQUIRE(func::demo_exists(full_path + path + "/config.json"));
   REQUIRE(func::demo_exists(full_path + path + "/rooms/test.json"));
   REQUIRE(func::demo_exists(full_path + path + "/players/players.json"));
@@ -71,10 +72,10 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->GetCategory(path+"/config", world, "config") != "");
 
   //Check adding files is working.
-  REQUIRE(user->AddFile("hum/bug", "humbug") == "Path not found.");
-  REQUIRE(user->AddFile(path+"/rooms", "../test_house") == "Wrong format.");
-  REQUIRE(user->AddFile(path+"/rooms", "test_house") == "");
-  REQUIRE(user->AddFile(path+"/rooms", "test_house") == "File already exists.");
+  REQUIRE(user->AddFile("hum/bug", "humbug") == ErrorCodes::PATH_NOT_FOUND);
+  REQUIRE(user->AddFile(path+"/rooms", "../test_house") == ErrorCodes::WRONG_FORMAT);
+  REQUIRE(user->AddFile(path+"/rooms", "test_house") == ErrorCodes::SUCCESS);
+  REQUIRE(user->AddFile(path+"/rooms", "test_house") == ErrorCodes::ALREADY_EXISTS);
   REQUIRE(func::demo_exists(full_path + path + "/rooms/test_house.json") 
       == true);
 
@@ -82,19 +83,19 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(system(command.c_str()) == 0);
 
   //Add a new file in every category and check that game is still running.
-  REQUIRE(user->AddFile(path+"/attacks", "test_attacks") == "");
-  REQUIRE(user->AddFile(path+"/defaultDialogs", "test_default_dialogs") == "");
-  REQUIRE(user->AddFile(path+"/dialogs", "test_dialogs") == "");
-  REQUIRE(user->AddFile(path+"/characters", "test_characters") == "");
+  REQUIRE(user->AddFile(path+"/attacks", "test_attacks") == ErrorCodes::SUCCESS);
+  REQUIRE(user->AddFile(path+"/defaultDialogs", "test_default_dialogs") == ErrorCodes::SUCCESS);
+  REQUIRE(user->AddFile(path+"/dialogs", "test_dialogs") == ErrorCodes::SUCCESS);
+  REQUIRE(user->AddFile(path+"/characters", "test_characters") == ErrorCodes::SUCCESS);
   REQUIRE(user->AddFile(path+"/defaultDescriptions", "test_default_descs") 
-      == "");
-  REQUIRE(user->AddFile(path+"/items", "test_items") == "");
-  REQUIRE(user->AddFile(path+"/details", "test_details") == "");
-  REQUIRE(user->AddFile(path+"/quests", "test_quests") == "");
-  REQUIRE(user->AddFile(path+"/texts", "test_texts") == "");
+      == ErrorCodes::SUCCESS);
+  REQUIRE(user->AddFile(path+"/items", "test_items") == ErrorCodes::SUCCESS);
+  REQUIRE(user->AddFile(path+"/details", "test_details") == ErrorCodes::SUCCESS);
+  REQUIRE(user->AddFile(path+"/quests", "test_quests") == ErrorCodes::SUCCESS);
+  REQUIRE(user->AddFile(path+"/texts", "test_texts") == ErrorCodes::SUCCESS);
   REQUIRE(system(command.c_str()) == 0);
   REQUIRE(user->AddFile(path+"/players", "test_house") == 
-      "Not supported category.");
+      ErrorCodes::NOT_ALLOWED);
 
   //Check that newly added subcategories are be found in category
   REQUIRE(user->GetCategory(path+"/rooms", world, "rooms").find("test_house") 
@@ -110,23 +111,23 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->GetObjects(room_path, world, "rooms", "test_house") != "");
 
   //Check that adding a new empty room is working
-  REQUIRE(user->AddNewObject(room_path, "test_room") == "");
+  REQUIRE(user->AddNewObject(room_path, "test_room") == ErrorCodes::SUCCESS);
   REQUIRE(system(command.c_str()) == 0);
-  REQUIRE(user->AddNewObject(path+"/attacks/test_attacks","test_attack") == "");
-  REQUIRE(user->AddNewObject(path+"/dialogs/test_dialogs","test_dialog") == "");
+  REQUIRE(user->AddNewObject(path+"/attacks/test_attacks","test_attack") == ErrorCodes::SUCCESS);
+  REQUIRE(user->AddNewObject(path+"/dialogs/test_dialogs","test_dialog") == ErrorCodes::SUCCESS);
   REQUIRE(user->AddNewObject(path+"/characters/test_characters", 
-        "test_character") == "");
+        "test_character") == ErrorCodes::SUCCESS);
   REQUIRE(system(command.c_str()) == 0);
-  REQUIRE(user->AddNewObject(path+"/items/test_items", "test_item") == "");
-  REQUIRE(user->AddNewObject(path+"/details/test_details","test_detail")=="");
-  REQUIRE(user->AddNewObject(path+"/quests/test_quests", "test_quest") == "");
-  REQUIRE(user->AddNewObject(path+"/texts/test_texts", "test_text") == "");
+  REQUIRE(user->AddNewObject(path+"/items/test_items", "test_item") == ErrorCodes::SUCCESS);
+  REQUIRE(user->AddNewObject(path+"/details/test_details","test_detail")==ErrorCodes::SUCCESS);
+  REQUIRE(user->AddNewObject(path+"/quests/test_quests", "test_quest") == ErrorCodes::SUCCESS);
+  REQUIRE(user->AddNewObject(path+"/texts/test_texts", "test_text") == ErrorCodes::SUCCESS);
   REQUIRE(system(command.c_str()) == 0);
   REQUIRE(user->AddNewObject(path+"/defaultDescriptions/test_default_descs",
-        "test_desc") == "");
+        "test_desc") == ErrorCodes::SUCCESS);
   REQUIRE(system(command.c_str()) == 0);
   REQUIRE(user->AddNewObject(path+"/defaultDialogs/test_default_dialogs",
-        "test_dialog") == "");
+        "test_dialog") == ErrorCodes::SUCCESS);
   REQUIRE(system(command.c_str()) == 0);
 
   //Check if newly create objects can be found on html page
@@ -160,7 +161,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
       != "File not found.");*/
 
   //Test Creating backups
-  REQUIRE(user->CreateBackup("test", "Test_World") == true);
+  REQUIRE(user->CreateBackup("test", "Test_World") == ErrorCodes::SUCCESS);
     
   //Modify objects and test if this works
   nlohmann::json test_room_fail;
@@ -169,11 +170,11 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   nlohmann::json write_room;
   write_room["path"] = path+"/rooms/test_house/test_room";
   write_room["json"] = test_room_fail;
-  REQUIRE(user->WriteObject(write_room.dump()) == "Game not runnding!");
+  REQUIRE(user->WriteObject(write_room.dump()) == ErrorCodes::GAME_NOT_RUNNING);
   //Test that game is still running
   REQUIRE(system(command.c_str()) == 0);
   //Force to write corrupter json
-  REQUIRE(user->WriteObject(write_room.dump(), true) == "");
+  REQUIRE(user->WriteObject(write_room.dump(), true) == ErrorCodes::SUCCESS);
   //Double check by testing whether game now does not start
   REQUIRE(system(command.c_str()) != 0);
   //Get backup from folder
@@ -184,10 +185,10 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   }
   backup = backup.substr(backup.rfind("/"));
   //Restore backup
-  REQUIRE(user->RestoreBackup("test", backup));
+  REQUIRE(user->RestoreBackup("test", backup) == ErrorCodes::SUCCESS);
   //No test, that game is running again.
   REQUIRE(system(command.c_str()) == 0);
-  REQUIRE(user->DeleteBackup("test", backup) == true);
+  REQUIRE(user->DeleteBackup("test", backup) == ErrorCodes::SUCCESS);
   //Check that backup is acctually deleted
   REQUIRE(func::demo_exists(full_path+"/test/backups/"+backup) == false);
   //Test updating a file
@@ -197,7 +198,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   nlohmann::json write_room_good;
   write_room_good["path"] = path+"/rooms/test_house/test_room";
   write_room_good["json"] = test_room;
-  REQUIRE(user->WriteObject(write_room_good.dump()) == "");
+  REQUIRE(user->WriteObject(write_room_good.dump()) == ErrorCodes::SUCCESS);
   //Check that game is still running
   REQUIRE(system(command.c_str()) == 0);
 }

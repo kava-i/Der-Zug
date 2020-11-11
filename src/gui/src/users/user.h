@@ -101,7 +101,7 @@ class User {
      * @param name (Name of the world)
      * @return Success code.
      */
-    std::string CreateNewWorld(std::string name); 
+    int CreateNewWorld(std::string name); 
 
     /**
      * @brief Adds new file to category
@@ -110,16 +110,16 @@ class User {
      * @param name
      * @return error code.
      */
-    std::string AddFile(std::string path, std::string name);
+    int AddFile(std::string path, std::string name);
     
 
     /**
      * @brief Adds a new empty object
      * @param path
      * @param id
-     * @return error code.
+     * @return ErrorCode.
      */
-    std::string AddNewObject(std::string path, std::string id);
+    int AddNewObject(std::string path, std::string id);
 
     /**
      * Write json to disc.
@@ -127,9 +127,9 @@ class User {
      * @param[in] request (request to create new, or change existsing)
      * @param[in] force (If true, then writing is set even if game is not
      * running.)
-     * @return boolean to indicate success.
+     * @return ErrorCode.
      */
-    bool WriteObject(std::string request, bool force=false);
+    int WriteObject(std::string request, bool force=false);
 
     // ** functions ** //
     
@@ -148,25 +148,25 @@ class User {
      * Create a backup of given world.
      * @param[in] user 
      * @param[in] world 
-     * @return boolean to indicate success.
+     * @return ErrorCode.
      */
-    bool CreateBackup(std::string user, std::string world);
+    int CreateBackup(std::string user, std::string world);
 
     /**
      * Restores a backup of given world.
      * @param[in] user 
      * @param[in] backup (given backup to restore)
-     * @return boolean to indicate success.
+     * @return ErrorCode.
      */
-    bool RestoreBackup(std::string user, std::string backup);
+    int RestoreBackup(std::string user, std::string backup);
 
     /**
      * Delete a backup of given world.
      * @param[in] user 
      * @param[in] backup 
-     * @return boolean to indicate success.
+     * @return ErrorCode.
      */
-    bool DeleteBackup(std::string user, std::string backup);
+    int DeleteBackup(std::string user, std::string backup);
 
 
   private:

@@ -2,9 +2,11 @@
 #include "httplib.h"
 #include "nlohmann/json.hpp"
 #include "users/user.h"
+#include "util/error_codes.h"
 #include "util/func.h"
 #include <exception>
 #include <iostream>
+#include <string>
 
 using namespace httplib;
 
@@ -280,6 +282,7 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
   catch (std::exception& e) {
     std::cout << "Parsing json failed: " << e.what() << std::endl;
     resp.status = 401;
+    resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
     return;
   }
   
@@ -287,24 +290,20 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
   sl.lock();
   User* user = user_manager_.GetUser(username);
   sl.unlock();
-  std::string error = "wrong select";
-  if (req.matches.size() > 1 && req.matches[1] == "world") {
-    error = user->CreateNewWorld(name);
-  }
-  else if (req.matches.size() > 1 && req.matches[1] == "subcategory") {
-    error = user->AddFile(path, name);
-  }
-  else if (req.matches.size() > 1 && req.matches[1] == "object") {
-    error = user->AddNewObject(path, name);
-  }
+  int error_code = ErrorCodes::WRONG_FORMAT;
+  if (req.matches.size() > 1 && req.matches[1] == "world")
+    error_code = user->CreateNewWorld(name);
+  else if (req.matches.size() > 1 && req.matches[1] == "subcategory") 
+    error_code = user->AddFile(path, name);
+  else if (req.matches.size() > 1 && req.matches[1] == "object") 
+    error_code = user->AddNewObject(path, name);
 
   //Check whether action succeeded
-  if (error == "")
+  if (error_code == ErrorCodes::SUCCESS) 
     resp.status = 200;
-  else {
-    std::cout << "Error adding elem: " << error << std::endl;
+  else 
     resp.status = 401;
-  }
+  resp.set_content(std::to_string(error_code), "text/txt");
 }
 
 void ServerFrame::WriteObject(const Request& req, Response& resp) {
@@ -322,13 +321,14 @@ void ServerFrame::WriteObject(const Request& req, Response& resp) {
   else {
     sl.lock();
     //Call matching function.
-    bool success = user_manager_.GetUser(username)->WriteObject(req.body);
+    int error_code = user_manager_.GetUser(username)->WriteObject(req.body);
     sl.unlock();
 
-    if (success == true)
+    if (error_code == ErrorCodes::SUCCESS)
       resp.status = 200;
     else
       resp.status = 401;
+    resp.set_content(std::to_string(error_code), "text/txt");
   }
 }
 
@@ -357,26 +357,28 @@ void ServerFrame::Backups(const Request& req, Response& resp, std::string action
   catch (std::exception& e) {
     std::cout << "Parsing values from request failed: " << e.what() << std::endl;
     resp.status = 401;
+    resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
     return;
   }
 
   sl.lock();
   //Call matching function.
-  bool success = false;
+  int error_code = false;
   if (action == "create")
-    success = user_manager_.GetUser(username)->CreateBackup(user, world);
+    error_code = user_manager_.GetUser(username)->CreateBackup(user, world);
   else if (action == "restore") 
-    success = user_manager_.GetUser(username)->RestoreBackup(user, backup);
+    error_code = user_manager_.GetUser(username)->RestoreBackup(user, backup);
   else if (action == "delete")
-    success = user_manager_.GetUser(username)->DeleteBackup(user, backup);
+    error_code = user_manager_.GetUser(username)->DeleteBackup(user, backup);
   else
-    success = false;
+    error_code = false;
   sl.unlock();
 
-  if (success == true)
+  if (error_code== true)
     resp.status = 200;
   else
     resp.status = 401;
+  resp.set_content(std::to_string(error_code), "text/txt");
 }
 
 bool ServerFrame::IsRunning() {

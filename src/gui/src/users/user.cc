@@ -2,7 +2,9 @@
  * @author fux
 */
 #include "user.h"
+#include "util//error_codes.h"
 #include "util/func.h"
+
 #include <exception>
 #include <filesystem>
 
@@ -155,7 +157,6 @@ std::string User::GetCategory(std::string path, std::string world,
 
 std::string User::GetObjects(std::string path, std::string world, std::string 
     category, std::string sub) {
-  std::cout << "GetObjects" << std::endl;
   //Create path and trying to load into json 
   path = path_ + path + ".json";
   nlohmann::json objects;
@@ -271,69 +272,61 @@ std::string User::GetObject(std::string path, std::string world, std::string
 // ** Functions ** //
 
 
-std::string User::CreateNewWorld(std::string name) {
+int User::CreateNewWorld(std::string name) {
 
   //Check for "/" which is considered bad format!
   if (name.find("/") != std::string::npos)
-    return "Wrong format.";
+    return ErrorCodes::WRONG_FORMAT;
 
   //Create path to new world and check whether world already exists.
   std::string path = path_ + "/" + username_ + "/files/" + name;
   if (func::demo_exists(path) == true)
-    return "World already exists.";
+    return ErrorCodes::ALREADY_EXISTS;
 
   //Try creating world and all categories.
   try {
     //Create directory for world
     fs::create_directories(path);
-    std::cout << "Created directory." << std::endl;
 
     //Create all subcategories.
-    for (const auto& category : categories_) {
-      std::cout << "Creating: " << path << "/" << category << std::endl;
+    for (const auto& category : categories_)
       fs::create_directory(path + "/" + category);
-    }
 
-    //Copy default config to world.
+    //Copy default config, room and player-file
     fs::copy("../../data/default_jsons/config.json", path); 
-
-    //Copy default room to world.
     fs::copy("../../data/default_jsons/test.json", path + "/rooms/"); 
-
-    //Copy default player-file to world.
     fs::copy("../../data/default_jsons/players.json", path + "/players/"); 
   }
 
   //Return error code and delete all already created directories.
   catch (std::exception& e) {
-    std::cout << "Error creating new world or subdirectories: ";
-    std::cout << e.what() << std::endl;
+    std::cout << "Error creating new world or subdirectories: "
+      << e.what() << std::endl;
     fs::remove_all(path);
-    return "Error creating world.";
+    return ErrorCodes::FAILED; 
   }
-  return "";
+  return ErrorCodes::SUCCESS;
 }
 
-std::string User::AddFile(std::string path, std::string name) {
+int User::AddFile(std::string path, std::string name) {
   path = path_ + path;
   //Check if path exists
   if (!func::demo_exists(path)) 
-    return "Path not found.";
+    return ErrorCodes::PATH_NOT_FOUND;
   //Check for wrong format
   if (name.find("/") != std::string::npos)
-    return "Wrong format.";
+    return ErrorCodes::WRONG_FORMAT;
   //Replace space by underscore and check if file already exists.
   std::replace(name.begin(), name.end(), ' ', '_');
   if (func::demo_exists(path + "/" + name + ".json"))
-    return "File already exists.";
+    return ErrorCodes::ALREADY_EXISTS;
 
   //Get Category from string
   std::string category = path.substr(path.rfind("/") + 1);
-  std::cout << category << std::endl;
 
   //Check for not supported categories
   if (category == "players")
-    return "Not supported category.";
+    return ErrorCodes::NOT_ALLOWED;
 
   nlohmann::json file;
   if (category == "defaultDialogs")
@@ -342,36 +335,35 @@ std::string User::AddFile(std::string path, std::string name) {
     file = nlohmann::json::object();
   
   try {
-    std::cout << "Writing: " << path + "/" + name + ".json" << std::endl;
     std::ofstream write(path + "/" + name + ".json");
     write << file;
     write.close();
   }
   catch (std::exception& e) {
     std::cout << "Adding new file failed!: " << e.what() << std::endl;
-    return "Adding file failed!";
+    return ErrorCodes::FAILED;
   }
-  return "";
+  return ErrorCodes::SUCCESS;
 }
 
-std::string User::AddNewObject(std::string path, std::string id) {
+int User::AddNewObject(std::string path, std::string id) {
   std::string full_path = path_ + path + ".json";
   std::cout << "AddNewObject: " << path << std::endl;
   //Check if path exists
   if (!func::demo_exists(full_path)) 
-    return "Path not found.";
+    return ErrorCodes::PATH_NOT_FOUND;
   //Check for wrong format
   if (id.find("/") != std::string::npos)
-    return "Wrong format.";
+    return ErrorCodes::NOT_ALLOWED;
   //Replace space by underscore and check if file already exists.
   std::replace(id.begin(), id.end(), ' ', '_');
   if (func::demo_exists(full_path + "/" + id + ".json"))
-    return "Object already exists.";
+    return ErrorCodes::ALREADY_EXISTS;
 
   //Get Category
   std::vector<std::string> elements = func::Split(path, "/");
   if (elements.size() < 2)
-    return "Category could not be parsed.";
+    return ErrorCodes::WRONG_FORMAT;
   std::string category = elements[elements.size()-2];
   
   //Load empty object of category
@@ -383,18 +375,11 @@ std::string User::AddNewObject(std::string path, std::string id) {
     request["json"] = nlohmann::json::array();
   else 
     request["json"] = nlohmann::json{{"id", id}};
-  try {
-    if (WriteObject(request.dump()) == false)
-      return "Problem with writing object.";
-  }
-  catch (std::exception& e) {
-    std::cout << "Problem writing new object: " << e.what() << std::endl;
-    return "Problem writing new object.";
-  }
-  return "";
+
+  return WriteObject(request.dump());
 }
 
-bool User::WriteObject(std::string request, bool force) {
+int User::WriteObject(std::string request, bool force) {
   //Get values from request
   nlohmann::json json;
   std::string path;
@@ -407,44 +392,38 @@ bool User::WriteObject(std::string request, bool force) {
   }
   catch (std::exception& e) {
     std::cout << "WriteObject: Problem parsing request: " << e.what() << "\n";
-    return false;
+    return ErrorCodes::WRONG_FORMAT;
   }
-  std::cout << "Reading object." << std::endl;
 
   //Parse path, read json and create doublicate (backup)
   std::string path_to_object = path_ + path.substr(0, path.rfind("/")) + ".json";
   nlohmann::json object;
   if (!func::LoadJsonFromDisc(path_to_object, object))
-    return false;
+    return ErrorCodes::PATH_NOT_FOUND;
   nlohmann::json obj_backup = object;
-  std::cout << "Adding to object." << std::endl;
   
   //Modify and write object.
   if (json.is_array() == true && object.is_array() == true)
     object.push_back(json);
   else if (json.is_array() == true)
     object[std::to_string(object.size())] = json;
-  else {
-    std::cout << "Adding now!" << std::endl;
+  else 
     object[json["id"].get<std::string>()] = json;
-  }
 
   std::cout << "writing data." << std::endl;
   std::ofstream write(path_to_object);
   write << object;
   write.close();
 
-  std::cout << "checking game." << std::endl;
   //Check if game is still running and return true if yes, are forcing is true
   if (CheckGameRunning(path) == true || force == true)
-    return true;
+    return ErrorCodes::SUCCESS;
 
-  std::cout << "reading data." << std::endl;
   //If not and forcing to write is set to false
   std::ofstream write_backup(path_to_object);
   write_backup << obj_backup;
   write_backup.close();
-  return false;
+  return ErrorCodes::GAME_NOT_RUNNING;
 }
 
 bool User::CheckAccessToLocations(std::string path) { 
@@ -480,10 +459,10 @@ nlohmann::json User::ConstructJson() const {
 
 
 
-bool User::CreateBackup(std::string user, std::string world) {
+int User::CreateBackup(std::string user, std::string world) {
   std::string path = path_ + "/" + user + "/files/" + world;
   
-  if (!func::demo_exists(path)) return false;
+  if (!func::demo_exists(path)) return ErrorCodes::PATH_NOT_FOUND;
 
   //Create backup name ([word]_[YYYY-mm-dd_HH-MM-ss])
   time_t now;
@@ -499,13 +478,13 @@ bool User::CreateBackup(std::string user, std::string world) {
   }
   catch (std::exception& e) { 
     std::cout << "Copying failed: " << e.what() << std::endl; 
-    return false;
+    return ErrorCodes::FAILED;
   }
-  return true;
+  return ErrorCodes::SUCCESS;
 }
 
 
-bool User::RestoreBackup(std::string user, std::string backup) {
+int User::RestoreBackup(std::string user, std::string backup) {
   //Extract world from backup
   std::string world = backup.substr(0, backup.rfind("_"));
   world = world.substr(0, world.rfind("_"));
@@ -518,7 +497,7 @@ bool User::RestoreBackup(std::string user, std::string backup) {
   if (!func::demo_exists(path) || !func::demo_exists(path_to_world)) {
     std::cout << "Backup " << path << " doesn't exist! Or ";
     std::cout << "World " << path_to_world << " doesn't exist!" << std::endl;
-    return false;
+    return ErrorCodes::PATH_NOT_FOUND;
   }
 
   //Restore backup.
@@ -530,23 +509,23 @@ bool User::RestoreBackup(std::string user, std::string backup) {
   }
   catch (std::exception& e) { 
     std::cout << "Copying failed: " << e.what() << std::endl; 
-    return false;
+    return ErrorCodes::FAILED;
   }
-  return true;
+  return ErrorCodes::SUCCESS;
 }
 
-bool User::DeleteBackup(std::string user, std::string backup) {
+int User::DeleteBackup(std::string user, std::string backup) {
 
   //Build path, then check if path exists.
   std::string path = path_+"/"+user+"/backups/"+backup;
   if (!func::demo_exists(path)) {
     std::cout << "Backup " << path << " does not exist!" << std::endl;
-    return false;
+    return ErrorCodes::PATH_NOT_FOUND;
   }
 
   //Remove backup.
   fs::remove_all(path);
-  return true;
+  return ErrorCodes::SUCCESS;
 }
 
 bool User::CheckGameRunning(std::string path) {
