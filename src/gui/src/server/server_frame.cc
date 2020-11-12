@@ -332,7 +332,6 @@ void ServerFrame::WriteObject(const Request& req, Response& resp) {
     resp.status = 302;
     resp.set_header("Location", "/login");
   }
-  //TODO (georgbuechner): Add Access-Checkup!
   else {
     sl.lock();
     //Call matching function.
