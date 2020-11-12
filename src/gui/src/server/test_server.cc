@@ -233,6 +233,17 @@ TEST_CASE("Server is working as expected", "[server]") {
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
+          //Get backup from folder
+          std::string backup = "";
+          for (auto p : fs::directory_iterator("../../data/users/test/backups/")) {
+            backup = p.path();
+            if (backup.find("Test_World") != std::string::npos) break;
+          }
+          backup = backup.substr(backup.rfind("/")+1);
+          resp = cl.Get("/test/backups/new_world", headers_1);
+          //Check that created backup can be found on backup page
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body.find(backup) != std::string::npos);
           
           //Modify objects and test if this works
           nlohmann::json test_room_fail;
@@ -251,13 +262,6 @@ TEST_CASE("Server is working as expected", "[server]") {
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
-          //Get backup from folder
-          std::string backup = "";
-          for (auto p : fs::directory_iterator("../../data/users/test/backups/")) {
-            backup = p.path();
-            if (backup.find("Test_World") != std::string::npos) break;
-          }
-          backup = backup.substr(backup.rfind("/"));
           //Restore backup
           nlohmann::json restore_backup;
           restore_backup["user"] = "test";
@@ -284,6 +288,11 @@ TEST_CASE("Server is working as expected", "[server]") {
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
+          //Check that deleted backup can't be found on backup page
+          resp = cl.Get("/test/backups/new_world", headers_1);
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body.find(backup) == std::string::npos);
+          
 
           // *** ACCESS TESTS *** //
           //
