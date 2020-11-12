@@ -209,14 +209,33 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   //Check that game is still running
   REQUIRE(system(command.c_str()) == 0);
 
+  //*** Test accesssing and granting access *** //
 
   //create new user
   user_manager.DoRegistration("test2", "password1234", "password1234");
-  User* user2 = user_manager.GetUser("test");
+  User* user2 = user_manager.GetUser("test2");
   REQUIRE(user2 != nullptr);
+
+  //Do access-tests for user: "test"
+  REQUIRE(user->CheckAccessToLocations("/test/files/Test_World") == true);
+  REQUIRE(user->CheckAccessToLocations("/test/files/Test_World/attacks") == true);
+  REQUIRE(user->CheckAccessToLocations("/test/backups/Test_World/") == true);
+
+  //Do access-tests for user: "test2"
+  REQUIRE(user2->CheckAccessToLocations("/test/files/Test_World") == false);
+  REQUIRE(user2->CheckAccessToLocations("/test/files/Test_World/attacks") == false);
+  REQUIRE(user2->CheckAccessToLocations("/test/backups/Test_World/") == false);
 
   REQUIRE(user_manager.GrantAccessTo("test", "test3", "Test_World") == ErrorCodes::NO_USER);
   REQUIRE(user_manager.GrantAccessTo("test", "test2", "World") == ErrorCodes::NO_WORLD);
   REQUIRE(user_manager.GrantAccessTo("test2", "test2", "Test_World") == ErrorCodes::NO_WORLD);
   REQUIRE(user_manager.GrantAccessTo("test", "test2", "Test_World") == ErrorCodes::SUCCESS);
+  
+  //Do access-tests for user: "test2" after granting access
+  REQUIRE(user2->CheckAccessToLocations("/test/files/Test_World") == true);
+  REQUIRE(user2->CheckAccessToLocations("/test/files/Test_World/attacks") == true);
+  REQUIRE(user2->CheckAccessToLocations("/test/backups/Test_World/") == true);
+  REQUIRE(user2->CreateBackup("test", "Test_World") == ErrorCodes::SUCCESS);
+  REQUIRE(user2->RestoreBackup("test", "XXBACKUPYY") == ErrorCodes::ACCESS_DENIED);
+  REQUIRE(user2->DeleteBackup("test", "XXBACKUPYY") == ErrorCodes::ACCESS_DENIED);
 }

@@ -62,6 +62,7 @@ void User::set_password(std::string password) {
 
 void User::AddLocation(std::string user, std::string world) {
   locations_.push_back(user+"/files/"+world);
+  locations_.push_back(user+"/backups/"+world);
 }
 
 // ** Serve an generate pages ** //
@@ -428,14 +429,7 @@ int User::WriteObject(std::string request) {
   return ErrorCodes::GAME_NOT_RUNNING;
 }
 
-bool User::CheckAccessToLocations(std::string path) { 
-  std::cout << "CheckAccessToLocations: " << path << std::endl; 
-  for (const auto& it : locations_) {
-    std::cout << "Location: " << it << std::endl;
-    if (path.find("/"+it) == 0) return true;
-  }
-  return false; 
-}
+
 
 void User::SafeUser() const {
   try { 
@@ -491,6 +485,8 @@ int User::CreateBackup(std::string user, std::string world) {
 
 
 int User::RestoreBackup(std::string user, std::string backup) {
+  if (user != username_) return ErrorCodes::ACCESS_DENIED;
+
   //Extract world from backup
   std::string world = backup.substr(0, backup.rfind("_"));
   world = world.substr(0, world.rfind("_"));
@@ -521,6 +517,7 @@ int User::RestoreBackup(std::string user, std::string backup) {
 }
 
 int User::DeleteBackup(std::string user, std::string backup) {
+  if (user != username_) return ErrorCodes::ACCESS_DENIED;
 
   //Build path, then check if path exists.
   std::string path = path_+"/"+user+"/backups/"+backup;
@@ -532,6 +529,15 @@ int User::DeleteBackup(std::string user, std::string backup) {
   //Remove backup.
   fs::remove_all(path);
   return ErrorCodes::SUCCESS;
+}
+
+bool User::CheckAccessToLocations(std::string path) { 
+  std::cout << "CheckAccessToLocations: " << path << std::endl; 
+  for (const auto& it : locations_) {
+    std::cout << "Location: " << it << std::endl;
+    if (path.find("/"+it) == 0) return true;
+  }
+  return false; 
 }
 
 bool User::CheckGameRunning(std::string path) {
