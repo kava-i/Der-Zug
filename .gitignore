@@ -1,8 +1,12 @@
 bin/*
 *.idx
+build*
 src/textadventure/build/*
 src/gui/build/*
 src/gui/webserver/builder_tests.o
 src/gui/webserver/game_builder.o
-src/data/users/test_manager
+src/data/users/*
+!src/data/users/fux/*
 src/gui/compile_commands.json
+*EIG.txt
+*dictionary.txt
