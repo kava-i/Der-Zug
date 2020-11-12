@@ -1,0 +1,40 @@
+{
+  "START": {
+    "id": "START",
+    "text": [
+      {
+        "speaker": "YOU",
+        "text": "Hey"
+      },
+      {
+        "speaker": "TAXIFAHRER ",
+        "text": "[Zuckt mit den Schultern]"
+      }
+    ],
+    "options": [
+      {
+        "id": 1,
+        "text": "Danke nochmal, dass Sie mich um die Uhrzeit noch mitnehmen. ",
+        "to": "ende"
+      },
+      {
+        "id": 2,
+        "text": "[Dialog beenden]",
+        "to": "ende"
+      }
+    ],
+    "actions": "",
+    "events": ""
+  },
+  "ende": {
+    "id": "ende",
+    "text": [
+      {
+        "speaker": "TAXIFAHRER",
+        "text": "[starrt nach vorn und räuspert sich.]"
+      }
+    ],
+    "actions": "",
+    "events": ""
+  }
+}

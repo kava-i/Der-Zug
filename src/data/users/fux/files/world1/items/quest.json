@@ -1,0 +1,28 @@
+{
+  "ticket": {
+    "name": "Ticket",
+    "id": "ticket",
+    "category": "quest",
+    "type": "ticket",
+    "value": 20,
+    "description": [
+      {
+        "speaker": "PERZEPTION",
+        "text": "Zugticket nach Moskau."
+      }
+    ]
+  },
+  "gold-münze": {
+    "name": "Gold Münze",
+    "id": "gold-münze",
+    "category": "others",
+    "type": "valueble",
+    "value": 10,
+    "description": [
+      {
+        "speaker": "desc",
+        "text": "Eine glänzende Goldmünze"
+      }
+    ]
+  }
+}

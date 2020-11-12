@@ -1,0 +1,10 @@
+---
+
+einleitung_taxi:
+    name: Taxi
+    id: einleitung_taxi
+    description: 
+    - {text: "Du bist in einem Taxi. Es ist beengen und du würdest ihm gerne entkommen."}
+    characters:
+    - [taxifahrer, {}]
+  
