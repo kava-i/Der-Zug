@@ -83,7 +83,17 @@ class UserManager {
      * @return username, "$no_cookie" or "$no_user"
      */
     std::string GetUserFromCookie(const char* ptr) const;
-    
+
+    /**
+     * Grant other user acces to a own world.
+     * @param[in] user1 (user which gives access world to)
+     * @param[in] user2 (user to give access to)
+     * @param[in] world (world which to grant access to)
+     * @return error_code
+     */
+    int GrantAccessTo(std::string user1, std::string user2, std::string world);
+
+   
   private:
     std::map<std::string, User*> users_;  ///< Map of all users.
     mutable std::shared_mutex shared_mutex_users_;

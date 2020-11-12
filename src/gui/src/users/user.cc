@@ -60,6 +60,10 @@ void User::set_password(std::string password) {
   password_ = password;
 }
 
+void User::AddLocation(std::string user, std::string world) {
+  locations_.push_back(user+"/files/"+world);
+}
+
 // ** Serve an generate pages ** //
 
 std::string User::GetOverview() {

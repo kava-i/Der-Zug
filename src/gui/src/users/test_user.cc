@@ -17,8 +17,10 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   
   //If already exists, delete test user.
   std::string path_to_test_user = "../../data/users/test";
+  std::string path_to_test_user2 = "../../data/users/test2";
   try {
     std::filesystem::remove_all (path_to_test_user);
+    std::filesystem::remove_all (path_to_test_user2);
   }
   catch (...) {
     std::cout << path_to_test_user << " not found!" << std::endl;
@@ -202,4 +204,15 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->WriteObject(write_room_good.dump()) == ErrorCodes::SUCCESS);
   //Check that game is still running
   REQUIRE(system(command.c_str()) == 0);
+
+
+  //create new user
+  user_manager.DoRegistration("test2", "password1234", "password1234");
+  User* user2 = user_manager.GetUser("test");
+  REQUIRE(user2 != nullptr);
+
+  REQUIRE(user_manager.GrantAccessTo("test", "test3", "Test_World") == ErrorCodes::NO_USER);
+  REQUIRE(user_manager.GrantAccessTo("test", "test2", "World") == ErrorCodes::NO_WORLD);
+  REQUIRE(user_manager.GrantAccessTo("test2", "test2", "Test_World") == ErrorCodes::NO_WORLD);
+  REQUIRE(user_manager.GrantAccessTo("test", "test2", "Test_World") == ErrorCodes::SUCCESS);
 }

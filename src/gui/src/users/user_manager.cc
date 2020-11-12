@@ -4,7 +4,11 @@
 
 #include "user_manager.h"
 #include "util/func.h"
+#include "util/error_codes.h"
+
 #include <exception>
+#include <iostream>
+
 namespace fs = std::filesystem;
 
 UserManager::UserManager(std::string main_path, std::vector<std::string> cats) 
@@ -141,6 +145,27 @@ bool UserManager::CheckPasswordStrength(std::string password) const {
       return true;
   }
   return false;
+}
+
+int UserManager::GrantAccessTo(std::string user1, std::string user2, std::string world) {
+  //Check is both given users exist
+  if (users_.count(user1) == 0 || users_.count(user2) == 0)
+    return ErrorCodes::NO_USER;
+
+  //Check if user who tries to grant acces has access himself.
+
+  //Check if world exists.
+  if (!func::demo_exists(path_+"/"+user1+"/files/"+world))
+    return ErrorCodes::NO_WORLD;
+
+  try {
+    users_[user2]->AddLocation(user1, world);
+  }
+  catch(std::exception& e) {
+    std::cout << "GrantAccessTo failed:" << e.what() << std::endl;
+    return ErrorCodes::FAILED;
+  }
+  return ErrorCodes::SUCCESS;
 }
 
 std::string UserManager::GenerateCookie(std::string username) {

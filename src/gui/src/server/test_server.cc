@@ -77,18 +77,18 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->get_header_value("Set-Cookie").length() > 32);
           std::string cookie = resp->get_header_value("Set-Cookie");
           cookie = cookie.substr(0, cookie.find(";"));
-          httplib::Headers headers = { { "Cookie", cookie } };
+          httplib::Headers headers_1 = { { "Cookie", cookie } };
 
-          resp = cl.Get("/overview", headers);
+          resp = cl.Get("/overview", headers_1);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
 
           //Test deleting user
-          resp = cl.Post("/api/user_delete", headers, "",
+          resp = cl.Post("/api/user_delete", headers_1, "",
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
           REQUIRE(func::demo_exists("../../data/users/test") == false);
-          resp = cl.Get("/overview", headers);
+          resp = cl.Get("/overview", headers_1);
           REQUIRE(resp->status == 302);
         }
 
@@ -106,18 +106,18 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->get_header_value("Set-Cookie").length() > 32);
           std::string cookie = resp->get_header_value("Set-Cookie");
           cookie = cookie.substr(0, cookie.find(";"));
-          httplib::Headers headers = { { "Cookie", cookie } };
+          httplib::Headers headers_1 = { { "Cookie", cookie } };
           //Check that overview page can be accessed
-          resp = cl.Get("/overview", headers);
+          resp = cl.Get("/overview", headers_1);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
 
-          resp = cl.Post("/api/user_logout", headers, request.dump(), 
+          resp = cl.Post("/api/user_logout", headers_1, request.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
 
           //Now, overview page should not be accessable anymore
-          resp = cl.Get("/overview", headers);
+          resp = cl.Get("/overview", headers_1);
           REQUIRE(resp->status == 302);
 
           //Log user in.
@@ -131,8 +131,8 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->get_header_value("Set-Cookie").length() > 32);
           cookie = resp->get_header_value("Set-Cookie");
           cookie = cookie.substr(0, cookie.find(";"));
-          headers = { { "Cookie", cookie } };
-          resp = cl.Get("/overview", headers);
+          headers_1 = { { "Cookie", cookie } };
+          resp = cl.Get("/overview", headers_1);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
         }
@@ -151,19 +151,19 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->get_header_value("Set-Cookie").length() > 32);
           std::string cookie = resp->get_header_value("Set-Cookie");
           cookie = cookie.substr(0, cookie.find(";"));
-          httplib::Headers headers = { { "Cookie", cookie } };
+          httplib::Headers headers_1 = { { "Cookie", cookie } };
           //Check that overview page can be accessed
-          resp = cl.Get("/overview", headers);
+          resp = cl.Get("/overview", headers_1);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
 
           //Create a new world
           nlohmann::json new_world;
           new_world["world"] = "new_world";
-          resp = cl.Post("/api/add_world", headers, new_world.dump(), 
+          resp = cl.Post("/api/add_world", headers_1, new_world.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
-          resp = cl.Get("/overview", headers);
+          resp = cl.Get("/overview", headers_1);
           REQUIRE(resp->body.find("new_world") != std::string::npos);
           
           //Check that newly build world is starting and basic command are running.
@@ -174,20 +174,20 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(system(command.c_str()) == 0);
 
           //Check accessing categories-page
-          resp = cl.Get("/test/files/new_world", headers);
+          resp = cl.Get("/test/files/new_world", headers_1);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body.find("config") != std::string::npos);
           REQUIRE(resp->body.find("attacks") != std::string::npos);
 
           //Check accessing categories
-          resp = cl.Get("/test/files/new_world/config", headers);
+          resp = cl.Get("/test/files/new_world/config", headers_1);
           REQUIRE(resp->status == 200);
-          resp = cl.Get("/test/files/new_world/rooms", headers);
+          resp = cl.Get("/test/files/new_world/rooms", headers_1);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body.find("test") != std::string::npos);
 
           //The test-room-file should already exist
-          resp = cl.Get("/test/files/new_world/rooms/test", headers);
+          resp = cl.Get("/test/files/new_world/rooms/test", headers_1);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body.find("test_room") != std::string::npos);
 
@@ -195,14 +195,14 @@ TEST_CASE("Server is working as expected", "[server]") {
           nlohmann::json new_sub;
           new_sub["subcategory"] = "test_attacks";
           new_sub["path"] = "/test/files/new_world/attacks";
-          resp = cl.Post("/api/add_subcategory", headers, new_sub.dump(), 
+          resp = cl.Post("/api/add_subcategory", headers_1, new_sub.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
           //test_attacks can be found on page
-          resp = cl.Get("/test/files/new_world/attacks", headers);
+          resp = cl.Get("/test/files/new_world/attacks", headers_1);
           REQUIRE(resp->body.find("test_attacks") != std::string::npos);
           //test attacks can be found
-          resp = cl.Get("/test/files/new_world/attacks/test_attacks", headers);
+          resp = cl.Get("/test/files/new_world/attacks/test_attacks", headers_1);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
 
@@ -213,15 +213,15 @@ TEST_CASE("Server is working as expected", "[server]") {
           nlohmann::json new_obj;
           new_obj["name"] = "test_attack";
           new_obj["path"] = "/test/files/new_world/attacks/test_attacks";
-          resp = cl.Post("/api/add_object", headers, new_obj.dump(), 
+          resp = cl.Post("/api/add_object", headers_1, new_obj.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
           //test_attacks can be found on page
-          resp = cl.Get("/test/files/new_world/attacks/test_attacks", headers);
+          resp = cl.Get("/test/files/new_world/attacks/test_attacks", headers_1);
           REQUIRE(resp->body.find("test_attack") != std::string::npos);
           //test attacks can be found
           resp = cl.Get("/test/files/new_world/attacks/test_attacks/test_attack", 
-              headers);
+              headers_1);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
 
@@ -229,7 +229,7 @@ TEST_CASE("Server is working as expected", "[server]") {
           nlohmann::json create_backup;
           create_backup["world"] = "new_world";
           create_backup["user"] = "test";
-          resp = cl.Post("/api/create_backup", headers, create_backup.dump(), 
+          resp = cl.Post("/api/create_backup", headers_1, create_backup.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
@@ -242,12 +242,12 @@ TEST_CASE("Server is working as expected", "[server]") {
           write_room_bad["path"] = "/test/files/new_world/rooms/test/test_room";
           write_room_bad["json"] = test_room_fail;
           //Write object.
-          resp = cl.Post("/api/write_object", headers, write_room_bad.dump(), 
+          resp = cl.Post("/api/write_object", headers_1, write_room_bad.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 401);
           REQUIRE(resp->body == std::to_string(ErrorCodes::GAME_NOT_RUNNING));
           write_room_bad["force"] = true;
-          resp = cl.Post("/api/write_object", headers, write_room_bad.dump(), 
+          resp = cl.Post("/api/write_object", headers_1, write_room_bad.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
@@ -262,7 +262,7 @@ TEST_CASE("Server is working as expected", "[server]") {
           nlohmann::json restore_backup;
           restore_backup["user"] = "test";
           restore_backup["backup"] = backup;
-          resp = cl.Post("/api/restore_backup", headers, restore_backup.dump(), 
+          resp = cl.Post("/api/restore_backup", headers_1, restore_backup.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
@@ -272,7 +272,7 @@ TEST_CASE("Server is working as expected", "[server]") {
           nlohmann::json write_room_good;
           write_room_good["path"] = "/test/files/new_world/rooms/test/test_room";
           write_room_good["json"] = test_room;
-          resp = cl.Post("/api/write_object", headers, write_room_good.dump(), 
+          resp = cl.Post("/api/write_object", headers_1, write_room_good.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
@@ -280,7 +280,7 @@ TEST_CASE("Server is working as expected", "[server]") {
           nlohmann::json delete_backup;
           delete_backup["user"] = "test";
           delete_backup["backup"] = backup;
-          resp = cl.Post("/api/delete_backup", headers, delete_backup.dump(),
+          resp = cl.Post("/api/delete_backup", headers_1, delete_backup.dump(),
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
@@ -301,22 +301,33 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->get_header_value("Set-Cookie").length() > 32);
           cookie = resp->get_header_value("Set-Cookie");
           cookie = cookie.substr(0, cookie.find(";"));
-          headers = { { "Cookie", cookie } };
+          httplib::Headers headers_2 = { { "Cookie", cookie } };
           //Check that overview page can be accessed
-          resp = cl.Get("/overview", headers);
+          resp = cl.Get("/overview", headers_2);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
 
-          resp = cl.Get("/test/files/new_world", headers);
+          resp = cl.Get("/test/files/new_world", headers_2);
           REQUIRE(resp->status == 302);
-          resp = cl.Post("/api/add_object", headers, new_obj.dump(), 
+          resp = cl.Post("/api/add_object", headers_2, new_obj.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->body == std::to_string(ErrorCodes::ACCESS_DENIED));
-          resp = cl.Post("/api/add_subcategory", headers, new_sub.dump(), 
+          resp = cl.Post("/api/add_subcategory", headers_2, new_sub.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->body == std::to_string(ErrorCodes::ACCESS_DENIED));
 
-          resp = cl.Post("/api/write_object", headers, write_room_good.dump(), 
+          resp = cl.Post("/api/write_object", headers_2, write_room_good.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->body == std::to_string(ErrorCodes::ACCESS_DENIED));
+
+          //Check that not backup-operations can be done.
+          resp = cl.Post("/api/create_backup", headers_2, create_backup.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->body == std::to_string(ErrorCodes::ACCESS_DENIED));
+          resp = cl.Post("/api/restore_backup", headers_2, restore_backup.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->body == std::to_string(ErrorCodes::ACCESS_DENIED));
+          resp = cl.Post("/api/delete_backup", headers_2, delete_backup.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->body == std::to_string(ErrorCodes::ACCESS_DENIED));
         }

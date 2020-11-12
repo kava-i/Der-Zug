@@ -360,12 +360,13 @@ void ServerFrame::Backups(const Request& req, Response& resp, std::string action
   }
 
   //Parse user, backup and world from request
-  std::string user, world, backup;
+  std::string user, world, backup, path;
   try {
     nlohmann::json json = nlohmann::json::parse(req.body);
     user = json["user"];
     world = json.value("world", "");
     backup = json.value("backup", "");
+    path = "/"+user+"/files/"+json.value("world", json.value("backup", "!!!!!"));
   } 
   catch (std::exception& e) {
     std::cout << "Parsing values from request failed: " << e.what() << std::endl;
@@ -377,7 +378,9 @@ void ServerFrame::Backups(const Request& req, Response& resp, std::string action
   sl.lock();
   //Call matching function.
   int error_code = false;
-  if (action == "create")
+  if (user_manager_.GetUser(username)->CheckAccessToLocations(path) == false)
+    error_code = ErrorCodes::ACCESS_DENIED;
+  else if (action == "create")
     error_code = user_manager_.GetUser(username)->CreateBackup(user, world);
   else if (action == "restore") 
     error_code = user_manager_.GetUser(username)->RestoreBackup(user, backup);

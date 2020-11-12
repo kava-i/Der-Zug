@@ -52,6 +52,15 @@ class User {
     // ** setter ** //
     void set_password(std::string password);
 
+    /**
+     * Add a new location.
+     * Adds a new location (a new world) to list of locations by adding path:
+     * "[new_username]/files/[new_world]" to locations.
+     * @param[in] user (user who granted access)
+     * @param[in] world (new world which is added)
+     */
+    void AddLocation(std::string user, std::string world);
+
     // ** Serve an generate pages ** //
     
     /**
@@ -168,7 +177,7 @@ class User {
      */
     int DeleteBackup(std::string user, std::string backup);
 
-
+    
   private:
     const std::string username_;  ///< username (should be unique!)
     std::string password_;  ///< password 

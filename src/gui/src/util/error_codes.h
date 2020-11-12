@@ -9,7 +9,9 @@ enum ErrorCodes
   PATH_NOT_FOUND = 3,
   NOT_ALLOWED = 4,
   ALREADY_EXISTS = 5,
-  FAILED = 5,
+  FAILED = 6,
+  NO_USER = 6,
+  NO_WORLD = 6,
   GAME_NOT_RUNNING = 9
 };
 
