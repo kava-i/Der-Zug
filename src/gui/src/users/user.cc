@@ -67,7 +67,6 @@ void User::AddLocation(std::string user, std::string world) {
 // ** Serve an generate pages ** //
 
 std::string User::GetOverview() {
-  std::cout << "GetOverview" << std::endl;
   //Create initial json with username.
   nlohmann::json worlds = nlohmann::json({{"username", username_}});
 
@@ -88,7 +87,6 @@ std::string User::GetOverview() {
 }
 
 std::string User::GetWorld(std::string path, std::string world) {
-  std::cout << "GetWorld" << std::endl;
   //Check if path to given world can be found
   if (!func::demo_exists(path_+path))
     return "";
@@ -107,11 +105,10 @@ std::string User::GetWorld(std::string path, std::string world) {
   return env.render(temp, j);
 }
 
-std::string User::GetBackups(std::string world) {
-  std::cout << "GetBackups" << std::endl;
+std::string User::GetBackups(std::string user, std::string world) {
   //Get all backups for this world.
   std::vector<std::string> backups;
-  for (auto& p  : fs::directory_iterator(path_ + "/backups")) {
+  for (auto& p  : fs::directory_iterator(path_+"/"+user+"/backups")) {
     std::string backup = p.path().filename();
     if (backup.find(world) == 0) {
       backups.push_back(backup);
@@ -128,8 +125,6 @@ std::string User::GetBackups(std::string world) {
 
 std::string User::GetCategory(std::string path, std::string world, 
     std::string category) {
-  std::cout << "GetCategory" << std::endl;
-  
   //Create path, inja Environment and initial json.
   path = path_ + path;
   inja::Environment env;
@@ -353,7 +348,6 @@ int User::AddFile(std::string path, std::string name) {
 
 int User::AddNewObject(std::string path, std::string id) {
   std::string full_path = path_ + path + ".json";
-  std::cout << "AddNewObject: " << path << std::endl;
   //Check if path exists
   if (!func::demo_exists(full_path)) 
     return ErrorCodes::PATH_NOT_FOUND;
@@ -394,7 +388,6 @@ int User::WriteObject(std::string request) {
     json = j["json"];
     path = j["path"];
     force = j.value("force", false);
-    std::cout << "Json:"  << json << std::endl; 
   }
   catch (std::exception& e) {
     std::cout << "WriteObject: Problem parsing request: " << e.what() << "\n";
@@ -542,7 +535,6 @@ int User::DeleteBackup(std::string user, std::string backup) {
 }
 
 bool User::CheckGameRunning(std::string path) {
-  std::cout << "!!! CheckGameRunning !!!" << std::endl;
 
   //Try to extract information (user and world, complete path)
   std::vector<std::string> vec = func::Split(path, "/");

@@ -87,8 +87,11 @@ class User {
     /**
      * Get Overview of a backups. 
      * (f.e. world1/rooms = trainstation, hospital...)
+     * @param[in] user
+     * @param[in] world
+     * @return overview page of all backups
      */
-    std::string GetBackups(std::string world);
+    std::string GetBackups(std::string user, std::string world);
 
     /**
      * Get Overview of a SubCategory.

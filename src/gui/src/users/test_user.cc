@@ -164,7 +164,16 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
 
   //Test Creating backups
   REQUIRE(user->CreateBackup("test", "Test_World") == ErrorCodes::SUCCESS);
-    
+  //Get backup from folder
+  std::string backup = "";
+  for (auto p : fs::directory_iterator(full_path+"/test/backups/")) {
+    backup = p.path();
+    if (backup.find("Test_World") != std::string::npos) break;
+  }
+  backup = backup.substr(backup.rfind("/")+1);
+  //Test if backup can be found on backup page
+  REQUIRE(user->GetBackups("test", "Test_World").find(backup) != std::string::npos);
+
   //Modify objects and test if this works
   nlohmann::json test_room_fail;
   REQUIRE(func::LoadJsonFromDisc("../../data/default_jsons/test_room_fail.json", 
@@ -180,20 +189,15 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->WriteObject(write_room_bad.dump()) == ErrorCodes::SUCCESS);
   //Double check by testing whether game now does not start
   REQUIRE(system(command.c_str()) != 0);
-  //Get backup from folder
-  std::string backup = "";
-  for (auto p : fs::directory_iterator(full_path+"/test/backups/")) {
-    backup = p.path();
-    if (backup.find("Test_World") != std::string::npos) break;
-  }
-  backup = backup.substr(backup.rfind("/"));
   //Restore backup
   REQUIRE(user->RestoreBackup("test", backup) == ErrorCodes::SUCCESS);
   //No test, that game is running again.
   REQUIRE(system(command.c_str()) == 0);
+
   REQUIRE(user->DeleteBackup("test", backup) == ErrorCodes::SUCCESS);
-  //Check that backup is acctually deleted
+  //Check that backup is acctually deleted.
   REQUIRE(func::demo_exists(full_path+"/test/backups/"+backup) == false);
+  REQUIRE(user->GetBackups("test", "Test_World").find(backup) == std::string::npos);
   //Test updating a file
   nlohmann::json test_room;
   REQUIRE(func::LoadJsonFromDisc("../../data/default_jsons/test_room.json", 

@@ -148,7 +148,7 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
       else if (req.matches.size() == 3 && backup == false)
         page = user->GetWorld(req.matches[0], req.matches[2]);
       else if (req.matches.size() == 3 && backup == true)
-        page = user->GetBackups(req.matches[2]);
+        page = user->GetBackups(req.matches[1], req.matches[2]);
       else if (req.matches.size() == 4)
         page = user->GetCategory(req.matches[0], req.matches[2], 
             req.matches[3]);
