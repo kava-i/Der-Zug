@@ -51,7 +51,7 @@ function DelUser() {
   //Function to handle request 
   xhttp.onload = function(event){
     //If request fails, display message to user.
-    let msg = document.getElementsByClassName("user_error")[0];
+    let msg = document.getElementsByClassName("user_error")[2];
     if (xhttp.status == 401) {
       msg.style = "display: block;"; 
       msg.innerHTML = "Could not be deleted. Sorry for that, try again later.";

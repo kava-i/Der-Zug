@@ -51,7 +51,41 @@ function OpenDelElemModal(name) {
 }
 
 /**
- * function deleting controller.
+ * function to delete an element
+ */
+function AddElem(elem) {
+  var json_request = new Object();
+  json_request.world = document.getElementById("name").value;
+  json_request.path=window.location.pathname;
+
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/api/add_"+elem);
+  xhttp.send(JSON.stringify(json_request));
+  
+  //Function to handle request 
+  xhttp.onload = function(event){
+    
+    //If request fails, display message to user.
+    let msg = document.getElementById("add_error");
+    if (xhttp.status == 401) {
+      msg.style = "display: block;"; 
+      msg.innerHTML = "Element couldn't be found or something went wrong.";
+    }
+    if (xhttp.status == 401 && event.data == "2") {
+      msg.style = "display: block;"; 
+      msg.innerHTML = "You have no access to this file.";
+    }
+    //Display success message to user.
+    else {
+      msg.style= "display: block; color: green;"; 
+      msg.innerHTML = "Successfully add " + json_request[elem];
+      document.getElementById("btn_del_elem").style="display: none;";
+    }
+  }
+}
+
+/**
+ * function deleting.
  */
 function DelElem() {
   
@@ -68,7 +102,7 @@ function DelElem() {
   //Function to handle request 
   xhttp.onload = function(event){
     //If request fails, display message to user.
-    let msg = document.getElementsByClassName("user_error")[1];
+    let msg = document.getElementsByClassName("user_error")[0];
     if (xhttp.status == 401) {
       msg.style = "display: block;"; 
       msg.innerHTML = "Element couldn't be found or something went wrong.";

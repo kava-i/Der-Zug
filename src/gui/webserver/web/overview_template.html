@@ -53,28 +53,16 @@
                 <a class="medium" href="/{{username}}/files/{{world}}">{{world}}</a>
               </td>
               <td>
-                <i class="fas fa-minus button2" onclick="OpenDelElemModal('{{world}}');return true"></i>
+                <i class="fas fa-minus button2" title="Delete this world."
+                  onclick="OpenDelElemModal('{{world}}');return true"></i>
               </td>
             </tr>
           {% endfor %}
         </table>
     </div>
-    <i class="fas fa-plus button" onclick="OpenAddElemModal();return true"></i>
+    <i class="fas fa-plus button" title="Create new world."
+      onclick="OpenAddElemModal();return true"></i>
 </div>
-
-<div id="modal_del_user" class="modal">
-  <div class="modal-content">
-    <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
-    <div class="content_center">
-      <div class="item"><p>Are you 100% sure you want to delete your
-        account on this server? All data will be lost and <i>can't ever be restored</i>.</div>
-      <div class="item"><p class="user_error"></p></div>
-      <div><button type="button" class="pure-button" id="btn_del_user"
-                                 onclick="DelUser()">Delete</button></div>
-    </div>
-  </div>
-</div>
-
 
 <div id="modal_del_elem" class="modal">
   <div class="modal-content">
@@ -93,10 +81,26 @@
     <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
     <div class="content_center">
       <div class="item"><input id="name" placeholder="name"></div>
-      <div class="item"><p class="user_error"></p></div>
+      <div class="item"><p id="add_error" class="user_error"></p></div>
       <div><button type="button" class="pure-button" id="btn_add_elem"
-                                 onclick="AddElem()">Add</button></div>
+                                 onclick="AddElem('world')">Add</button></div>
     </div>
   </div>
 </div>
+
+<div id="modal_del_user" class="modal">
+  <div class="modal-content">
+    <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
+    <div class="content_center">
+      <div class="item"><p>Are you 100% sure you want to delete your
+        account on this server? All data will be lost and <i>can't ever be restored</i>.</div>
+      <div class="item"><p class="user_error"></p></div>
+      <div><button type="button" class="pure-button" id="btn_del_user"
+                                 onclick="DelUser()">Delete</button></div>
+    </div>
+  </div>
+</div>
+
+
+
 </body>
