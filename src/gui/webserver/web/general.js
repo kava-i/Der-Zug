@@ -55,8 +55,8 @@ function OpenDelElemModal(name) {
  */
 function AddElem(elem) {
   var json_request = new Object();
-  json_request.world = document.getElementById("name").value;
-  json_request.path=window.location.pathname;
+  json_request.name = document.getElementById("name").value;
+  json_request.path = window.location.pathname;
 
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", "/api/add_"+elem);
@@ -78,7 +78,7 @@ function AddElem(elem) {
     //Display success message to user.
     else {
       msg.style= "display: block; color: green;"; 
-      msg.innerHTML = "Successfully add " + json_request[elem];
+      msg.innerHTML = "Successfully add " + json_request["name"];
       document.getElementById("btn_del_elem").style="display: none;";
     }
   }
