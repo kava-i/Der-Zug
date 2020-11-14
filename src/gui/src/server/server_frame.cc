@@ -63,6 +63,8 @@ void ServerFrame::Start(int port) {
       AddElem(req, resp); });
   server_.Post("/api/write_object", [&](const Request& req, Response& resp) {
       WriteObject(req, resp); });
+  server_.Post("/api/grant_access_to", [&](const Request& req, Response& resp) {
+      GrantAccessTo(req, resp); });
 
   //html
   server_.Get("/", [&](const Request& req, Response& resp) {
@@ -120,53 +122,6 @@ void ServerFrame::LoginPage(const Request& req, Response& resp) const {
   else
     resp.set_content(func::GetPage("web/login.html"), "text/html");
 }
-
-void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup) 
-    const {
-  //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  User* user = user_manager_.GetUser(username);
-  sl.unlock();
-
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-  }
-  else if (user->CheckAccessToLocations(req.matches[0]) == false &&
-      req.matches.size() > 1) {
-    resp.status = 302;
-    resp.set_header("Location", "/overview");
-  }
-  else {
-    std::string page = "";
-    try {
-      if (req.matches.size() == 1)
-        page = user->GetOverview();
-      else if (req.matches.size() == 3 && backup == false)
-        page = user->GetWorld(req.matches[0], req.matches[2]);
-      else if (req.matches.size() == 3 && backup == true)
-        page = user->GetBackups(req.matches[1], req.matches[2]);
-      else if (req.matches.size() == 4)
-        page = user->GetCategory(req.matches[0], req.matches[2], 
-            req.matches[3]);
-      else if (req.matches.size() == 5)
-        page = user->GetObjects(req.matches[0], req.matches[2], req.matches[3], 
-            req.matches[4]);
-      else if (req.matches.size() == 6) {
-        page = user->GetObject(req.matches[0], req.matches[2], req.matches[3], 
-            req.matches[4], req.matches[5]);
-      }
-    }
-    catch (std::exception& e) {
-      std::cout << "ServeFile: " << e.what() << std::endl;
-    }
-    resp.set_content(page.c_str(), "text/html");
-  }
-}
-
 
 void ServerFrame::DoLogin(const Request& req, Response& resp) {
   std::string username = "", pw = "";
@@ -262,6 +217,51 @@ void ServerFrame::DelUser(const Request& req, Response& resp) {
     resp.status = 302;
     resp.set_header("Location", "/login");
     return;
+  }
+}
+void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup) 
+    const {
+  //Try to get username from cookie
+  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::shared_lock sl(shared_mtx_user_manager_);
+  std::string username = user_manager_.GetUserFromCookie(ptr);
+  User* user = user_manager_.GetUser(username);
+  sl.unlock();
+
+  //If user does not exist, redirect to login-page.
+  if (username == "") {
+    resp.status = 302;
+    resp.set_header("Location", "/login");
+  }
+  else if (user->CheckAccessToLocations(req.matches[0]) == false &&
+      req.matches.size() > 1) {
+    resp.status = 302;
+    resp.set_header("Location", "/overview");
+  }
+  else {
+    std::string page = "";
+    try {
+      if (req.matches.size() == 1)
+        page = user->GetOverview();
+      else if (req.matches.size() == 3 && backup == false)
+        page = user->GetWorld(req.matches[0], req.matches[2]);
+      else if (req.matches.size() == 3 && backup == true)
+        page = user->GetBackups(req.matches[1], req.matches[2]);
+      else if (req.matches.size() == 4)
+        page = user->GetCategory(req.matches[0], req.matches[2], 
+            req.matches[3]);
+      else if (req.matches.size() == 5)
+        page = user->GetObjects(req.matches[0], req.matches[2], req.matches[3], 
+            req.matches[4]);
+      else if (req.matches.size() == 6) {
+        page = user->GetObject(req.matches[0], req.matches[2], req.matches[3], 
+            req.matches[4], req.matches[5]);
+      }
+    }
+    catch (std::exception& e) {
+      std::cout << "ServeFile: " << e.what() << std::endl;
+    }
+    resp.set_content(page.c_str(), "text/html");
   }
 }
 
@@ -390,6 +390,42 @@ void ServerFrame::Backups(const Request& req, Response& resp, std::string action
     error_code = false;
   sl.unlock();
 
+  if (error_code == ErrorCodes::SUCCESS)
+    resp.status = 200;
+  else
+    resp.status = 401;
+  resp.set_content(std::to_string(error_code), "text/txt");
+}
+
+void ServerFrame::GrantAccessTo(const Request& req, Response& resp) {
+  //Try to get username from cookie
+  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::shared_lock sl(shared_mtx_user_manager_);
+  std::string username = user_manager_.GetUserFromCookie(ptr);
+  sl.unlock();
+  
+  //If user does not exist, redirect to login-page.
+  if (username == "") {
+    resp.status = 302;
+    resp.set_header("Location", "/login");
+    return;
+  }
+  
+  std::string user2, world;
+  try {
+    nlohmann::json json = nlohmann::json::parse(req.body);
+    user2 = json["user"];
+    world = json["world"];
+  }
+  catch (std::exception& e) {
+    std::cout << "GrantAccessTo, problem parsing json: " << e.what() << std::endl;
+    resp.status = 401;
+    resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
+    return;
+  }
+
+  sl.lock();
+  int error_code = user_manager_.GrantAccessTo(username, user2, world);
   if (error_code == ErrorCodes::SUCCESS)
     resp.status = 200;
   else

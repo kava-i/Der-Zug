@@ -43,15 +43,6 @@ class ServerFrame {
     void LoginPage(const httplib::Request& req, httplib::Response& resp) const;
 
     /**
-      * Function to send all pages (except login and start page).
-      * Redirect to login depending on status: logged in/ not logged in.
-      * @param[in] req (reference to request)
-      * @param[in, out] resp (server response)
-      */
-    void ServeFile(const httplib::Request& req, httplib::Response& resp,
-        bool backup=false) const;
-   
-    /**
      * function to handle login
      * @param[in] req (reference to request)
      * @param[in, out] resp (server response)
@@ -81,6 +72,15 @@ class ServerFrame {
     void DelUser(const httplib::Request& req, httplib::Response& resp);
 
     /**
+      * Function to send all pages (except login and start page).
+      * Redirect to login depending on status: logged in/ not logged in.
+      * @param[in] req (reference to request)
+      * @param[in, out] resp (server response)
+      */
+    void ServeFile(const httplib::Request& req, httplib::Response& resp,
+        bool backup=false) const;
+
+    /**
      * @brief Add new element (world, subcategory).
      * @param[in] req (reference to request)
      * @param[in, out] resp (reference to response)
@@ -101,6 +101,13 @@ class ServerFrame {
      */
     void Backups(const httplib::Request& req, httplib::Response& resp, 
         std::string action);
+
+    /**
+     * @brief Grants given user access to world of other user.
+     * @param[in] req (reference to request)
+     * @param[in, out] resp (reference to response)
+     */
+    void GrantAccessTo(const httplib::Request& req, httplib::Response& resp);
 
     /**    
      * @brief Gives feedback on whether server is still running    

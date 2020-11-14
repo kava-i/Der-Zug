@@ -329,7 +329,7 @@ TEST_CASE("Server is working as expected", "[server]") {
               "application/x-www-form-urlencoded");
           REQUIRE(resp->body == std::to_string(ErrorCodes::ACCESS_DENIED));
 
-          //Check that not backup-operations can be done.
+          //Check that no backup-operations can be done.
           resp = cl.Post("/api/create_backup", headers_2, create_backup.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->body == std::to_string(ErrorCodes::ACCESS_DENIED));
@@ -339,6 +339,46 @@ TEST_CASE("Server is working as expected", "[server]") {
           resp = cl.Post("/api/delete_backup", headers_2, delete_backup.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->body == std::to_string(ErrorCodes::ACCESS_DENIED));
+
+          //Grant access to new user
+          nlohmann::json grant_access;
+          grant_access["user"] = "test2";
+          grant_access["world"] = "new_world";
+          resp = cl.Post("/api/grant_access_to", {}, grant_access.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 302);
+          resp = cl.Post("/api/grant_access_to", headers_2, grant_access.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->body == std::to_string(ErrorCodes::NO_WORLD));
+          resp = cl.Post("/api/grant_access_to", headers_1, grant_access.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
+
+          resp = cl.Get("/test/files/new_world", headers_2);
+          REQUIRE(resp->status == 200);
+          resp = cl.Post("/api/add_object", headers_2, new_obj.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
+          resp = cl.Post("/api/add_subcategory", headers_2, new_sub.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->body == std::to_string(ErrorCodes::ALREADY_EXISTS));
+
+          resp = cl.Post("/api/write_object", headers_2, write_room_good.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
+
+          //Check that no backup-operations can be done.
+          resp = cl.Post("/api/create_backup", headers_2, create_backup.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
+          //Deleting and restororing backup still not possible
+          resp = cl.Post("/api/restore_backup", headers_2, restore_backup.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->body == std::to_string(ErrorCodes::ACCESS_DENIED));
+          resp = cl.Post("/api/delete_backup", headers_2, delete_backup.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->body == std::to_string(ErrorCodes::ACCESS_DENIED));
+
         }
         server.Stop();
     });
