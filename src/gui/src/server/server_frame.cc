@@ -286,8 +286,7 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
   std::string name, path;
   try {
     nlohmann::json request = nlohmann::json::parse(req.body);
-    name = request.value("world", request.value("subcategory", 
-          request.value("name", "")));
+    name = request["name"];
     path = request.value("path", "");
   }
   catch (std::exception& e) {

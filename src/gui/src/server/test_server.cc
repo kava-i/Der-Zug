@@ -159,7 +159,7 @@ TEST_CASE("Server is working as expected", "[server]") {
 
           //Create a new world
           nlohmann::json new_world;
-          new_world["world"] = "new_world";
+          new_world["name"] = "new_world";
           resp = cl.Post("/api/add_world", headers_1, new_world.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
@@ -195,7 +195,7 @@ TEST_CASE("Server is working as expected", "[server]") {
 
           //Add a few new files to categories
           nlohmann::json new_sub;
-          new_sub["subcategory"] = "test_attacks";
+          new_sub["name"] = "test_attacks";
           new_sub["path"] = "/test/files/new_world/attacks";
           resp = cl.Post("/api/add_subcategory", headers_1, new_sub.dump(), 
               "application/x-www-form-urlencoded");
