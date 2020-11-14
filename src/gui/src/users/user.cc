@@ -535,8 +535,12 @@ bool User::CheckAccessToLocations(std::string path) {
   std::cout << "CheckAccessToLocations: " << path << std::endl; 
   for (const auto& it : locations_) {
     std::cout << "Location: " << it << std::endl;
-    if (path.find("/"+it) == 0) return true;
+    if (path.find("/"+it) == 0) {
+      std::cout << "success!";
+      return true;
+    }
   }
+  std::cout << "fail." << std::endl;
   return false; 
 }
 

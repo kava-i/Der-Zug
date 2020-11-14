@@ -182,6 +182,8 @@ TEST_CASE("Server is working as expected", "[server]") {
           //Check accessing categories
           resp = cl.Get("/test/files/new_world/config", headers_1);
           REQUIRE(resp->status == 200);
+          REQUIRE(resp->body.find("mapAttributes") != std::string::npos);
+
           resp = cl.Get("/test/files/new_world/rooms", headers_1);
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body.find("test") != std::string::npos);
