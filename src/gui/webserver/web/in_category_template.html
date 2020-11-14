@@ -53,7 +53,7 @@
   <div class="modal-content">
     <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
     <div class="content_center">
-      <div class="item"><p id="check_msg" cont_mac_adress=""></div>
+      <div class="item"><p id="check_msg" elem_name=""></div>
       <div class="item"><p class="user_error"></p></div>
       <div><button type="button" class="pure-button" id="btn_del_elem"
                                  onclick="DelElem()">Delete</button></div>
@@ -66,10 +66,11 @@
     <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
     <div class="content_center">
       <div class="item"><input id="name" placeholder="name"></div>
-      <div class="item"><p class="user_error"></p></div>
+      <div class="item"><p id="add_error" class="user_error"></p></div>
       <div><button type="button" class="pure-button" id="btn_add_elem"
-                                 onclick="AddElem()">Add</button></div>
+                                 onclick="AddElem('subcategory')">Add</button></div>
     </div>
   </div>
 </div>
+
 </body>
