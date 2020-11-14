@@ -27,7 +27,7 @@
 </nav>
 
 <div class="top_right">
-  <img src="/web/logo.png" style="margin-bottom:0.5em;"><br>
+  <img src="/web/logo.png" style="width:120px; height:63px; margin-bottom:0.5em;"><br>
 </div>
 
 <div class="box_overview center_in_box">
@@ -37,10 +37,11 @@
         {% for backup in backups %}
           <tr>
             <td><a class="medium" href="/">{{backup}}</a></td>
-            <td><i class="fas fa-minus button2" style="font-size: 1.5em;" 
+            <td><i class="fas fa-minus button2" style="font-size: 1.5em;" title="Delete backup."
                       onclick="delete_backup('{{backup}}');return true">-</i>
               </td>
-            <td><i class="button2" onclick="restore_backup('{{backup}}');return true">Restore</i>
+            <td><i class="button2" onclick="restore_backup('{{backup}}');return true"
+                title="Restore backup.">Restore</i>
               </td>
           </tr>
         {% endfor %}

@@ -98,6 +98,9 @@ void ServerFrame::Start(int port) {
   //Images
   server_.Get("/web/background.jpg", [](const Request& req, Response& resp) {
       resp.set_content(func::GetImage("web/images/background.jpg"), "image/jpg");});
+  server_.Get("/web/logo.png", [](const Request& req, Response& resp) {
+      resp.set_content(func::GetImage("web/images/logo.png"), "image/png");});
+
 
   std::cout << "C++ Api server startup successfull!" << std::endl;
   server_.listen("0.0.0.0", port);
