@@ -45,13 +45,13 @@ function DoLogout() {
 function DelUser() {
   //Send request
   var xhttp = new XMLHttpRequest();
-  xhttp.open("POST", "/api/del_user");
+  xhttp.open("POST", "/api/user_delete");
   xhttp.send("");
 
   //Function to handle request 
   xhttp.onload = function(event){
     //If request fails, display message to user.
-    let msg = document.getElementsByClassName("user_error")[1];
+    let msg = document.getElementsByClassName("user_error")[0];
     if (xhttp.status == 401) {
       msg.style = "display: block;"; 
       msg.innerHTML = "Could not be deleted. Sorry for that, try again later.";
@@ -60,7 +60,7 @@ function DelUser() {
     else {
       msg.style= "display: block; color: green;"; 
       msg.innerHTML = "Successfully deleted account.";
-      document.getElementById("btn_del_controller").style="display: none;";
+      document.getElementById("btn_del_user").style="display: none;";
       window.location="/";
     }
   }

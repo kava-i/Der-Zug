@@ -2,7 +2,6 @@
 function CloseModul() {
   document.getElementById("modal_add_elem").style.display = "none";
   document.getElementById("modal_del_elem").style.display = "none";
-  document.getElementById("modal_write").style.display = "none";
   window.location=window.location;
 }
 
@@ -10,13 +9,10 @@ function CloseModul() {
 window.onclick = function(event)  {
   let modal1 = document.getElementById("modal_add_elem");
   let modal2 = document.getElementById("modal_del_elem");
-  let modal3 = document.getElementById("modal_write");
   if (event.target == modal1) 
     modal1.style.display = "none";
   else if (event.target == modal2)
     modal2.style.display = "none";
-  else if (event.target == modal3)
-    modal3.style.display = "none";
   else
     return;
   window.location=window.location;
@@ -52,53 +48,6 @@ function OpenDelElemModal(name) {
   document.getElementById("check_msg").innerHTML = "Are you 100% sure "
     + "you want to delete <i>" + name + "</i>?";
   document.getElementById("check_msg").elem_name=name;
-}
-
-/**
- * Open modal to delete controller. 
- * Modal asks user, whether he/she really wants to delete controller.
- */
-function OpenWriteModal(name) {
-  document.getElementById("modal_write").style.display = "block";
-
-  var json = GenerateJson();
-  document.getElementById("check_msg").innerHTML = "Are you sure you want to override the "
-    + " current room (" + name + ") with following json:" + json;
-  document.getElementById("check_msg").elem_name=name;
-}
-
-/**
- * function sending request to add new controller.
- */
-function AddController() {
-
-  //Get controller name and path (url) from document.
-  var json_request = new Object();
-  json_request["name"] = document.getElementById("name").value;
-  json_request["location"] = window.location;
-  
-  //Send request
-  var xhttp = new XMLHttpRequest();
-  xhttp.open("POST", "/api/add_elem");
-  xhttp.send(JSON.stringify(json_request));
-
-  //Function to handle request 
-  xhttp.onload = function(event){
-    //If request fails, display message to user.
-    var txt = "";
-    let msg = document.getElementsByClassName("user_error")[2];
-    if (xhttp.status == 401) {
-      msg.style = "display: block;"; 
-      msg.innerHTML = "Something went wrong, sorry, for that.";
-    }
-    //Display success message to user.
-    else {
-      msg.style= "display: block; color: green;"; 
-      msg.innerHTML= "Successfully added new element.";
-      document.getElementById("btn_add_elem").style="display: none;";
-    }
-    document.getElementById("name").value = "";
-  }
 }
 
 /**
