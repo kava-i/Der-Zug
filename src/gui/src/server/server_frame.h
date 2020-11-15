@@ -81,11 +81,19 @@ class ServerFrame {
         bool backup=false) const;
 
     /**
-     * @brief Add new element (world, subcategory).
+     * @brief Add new element (world, subcategory, object).
      * @param[in] req (reference to request)
      * @param[in, out] resp (reference to response)
      */
     void AddElem(const httplib::Request& req, httplib::Response& resp);
+
+    /**
+     * @brief Delete element (world, subcategory, object).
+     * @param[in] req (reference to request)
+     * @param[in, out] resp (reference to response)
+     */
+    void DelElem(const httplib::Request& req, httplib::Response& resp);
+
 
     /**
      * @brief Write (modified) object.

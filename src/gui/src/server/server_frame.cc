@@ -61,6 +61,8 @@ void ServerFrame::Start(int port) {
       Backups(req, resp, "delete"); });
   server_.Post("/api/add_(.*)", [&](const Request& req, Response& resp) {
       AddElem(req, resp); });
+  server_.Post("/api/delete_(.*)", [&](const Request& req, Response& resp) {
+      DelElem(req, resp); });
   server_.Post("/api/write_object", [&](const Request& req, Response& resp) {
       WriteObject(req, resp); });
   server_.Post("/api/grant_access_to", [&](const Request& req, Response& resp) {
@@ -313,6 +315,60 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
     error_code = user->AddFile(path, name);
   else if (req.matches.size() > 1 && req.matches[1] == "object") 
     error_code = user->AddNewObject(path, name);
+
+  //Check whether action succeeded
+  if (error_code == ErrorCodes::SUCCESS) 
+    resp.status = 200;
+  else 
+    resp.status = 401;
+  resp.set_content(std::to_string(error_code), "text/txt");
+}
+
+void ServerFrame::DelElem(const Request& req, Response& resp) {
+  //Try to get username from cookie
+  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::shared_lock sl(shared_mtx_user_manager_);
+  std::string username = user_manager_.GetUserFromCookie(ptr);
+  sl.unlock();
+
+  //If user does not exist, redirect to login-page.
+  if (username == "") {
+    resp.status = 302;
+    resp.set_header("Location", "/login");
+    return;
+  }
+  
+  //Try to parse json
+  std::string name, path;
+  try {
+    nlohmann::json request = nlohmann::json::parse(req.body);
+    name = request["name"];
+    path = request.value("path", "");
+  }
+  catch (std::exception& e) {
+    std::cout << "Parsing json failed: " << e.what() << std::endl;
+    resp.status = 401;
+    resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
+    return;
+  }
+  
+  //Get user
+  sl.lock();
+  User* user = user_manager_.GetUser(username);
+
+  sl.unlock();
+  int error_code = ErrorCodes::WRONG_FORMAT;
+  //Check whether user has access to this location
+  if (user->CheckAccessToLocations(path) == false &&
+      req.matches.size() > 1 && req.matches[1] != "world") {
+    error_code = ErrorCodes::ACCESS_DENIED;
+  }
+  else if (req.matches.size() > 1 && req.matches[1] == "world")
+    error_code = user->DeleteWorld(name);
+  else if (req.matches.size() > 1 && req.matches[1] == "subcategory") 
+    error_code = user->DeleteFile(path, name);
+  else if (req.matches.size() > 1 && req.matches[1] == "object") 
+    error_code = user->DeleteObject(path, name);
 
   //Check whether action succeeded
   if (error_code == ErrorCodes::SUCCESS) 

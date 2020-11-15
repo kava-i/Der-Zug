@@ -8,6 +8,7 @@
 #include <exception>
 #include <filesystem>
 #include <iterator>
+#include <ostream>
 
 namespace fs = std::filesystem;
 
@@ -427,6 +428,68 @@ int User::WriteObject(std::string request) {
   write_backup << obj_backup;
   write_backup.close();
   return ErrorCodes::GAME_NOT_RUNNING;
+}
+
+int User::DeleteWorld(std::string world) {
+  //Load json 
+  std::string path = path_+"/"+username_+"/files/"+world;
+  std::cout << "Path: " << path << std::endl;
+
+  if (func::demo_exists(path) == false)
+    return ErrorCodes::NO_WORLD;
+
+  //Write remove file 
+  try {
+    fs::remove_all(path);
+  }
+  catch (std::exception& e) {
+    std::cout << "DeleteFile failed: " << e.what() << std::endl;
+    return ErrorCodes::FAILED;
+  }
+  return ErrorCodes::SUCCESS;
+}
+
+int User::DeleteFile(std::string path, std::string file) {
+  //Load json 
+  path = path_+path+"/"+file+".json";
+
+  if (func::demo_exists(path) == false)
+    return ErrorCodes::PATH_NOT_FOUND;
+
+  //Write remove file 
+  try {
+    fs::remove_all(path);
+  }
+  catch (std::exception& e) {
+    std::cout << "DeleteFile failed: " << e.what() << std::endl;
+    return ErrorCodes::FAILED;
+  }
+  return ErrorCodes::SUCCESS;
+}
+
+int User::DeleteObject(std::string path, std::string object) {
+  //Load json 
+  path = path_+path+".json";
+  nlohmann::json json_objects;
+  if (func::LoadJsonFromDisc(path, json_objects) == false)
+    return ErrorCodes::PATH_NOT_FOUND;
+
+  //Delete object
+  if (json_objects.count(object) == 0)
+    return ErrorCodes::NOT_ALLOWED;
+  json_objects.erase(object);
+
+  //Write back to disc
+  try {
+    std::ofstream write_backup(path);
+    write_backup << json_objects;
+    write_backup.close();
+  }
+  catch (std::exception& e) {
+    std::cout << "DeleteObject failed: " << e.what() << std::endl;
+    return ErrorCodes::FAILED;
+  }
+  return ErrorCodes::SUCCESS;
 }
 
 

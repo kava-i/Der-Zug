@@ -143,6 +143,29 @@ class User {
      */
     int WriteObject(std::string request);
 
+    /**
+     * delete a given file (subcategory) 
+     * @param[in] world 
+     * return ErrorCode.
+     */
+    int DeleteWorld(std::string world);
+
+    /**
+     * delete a given file (subcategory) 
+     * @param[in] path (path to category)
+     * @param[in] subcategory 
+     * return ErrorCode.
+     */
+    int DeleteFile(std::string path, std::string subcategory);
+
+    /**
+     * delete a given object
+     * @param[in] path (path to json)
+     * @param[in] object (object to delete from json)
+     * return ErrorCode.
+     */
+    int DeleteObject(std::string path, std::string object);
+
     // ** functions ** //
     
     /**

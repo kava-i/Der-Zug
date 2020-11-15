@@ -54,6 +54,10 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(func::demo_exists(full_path + path + "/rooms/test.json"));
   REQUIRE(func::demo_exists(full_path + path + "/players/players.json"));
 
+  REQUIRE(user->DeleteWorld("humbug") == ErrorCodes::NO_WORLD);
+  REQUIRE(user->DeleteWorld(world) == ErrorCodes::SUCCESS);
+  REQUIRE(user->CreateNewWorld(world) == ErrorCodes::SUCCESS); 
+
   //Check that newly build world is starting and basic command are running.
   std::string command = "./../../textadventure/build/bin/testing.o"
     " --path ../../data/users/test/files/Test_World/"
@@ -99,6 +103,11 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->AddFile(path+"/players", "test_house") == 
       ErrorCodes::NOT_ALLOWED);
 
+  //Check that deleting files works
+  REQUIRE(user->DeleteFile(path+"/humbug", "test_attacks") == ErrorCodes::PATH_NOT_FOUND);
+  REQUIRE(user->DeleteFile(path+"/attacks", "test_attacks") == ErrorCodes::SUCCESS);
+  REQUIRE(user->AddFile(path+"/attacks", "test_attacks") == ErrorCodes::SUCCESS);
+
   //Check that newly added subcategories are be found in category
   REQUIRE(user->GetCategory(path+"/rooms", world, "rooms").find("test_house") 
       != std::string::npos);
@@ -130,6 +139,14 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(system(command.c_str()) == 0);
   REQUIRE(user->AddNewObject(path+"/defaultDialogs/test_default_dialogs",
         "test_dialog") == ErrorCodes::SUCCESS);
+  REQUIRE(system(command.c_str()) == 0);
+
+  //Check deleting object is working
+  REQUIRE(user->DeleteObject(path+"/humbug", "test_attack") == ErrorCodes::PATH_NOT_FOUND);
+  REQUIRE(user->DeleteObject(path+"/attacks/test_attacks","quark") == ErrorCodes::NOT_ALLOWED);
+  REQUIRE(user->DeleteObject(path+"/attacks/test_attacks","test_attack") == ErrorCodes::SUCCESS);
+  REQUIRE(system(command.c_str()) == 0);
+  REQUIRE(user->AddNewObject(path+"/attacks/test_attacks","test_attack") == ErrorCodes::SUCCESS);
   REQUIRE(system(command.c_str()) == 0);
 
   //Check if newly create objects can be found on html page
