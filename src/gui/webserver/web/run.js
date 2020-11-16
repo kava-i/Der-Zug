@@ -1,3 +1,18 @@
+//Close modal, when close-span is clicked (works for both moduls)
+function CloseModul() {
+  document.getElementById("modal_log").style.display = "none";
+  window.location=window.location;
+}
+
+//Close modal when users clicks anywhere outside of the modal. (works for both)
+window.onclick = function(event)  {
+  let modal = document.getElementById("modal_log");
+  if (event.target == modal) 
+    modal.style.display = "none";
+  else
+    return;
+  window.location=window.location;
+}
 //Function to send request, to check whether game is still running
 function check_running() {
   var xhttp = new XMLHttpRequest();
