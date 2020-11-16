@@ -198,7 +198,13 @@ function WriteElem() {
     //If request fails, display message to user.
     let msg = document.getElementsByClassName("user_error")[1];
     if (xhttp.status != 200) {
-      alert("Problem writing json!");
+      if (this.responseText = "9") {
+        CloseModul();
+        document.getElementById("modal_log").style.display = "block";
+        get_log();
+      }
+      else
+        alert("Problem writing json!");
     }
     //Display success message to user.
     else {

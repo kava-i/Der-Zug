@@ -80,7 +80,7 @@ function AddElem(elem) {
     else {
       msg.style= "display: block; color: green;"; 
       msg.innerHTML = "Successfully add " + json_request["name"];
-      document.getElementById("btn_del_elem").style="display: none;";
+      window.location = window.location;
     }
   }
 }

@@ -21,7 +21,6 @@ function check_running() {
   
   xhttp.onload = function(event){
     document.getElementById("modal_log").style.display = "block";
-    document.getElementById("check_msg").style.display = "block";
     if (xhttp.status == 200) {
       document.getElementById("check_msg").innerHTML = "Game is running as accpected!";
     }
