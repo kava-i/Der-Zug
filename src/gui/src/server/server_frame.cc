@@ -108,6 +108,10 @@ void ServerFrame::Start(int port) {
   server_.Get("/web/overview.js", [](const Request& req, Response& resp)
       { resp.set_content(func::GetPage("web/overview.js"), 
           "application/javascript");});
+  server_.Get("/web/run.js", [](const Request& req, Response& resp)
+      { resp.set_content(func::GetPage("web/run.js"), 
+          "application/javascript");});
+
 
   //Images
   server_.Get("/web/background.jpg", [](const Request& req, Response& resp) {
