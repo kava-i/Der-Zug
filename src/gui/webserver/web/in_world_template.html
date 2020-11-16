@@ -12,8 +12,8 @@
    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <script src="/web/backup.js">
-    <script src="/web/run.js">
+    <script src="/web/backup.js"></script>
+    <script src="/web/run.js"></script>
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 </head>
 
@@ -57,4 +57,20 @@
       <button class="pure-button" onclick="window.location.href='/{{user}}/backups/{{world}}'">
         Show Backups</button>
     </div>
+
 </div>
+
+<div id="modal_log" class="modal">
+  <div class="modal2-content">
+    <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
+    <div class="content_center">
+      <div class="item"><p id="check_msg"></div>
+      <div class="item" style="text-align: left;"><pre id="display_log"></div>
+      <div class="item"><button type="button" class="pure-button" id="get_log"
+                                 onclick="get_log()">Show Log</button></div>
+      <br>
+    </div>
+</div>
+
+
+

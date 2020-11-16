@@ -381,6 +381,17 @@ TEST_CASE("Server is working as expected", "[server]") {
               "application/x-www-form-urlencoded");
           REQUIRE(resp->body == std::to_string(ErrorCodes::ACCESS_DENIED));
 
+                   
+          // *** Run Game *** //
+          resp = cl.Post("/api/check_running", headers_1, "/test/files/new_world", 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+          resp = cl.Post("/api/get_log", headers_1, "/test/files/new_world", 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body != "");
+
+          // *** Delete tests *** //
           nlohmann::json delete_tests;
           delete_tests["name"] = "test_attack";
           delete_tests["path"] = "/test/files/new_world/attacks/test_attacks";
@@ -397,14 +408,10 @@ TEST_CASE("Server is working as expected", "[server]") {
           resp = cl.Post("/api/delete_world", headers_2, delete_tests.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->body == std::to_string(ErrorCodes::NO_WORLD));
+
           resp = cl.Post("/api/delete_world", headers_1, delete_tests.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
-
-          // *** Run Game *** //
-          resp = cl.Post("/api/check_running", headers_1, "/test/files/new_world", 
-              "application/x-www-form-urlencoded");
-          REQUIRE(resp->status == 200);
 
         }
         server.Stop();

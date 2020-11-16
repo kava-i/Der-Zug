@@ -79,6 +79,8 @@ void ServerFrame::Start(int port) {
   //Running and testing game.
   server_.Post("/api/check_running", [&](const Request& req, Response& resp) {
       CheckRunning(req, resp); });
+  server_.Post("/api/get_log", [&](const Request& req, Response& resp) {
+      GetLog(req, resp); });
 
   //html
   server_.Get("/", [&](const Request& req, Response& resp) {
@@ -523,12 +525,47 @@ void ServerFrame::CheckRunning(const Request& req, Response& resp) {
 
   sl.lock();
   bool success = user_manager_.GetUser(username)->CheckGameRunning(req.body);
-  if (success == false)
+  if (success == true) {
+    std::cout << "CheckRunning: success." << std::endl;
     resp.status = 200;
-  else
+  }
+  else {
     resp.status = 401;
+    std::cout << "CheckRunning: failed." << std::endl;
+  }
 }
- 
+
+void ServerFrame::GetLog(const Request& req, Response& resp) {
+  //Try to get username from cookie
+  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::shared_lock sl(shared_mtx_user_manager_);
+  std::string username = user_manager_.GetUserFromCookie(ptr);
+  sl.unlock();
+  
+  //If user does not exist, redirect to login-page.
+  if (username == "") {
+    resp.status = 302;
+    resp.set_header("Location", "/login");
+    return;
+  }
+
+  std::string path = "../../data/users/" + req.body;
+  size_t pos = path.find("files");
+  path.erase(pos, 5);
+  path.insert(pos, "logs");
+  path+=".txt";
+  std::cout << "Path to log: " << path << std::endl;
+
+  if (func::demo_exists(path) == false)
+    resp.status = 401;
+
+  else {
+    resp.status = 200;
+    resp.set_content(func::GetPage(path), "text/txt");
+  }
+}
+
+
 bool ServerFrame::IsRunning() {
   return server_.is_running();
 }
