@@ -400,6 +400,12 @@ TEST_CASE("Server is working as expected", "[server]") {
           resp = cl.Post("/api/delete_world", headers_1, delete_tests.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
+
+          // *** Run Game *** //
+          resp = cl.Post("/api/run_game", headers_1, "/test/files/new_world", 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+
         }
         server.Stop();
     });
