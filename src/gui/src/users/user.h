@@ -203,7 +203,16 @@ class User {
      */
     int DeleteBackup(std::string user, std::string backup);
 
-    
+    /**
+     * Tries to run game.
+     * Extracts user and world from path and tries to run game with all existing
+     * players.
+     * @param[in] path (path to extract information from)
+     * @param[in] number (of players to check)
+     * @return boolean indicating success.
+     */
+    bool CheckGameRunning(std::string path);
+
   private:
     const std::string username_;  ///< username (should be unique!)
     std::string password_;  ///< password 
@@ -218,16 +227,6 @@ class User {
      * @return return json of user.
      */
     nlohmann::json ConstructJson() const;
-
-    /**
-     * Tries to run game.
-     * Extracts user and world from path and tries to run game with all existing
-     * players.
-     * @param[in] path (path to extract information from)
-     * @param[in] number (of players to check)
-     * @return boolean indicating success.
-     */
-    bool CheckGameRunning(std::string path);
 };
 
 #endif

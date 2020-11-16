@@ -26,7 +26,7 @@ ServerFrame::ServerFrame() : user_manager_("../../data/users", {"attacks",
 void ServerFrame::Start(int port) {
   std::cout << "Starting on Port: " << port << std::endl;
 
-  //Pages
+  // *** Pages *** //
   server_.Get("/login", [&](const Request& req, Response& resp) { 
       LoginPage(req, resp);});
   server_.Get("/overview", [&](const Request& req, Response& resp) { 
@@ -44,7 +44,9 @@ void ServerFrame::Start(int port) {
   server_.Get("/(.*)/files/(.*)", [&](const Request& req, Response& resp) { 
       ServeFile(req, resp); });
 
-  //Actions
+  // *** Actions *** //
+
+  //usermanagerment 
   server_.Post("/api/user_login", [&](const Request& req, Response& resp) {
       DoLogin(req, resp); });
   server_.Post("/api/user_registration", [&](const Request& req, Response& resp) {
@@ -53,20 +55,30 @@ void ServerFrame::Start(int port) {
       DelUser(req, resp); });
   server_.Post("/api/user_logout", [&](const Request& req, Response& resp) {
       DoLogout(req, resp); });
+
+  //Backups
   server_.Post("/api/create_backup", [&](const Request& req, Response& resp) {
       Backups(req, resp, "create"); });
   server_.Post("/api/restore_backup", [&](const Request& req, Response& resp) {
       Backups(req, resp, "restore"); });
   server_.Post("/api/delete_backup", [&](const Request& req, Response& resp) {
       Backups(req, resp, "delete"); });
+
+  //Adding/ writing/ deleting
   server_.Post("/api/add_(.*)", [&](const Request& req, Response& resp) {
       AddElem(req, resp); });
-  server_.Post("/api/delete_(.*)", [&](const Request& req, Response& resp) {
-      DelElem(req, resp); });
   server_.Post("/api/write_object", [&](const Request& req, Response& resp) {
       WriteObject(req, resp); });
+  server_.Post("/api/delete_(.*)", [&](const Request& req, Response& resp) {
+      DelElem(req, resp); });
+
+  //Access-rights
   server_.Post("/api/grant_access_to", [&](const Request& req, Response& resp) {
       GrantAccessTo(req, resp); });
+
+  //Running and testing game.
+  server_.Post("/api/check_running", [&](const Request& req, Response& resp) {
+      CheckRunning(req, resp); });
 
   //html
   server_.Get("/", [&](const Request& req, Response& resp) {
@@ -491,6 +503,28 @@ void ServerFrame::GrantAccessTo(const Request& req, Response& resp) {
   resp.set_content(std::to_string(error_code), "text/txt");
 }
 
+void ServerFrame::CheckRunning(const Request& req, Response& resp) {
+  //Try to get username from cookie
+  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::shared_lock sl(shared_mtx_user_manager_);
+  std::string username = user_manager_.GetUserFromCookie(ptr);
+  sl.unlock();
+  
+  //If user does not exist, redirect to login-page.
+  if (username == "") {
+    resp.status = 302;
+    resp.set_header("Location", "/login");
+    return;
+  }
+
+  sl.lock();
+  bool success = user_manager_.GetUser(username)->CheckGameRunning(req.body);
+  if (success == false)
+    resp.status = 200;
+  else
+    resp.status = 401;
+}
+ 
 bool ServerFrame::IsRunning() {
   return server_.is_running();
 }

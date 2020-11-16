@@ -33,6 +33,13 @@
 <div class="box_overview center_in_box">
   <h1>{{world}}</h1>
     <div class="controlers">
+      <button class="pure-button" style="margin-bottom:0.5em;"
+        onclick="check_running();">
+        CheckRunning</button>
+      <button class="pure-button" style="margin-bottom:0.5em;"
+        onclick="check_running();">
+        Run</button><br>
+
       <table id="categorys">
         <tr>
           <td><a class="medium" href="/{{user}}/files/{{world}}/config">Config</a></td>
@@ -45,7 +52,7 @@
       </table>
 
       <button class="pure-button" style="margin-bottom:0.5em;" onclick="create_backup();">
-        Create Backup</button><br>
+        Create Backup</button>
       <button class="pure-button" onclick="window.location.href='/{{user}}/backups/{{world}}'">
         Show Backups</button>
     </div>
