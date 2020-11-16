@@ -43,11 +43,12 @@ function OpenAddElemModal() {
  * Open modal to delete controller. 
  * Modal asks user, whether he/she really wants to delete controller.
  */
-function OpenDelElemModal(name) {
+function OpenDelElemModal(type, name) {
   document.getElementById("modal_del_elem").style.display = "block";
   document.getElementById("check_msg").innerHTML = "Are you 100% sure "
     + "you want to delete <i>" + name + "</i>?";
   document.getElementById("check_msg").elem_name=name;
+  document.getElementById("check_msg").elem_type=type;
 }
 
 /**
@@ -87,31 +88,27 @@ function AddElem(elem) {
 /**
  * function deleting.
  */
-function DelElem() {
+function DelElem(what, name) {
   
   //Get controller name and path (url) from document.
   var json_request = new Object();
   json_request["name"] = document.getElementById("check_msg").elem_name;
-  json_request["location"] = window.location;
+  json_request["path"] = window.location.pathname;
 
   //Send request
   var xhttp = new XMLHttpRequest();
-  xhttp.open("POST", "/api/del_controller");
+  xhttp.open("POST", "/api/delete_" + document.getElementById("check_msg").elem_type);
   xhttp.send(JSON.stringify(json_request));
 
   //Function to handle request 
   xhttp.onload = function(event){
     //If request fails, display message to user.
-    let msg = document.getElementsByClassName("user_error")[0];
     if (xhttp.status == 401) {
-      msg.style = "display: block;"; 
-      msg.innerHTML = "Element couldn't be found or something went wrong.";
+      alert("Element couldn't be found or something went wrong.");
     }
     //Display success message to user.
     else {
-      msg.style= "display: block; color: green;"; 
-      msg.innerHTML = "Successfully deleted " + json_request["name"];
-      document.getElementById("btn_del_elem").style="display: none;";
+      window.location=window.location;
     }
   }
 }

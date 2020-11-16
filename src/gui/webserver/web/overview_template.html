@@ -54,7 +54,7 @@
               </td>
               <td>
                 <i class="fas fa-minus button2" title="Delete this world."
-                  onclick="OpenDelElemModal('{{world}}');return true"></i>
+                  onclick="OpenDelElemModal('world','{{world}}');return true"></i>
               </td>
             </tr>
           {% endfor %}
@@ -68,8 +68,7 @@
   <div class="modal-content">
     <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
     <div class="content_center">
-      <div class="item"><p id="check_msg" elem_name=""></div>
-      <div class="item"><p class="user_error"></p></div>
+      <div class="item"><p id="check_msg" elem_name="" elem_type=""></div>
       <div><button type="button" class="pure-button" id="btn_del_elem"
                                  onclick="DelElem()">Delete</button></div>
     </div>
