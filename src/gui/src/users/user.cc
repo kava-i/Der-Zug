@@ -213,6 +213,8 @@ std::string User::GetObject(std::string path, std::string world, std::string
     return "File not found.";
   }
 
+  std::cout << "Got objects: " << objects << std::endl;
+
   nlohmann::json overview;   
   //Load object by id
   if (objects.is_array() == false) {
@@ -228,6 +230,8 @@ std::string User::GetObject(std::string path, std::string world, std::string
   overview["header"] = nlohmann::json({{"user", username_}, {"world", world}, 
       {"category", category}, {"sub", sub}, {"obj",obj}});
 
+  std::cout << "Got overview: " << overview << std::endl;
+
   inja::Environment env;
   inja::Template temp;
 
@@ -236,6 +240,9 @@ std::string User::GetObject(std::string path, std::string world, std::string
   inja::Template description = env.parse_template(
       "web/object_templates/description.html");
   env.include_template("web/object_templates/temp_description", description);
+
+  inja::Template text = env.parse_template("web/object_templates/text.html");
+  env.include_template("web/object_templates/temp_text", text);
 
   inja::Template room_description = env.parse_template(
       "web/object_templates/room_description.html");
@@ -599,11 +606,9 @@ bool User::CheckAccessToLocations(std::string path) {
   for (const auto& it : locations_) {
     std::cout << "Location: " << it << std::endl;
     if (path.find("/"+it) == 0) {
-      std::cout << "success!";
       return true;
     }
   }
-  std::cout << "fail." << std::endl;
   return false; 
 }
 

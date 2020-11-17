@@ -188,6 +188,10 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body.find("test") != std::string::npos);
 
+          resp = cl.Get("/test/files/new_world/players/players/test", headers_1);
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body.find("test") != std::string::npos);
+
           //The test-room-file should already exist
           resp = cl.Get("/test/files/new_world/rooms/test", headers_1);
           REQUIRE(resp->status == 200);

@@ -4,18 +4,21 @@
 
   <li custom="list">
     <label>Text</label>
-    {% include "temp_description" %}
+    {% include "temp_text" %}
   </li>
 
-  <li custom="map">
-    <label>Option</label>
+  <li custom="list">
+    <label>Options</label>
     <ul id="options">
-      {% for key, val in default(options, {"": {}}) %}
-        <li custom"key_object">
-          <input id="id" custom="int" placeholder="id (number)" value="{{default(val.id,'0')}}">
-          <input id="text" placeholder="text" value="{{default(val.text, "")}}">
-          <input id="to" placeholder="linked step" value="{{default(val.to, "")}}">
-          <input id="logic" placeholder="logic" value="{{default(val.logic, "") }}">
+      {% for opt in default(options, [{}]) %}
+        <li custom"object">
+          <input id="id" custom="int" placeholder="id (number)"
+          value="{{default(opt.id,"0")}}">
+          <input id="text" placeholder="text" value="{{default(opt.text, "")}}">
+          <input id="to" placeholder="linked step" value="{{default(opt.to, "")}}">
+          <input id="logic" placeholder="logic" value="{{default(opt.logic, "") }}">
+          <span class="mod_elem" onclick="del_elem('options',{{loop.index}})">-</span>
+          <span class="mod_elem" onclick="add_elem('options',{{loop.index}})">+</span>
         </li>
       {% endfor %}
     </ul>

@@ -58,8 +58,8 @@
         <li custom="pair">
           <input placeholder="id" value="{{default(key, "")}}">
           <input placeholder="name" value="{{default(value, "")}}">
-          <span class="mod_elem" onclick="del_elem('handlers',{{loop.index}})">-</span>
-          <span class="mod_elem" onclick="add_elem('handlers',{{loop.index}})">+</span>
+          <span class="mod_elem" onclick="del_elem('attacks',{{loop.index}})">-</span>
+          <span class="mod_elem" onclick="add_elem('attacks',{{loop.index}})">+</span>
         </li>
       {% endfor %}
     </ul>

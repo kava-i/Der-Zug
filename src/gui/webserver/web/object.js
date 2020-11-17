@@ -168,7 +168,6 @@ window.onclick = function(event)  {
 //Close modal, when close-span is clicked (works for both moduls)
 function CloseModul() {
   document.getElementById("modal_write").style.display = "none";
-  window.location = window.location;
 }
 
 //Open write modal.

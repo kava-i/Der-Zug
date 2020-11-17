@@ -1,0 +1,27 @@
+{% include "temp_header" %}
+
+  <li><label>Name:</label><input id="name" value="{{ default(name, "") }}"></li> 
+  <li><label>Id:</label><input id="id" value="{{ id }}"></li> 
+  <li><label>Password:</label><input id="password" value="{{ default(password,
+    "") }}"></li> 
+  <li><label>room:</label><input id="room" value="{{ default(room, "test") }}"></li> 
+  <li><label>hp:</label><input id="hp" custom="int" value="{{ default(name, "0") }}"></li> 
+  <li><label>Strength:</label><input id="strength" custom="int" value="{{
+    default(strength, "0") }}"></li> 
+
+  <!-- Attacks (default value for non-set-values) -->
+  <li custom="map">
+    <label>Attacks:</label>
+    <ul id="attacks">
+      {% for key, value in default(attacks, {"":""}) %}
+        <li custom="pair">
+          <input placeholder="id" value="{{default(key, "")}}">
+          <input placeholder="name" value="{{default(value, "")}}">
+          <span class="mod_elem" onclick="del_elem('attacks',{{loop.index}})">-</span>
+          <span class="mod_elem" onclick="add_elem('attacks',{{loop.index}})">+</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </li>
+  
+{% include "temp_footer" %}
