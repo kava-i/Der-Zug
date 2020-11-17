@@ -6,14 +6,21 @@
 
   <!-- Description (added by include) expand non-set optional values -->
   <li custom="list">
-    <label>Description:</label> 
+    <label title="Description printed, when character is viewed.">Description:</label> 
     {% include "temp_description" %}
   </li>
   
   <!-- Room Description (added by include) expand non-set optional values -->
   <li custom="list">
-    <label>Room Description:</label> 
+    <label title="Description added to the room-description when room is viewed">
+      Room Description:</label> 
     {% include "temp_room_description" %}
+  </li>
+
+  <!-- Dead Description (added by include) expand non-set optional values -->
+  <li custom="list">
+    <label title="Description printed when character dies/faints">Dead Description:</label> 
+    {% include "temp_dead_description" %}
   </li>
 
 

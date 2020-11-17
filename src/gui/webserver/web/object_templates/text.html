@@ -1,5 +1,7 @@
 <ul id="text">
-  {% for desc in default(text, [{"speaker":"", "text":"", "logic":"", "updates":"{}", "pre_pEvents":[], "pre_otEvents":[], "post_pEvents":[], "post_otEvents":[]}]) %}
+  {% for desc in default(text, [{"speaker":"", "text":"", "logic":"",
+  "updates":"{}", "pre_pEvents":[""], "pre_otEvents":[""], "post_pEvents":[""],
+  "post_otEvents":[""]}]) %}
     <li id="li_text_{{loop.index}}" custom="list_object">
       <ul id="text_{{loop.index}}">
         <li>

@@ -1,10 +1,13 @@
 <ul id="description">
-  {% for desc in default(description, [{"speaker":"", "text":"", "logic":"", "updates":"{}", "pre_pEvents":[], "pre_otEvents":[], "post_pEvents":[], "post_otEvents":[]}]) %}
+  {% for desc in default(description, [{"speaker":"", "text":"", "logic":"",
+  "updates":"{}", "pre_pEvents":[""], "pre_otEvents":[""], "post_pEvents":[""],
+  "post_otEvents":[""]}]) %}
     <li id="li_description_{{loop.index}}" custom="list_object">
       <ul id="description_{{loop.index}}">
         <li>
           <label>Speaker:</label>
-          <input id="speaker" placeholder="speaker" value="{{desc.speaker}}">
+          <input id="speaker" placeholder="speaker"
+          value="{{default(desc.speaker, "")}}">
         </li>
         <li>
           <label>Text:</label>
