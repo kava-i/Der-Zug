@@ -1,6 +1,6 @@
 <ul id="description">
   {% for desc in default(description, [{"speaker":"", "text":"", "logic":"",
-  "updates":"{}", "pre_pEvents":[""], "pre_otEvents":[""], "post_pEvents":[""],
+  "updates":{}, "pre_pEvents":[""], "pre_otEvents":[""], "post_pEvents":[""],
   "post_otEvents":[""]}]) %}
     <li id="li_description_{{loop.index}}" custom="list_object">
       <ul id="description_{{loop.index}}">
@@ -19,7 +19,8 @@
         </li>
         <li id="optional" class="full_length" style="display: none;">
           <label>Updates:</label>
-          <input id="updates" custom="json" placeholder="updates" value="{{default(desc.updates,"{}")}}">
+          <input id="updates" custom="json" placeholder="updates" 
+               value='{ {% for k,v in default(desc.updates,{})%}"{{k}}":"{{v}}"{% if loop.is_last == false %}, {% endif %}{%endfor %} }'>
         </li>
         <li id="optional" style="display: none;" custom="list">
           <label style="width:auto;">Pre permanent Events:</label>

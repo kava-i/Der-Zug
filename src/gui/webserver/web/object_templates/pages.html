@@ -1,5 +1,7 @@
 <ul id="pages">
-  {% for desc in default(pages, [{"speaker":"", "text":"", "logic":"", "updates":"{}", "pre_pEvents":[], "pre_otEvents":[], "post_pEvents":[], "post_otEvents":[]}]) %}
+  {% for desc in default(pages, [{"speaker":"", "text":"", "logic":"",
+  "updates":{}, "pre_pEvents":[""], "pre_otEvents":[""], "post_pEvents":[""],
+  "post_otEvents":[""]}]) %}
     <li id="li_pages_{{loop.index}}" custom="list_object">
       <ul id="pages_{{loop.index}}">
         <li>
@@ -25,7 +27,7 @@
         <li id="optional" class="full_length" style="display: none;">
           <label>Updates:</label>
           <input id="updates" placeholder="updates" custom="json" 
-             value="{{default(desc.updates, "{}")}}">
+              value='{ {% for k,v in default(desc.updates,{})%}"{{k}}":"{{v}}"{% if loop.is_last == false %}, {% endif %}{%endfor %} }'>
         </li>
         <li id="optional" style="display: none;" custom="list">
           <label style="width:auto;">Pre permanent Events:</label>
