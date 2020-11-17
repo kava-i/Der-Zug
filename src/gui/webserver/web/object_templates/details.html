@@ -35,7 +35,8 @@
           <input id="value" custom="int" placeholder="total value" value="{{
                      default(val.value, "0") }}">
           <input id="types" custom="json" placeholder="item types" value="{{
-                     default(val.types, "[]") }}">
+                     default(val.types, "[]") }}" title='F.e. ["consumable",
+                     "read"]'>
           <span class="mod_elem" onclick="del_elem('defaultItems',{{loop.index}})">-</span>
           <span class="mod_elem" onclick="add_elem('defaultItems',{{loop.index}})">+</span>
         </li>

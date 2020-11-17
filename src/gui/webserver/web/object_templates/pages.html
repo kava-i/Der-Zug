@@ -1,10 +1,18 @@
 <ul id="pages">
-  {% for desc in default(description, [{"speaker":"", "text":"", "logic":"", "updates":"{}", "pre_pEvents":[], "pre_otEvents":[], "post_pEvents":[], "post_otEvents":[]}]) %}
+  {% for desc in default(pages, [{"speaker":"", "text":"", "logic":"", "updates":"{}", "pre_pEvents":[], "pre_otEvents":[], "post_pEvents":[], "post_otEvents":[]}]) %}
     <li id="li_pages_{{loop.index}}" custom="list_object">
       <ul id="pages_{{loop.index}}">
         <li>
+          <label title="There can be multiple pages with the same number. By
+                        setting logic-attributes, the matching page is shown to
+                        the player">Page</label>
+          <input id="speaker" custom="int" placeholder="page" value="{{
+          default(desc.page, "0") }}">
+        </li>
+        <li>
           <label>Speaker:</label>
-          <input id="speaker" placeholder="speaker" value="{{desc.speaker}}">
+          <input id="speaker" placeholder="speaker"
+          value="{{default(desc.speaker, "")}}">
         </li>
         <li>
           <label>Text:</label>

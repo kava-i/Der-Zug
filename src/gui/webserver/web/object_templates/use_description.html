@@ -1,5 +1,5 @@
 <ul id="useDescription">
-  {% for desc in default(description, [{"speaker":"", "text":"", "logic":"", "updates":"{}", "pre_pEvents":[], "pre_otEvents":[], "post_pEvents":[], "post_otEvents":[]}]) %}
+  {% for desc in default(useDescription, [{"speaker":"", "text":"", "logic":"", "updates":"{}", "pre_pEvents":[], "pre_otEvents":[], "post_pEvents":[], "post_otEvents":[]}]) %}
     <li id="li_useDescription_{{loop.index}}" custom="list_object">
       <ul id="useDescription_{{loop.index}}">
         <li>

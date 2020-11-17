@@ -3,24 +3,26 @@
   <!-- Name and ID (default value for non-set-values) -->
   <li><label>Name:</label><input id="name" value="{{ default(name, "") }}">
   <li><label>Id:</label><input id="id" value="{{ default(id, "") }}">
-  <li><label>Description:</label><input id="description" value="{{
-    default(description, "") }}">
+  <li><label style="width:auto">Description:</label>
+      <input style="width:40em" id="description" value="{{default(description, "") }}">
   <li><label>Ep:</label><input id="ep" custom="int" value="{{ default(ep, "0") }}">
-  <li><label title="List of steps, which are active from beginning">Active from beginning:</label>
-        <input id="ep" custom="json" value="{{ default(active_from_beginning, "[]") }}">
+  <li><label style="width:auto" title="List of steps, which are active from beginning"
+      custom="json">Active from beginning:</label>
+        <input id="ep" custom="json" style="width:20em;" 
+             value='[{% for x in default(active_from_beginning,[]) %}"{{x}}"{% if loop.is_last == false %}, {% endif %}{%endfor %}]'>
 
   <!-- Listeners -->
   <li custom="list">
     <label>Listeners:</label>
-    <ul id="listeners">
-      {% for listener in default(listeners, [{}]) %}
+    <ul id="listener">
+      {% for elem in default(listener, [{}]) %}
         <li custom="object">
-          <input id="id" placeholder="function" value="{{default(listener.id, "")}}">
-          <input id="string" placeholder="command" value="{{default(listener.string, "")}}">
+          <input id="id" placeholder="function" value="{{default(elem.id, "")}}">
+          <input id="string" placeholder="command" value="{{default(elem.string, "")}}">
           <input custom="int" id="priority" placeholder="priority" style="width: 4em;" 
-              value="{{default(listener.priority, 0)}}">
-          <span class="mod_elem" onclick="del_elem('listeners',{{loop.index}})">-</span>
-          <span class="mod_elem" onclick="add_elem('listeners',{{loop.index}})">+</span>
+              value="{{default(elem.priority, 0)}}">
+          <span class="mod_elem" onclick="del_elem('listener',{{loop.index}})">-</span>
+          <span class="mod_elem" onclick="add_elem('listener',{{loop.index}})">+</span>
         </li>
       {% endfor %}
     </ul>
@@ -32,20 +34,45 @@
     <ul id="steps">
       {% for step in default(steps, [{}]) %}
         <li custom="object">
-          <input id="id" placeholder="id" value="{{default(step.id, "")}}">
-          <input id="id" placeholder="name" value="{{default(step.name, "")}}">
-          <input id="description" placeholder="description"
+          <label style="width:auto">Id:</label>
+          <input style="width:10em" id="id" placeholder="id" value="{{default(step.id, "")}}">
+          <label style="width:auto">Name:</label>
+          <input style="width:10em" id="name" placeholder="name" 
+            value="{{default(step.name, "")}}">
+          <br>
+          <label style="width:10em">Description</label>
+          <input style="width:20em" id="description" placeholder="description"
               value="{{default(step.description, "")}}">
-          <input id="logic" placeholder="logic", value="{{default(step.logic,
-                                               "")}}">
-          <input id="events" placeholder="events" value="{{default(step.events, "")}}">
-          <input id=_"events" placeholder="pre events" value="{{default(step._events, "")}}">
-          <input id="updates" custom="json" placeholder="updates"  
-                                            value="{{default(step.updates, "{}")}}">
-          <input id="linkedSteps" custom="json" placeholder="linkedSteps"  
-              value="{{default(step.linkedSteps, "[]")}}">
-          <span class="mod_elem" onclick="del_elem('steps',{{loop.index}})">-</span>
-          <span class="mod_elem" onclick="add_elem('steps',{{loop.index}})">+</span>
+          <br>
+          <label style="width:10em" title="Here you can set (if you are not using a custom function 
+                         anyway), what is needed succeed step.">Logic</label>
+          <input style="width:20em" id="logic" placeholder="logic", 
+              value="{{default(step.logic,"")}}">
+          <br>
+          <label style="width:10em" title="Events/ commands executed after success message."
+                  >Post Events</label>
+          <input style="width:20em" id="events" placeholder="events" 
+              value="{{default(step.events, "")}}">
+          <br>
+          <label style="width:10em" title="Events/ commands executed before success message.">Pre Events</label>
+          <input style="width:20em" id=_"events" placeholder="pre events" value="{{default(step._events, "")}}">
+          <br>
+          <label style="width:10em" title="json of attributes/ minds to update after
+                        success">Updates</label>
+          <input style="width:20em" id="updates" custom="json" placeholder="updates"  
+                value='{ {% for k,v in default(step.updates,{})%}"{{k}}":"{{v}}"{% if loop.is_last == false %}, {% endif %}{%endfor %} }'>
+          <br>
+          <label style="width:10em"  title="List of steps to set active, when this step is
+                        done.">Linked Steps</label>
+          <input style="width:20em" id="linkedSteps" custom="json" placeholder="linkedSteps"  
+             value='[{% for x in default(step.linkedSteps,[]) %}"{{x}}"{% if loop.is_last == false %}, {% endif %}{%endfor %}]'>
+          <br>
+          <div style="text-align: center">
+            <span title="Delete this element" class="mod_elem" 
+              onclick="del_elem('steps',{{loop.index}})">-</span>
+            <span title="Add a new element here" class="mod_elem" 
+                                                 onclick="add_elem('steps',{{loop.index}})">+</span>
+          </div>
         </li>
       {% endfor %}
     </ul>
