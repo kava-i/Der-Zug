@@ -5,8 +5,7 @@ src/textadventure/build/*
 src/gui/build/*
 src/gui/webserver/builder_tests.o
 src/gui/webserver/game_builder.o
-src/data/users/*
-!src/data/users/fux/*
+src/data/users/test*
 src/gui/compile_commands.json
 *EIG.txt
 *dictionary.txt
