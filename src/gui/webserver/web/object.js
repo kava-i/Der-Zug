@@ -2,6 +2,8 @@
  * @author fux (georgbuechner)
  */
 
+global_error = false;
+
 // ***** ***** GENERATE JSONS ***** ***** //
 
 //Generate json of an object.
@@ -127,18 +129,29 @@ function CreateObject(elem) {
 
 //Get value of an input fields as a specific type (string, json, int, bool).
 function GetAsType(elem) {
-  if (elem.hasAttribute("custom") == false)
-    return elem.value;
-  else if (elem.getAttribute("custom") == "int")
-    return parseInt(elem.value);
-  else if (elem.getAttribute("custom") == "json")
-    return JSON.parse(elem.value);
-  else if (elem.getAttribute("custom") == "bool" && elem.value == "yes") 
-    return 1;
-  else if (elem.getAttribute("custom") == "bool" && elem.value == "no") 
-    return 0;
-  else {
-    console.log("Problem parsing: ", elem.id, elem.getAttribute("custom"), elem.value);
+  try {
+    elem.style.border="none";
+    if (elem.hasAttribute("custom") == false)
+      return elem.value;
+    else if (elem.getAttribute("custom") == "int") {
+      var is_number = /^\d+$/.test(elem.value);
+      if (is_number == false)
+        throw(elem.value + " is not a number.");
+      return parseInt(elem.value);
+    }
+    else if (elem.getAttribute("custom") == "json")
+      return JSON.parse(elem.value);
+    else if (elem.getAttribute("custom") == "bool" && elem.value == "yes") 
+      return 1;
+    else if (elem.getAttribute("custom") == "bool" && elem.value == "no") 
+      return 0;
+    else
+      throw("Problem parsing: ", elem.id, elem.getAttribute("custom"), elem.value);
+  }
+  catch(err) {
+    console.log(err);
+    global_error = true;
+    elem.style.border="1px solid red";
     return "";
   }
 }
@@ -166,19 +179,27 @@ window.onclick = function(event)  {
 }
 
 //Close modal, when close-span is clicked (works for both moduls)
-function CloseModul() {
+function CloseWriteModul() {
   document.getElementById("modal_write").style.display = "none";
 }
 
 //Open write modal.
 function OpenWriteModal(name) {
+  global_error = false;
+
   document.getElementById("modal_write").style.display = "block";
+  document.getElementById("display_json").innerHTML = "";
 
   var json = GenerateJson("object");
-  document.getElementById("check_msg").innerHTML = "Are you sure you want to override the "
-    + " current room (" + name + ") with following json:";
-  document.getElementById("display_json").innerHTML = JSON.stringify(json, null, 4);
-  document.getElementById("check_msg").elem_json = json;
+  if (global_error == true) {
+    document.getElementById("check_msg").innerHTML = "You have an error in your document.";
+  }
+  else {
+    document.getElementById("check_msg").innerHTML = "Are you sure you want to override the "
+      + " current room (" + name + ") with following json:";
+    document.getElementById("display_json").innerHTML = JSON.stringify(json, null, 4);
+    document.getElementById("check_msg").elem_json = json;
+  }
 }
 
 //Write elemenet into json

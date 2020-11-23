@@ -1,5 +1,5 @@
 <ul id="deadDescription">
-  {% for desc in default(dead_description, [{"speaker":"", "text":"", "logic":"",
+  {% for desc in default(deadDescription, [{"speaker":"", "text":"", "logic":"",
   "updates":{}, "pre_pEvents":[""], "pre_otEvents":[""], "post_pEvents":[""],
   "post_otEvents":[""]}]) %}
     <li id="li_deadDescription_{{loop.index}}" custom="list_object">

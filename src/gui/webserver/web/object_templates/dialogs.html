@@ -11,7 +11,7 @@
     <label>Options</label>
     <ul id="options">
       {% for opt in default(options, [{}]) %}
-        <li custom"object">
+        <li custom="object">
           <input id="id" custom="int" placeholder="id (number)"
           value="{{default(opt.id,"0")}}">
           <input id="text" placeholder="text" value="{{default(opt.text, "")}}">
