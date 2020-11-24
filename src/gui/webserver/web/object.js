@@ -186,15 +186,14 @@ function CloseWriteModul() {
 //Open write modal.
 function OpenWriteModal(name) {
   global_error = false;
-
-  document.getElementById("modal_write").style.display = "block";
   document.getElementById("display_json").innerHTML = "";
 
   var json = GenerateJson("object");
   if (global_error == true) {
-    document.getElementById("check_msg").innerHTML = "You have an error in your document.";
+    alert("You have an error in your document.");
   }
   else {
+    document.getElementById("modal_write").style.display = "block";
     document.getElementById("check_msg").innerHTML = "Are you sure you want to override the "
       + " current room (" + name + ") with following json:";
     document.getElementById("display_json").innerHTML = JSON.stringify(json, null, 4);
@@ -217,10 +216,15 @@ function WriteElem() {
   xhttp.onload = function(event){
     //If request fails, display message to user.
     let msg = document.getElementsByClassName("user_error")[1];
+    console.log("Response: ", this.responseText);
     if (xhttp.status != 200) {
       if (this.responseText = "9") {
-        CloseModul();
+        document.getElementById("modal_write").style.display = "none";
         document.getElementById("modal_log").style.display = "block";
+        document.getElementById("check_msg_log").style.color = "red";
+        document.getElementById("check_msg_log").innerHTML = 
+          "Error when trying to run game after writing object. No changes made.";
+        document.getElementById("get_log").style.display = "none";
         get_log();
       }
       else
@@ -228,7 +232,8 @@ function WriteElem() {
     }
     //Display success message to user.
     else {
-      window.location=window.location;
+      msg.innerHTML = "That worked great!";
+      //window.location=window.location;
     }
   }
 }

@@ -551,6 +551,9 @@ void ServerFrame::GetLog(const Request& req, Response& resp) {
 
   std::string path = "../../data/users/" + req.body;
   size_t pos = path.find("files");
+  size_t pos2 = path.find("/", pos+8);
+  if (pos2 != std::string::npos)
+    path.erase(pos2);
   path.erase(pos, 5);
   path.insert(pos, "logs");
   path+=".txt";

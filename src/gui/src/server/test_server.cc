@@ -395,6 +395,12 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
 
+          resp = cl.Post("/api/get_log", headers_1, "/test/files/new_world/items/"
+              "rooms/test/test_room", "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+          REQUIRE(resp->body != "");
+
+
           // *** Delete tests *** //
           nlohmann::json delete_tests;
           delete_tests["name"] = "test_attack";

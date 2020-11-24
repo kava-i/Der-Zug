@@ -27,20 +27,15 @@
   </li>
   
   <!-- Default items(default value for non-set-values) -->
-  <li custom="map">
+  <li custom="object">
     <label style="width: auto;" title="Select items to automatically be added.">Default Items:</label>
     <ul id="defaultItems">
-      {% for key, val in default(exits, {"": {}}) %}
-        <li custom="key_object">
-          <input id="value" custom="int" placeholder="total value" value="{{
-                     default(val.value, "0") }}">
-          <input id="types" custom="json" placeholder="item types" value="{{
-                     default(val.types, "[]") }}" title='F.e. ["consumable",
-                     "read"]'>
-          <span class="mod_elem" onclick="del_elem('defaultItems',{{loop.index}})">-</span>
-          <span class="mod_elem" onclick="add_elem('defaultItems',{{loop.index}})">+</span>
-        </li>
-      {% endfor %}
+      <li><input id="value" custom="int" placeholder="total value" value="{{
+                     default(val.value, "0") }}"></li>
+      <li><input id="types" custom="json" placeholder="item types" value="{{
+                 default(val.types, "[]") }}" title='F.e. ["consumable","book"]'></li>
+      <li><input id="categories" custom="json" placeholder="item categories" value="{{
+                 default(val.types, "[]") }}" title='F.e. ["others","consume"]'></li>
     </ul>
   </li>
 

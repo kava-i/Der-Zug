@@ -8,11 +8,11 @@
         <span class="close" id="close_modal" onclick="CloseWriteModul()">&times;</span>
         <div class="content_center">
           <div class="item"><p id="check_msg" elem_json=""></div>
-          <div class="content_center2">
+          <div class="scroll_content">
             <div class="item" style="text-align: left;"><pre id="display_json"></div>
           </div>
           <div class="item"><button type="button" class="pure-button" id="btn_del_elem"
-                                     onclick="WriteElem()">WriteMe</button></div>
+                                     onclick="WriteElem()">Confirm</button></div>
           <br>
         </div>
       </div>
@@ -23,8 +23,10 @@
       <div class="modal2-content">
         <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
         <div class="content_center">
-          <div class="item"><p id="check_msg"></div>
-          <div class="item" style="text-align: left;"><pre id="display_log"></div>
+          <div class="item"><p id="check_msg_log"></div>
+          <div class="scroll_content" id="log_div">
+            <div class="item" style="text-align: left;"><pre id="display_log"></div>
+          </div>
           <div class="item"><button type="button" class="pure-button" id="get_log"
                                      onclick="get_log()">Show Log</button></div>
           <br>

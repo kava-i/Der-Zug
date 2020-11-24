@@ -1,7 +1,6 @@
 //Close modal, when close-span is clicked (works for both moduls)
 function CloseModul() {
   document.getElementById("modal_log").style.display = "none";
-  window.location=window.location;
 }
 
 //Close modal when users clicks anywhere outside of the modal. (works for both)
@@ -32,13 +31,16 @@ function check_running() {
 function get_log() {
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", "/api/get_log");
+  console.log("sending request");
   xhttp.send(window.location.pathname);
   
   xhttp.onload = function(event){
-    console.log("text: ", this.responseText);
-    if (xhttp.status == 200) 
+    console.log("Got response: ", this.responseText);
+    if (xhttp.status == 200) {
+      document.getElementById("log_div").style.display="block";
       document.getElementById("display_log").innerHTML = this.responseText;
+    }
     else
-      document.getElementById("display_log").innerHTML = "failed getting log.";
+      document.getElementById("check_msg").innerHTML = "failed getting log.";
   }
 }

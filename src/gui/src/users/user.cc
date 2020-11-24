@@ -241,6 +241,7 @@ std::string User::GetObject(std::string path, std::string world, std::string
       "web/object_templates/description.html");
   env.include_template("web/object_templates/temp_description", description);
 
+
   inja::Template text = env.parse_template("web/object_templates/text.html");
   env.include_template("web/object_templates/temp_text", text);
 
