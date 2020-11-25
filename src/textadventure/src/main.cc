@@ -103,6 +103,10 @@ int main(int x, char **argc) {
   CGame currentGame(argc[1]);
   game = &currentGame;
   Webgame<WebserverGame> gl;
-  gl.run();
+  int port = 9002;
+  if (x>2)
+    port = std::stoi(argc[2]);
+  std::cout << "Game starting on port " << port << std::endl;
+  gl.run(port);
 }
 
