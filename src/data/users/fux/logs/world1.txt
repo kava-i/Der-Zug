@@ -1,0 +1,958 @@
+Creating game.
+QuestFactory
+"besiege_besoffene_frau"
+"geldauftreiben"
+"reden"
+"hilfe"
+"details"
+"betrachten"
+"menschen"
+"reden"
+"ausgänge"
+"gehen"
+"examine1"
+"examine2"
+"pickup"
+"ende"
+"ticketverkaeufer"
+"ticketkauf"
+"zum_gleis"
+QuestFactory
+"leave"
+Room: "hospital_corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital_corridor"
+Room: "hospital_foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital_foyer_kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital_foyer"
+Room: "hospital_stairs"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "hospital_stairs"
+Created all rooms 
+Room: "trainstation_ausgang"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_ausgang"
+Room: "trainstation_eingangshalle"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+"trainstation_eingangshalle_glasmalerei"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_katharina_die_große"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_hegel_tafel"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_buecherregal"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "trainstation_eingangshalle"
+Room: "trainstation_fernzüge"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_fernzüge"
+Room: "trainstation_frauenToilette"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_frauenToilette"
+Room: "trainstation_geheime-kammer1"
+Parsing characters
+Parsing Items
+Parsing details 
+"trainstation_geheime-kammer1_sockel"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "trainstation_geheime-kammer1"
+Room: "trainstation_geheime-kammer4"
+Parsing characters
+Parsing Items
+Parsing details 
+"trainstation_geheime-kammer4_sockel"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "trainstation_geheime-kammer4"
+Room: "trainstation_gleis1"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis1"
+Room: "trainstation_gleis2"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis2"
+Room: "trainstation_gleis3"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis3"
+Room: "trainstation_gleis4"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis4"
+Room: "trainstation_gleis5"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis5"
+Room: "trainstation_maennerToilette"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_maennerToilette"
+Room: "trainstation_nebenhalle"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_nebenhalle"
+Room: "trainstation_toiletten"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_toiletten"
+Created all rooms 
+Room: "zug_compartment-a"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-a"
+Room: "zug_compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-b"
+Room: "zug_compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-c"
+Room: "zug_compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-d"
+Room: "zug_trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_trainCorridor"
+Created all rooms 
+worldFactory: done.
+Done parsing world.
+Parsing players... 
+QuestFactory
+"besiege_besoffene_frau"
+"geldauftreiben"
+"reden"
+"hilfe"
+"details"
+"betrachten"
+"menschen"
+"reden"
+"ausgänge"
+"gehen"
+"examine1"
+"examine2"
+"pickup"
+"ende"
+"ticketverkaeufer"
+"ticketkauf"
+"zum_gleis"
+QuestFactory
+"leave"
+Room: "hospital_corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital_corridor"
+Room: "hospital_foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital_foyer_kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital_foyer"
+Room: "hospital_stairs"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "hospital_stairs"
+Created all rooms 
+Room: "trainstation_ausgang"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_ausgang"
+Room: "trainstation_eingangshalle"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+"trainstation_eingangshalle_glasmalerei"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_katharina_die_große"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_hegel_tafel"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_buecherregal"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "trainstation_eingangshalle"
+Room: "trainstation_fernzüge"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_fernzüge"
+Room: "trainstation_frauenToilette"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_frauenToilette"
+Room: "trainstation_geheime-kammer1"
+Parsing characters
+Parsing Items
+Parsing details 
+"trainstation_geheime-kammer1_sockel"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "trainstation_geheime-kammer1"
+Room: "trainstation_geheime-kammer4"
+Parsing characters
+Parsing Items
+Parsing details 
+"trainstation_geheime-kammer4_sockel"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "trainstation_geheime-kammer4"
+Room: "trainstation_gleis1"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis1"
+Room: "trainstation_gleis2"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis2"
+Room: "trainstation_gleis3"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis3"
+Room: "trainstation_gleis4"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis4"
+Room: "trainstation_gleis5"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis5"
+Room: "trainstation_maennerToilette"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_maennerToilette"
+Room: "trainstation_nebenhalle"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_nebenhalle"
+Room: "trainstation_toiletten"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_toiletten"
+Created all rooms 
+Room: "zug_compartment-a"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-a"
+Room: "zug_compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-b"
+Room: "zug_compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-c"
+Room: "zug_compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-d"
+Room: "zug_trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_trainCorridor"
+Created all rooms 
+worldFactory: done.
+initializing context stack.
+Done.
+QuestFactory
+"besiege_besoffene_frau"
+"geldauftreiben"
+"reden"
+"hilfe"
+"details"
+"betrachten"
+"menschen"
+"reden"
+"ausgänge"
+"gehen"
+"examine1"
+"examine2"
+"pickup"
+"ende"
+"ticketverkaeufer"
+"ticketkauf"
+"zum_gleis"
+QuestFactory
+"leave"
+Room: "hospital_corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital_corridor"
+Room: "hospital_foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital_foyer_kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital_foyer"
+Room: "hospital_stairs"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "hospital_stairs"
+Created all rooms 
+Room: "trainstation_ausgang"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_ausgang"
+Room: "trainstation_eingangshalle"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+"trainstation_eingangshalle_glasmalerei"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_katharina_die_große"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_hegel_tafel"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_buecherregal"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "trainstation_eingangshalle"
+Room: "trainstation_fernzüge"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_fernzüge"
+Room: "trainstation_frauenToilette"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_frauenToilette"
+Room: "trainstation_geheime-kammer1"
+Parsing characters
+Parsing Items
+Parsing details 
+"trainstation_geheime-kammer1_sockel"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "trainstation_geheime-kammer1"
+Room: "trainstation_geheime-kammer4"
+Parsing characters
+Parsing Items
+Parsing details 
+"trainstation_geheime-kammer4_sockel"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "trainstation_geheime-kammer4"
+Room: "trainstation_gleis1"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis1"
+Room: "trainstation_gleis2"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis2"
+Room: "trainstation_gleis3"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis3"
+Room: "trainstation_gleis4"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis4"
+Room: "trainstation_gleis5"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis5"
+Room: "trainstation_maennerToilette"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_maennerToilette"
+Room: "trainstation_nebenhalle"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_nebenhalle"
+Room: "trainstation_toiletten"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_toiletten"
+Created all rooms 
+Room: "zug_compartment-a"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-a"
+Room: "zug_compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-b"
+Room: "zug_compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-c"
+Room: "zug_compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-d"
+Room: "zug_trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_trainCorridor"
+Created all rooms 
+worldFactory: done.
+initializing context stack.
+Done.
+QuestFactory
+"besiege_besoffene_frau"
+"geldauftreiben"
+"reden"
+"hilfe"
+"details"
+"betrachten"
+"menschen"
+"reden"
+"ausgänge"
+"gehen"
+"examine1"
+"examine2"
+"pickup"
+"ende"
+"ticketverkaeufer"
+"ticketkauf"
+"zum_gleis"
+QuestFactory
+"leave"
+Room: "hospital_corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital_corridor"
+Room: "hospital_foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital_foyer_kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital_foyer"
+Room: "hospital_stairs"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "hospital_stairs"
+Created all rooms 
+Room: "trainstation_ausgang"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_ausgang"
+Room: "trainstation_eingangshalle"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+"trainstation_eingangshalle_glasmalerei"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_katharina_die_große"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_hegel_tafel"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_buecherregal"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "trainstation_eingangshalle"
+Room: "trainstation_fernzüge"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_fernzüge"
+Room: "trainstation_frauenToilette"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_frauenToilette"
+Room: "trainstation_geheime-kammer1"
+Parsing characters
+Parsing Items
+Parsing details 
+"trainstation_geheime-kammer1_sockel"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "trainstation_geheime-kammer1"
+Room: "trainstation_geheime-kammer4"
+Parsing characters
+Parsing Items
+Parsing details 
+"trainstation_geheime-kammer4_sockel"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "trainstation_geheime-kammer4"
+Room: "trainstation_gleis1"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis1"
+Room: "trainstation_gleis2"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis2"
+Room: "trainstation_gleis3"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis3"
+Room: "trainstation_gleis4"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis4"
+Room: "trainstation_gleis5"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis5"
+Room: "trainstation_maennerToilette"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_maennerToilette"
+Room: "trainstation_nebenhalle"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_nebenhalle"
+Room: "trainstation_toiletten"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_toiletten"
+Created all rooms 
+Room: "zug_compartment-a"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-a"
+Room: "zug_compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-b"
+Room: "zug_compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-c"
+Room: "zug_compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-d"
+Room: "zug_trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_trainCorridor"
+Created all rooms 
+worldFactory: done.
+initializing context stack.
+Done.
+QuestFactory
+"besiege_besoffene_frau"
+"geldauftreiben"
+"reden"
+"hilfe"
+"details"
+"betrachten"
+"menschen"
+"reden"
+"ausgänge"
+"gehen"
+"examine1"
+"examine2"
+"pickup"
+"ende"
+"ticketverkaeufer"
+"ticketkauf"
+"zum_gleis"
+QuestFactory
+"leave"
+Room: "hospital_corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital_corridor"
+Room: "hospital_foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital_foyer_kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital_foyer"
+Room: "hospital_stairs"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "hospital_stairs"
+Created all rooms 
+Room: "trainstation_ausgang"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_ausgang"
+Room: "trainstation_eingangshalle"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+"trainstation_eingangshalle_glasmalerei"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_katharina_die_große"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_hegel_tafel"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_buecherregal"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "trainstation_eingangshalle"
+Room: "trainstation_fernzüge"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_fernzüge"
+Room: "trainstation_frauenToilette"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_frauenToilette"
+Room: "trainstation_geheime-kammer1"
+Parsing characters
+Parsing Items
+Parsing details 
+"trainstation_geheime-kammer1_sockel"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "trainstation_geheime-kammer1"
+Room: "trainstation_geheime-kammer4"
+Parsing characters
+Parsing Items
+Parsing details 
+"trainstation_geheime-kammer4_sockel"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "trainstation_geheime-kammer4"
+Room: "trainstation_gleis1"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis1"
+Room: "trainstation_gleis2"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis2"
+Room: "trainstation_gleis3"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis3"
+Room: "trainstation_gleis4"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis4"
+Room: "trainstation_gleis5"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis5"
+Room: "trainstation_maennerToilette"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_maennerToilette"
+Room: "trainstation_nebenhalle"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "trainstation_nebenhalle"
+Room: "trainstation_toiletten"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_toiletten"
+Created all rooms 
+Room: "zug_compartment-a"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-a"
+Room: "zug_compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-b"
+Room: "zug_compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-c"
+Room: "zug_compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-d"
+Room: "zug_trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_trainCorridor"
+Created all rooms 
+worldFactory: done.
+initializing context stack.
+Done.
+Finished parsing!
+[1;31mEvents: show room, from: startGame[0m
+[1;31mshow, room[0m
+[1;34mfirst[0m throwing: show|room
+[1;31mEvents: printText start, from: pre-events[0m
+[1;31mprintText, start[0m
+[1;31mEvents: printText start2, from: post-events[0m
+[1;31mprintText, start2[0m
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|room
+[1;34mtutorial[0m throwing: show|room
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|room
+[1;34mkomische_gruppe[0m throwing: show|room
+[1;34mgeld_fuer_ticket[0m throwing: show|room
+[1;34mbesoffene_frau[0m throwing: show|room
+[1;34mworld[0m throwing: show|room
+[1;34mroom[0m throwing: show|room
+[1;34mstandard[0m throwing: show|room
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[1;34mgame[0m throwing: show|room
+[1;31mEvents: show room, from: CGame::play[0m
+[1;31mshow, room[0m
+[1;34mfirst[0m throwing: show|room
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|room
+[1;34mtutorial[0m throwing: show|room
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|room
+[1;34mkomische_gruppe[0m throwing: show|room
+[1;34mgeld_fuer_ticket[0m throwing: show|room
+[1;34mbesoffene_frau[0m throwing: show|room
+[1;34mworld[0m throwing: show|room
+[1;34mroom[0m throwing: show|room
+[1;34mstandard[0m throwing: show|room
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[1;34mgame[0m throwing: show|exits
+[1;31mEvents: show exits, from: CGame::play[0m
+[1;31mshow, exits[0m
+[1;34mfirst[0m throwing: show|exits
+Calling:  show exits!
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|exits
+[1;34mtutorial[0m throwing: show|exits
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|exits
+[1;34mkomische_gruppe[0m throwing: show|exits
+[1;34mgeld_fuer_ticket[0m throwing: show|exits
+[1;34mbesoffene_frau[0m throwing: show|exits
+[1;34mworld[0m throwing: show|exits
+[1;34mroom[0m throwing: show|exits
+[1;34mstandard[0m throwing: show|exits
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[1;34mgame[0m throwing: show|people
+[1;31mEvents: show people, from: CGame::play[0m
+[1;31mshow, people[0m
+[1;34mfirst[0m throwing: show|people
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|people
+[1;34mtutorial[0m throwing: show|people
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|people
+[1;34mkomische_gruppe[0m throwing: show|people
+[1;34mgeld_fuer_ticket[0m throwing: show|people
+[1;34mbesoffene_frau[0m throwing: show|people
+[1;34mworld[0m throwing: show|people
+[1;34mselect[0m throwing: show|people
+[1;34mroom[0m throwing: show|people
+[1;34mstandard[0m throwing: show|people
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[1;34mgame[0m throwing: show|items
+[1;31mEvents: show items, from: CGame::play[0m
+[1;31mshow, items[0m
+[1;34mfirst[0m throwing: show|items
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|items
+[1;34mtutorial[0m throwing: show|items
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|items
+[1;34mkomische_gruppe[0m throwing: show|items
+[1;34mgeld_fuer_ticket[0m throwing: show|items
+[1;34mbesoffene_frau[0m throwing: show|items
+[1;34mworld[0m throwing: show|items
+[1;34mselect[0m throwing: show|items
+[1;34mselect[0m throwing: show|items
+[1;34mroom[0m throwing: show|items
+[1;34mstandard[0m throwing: show|items
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[1;34mgame[0m throwing: show|details
+[1;31mEvents: show details, from: CGame::play[0m
+[1;31mshow, details[0m
+[1;34mfirst[0m throwing: show|details
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|details
+[1;34mtutorial[0m throwing: show|details
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;31mEvents: printText tutorial_details, from: post-events[0m
+[1;31mprintText, tutorial_details[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|details
+[1;34mkomische_gruppe[0m throwing: show|details
+[1;34mgeld_fuer_ticket[0m throwing: show|details
+[1;34mbesoffene_frau[0m throwing: show|details
+[1;34mworld[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mroom[0m throwing: show|details
+[1;34mstandard[0m throwing: show|details
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+===============================================================================
+All tests passed (6 assertions in 1 test case)
+

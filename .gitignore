@@ -1,7 +1,11 @@
 bin/*
-Testing/*
-build/*
-dictionary.txt
-src/dictionary.txt
-EIG.txt
-src/EIG.txt
+*.idx
+build*
+src/textadventure/build/*
+src/gui/build/*
+src/gui/webserver/builder_tests.o
+src/gui/webserver/game_builder.o
+src/data/users/test*
+src/gui/compile_commands.json
+*EIG.txt
+*dictionary.txt

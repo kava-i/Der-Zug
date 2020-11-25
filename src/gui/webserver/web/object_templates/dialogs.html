@@ -1,0 +1,30 @@
+{% include "temp_header" %}
+
+  <li><label>Id:</label><input id="id" value="{{ id }}"></li> 
+
+  <li custom="list">
+    <label>Text</label>
+    {% include "temp_text" %}
+  </li>
+
+  <li custom="list">
+    <label>Options</label>
+    <ul id="options">
+      {% for opt in default(options, [{}]) %}
+        <li custom="object">
+          <input id="id" custom="int" placeholder="id (number)"
+          value="{{default(opt.id,"0")}}">
+          <input id="text" placeholder="text" value="{{default(opt.text, "")}}">
+          <input id="to" placeholder="linked step" value="{{default(opt.to, "")}}">
+          <input id="logic" placeholder="logic" value="{{default(opt.logic, "") }}">
+          <span class="mod_elem" onclick="del_elem('options',{{loop.index}})">-</span>
+          <span class="mod_elem" onclick="add_elem('options',{{loop.index}})">+</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </li>
+
+  <li><label>Events:</label><input id="events" value="{{ default(events, "") }}"></li>
+  <li><label>Actions:</label><input id="actions" value="{{ default(actions, "") }}"></li>
+
+{% include "temp_footer" %}

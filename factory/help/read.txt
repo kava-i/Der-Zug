@@ -1,6 +1,0 @@
---- READ --- 
-weiterblätern: "weiter"
-zurückblättern: "zurück"
-lesezeichen setzen: "lesezeichen"
-unterstreichen "unterstreiche [von (wort)], [bis (wort)]"
-buch zuschlagen "end"

@@ -1,0 +1,42 @@
+{
+    "printing":{
+        "story":"ERZÄHLER", 
+        "error":"",
+        "desc":"SINNLICHE GEWISSHEIT",
+        "tech":""
+        },
+
+    "show":{
+        "exits":["Hier sehe ich einen Weg", "nichts"],
+        "chars":["Hier sind", ""]},
+
+    "minds":[
+        {"id":"sinnliche gewissheit", "color":"blue", "level":3, "relevance":0.1},
+        {"id":"wahrnehmung", "color":"blue", "level":0, "relevance":0.2},
+        {"id":"vernunft", "color":"green", "level":0, "relevance":0.3},
+        {"id":"sittlichkeit", "color":"red", "level":0, "relevance":0.4},
+        {"id":"moralität", "color":"red", "level":0, "relevance":0.5},
+        {"id":"entfremdung", "color":"red", "level":0, "relevance":0.6}
+        ],
+
+    "commands":[
+        {"id":"show", "regex":"zeige (.*)"},
+        {"id":"look", "regex":"schaue (.*)"},
+        {"id":"search", "regex":"(durchsuche|untersuche) (.*)", "take":2},
+        {"id":"go", "regex":"gehe (.*)"},
+        {"id":"talk", "regex":"spreche (.*) an"},
+        {"id":"pick", "regex":"hebe (.*) auf"},
+        {"id":"consume", "regex":"(trinke|rauche|esse) (.*)", "take":2},
+        {"id":"equipe", "regex":"rüste (.*) aus"},
+        {"id":"dequipe", "regex":"rüste (.*) ab"},
+        {"id":"read", "regex":"lese (.*)"},
+        {"id":"examine", "regex":"(betrachte|beobachte) (.*)", "take":2},
+        {"id":"next", "regex":"weiter"},
+        {"id":"previous", "regex":"zurück"},
+        {"id":"mark", "regex":"lesezeichen"},
+        {"id":"underline", "regex":"unterstreiche (.*)"}
+        ],
+    "attributes":[],
+    "mapAttributes":{}
+}
+

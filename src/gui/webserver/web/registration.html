@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Game*Creator - register</title>
+
+    <link href="/favicon.png" rel="icon" type="image/png"/>
+
+    <!-- <link rel="stylesheet", href="bootstrap/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link href="web/general.css" rel="stylesheet">
+
+    <script src="web/registration.js"></script>
+</head>
+
+<body>
+<nav aria-lable="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Game*Creator</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><a>Registration</a></li>
+    </ol>
+</nav>
+<img src="web/logo.png", class="logo" align="right">
+
+<div id="center_box" class="center_in_box">
+    <h1>G*C REGISTRATION</h1>
+    <input type="text" id="r_username" placeholder="username"><br><br>
+    <input type="password" id="r_password" placeholder="password"
+                                           oninput="PasswordStrength()"><br>
+    <p id="pw_strength" class="pw_strength">Make sure your password contains
+    <span id="big">at least 15 characters</span>, or <span id="small">at least 8
+      characters</span>, a <span id="digit">number</span> and a <span
+      id="lower">lowercase letter</span>.</p>
+    <input type="password" id="r_password2" placeholder="password"
+                                           oninput="PasswordMatch()">
+    <br>
+    <p id="pw_match" class="pw_match">Passwords don't match</p>
+    <br>
+    <p id="login_error" class="login_error"></p>
+    <button type="button" class="pure-button" id="r_btn" onclick="DoRegister();return true">
+      register
+    </button>
+</div>
+
+</body>
+
+
+

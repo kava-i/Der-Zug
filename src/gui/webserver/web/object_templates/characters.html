@@ -1,0 +1,106 @@
+{% include "temp_header" %}
+
+  <!-- Name and ID (default value for non-set-values) -->
+  <li><label>Name:</label><input id="name" value="{{ default(name, "") }}">
+  <li><label>Id:</label><input id="id" value="{{ default(id, "") }}">
+
+  <!-- Description (added by include) expand non-set optional values -->
+  <li custom="list">
+    <label title="Description printed, when character is viewed.">Description:</label> 
+    {% include "temp_description" %}
+  </li>
+  
+  <!-- Room Description (added by include) expand non-set optional values -->
+  <li custom="list">
+    <label title="Description added to the room-description when room is viewed">
+      Room Description:</label> 
+    {% include "temp_room_description" %}
+  </li>
+
+  <!-- Dead Description (added by include) expand non-set optional values -->
+  <li custom="list">
+    <label title="Description printed when character dies/faints">Dead Description:</label> 
+    {% include "temp_dead_description" %}
+  </li>
+
+
+  <!-- Attributes like (hp, money, experience etc. -->
+  <li><label>HP:</label>
+    <input id="hp" custom="int" value="{{ default(hp, 10) }}"></li>
+  <li><label>Strength:</label>
+    <input id="strength" custom="int" value="{{ default(strength, 10) }}"></li>
+  <li><label>EP:</label>
+    <input id="hp" custom="int" value="{{ default(ep, 10) }}"></li>
+
+  <!-- Others (default value for non-set-values) -->
+  <li>
+    <label title="Characters faints, instead to die instantly.">Faint</label>
+    {% if default(faint, 1) == 1) %} 
+    <input id="faint" custom="bool" value="yes">
+    {% else %} 
+    <input id="faint" custom="bool" value="no"> 
+    {% endif %}
+  </li>
+
+  <!-- Items (default value for non-set-values) -->
+  <li custom="list">
+    <label>Items:</label>
+    <ul id="items">
+      {% for item in default(items, [["", {}]]) %}
+        <li custom="list">
+          <input placeholder="item id" value={{item.0}}>
+          <input custom="json" placeholder="custom attributes" value={{item.1}}>
+          <span class="mod_elem" onclick="del_elem('items',{{loop.index}})">-</span>
+          <span class="mod_elem" onclick="add_elem('items',{{loop.index}})">+</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </li>
+  
+  <!-- Attacks (default value for non-set-values) -->
+  <li custom="map">
+    <label>Attacks:</label>
+    <ul id="attacks">
+      {% for key, value in default(attacks, {"":""}) %}
+        <li custom="pair">
+          <input placeholder="id" value="{{default(key, "")}}">
+          <input placeholder="name" value="{{default(value, "")}}">
+          <span class="mod_elem" onclick="del_elem('attacks',{{loop.index}})">-</span>
+          <span class="mod_elem" onclick="add_elem('attacks',{{loop.index}})">+</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </li>
+  
+  <!-- Handlers (default value for non-set-values) -->
+  <li custom="list">
+    <label>Handlers:</label>
+    <ul id="handlers">
+      {% for handler in default(handlers, [{}]) %}
+        <li custom="object">
+          <input id="id" placeholder="function" value="{{default(handler.id, "")}}">
+          <input id="string" placeholder="command" value="{{default(handler.string, "")}}">
+          <input id="priority" custom="int" placeholder="priority" style="width: 4em;" 
+              value="{{default(handler.priority, 0)}}">
+          <span class="mod_elem" onclick="del_elem('handlers',{{loop.index}})">-</span>
+          <span class="mod_elem" onclick="add_elem('handlers',{{loop.index}})">+</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </li>
+
+  <!-- Default dialogs/ descriptions -->
+  <li>
+    <label title="only needed when no description is given. Loads a random
+      description from selected default descriptions" style="margin-right:3em;"
+      >Default Descriptions:</label>
+    <input id="defaultDescription" placeholder="default description" 
+      value="{{ default(defaultDescription, "") }}"></li>
+  <li>
+    <label title="only needed when no dialog is created. Loads a random
+      dialog from selected default dialogs" style="margin-right:3em;"
+      >Default Dialogs:</label>
+    <input id="defaultDialogs" placeholder="default dialogs" 
+      value="{{ default(defaultDialogs, "") }}"></li>
+
+{% include "temp_footer" %}

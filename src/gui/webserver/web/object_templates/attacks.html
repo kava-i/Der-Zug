@@ -1,0 +1,16 @@
+{% include "temp_header" %}
+
+  <li><label>Name:</label><input id="name" value="{{ default(name, "") }}"></li>
+  <li><label>ID:</label><input id="id" value="{{ default(id, "") }}"></li>
+  <li><label class="long_lbl">description:</label>
+      <input class="long_inp" id="description" 
+        value="{{ default(description, "") }}">
+  </li>
+  <li><label class="long_lbl">Output:</label>
+    <input class="long_inp" id="output" value="{{ default(output, "")
+    }}">
+  </li>
+  <li><label>Power:</label><input id="power" custom="int" value="{{
+    default(power, 0) }}"></li>
+
+{% include "temp_footer" %}

@@ -1,3 +1,0 @@
-Type the name of the attack you want to use. You may ignore case. Also attack can be found via partial matchig. Thus "kick", "legs" of even just "betw" is sufficient to select "kick between the legs". Also [enter] selects the first attack. 
-show "stats" or "opponent" show the current hp and strength of you or your opponent.
-

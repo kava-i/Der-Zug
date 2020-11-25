@@ -1,0 +1,14 @@
+Commands
+show [inventory, people, items, details, ...]   f.e. "show people"
+look [in, under, above, ....] [name of detail]  f.e. "look in small box"
+go to [name of exit]                            f.e. "go to Corridor" or "go Corridor" or "go back"
+go to [name of room, you already visited]       
+talk to [name of person]                        f.e. "talk to parsen" or "talk parsen"
+pick up [name of item]                          f.e. "pick up wine" or "pick wine" or "pick up all"
+consume [name of item in inventory]             f.e. "consume cake"
+equipe [name of item in inventory]              f.e. "equipe sword"
+dequipe [name of item in inventory]             f.e. "dequipe sword"
+examine [name of item/detail/person]            f.e. "examine box"
+show (solved) quests                            f.e. "show quests" or "show solved quests"
+
+All command igonore case. In addition partial matching works. So instead of writing "pick up pack of cigaretts" you may enter "pick up cigaretts" or even "pick up cig". This only works for people, exits, items etc. not for commands. So "show invent" does not work, "show inventory" is neccesarry. However instead of writing "go to", "talk to", "pick up" etc. you may simply write "go", "talk", "pick" etc.  

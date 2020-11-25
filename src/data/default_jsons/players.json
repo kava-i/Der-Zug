@@ -1,0 +1,8 @@
+{
+  "test":{
+    "id":"test",
+    "name":"Test",
+    "password":"password",
+    "room":"test_test_room"
+  }
+}

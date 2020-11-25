@@ -1,0 +1,67 @@
+
+.object ul{
+  text-align: left;
+}
+.object li{
+  margin-bottom: 0.2em;
+}
+.object label{
+  width: auto;
+  margin-right: 0.5em;
+  display:inline-block;
+}
+.object input{
+  background-color: rgba(0, 0, 0, 0.55);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  text-align:center;
+  font-size: 0.7em;
+}
+
+.object textarea{
+  background-color: rgba(0, 0, 0, 0.55);
+  color: white;
+  text-align: left;
+  border-radius: 5px;
+  border: none;
+  width: 40em;
+  height: 5em;
+  font-size: 0.7em;
+}
+
+.m_input {
+  margin-right: 0.9em;
+}
+.full_length input {
+  text-align: left;
+  width: 30em;
+  font-size: 0.7em;
+}
+.long_inp {
+  width:30em;
+}
+.short{
+  width:4em;
+}
+.fitting {
+  width:auto;
+}
+
+.expand {
+  text-align: center;
+}
+.expand span {
+  padding: 0.6em;
+  font-size: 20px;
+}
+.expand span:hover {
+  cursor: pointer;
+}
+
+.mod_elem {
+  padding: 0.5em;
+}
+.mod_elem:hover {
+  cursor: pointer;
+}

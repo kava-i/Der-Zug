@@ -1,1 +1,0 @@
-{"einleitung_taxi": {"name": "Taxi", "id": "einleitung_taxi", "description": [{"text": "Du bist in einem Taxi. Es ist beengend und du w\u00fcrdest ihm gerne entkommen.", "post_otEvents": ["addTimeEvent changeDialog taxifahrer|2,room,1,0.25", "addTimeEvent talk to taxi,room,0,0.3"]}], "characters": [["taxifahrer", {}], ["jan", {}]], "items": [["zigaretten", {}]]}}
