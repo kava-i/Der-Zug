@@ -8,9 +8,8 @@
   <li><label>Ep:</label><input id="ep" custom="int" value="{{ default(ep, "0") }}">
   <li><label style="width:auto" title="List of steps, which are active from beginning"
       custom="json">Active from beginning:</label>
-        <input id="ep" custom="json" style="width:20em;" 
-             value='[{% for x in default(active_from_beginning,[]) %}"{{x}}"{% if loop.is_last == false %}, {% endif %}{%endfor %}]'>
-
+        <input id="active_from_beginning" custom="json" style="width:20em;" 
+                                        value={{default(active_from_beginning,[]) }}>
   <!-- Listeners -->
   <li custom="list">
     <label>Listeners:</label>
@@ -44,8 +43,8 @@
           <input style="width:20em" id="description" placeholder="description"
               value="{{default(step.description, "")}}">
           <br>
-          <label style="width:10em" title="Here you can set (if you are not using a custom function 
-                         anyway), what is needed succeed step.">Logic</label>
+          <label style="width:10em" title="Here you can set (if you are not using a 
+                      custom function anyway), what is needed succeed step.">Logic</label>
           <input style="width:20em" id="logic" placeholder="logic", 
               value="{{default(step.logic,"")}}">
           <br>
@@ -54,31 +53,30 @@
           <input style="width:20em" id="events" placeholder="events" 
               value="{{default(step.events, "")}}">
           <br>
-          <label style="width:10em" title="Events/ commands executed before success message.">Pre Events</label>
-          <input style="width:20em" id=_"events" placeholder="pre events" value="{{default(step._events, "")}}">
+          <label style="width:10em" title="Events/ commands executed before success message."
+            >Pre Events</label>
+          <input style="width:20em" id=_"events" placeholder="pre events" 
+                    value="{{default(step._events, "")}}">
           <br>
           <label style="width:10em" title="json of attributes/ minds to update after
                         success">Updates</label>
           <input style="width:20em" id="updates" custom="json" placeholder="updates"  
-                value='{ {% for k,v in default(step.updates,{})%}"{{k}}":"{{v}}"{% if loop.is_last == false %}, {% endif %}{%endfor %} }'>
+                                                value={{ default(step.updates, {}) }}>
           <br>
           <label style="width:10em"  title="List of steps to set active, when this step is
                         done.">Linked Steps</label>
           <input style="width:20em" id="linkedSteps" custom="json" placeholder="linkedSteps"  
-             value='[{% for x in default(step.linkedSteps,[]) %}"{{x}}"{% if loop.is_last == false %}, {% endif %}{%endfor %}]'>
+                              value={{ default(step.linkedSteps, []) }}>
           <br>
           <div style="text-align: center">
             <span title="Delete this element" class="mod_elem" 
               onclick="del_elem('steps',{{loop.index}})">-</span>
             <span title="Add a new element here" class="mod_elem" 
-                                                 onclick="add_elem('steps',{{loop.index}})">+</span>
+                        onclick="add_elem('steps',{{loop.index}})">+</span>
           </div>
         </li>
       {% endfor %}
     </ul>
   </li>
-
-  
-
   
 {% include "temp_footer" %}

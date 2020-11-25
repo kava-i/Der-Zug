@@ -18,13 +18,15 @@ function GenerateJson(element) {
     //Simple input fields (f.e. name, id, ...).
     if (object_list[i].hasAttribute("custom") == false)
       AddJsons(json, CreateObject(object_list[i]));
+    //Number of inputfields, not assamble in ul. With extra id fields
+    else if (object_list[i].getAttribute("custom") == "just_object")
+      json[object_list[i].id] = CreateObject(object_list[i]);
     //List of objects (f.e. items, handlers, descriptions...).
     else if (object_list[i].getAttribute("custom") == "list")
       AddJsons(json, CreateList(object_list[i]));
     //Dictionary of objects (f.e. exits, attacks, ...).
-    else if (object_list[i].getAttribute("custom") == "map") {
+    else if (object_list[i].getAttribute("custom") == "map") 
       AddJsons(json, CreateMap(object_list[i]));
-    }
     else
       console.log("Unkown attribute in 'GenerateJson': ", object_list[i].getAttribute("custom"));
   }
@@ -139,6 +141,12 @@ function GetAsType(elem) {
         throw(elem.value + " is not a number.");
       return parseInt(elem.value);
     }
+    else if (elem.getAttribute("custom") == "str_int") {
+      var is_number = /^\d+$/.test(elem.value);
+      if (is_number == false)
+        throw(elem.value + " is not a number.");
+      return elem.value;
+    }
     else if (elem.getAttribute("custom") == "json")
       return JSON.parse(elem.value);
     else if (elem.getAttribute("custom") == "bool" && elem.value == "yes") 
@@ -215,7 +223,6 @@ function WriteElem() {
   //Function to handle request 
   xhttp.onload = function(event){
     //If request fails, display message to user.
-    let msg = document.getElementsByClassName("user_error")[1];
     console.log("Response: ", this.responseText);
     if (xhttp.status != 200) {
       if (this.responseText = "9") {
@@ -232,8 +239,7 @@ function WriteElem() {
     }
     //Display success message to user.
     else {
-      msg.innerHTML = "That worked great!";
-      //window.location=window.location;
+      window.location=window.location;
     }
   }
 }

@@ -19,7 +19,7 @@
         <li id="optional" class="full_length" style="display: none;">
           <label>Updates:</label>
           <input id="updates" placeholder="updates" custom="json" 
-              value='{ {% for k,v in default(desc.updates,{})%}"{{k}}":"{{v}}"{% if loop.is_last == false %}, {% endif %}{%endfor %} }'>
+              value= {{ default(desc.updates, {}) }}>
         </li>
         <li id="optional" style="display: none;" custom="list">
           <label style="width:auto;">Pre permanent Events:</label>

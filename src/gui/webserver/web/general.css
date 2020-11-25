@@ -299,3 +299,16 @@ body {
   height:63px; 
   margin-right: 1em;
 }
+
+.long_inp {
+  width:35em;
+}
+.long_lbl {
+  width:7em;
+}
+.short{
+  width:4em;
+}
+.fitting {
+  width:auto;
+}

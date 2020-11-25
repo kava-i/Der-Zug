@@ -8,7 +8,7 @@
           <label title="There can be multiple pages with the same number. By
                         setting logic-attributes, the matching page is shown to
                         the player">Page</label>
-          <input id="speaker" custom="int" placeholder="page" value="{{
+          <input id="page" custom="str_int" placeholder="page" value="{{
           default(desc.page, "0") }}">
         </li>
         <li>
@@ -27,7 +27,7 @@
         <li id="optional" class="full_length" style="display: none;">
           <label>Updates:</label>
           <input id="updates" placeholder="updates" custom="json" 
-              value='{ {% for k,v in default(desc.updates,{})%}"{{k}}":"{{v}}"{% if loop.is_last == false %}, {% endif %}{%endfor %} }'>
+                                                    value={{default(desc.updates,{})}}>
         </li>
         <li id="optional" style="display: none;" custom="list">
           <label style="width:auto;">Pre permanent Events:</label>
