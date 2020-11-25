@@ -19,35 +19,25 @@ QuestFactory
 "zum_gleis"
 QuestFactory
 "leave"
-Room: "zug_compartment-a"
+Room: "hospital_corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital_corridor"
+Room: "hospital_foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital_foyer_kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital_foyer"
+Room: "hospital_stairs"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug_compartment-a"
-Room: "zug_compartment-b"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-b"
-Room: "zug_compartment-c"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-c"
-Room: "zug_compartment-d"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-d"
-Room: "zug_trainCorridor"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_trainCorridor"
+Create room: "hospital_stairs"
 Created all rooms 
 Room: "trainstation_ausgang"
 Parsing characters
@@ -60,10 +50,16 @@ Parsing Items
 Parsing Items
 Parsing details 
 "trainstation_eingangshalle_glasmalerei"
+parseRandomItemsToDetail
 Parsing Items
 "trainstation_eingangshalle_katharina_die_große"
+parseRandomItemsToDetail
 Parsing Items
 "trainstation_eingangshalle_hegel_tafel"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_buecherregal"
+parseRandomItemsToDetail
 Parsing Items
 Create room: "trainstation_eingangshalle"
 Room: "trainstation_fernzüge"
@@ -82,6 +78,7 @@ Parsing characters
 Parsing Items
 Parsing details 
 "trainstation_geheime-kammer1_sockel"
+parseRandomItemsToDetail
 Parsing Items
 Create room: "trainstation_geheime-kammer1"
 Room: "trainstation_geheime-kammer4"
@@ -89,6 +86,7 @@ Parsing characters
 Parsing Items
 Parsing details 
 "trainstation_geheime-kammer4_sockel"
+parseRandomItemsToDetail
 Parsing Items
 Create room: "trainstation_geheime-kammer4"
 Room: "trainstation_gleis1"
@@ -136,24 +134,35 @@ Parsing Items
 Parsing details 
 Create room: "trainstation_toiletten"
 Created all rooms 
-Room: "hospital_corridor"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "hospital_corridor"
-Room: "hospital_foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital_foyer_kleine_kiste"
-Parsing Items
-Create room: "hospital_foyer"
-Room: "hospital_stairs"
+Room: "zug_compartment-a"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital_stairs"
+Create room: "zug_compartment-a"
+Room: "zug_compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-b"
+Room: "zug_compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-c"
+Room: "zug_compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-d"
+Room: "zug_trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_trainCorridor"
 Created all rooms 
 worldFactory: done.
 Done parsing world.
@@ -178,35 +187,25 @@ QuestFactory
 "zum_gleis"
 QuestFactory
 "leave"
-Room: "zug_compartment-a"
+Room: "hospital_corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital_corridor"
+Room: "hospital_foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital_foyer_kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital_foyer"
+Room: "hospital_stairs"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug_compartment-a"
-Room: "zug_compartment-b"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-b"
-Room: "zug_compartment-c"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-c"
-Room: "zug_compartment-d"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-d"
-Room: "zug_trainCorridor"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_trainCorridor"
+Create room: "hospital_stairs"
 Created all rooms 
 Room: "trainstation_ausgang"
 Parsing characters
@@ -219,10 +218,16 @@ Parsing Items
 Parsing Items
 Parsing details 
 "trainstation_eingangshalle_glasmalerei"
+parseRandomItemsToDetail
 Parsing Items
 "trainstation_eingangshalle_katharina_die_große"
+parseRandomItemsToDetail
 Parsing Items
 "trainstation_eingangshalle_hegel_tafel"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_buecherregal"
+parseRandomItemsToDetail
 Parsing Items
 Create room: "trainstation_eingangshalle"
 Room: "trainstation_fernzüge"
@@ -241,6 +246,7 @@ Parsing characters
 Parsing Items
 Parsing details 
 "trainstation_geheime-kammer1_sockel"
+parseRandomItemsToDetail
 Parsing Items
 Create room: "trainstation_geheime-kammer1"
 Room: "trainstation_geheime-kammer4"
@@ -248,6 +254,7 @@ Parsing characters
 Parsing Items
 Parsing details 
 "trainstation_geheime-kammer4_sockel"
+parseRandomItemsToDetail
 Parsing Items
 Create room: "trainstation_geheime-kammer4"
 Room: "trainstation_gleis1"
@@ -295,24 +302,35 @@ Parsing Items
 Parsing details 
 Create room: "trainstation_toiletten"
 Created all rooms 
-Room: "hospital_corridor"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "hospital_corridor"
-Room: "hospital_foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital_foyer_kleine_kiste"
-Parsing Items
-Create room: "hospital_foyer"
-Room: "hospital_stairs"
+Room: "zug_compartment-a"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital_stairs"
+Create room: "zug_compartment-a"
+Room: "zug_compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-b"
+Room: "zug_compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-c"
+Room: "zug_compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-d"
+Room: "zug_trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_trainCorridor"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
@@ -337,35 +355,25 @@ QuestFactory
 "zum_gleis"
 QuestFactory
 "leave"
-Room: "zug_compartment-a"
+Room: "hospital_corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital_corridor"
+Room: "hospital_foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital_foyer_kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital_foyer"
+Room: "hospital_stairs"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug_compartment-a"
-Room: "zug_compartment-b"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-b"
-Room: "zug_compartment-c"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-c"
-Room: "zug_compartment-d"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-d"
-Room: "zug_trainCorridor"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_trainCorridor"
+Create room: "hospital_stairs"
 Created all rooms 
 Room: "trainstation_ausgang"
 Parsing characters
@@ -378,10 +386,16 @@ Parsing Items
 Parsing Items
 Parsing details 
 "trainstation_eingangshalle_glasmalerei"
+parseRandomItemsToDetail
 Parsing Items
 "trainstation_eingangshalle_katharina_die_große"
+parseRandomItemsToDetail
 Parsing Items
 "trainstation_eingangshalle_hegel_tafel"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_buecherregal"
+parseRandomItemsToDetail
 Parsing Items
 Create room: "trainstation_eingangshalle"
 Room: "trainstation_fernzüge"
@@ -400,6 +414,7 @@ Parsing characters
 Parsing Items
 Parsing details 
 "trainstation_geheime-kammer1_sockel"
+parseRandomItemsToDetail
 Parsing Items
 Create room: "trainstation_geheime-kammer1"
 Room: "trainstation_geheime-kammer4"
@@ -407,6 +422,7 @@ Parsing characters
 Parsing Items
 Parsing details 
 "trainstation_geheime-kammer4_sockel"
+parseRandomItemsToDetail
 Parsing Items
 Create room: "trainstation_geheime-kammer4"
 Room: "trainstation_gleis1"
@@ -454,24 +470,35 @@ Parsing Items
 Parsing details 
 Create room: "trainstation_toiletten"
 Created all rooms 
-Room: "hospital_corridor"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "hospital_corridor"
-Room: "hospital_foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital_foyer_kleine_kiste"
-Parsing Items
-Create room: "hospital_foyer"
-Room: "hospital_stairs"
+Room: "zug_compartment-a"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital_stairs"
+Create room: "zug_compartment-a"
+Room: "zug_compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-b"
+Room: "zug_compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-c"
+Room: "zug_compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-d"
+Room: "zug_trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_trainCorridor"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
@@ -496,35 +523,25 @@ QuestFactory
 "zum_gleis"
 QuestFactory
 "leave"
-Room: "zug_compartment-a"
+Room: "hospital_corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital_corridor"
+Room: "hospital_foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital_foyer_kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital_foyer"
+Room: "hospital_stairs"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug_compartment-a"
-Room: "zug_compartment-b"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-b"
-Room: "zug_compartment-c"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-c"
-Room: "zug_compartment-d"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-d"
-Room: "zug_trainCorridor"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_trainCorridor"
+Create room: "hospital_stairs"
 Created all rooms 
 Room: "trainstation_ausgang"
 Parsing characters
@@ -537,10 +554,16 @@ Parsing Items
 Parsing Items
 Parsing details 
 "trainstation_eingangshalle_glasmalerei"
+parseRandomItemsToDetail
 Parsing Items
 "trainstation_eingangshalle_katharina_die_große"
+parseRandomItemsToDetail
 Parsing Items
 "trainstation_eingangshalle_hegel_tafel"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_buecherregal"
+parseRandomItemsToDetail
 Parsing Items
 Create room: "trainstation_eingangshalle"
 Room: "trainstation_fernzüge"
@@ -559,6 +582,7 @@ Parsing characters
 Parsing Items
 Parsing details 
 "trainstation_geheime-kammer1_sockel"
+parseRandomItemsToDetail
 Parsing Items
 Create room: "trainstation_geheime-kammer1"
 Room: "trainstation_geheime-kammer4"
@@ -566,6 +590,7 @@ Parsing characters
 Parsing Items
 Parsing details 
 "trainstation_geheime-kammer4_sockel"
+parseRandomItemsToDetail
 Parsing Items
 Create room: "trainstation_geheime-kammer4"
 Room: "trainstation_gleis1"
@@ -613,24 +638,35 @@ Parsing Items
 Parsing details 
 Create room: "trainstation_toiletten"
 Created all rooms 
-Room: "hospital_corridor"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "hospital_corridor"
-Room: "hospital_foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital_foyer_kleine_kiste"
-Parsing Items
-Create room: "hospital_foyer"
-Room: "hospital_stairs"
+Room: "zug_compartment-a"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital_stairs"
+Create room: "zug_compartment-a"
+Room: "zug_compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-b"
+Room: "zug_compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-c"
+Room: "zug_compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-d"
+Room: "zug_trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_trainCorridor"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
@@ -655,35 +691,25 @@ QuestFactory
 "zum_gleis"
 QuestFactory
 "leave"
-Room: "zug_compartment-a"
+Room: "hospital_corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital_corridor"
+Room: "hospital_foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital_foyer_kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital_foyer"
+Room: "hospital_stairs"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug_compartment-a"
-Room: "zug_compartment-b"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-b"
-Room: "zug_compartment-c"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-c"
-Room: "zug_compartment-d"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-d"
-Room: "zug_trainCorridor"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_trainCorridor"
+Create room: "hospital_stairs"
 Created all rooms 
 Room: "trainstation_ausgang"
 Parsing characters
@@ -696,10 +722,16 @@ Parsing Items
 Parsing Items
 Parsing details 
 "trainstation_eingangshalle_glasmalerei"
+parseRandomItemsToDetail
 Parsing Items
 "trainstation_eingangshalle_katharina_die_große"
+parseRandomItemsToDetail
 Parsing Items
 "trainstation_eingangshalle_hegel_tafel"
+parseRandomItemsToDetail
+Parsing Items
+"trainstation_eingangshalle_buecherregal"
+parseRandomItemsToDetail
 Parsing Items
 Create room: "trainstation_eingangshalle"
 Room: "trainstation_fernzüge"
@@ -718,6 +750,7 @@ Parsing characters
 Parsing Items
 Parsing details 
 "trainstation_geheime-kammer1_sockel"
+parseRandomItemsToDetail
 Parsing Items
 Create room: "trainstation_geheime-kammer1"
 Room: "trainstation_geheime-kammer4"
@@ -725,6 +758,7 @@ Parsing characters
 Parsing Items
 Parsing details 
 "trainstation_geheime-kammer4_sockel"
+parseRandomItemsToDetail
 Parsing Items
 Create room: "trainstation_geheime-kammer4"
 Room: "trainstation_gleis1"
@@ -772,24 +806,35 @@ Parsing Items
 Parsing details 
 Create room: "trainstation_toiletten"
 Created all rooms 
-Room: "hospital_corridor"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "hospital_corridor"
-Room: "hospital_foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital_foyer_kleine_kiste"
-Parsing Items
-Create room: "hospital_foyer"
-Room: "hospital_stairs"
+Room: "zug_compartment-a"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital_stairs"
+Create room: "zug_compartment-a"
+Room: "zug_compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-b"
+Room: "zug_compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-c"
+Room: "zug_compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-d"
+Room: "zug_trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_trainCorridor"
 Created all rooms 
 worldFactory: done.
 initializing context stack.

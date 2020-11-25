@@ -289,27 +289,33 @@ map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room,
   return mapDetails;
 }
 
-void CWorld::parseRandomItemsToDetail(nlohmann::json& j_detail)
-{
-    if(j_detail.count("defaultItems") > 0)
-    {
-        nlohmann::json j = j_detail["defaultItems"];
-        int value = j["value"];
-        while(value > 0)
-        {
-            auto it = m_items.begin();
-            size_t num = rand() % m_items.size();
-            std::advance(it, num);
-            nlohmann::json jItem = it->second;
-            if(j.count("categories") > 0 && func::inArray(j["categories"], jItem["category"]) == false)
-                continue;
-            if(j.count("types") > 0 && func::inArray(j["types"], jItem["type"]) == false)
-                continue;
-            value -= jItem.value("value", 2); 
-            nlohmann::json newItem = {it->first, nlohmann::json::object()};
-            j_detail["items"].push_back(newItem);
-        }
+void CWorld::parseRandomItemsToDetail(nlohmann::json& j_detail) {
+  std::cout << "parseRandomItemsToDetail" << std::endl;
+  if(j_detail.count("defaultItems") > 0) {
+    nlohmann::json j = j_detail["defaultItems"];
+    int value = j["value"];
+    int counter = 0;
+    while(value > 0) {
+      counter++;
+      if (counter == 10000) {
+        std::cout << "Wrong values set for type/ categories: no items found." 
+          << std::endl;
+        throw("Wrong entries for defaultItems");
+        break;
+      }
+      auto it = m_items.begin();
+      size_t num = rand() % m_items.size();
+      std::advance(it, num);
+      nlohmann::json jItem = it->second;
+      if(j.count("categories") > 0 && j["categories"].size() > 0 
+          && func::inArray(j["categories"], jItem["category"]) == false) continue;
+      if(j.count("types") > 0 && j["types"].size() > 0 
+          && func::inArray(j["types"], jItem["type"]) == false) continue;
+      value -= jItem.value("value", 2); 
+      nlohmann::json newItem = {it->first, nlohmann::json::object()};
+      j_detail["items"].push_back(newItem);
     }
+  }
 }
 
 void CWorld::itemFactory()
