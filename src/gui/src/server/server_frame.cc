@@ -81,6 +81,9 @@ void ServerFrame::Start(int port) {
       CheckRunning(req, resp); });
   server_.Post("/api/get_log", [&](const Request& req, Response& resp) {
       GetLog(req, resp); });
+  server_.Post("/api/get_user_port", [&](const Request& req, Response& resp) {
+      GetUserPort(req, resp); });
+
 
   //html
   server_.Get("/", [&](const Request& req, Response& resp) {
@@ -566,6 +569,25 @@ void ServerFrame::GetLog(const Request& req, Response& resp) {
     resp.status = 200;
     resp.set_content(func::GetPage(path), "text/txt");
   }
+}
+
+void ServerFrame::GetUserPort(const Request& req, Response& resp) {
+  //Try to get username from cookie
+  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::shared_lock sl(shared_mtx_user_manager_);
+  std::string username = user_manager_.GetUserFromCookie(ptr);
+  sl.unlock();
+  
+  //If user does not exist, redirect to login-page.
+  if (username == "") {
+    resp.status = 302;
+    resp.set_header("Location", "/login");
+    return;
+  }
+
+  sl.lock();
+  resp.set_content(std::to_string(user_manager_.GetUser(username)->port()),
+      "text/txt");
 }
 
 

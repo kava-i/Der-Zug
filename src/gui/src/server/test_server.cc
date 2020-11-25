@@ -14,6 +14,7 @@
 #include <httplib.h>
 
 #include "server_frame.h"
+#include "users/user_manager.h"
 #include "util/func.h"
 
 namespace fs=std::filesystem;
@@ -423,6 +424,11 @@ TEST_CASE("Server is working as expected", "[server]") {
               "application/x-www-form-urlencoded");
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
 
+          // *** test running game *** //
+          resp = cl.Post("/api/get_user_port", headers_1, "",
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+          REQUIRE(stoi(resp->body) > 9000);
         }
         server.Stop();
     });
