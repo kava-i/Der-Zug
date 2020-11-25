@@ -44,3 +44,10 @@ function get_log() {
       document.getElementById("check_msg").innerHTML = "failed getting log.";
   }
 }
+
+function run() {
+  var cur_loc = window.location.href;
+  cur_loc = cur_loc.substr(0, cur_loc.indexOf(":", 7));
+  console.log("current location:", cur_loc);
+  window.open(cur_loc + ":9003/");
+}
