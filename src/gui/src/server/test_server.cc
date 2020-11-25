@@ -169,7 +169,7 @@ TEST_CASE("Server is working as expected", "[server]") {
           //Check that newly build world is starting and basic command are running.
           std::string command = "./../../textadventure/build/bin/testing.o"
               " --path ../../data/users/test/files/new_world/"
-              " -p test"
+              " -p _admin"
               " > ../../data/users/test/logs/new_world.txt";
           REQUIRE(system(command.c_str()) == 0);
 
@@ -188,9 +188,9 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body.find("test") != std::string::npos);
 
-          resp = cl.Get("/test/files/new_world/players/players/test", headers_1);
+          resp = cl.Get("/test/files/new_world/players/players/_admin", headers_1);
           REQUIRE(resp->status == 200);
-          REQUIRE(resp->body.find("test") != std::string::npos);
+          REQUIRE(resp->body.find("Admin") != std::string::npos);
 
           //The test-room-file should already exist
           resp = cl.Get("/test/files/new_world/rooms/test", headers_1);

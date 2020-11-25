@@ -1,4 +1,6 @@
 #include "game.h" 
+#include <chrono>
+#include <thread>
 
 // *** GETTER ***
 map<string, CPlayer*> CGame::getPlayers() {
@@ -106,6 +108,18 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>&
   m_curPlayer->getRoom()->setPlayers(mapOnlinePlayers);
   m_curPlayer->setPlayers(mapOnlinePlayers2);
 
+  if (sInput == "[end_game]" && m_curPlayer->getID() == "_admin") {
+    std::cout << "Sending to all online players" << std::endl;
+    for (auto it : onlinePlayers) {
+      if (it == m_curPlayer->getID()) continue;
+      m_players[it]->send("Game closed by host.\n");
+    }
+    std::cout << "Sending to host." << std::endl;
+    m_curPlayer->send("Confirm closing...\n");
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    return "[### end_game ###]";
+  }
+
   //Check whether player is dead
   if(m_curPlayer->getStat("hp") <= 0) {
     m_context->throw_event(std::make_pair("reload_player", 
@@ -117,7 +131,7 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>&
   std::vector<event> events = parser.parse(sInput);
 
   //Check for programmer commands
-  if(m_curPlayer->getID().find("programmer") != std::string::npos) {
+  if(m_curPlayer->getID() == "_admin") {
     for(size_t i=0; i<events.size(); i++)
       m_context->throw_event(events[i], m_curPlayer);
   }
