@@ -437,11 +437,10 @@ void CPlayer::startChat(CPlayer* player) {
 * Add chat context.
 * @param sPlayer (chat partner (other player))
 */
-void CPlayer::addChatContext(std::string sPartner)
-{
-    Context* context = new Context("chat", {{"partner", sPartner}});
-    context->add_listener("h_send", (std::regex)"(.*)", 1);
-    m_contextStack.insert(context, 1, "chat");
+void CPlayer::addChatContext(std::string sPartner) {
+  Context* context = new Context("chat", {{"partner", sPartner}});
+  context->add_listener("h_send", (std::regex)"(.*)", 1);
+  m_contextStack.insert(context, 1, "chat");
 }
 
 
@@ -451,23 +450,21 @@ void CPlayer::addChatContext(std::string sPartner)
 * of the Dialog partner, printing, what he said.
 * @param sMessage message to print to console
 */
-void CPlayer::send(string sMessage)
-{
-    _cout->write(sMessage);
-    _cout->flush(); 
+void CPlayer::send(string sMessage) {
+  _cout->write(sMessage);
+  _cout->flush(); 
 }
 
 /**
 * Add read context.
 * @param sItem (id of book which to read)
 */
-void CPlayer::addReadContext(std::string sID)
-{
-    //Create context and add to context-stack.
-    CItem* item = m_inventory.getItem_byID(sID);
-    Context* context = new Context((std::string)"read", 
-                                    {{"mark", item->getMark()},{"item",sID}});
-    m_contextStack.insert(context, 1, "read");
+void CPlayer::addReadContext(std::string sID) {
+  //Create context and add to context-stack.
+  CItem* item = m_inventory.getItem_byID(sID);
+  Context* context = new Context((std::string)"read", 
+                                  {{"mark", item->getMark()},{"item",sID}});
+  m_contextStack.insert(context, 1, "read");
 }
 
 

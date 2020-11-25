@@ -36,8 +36,8 @@ class WebserverGame {
       return _id;
     }
 
-    void onmessage(std::string sInput,std::map<decltype(websocketpp::lib::
-          weak_ptr<void>().lock().get()),WebserverGame*> *ptr) {
+    void onmessage(std::string sInput, std::map<decltype(websocketpp::lib::
+          weak_ptr<void>().lock().get()), WebserverGame*> *ptr, bool& global_shutdown) {
       if(_name=="") {
         _name=sInput;
         _cout->write(" " + sInput +"\n");
@@ -79,23 +79,23 @@ class WebserverGame {
         return;
       } 
 
-      if(sInput == ":q") {
-        _cout->write(Webcmd::set_sound("sounds/fight.mp3"),Webcmd::set_color(Webcmd::color::GREEN),"Thanks for playing\n");
-        _cout->flush();
-        return;
-      }
-
       std::list<std::string> lk;
       for(const auto &it : *ptr)
         lk.push_back(it.second->GetID());
 
-      std::cout<<"Befor play: sInput: "<<sInput<<" calling with id: "<<_id<<std::endl;
+      std::cout<<"Befor play: sInput: "<< sInput << " calling with id: " 
+        << _id <<std::endl;
       std::string sOutput = game->play(sInput, _id, lk);
-      //std::cout<<"Got output: "<<sOutput<<std::endl;
-      std::cout<<"Writing to client now"<<std::endl;
-      _cout->write(sOutput);
-      std::cout<<"Send the output to client"<<std::endl;
-      _cout->flush();
+      if (sOutput == "[### end_game ###]") {
+        sOutput = "Game closed by host";
+        global_shutdown = true;
+        std::cout << "Game is getting closed..." << std::endl;
+      }
+      else {
+        _cout->write(sOutput);
+        std::cout<<"Send the output to client: " << sOutput <<std::endl;
+        _cout->flush();
+      }
     }
 };
 
