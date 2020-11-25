@@ -13,6 +13,7 @@ namespace fs = std::filesystem;
 
 UserManager::UserManager(std::string main_path, std::vector<std::string> cats) 
   : path_(main_path), categories_(cats) {
+  ports_ = 9000;
   //Iterate over users and create user.
   for (auto& p : fs::directory_iterator(path_)) {
     std::string path = p.path();
@@ -22,7 +23,7 @@ UserManager::UserManager(std::string main_path, std::vector<std::string> cats)
     
     try {
       users_[user["username"]] = new User(user["username"], user["password"], 
-        path_, user["locations"], categories_);
+        path_, user["locations"], categories_, ++ports_);
     }
     catch(std::exception& e) {
       std::cout << "Creating user at path: " << p.path() << " failed!\n";
@@ -40,8 +41,8 @@ User* UserManager::GetUser(std::string username) const {
 }
 
 void UserManager::AddUser(std::string username, std::string password) {
-  std::unique_lock ul(shared_mutex_users_);
-  users_[username] = new User(username, password, path_, categories_);
+  std::scoped_lock scoped_locks(shared_mutex_users_, shared_mutex_ports_);
+  users_[username] = new User(username, password, path_, categories_, ++ports_);
   users_[username]->SafeUser();
 }
 

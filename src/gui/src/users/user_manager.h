@@ -101,6 +101,8 @@ class UserManager {
     mutable std::shared_mutex shared_mutex_cookies_;
     const std::string path_;
     const std::vector<std::string> categories_;
+    int ports_;
+    mutable std::shared_mutex shared_mutex_ports_;
 
     /**
      * Adds new user

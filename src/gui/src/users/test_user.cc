@@ -35,6 +35,9 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   user_manager.DoRegistration("test", "password1234", "password1234");
   User* user = user_manager.GetUser("test");
   REQUIRE(user != nullptr);
+  //Check that user got a port
+  REQUIRE(user->port() < 10000);
+  REQUIRE(user->port() > 9000);
   //Check that folders for worlds and backups where created
   REQUIRE(func::demo_exists("../../data/users/test/files") == true);
   REQUIRE(func::demo_exists("../../data/users/test/backups") == true);

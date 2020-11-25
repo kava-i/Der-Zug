@@ -13,7 +13,8 @@
 namespace fs = std::filesystem;
 
 User::User(std::string name, std::string pw, std::string path, std::vector
-    <std::string> cats) : username_(name), path_(path), categories_(cats) {
+    <std::string> cats, int port) : username_(name), path_(path), 
+    categories_(cats), port_(port) {
   password_ = pw;
   locations_.push_back(username_ + "/");
 
@@ -30,7 +31,8 @@ User::User(std::string name, std::string pw, std::string path, std::vector
 
 User::User(std::string name, std::string pw, std::string path, 
     std::vector<std::string> locations, std::vector
-    <std::string> cats) : username_(name), path_(path), categories_(cats) {
+    <std::string> cats, int port) : username_(name), path_(path), 
+    categories_(cats), port_(port) {
   password_ = pw;
   locations_ = locations;
 
@@ -50,6 +52,9 @@ User::User(std::string name, std::string pw, std::string path,
 std::string User::password() const {
   std::shared_lock sl(shared_mtx_password_);
   return password_;
+}
+const int User::port() const {
+  return port_;
 }
 
 

@@ -32,7 +32,7 @@ class User {
      * @param[in] categories (all currently available categories)
     */
     User(std::string username, std::string pw, std::string path, std::vector
-        <std::string> categories);
+        <std::string> categories, int port);
 
     /**
      * Constructor creating a (new) user.
@@ -43,11 +43,12 @@ class User {
      * @param[in] categories (all currently available categories)
     */
     User(std::string username, std::string pw, std::string path, std::vector
-        <std::string> locations, std::vector<std::string> categories);
+        <std::string> locations, std::vector<std::string> categories, int port);
 
 
     // ** getter ** //
     std::string password() const;
+    const int port() const;
 
     // ** setter ** //
     void set_password(std::string password);
@@ -221,6 +222,7 @@ class User {
     std::vector<std::string> locations_;
     mutable std::shared_mutex shared_mtx_locations_;
     const std::vector<std::string> categories_;
+    const int port_;
 
     /**
      * Construct a json with all the values from user.
