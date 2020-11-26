@@ -1,4 +1,9 @@
 #include <iostream>
+#include <fstream>
+
+#include <httplib.h>
+#include <inja/inja.hpp>
+#include <nlohmann/json.hpp>
 
 #include "JanGeschenk/Webconsole.hpp"
 #include "JanGeschenk/Webgame.hpp"
@@ -24,8 +29,6 @@ class WebserverGame {
       _password = "";
       _id = "";
       _cout = cout;
-      _cout->write(Webcmd::set_color(Webcmd::color::ORANGE), "Name: ");
-      _cout->flush();
     }
 
     const std::string &GetName() {
@@ -99,6 +102,20 @@ class WebserverGame {
     }
 };
 
+std::string GetPage(std::string path) {
+  //Read loginpage and send
+  std::ifstream read(path);
+  if (!read) {
+    std::cout << "Wrong file passed: " << path << std::endl;
+    return "";
+  }
+  std::string page( (std::istreambuf_iterator<char>(read) ),
+                    std::istreambuf_iterator<char>()     );
+  //Delete file-end marker
+  page.pop_back();
+  return page;
+}
+
 int main(int x, char **argc) {
   CGame currentGame(argc[1]);
   game = &currentGame;
@@ -106,7 +123,21 @@ int main(int x, char **argc) {
   int port = 9002;
   if (x>2)
     port = std::stoi(argc[2]);
-  std::cout << "Game starting on port " << port << std::endl;
-  gl.run(port);
-}
 
+  //Open httpserver to serve main-page
+  std::thread t1([&]() {
+    httplib::Server srv;
+    srv.Get("/", [&](const httplib::Request& req, httplib::Response& resp)  {
+      inja::Environment env;
+      inja::Template temp = env.parse_template("index.html");
+      resp.set_content(env.render(temp, nlohmann::json({{"port",port+1}})), 
+          "text/html"); });
+    srv.listen("0.0.0.0", port);
+  });
+
+  std::thread t2([&]() {
+    gl.run(port+1);
+  });
+  t1.join(); 
+  t2.join(); 
+}
