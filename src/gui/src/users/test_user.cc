@@ -29,15 +29,12 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   //Create user manager.
   UserManager user_manager("../../data/users", {"attacks", 
     "defaultDialogs", "dialogs", "players", "rooms", "characters", 
-    "defaultDescriptions", "details", "items", "quests", "texts"});
+    "defaultDescriptions", "details", "items", "quests", "texts", "images"});
 
   //Create new user
   user_manager.DoRegistration("test", "password1234", "password1234");
   User* user = user_manager.GetUser("test");
   REQUIRE(user != nullptr);
-  //Check that user got a port
-  REQUIRE(user->port() < 10000);
-  REQUIRE(user->port() > 9000);
   //Check that folders for worlds and backups where created
   REQUIRE(func::demo_exists("../../data/users/test/files") == true);
   REQUIRE(func::demo_exists("../../data/users/test/backups") == true);
@@ -46,20 +43,24 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   std::string world = "Test_World";
   std::string full_path = "../../data/users";
   std::string path = "/test/files/" + world;
-  REQUIRE(user->CreateNewWorld(world) == ErrorCodes::SUCCESS); 
+  REQUIRE(user->CreateNewWorld(world, 9999) == ErrorCodes::SUCCESS); 
   nlohmann::json players_json;
   REQUIRE(func::LoadJsonFromDisc(full_path+path+"/players/players.json", 
         players_json) == true);
   REQUIRE(players_json.size() != 0);
-  REQUIRE(user->CreateNewWorld(world) == ErrorCodes::ALREADY_EXISTS); 
-  REQUIRE(user->CreateNewWorld("../Test_World") == ErrorCodes::WRONG_FORMAT); 
+  REQUIRE(user->CreateNewWorld(world, 9999) == ErrorCodes::ALREADY_EXISTS); 
+  REQUIRE(user->CreateNewWorld("../Test_World", 9999) == ErrorCodes::WRONG_FORMAT); 
   REQUIRE(func::demo_exists(full_path + path + "/config.json"));
   REQUIRE(func::demo_exists(full_path + path + "/rooms/test.json"));
   REQUIRE(func::demo_exists(full_path + path + "/players/players.json"));
+  REQUIRE(func::demo_exists(full_path + path + "/images/background.jpg"));
 
   REQUIRE(user->DeleteWorld("humbug") == ErrorCodes::NO_WORLD);
   REQUIRE(user->DeleteWorld(world) == ErrorCodes::SUCCESS);
-  REQUIRE(user->CreateNewWorld(world) == ErrorCodes::SUCCESS); 
+  REQUIRE(user->CreateNewWorld(world, 9999) == ErrorCodes::SUCCESS); 
+  
+  //Check that user got a port
+  REQUIRE(user->GetPortOfWorld("Test_World") == 9999);
 
   //Check that newly build world is starting and basic command are running.
   std::string command = "./../../textadventure/build/bin/testing.o"
@@ -69,16 +70,17 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(system(command.c_str()) == 0);
 
   //GetOverview: Check if world is found on overview page.
-  REQUIRE(user->GetOverview().find(world) != std::string::npos);
+  REQUIRE(user->GetOverview(user_manager.GetSharedWorlds("test"), 
+        user_manager.GetAllWorlds("test")).find(world) != std::string::npos);
   
   //GetWorld: Check if basic categories are found and func react to wrong path.
-  REQUIRE(user->GetWorld("humbug", "humbug") == "");
-  REQUIRE(user->GetWorld(path, world).find("attacks") != std::string::npos);
+  REQUIRE(user->GetWorld("humbug", "hum", "humbug", 0) == "");
+  REQUIRE(user->GetWorld(path, "test", world, 0).find("attacks") != std::string::npos);
  
   //GetCategory: Check if page is returned, and func reacts to wrong path.
-  REQUIRE(user->GetCategory("hum/bug", "hum", "bug") == "");
-  REQUIRE(user->GetCategory(path+"/rooms", world, "rooms") != "");
-  REQUIRE(user->GetCategory(path+"/config", world, "config") != "");
+  REQUIRE(user->GetCategory("hum/bug", "hum", "sum", "bug") == "");
+  REQUIRE(user->GetCategory(path+"/rooms", "test", world, "rooms") != "");
+  REQUIRE(user->GetCategory(path+"/config", "test", world, "config") != "");
 
   //Check adding files is working.
   REQUIRE(user->AddFile("hum/bug", "humbug") == ErrorCodes::PATH_NOT_FOUND);
@@ -112,17 +114,17 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->AddFile(path+"/attacks", "test_attacks") == ErrorCodes::SUCCESS);
 
   //Check that newly added subcategories are be found in category
-  REQUIRE(user->GetCategory(path+"/rooms", world, "rooms").find("test_house") 
+  REQUIRE(user->GetCategory(path+"/rooms", "test", world, "rooms").find("test_house") 
       != std::string::npos);
 
   //Check that accessing objects inside subcategory works
   std::string room_path = path + "/rooms/test_house";
-  REQUIRE(user->GetObjects("hum/bug/quatsch", "hum", "bug", "quatsch") == "");
-  REQUIRE(user->GetObjects(room_path, world, "rooms", "test_house") != "");
+  REQUIRE(user->GetObjects("hum/bug/quatsch", "bla", "hum", "bug", "quatsch") == "");
+  REQUIRE(user->GetObjects(room_path, "test", world, "rooms", "test_house") != "");
 
   //Check that accessing object is working
-  REQUIRE(user->GetObjects("hum/bug/quatsch", "hum", "bug", "quatsch") == "");
-  REQUIRE(user->GetObjects(room_path, world, "rooms", "test_house") != "");
+  REQUIRE(user->GetObjects("hum/bug/quatsch", "bla", "hum", "bug", "quatsch") == "");
+  REQUIRE(user->GetObjects(room_path, "test", world, "rooms", "test_house") != "");
 
   //Check that adding a new empty room is working
   REQUIRE(user->AddNewObject(room_path, "test_room") == ErrorCodes::SUCCESS);
@@ -153,27 +155,27 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(system(command.c_str()) == 0);
 
   //Check if newly create objects can be found on html page
-  REQUIRE(user->GetObjects(room_path, world, "rooms", "test_house")
+  REQUIRE(user->GetObjects(room_path, "test", world, "rooms", "test_house")
       .find("test_room") != std::string::npos);
 
   //Check if object pages can be reached
-  REQUIRE(user->GetObject(path+"/rooms/test_house/test_room", world, "rooms", 
+  REQUIRE(user->GetObject(path+"/rooms/test_house/test_room", "test", world, "rooms", 
         "test_house","test_room") != "File not found.");
-  REQUIRE(user->GetObject(path+"/attacks/test_attacks/test_attack", world, "attacks", 
+  REQUIRE(user->GetObject(path+"/attacks/test_attacks/test_attack", "test", world, "attacks", 
         "test_attacks","test_attack") != "File not found.");
-  REQUIRE(user->GetObject(path+"/dialogs/test_dialogs/test_dialog", world, "dialogs", 
+  REQUIRE(user->GetObject(path+"/dialogs/test_dialogs/test_dialog", "test", world, "dialogs", 
         "test_dialogs","test_dialog") != "File not found.");
-  REQUIRE(user->GetObject(path+"/characters/test_characters/test_character", world, 
+  REQUIRE(user->GetObject(path+"/characters/test_characters/test_character", "test", world, 
         "characters", "test_characters","test_character") != "File not found.");
-  REQUIRE(user->GetObject(path+"/items/test_items/test_item", world, "items", 
+  REQUIRE(user->GetObject(path+"/items/test_items/test_item", "test", world, "items", 
         "test_items","test_item") != "File not found.");
-  REQUIRE(user->GetObject(path+"/details/test_details/test_detail", world, "details", 
+  REQUIRE(user->GetObject(path+"/details/test_details/test_detail", "test", world, "details", 
         "test_details","test_detail") != "File not found.");
-  REQUIRE(user->GetObject(path+"/details/test_details/test_detail", world, "details", 
+  REQUIRE(user->GetObject(path+"/details/test_details/test_detail", "test", world, "details", 
         "test_details","test_detail") != "File not found.");
-  REQUIRE(user->GetObject(path+"/quests/test_quests/test_quest", world, "quests", 
+  REQUIRE(user->GetObject(path+"/quests/test_quests/test_quest", "test", world, "quests", 
           "test_quests","test_quest") != "File not found.");
-  REQUIRE(user->GetObject(path+"/texts/test_texts/test_text", world, "details", 
+  REQUIRE(user->GetObject(path+"/texts/test_texts/test_text", "test", world, "details", 
           "test_texts","test_text") != "File not found.");
   /*REQUIRE(user->GetObject(path+"/defaultDescriptions/test_default_descs/test_desc", 
         world, "defaultDescriptions", "test_default_descs","test_desc") 
@@ -241,10 +243,13 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->CheckAccessToLocations("/test/files/Test_World/attacks") == true);
   REQUIRE(user->CheckAccessToLocations("/test/backups/Test_World/") == true);
 
+
   //Do access-tests for user: "test2"
   REQUIRE(user2->CheckAccessToLocations("/test/files/Test_World") == false);
   REQUIRE(user2->CheckAccessToLocations("/test/files/Test_World/attacks") == false);
   REQUIRE(user2->CheckAccessToLocations("/test/backups/Test_World/") == false);
+
+  REQUIRE(user->AddRequest("test2", "Test_World") == true);
 
   REQUIRE(user_manager.GrantAccessTo("test", "test3", "Test_World") == ErrorCodes::NO_USER);
   REQUIRE(user_manager.GrantAccessTo("test", "test2", "World") == ErrorCodes::NO_WORLD);
@@ -258,4 +263,13 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user2->CreateBackup("test", "Test_World") == ErrorCodes::SUCCESS);
   REQUIRE(user2->RestoreBackup("test", "XXBACKUPYY") == ErrorCodes::ACCESS_DENIED);
   REQUIRE(user2->DeleteBackup("test", "XXBACKUPYY") == ErrorCodes::ACCESS_DENIED);
+
+  //Double check that all test-users are deleted
+  try {
+    std::filesystem::remove_all (path_to_test_user);
+    std::filesystem::remove_all (path_to_test_user2);
+  }
+  catch (...) {
+    std::cout << path_to_test_user << " not found!" << std::endl;
+  }
 }

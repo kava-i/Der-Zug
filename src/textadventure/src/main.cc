@@ -11,8 +11,8 @@
 #include "eventmanager/sorted_context.h"
 #include "tools/webcmd.h"
 
-
 CGame *game;
+httplib::Server srv;
 
 class WebserverGame {
   private:
@@ -92,6 +92,7 @@ class WebserverGame {
       if (sOutput == "[### end_game ###]") {
         sOutput = "Game closed by host";
         global_shutdown = true;
+        srv.stop();
         std::cout << "Game is getting closed..." << std::endl;
       }
       else {
@@ -116,6 +117,27 @@ std::string GetPage(std::string path) {
   return page;
 }
 
+std::string GetImage(std::string path, std::string image) {
+  system("ls");
+  path = path + "images" + image + ".jpg";
+  std::ifstream f(path, std::ios::in|std::ios::binary|std::ios::ate);    
+  if (!f.is_open()) {
+    std::cout << "file could not be found: " << path << std::endl;    
+    return "";
+  }
+  FILE* file_stream = fopen(path.c_str(), "rb");    
+  std::vector<char> buffer;    
+  fseek(file_stream, 0, SEEK_END);    
+  long length = ftell(file_stream);    
+  rewind(file_stream);    
+  buffer.resize(length);    
+  length = fread(&buffer[0], 1, length, file_stream);    
+      
+  std::string s(buffer.begin(), buffer.end());    
+  return s;
+}
+
+
 int main(int x, char **argc) {
   CGame currentGame(argc[1]);
   game = &currentGame;
@@ -126,17 +148,25 @@ int main(int x, char **argc) {
 
   //Open httpserver to serve main-page
   std::thread t1([&]() {
-    httplib::Server srv;
+
+    //Function to serve main app
     srv.Get("/", [&](const httplib::Request& req, httplib::Response& resp)  {
       inja::Environment env;
       inja::Template temp = env.parse_template("index.html");
       resp.set_content(env.render(temp, nlohmann::json({{"port",port+1}})), 
-          "text/html"); });
+          "text/html"); 
+      });
+    //Function to serve images
+    srv.Get("(.*).jpg", [&](const httplib::Request& req, httplib::Response& resp)  {
+        resp.set_content(GetImage(argc[1], req.matches[1]), "image/jpg"); });
+
+    //Start main loop.
     srv.listen("0.0.0.0", port);
+    return 0;
   });
 
   std::thread t2([&]() {
-    gl.run(port+1);
+      gl.run(port+1);
   });
   t1.join(); 
   t2.join(); 

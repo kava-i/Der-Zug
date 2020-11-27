@@ -123,6 +123,13 @@ class ServerFrame {
     void GrantAccessTo(const httplib::Request& req, httplib::Response& resp);
 
     /**
+     * @brief Grants given user access to world of other user.
+     * @param[in] req (reference to request)
+     * @param[in, out] resp (reference to response)
+     */
+    void CreateRequest(const httplib::Request& req, httplib::Response& resp);
+
+    /**
      * @brief Checks whether game is still running.
      * @param[in] req (reference to request)
      * @param[in, out] resp (reference to response)
@@ -141,7 +148,7 @@ class ServerFrame {
      * @param[in] req (reference to request)
      * @param[in, out] resp (reference to response)
      */
-    void GetUserPort(const httplib::Request& req, httplib::Response& resp);
+    void StartGame(const httplib::Request& req, httplib::Response& resp);
 
     /**    
      * @brief Gives feedback on whether server is still running    

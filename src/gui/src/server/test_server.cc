@@ -82,7 +82,9 @@ TEST_CASE("Server is working as expected", "[server]") {
 
           resp = cl.Get("/overview", headers_1);
           REQUIRE(resp->status == 200);
-          REQUIRE(resp->body != "");
+          REQUIRE(resp->body.find("YOUR WORLDS") != std::string::npos);
+          REQUIRE(resp->body.find("SHARED WORLDS") != std::string::npos);
+          REQUIRE(resp->body.find("ALL WORLDS") != std::string::npos);
 
           //Test deleting user
           resp = cl.Post("/api/user_delete", headers_1, "",
@@ -347,6 +349,16 @@ TEST_CASE("Server is working as expected", "[server]") {
               "application/x-www-form-urlencoded");
           REQUIRE(resp->body == std::to_string(ErrorCodes::ACCESS_DENIED));
 
+          //Add request for user.
+          nlohmann::json create_request;
+          create_request["user"] = "test";
+          create_request["world"] = "new_world";
+          resp = cl.Post("/api/create_request", headers_2, create_request.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+          resp = cl.Get("/overview", headers_1);
+          REQUIRE(resp->body.find("from test2") != std::string::npos);
+
           //Grant access to new user
           nlohmann::json grant_access;
           grant_access["user"] = "test2";
@@ -360,6 +372,9 @@ TEST_CASE("Server is working as expected", "[server]") {
           resp = cl.Post("/api/grant_access_to", headers_1, grant_access.dump(), 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
+
+          resp = cl.Get("/overview", headers_1);
+          REQUIRE(resp->body.find("request from test2") == std::string::npos);
 
           resp = cl.Get("/test/files/new_world", headers_2);
           REQUIRE(resp->status == 200);
@@ -391,16 +406,15 @@ TEST_CASE("Server is working as expected", "[server]") {
           resp = cl.Post("/api/check_running", headers_1, "/test/files/new_world", 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
-          resp = cl.Post("/api/get_log", headers_1, "/test/files/new_world", 
+          resp = cl.Post("/api/get_write_log", headers_1, "/test/files/new_world", 
               "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
 
-          resp = cl.Post("/api/get_log", headers_1, "/test/files/new_world/items/"
-              "rooms/test/test_room", "application/x-www-form-urlencoded");
+          // *** test running game *** //
+          resp = cl.Post("/api/start_game", headers_1, "/test/files/new_world",
+              "application/x-www-form-urlencoded");
           REQUIRE(resp->status == 200);
-          REQUIRE(resp->body != "");
-
 
           // *** Delete tests *** //
           nlohmann::json delete_tests;
@@ -424,14 +438,13 @@ TEST_CASE("Server is working as expected", "[server]") {
               "application/x-www-form-urlencoded");
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
 
-          // *** test running game *** //
-          resp = cl.Post("/api/get_user_port", headers_1, "",
-              "application/x-www-form-urlencoded");
-          REQUIRE(resp->status == 200);
-          REQUIRE(stoi(resp->body) > 9000);
         }
         server.Stop();
     });
   t1.join();
   t2.join();
+
+  //Double check that all test-users are deleted.
+  del_test_user("test");
+  del_test_user("test2");
 }

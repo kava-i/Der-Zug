@@ -232,7 +232,7 @@ function WriteElem() {
         document.getElementById("check_msg_log").innerHTML = 
           "Error when trying to run game after writing object. No changes made.";
         document.getElementById("get_log").style.display = "none";
-        get_log();
+        get_log('write');
       }
       else
         alert("Problem writing json!");
