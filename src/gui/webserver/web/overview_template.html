@@ -36,7 +36,17 @@
     </button>
     <div class="notice_container">
       <a>Logged in as <b>{{username}}</b>.</a><br>
-        <a id="confirmed" style="color: green;">Account confirmed.</a>
+      {% if length(requests) == 0 %}
+        <a id="" style="color: green;">Currently no requests active.</a>
+      {% else %}
+        {% for req in requests %}
+        <a style="color: blue;">New request from {{req.user2}}
+          <span
+            onclick="GrantAccessTo('{{req.user2}}','{{req.world}}')">confim
+          </span>
+        </a><br>
+        {% endfor %}
+      {% endif %}
       <span onclick="DoLogout()">Logout</span><br>
       <span onclick="OpenDelUserModal()">Delete</button><br> 
     </div>
@@ -44,17 +54,23 @@
 </div>
 
 <div class="box_overview center_in_box">
-    <h1>YOUR WORLDS</h1>
+    <h2>WORLDS</h2>
+    <h3>YOUR WORLDS</h3>
     <div class="controlers">
         <table id="controller">
           {% for world in worlds %}
             <tr>
               <td>
-                <a class="medium" href="/{{username}}/files/{{world}}">{{world}}</a>
+                <a class="medium"
+                  href="/{{username}}/files/{{world.name}}">{{world.name}}</a>
               </td>
               <td>
                 <i class="fas fa-minus button2" title="Delete this world."
-                  onclick="OpenDelElemModal('world','{{world}}');return true"></i>
+                  onclick="OpenDelElemModal('world','{{world.name}}');return true"></i>
+              </td>
+              <td>
+                <i class="txt_button" title="Go to textadventure" 
+                   onclick="play_game({{world.port}})">PLAY</i>
               </td>
             </tr>
           {% endfor %}
@@ -62,6 +78,51 @@
     </div>
     <i class="fas fa-plus button" title="Create new world."
       onclick="OpenAddElemModal();return true"></i>
+
+    <br>
+
+    <h3>SHARED WORLDS</h3>
+    <div class="controlers">
+        <table id="controller">
+          {% for world in shared_worlds %}
+            <tr>
+              <td>
+                <a class="medium"
+                   href="/{{world.user}}/files/{{world.name}}">{{world.user}}/{{world.name}}</a>
+              </td>
+              <td>
+                <i class="txt_button" title="Go to textadventure" 
+                   onclick="play_game({{world.port}})">PLAY</i>
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+    </div>
+
+    <br><br>
+
+    <h3>ALL WORLDS</h3>
+    <div class="controlers">
+        <table id="controller">
+          {% for world in all_worlds %}
+            <tr>
+              <td>
+                <a class="medium"
+                   href="/{{world.user}}/files/{{world.name}}">{{world.user}}/{{world.name}}</a>
+              </td>
+              <td>
+                <i class="txt_button" title="Go to textadventure" 
+                   onclick="play_game({{world.port}})">PLAY</i>
+              </td>
+              <td>
+                <i class="txt_button" title="Request access." 
+                      onclick="request_access('{{world.user}}','{{world.name}}')">Request</i>
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+    </div>
+
 </div>
 
 <div id="modal_del_elem" class="modal">

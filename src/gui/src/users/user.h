@@ -47,7 +47,10 @@ class User {
 
 
     // ** getter ** //
+    const std::string username() const;
     std::string password() const;
+    std::map<std::string, int>& worlds();
+    const std::vector<std::string>& locations() const;
 
     // ** setter ** //
     void set_password(std::string password);
@@ -65,23 +68,27 @@ class User {
     
     /**
      * Gets all worlds and parses them into the overview page.
+     * @param[in] shared_worlds (json with all shared_worlds and ports)
+     * @param[in] all_worlds (json with all worlds and ports)
      * @return overview-page.
      */
-    std::string GetOverview();
+    std::string GetOverview(nlohmann::json shared_worlds, nlohmann::json all_worlds);
 
     /**
      * @brief Get Overview of categories in one world.
      * @param path (path to current world)
      * @param world (name of accessed world)
+     * @param port (port of world, as it might not be the current users port)
      * @return HTML page or empty string.
      */
-    std::string GetWorld(std::string path, std::string world);
+    std::string GetWorld(std::string path, std::string user, std::string world, 
+        int port);
 
     /**
      * Get Overview of a category. 
      * (f.e. world1/rooms = trainstation, hospital...)
      */
-    std::string GetCategory(std::string path, std::string world, 
+    std::string GetCategory(std::string path, std::string user, std::string world, 
         std::string category);
 
     /**
@@ -97,23 +104,24 @@ class User {
      * Get Overview of a SubCategory.
      * (f.e. world1/rooms/trainstation = platform a, great_hall ...)
      */
-    std::string GetObjects(std::string path, std::string world, std::string 
-        category, std::string sub);
+    std::string GetObjects(std::string path, std::string user, std::string world, 
+        std::string category, std::string sub);
 
     /*
      * Get one object.
      */
-    std::string GetObject(std::string path, std::string world, std::string 
-        category, std::string sub, std::string obj);
+    std::string GetObject(std::string path, std::string user, std::string world, 
+        std::string category, std::string sub, std::string obj);
 
     // ** Create New Files/ Folders ** //
 
     /**
      * @brief Creates a new world for this user
      * @param name (Name of the world)
+     * @param port 
      * @return Success code.
      */
-    int CreateNewWorld(std::string name); 
+    int CreateNewWorld(std::string name, int port); 
 
     /**
      * @brief Adds new file to category
@@ -213,6 +221,29 @@ class User {
      */
     bool CheckGameRunning(std::string path);
 
+    /**
+     * Get a attribute of a certain world
+     * @param[in] path (path to world)
+     * @param[in] attr 
+     */
+    int GetPortOfWorld(std::string path);
+
+    /**
+     * Adds a new access-request.
+     * @param[in] user (user who asks for access)
+     * @param[in] world (world to gran access for)
+     * @return success.
+     */
+    bool AddRequest(std::string user, std::string world);
+
+    /**
+     * Removes an access-request.
+     * @param[in] user (user who asks for access)
+     * @param[in] world (world to gran access for)
+     * @return success.
+     */
+    void RemoveRequest(std::string user, std::string world);
+
   private:
     const std::string username_;  ///< username (should be unique!)
     std::string password_;  ///< password 
@@ -221,6 +252,10 @@ class User {
     std::vector<std::string> locations_;
     mutable std::shared_mutex shared_mtx_locations_;
     const std::vector<std::string> categories_;
+    std::map<std::string, int> worlds_;
+    mutable std::shared_mutex shared_mtx_worlds_;
+    std::vector<nlohmann::json> requests_;
+    mutable std::shared_mutex shared_mtx_requests_;
 
     /**
      * Construct a json with all the values from user.

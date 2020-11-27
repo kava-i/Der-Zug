@@ -9,3 +9,4 @@ src/data/users/test*
 src/gui/compile_commands.json
 *EIG.txt
 *dictionary.txt
+*vgcore*

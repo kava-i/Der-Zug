@@ -112,3 +112,58 @@ function DelElem(what, name) {
     }
   }
 }
+
+async function play_game(port) {
+  //Check if game is already running.
+  var adress = "ws://127.0.0.1:" + parseInt(port+1) + "/";
+  socket = new WebSocket(adress);
+  await new Promise(r => setTimeout(r, 500));
+  if (socket.readyState === 2 || socket.readyState === 3)
+    alert("Game not running.");
+  else {
+    var cur_loc = window.location.href;
+    cur_loc = cur_loc.substr(0, cur_loc.indexOf(":", 7));
+    window.open(cur_loc + ":" + parseInt(port) + "/");
+  }
+}
+
+function request_access(user, world) {
+  var json_request = new Object();
+  json_request["user"] = user;
+  json_request["world"] = world;
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/api/create_request");
+  xhttp.send(JSON.stringify(json_request));
+
+  xhttp.onload = function(event){
+    //If request fails, display message to user.
+    if (xhttp.status == 401) {
+      alert("Sending request failed");
+    }
+    //Display success message to user.
+    else {
+      alert("Successfully sent request");
+    }
+  }
+}
+
+function GrantAccessTo(user, world) {
+  var json_request = new Object();
+  json_request["user"] = user;
+  json_request["world"] = world;
+
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/api/grant_access_to");
+  xhttp.send(JSON.stringify(json_request));
+
+  xhttp.onload = function(event){
+    //If request fails, display message to user.
+    if (xhttp.status == 401) {
+      alert("granting accesss failed");
+    }
+    //Display success message to user.
+    else {
+      alert("Successfully granted access");
+    }
+  }
+}

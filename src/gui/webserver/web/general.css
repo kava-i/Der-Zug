@@ -25,7 +25,10 @@ body {
     color: #E5E7E9;
     margin-bottom: 2rem;
 }
-
+.center_in_box h2{
+    color: #E5E7E9;
+    margin-bottom: 2rem;
+}
 .box_main {
   width:60%;
 }
@@ -311,4 +314,8 @@ body {
 }
 .fitting {
   width:auto;
+}
+.txt_button:hover{
+  cursor:pointer;
+  color:white;
 }

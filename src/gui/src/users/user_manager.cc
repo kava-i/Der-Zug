@@ -13,6 +13,7 @@ namespace fs = std::filesystem;
 
 UserManager::UserManager(std::string main_path, std::vector<std::string> cats) 
   : path_(main_path), categories_(cats) {
+  ports_ = 9001;
   //Iterate over users and create user.
   for (auto& p : fs::directory_iterator(path_)) {
     std::string path = p.path();
@@ -23,10 +24,12 @@ UserManager::UserManager(std::string main_path, std::vector<std::string> cats)
     try {
       users_[user["username"]] = new User(user["username"], user["password"], 
         path_, user["locations"], categories_);
+      InitWorlds(users_[user["username"]]);
     }
     catch(std::exception& e) {
       std::cout << "Creating user at path: " << p.path() << " failed!\n";
     }
+
   }
   std::cout << users_.size() << " users initialized!" << std::endl;
 }
@@ -40,8 +43,9 @@ User* UserManager::GetUser(std::string username) const {
 }
 
 void UserManager::AddUser(std::string username, std::string password) {
-  std::unique_lock ul(shared_mutex_users_);
+  std::scoped_lock scoped_locks(shared_mutex_users_, shared_mutex_ports_);
   users_[username] = new User(username, password, path_, categories_);
+  ports_+=2;
   users_[username]->SafeUser();
 }
 
@@ -160,6 +164,7 @@ int UserManager::GrantAccessTo(std::string user1, std::string user2, std::string
 
   try {
     users_[user2]->AddLocation(user1, world);
+    users_[user1]->RemoveRequest(user2, world);
   }
   catch(std::exception& e) {
     std::cout << "GrantAccessTo failed:" << e.what() << std::endl;
@@ -202,4 +207,51 @@ std::string UserManager::GetUserFromCookie(const char* ptr) const {
   if (cookies_.count(cookie) == 0) 
     return "";
   return cookies_.at(cookie);
+}
+
+void UserManager::InitWorlds(User* user) {
+  for (auto& p : fs::directory_iterator(path_ + "/" 
+        + user->username() + "/files/")) {
+    user->worlds()[p.path().stem()] = ports_;
+    ports_+=2;
+  }
+}
+
+int UserManager::GetNextPort() {
+  ports_+=2;
+  return ports_;
+}
+
+nlohmann::json UserManager::GetAllWorlds(std::string username) const {
+  nlohmann::json all_worlds = nlohmann::json::array();
+  for (auto it : users_) {
+    if (it.first == username) continue;
+    for (auto jt : it.second->worlds())
+      all_worlds.push_back({{"user", it.first},{"name", jt.first},{"port", jt.second}});
+  }
+  return all_worlds;
+}
+
+nlohmann::json UserManager::GetSharedWorlds(std::string username) const {
+  nlohmann::json shared_worlds = nlohmann::json::array();
+  for(auto it : GetUser(username)->locations()) {
+    std::string location = it;
+    if (location.find(username) == 0) continue;
+    if (location.find("backups") != std::string::npos) continue;
+    std::string user = location.substr(0, location.find("/"));
+    std::string world = location.substr(location.rfind("/")+1);
+    shared_worlds.push_back(nlohmann::json({{"user", user}, {"name", world}, 
+          {"port", GetUser(user)->worlds()["world"]}}));
+  }
+  return shared_worlds;
+}
+
+int UserManager::GetPortOfWorld(std::string user, std::string world) const {
+  try {
+    return users_.at(user)->worlds()[world];
+  }
+  catch(std::exception& e) {
+    std::cout << "World \"" << world << "\" from " << user << " not found.\n";
+    return 0;
+  }
 }

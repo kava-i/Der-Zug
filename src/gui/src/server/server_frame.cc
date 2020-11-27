@@ -12,6 +12,7 @@
 
 #include <exception>
 #include <iostream>
+#include <regex>
 #include <string>
 
 using namespace httplib;
@@ -20,7 +21,7 @@ using namespace httplib;
 //Constructor
 ServerFrame::ServerFrame() : user_manager_("../../data/users", {"attacks", 
     "defaultDialogs", "dialogs", "players", "rooms", "characters", 
-    "defaultDescriptions", "details", "items", "quests", "texts"})
+    "defaultDescriptions", "details", "items", "quests", "texts", "images"})
 {}
 
 void ServerFrame::Start(int port) {
@@ -75,12 +76,16 @@ void ServerFrame::Start(int port) {
   //Access-rights
   server_.Post("/api/grant_access_to", [&](const Request& req, Response& resp) {
       GrantAccessTo(req, resp); });
+  server_.Post("/api/create_request",  [&](const Request& req, Response& resp) {
+      CreateRequest(req, resp); });
 
   //Running and testing game.
   server_.Post("/api/check_running", [&](const Request& req, Response& resp) {
       CheckRunning(req, resp); });
-  server_.Post("/api/get_log", [&](const Request& req, Response& resp) {
+  server_.Post("/api/get_(.*)_log", [&](const Request& req, Response& resp) {
       GetLog(req, resp); });
+  server_.Post("/api/start_game", [&](const Request& req, Response& resp) {
+      StartGame(req, resp); });
 
   //html
   server_.Get("/", [&](const Request& req, Response& resp) {
@@ -264,21 +269,30 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
   else {
     std::string page = "";
     try {
-      if (req.matches.size() == 1)
-        page = user->GetOverview();
-      else if (req.matches.size() == 3 && backup == false)
-        page = user->GetWorld(req.matches[0], req.matches[2]);
+      if (req.matches.size() == 1) {
+        sl.lock();
+        nlohmann::json shared_worlds = user_manager_.GetSharedWorlds(username);
+        nlohmann::json all_worlds = user_manager_.GetAllWorlds(username);
+        sl.unlock();
+        page = user->GetOverview(shared_worlds, all_worlds);
+      }
+      else if (req.matches.size() == 3 && backup == false) {
+        sl.lock();
+        int port = user_manager_.GetPortOfWorld(req.matches[1], req.matches[2]);
+        sl.unlock();
+        page = user->GetWorld(req.matches[0], req.matches[1], req.matches[2], port);
+      }
       else if (req.matches.size() == 3 && backup == true)
         page = user->GetBackups(req.matches[1], req.matches[2]);
       else if (req.matches.size() == 4)
-        page = user->GetCategory(req.matches[0], req.matches[2], 
+        page = user->GetCategory(req.matches[0], req.matches[1], req.matches[2], 
             req.matches[3]);
       else if (req.matches.size() == 5)
-        page = user->GetObjects(req.matches[0], req.matches[2], req.matches[3], 
-            req.matches[4]);
+        page = user->GetObjects(req.matches[0], req.matches[1], req.matches[2], 
+            req.matches[3], req.matches[4]);
       else if (req.matches.size() == 6) {
-        page = user->GetObject(req.matches[0], req.matches[2], req.matches[3], 
-            req.matches[4], req.matches[5]);
+        page = user->GetObject(req.matches[0], req.matches[1], req.matches[2], 
+            req.matches[3], req.matches[4], req.matches[5]);
       }
     }
     catch (std::exception& e) {
@@ -327,8 +341,8 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
       req.matches.size() > 1 && req.matches[1] != "world") {
     error_code = ErrorCodes::ACCESS_DENIED;
   }
-  else if (req.matches.size() > 1 && req.matches[1] == "world")
-    error_code = user->CreateNewWorld(name);
+  else if (req.matches.size() > 1 && req.matches[1] == "world") 
+    error_code = user->CreateNewWorld(name, user_manager_.GetNextPort());
   else if (req.matches.size() > 1 && req.matches[1] == "subcategory") 
     error_code = user->AddFile(path, name);
   else if (req.matches.size() > 1 && req.matches[1] == "object") 
@@ -509,6 +523,39 @@ void ServerFrame::GrantAccessTo(const Request& req, Response& resp) {
   resp.set_content(std::to_string(error_code), "text/txt");
 }
 
+void ServerFrame::CreateRequest(const Request& req, Response& resp) {
+  //Try to get username from cookie
+  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::shared_lock sl(shared_mtx_user_manager_);
+  std::string username = user_manager_.GetUserFromCookie(ptr);
+  sl.unlock();
+  
+  //If user does not exist, redirect to login-page.
+  if (username == "") {
+    resp.status = 302;
+    resp.set_header("Location", "/login");
+    return;
+  }
+
+  std::string user2, world;
+  try {
+    nlohmann::json json = nlohmann::json::parse(req.body);
+    user2 = json["user"];
+    world = json["world"];
+  }
+  catch (std::exception& e) {
+    std::cout << "CreateRequest: problem parsing json: " << e.what() << std::endl;
+    resp.status = 401;
+    resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
+    return;
+  }
+  sl.lock();
+  if (user_manager_.GetUser(user2)->AddRequest(username, world) == false)
+    resp.status = 401;
+  else
+    resp.status = 200;
+}
+ 
 void ServerFrame::CheckRunning(const Request& req, Response& resp) {
   //Try to get username from cookie
   const char* ptr = get_header_value(req.headers, "Cookie");
@@ -549,14 +596,10 @@ void ServerFrame::GetLog(const Request& req, Response& resp) {
     return;
   }
 
-  std::string path = "../../data/users/" + req.body;
-  size_t pos = path.find("files");
-  size_t pos2 = path.find("/", pos+8);
-  if (pos2 != std::string::npos)
-    path.erase(pos2);
-  path.erase(pos, 5);
-  path.insert(pos, "logs");
-  path+=".txt";
+  std::string path = "../../data/users/" + req.body.substr(1, req.body.find("/", 1))
+    + "logs" + req.body.substr(req.body.rfind("/"));
+  std::string type = req.matches[1];
+  path += "_" + type + ".txt";
   std::cout << "Path to log: " << path << std::endl;
 
   if (func::demo_exists(path) == false)
@@ -566,6 +609,42 @@ void ServerFrame::GetLog(const Request& req, Response& resp) {
     resp.status = 200;
     resp.set_content(func::GetPage(path), "text/txt");
   }
+}
+
+void ServerFrame::StartGame(const Request& req, Response& resp) {
+  //Try to get username from cookie
+  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::shared_lock sl(shared_mtx_user_manager_);
+  std::string username = user_manager_.GetUserFromCookie(ptr);
+  sl.unlock();
+  
+  //If user does not exist, redirect to login-page.
+  if (username == "") {
+    resp.status = 302;
+    resp.set_header("Location", "/login");
+    return;
+  }
+
+  //Extract data from path and build path to textadventure.
+  std::string user = req.body.substr(1, req.body.find("/", 1)-1);
+  std::string world = req.body.substr(req.body.rfind("/")+1);
+  std::string path_to_game = "../../data/users" + req.body + "/";
+  if (!func::demo_exists(path_to_game)) {
+    resp.status = 401;
+    return;
+  }
+
+  //Get port
+  sl.lock();
+  std::string port = std::to_string(user_manager_.GetPortOfWorld(user, world));
+  sl.unlock();
+
+  //Build command and start game
+  std::string command = "../../textadventure/build/bin/txtadventure "
+    + path_to_game + " " + port
+    + " > ../../data/users/" + user + "/logs/" + world + "_run.txt &";
+  system(command.c_str());
+  resp.status = 200;
 }
 
 

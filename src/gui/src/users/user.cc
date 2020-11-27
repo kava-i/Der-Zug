@@ -29,8 +29,8 @@ User::User(std::string name, std::string pw, std::string path, std::vector
 }
 
 User::User(std::string name, std::string pw, std::string path, 
-    std::vector<std::string> locations, std::vector
-    <std::string> cats) : username_(name), path_(path), categories_(cats) {
+    std::vector<std::string> locations, std::vector <std::string> cats) 
+    : username_(name), path_(path), categories_(cats) {
   password_ = pw;
   locations_ = locations;
 
@@ -51,7 +51,15 @@ std::string User::password() const {
   std::shared_lock sl(shared_mtx_password_);
   return password_;
 }
-
+std::map<std::string, int>& User::worlds() {
+  return worlds_;
+}
+const std::string User::username() const {
+  return username_;
+}
+const std::vector<std::string>& User::locations() const {
+  return locations_;
+}
 
 
 // ** Setter ** //
@@ -68,34 +76,39 @@ void User::AddLocation(std::string user, std::string world) {
 
 // ** Serve an generate pages ** //
 
-std::string User::GetOverview() {
+std::string User::GetOverview(nlohmann::json shared_worlds, 
+    nlohmann::json all_worlds) {
   //Create initial json with username.
   nlohmann::json worlds = nlohmann::json({{"username", username_}});
 
   //Add all dictionaries of this user to json.
   worlds["worlds"] = nlohmann::json::array();
   for (auto& p : fs::directory_iterator(path_ + "/" + username_ + "/files")) {
-    if (p.path().stem() != "user")
-      worlds["worlds"].push_back(p.path().stem());
+    if (p.path().stem() != "user") {
+      worlds["worlds"].push_back(nlohmann::json({{"name",p.path().stem()},
+          {"port",worlds_[p.path().stem()]}}));
+    }
   }
-  for (size_t i=1; i<locations_.size(); i++) {
-    worlds["worlds"].push_back(locations_[i]);
-  }
-    
+  worlds["shared_worlds"] = shared_worlds;
+  worlds["all_worlds"] = all_worlds;
+  worlds["requests"] = requests_;
+
   //Parse overview page. 
   inja::Environment env;                                                                  
   inja::Template temp = env.parse_template("web/overview_template.html");
   return env.render(temp, worlds);
 }
 
-std::string User::GetWorld(std::string path, std::string world) {
+std::string User::GetWorld(std::string path, std::string user, std::string world, 
+    int port) {
   //Check if path to given world can be found
   if (!func::demo_exists(path_+path))
     return "";
 
   //Create initial json with world and all categories.
-  nlohmann::json j = nlohmann::json({{"user", username_}, {"world", world}, 
-      {"categories", categories_}});
+  if (worlds_.count(world) > 0) port = worlds_[world];
+  nlohmann::json j = nlohmann::json({{"user", user}, {"world", world}, 
+      {"categories", categories_}, {"port", port}});
 
   //Create dictionaries for all categories, if they do not exist.
   for (auto cat : categories_)
@@ -125,12 +138,12 @@ std::string User::GetBackups(std::string user, std::string world) {
   return env.render(temp, j);
 }
 
-std::string User::GetCategory(std::string path, std::string world, 
+std::string User::GetCategory(std::string path, std::string user, std::string world, 
     std::string category) {
   //Create path, inja Environment and initial json.
   path = path_ + path;
   inja::Environment env;
-  nlohmann::json j_category = nlohmann::json({{"user", username_}, 
+  nlohmann::json j_category = nlohmann::json({{"user", user}, 
       {"world", world}, {"category", category}});
 
   //Directly parse config page.
@@ -157,7 +170,7 @@ std::string User::GetCategory(std::string path, std::string world,
   return env.render(temp, j_category);
 }
 
-std::string User::GetObjects(std::string path, std::string world, std::string 
+std::string User::GetObjects(std::string path, std::string user, std::string world, std::string 
     category, std::string sub) {
   //Create path and trying to load into json 
   path = path_ + path + ".json";
@@ -173,7 +186,7 @@ std::string User::GetObjects(std::string path, std::string world, std::string
   }
 
   inja::Environment env;
-  nlohmann::json overview = nlohmann::json({{"user", username_}, 
+  nlohmann::json overview = nlohmann::json({{"user", user}, 
       {"world", world}, {"category", category}, {"sub", sub}, 
       {"objects", nlohmann::json::array()}});
   
@@ -198,8 +211,8 @@ std::string User::GetObjects(std::string path, std::string world, std::string
   return env.render(temp, overview);
 }
 
-std::string User::GetObject(std::string path, std::string world, std::string 
-    category, std::string sub, std::string obj) {
+std::string User::GetObject(std::string path, std::string user, std::string world, 
+    std::string category, std::string sub, std::string obj) {
   //Create path and trying to load into json 
   path = path_ + path.substr(0, path.rfind("/")) + ".json";
   nlohmann::json objects;
@@ -227,7 +240,7 @@ std::string User::GetObject(std::string path, std::string world, std::string
     if (objects.size() > num)
       overview["json"] = objects[num];
   }
-  overview["header"] = nlohmann::json({{"user", username_}, {"world", world}, 
+  overview["header"] = nlohmann::json({{"user", user}, {"world", world}, 
       {"category", category}, {"sub", sub}, {"obj",obj}});
 
   std::cout << "Got overview: " << overview << std::endl;
@@ -282,8 +295,7 @@ std::string User::GetObject(std::string path, std::string world, std::string
 // ** Functions ** //
 
 
-int User::CreateNewWorld(std::string name) {
-
+int User::CreateNewWorld(std::string name, int port) {
   //Check for "/" which is considered bad format!
   if (name.find("/") != std::string::npos)
     return ErrorCodes::WRONG_FORMAT;
@@ -306,6 +318,7 @@ int User::CreateNewWorld(std::string name) {
     fs::copy("../../data/default_jsons/config.json", path); 
     fs::copy("../../data/default_jsons/test.json", path + "/rooms/"); 
     fs::copy("../../data/default_jsons/players.json", path + "/players/"); 
+    fs::copy("../../data/default_jsons/background.jpg", path + "/images/"); 
   }
 
   //Return error code and delete all already created directories.
@@ -315,6 +328,7 @@ int User::CreateNewWorld(std::string name) {
     fs::remove_all(path);
     return ErrorCodes::FAILED; 
   }
+  worlds_[name] = port;
   return ErrorCodes::SUCCESS;
 }
 
@@ -602,6 +616,38 @@ int User::DeleteBackup(std::string user, std::string backup) {
   return ErrorCodes::SUCCESS;
 }
 
+int User::GetPortOfWorld(std::string world) {
+  if (worlds_.count(world) == 0) {
+    std::cout << "World not found" << std::endl;
+    return -1;
+  }
+  return worlds_[world];
+}
+
+bool User::AddRequest(std::string user, std::string world) {
+  std::string path = path_ + "/" + username_ + "/files/" + world;
+  if (!func::demo_exists(path)) {
+    std::cout << "World at path: " << path << " doesn't exist." << std::endl;
+    return false;
+  }
+
+  requests_.push_back(nlohmann::json({{"user1", username_}, {"user2", user},
+        {"world", world}}));
+  return true;
+}
+
+void User::RemoveRequest(std::string user, std::string world) {
+  size_t counter=0;
+  for (auto it : requests_) {
+    if (it["user2"] == user && it["world"] == world) {
+      requests_.erase(requests_.begin()+counter);
+      return;
+    }
+    counter++;
+  }
+  std::cout << "request not found." << std::endl;
+}
+
 bool User::CheckAccessToLocations(std::string path) { 
   std::cout << "CheckAccessToLocations: " << path << std::endl; 
   for (const auto& it : locations_) {
@@ -639,7 +685,7 @@ bool User::CheckGameRunning(std::string path) {
   bool success = true;
   for (auto it=players.begin(); it!=players.end(); it++) {
     std::string test_p = command + " -p " + it.key() + 
-      " > ../../data/users/"+user+"/logs/"+world+".txt";
+      " > ../../data/users/"+user+"/logs/"+world+"_write.txt";
     if (system(test_p.c_str()) != 0) 
       success = false;
     std::cout << "Running with player \"" << it.key() << "\": " << success << std::endl;

@@ -24,6 +24,11 @@ class ServerFrame {
      */
     ServerFrame();
 
+    // *** getter *** //
+    UserManager& user_manager() {
+      return user_manager_;
+    }
+
     /**
      * Starts server. 
      * Server is started on given port. Also handlers are initialized.
@@ -118,6 +123,13 @@ class ServerFrame {
     void GrantAccessTo(const httplib::Request& req, httplib::Response& resp);
 
     /**
+     * @brief Grants given user access to world of other user.
+     * @param[in] req (reference to request)
+     * @param[in, out] resp (reference to response)
+     */
+    void CreateRequest(const httplib::Request& req, httplib::Response& resp);
+
+    /**
      * @brief Checks whether game is still running.
      * @param[in] req (reference to request)
      * @param[in, out] resp (reference to response)
@@ -131,6 +143,13 @@ class ServerFrame {
      */
     void GetLog(const httplib::Request& req, httplib::Response& resp);
 
+    /**
+     * @brief Checks whether game is still running.
+     * @param[in] req (reference to request)
+     * @param[in, out] resp (reference to response)
+     */
+    void StartGame(const httplib::Request& req, httplib::Response& resp);
+
     /**    
      * @brief Gives feedback on whether server is still running    
      * @return boolean    
@@ -141,7 +160,7 @@ class ServerFrame {
      * @brief Makes server stop running.    
      */    
     void Stop();    
-    
+
     /**    
      * @brief Destructor, which stops server.    
      */    

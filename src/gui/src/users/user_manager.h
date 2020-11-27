@@ -93,6 +93,28 @@ class UserManager {
      */
     int GrantAccessTo(std::string user1, std::string user2, std::string world);
 
+    /**
+     * Returns next port.
+     */
+    int GetNextPort();
+
+    /**
+     * Get all worlds.
+     * Array of jsons returned with values: user, name (of world) and port.
+     * @param[in] user to create list for.
+     * return json
+     */
+    nlohmann::json GetAllWorlds(std::string username) const;
+
+    /**
+     * Get all shared worlds of a user.
+     * Array of jsons returned with values: user, name (of world) and port.
+     * @param[in] user to create list for.
+     * return json
+     */
+    nlohmann::json GetSharedWorlds(std::string username) const;
+
+    int GetPortOfWorld(std::string user, std::string world) const;
    
   private:
     std::map<std::string, User*> users_;  ///< Map of all users.
@@ -101,6 +123,8 @@ class UserManager {
     mutable std::shared_mutex shared_mutex_cookies_;
     const std::string path_;
     const std::vector<std::string> categories_;
+    int ports_;
+    mutable std::shared_mutex shared_mutex_ports_;
 
     /**
      * Adds new user
@@ -125,6 +149,13 @@ class UserManager {
      * @return whether strength is sufficient.
      */
     bool CheckPasswordStrength(std::string password) const;
+
+    /**
+     * Initializes worlds by adding to map of worlds and setting port.
+     * @param[in, out] user
+     */
+    void InitWorlds(User* user);
+
 };
 
 #endif
