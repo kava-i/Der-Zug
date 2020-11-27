@@ -840,35 +840,15 @@ worldFactory: done.
 initializing context stack.
 Done.
 Finished parsing!
-[2020-11-27 13:24:33] [connect] WebSocket Connection [::ffff:127.0.0.1]:57934 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
+[2020-11-27 15:07:36] [connect] WebSocket Connection [::ffff:127.0.0.1]:46028 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
 builder_tests.o
 game_builder.o
 index.html
 web
 Starting....
-[2020-11-27 13:24:35] [connect] WebSocket Connection [::ffff:127.0.0.1]:57936 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
-Starting....
-[2020-11-27 13:24:36] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 19 payload bytes
-[2020-11-27 13:24:36] [frame_header] Header Bytes: 
-[0] (2) 81 07 
-[1] (2) 81 0C 
+[2020-11-27 15:07:43] [control] Control frame received with opcode 8
+[2020-11-27 15:07:43] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2020-11-27 15:07:43] [frame_header] Header Bytes: 
+[0] (2) 88 02 
 
-checkLogin
-Login data: _admin
-[1;31mEvents: show room, from: startGame[0m
-[1;31mshow, room[0m
-[1;34mfirst[0m throwing: show|room
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|room
-[1;34mtutorial[0m throwing: show|room
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|room
-[1;34mkomische_gruppe[0m throwing: show|room
-[1;34mgeld_fuer_ticket[0m throwing: show|room
-[1;34mbesoffene_frau[0m throwing: show|room
-[1;34mworld[0m throwing: show|room
-[1;34mroom[0m throwing: show|room
-[1;34mstandard[0m throwing: show|room
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Befor play: sInput: [end_game] calling with id: _admin
+[2020-11-27 15:07:43] [disconnect] Disconnect close local:[1001] remote:[1001]
