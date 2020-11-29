@@ -118,7 +118,6 @@ std::string GetPage(std::string path) {
 }
 
 std::string GetImage(std::string path, std::string image) {
-  system("ls");
   path = path + "images" + image + ".jpg";
   std::ifstream f(path, std::ios::in|std::ios::binary|std::ios::ate);    
   if (!f.is_open()) {

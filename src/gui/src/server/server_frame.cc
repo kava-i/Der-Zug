@@ -643,7 +643,7 @@ void ServerFrame::StartGame(const Request& req, Response& resp) {
   std::string command = "../../textadventure/build/bin/txtadventure "
     + path_to_game + " " + port
     + " > ../../data/users/" + user + "/logs/" + world + "_run.txt &";
-  system(command.c_str());
+  std::cout << system(command.c_str()) << std::endl;
   resp.status = 200;
 }
 
