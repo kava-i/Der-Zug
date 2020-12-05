@@ -113,9 +113,10 @@ function DelElem(what, name) {
   }
 }
 
+var ip = location.host.substr(0, location.host.indexOf(":"));
 async function play_game(port) {
   //Check if game is already running.
-  var adress = "ws://127.0.0.1:" + parseInt(port+1) + "/";
+  var adress = "ws://" + ip + ":" + parseInt(port+1) + "/";
   socket = new WebSocket(adress);
   await new Promise(r => setTimeout(r, 500));
   if (socket.readyState === 2 || socket.readyState === 3)
