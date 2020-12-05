@@ -63,9 +63,12 @@
   <div class="modal2-content">
     <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
     <div class="content_center">
+      <div class="item"><h1>Game Logs</h1></div>
       <div class="item"><p id="check_msg"></div>
       <div class="scroll_content" style="display: none" id="log_div">
-        <div class="item" style="text-align: left;"><pre id="display_log"></div>
+        <div class="item" style="text-align: left;" id="display_log_div">
+          <pre id="display_log">
+        </div>
       </div>
       <div class="item"><button type="button" class="pure-button" id="get_log"
                                  onclick="get_log('run')">Show Log</button></div>

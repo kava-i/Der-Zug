@@ -118,7 +118,7 @@ hr {
 
 </style>
 <script>
-let host = "127.0.0.1";
+var host = location.host.substr(0, location.host.indexOf(":"));
 let socket=null;
 /*
 if(window.location.hostname!="")

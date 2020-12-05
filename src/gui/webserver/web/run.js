@@ -1,6 +1,11 @@
 //Close modal, when close-span is clicked (works for both moduls)
 function CloseModul() {
   document.getElementById("modal_log").style.display = "none";
+
+  //Show button again and empty log
+  document.getElementById("get_log").style.display = "block";
+  document.getElementById("display_log").innerHTML = "";
+  document.getElementById("display_log_div").innerHTML = "";
 }
 
 //Close modal when users clicks anywhere outside of the modal. (works for both)
@@ -51,9 +56,10 @@ function get_log(x) {
   }
 }
 
+var ip = location.host.substr(0, location.host.indexOf(":"));
 async function run(port) {
   //Check if game is already running.
-  var adress = "ws://127.0.0.1:" + parseInt(port+1) + "/";
+  var adress = "ws://" + ip + ":" + parseInt(port+1) + "/";
   socket = new WebSocket(adress);
   await new Promise(r => setTimeout(r, 1000));
   console.log("Connection:", socket.readyState); 
@@ -84,20 +90,20 @@ async function run(port) {
 
 async function end(port) {
   //Check if game is already running.
-  var adress = "ws://127.0.0.1:" + parseInt(port+1) + "/";
+  var adress = "ws://" + ip + ":" + parseInt(port+1) + "/";
   socket = new WebSocket(adress);
   await new Promise(r => setTimeout(r, 500));
   console.log("Connection:", socket.readyState); 
   if (socket.readyState === 2 || socket.readyState === 3) {
-    alert("Game not running.");
-    return;
+    document.getElementById("check_msg").innerHTML = "Game was not running.";
   }
-
-  //End game.
-  socket.send("admin");
-  socket.send("password");
-  socket.send("[end_game]");
-  socket.send("[end_game]");
+  else {
+    //End game.
+    socket.send("admin");
+    socket.send("password");
+    socket.send("[end_game]");
+    socket.send("[end_game]");
+    document.getElementById("check_msg").innerHTML = "Game closed succesfully!";
+  }
   document.getElementById("modal_log").style.display = "block";
-  document.getElementById("check_msg").innerHTML = "Game closed!";
 }
