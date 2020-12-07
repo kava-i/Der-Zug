@@ -61,14 +61,20 @@ void CGame::playerFactory(nlohmann::json j_player) {
 }
 
 
-string CGame::checkLogin(string sName, string sPassword) {
+string CGame::checkLogin(string sName, string sPassword, bool login, std::string& id) {
   std::cout << "checkLogin\n";
-  for(auto &it : m_players) {
-    string tmp = it.second->doLogin(sName,sPassword);
-    if(tmp != "")
-      return tmp;
-  }
-  return "";
+  
+  if (login == true) {
+    for(auto &it : m_players) {
+      string tmp = it.second->doLogin(sName,sPassword);
+      if(tmp != "") {
+        id = tmp;
+        return "Loggen in as " + id + "\n\n";
+      }
+    }
+  } 
+  return Webcmd::set_color(Webcmd::color::RED) + "Invalid login please try again!"
+    + Webcmd::set_color(Webcmd::color::WHITE) + "\n\nName: ";
 }
 
 // ****************** FUNCTIONS CALLER ********************** //

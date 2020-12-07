@@ -45,6 +45,31 @@ class WebserverGame {
       cout_->flush();
     }
 
+    void Login(std::string in) {
+      std::cout << "On to getting credentials" << std::endl;
+      if(name_=="") {
+        name_ = in ;
+        send(" " + in + "\n");
+        cout_->write(Webcmd::set_color(Webcmd::color::ORANGE), "Password: ");
+        cout_->flush();
+        return;
+      }
+
+      if(password_ == "") {
+        password_ = in;
+        std::string str(in.length(), '*');
+        send(" " + str + "\n");
+        std::string out = game->checkLogin(name_, password_, sign_in_up_ == "l", id_);
+        send(out);
+        if (id_ == "") {
+          password_ = "";
+          name_ = "";
+        }
+        else
+          send(game->startGame(in, id_, cout_));
+      }
+    }
+
     void SignInUp(std::string in) {
       if (sign_in_up_ == "") {
         std::cout << "Choosing login/ register";
@@ -61,38 +86,8 @@ class WebserverGame {
           cout_->flush();
         }
       }
-      else {
-        std::cout << "On to getting credentials" << std::endl;
-        if(name_=="") {
-          name_ = in ;
-          send(" " + in + "\n");
-          cout_->write(Webcmd::set_color(Webcmd::color::ORANGE), "Password: ");
-          cout_->flush();
-          return;
-        }
-
-        if(password_ == "") {
-          password_ = in;
-          std::string str(in.length(), '*');
-          send(" " + str + "\n");
-          id_ = game->checkLogin(name_,password_);
-          if(id_== "") {
-            name_ = "";
-            password_ = "";
-            cout_->write(Webcmd::set_color(Webcmd::color::RED), 
-                "Invalid Login please try again!", color::white, "\n\nName: ");
-            cout_->flush();
-          }
-          else {
-            std::cout << "Login data: " << id_ << std::endl;
-            if (sign_in_up_ == "l") 
-              send("Logged in as " + id_ + "\n\n");
-            else
-              send("Registered as " + id_ + "\n\n");
-            send(game->startGame(in, id_, cout_));
-          }
-        }
-      }
+      else
+        Login(in);
     }
 
     void onmessage(std::string sInput, std::map<decltype(websocketpp::lib::
