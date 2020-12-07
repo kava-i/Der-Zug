@@ -16,69 +16,71 @@ httplib::Server srv;
 
 class WebserverGame {
   private:
-    std::string _name;
-    std::string _password;
-    std::string _id;
-    Webconsole* _cout;
+    std::string name_;
+    std::string password_;
+    std::string id_;
+    Webconsole* cout_;
 
   public:
     WebserverGame(Webconsole *cout) {
       std::cout << "Starting....\n";
 
-      _name = "";
-      _password = "";
-      _id = "";
-      _cout = cout;
+      name_ = "";
+      password_ = "";
+      id_ = "";
+      cout_ = cout;
     }
 
     const std::string &GetName() {
-      return _name;
+      return name_;
     }
 
     const std::string &GetID() {
-      return _id;
+      return id_;
+    }
+
+    void send(std::string msg) {
+      cout_->write(msg);
+      cout_->flush();
     }
 
     void onmessage(std::string sInput, std::map<decltype(websocketpp::lib::
           weak_ptr<void>().lock().get()), WebserverGame*> *ptr, bool& global_shutdown) {
-      if(_name=="") {
-        _name=sInput;
-        _cout->write(" " + sInput +"\n");
-        _cout->flush();
-        if(_name=="") {
-          _cout->write(Webcmd::set_color(Webcmd::color::RED),"\nName: ");
-          _cout->flush();
+      if(name_=="") {
+        name_=sInput;
+        send(" " + sInput + "\n");
+        if(name_=="") {
+          cout_->write(Webcmd::set_color(Webcmd::color::RED), "\nName: ");
+          cout_->flush();
           return;
         }
-        _cout->write(Webcmd::set_color(Webcmd::color::ORANGE),"\nPassword: ");
-        _cout->flush();
+        cout_->write(Webcmd::set_color(Webcmd::color::ORANGE), "\nPassword: ");
+        cout_->flush();
         return;
       }
 
-      if(_password=="") {
-        _password = sInput;
+      if(password_=="") {
+        password_ = sInput;
         std::string str = "";
         for(size_t i=0; i<sInput.length(); i++) 
           str += "*";
-        _cout->write(" " + str + "\n");
-        _cout->flush();
-        if(_password=="") {
-          _cout->write("\nPassword: ");
-          _cout->flush();
+        send(" " + str + "\n");
+        if(password_=="") {
+          send("\nPassword: ");
           return;
         }
-        _id = game->checkLogin(_name,_password);
-        if(_id=="") {
-          _name = "";
-          _password = "";
-          _cout->write(Webcmd::set_color(Webcmd::color::RED), "Invalid Login please try again!",color::white, "\n\nName: ");
-          _cout->flush();
+        id_ = game->checkLogin(name_,password_);
+        if(id_=="") {
+          name_ = "";
+          password_ = "";
+          cout_->write(Webcmd::set_color(Webcmd::color::RED), 
+              "Invalid Login please try again!", color::white, "\n\nName: ");
+          cout_->flush();
           return;
         }
-        std::cout << "Login data: " << _id << std::endl;
-        sInput = game->startGame(sInput,_id, _cout);
-        _cout->write(sInput);
-        _cout->flush();
+        std::cout << "Login data: " << id_ << std::endl;
+        sInput = game->startGame(sInput,id_, cout_);
+        send(sInput);
         return;
       } 
 
@@ -87,8 +89,8 @@ class WebserverGame {
         lk.push_back(it.second->GetID());
 
       std::cout<<"Befor play: sInput: "<< sInput << " calling with id: " 
-        << _id <<std::endl;
-      std::string sOutput = game->play(sInput, _id, lk);
+        << id_ <<std::endl;
+      std::string sOutput = game->play(sInput, id_, lk);
       if (sOutput == "[### end_game ###]") {
         sOutput = "Game closed by host";
         global_shutdown = true;
@@ -96,9 +98,8 @@ class WebserverGame {
         std::cout << "Game is getting closed..." << std::endl;
       }
       else {
-        _cout->write(sOutput);
+        send(sOutput);
         std::cout<<"Send the output to client: " << sOutput <<std::endl;
-        _cout->flush();
       }
     }
 };
