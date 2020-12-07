@@ -113,19 +113,10 @@ function DelElem(what, name) {
   }
 }
 
-var ip = location.host.substr(0, location.host.indexOf(":"));
-async function play_game(port) {
-  //Check if game is already running.
-  var adress = "ws://" + ip + ":" + parseInt(port+1) + "/";
-  socket = new WebSocket(adress);
-  await new Promise(r => setTimeout(r, 500));
-  if (socket.readyState === 2 || socket.readyState === 3)
-    alert("Game not running.");
-  else {
-    var cur_loc = window.location.href;
-    cur_loc = cur_loc.substr(0, cur_loc.indexOf(":", 7));
-    window.open(cur_loc + ":" + parseInt(port) + "/");
-  }
+function play_game(port) {
+  var cur_loc = window.location.href;
+  cur_loc = cur_loc.substr(0, cur_loc.indexOf(":", 7));
+  window.open(cur_loc + ":" + parseInt(port) + "/");
 }
 
 function request_access(user, world) {
