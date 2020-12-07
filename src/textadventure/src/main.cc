@@ -19,15 +19,16 @@ class WebserverGame {
     std::string name_;
     std::string password_;
     std::string id_;
+    std::string sign_in_up_;
     Webconsole* cout_;
 
   public:
     WebserverGame(Webconsole *cout) {
       std::cout << "Starting....\n";
-
       name_ = "";
       password_ = "";
       id_ = "";
+      sign_in_up_ = "";
       cout_ = cout;
     }
 
@@ -44,53 +45,76 @@ class WebserverGame {
       cout_->flush();
     }
 
-    void onmessage(std::string sInput, std::map<decltype(websocketpp::lib::
-          weak_ptr<void>().lock().get()), WebserverGame*> *ptr, bool& global_shutdown) {
-      if(name_=="") {
-        name_=sInput;
-        send(" " + sInput + "\n");
+    void SignInUp(std::string in) {
+      if (sign_in_up_ == "") {
+        std::cout << "Choosing login/ register";
+        if (in == "l" || in == "r" || in == "login" || in == "register") {
+          sign_in_up_ = in.substr(0,1);
+          cout_->write(Webcmd::set_color(Webcmd::color::ORANGE), "\nName: ");
+          cout_->flush();
+          std::cout << "Set sign_in_up_ to " << in.substr(0,1) << std::endl;
+        }
+        else  {
+          std::cout << "Wrong input" << std::endl;
+          cout_->write(Webcmd::set_color(Webcmd::color::RED), 
+              "Invalid option please try again!", color::white, "\n\nlogin/register (l/r): ");
+          cout_->flush();
+        }
+      }
+      else {
+        std::cout << "On to getting credentials" << std::endl;
         if(name_=="") {
-          cout_->write(Webcmd::set_color(Webcmd::color::RED), "\nName: ");
+          name_ = in ;
+          send(" " + in + "\n");
+          cout_->write(Webcmd::set_color(Webcmd::color::ORANGE), "Password: ");
           cout_->flush();
           return;
         }
-        cout_->write(Webcmd::set_color(Webcmd::color::ORANGE), "\nPassword: ");
-        cout_->flush();
+
+        if(password_ == "") {
+          password_ = in;
+          std::string str(in.length(), '*');
+          send(" " + str + "\n");
+          id_ = game->checkLogin(name_,password_);
+          if(id_== "") {
+            name_ = "";
+            password_ = "";
+            cout_->write(Webcmd::set_color(Webcmd::color::RED), 
+                "Invalid Login please try again!", color::white, "\n\nName: ");
+            cout_->flush();
+          }
+          else {
+            std::cout << "Login data: " << id_ << std::endl;
+            if (sign_in_up_ == "l") 
+              send("Logged in as " + id_ + "\n\n");
+            else
+              send("Registered as " + id_ + "\n\n");
+            send(game->startGame(in, id_, cout_));
+          }
+        }
+      }
+    }
+
+    void onmessage(std::string sInput, std::map<decltype(websocketpp::lib::
+          weak_ptr<void>().lock().get()), WebserverGame*> *ptr, bool& global_shutdown) {
+
+      //Check for login/register-phase
+      if (sign_in_up_ == "" || name_ == "" || password_ == "") {
+        SignInUp(sInput);
         return;
       }
 
-      if(password_=="") {
-        password_ = sInput;
-        std::string str = "";
-        for(size_t i=0; i<sInput.length(); i++) 
-          str += "*";
-        send(" " + str + "\n");
-        if(password_=="") {
-          send("\nPassword: ");
-          return;
-        }
-        id_ = game->checkLogin(name_,password_);
-        if(id_=="") {
-          name_ = "";
-          password_ = "";
-          cout_->write(Webcmd::set_color(Webcmd::color::RED), 
-              "Invalid Login please try again!", color::white, "\n\nName: ");
-          cout_->flush();
-          return;
-        }
-        std::cout << "Login data: " << id_ << std::endl;
-        sInput = game->startGame(sInput,id_, cout_);
-        send(sInput);
-        return;
-      } 
-
+      //Create list of all online players
       std::list<std::string> lk;
       for(const auto &it : *ptr)
         lk.push_back(it.second->GetID());
 
+      //Call main play-loop
       std::cout<<"Befor play: sInput: "<< sInput << " calling with id: " 
         << id_ <<std::endl;
       std::string sOutput = game->play(sInput, id_, lk);
+
+      //Check if game is ended -> close game
       if (sOutput == "[### end_game ###]") {
         sOutput = "Game closed by host";
         global_shutdown = true;
@@ -104,6 +128,11 @@ class WebserverGame {
     }
 };
 
+/**
+ * Function load a (txt-)file from disc.
+ * @param[in] path (path to file to load)
+ * @return return file as string
+ */
 std::string GetPage(std::string path) {
   //Read loginpage and send
   std::ifstream read(path);
@@ -118,6 +147,12 @@ std::string GetPage(std::string path) {
   return page;
 }
 
+/**
+ * Function to load an image from disc.
+ * @param[in] path (to images)
+ * @param[in] iamge (name of image to load)
+ * @return Return image as string.
+ */
 std::string GetImage(std::string path, std::string image) {
   path = path + "images" + image + ".jpg";
   std::ifstream f(path, std::ios::in|std::ios::binary|std::ios::ate);    
@@ -138,6 +173,9 @@ std::string GetImage(std::string path, std::string image) {
 }
 
 
+/**
+ * main loop
+ */
 int main(int x, char **argc) {
   CGame currentGame(argc[1]);
   game = &currentGame;
