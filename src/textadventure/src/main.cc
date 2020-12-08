@@ -75,7 +75,7 @@ class WebserverGame {
         std::cout << "Choosing login/ register";
         if (in == "l" || in == "r" || in == "login" || in == "register") {
           sign_in_up_ = in.substr(0,1);
-          cout_->write(Webcmd::set_color(Webcmd::color::ORANGE), "\nName: ");
+          cout_->write(Webcmd::set_color(Webcmd::color::ORANGE), "\nid: ");
           cout_->flush();
           std::cout << "Set sign_in_up_ to " << in.substr(0,1) << std::endl;
         }
@@ -90,14 +90,15 @@ class WebserverGame {
         Login(in);
     }
 
-    void onmessage(std::string sInput, std::map<decltype(websocketpp::lib::
+    void onmessage(std::string input, std::map<decltype(websocketpp::lib::
           weak_ptr<void>().lock().get()), WebserverGame*> *ptr, bool& global_shutdown) {
 
       //Check for login/register-phase
       if (sign_in_up_ == "" || name_ == "" || password_ == "") {
-        SignInUp(sInput);
+        SignInUp(input);
         return;
       }
+      func::convertToLower(input);
 
       //Create list of all online players
       std::list<std::string> lk;
@@ -105,9 +106,9 @@ class WebserverGame {
         lk.push_back(it.second->GetID());
 
       //Call main play-loop
-      std::cout<<"Befor play: sInput: "<< sInput << " calling with id: " 
+      std::cout<<"Befor play: input: "<< input << " calling with id: " 
         << id_ <<std::endl;
-      std::string sOutput = game->play(sInput, id_, lk);
+      std::string sOutput = game->play(input, id_, lk);
 
       //Check if game is ended -> close game
       if (sOutput == "[### end_game ###]") {

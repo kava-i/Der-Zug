@@ -66,13 +66,13 @@ void CGame::playerFactory(nlohmann::json j_player) {
 }
 
 
-string CGame::checkLogin(string name, string password, bool login, std::string& id) {
+string CGame::checkLogin(string in_id, string password, bool login, std::string& id) {
   std::cout << "checkLogin\n";
   
   //Log player in
   if (login == true) {
     for(auto &it : m_players) {
-      string tmp = it.second->doLogin(name, password);
+      string tmp = it.second->doLogin(in_id, password);
       if(tmp != "") {
         id = tmp;
         return "Loggen in as " + id + "\n\n";
@@ -82,16 +82,16 @@ string CGame::checkLogin(string name, string password, bool login, std::string& 
 
   //Register player
   else {
-    if (m_players.count(name) > 0) {
-      return Webcmd::set_color(Webcmd::color::RED) + "Username already exists"
-          + Webcmd::set_color(Webcmd::color::WHITE) + "\n\nName: ";
+    if (m_players.count(in_id) > 0) {
+      return Webcmd::set_color(Webcmd::color::RED) + "id already exists"
+          + Webcmd::set_color(Webcmd::color::WHITE) + "\n\nid: ";
     }
     else {
       //Create new player
       nlohmann::json player;
-      player["name"] = name;
+      player["name"] = in_id;
       player["password"] = password;
-      player["id"] = func::returnToLower(name);
+      player["id"] = in_id;
       player["hp"] = 10;
       player["strength"] = 0;
       player["attacks"] = nlohmann::json::object();
@@ -102,7 +102,7 @@ string CGame::checkLogin(string name, string password, bool login, std::string& 
       std::ifstream read(path_ + "/players/players.json");
       read >> players;
       read.close();
-      players[func::returnToLower(name)] = player;
+      players[in_id] = player;
 
       //Write player to disc.
       std::ofstream write(path_ + "/players/players.json");
@@ -111,21 +111,14 @@ string CGame::checkLogin(string name, string password, bool login, std::string& 
 
       //Reload players
       playerFactory(false);
-      id = name;
+      id = in_id;
 
-      //Check is newly created player exists in players
-      for (auto &it : m_players)
-        std::cout << it.first << ", " << it.second->getName() << std::endl;
-
-      //Set id
-      id = name;
-
-      return "Loggen in as " + id + "\n\n";
+      return "Loggen in as " + in_id + "\n\n";
     }
   }
 
   return Webcmd::set_color(Webcmd::color::RED) + "Invalid login please try again!"
-    + Webcmd::set_color(Webcmd::color::WHITE) + "\n\nName: ";
+    + Webcmd::set_color(Webcmd::color::WHITE) + "\n\nid: ";
 }
 
 // ****************** FUNCTIONS CALLER ********************** //

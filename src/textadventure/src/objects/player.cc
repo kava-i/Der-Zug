@@ -945,12 +945,11 @@ void CPlayer::checkCommands()
 * @param sName name to compare to player's name.
 * @param sPassword password to compare to player's password.
 */
-string CPlayer::doLogin(string sName, string sPassword)
-{
-    if(sName == func::returnToLower(m_sName) && sPassword == m_sPassword) 
-        return m_sID;
-    else 
-        return "";
+string CPlayer::doLogin(string id, string password) {
+  if(id == func::returnToLower(m_sID) && password== m_sPassword) 
+    return m_sID;
+  else 
+    return "";
 }
 
 /**
