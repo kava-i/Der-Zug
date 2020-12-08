@@ -840,24 +840,299 @@ worldFactory: done.
 initializing context stack.
 Done.
 Finished parsing!
-[2020-11-27 15:07:36] [connect] WebSocket Connection [::ffff:127.0.0.1]:46028 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
-builder_tests.o
-game_builder.o
-index.html
-web
+[2020-12-07 20:37:44] [connect] WebSocket Connection [::ffff:127.0.0.1]:33114 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
 Starting....
-[2020-11-27 15:07:43] [control] Control frame received with opcode 8
-[2020-11-27 15:07:43] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
-[2020-11-27 15:07:43] [frame_header] Header Bytes: 
+[2020-12-07 20:37:46] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 18 payload bytes
+[2020-12-07 20:37:46] [frame_header] Header Bytes: 
+[0] (2) 81 06 
+[1] (2) 81 0C 
+
+checkLogin
+Login data: alex
+[1;31mEvents: show room, from: startGame[0m
+[1;31mshow, room[0m
+[1;34mfirst[0m throwing: show|room
+[1;31mEvents: printText start, from: pre-events[0m
+[1;31mprintText, start[0m
+[1;31mEvents: printText start2, from: post-events[0m
+[1;31mprintText, start2[0m
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|room
+[1;34mtutorial[0m throwing: show|room
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|room
+[1;34mkomische_gruppe[0m throwing: show|room
+[1;34mgeld_fuer_ticket[0m throwing: show|room
+[1;34mbesoffene_frau[0m throwing: show|room
+[1;34mworld[0m throwing: show|room
+[1;34mroom[0m throwing: show|room
+[1;34mstandard[0m throwing: show|room
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[2020-12-07 20:37:48] [frame_header] Dispatching write containing 2 message(s) containing 6 header bytes and 854 payload bytes
+[2020-12-07 20:37:48] [frame_header] Header Bytes: 
+[0] (2) 81 0A 
+[1] (4) 81 7E 03 4C 
+
+Befor play: sInput: zeige details calling with id: alex
+[1;31mEvents: zeige details, from: CGame::play[0m
+[1;31mshow, details[0m
+[1;34mfirst[0m throwing: show|details
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|details
+[1;34mtutorial[0m throwing: show|details
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;31mEvents: printText tutorial_details, from: post-events[0m
+[1;31mprintText, tutorial_details[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|details
+[1;34mkomische_gruppe[0m throwing: show|details
+[1;34mgeld_fuer_ticket[0m throwing: show|details
+[1;34mbesoffene_frau[0m throwing: show|details
+[1;34mworld[0m throwing: show|details
+[1;34mroom[0m throwing: show|details
+[1;34mstandard[0m throwing: show|details
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind  <b>Bücherregal</b>, <b>Fenster mit aufwendiger Glasmalerei</b>, <b>Steintafel</b> und <b>Statur</b>. 
+</div>Details Erfolgreich
+wahrnehmung um 1 erhöht!
+<div class='spoken'>ERZÄHLER - 	Sehr gut. Willst du die Dinge näher sehen? Dich ihnen anschauend hingeben?$</div><div class='spoken2'>	Aber sei wachsam, schau dir die Wahrheit, die du jetzt siehst nicht <i>nachher</i> oder <i>entfernt</i> davon an, sie hätte dann <i>gar keine Bedeutung</i> mehr.$</div><div class='spoken2'>	Sage <b>"betrachte [name des details]"</b> und tauche tiefer in (deine) Welt ein. (Es reicht einen eindeutigen Teil des Gegenstandes einzugeben, den du betrachten magst.)</div>
+
+[2020-12-07 20:37:52] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 723 payload bytes
+[2020-12-07 20:37:52] [frame_header] Header Bytes: 
+[0] (4) 81 7E 02 D3 
+
+[2020-12-07 20:38:10] [connect] WebSocket Connection [::ffff:127.0.0.1]:33124 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
+Starting....
+[2020-12-07 20:38:13] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 17 payload bytes
+[2020-12-07 20:38:13] [frame_header] Header Bytes: 
+[0] (2) 81 05 
+[1] (2) 81 0C 
+
+checkLogin
+Login data: jan
+[1;31mEvents: show room, from: startGame[0m
+[1;31mshow, room[0m
+[1;34mfirst[0m throwing: show|room
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|room
+[1;34mtutorial[0m throwing: show|room
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|room
+[1;34mkomische_gruppe[0m throwing: show|room
+[1;34mgeld_fuer_ticket[0m throwing: show|room
+[1;34mbesoffene_frau[0m throwing: show|room
+[1;34mworld[0m throwing: show|room
+[1;34mroom[0m throwing: show|room
+[1;34mstandard[0m throwing: show|room
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[2020-12-07 20:38:14] [frame_header] Dispatching write containing 2 message(s) containing 6 header bytes and 300 payload bytes
+[2020-12-07 20:38:14] [frame_header] Header Bytes: 
+[0] (2) 81 0A 
+[1] (4) 81 7E 01 22 
+
+Befor play: sInput: show people calling with id: jan
+[1;31mEvents: show people, from: CGame::play[0m
+[1;31mshow, people[0m
+[1;34mfirst[0m throwing: show|people
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|people
+[1;34mtutorial[0m throwing: show|people
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|people
+[1;34mkomische_gruppe[0m throwing: show|people
+[1;34mgeld_fuer_ticket[0m throwing: show|people
+[1;34mbesoffene_frau[0m throwing: show|people
+[1;34mworld[0m throwing: show|people
+[1;34mroom[0m throwing: show|people
+[1;34mstandard[0m throwing: show|people
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind <b>Pissing man</b>. 
+</div>
+
+[2020-12-07 20:38:17] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 85 payload bytes
+[2020-12-07 20:38:17] [frame_header] Header Bytes: 
+[0] (2) 81 55 
+
+Befor play: sInput: spreche man an calling with id: jan
+[1;31mEvents: spreche man an, from: CGame::play[0m
+[1;31mtalk, man[0m
+[1;34mfirst[0m throwing: talk|man
+[1;34mzug_nach_moskau[0m throwing: talk|man
+[1;34mtutorial[0m throwing: talk|man
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(talk)[0m
+[1;34mleave[0m throwing: talk|man
+[1;34mkomische_gruppe[0m throwing: talk|man
+[1;32m ... [1;34mkomische_gruppe: [1;32mevent triggered: reden(talk)[0m
+[1;34mgeld_fuer_ticket[0m throwing: talk|man
+[1;34mbesoffene_frau[0m throwing: talk|man
+[1;34mworld[0m throwing: talk|man
+[1;34mselect[0m throwing: talk|man
+[1;34mroom[0m throwing: talk|man
+[1;34mstandard[0m throwing: talk|man
+About to set attribute that does not exist: state
+About to set attribute that does not exist: mapOptions
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_startDialog(talk)[0m
+Send the output to client: <div class='spoken'>DRAMA - 	You're looking at the man and you're thinking of what to say...</div>1: Are you seriosly pissing straight on the floor?
+2: Walk away.
+
+
+[2020-12-07 20:38:25] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 165 payload bytes
+[2020-12-07 20:38:25] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 A5 
+
+Befor play: sInput: 2 calling with id: jan
+[1;31mEvents: 2, from: CGame::play[0m
+[1;31m2, 2[0m
+[1;34mfirst[0m throwing: 2|2
+[1;34mzug_nach_moskau[0m throwing: 2|2
+[1;34mtutorial[0m throwing: 2|2
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(2)[0m
+[1;34mleave[0m throwing: 2|2
+[1;34mkomische_gruppe[0m throwing: 2|2
+[1;34mgeld_fuer_ticket[0m throwing: 2|2
+[1;34mbesoffene_frau[0m throwing: 2|2
+[1;34mworld[0m throwing: 2|2
+[1;34mdialog[0m throwing: 2|2
+[1;31mEvents: endDialog, from: h_call[0m
+[1;31mendDialog, endDialog[0m
+[1;34mfirst[0m throwing: endDialog|endDialog
+[1;34mzug_nach_moskau[0m throwing: endDialog|endDialog
+[1;34mtutorial[0m throwing: endDialog|endDialog
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(endDialog)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(endDialog)[0m
+[1;34mleave[0m throwing: endDialog|endDialog
+[1;34mkomische_gruppe[0m throwing: endDialog|endDialog
+[1;34mgeld_fuer_ticket[0m throwing: endDialog|endDialog
+[1;34mbesoffene_frau[0m throwing: endDialog|endDialog
+[1;34mworld[0m throwing: endDialog|endDialog
+[1;32m ... [1;34mworld: [1;32mevent triggered: h_endDialog(endDialog)[0m
+[1;32m ... [1;34mdialog: [1;32mevent triggered: h_call(2)[0m
+Send the output to client: <div class='spoken'>DRAMA - 	Your decide not to care and leave the man alone.</div>Dialog ended.
+
+
+[2020-12-07 20:38:27] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 99 payload bytes
+[2020-12-07 20:38:27] [frame_header] Header Bytes: 
+[0] (2) 81 63 
+
+Befor play: sInput: spreche man an calling with id: jan
+[1;31mEvents: spreche man an, from: CGame::play[0m
+[1;31mtalk, man[0m
+[1;34mfirst[0m throwing: talk|man
+[1;34mzug_nach_moskau[0m throwing: talk|man
+[1;34mtutorial[0m throwing: talk|man
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(talk)[0m
+[1;34mleave[0m throwing: talk|man
+[1;34mkomische_gruppe[0m throwing: talk|man
+[1;32m ... [1;34mkomische_gruppe: [1;32mevent triggered: reden(talk)[0m
+[1;34mgeld_fuer_ticket[0m throwing: talk|man
+[1;34mbesoffene_frau[0m throwing: talk|man
+[1;34mworld[0m throwing: talk|man
+[1;34mselect[0m throwing: talk|man
+[1;34mroom[0m throwing: talk|man
+[1;34mstandard[0m throwing: talk|man
+About to set attribute that does not exist: state
+About to set attribute that does not exist: mapOptions
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_startDialog(talk)[0m
+Send the output to client: <div class='spoken'>DRAMA - 	You're looking at the man and you're thinking of what to say...</div>1: Are you seriosly pissing straight on the floor?
+(2: Walk away.)
+
+
+[2020-12-07 20:38:29] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 167 payload bytes
+[2020-12-07 20:38:29] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 A7 
+
+Befor play: sInput: 1 calling with id: jan
+[1;31mEvents: 1, from: CGame::play[0m
+[1;31m1, 1[0m
+[1;34mfirst[0m throwing: 1|1
+[1;34mzug_nach_moskau[0m throwing: 1|1
+[1;34mtutorial[0m throwing: 1|1
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(1)[0m
+[1;34mleave[0m throwing: 1|1
+[1;34mkomische_gruppe[0m throwing: 1|1
+[1;34mgeld_fuer_ticket[0m throwing: 1|1
+[1;34mbesoffene_frau[0m throwing: 1|1
+[1;34mworld[0m throwing: 1|1
+[1;34mdialog[0m throwing: 1|1
+[1;31mEvents: endDialog, from: h_call[0m
+[1;31mendDialog, endDialog[0m
+[1;34mfirst[0m throwing: endDialog|endDialog
+[1;34mzug_nach_moskau[0m throwing: endDialog|endDialog
+[1;34mtutorial[0m throwing: endDialog|endDialog
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(endDialog)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(endDialog)[0m
+[1;34mleave[0m throwing: endDialog|endDialog
+[1;34mkomische_gruppe[0m throwing: endDialog|endDialog
+[1;34mgeld_fuer_ticket[0m throwing: endDialog|endDialog
+[1;34mbesoffene_frau[0m throwing: endDialog|endDialog
+[1;34mworld[0m throwing: endDialog|endDialog
+[1;32m ... [1;34mworld: [1;32mevent triggered: h_endDialog(endDialog)[0m
+[1;32m ... [1;34mdialog: [1;32mevent triggered: h_call(1)[0m
+Send the output to client: <div class='spoken'>YOU - 	Are you seriosly pissing straight on the floor?$</div><div class='spoken'>PISSING MAN - 	You fuck off and leave an old man be!</div>Dialog ended.
+
+
+[2020-12-07 20:38:32] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 176 payload bytes
+[2020-12-07 20:38:32] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 B0 
+
+Befor play: sInput: spreche man an calling with id: jan
+[1;31mEvents: spreche man an, from: CGame::play[0m
+[1;31mtalk, man[0m
+[1;34mfirst[0m throwing: talk|man
+[1;34mzug_nach_moskau[0m throwing: talk|man
+[1;34mtutorial[0m throwing: talk|man
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(talk)[0m
+[1;34mleave[0m throwing: talk|man
+[1;34mkomische_gruppe[0m throwing: talk|man
+[1;32m ... [1;34mkomische_gruppe: [1;32mevent triggered: reden(talk)[0m
+[1;34mgeld_fuer_ticket[0m throwing: talk|man
+[1;34mbesoffene_frau[0m throwing: talk|man
+[1;34mworld[0m throwing: talk|man
+[1;34mselect[0m throwing: talk|man
+[1;34mroom[0m throwing: talk|man
+[1;34mstandard[0m throwing: talk|man
+About to set attribute that does not exist: state
+About to set attribute that does not exist: mapOptions
+[1;31mEvents: endDialog, from: CPlayer::startDialog[0m
+[1;31mendDialog, endDialog[0m
+[1;34mfirst[0m throwing: endDialog|endDialog
+[1;34mzug_nach_moskau[0m throwing: endDialog|endDialog
+[1;34mtutorial[0m throwing: endDialog|endDialog
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(endDialog)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(endDialog)[0m
+[1;34mleave[0m throwing: endDialog|endDialog
+[1;34mkomische_gruppe[0m throwing: endDialog|endDialog
+[1;34mgeld_fuer_ticket[0m throwing: endDialog|endDialog
+[1;34mbesoffene_frau[0m throwing: endDialog|endDialog
+[1;34mworld[0m throwing: endDialog|endDialog
+[1;32m ... [1;34mworld: [1;32mevent triggered: h_endDialog(endDialog)[0m
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_startDialog(talk)[0m
+Send the output to client: <div class='spoken'>LOGIK - 	Ah, This is very boring. Nobody wants to talk man!</div>Dialog ended.
+
+
+[2020-12-07 20:38:35] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 101 payload bytes
+[2020-12-07 20:38:35] [frame_header] Header Bytes: 
+[0] (2) 81 65 
+
+[2020-12-07 20:38:37] [control] Control frame received with opcode 8
+[2020-12-07 20:38:37] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2020-12-07 20:38:37] [frame_header] Header Bytes: 
 [0] (2) 88 02 
 
-[2020-11-27 15:07:43] [disconnect] Disconnect close local:[1001] remote:[1001]
-[2020-11-27 16:45:27] [connect] WebSocket Connection [::ffff:127.0.0.1]:46930 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
+[2020-12-07 20:38:37] [disconnect] Disconnect close local:[1001] remote:[1001]
+[2020-12-07 20:38:39] [control] Control frame received with opcode 8
+[2020-12-07 20:38:39] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2020-12-07 20:38:39] [frame_header] Header Bytes: 
+[0] (2) 88 02 
+
+[2020-12-07 20:38:39] [disconnect] Disconnect close local:[1001] remote:[1001]
+[2020-12-07 20:38:45] [connect] WebSocket Connection [::ffff:127.0.0.1]:33138 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
 Starting....
-[2020-11-27 16:45:31] [connect] WebSocket Connection [::ffff:127.0.0.1]:46932 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
-Starting....
-[2020-11-27 16:45:31] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 19 payload bytes
-[2020-11-27 16:45:31] [frame_header] Header Bytes: 
+[2020-12-07 20:38:46] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 19 payload bytes
+[2020-12-07 20:38:46] [frame_header] Header Bytes: 
 [0] (2) 81 07 
 [1] (2) 81 0C 
 
@@ -880,3 +1155,11 @@ Login data: _admin
 [1;34mstandard[0m throwing: show|room
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
 Befor play: sInput: [end_game] calling with id: _admin
+Sending to all online players
+Sending to host.
+Game is getting closed...
+Befor play: sInput: [end_game] calling with id: _admin
+Sending to all online players
+Sending to host.
+Game is getting closed...
+Webgame started on port 9002

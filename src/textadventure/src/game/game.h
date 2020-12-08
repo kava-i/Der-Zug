@@ -20,6 +20,7 @@
 #include "tools/gramma.h"
 #include "tools/fuzzy.h"
 #include "tools/func.h"
+#include "tools/webcmd.h"
 
 //#include <Python.h>
 
@@ -39,6 +40,7 @@ private:
     map<string, nlohmann::json> m_playerJsons;
     CPlayer* m_curPlayer;
     CGramma* m_gramma;
+    std::string path_;
 
     Context* m_context;
 
@@ -61,7 +63,7 @@ public:
     string play(string sInput, string sPlayerID, std::list<string>& onlinePlayers);
 
     // *** FUNCTIONS *** //
-    string checkLogin(string sName, string sPassword);  
+    string checkLogin(string sName, string sPassword, bool login, std::string& id);  
     bool reloadPlayer(string sPlayerID);
     bool reloadWorld();
     bool reloadWorld(string sPlayerID);

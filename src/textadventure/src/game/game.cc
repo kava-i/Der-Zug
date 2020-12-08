@@ -13,11 +13,16 @@ map<string, nlohmann::json> CGame::getPlayerJsons() {
 CGame::CGame(std::string path) {
   std::cout << "Creating game.\n";
 
+  //Set path 
+  path_ = path;
+
+  //Initialize contexts
   Context::initializeHanlders();
   Context::initializeTemplates();
   m_context = new Context((std::string)"game");
   m_context->setGame(this);
 
+  //Create world
   m_world = new CWorld(NULL, path);
   std::cout << "Done parsing world." << std::endl;
   //m_gramma = new CGramma({"dictionary.txt", "EIG.txt"});
@@ -61,14 +66,59 @@ void CGame::playerFactory(nlohmann::json j_player) {
 }
 
 
-string CGame::checkLogin(string sName, string sPassword) {
+string CGame::checkLogin(string in_id, string password, bool login, std::string& id) {
   std::cout << "checkLogin\n";
-  for(auto &it : m_players) {
-    string tmp = it.second->doLogin(sName,sPassword);
-    if(tmp != "")
-      return tmp;
+  
+  //Log player in
+  if (login == true) {
+    for(auto &it : m_players) {
+      string tmp = it.second->doLogin(in_id, password);
+      if(tmp != "") {
+        id = tmp;
+        return "Loggen in as " + id + "\n\n";
+      }
+    }
+  } 
+
+  //Register player
+  else {
+    if (m_players.count(in_id) > 0) {
+      return Webcmd::set_color(Webcmd::color::RED) + "id already exists"
+          + Webcmd::set_color(Webcmd::color::WHITE) + "\n\nid: ";
+    }
+    else {
+      //Create new player
+      nlohmann::json player;
+      player["name"] = in_id;
+      player["password"] = password;
+      player["id"] = in_id;
+      player["hp"] = 10;
+      player["strength"] = 0;
+      player["attacks"] = nlohmann::json::object();
+      player["room"] = "trainstation_eingangshalle";
+      
+      //Edit json of all players and add new player
+      nlohmann::json players;
+      std::ifstream read(path_ + "/players/players.json");
+      read >> players;
+      read.close();
+      players[in_id] = player;
+
+      //Write player to disc.
+      std::ofstream write(path_ + "/players/players.json");
+      write << players;
+      write.close();
+
+      //Reload players
+      playerFactory(false);
+      id = in_id;
+
+      return "Loggen in as " + in_id + "\n\n";
+    }
   }
-  return "";
+
+  return Webcmd::set_color(Webcmd::color::RED) + "Invalid login please try again!"
+    + Webcmd::set_color(Webcmd::color::WHITE) + "\n\nid: ";
 }
 
 // ****************** FUNCTIONS CALLER ********************** //
