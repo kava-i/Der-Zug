@@ -40,6 +40,7 @@ private:
     map<string, nlohmann::json> m_playerJsons;
     CPlayer* m_curPlayer;
     CGramma* m_gramma;
+    std::string path_;
 
     Context* m_context;
 

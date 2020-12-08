@@ -172,15 +172,12 @@ function bdyonload()
             }
             else
             {
-                let st = document.getElementById("input").value;
-                let k = st.toLowerCase();
+                let p_input = document.getElementById("input").value;
                 document.getElementById("input").value ="";
-                if(k=="")
+                if(p_input=="")
                     printString('\x06'+". . ."+'\n');
-                //else
-                //    printString('\x06'+k+'\n');
-                listOfCommands.push(k);
-                socket.send(k);
+                listOfCommands.push(p_input);
+                socket.send(p_input);
                 let val = document.getElementById("output");
                 val.scrollTop = val.scrollHeight;
                 currentIter = -1;

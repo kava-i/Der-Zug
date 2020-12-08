@@ -13,11 +13,16 @@ map<string, nlohmann::json> CGame::getPlayerJsons() {
 CGame::CGame(std::string path) {
   std::cout << "Creating game.\n";
 
+  //Set path 
+  path_ = path;
+
+  //Initialize contexts
   Context::initializeHanlders();
   Context::initializeTemplates();
   m_context = new Context((std::string)"game");
   m_context->setGame(this);
 
+  //Create world
   m_world = new CWorld(NULL, path);
   std::cout << "Done parsing world." << std::endl;
   //m_gramma = new CGramma({"dictionary.txt", "EIG.txt"});
@@ -61,18 +66,64 @@ void CGame::playerFactory(nlohmann::json j_player) {
 }
 
 
-string CGame::checkLogin(string sName, string sPassword, bool login, std::string& id) {
+string CGame::checkLogin(string name, string password, bool login, std::string& id) {
   std::cout << "checkLogin\n";
   
+  //Log player in
   if (login == true) {
     for(auto &it : m_players) {
-      string tmp = it.second->doLogin(sName,sPassword);
+      string tmp = it.second->doLogin(name, password);
       if(tmp != "") {
         id = tmp;
         return "Loggen in as " + id + "\n\n";
       }
     }
   } 
+
+  //Register player
+  else {
+    if (m_players.count(name) > 0) {
+      return Webcmd::set_color(Webcmd::color::RED) + "Username already exists"
+          + Webcmd::set_color(Webcmd::color::WHITE) + "\n\nName: ";
+    }
+    else {
+      //Create new player
+      nlohmann::json player;
+      player["name"] = name;
+      player["password"] = password;
+      player["id"] = func::returnToLower(name);
+      player["hp"] = 10;
+      player["strength"] = 0;
+      player["attacks"] = nlohmann::json::object();
+      player["room"] = "trainstation_eingangshalle";
+      
+      //Edit json of all players and add new player
+      nlohmann::json players;
+      std::ifstream read(path_ + "/players/players.json");
+      read >> players;
+      read.close();
+      players[func::returnToLower(name)] = player;
+
+      //Write player to disc.
+      std::ofstream write(path_ + "/players/players.json");
+      write << players;
+      write.close();
+
+      //Reload players
+      playerFactory(false);
+      id = name;
+
+      //Check is newly created player exists in players
+      for (auto &it : m_players)
+        std::cout << it.first << ", " << it.second->getName() << std::endl;
+
+      //Set id
+      id = name;
+
+      return "Loggen in as " + id + "\n\n";
+    }
+  }
+
   return Webcmd::set_color(Webcmd::color::RED) + "Invalid login please try again!"
     + Webcmd::set_color(Webcmd::color::WHITE) + "\n\nName: ";
 }
