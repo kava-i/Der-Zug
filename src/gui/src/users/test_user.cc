@@ -8,6 +8,7 @@
 
 #include "user.h"
 #include "user_manager.h"
+#include "users/inja.hpp"
 #include "util//error_codes.h"
 #include "util/func.h"
 

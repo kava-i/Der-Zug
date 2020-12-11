@@ -118,6 +118,10 @@ void ServerFrame::Start(int port) {
   server_.Get("/web/run.js", [](const Request& req, Response& resp)
       { resp.set_content(func::GetPage("web/run.js"), 
           "application/javascript");});
+  server_.Get("/web/fuzzy_finder.js", [](const Request& req, Response& resp)
+      { resp.set_content(func::GetPage("web/fuzzy_finder.js"), 
+          "application/javascript");});
+
 
 
   //Images

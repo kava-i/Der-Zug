@@ -14,6 +14,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="/web/backup.js"></script>
     <script src="/web/run.js"></script>
+    <script src="/web/fuzzy_finder.js"></script>
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 </head>
 
@@ -27,8 +28,19 @@
     </ol>
 </nav>
 
+<div id="fuzzy_finder_div" class="fuzzy_finder" pages={{pages}}>
+  <div class="fuzzy_finder_center">
+    <label style="color:#1fe921;">files: </label><input id="fuzzy_finder_inp">
+    <ol id="fuzzy_finder_elems" class="fuzzy_finder_elems">
+  </div>
+</div>
+
 <div class="top_right">
-  <img src="/web/logo.png" style="width:120px; height:63px;margin-bottom:0.5em;"><br>
+  <img class="top_right_image" src="/web/logo.png">
+  <p class="fuzzy_finder_focused" 
+    title="Fuzzy finder active. Press any key to fuzzy search for pages/files/objects">
+      fuzzy_finder
+  </p>
 </div>
 
 <div class="box_overview center_in_box">
@@ -75,6 +87,3 @@
       <br>
     </div>
 </div>
-
-
-
