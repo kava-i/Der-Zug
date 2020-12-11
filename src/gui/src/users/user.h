@@ -262,6 +262,12 @@ class User {
      * @return return json of user.
      */
     nlohmann::json ConstructJson() const;
+
+    std::vector<std::string> GetAllPages(std::string user, std::string world);
+    std::vector<std::string> GetAllPages(std::string full_path, std::string path,
+      std::vector<std::string>& files);
+    void GetFiles(std::string full_path, std::string path, 
+        std::vector<std::string>& files);
 };
 
 #endif

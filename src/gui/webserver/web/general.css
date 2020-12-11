@@ -126,6 +126,11 @@ body {
   text-align: center;
 }
 
+.top_right_image {
+  width: 120px;
+  height: 63px;
+}
+
 .top_left{
   text-align: center;
 }
@@ -318,4 +323,51 @@ body {
 .txt_button:hover{
   cursor:pointer;
   color:white;
+}
+
+/** fuzzy_finder **/ 
+.fuzzy_finder {
+  position:fixed;
+  display: none;
+  z-index: 1; 
+  height:3em;
+  text-align:left;
+  margin-top: 30em;
+  margin-left:30%;
+  margin-right:30%;
+  width:40%;
+}
+
+.fuzzy_finder_center {
+  position: absolute;
+  width:100%;
+  margin-top=3em;
+  height: 15em;
+  margin: 0;
+  top: 50%;
+  left: 50%;
+
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+
+  background-color: rgba(0, 0, 0, 0.7);
+  box-shadow: 5px 10px rgba(0,0,0,0.4);
+  color: white;
+  text-align:left;
+}
+
+.fuzzy_finder_elems {
+  list-style: none;
+}
+
+.fuzzy_finder input {
+  padding:0.1em;
+  color: white;
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+}
+
+.fuzzy_finder_focused {
+  color: #1fe921;
+  text-decoration: underline;
 }

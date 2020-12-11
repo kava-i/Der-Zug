@@ -7,8 +7,11 @@
 
 #include <exception>
 #include <filesystem>
+#include <fstream>
+#include <iostream>
 #include <iterator>
 #include <ostream>
+#include <string>
 
 namespace fs = std::filesystem;
 
@@ -108,7 +111,7 @@ std::string User::GetWorld(std::string path, std::string user, std::string world
   //Create initial json with world and all categories.
   if (worlds_.count(world) > 0) port = worlds_[world];
   nlohmann::json j = nlohmann::json({{"user", user}, {"world", world}, 
-      {"categories", categories_}, {"port", port}});
+      {"categories", categories_}, {"port", port}, {"pages", GetAllPages(user, world)}});
 
   //Create dictionaries for all categories, if they do not exist.
   for (auto cat : categories_)
@@ -140,12 +143,16 @@ std::string User::GetBackups(std::string user, std::string world) {
 
 std::string User::GetCategory(std::string path, std::string user, std::string world, 
     std::string category) {
+
+  
   //Create path, inja Environment and initial json.
   path = path_ + path;
   inja::Environment env;
+  
+  // Create header to parse in_category_template.
   nlohmann::json j_category = nlohmann::json({{"user", user}, 
-      {"world", world}, {"category", category}});
-
+      {"world", world}, {"category", category}, {"pages", GetAllPages(user, world)}});
+  
   //Directly parse config page.
   if (category == "config") {
     nlohmann::json config_json;
@@ -172,6 +179,12 @@ std::string User::GetCategory(std::string path, std::string user, std::string wo
 
 std::string User::GetObjects(std::string path, std::string user, std::string world, std::string 
     category, std::string sub) {
+
+  // Create header to parse in_category_template.
+  nlohmann::json overview = nlohmann::json({{"user", user}, 
+      {"world", world}, {"category", category}, {"sub", sub}, 
+      {"pages", GetAllPages(user, world)}, {"objects", nlohmann::json::array()}});
+
   //Create path and trying to load into json 
   path = path_ + path + ".json";
   nlohmann::json objects;
@@ -186,10 +199,7 @@ std::string User::GetObjects(std::string path, std::string user, std::string wor
   }
 
   inja::Environment env;
-  nlohmann::json overview = nlohmann::json({{"user", user}, 
-      {"world", world}, {"category", category}, {"sub", sub}, 
-      {"objects", nlohmann::json::array()}});
-  
+    
   //Standard style, for rooms, items, ... Dictionary or dictionaries
   if (objects.is_array() == false) {
     size_t couter = 1;
@@ -241,7 +251,8 @@ std::string User::GetObject(std::string path, std::string user, std::string worl
       overview["json"] = objects[num];
   }
   overview["header"] = nlohmann::json({{"user", user}, {"world", world}, 
-      {"category", category}, {"sub", sub}, {"obj",obj}});
+      {"category", category}, {"sub", sub}, {"obj",obj}, 
+      {"pages", GetAllPages(user, world)}});
 
   std::cout << "Got overview: " << overview << std::endl;
 
@@ -691,4 +702,70 @@ bool User::CheckGameRunning(std::string path) {
     std::cout << "Running with player \"" << it.key() << "\": " << success << std::endl;
   }
   return success;
+}
+
+std::vector<std::string> User::GetAllPages(std::string user, std::string world) {
+
+  std::string path = "/" + user + "/files/" + world;
+  std::string full_path = path_ + path;
+  std::vector<std::string> files;
+  if (!func::demo_exists(full_path)) full_path += ".json";
+  if (!func::demo_exists(full_path)) return files;
+  files.push_back(path);
+
+  for (auto& p : fs::directory_iterator(full_path)) {
+    std::string current_path = p.path();
+    current_path = current_path.substr(current_path.find(path));
+    std::cout << "searching in " << current_path << ": " << current_path.find(".")
+        << std::endl;
+    if (current_path.find(".") < 7 || current_path.find(".") == std::string::npos) {
+      files.push_back(current_path);
+      files = GetAllPages(p.path(), path, files);
+    }
+    else {
+      files.push_back(current_path.substr(0, current_path.find(".")));
+      GetFiles(p.path(), current_path, files);
+    }
+  }
+  return files;
+}
+
+std::vector<std::string> User::GetAllPages(std::string full_path, std::string path,
+    std::vector<std::string>& files) {
+
+  if (!func::demo_exists(full_path)) return files;
+  for (auto& p : fs::directory_iterator(full_path)) {
+    std::string current_path = p.path();
+    current_path = current_path.substr(current_path.find(path));
+    std::cout << "searching in " << current_path << ": " << current_path.find(".")
+        << std::endl;
+    if (current_path.find(".") < 7 || current_path.find(".") == std::string::npos) {
+      files.push_back(current_path);
+      files = GetAllPages(p.path(), path, files);
+    }
+    else {
+      files.push_back(current_path.substr(0, current_path.find(".")));
+      GetFiles(p.path(), current_path, files);
+    }
+  }
+  return files;
+}
+
+void User::GetFiles(std::string full_path, std::string path,
+    std::vector<std::string>& files) {
+  path = path.substr(0, path.find("."));
+  nlohmann::json objects;
+  
+  //Check if path exists.
+  if (!func::LoadJsonFromDisc(full_path, objects))
+    return;
+
+  //Iterate over all objects and add to path.
+  try {
+    for (auto it=objects.begin(); it!=objects.end(); it++) {
+      std::cout << "Added " << it.key() << " to files" << std::endl;
+      files.push_back(path + "/" + it.key());
+    }
+  }
+  catch (...) {}
 }
