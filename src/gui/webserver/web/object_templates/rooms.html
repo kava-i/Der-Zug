@@ -79,7 +79,8 @@
       {% for handler in default(handlers, [{}]) %}
         <li custom="object">
           <input id="id" placeholder="function" value="{{default(handler.id, "")}}">
-          <input id="string" placeholder="command" value="{{default(handler.string, "")}}">
+          <input id="string" placeholder="cmd (string)" value="{{default(handler.string, "")}}">
+          <input id="regex" placeholder="cmd (regex)" value="{{default(handler.regex, "")}}">
           <input custom="int" id="priority" placeholder="priority" class="short" 
               value="{{default(handler.priority, 0)}}">
           <span class="mod_elem" onclick="del_elem('handlers',{{loop.index}})">-</span>
