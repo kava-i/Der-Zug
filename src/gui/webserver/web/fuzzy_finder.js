@@ -56,7 +56,8 @@ document.addEventListener('keydown', function(event) {
 
   //Check if input is ment for an input field whcih isn'z fuzzy finder.
   inputs = document.getElementsByTagName('input');
-  for (index = 0; index < inputs.length; ++index) {
+  inputs.push.apply(document.getElementsByTagName('textarea'));
+  for (var index = 0; index < inputs.length; ++index) {
     if (event.target == inputs[index] && event.target != fuzzy_finder_inp) 
       return;
   }
