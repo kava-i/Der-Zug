@@ -54,11 +54,12 @@ document.addEventListener('keydown', function(event) {
   fuzzy_finder_inp = document.getElementById("fuzzy_finder_inp");
   pages = document.getElementById("fuzzy_finder_elems").children;
 
-  //Check if input is ment for an input field whcih isn'z fuzzy finder.
-  inputs = document.getElementsByTagName('input');
-  inputs.push.apply(document.getElementsByTagName('textarea'));
-  for (var index = 0; index < inputs.length; ++index) {
-    if (event.target == inputs[index] && event.target != fuzzy_finder_inp) 
+  // Check if input is ment for an input field which isn't fuzzy finder.
+  var input_fields = [];
+  input_fields.push.apply(input_fields, document.getElementsByTagName('input'));
+  input_fields.push.apply(input_fields, document.getElementsByTagName('textarea'));
+  for (var index = 0; index < input_fields.length; ++index) {
+    if (event.target == input_fields[index] && event.target != fuzzy_finder_inp) 
       return;
   }
 
