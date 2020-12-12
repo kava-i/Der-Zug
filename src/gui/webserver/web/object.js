@@ -136,7 +136,7 @@ function GetAsType(elem) {
     if (elem.hasAttribute("custom") == false)
       return elem.value;
     else if (elem.getAttribute("custom") == "int") {
-      var is_number = /^\d+$/.test(elem.value);
+      var is_number = /^\d+(\.\d+)?$/.test(elem.value);
       if (is_number == false)
         throw(elem.value + " is not a number.");
       return parseInt(elem.value);

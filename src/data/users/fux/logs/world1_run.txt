@@ -1008,19 +1008,19 @@ worldFactory: done.
 initializing context stack.
 Done.
 Finished parsing!
-[2020-12-12 17:05:36] [connect] WebSocket Connection [::ffff:127.0.0.1]:48732 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
+[2020-12-12 17:45:33] [connect] WebSocket Connection [::ffff:127.0.0.1]:49004 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
 Starting....
-[2020-12-12 17:05:38] [control] Control frame received with opcode 8
-[2020-12-12 17:05:38] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
-[2020-12-12 17:05:38] [frame_header] Header Bytes: 
+[2020-12-12 17:45:38] [control] Control frame received with opcode 8
+[2020-12-12 17:45:38] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2020-12-12 17:45:38] [frame_header] Header Bytes: 
 [0] (2) 88 02 
 
-[2020-12-12 17:05:38] [disconnect] Disconnect close local:[1001] remote:[1001]
-[2020-12-12 17:05:39] [connect] WebSocket Connection [::ffff:127.0.0.1]:48736 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
+[2020-12-12 17:45:38] [disconnect] Disconnect close local:[1001] remote:[1001]
+[2020-12-12 17:45:39] [connect] WebSocket Connection [::ffff:127.0.0.1]:49008 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
 Starting....
 Choosing login/ registerSet sign_in_up_ to l
-[2020-12-12 17:05:39] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
-[2020-12-12 17:05:39] [frame_header] Header Bytes: 
+[2020-12-12 17:45:39] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
+[2020-12-12 17:45:39] [frame_header] Header Bytes: 
 [0] (2) 81 06 
 
 On to getting credentials
