@@ -158,9 +158,9 @@ std::string User::GetCategory(std::string path, std::string user, std::string wo
     nlohmann::json config_json;
     if (!func::LoadJsonFromDisc((path+".json"), config_json))
       return "";
-    j_category["json"] = config_json;
+    config_json["header"] = j_category;
     inja::Template temp = env.parse_template("web/object_templates/config.html");
-    return env.render(temp, j_category);
+    return env.render(temp, config_json);
   }
 
   //Check if path to given category exists 
