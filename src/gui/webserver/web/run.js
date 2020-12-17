@@ -3,9 +3,7 @@ function CloseModul() {
   document.getElementById("modal_log").style.display = "none";
 
   //Show button again and empty log
-  document.getElementById("get_log").style.display = "block";
-  document.getElementById("display_log").innerHTML = "";
-  document.getElementById("display_log_div").innerHTML = "";
+  document.getElementById("get_log").style.display = "inline-block";
 }
 
 //Close modal when users clicks anywhere outside of the modal. (works for both)
@@ -26,9 +24,8 @@ function check_running() {
   
   xhttp.onload = function(event){
     document.getElementById("modal_log").style.display = "block";
-    if (xhttp.status == 200) {
+    if (xhttp.status == 200)
       document.getElementById("check_msg").innerHTML = "Game is running as accpected!";
-    }
     else
       document.getElementById("check_msg").innerHTML = "Game is not running!";
   }
@@ -99,11 +96,17 @@ async function end(port) {
   }
   else {
     //End game.
-    socket.send("admin");
+    socket.send("l");
+    socket.send("_admin");
     socket.send("password");
     socket.send("[end_game]");
     socket.send("[end_game]");
-    document.getElementById("check_msg").innerHTML = "Game closed succesfully!";
+    await new Promise(r => setTimeout(r, 700));
+    console.log("Connection:", socket.readyState); 
+    if (socket.readyState === 2 || socket.readyState === 3)
+      document.getElementById("check_msg").innerHTML = "Game closed succesfully!";
+    else
+      document.getElementById("check_msg").innerHTML = "Failed closing game!";
   }
   document.getElementById("modal_log").style.display = "block";
 }
