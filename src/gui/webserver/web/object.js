@@ -224,13 +224,14 @@ function OpenWriteModal(name) {
 }
 
 //Write elemenet into json
-function WriteElem(direct) {
+function WriteElem(direct=false, force=false) {
   console.log("Writing json");
   //Send request
   var request = new Object;
   request.json = GenerateJson("object"); 
   request.path = window.location.pathname;
   request.direct = direct;
+  request.force = force;
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", "/api/write_object");
   xhttp.send(JSON.stringify(request));
@@ -242,11 +243,12 @@ function WriteElem(direct) {
     if (xhttp.status != 200) {
       if (this.responseText = "9") {
         document.getElementById("modal_write").style.display = "none";
-        document.getElementById("modal_log").style.display = "block";
+        document.getElementById("modal_log").style.display = "inline-block";
         document.getElementById("check_msg_log").style.color = "red";
         document.getElementById("check_msg_log").innerHTML = 
           "Error when trying to run game after writing object. No changes made.";
         document.getElementById("get_log").style.display = "none";
+        document.getElementById("force_write").style.display = "inline-block";
         get_log('write');
       }
       else
