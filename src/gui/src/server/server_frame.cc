@@ -600,10 +600,13 @@ void ServerFrame::GetLog(const Request& req, Response& resp) {
     return;
   }
 
-  std::string path = "../../data/users/" + req.body.substr(1, req.body.find("/", 1))
-    + "logs" + req.body.substr(req.body.rfind("/"));
+  size_t pos = req.body.find("/files/");
+  std::string user = req.body.substr(1, req.body.find("/", 1));
+  std::string world = req.body.substr(pos+7, req.body.find("/", pos+7)-(pos+7));
+  std::cout << "World: " << world << std::endl;
+  std::string path = "../../data/users/" + user + "logs/";
   std::string type = req.matches[1];
-  path += "_" + type + ".txt";
+  path += world + "_" + type + ".txt";
   std::cout << "Path to log: " << path << std::endl;
 
   if (func::demo_exists(path) == false)
