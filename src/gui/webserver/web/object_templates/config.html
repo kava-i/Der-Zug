@@ -65,7 +65,7 @@
             </label>
             <ul id="printing">
               {% for key, val in default(printing, {"":""}) %}
-                <li custom="key_value">
+                <li custom="pair">
                   <input id="id" placeholder="what" value="{{ key }}">
                   <input id="name" placeholder="name" value="{{ val }}">
                   <span class="mod_elem" onclick="del_elem('printing',{{loop.index}})">-</span>
@@ -84,8 +84,8 @@
               {% for key, val in default(show, {"":[]}) %}
                 <li custom="key_list">
                   <input id="id" placeholder="what" value="{{ key }}">
-                  <input id="name" class="long_inp" placeholder="pre" value="{{ val.0 }}">
-                  <input id="name" placeholder="nothing" value="{{ val.1 }}">
+                  <input id="desc" class="long_inp" placeholder="pre" value="{{ val.0 }}">
+                  <input id="error" placeholder="nothing" value="{{ val.1 }}">
                   <span class="mod_elem" onclick="del_elem('show',{{loop.index}})">-</span>
                   <span class="mod_elem" onclick="add_elem('show',{{loop.index}})">+</span>
                 </li>
@@ -104,7 +104,7 @@
                   <input id="id" placeholder="id" value="{{ mind.id }}">
                   <input id="color" placeholder="color" value="{{ mind.color }}">
                   <input id="level" custom="int" placeholder="level" value="{{ mind.level}}">
-                  <input id="relevance" custom="int" placeholder="relevance" value="{{
+                  <input id="relevance" custom="float" placeholder="relevance" value="{{
                   mind.relevance }}">
                   <span class="mod_elem" onclick="del_elem('minds',{{loop.index}})">-</span>
                   <span class="mod_elem" onclick="add_elem('minds',{{loop.index}})">+</span>

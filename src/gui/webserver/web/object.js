@@ -105,6 +105,13 @@ function CreateMap(elem) {
     else if (elems[i].getAttribute("custom") == "pair") {
       map[GetAsType(GetValueFields(elems[i])[0])] = GetAsType(GetValueFields(elems[i])[1]);
     }
+    else if (elems[i].getAttribute("custom") == "key_list") {
+      var json = [];
+      var value_fields = GetValueFields(elems[i]);
+      for (var j=1; j<=elems.length; j++) 
+        json.push(GetAsType(value_fields[j]));
+      map[GetAsType(GetValueFields(elems[i])[0])] = json;
+    }
     else
       console.log("Unkown attribute in 'CreateMap': ", elems[i].getAttribute("custom"));
   }
@@ -140,6 +147,13 @@ function GetAsType(elem) {
       if (is_number == false)
         throw(elem.value + " is not a number.");
       return parseInt(elem.value);
+    }
+    else if (elem.getAttribute("custom") == "float") {
+      var is_number = /^\d+(\.\d+)?$/.test(elem.value);
+      if (is_number == false)
+        throw(elem.value + " is not a number.");
+      return parseFloat(elem.value);
+
     }
     else if (elem.getAttribute("custom") == "str_int") {
       var is_number = /^\d+$/.test(elem.value);
