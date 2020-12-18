@@ -417,12 +417,15 @@ int User::WriteObject(std::string request) {
   //Get values from request
   nlohmann::json json;
   std::string path;
-  bool force = false;
+  bool force = false, direct = false;
   try {
     nlohmann::json j = nlohmann::json::parse(request);
     json = j["json"];
     path = j["path"];
+
+    std::cout << "PATH: " << path << std::endl;
     force = j.value("force", false);
+    direct = j.value("direct", false);
   }
   catch (std::exception& e) {
     std::cout << "WriteObject: Problem parsing request: " << e.what() << "\n";
@@ -434,14 +437,21 @@ int User::WriteObject(std::string request) {
     return ErrorCodes::ACCESS_DENIED;
 
   //Parse path, read json and create doublicate (backup)
-  std::string path_to_object = path_ + path.substr(0, path.rfind("/")) + ".json";
+  std::string path_to_object = path_;
+  if (direct == true)
+    path_to_object += path + ".json";
+  else
+    path_to_object += path.substr(0, path.rfind("/")) + ".json";
+
   nlohmann::json object;
   if (!func::LoadJsonFromDisc(path_to_object, object))
     return ErrorCodes::PATH_NOT_FOUND;
   nlohmann::json obj_backup = object;
   
   //Modify and write object.
-  if (json.is_array() == true && object.is_array() == true)
+  if (direct == true) 
+    object = json;
+  else if (json.is_array() == true && object.is_array() == true)
     object.push_back(json);
   else if (json.is_array() == true)
     object[std::to_string(object.size())] = json;
@@ -716,8 +726,6 @@ std::vector<std::string> User::GetAllPages(std::string user, std::string world) 
   for (auto& p : fs::directory_iterator(full_path)) {
     std::string current_path = p.path();
     current_path = current_path.substr(current_path.find(path));
-    std::cout << "searching in " << current_path << ": " << current_path.find(".")
-        << std::endl;
     if (current_path.find(".") < 7 || current_path.find(".") == std::string::npos) {
       files.push_back(current_path);
       files = GetAllPages(p.path(), path, files);

@@ -224,12 +224,13 @@ function OpenWriteModal(name) {
 }
 
 //Write elemenet into json
-function WriteElem() {
+function WriteElem(direct) {
   console.log("Writing json");
   //Send request
   var request = new Object;
   request.json = GenerateJson("object"); 
   request.path = window.location.pathname;
+  request.direct = direct;
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", "/api/write_object");
   xhttp.send(JSON.stringify(request));
