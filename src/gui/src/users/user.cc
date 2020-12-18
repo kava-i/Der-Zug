@@ -737,8 +737,6 @@ std::vector<std::string> User::GetAllPages(std::string full_path, std::string pa
   for (auto& p : fs::directory_iterator(full_path)) {
     std::string current_path = p.path();
     current_path = current_path.substr(current_path.find(path));
-    std::cout << "searching in " << current_path << ": " << current_path.find(".")
-        << std::endl;
     if (current_path.find(".") < 7 || current_path.find(".") == std::string::npos) {
       files.push_back(current_path);
       files = GetAllPages(p.path(), path, files);
@@ -762,10 +760,8 @@ void User::GetFiles(std::string full_path, std::string path,
 
   //Iterate over all objects and add to path.
   try {
-    for (auto it=objects.begin(); it!=objects.end(); it++) {
-      std::cout << "Added " << it.key() << " to files" << std::endl;
+    for (auto it=objects.begin(); it!=objects.end(); it++) 
       files.push_back(path + "/" + it.key());
-    }
   }
   catch (...) {}
 }
