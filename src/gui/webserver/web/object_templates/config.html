@@ -142,7 +142,7 @@
               New Players:
             </label>
             <ul id="new_player">
-              {% for key, val in default(printing, {"":""}) %}
+              {% for key, val in default(new_player, {"":""}) %}
                 <li custom="pair">
                   <input id="id" placeholder="what" value="{{ key }}">
                   <input id="name" placeholder="name" value="{{ val }}">
