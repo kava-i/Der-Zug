@@ -137,6 +137,23 @@
             </ul>
           </li>
 
+          <li custom="map">
+            <label title="Add standard fields for newly created players">
+              New Players:
+            </label>
+            <ul id="new_player">
+              {% for key, val in default(printing, {"":""}) %}
+                <li custom="pair">
+                  <input id="id" placeholder="what" value="{{ key }}">
+                  <input id="name" placeholder="name" value="{{ val }}">
+                  <span class="mod_elem" onclick="del_elem('printing',{{loop.index}})">-</span>
+                  <span class="mod_elem" onclick="add_elem('printing',{{loop.index}})">+</span>
+                </li>
+              {% endfor %}
+            </ul>
+          </li>
+
+
         </ul>
         <button id="write" class="pure-button" 
         onclick="OpenWriteModal('config')">Write</button>

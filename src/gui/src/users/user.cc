@@ -404,7 +404,18 @@ int User::AddNewObject(std::string path, std::string id, bool force) {
   nlohmann::json request;
   request["force"] = force;
   request["path"] = path+"/"+id;
-  if (category == "defaultDialogs") 
+  if (category == "players") {
+    nlohmann::json config;
+    if (!func::LoadJsonFromDisc("../../data/default_jsons/config.json", config))
+      return ErrorCodes::PATH_NOT_FOUND;
+    nlohmann::json player;
+    player = config["new_player"];
+    std::cout << "NEW PLAYERS: " << player << std::endl;
+    player["id"] = id;
+    request["json"] = player;
+    std::cout << "SENDING PLAYER JSON: " << request["json"] << std::endl;
+  }
+  else if (category == "defaultDialogs") 
     request["json"] = nlohmann::json::array();
   else if (category == "defaultDescriptions")
     request["json"] = nlohmann::json::array();
@@ -422,9 +433,9 @@ int User::WriteObject(std::string request) {
   try {
     nlohmann::json j = nlohmann::json::parse(request);
     json = j["json"];
+    std::cout << "GOT PLAYER JSON: " << json << std::endl;
     path = j["path"];
 
-    std::cout << "PATH: " << path << std::endl;
     force = j.value("force", false);
     direct = j.value("direct", false);
   }
@@ -456,8 +467,12 @@ int User::WriteObject(std::string request) {
     object.push_back(json);
   else if (json.is_array() == true)
     object[std::to_string(object.size())] = json;
-  else 
+  else  {
+    std::cout << "Correctly chose object-type. Writing json: " << json << std::endl;
     object[json["id"].get<std::string>()] = json;
+  }
+
+  std::cout << "WRITING" << object << std::endl;
 
   std::ofstream write(path_to_object);
   write << object;
@@ -706,7 +721,8 @@ bool User::CheckGameRunning(std::string path) {
   //Run game with every existing player.
   bool success = true;
   for (auto it=players.begin(); it!=players.end(); it++) {
-    std::string test_p = command + " -p " + it.key() + 
+    std::cout << "PLAYER: " << it.value() << std::endl;
+    std::string test_p = command + " -p " + it.key() +
       " > ../../data/users/"+user+"/logs/"+world+"_write.txt";
     if (system(test_p.c_str()) != 0) 
       success = false;
