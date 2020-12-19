@@ -234,6 +234,14 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->status == 200);
           REQUIRE(resp->body != "");
 
+          //Add new player
+          nlohmann::json new_player;
+          new_player["name"] = "test_player";
+          new_player["path"] = "/test/files/new_world/players/players";
+          resp = cl.Post("/api/add_object", headers_1, new_player.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 200);
+
           //Create backup
           nlohmann::json create_backup;
           create_backup["world"] = "new_world";

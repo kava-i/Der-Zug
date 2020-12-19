@@ -322,10 +322,12 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
   
   //Try to parse json
   std::string name, path;
+  bool force = false;
   try {
     nlohmann::json request = nlohmann::json::parse(req.body);
     name = request["name"];
     path = request.value("path", "");
+    force = request.value("force", false);
   }
   catch (std::exception& e) {
     std::cout << "Parsing json failed: " << e.what() << std::endl;
@@ -350,7 +352,7 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
   else if (req.matches.size() > 1 && req.matches[1] == "subcategory") 
     error_code = user->AddFile(path, name);
   else if (req.matches.size() > 1 && req.matches[1] == "object") 
-    error_code = user->AddNewObject(path, name);
+    error_code = user->AddNewObject(path, name, force);
 
   //Check whether action succeeded
   if (error_code == ErrorCodes::SUCCESS) 

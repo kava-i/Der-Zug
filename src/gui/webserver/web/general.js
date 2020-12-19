@@ -54,9 +54,10 @@ function OpenDelElemModal(type, name) {
 /**
  * function to delete an element
  */
-function AddElem(elem) {
+function AddElem(elem, force=false) {
   var json_request = new Object();
   json_request.name = document.getElementById("name").value;
+  json_request.force = force;
   json_request.path = window.location.pathname;
 
   var xhttp = new XMLHttpRequest();
@@ -69,13 +70,17 @@ function AddElem(elem) {
     //If request fails, display message to user.
     let msg = document.getElementById("add_error");
     console.log(event.data);
-    if (xhttp.status != 200)
+    if (xhttp.status != 200) {
       msg.style = "display: block;"; 
+      document.getElementById("btn_add_elem").style.display = "none";
+    }
     if (xhttp.status == 401 && this.responseText == "2") 
       msg.innerHTML = "You have no access to this file.";
-    else if (xhttp.status == 401 && this.responseText  == "9") 
+    else if (xhttp.status == 401 && this.responseText  == "9") {
       msg.innerHTML = "Game is not running after this change";
-    else if (xhttp.status == 401)
+      document.getElementById("force_add_elem").style.display = "inline-block";
+    }
+    else if (xhttp.status == 401) 
       msg.innerHTML = "Element couldn't be found or something went wrong.";
     //Display success message to user.
     else {

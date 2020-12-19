@@ -381,7 +381,7 @@ int User::AddFile(std::string path, std::string name) {
   return ErrorCodes::SUCCESS;
 }
 
-int User::AddNewObject(std::string path, std::string id) {
+int User::AddNewObject(std::string path, std::string id, bool force) {
   std::string full_path = path_ + path + ".json";
   //Check if path exists
   if (!func::demo_exists(full_path)) 
@@ -402,6 +402,7 @@ int User::AddNewObject(std::string path, std::string id) {
   
   //Load empty object of category
   nlohmann::json request;
+  request["force"] = force;
   request["path"] = path+"/"+id;
   if (category == "defaultDialogs") 
     request["json"] = nlohmann::json::array();
