@@ -33,6 +33,14 @@ function GenerateJson(element) {
   return json;
 }
 
+function Description(elem) {
+  if (elem.hasAttribute("id") == false) 
+    return false;
+  if (elem.getAttribute("id").indexOf("escription") != -1)
+    return true;
+  return false;
+}
+
 //Parse a list of inputs to a json list.
 function CreateList(elem) {
 
@@ -45,9 +53,10 @@ function CreateList(elem) {
   for (var i=0; i<elems.length; i++) {
     console.log(elems[i].getAttribute("custom"));
     //Skip empty fields.
-    if (GetValueFields(elems[i]).length == 0 || 
-        GetValueFields(elems[i])[0].value == "")
-      continue;
+    if (GetValueFields(elems[i]).length == 0 || GetValueFields(elems[i])[0].value == "") {
+      if (!Description(elems[i]))
+        continue;
+    }
     //Simple string
     if (elems[i].hasAttribute("custom") == false) {
       list.push(GetAsType(GetValueFields(elems[i])[0]));
