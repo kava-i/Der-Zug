@@ -33,6 +33,22 @@ function GenerateJson(element) {
   return json;
 }
 
+function IsEmpty(elem) {
+  if (elem.hasAttribute("custom"))
+    console.log("VALUE: ", elem.value, ", CUSTOM: ", elem.getAttribute("custom"))
+  else
+    console.log("VALUE: ", elem.value);
+  if (elem.value == "") 
+    return true;
+  if (elem.hasAttribute("custom") && elem.getAttribute("custom") == "json"
+    && (elem.value == "{}" || elem.value == "[]"))
+    return true;
+  if (elem.hasAttribute("custom") && elem.getAttribute("custom") == "int" 
+    && elem.value == 0)
+    return true;
+  return false;
+}
+
 //Parse a list of inputs to a json list.
 function CreateList(elem) {
 
@@ -43,11 +59,20 @@ function CreateList(elem) {
 
   //Iterate over all elements and create specific json to add to list
   for (var i=0; i<elems.length; i++) {
-    console.log(elems[i].getAttribute("custom"));
+
     //Skip empty fields.
-    if (GetValueFields(elems[i]).length == 0 || 
-        GetValueFields(elems[i])[0].value == "")
+    var empty_fields = 0;
+    for (var j=0; j<GetValueFields(elems[i]).length; j++) {
+      if (IsEmpty(GetValueFields(elems[i])[j])) {
+        console.log("empty!")
+        empty_fields++;
+      }
+      else 
+        console.log("not empty!")
+    }
+    if (empty_fields == GetValueFields(elems[i]).length) 
       continue;
+
     //Simple string
     if (elems[i].hasAttribute("custom") == false) {
       list.push(GetAsType(GetValueFields(elems[i])[0]));
@@ -224,12 +249,14 @@ function OpenWriteModal(name) {
 }
 
 //Write elemenet into json
-function WriteElem() {
+function WriteElem(direct=false, force=false) {
   console.log("Writing json");
   //Send request
   var request = new Object;
   request.json = GenerateJson("object"); 
   request.path = window.location.pathname;
+  request.direct = direct;
+  request.force = force;
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", "/api/write_object");
   xhttp.send(JSON.stringify(request));
@@ -241,11 +268,12 @@ function WriteElem() {
     if (xhttp.status != 200) {
       if (this.responseText = "9") {
         document.getElementById("modal_write").style.display = "none";
-        document.getElementById("modal_log").style.display = "block";
+        document.getElementById("modal_log").style.display = "inline-block";
         document.getElementById("check_msg_log").style.color = "red";
         document.getElementById("check_msg_log").innerHTML = 
           "Error when trying to run game after writing object. No changes made.";
         document.getElementById("get_log").style.display = "none";
+        document.getElementById("force_write").style.display = "inline-block";
         get_log('write');
       }
       else

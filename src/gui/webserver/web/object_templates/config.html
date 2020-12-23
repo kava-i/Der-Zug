@@ -137,6 +137,23 @@
             </ul>
           </li>
 
+          <li custom="map">
+            <label title="Add standard fields for newly created players">
+              New Players:
+            </label>
+            <ul id="new_player">
+              {% for key, val in default(new_player, {"":""}) %}
+                <li custom="pair">
+                  <input id="id" placeholder="what" value="{{ key }}">
+                  <input id="name" placeholder="name" value="{{ val }}">
+                  <span class="mod_elem" onclick="del_elem('printing',{{loop.index}})">-</span>
+                  <span class="mod_elem" onclick="add_elem('printing',{{loop.index}})">+</span>
+                </li>
+              {% endfor %}
+            </ul>
+          </li>
+
+
         </ul>
         <button id="write" class="pure-button" 
         onclick="OpenWriteModal('config')">Write</button>
@@ -151,7 +168,7 @@
             <div class="item" style="text-align: left;"><pre id="display_json"></div>
           </div>
           <div class="item"><button type="button" class="pure-button" id="btn_del_elem"
-                                     onclick="WriteElem()">Confirm</button></div>
+                                     onclick="WriteElem(true)">Confirm</button></div>
           <br>
         </div>
       </div>
@@ -169,6 +186,15 @@
           <div class="item"><button type="button" class="pure-button" id="get_log"
                                      onclick="get_log('write')">Show Log</button></div>
           <br>
+          <div class="item">
+              <button type="button" 
+                      class="pure-button"
+                      id="force_write" 
+                      style="display: none"
+                      onclick="WriteElem(true, true)">
+                   Force 
+              </button>
+          </div>
         </div>
     </div>
 </body>

@@ -130,6 +130,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   //Check that adding a new empty room is working
   REQUIRE(user->AddNewObject(room_path, "test_room") == ErrorCodes::SUCCESS);
   REQUIRE(system(command.c_str()) == 0);
+  REQUIRE(user->AddNewObject(path+"/players/players","test_player") == ErrorCodes::SUCCESS);
   REQUIRE(user->AddNewObject(path+"/attacks/test_attacks","test_attack") == ErrorCodes::SUCCESS);
   REQUIRE(user->AddNewObject(path+"/dialogs/test_dialogs","test_dialog") == ErrorCodes::SUCCESS);
   REQUIRE(user->AddNewObject(path+"/characters/test_characters", 

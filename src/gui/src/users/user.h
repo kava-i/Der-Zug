@@ -137,9 +137,10 @@ class User {
      * @brief Adds a new empty object
      * @param path
      * @param id
+     * @param force
      * @return ErrorCode.
      */
-    int AddNewObject(std::string path, std::string id);
+    int AddNewObject(std::string path, std::string id, bool force=false);
 
     /**
      * Write json to disc.

@@ -381,7 +381,7 @@ int User::AddFile(std::string path, std::string name) {
   return ErrorCodes::SUCCESS;
 }
 
-int User::AddNewObject(std::string path, std::string id) {
+int User::AddNewObject(std::string path, std::string id, bool force) {
   std::string full_path = path_ + path + ".json";
   //Check if path exists
   if (!func::demo_exists(full_path)) 
@@ -402,8 +402,20 @@ int User::AddNewObject(std::string path, std::string id) {
   
   //Load empty object of category
   nlohmann::json request;
+  request["force"] = force;
   request["path"] = path+"/"+id;
-  if (category == "defaultDialogs") 
+  if (category == "players") {
+    nlohmann::json config;
+    if (!func::LoadJsonFromDisc("../../data/default_jsons/config.json", config))
+      return ErrorCodes::PATH_NOT_FOUND;
+    nlohmann::json player;
+    player = config["new_player"];
+    std::cout << "NEW PLAYERS: " << player << std::endl;
+    player["id"] = id;
+    request["json"] = player;
+    std::cout << "SENDING PLAYER JSON: " << request["json"] << std::endl;
+  }
+  else if (category == "defaultDialogs") 
     request["json"] = nlohmann::json::array();
   else if (category == "defaultDescriptions")
     request["json"] = nlohmann::json::array();
@@ -417,12 +429,15 @@ int User::WriteObject(std::string request) {
   //Get values from request
   nlohmann::json json;
   std::string path;
-  bool force = false;
+  bool force = false, direct = false;
   try {
     nlohmann::json j = nlohmann::json::parse(request);
     json = j["json"];
+    std::cout << "GOT PLAYER JSON: " << json << std::endl;
     path = j["path"];
+
     force = j.value("force", false);
+    direct = j.value("direct", false);
   }
   catch (std::exception& e) {
     std::cout << "WriteObject: Problem parsing request: " << e.what() << "\n";
@@ -434,19 +449,30 @@ int User::WriteObject(std::string request) {
     return ErrorCodes::ACCESS_DENIED;
 
   //Parse path, read json and create doublicate (backup)
-  std::string path_to_object = path_ + path.substr(0, path.rfind("/")) + ".json";
+  std::string path_to_object = path_;
+  if (direct == true)
+    path_to_object += path + ".json";
+  else
+    path_to_object += path.substr(0, path.rfind("/")) + ".json";
+
   nlohmann::json object;
   if (!func::LoadJsonFromDisc(path_to_object, object))
     return ErrorCodes::PATH_NOT_FOUND;
   nlohmann::json obj_backup = object;
   
   //Modify and write object.
-  if (json.is_array() == true && object.is_array() == true)
+  if (direct == true) 
+    object = json;
+  else if (json.is_array() == true && object.is_array() == true)
     object.push_back(json);
   else if (json.is_array() == true)
     object[std::to_string(object.size())] = json;
-  else 
+  else  {
+    std::cout << "Correctly chose object-type. Writing json: " << json << std::endl;
     object[json["id"].get<std::string>()] = json;
+  }
+
+  std::cout << "WRITING" << object << std::endl;
 
   std::ofstream write(path_to_object);
   write << object;
@@ -695,7 +721,8 @@ bool User::CheckGameRunning(std::string path) {
   //Run game with every existing player.
   bool success = true;
   for (auto it=players.begin(); it!=players.end(); it++) {
-    std::string test_p = command + " -p " + it.key() + 
+    std::cout << "PLAYER: " << it.value() << std::endl;
+    std::string test_p = command + " -p " + it.key() +
       " > ../../data/users/"+user+"/logs/"+world+"_write.txt";
     if (system(test_p.c_str()) != 0) 
       success = false;
@@ -716,8 +743,6 @@ std::vector<std::string> User::GetAllPages(std::string user, std::string world) 
   for (auto& p : fs::directory_iterator(full_path)) {
     std::string current_path = p.path();
     current_path = current_path.substr(current_path.find(path));
-    std::cout << "searching in " << current_path << ": " << current_path.find(".")
-        << std::endl;
     if (current_path.find(".") < 7 || current_path.find(".") == std::string::npos) {
       files.push_back(current_path);
       files = GetAllPages(p.path(), path, files);
@@ -737,8 +762,6 @@ std::vector<std::string> User::GetAllPages(std::string full_path, std::string pa
   for (auto& p : fs::directory_iterator(full_path)) {
     std::string current_path = p.path();
     current_path = current_path.substr(current_path.find(path));
-    std::cout << "searching in " << current_path << ": " << current_path.find(".")
-        << std::endl;
     if (current_path.find(".") < 7 || current_path.find(".") == std::string::npos) {
       files.push_back(current_path);
       files = GetAllPages(p.path(), path, files);
@@ -762,10 +785,8 @@ void User::GetFiles(std::string full_path, std::string path,
 
   //Iterate over all objects and add to path.
   try {
-    for (auto it=objects.begin(); it!=objects.end(); it++) {
-      std::cout << "Added " << it.key() << " to files" << std::endl;
+    for (auto it=objects.begin(); it!=objects.end(); it++) 
       files.push_back(path + "/" + it.key());
-    }
   }
   catch (...) {}
 }
