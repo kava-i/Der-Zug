@@ -6,11 +6,12 @@
       <ul id="text_{{loop.index}}">
         <li>
           <label>Speaker:</label>
-          <input id="speaker" placeholder="speaker" value="{{desc.speaker}}">
+          <input id="speaker" placeholder="speaker"
+          value="{{default(desc.speaker, "")}}">
         </li>
         <li>
           <label>Text:</label>
-          <textarea id="text">{{desc.text}}</textarea></li>
+          <textarea id="text">{{default(desc.text, "")}}</textarea></li>
        </li>
         <li id="optional" class="full_length" style="display: none;">
           <label>Logic:</label>

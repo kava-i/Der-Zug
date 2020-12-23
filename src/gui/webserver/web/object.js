@@ -33,10 +33,18 @@ function GenerateJson(element) {
   return json;
 }
 
-function Description(elem) {
-  if (elem.hasAttribute("id") == false) 
-    return false;
-  if (elem.getAttribute("id").indexOf("escription") != -1)
+function IsEmpty(elem) {
+  if (elem.hasAttribute("custom"))
+    console.log("VALUE: ", elem.value, ", CUSTOM: ", elem.getAttribute("custom"))
+  else
+    console.log("VALUE: ", elem.value);
+  if (elem.value == "") 
+    return true;
+  if (elem.hasAttribute("custom") && elem.getAttribute("custom") == "json"
+    && (elem.value == "{}" || elem.value == "[]"))
+    return true;
+  if (elem.hasAttribute("custom") && elem.getAttribute("custom") == "int" 
+    && elem.value == 0)
     return true;
   return false;
 }
@@ -51,12 +59,20 @@ function CreateList(elem) {
 
   //Iterate over all elements and create specific json to add to list
   for (var i=0; i<elems.length; i++) {
-    console.log(elems[i].getAttribute("custom"));
+
     //Skip empty fields.
-    if (GetValueFields(elems[i]).length == 0 || GetValueFields(elems[i])[0].value == "") {
-      if (!Description(elems[i]))
-        continue;
+    var empty_fields = 0;
+    for (var j=0; j<GetValueFields(elems[i]).length; j++) {
+      if (IsEmpty(GetValueFields(elems[i])[j])) {
+        console.log("empty!")
+        empty_fields++;
+      }
+      else 
+        console.log("not empty!")
     }
+    if (empty_fields == GetValueFields(elems[i]).length) 
+      continue;
+
     //Simple string
     if (elems[i].hasAttribute("custom") == false) {
       list.push(GetAsType(GetValueFields(elems[i])[0]));
