@@ -873,31 +873,30 @@ void Context::h_dequipe(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_examine(std::string &sIdentifier, CPlayer*p) {
-    //Check for room 
-    if(sIdentifier == "raum")
-    {
-        p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
-        return;
-    }
+  //Check for room 
+  if(sIdentifier == "room" || sIdentifier == "raum") {
+    p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
+    return;
+  }
 
-    //Check for detail
-    auto lambda1 = [](CDetail* detail) { return detail->getName(); };
-    std::string sObject = func::getObjectId(p->getRoom()->getDetails(), sIdentifier, lambda1);
-    if(sObject != "")
-        p->appendPrint(p->getRoom()->getDetails()[sObject]->getDescription());
+  //Check for detail
+  auto lambda1 = [](CDetail* detail) { return detail->getName(); };
+  std::string sObject = func::getObjectId(p->getRoom()->getDetails(), sIdentifier, lambda1);
+  if(sObject != "")
+    p->appendPrint(p->getRoom()->getDetails()[sObject]->getDescription());
 
-    auto lambda2 = [](CItem* item) { return item->getName(); };
-    sObject = func::getObjectId(p->getRoom()->getItems(), sIdentifier, lambda2);
-    //Check for item
-    if(sObject != "")
-        p->appendPrint(p->getRoom()->getItems()[sObject]->getDescription());
+  auto lambda2 = [](CItem* item) { return item->getName(); };
+  sObject = func::getObjectId(p->getRoom()->getItems(), sIdentifier, lambda2);
+  //Check for item
+  if(sObject != "")
+    p->appendPrint(p->getRoom()->getItems()[sObject]->getDescription());
 
-    //Check for person
-    auto lambda3 = [](CPerson* person) { return person->getName();};
-    sObject = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda3);
-    //Check for item
-    if(sObject != "")
-        p->appendPrint(p->getWorld()->getCharacter(sObject)->getDescription());
+  //Check for person
+  auto lambda3 = [](CPerson* person) { return person->getName();};
+  sObject = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda3);
+  //Check for item
+  if(sObject != "")
+    p->appendPrint(p->getWorld()->getCharacter(sObject)->getDescription());
 }
 
 void Context::h_test(std::string& sIdentifier, CPlayer* p) {
