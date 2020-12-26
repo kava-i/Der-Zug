@@ -1,0 +1,112 @@
+Creating game.
+Room: "test_test_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_test_room"
+Created all rooms 
+worldFactory: done.
+Done parsing world.
+Parsing players... 
+Room: "test_test_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_test_room"
+Created all rooms 
+worldFactory: done.
+initializing context stack.
+Done.
+Finished parsing!
+[2020-12-09 20:53:33] [connect] WebSocket Connection [::ffff:127.0.0.1]:51010 v13 "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
+Starting....
+[2020-12-09 20:53:42] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 20 payload bytes
+[2020-12-09 20:53:42] [frame_header] Header Bytes: 
+[0] (2) 81 08 
+[1] (2) 81 0C 
+
+checkLogin
+[2020-12-09 20:53:44] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 51 payload bytes
+[2020-12-09 20:53:44] [frame_header] Header Bytes: 
+[0] (2) 81 0A 
+[1] (2) 81 29 
+
+[2020-12-09 20:53:48] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 19 payload bytes
+[2020-12-09 20:53:48] [frame_header] Header Bytes: 
+[0] (2) 81 07 
+[1] (2) 81 0C 
+
+checkLogin
+Login data: _admin
+[1;31mEvents: show room, from: startGame[0m
+[1;31mshow, room[0m
+[1;34mfirst[0m throwing: show|room
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mworld[0m throwing: show|room
+[1;34mroom[0m throwing: show|room
+[1;34mstandard[0m throwing: show|room
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[2020-12-09 20:53:49] [frame_header] Dispatching write containing 2 message(s) containing 6 header bytes and 145 payload bytes
+[2020-12-09 20:53:49] [frame_header] Header Bytes: 
+[0] (2) 81 0A 
+[1] (4) 81 7E 00 87 
+
+Befor play: sInput: show people calling with id: _admin
+[1;34mgame[0m throwing: show|people
+[1;31mEvents: show people, from: CGame::play[0m
+[1;31mshow, people[0m
+[1;34mfirst[0m throwing: show|people
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mworld[0m throwing: show|people
+[1;34mroom[0m throwing: show|people
+[1;34mstandard[0m throwing: show|people
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: In diesem Raum sind keine Personen.
+
+
+
+[2020-12-09 20:54:01] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 38 payload bytes
+[2020-12-09 20:54:01] [frame_header] Header Bytes: 
+[0] (2) 81 26 
+
+[2020-12-09 20:54:18] [control] Control frame received with opcode 8
+[2020-12-09 20:54:18] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2020-12-09 20:54:18] [frame_header] Header Bytes: 
+[0] (2) 88 02 
+
+[2020-12-09 20:54:18] [disconnect] Disconnect close local:[1001] remote:[1001]
+[2020-12-09 20:54:31] [connect] WebSocket Connection [::ffff:127.0.0.1]:51030 v13 "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
+Starting....
+[2020-12-09 20:54:35] [control] Control frame received with opcode 8
+[2020-12-09 20:54:35] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2020-12-09 20:54:35] [frame_header] Header Bytes: 
+[0] (2) 88 02 
+
+[2020-12-09 20:54:35] [disconnect] Disconnect close local:[1001] remote:[1001]
+[2020-12-09 20:54:52] [connect] WebSocket Connection [::ffff:127.0.0.1]:51048 v13 "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
+Starting....
+[2020-12-09 20:54:52] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 19 payload bytes
+[2020-12-09 20:54:52] [frame_header] Header Bytes: 
+[0] (2) 81 07 
+[1] (2) 81 0C 
+
+checkLogin
+Login data: _admin
+[1;31mEvents: show room, from: startGame[0m
+[1;31mshow, room[0m
+[1;34mfirst[0m throwing: show|room
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mworld[0m throwing: show|room
+[1;34mselect[0m throwing: show|room
+[1;34mroom[0m throwing: show|room
+[1;34mstandard[0m throwing: show|room
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Befor play: sInput: [end_game] calling with id: _admin
+Sending to all online players
+Sending to host.
+Game is getting closed...
+Befor play: sInput: [end_game] calling with id: _admin
+Sending to all online players
+Sending to host.
+Game is getting closed...
+Webgame started on port 9012

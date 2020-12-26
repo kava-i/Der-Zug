@@ -19,25 +19,35 @@ QuestFactory
 "zum_gleis"
 QuestFactory
 "leave"
-Room: "hospital_corridor"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "hospital_corridor"
-Room: "hospital_foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital_foyer_kleine_kiste"
-parseRandomItemsToDetail
-Parsing Items
-Create room: "hospital_foyer"
-Room: "hospital_stairs"
+Room: "zug_compartment-a"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital_stairs"
+Create room: "zug_compartment-a"
+Room: "zug_compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-b"
+Room: "zug_compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-c"
+Room: "zug_compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-d"
+Room: "zug_trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_trainCorridor"
 Created all rooms 
 Room: "trainstation_ausgang"
 Parsing characters
@@ -134,35 +144,25 @@ Parsing Items
 Parsing details 
 Create room: "trainstation_toiletten"
 Created all rooms 
-Room: "zug_compartment-a"
+Room: "hospital_corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital_corridor"
+Room: "hospital_foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital_foyer_kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital_foyer"
+Room: "hospital_stairs"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug_compartment-a"
-Room: "zug_compartment-b"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-b"
-Room: "zug_compartment-c"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-c"
-Room: "zug_compartment-d"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-d"
-Room: "zug_trainCorridor"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_trainCorridor"
+Create room: "hospital_stairs"
 Created all rooms 
 worldFactory: done.
 Done parsing world.
@@ -187,25 +187,35 @@ QuestFactory
 "zum_gleis"
 QuestFactory
 "leave"
-Room: "hospital_corridor"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "hospital_corridor"
-Room: "hospital_foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital_foyer_kleine_kiste"
-parseRandomItemsToDetail
-Parsing Items
-Create room: "hospital_foyer"
-Room: "hospital_stairs"
+Room: "zug_compartment-a"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital_stairs"
+Create room: "zug_compartment-a"
+Room: "zug_compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-b"
+Room: "zug_compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-c"
+Room: "zug_compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-d"
+Room: "zug_trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_trainCorridor"
 Created all rooms 
 Room: "trainstation_ausgang"
 Parsing characters
@@ -302,35 +312,25 @@ Parsing Items
 Parsing details 
 Create room: "trainstation_toiletten"
 Created all rooms 
-Room: "zug_compartment-a"
+Room: "hospital_corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital_corridor"
+Room: "hospital_foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital_foyer_kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital_foyer"
+Room: "hospital_stairs"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug_compartment-a"
-Room: "zug_compartment-b"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-b"
-Room: "zug_compartment-c"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-c"
-Room: "zug_compartment-d"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-d"
-Room: "zug_trainCorridor"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_trainCorridor"
+Create room: "hospital_stairs"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
@@ -355,25 +355,35 @@ QuestFactory
 "zum_gleis"
 QuestFactory
 "leave"
-Room: "hospital_corridor"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "hospital_corridor"
-Room: "hospital_foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital_foyer_kleine_kiste"
-parseRandomItemsToDetail
-Parsing Items
-Create room: "hospital_foyer"
-Room: "hospital_stairs"
+Room: "zug_compartment-a"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital_stairs"
+Create room: "zug_compartment-a"
+Room: "zug_compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-b"
+Room: "zug_compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-c"
+Room: "zug_compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-d"
+Room: "zug_trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_trainCorridor"
 Created all rooms 
 Room: "trainstation_ausgang"
 Parsing characters
@@ -470,35 +480,25 @@ Parsing Items
 Parsing details 
 Create room: "trainstation_toiletten"
 Created all rooms 
-Room: "zug_compartment-a"
+Room: "hospital_corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital_corridor"
+Room: "hospital_foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital_foyer_kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital_foyer"
+Room: "hospital_stairs"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug_compartment-a"
-Room: "zug_compartment-b"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-b"
-Room: "zug_compartment-c"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-c"
-Room: "zug_compartment-d"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-d"
-Room: "zug_trainCorridor"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_trainCorridor"
+Create room: "hospital_stairs"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
@@ -523,25 +523,35 @@ QuestFactory
 "zum_gleis"
 QuestFactory
 "leave"
-Room: "hospital_corridor"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "hospital_corridor"
-Room: "hospital_foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital_foyer_kleine_kiste"
-parseRandomItemsToDetail
-Parsing Items
-Create room: "hospital_foyer"
-Room: "hospital_stairs"
+Room: "zug_compartment-a"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital_stairs"
+Create room: "zug_compartment-a"
+Room: "zug_compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-b"
+Room: "zug_compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-c"
+Room: "zug_compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-d"
+Room: "zug_trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_trainCorridor"
 Created all rooms 
 Room: "trainstation_ausgang"
 Parsing characters
@@ -638,35 +648,25 @@ Parsing Items
 Parsing details 
 Create room: "trainstation_toiletten"
 Created all rooms 
-Room: "zug_compartment-a"
+Room: "hospital_corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital_corridor"
+Room: "hospital_foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital_foyer_kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital_foyer"
+Room: "hospital_stairs"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug_compartment-a"
-Room: "zug_compartment-b"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-b"
-Room: "zug_compartment-c"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-c"
-Room: "zug_compartment-d"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-d"
-Room: "zug_trainCorridor"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_trainCorridor"
+Create room: "hospital_stairs"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
@@ -691,25 +691,35 @@ QuestFactory
 "zum_gleis"
 QuestFactory
 "leave"
-Room: "hospital_corridor"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "hospital_corridor"
-Room: "hospital_foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital_foyer_kleine_kiste"
-parseRandomItemsToDetail
-Parsing Items
-Create room: "hospital_foyer"
-Room: "hospital_stairs"
+Room: "zug_compartment-a"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital_stairs"
+Create room: "zug_compartment-a"
+Room: "zug_compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-b"
+Room: "zug_compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-c"
+Room: "zug_compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-d"
+Room: "zug_trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_trainCorridor"
 Created all rooms 
 Room: "trainstation_ausgang"
 Parsing characters
@@ -806,35 +816,25 @@ Parsing Items
 Parsing details 
 Create room: "trainstation_toiletten"
 Created all rooms 
-Room: "zug_compartment-a"
+Room: "hospital_corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital_corridor"
+Room: "hospital_foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital_foyer_kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital_foyer"
+Room: "hospital_stairs"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug_compartment-a"
-Room: "zug_compartment-b"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-b"
-Room: "zug_compartment-c"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-c"
-Room: "zug_compartment-d"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-d"
-Room: "zug_trainCorridor"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_trainCorridor"
+Create room: "hospital_stairs"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
@@ -859,25 +859,35 @@ QuestFactory
 "zum_gleis"
 QuestFactory
 "leave"
-Room: "hospital_corridor"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "hospital_corridor"
-Room: "hospital_foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital_foyer_kleine_kiste"
-parseRandomItemsToDetail
-Parsing Items
-Create room: "hospital_foyer"
-Room: "hospital_stairs"
+Room: "zug_compartment-a"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital_stairs"
+Create room: "zug_compartment-a"
+Room: "zug_compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-b"
+Room: "zug_compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-c"
+Room: "zug_compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug_compartment-d"
+Room: "zug_trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug_trainCorridor"
 Created all rooms 
 Room: "trainstation_ausgang"
 Parsing characters
@@ -974,53 +984,1707 @@ Parsing Items
 Parsing details 
 Create room: "trainstation_toiletten"
 Created all rooms 
-Room: "zug_compartment-a"
+Room: "hospital_corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital_corridor"
+Room: "hospital_foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital_foyer_kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital_foyer"
+Room: "hospital_stairs"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug_compartment-a"
-Room: "zug_compartment-b"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-b"
-Room: "zug_compartment-c"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-c"
-Room: "zug_compartment-d"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_compartment-d"
-Room: "zug_trainCorridor"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug_trainCorridor"
+Create room: "hospital_stairs"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
 Done.
 Finished parsing!
-[2020-12-12 17:45:33] [connect] WebSocket Connection [::ffff:127.0.0.1]:49004 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
-Starting....
-[2020-12-12 17:45:38] [control] Control frame received with opcode 8
-[2020-12-12 17:45:38] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
-[2020-12-12 17:45:38] [frame_header] Header Bytes: 
-[0] (2) 88 02 
-
-[2020-12-12 17:45:38] [disconnect] Disconnect close local:[1001] remote:[1001]
-[2020-12-12 17:45:39] [connect] WebSocket Connection [::ffff:127.0.0.1]:49008 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:83.0) Gecko/20100101 Firefox/83.0" / 101
+[2020-12-24 00:02:16] [connect] WebSocket Connection [::ffff:127.0.0.1]:39354 v13 "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gecko/20100101 Firefox/84.0" / 101
 Starting....
 Choosing login/ registerSet sign_in_up_ to l
-[2020-12-12 17:45:39] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
-[2020-12-12 17:45:39] [frame_header] Header Bytes: 
+[2020-12-24 00:02:18] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
+[2020-12-24 00:02:18] [frame_header] Header Bytes: 
+[0] (2) 81 06 
+
+On to getting credentials
+[2020-12-24 00:02:19] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 17 payload bytes
+[2020-12-24 00:02:19] [frame_header] Header Bytes: 
+[0] (2) 81 06 
+[1] (2) 81 0B 
+
+On to getting credentials
+checkLogin
+[1;31mEvents: show room, from: startGame[0m
+[1;31mshow, room[0m
+[1;34mfirst[0m throwing: show|room
+[1;31mEvents: printText start, from: pre-events[0m
+[1;31mprintText, start[0m
+[1;31mEvents: printText start2, from: post-events[0m
+[1;31mprintText, start2[0m
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|room
+[1;34mtutorial[0m throwing: show|room
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|room
+[1;34mkomische_gruppe[0m throwing: show|room
+[1;34mgeld_fuer_ticket[0m throwing: show|room
+[1;34mbesoffene_frau[0m throwing: show|room
+[1;34mworld[0m throwing: show|room
+[1;34mroom[0m throwing: show|room
+[1;34mstandard[0m throwing: show|room
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[2020-12-24 00:02:21] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 873 payload bytes
+[2020-12-24 00:02:21] [frame_header] Header Bytes: 
+[0] (2) 81 0A 
+[1] (2) 81 13 
+[2] (4) 81 7E 03 4C 
+
+Befor play: input: zeige details calling with id: alex
+[1;31mEvents: zeige details, from: CGame::play[0m
+[1;31mshow, details[0m
+[1;34mfirst[0m throwing: show|details
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|details
+[1;34mtutorial[0m throwing: show|details
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;31mEvents: printText tutorial_details, from: post-events[0m
+[1;31mprintText, tutorial_details[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|details
+[1;34mkomische_gruppe[0m throwing: show|details
+[1;34mgeld_fuer_ticket[0m throwing: show|details
+[1;34mbesoffene_frau[0m throwing: show|details
+[1;34mworld[0m throwing: show|details
+[1;34mroom[0m throwing: show|details
+[1;34mstandard[0m throwing: show|details
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind  <b>Bücherregal</b>, <b>Fenster mit aufwendiger Glasmalerei</b>, <b>Steintafel</b> und <b>Statur</b>. 
+</div>Details Erfolgreich
+wahrnehmung um 1 erhöht!
+<div class='spoken'>ERZÄHLER - 	Sehr gut. Willst du die Dinge näher sehen? Dich ihnen anschauend hingeben?$</div><div class='spoken2'>	Aber sei wachsam, schau dir die Wahrheit, die du jetzt siehst nicht <i>nachher</i> oder <i>entfernt</i> davon an, sie hätte dann <i>gar keine Bedeutung</i> mehr.$</div><div class='spoken2'>	Sage <b>"betrachte [name des details]"</b> und tauche tiefer in (deine) Welt ein. (Es reicht einen eindeutigen Teil des Gegenstandes einzugeben, den du betrachten magst.)</div>
+
+[2020-12-24 00:03:53] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 723 payload bytes
+[2020-12-24 00:03:53] [frame_header] Header Bytes: 
+[0] (4) 81 7E 02 D3 
+
+Befor play: input: betrachte fenster calling with id: alex
+[1;31mEvents: betrachte fenster, from: CGame::play[0m
+[1;31mexamine, fenster[0m
+[1;34mfirst[0m throwing: examine|fenster
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_examine(examine)[0m
+[1;34mzug_nach_moskau[0m throwing: examine|fenster
+[1;34mtutorial[0m throwing: examine|fenster
+[1;31mEvents: printText tutorial_betrachten, from: post-events[0m
+[1;31mprintText, tutorial_betrachten[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(examine)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(examine)[0m
+[1;34mleave[0m throwing: examine|fenster
+[1;34mkomische_gruppe[0m throwing: examine|fenster
+[1;34mgeld_fuer_ticket[0m throwing: examine|fenster
+[1;34mbesoffene_frau[0m throwing: examine|fenster
+[1;34mworld[0m throwing: examine|fenster
+[1;34mroom[0m throwing: examine|fenster
+[1;34mstandard[0m throwing: examine|fenster
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(examine)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Ein am Kreuz hängender Mann ist zu sehen, auf dem Kopf trägt er einen Kranz. Daneben stehen zwei Personen mit gesenktem Kopf und ebenfalls einem Kranz, aber ihrer leuchtet vielleicht weniger schwach.$</div>Betrachten Erfolgreich
+wahrnehmung um 1 erhöht!
+<div class='spoken'>ERZÄHLER - 	Du kannst nun die Dinge aus der Nähe sehen und das eine oder andere erkennen, die Dinge sind noch mehr, als was sie auf den ersten Blick erscheinen, nicht wahr? 
+Erkunde ruhig weiter Das-Um-Dich-Herum, nehme dir Zeit dafür.$</div><div class='spoken2'>	Wird es dir schon langsam bewusst? Nein, wie sollte es auch, das geht noch gar nicht. Aber vielleicht? Eine Ahnung? Was ist denn jetzt <i>Hier</i>? $</div><div class='spoken2'>	Nun geht es weiter und um die Menschen um dich herum. Nutze dazu den Befehl: <b>"zeige personen"</b>.</div>
+
+[2020-12-24 00:06:02] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 881 payload bytes
+[2020-12-24 00:06:02] [frame_header] Header Bytes: 
+[0] (4) 81 7E 03 71 
+
+Befor play: input: betrachte statur calling with id: alex
+[1;31mEvents: betrachte statur, from: CGame::play[0m
+[1;31mexamine, statur[0m
+[1;34mfirst[0m throwing: examine|statur
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_examine(examine)[0m
+[1;34mzug_nach_moskau[0m throwing: examine|statur
+[1;34mtutorial[0m throwing: examine|statur
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(examine)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(examine)[0m
+[1;34mleave[0m throwing: examine|statur
+[1;34mkomische_gruppe[0m throwing: examine|statur
+[1;34mgeld_fuer_ticket[0m throwing: examine|statur
+[1;34mbesoffene_frau[0m throwing: examine|statur
+[1;34mworld[0m throwing: examine|statur
+[1;34mroom[0m throwing: examine|statur
+[1;34mstandard[0m throwing: examine|statur
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(examine)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Eine riesige steinerne Statur von einer Frau im Kleid und ausgestrecktem Arm. Ihr Kinn ist nach oben gestreckt. </div>
+
+[2020-12-24 00:08:18] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 166 payload bytes
+[2020-12-24 00:08:18] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 A6 
+
+Befor play: input:  calling with id: alex
+[1;31mEvents: , from: CGame::play[0m
+Send the output to client: 
+
+[2020-12-24 00:08:34] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 1 payload bytes
+[2020-12-24 00:08:34] [frame_header] Header Bytes: 
+[0] (2) 81 01 
+
+Befor play: input:  calling with id: alex
+[1;31mEvents: , from: CGame::play[0m
+Send the output to client: 
+
+[2020-12-24 00:08:46] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 1 payload bytes
+[2020-12-24 00:08:46] [frame_header] Header Bytes: 
+[0] (2) 81 01 
+
+Befor play: input:  calling with id: alex
+[1;31mEvents: , from: CGame::play[0m
+Send the output to client: 
+
+[2020-12-24 00:08:48] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 1 payload bytes
+[2020-12-24 00:08:48] [frame_header] Header Bytes: 
+[0] (2) 81 01 
+
+Befor play: input:  calling with id: alex
+[1;31mEvents: , from: CGame::play[0m
+Send the output to client: 
+
+[2020-12-24 00:08:48] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 1 payload bytes
+[2020-12-24 00:08:48] [frame_header] Header Bytes: 
+[0] (2) 81 01 
+
+Befor play: input:  calling with id: alex
+[1;31mEvents: , from: CGame::play[0m
+Send the output to client: 
+
+[2020-12-24 00:08:48] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 1 payload bytes
+[2020-12-24 00:08:48] [frame_header] Header Bytes: 
+[0] (2) 81 01 
+
+Befor play: input:  calling with id: alex
+[1;31mEvents: , from: CGame::play[0m
+Send the output to client: 
+
+[2020-12-24 00:08:49] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 1 payload bytes
+[2020-12-24 00:08:49] [frame_header] Header Bytes: 
+[0] (2) 81 01 
+
+Befor play: input:  calling with id: alex
+[1;31mEvents: , from: CGame::play[0m
+Send the output to client: 
+
+[2020-12-24 00:08:49] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 1 payload bytes
+[2020-12-24 00:08:49] [frame_header] Header Bytes: 
+[0] (2) 81 01 
+
+Befor play: input: zeige personen calling with id: alex
+[1;31mEvents: zeige personen, from: CGame::play[0m
+[1;31mshow, personen[0m
+[1;34mfirst[0m throwing: show|personen
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|personen
+[1;34mtutorial[0m throwing: show|personen
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;31mEvents: printText tutorial_menschen, from: post-events[0m
+[1;31mprintText, tutorial_menschen[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|personen
+[1;34mkomische_gruppe[0m throwing: show|personen
+[1;34mgeld_fuer_ticket[0m throwing: show|personen
+[1;34mbesoffene_frau[0m throwing: show|personen
+[1;34mworld[0m throwing: show|personen
+[1;34mroom[0m throwing: show|personen
+[1;34mstandard[0m throwing: show|personen
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind <b>eine komische Gruppe von drei Passanten</b>. 
+</div>Menschen Erfolgreich
+wahrnehmung um 1 erhöht!
+<div class='spoken'>ERZÄHLER - 	Menschen sind hier überall um dich herum, bemerkst du es, es ist nie nur der eine. Auch sie kannst du betrachten. $</div><div class='spoken2'>	Aber auch noch mehr, als das. Du kannst mit ihnen <i>reden</i>. Um eine Person anzusprechen, sage: <b>"spreche [name] an"</b>.</div>
+
+[2020-12-24 00:09:11] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 473 payload bytes
+[2020-12-24 00:09:11] [frame_header] Header Bytes: 
+[0] (4) 81 7E 01 D9 
+
+Befor play: input: spreche k calling with id: alex
+[1;31mEvents: spreche k, from: CGame::play[0m
+[1;31mspreche, k[0m
+[1;34mfirst[0m throwing: spreche|k
+[1;34mzug_nach_moskau[0m throwing: spreche|k
+[1;34mtutorial[0m throwing: spreche|k
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(spreche)[0m
+[1;34mleave[0m throwing: spreche|k
+[1;34mkomische_gruppe[0m throwing: spreche|k
+[1;34mgeld_fuer_ticket[0m throwing: spreche|k
+[1;34mbesoffene_frau[0m throwing: spreche|k
+[1;34mworld[0m throwing: spreche|k
+[1;34mselect[0m throwing: spreche|k
+[1;34mroom[0m throwing: spreche|k
+[1;34mstandard[0m throwing: spreche|k
+Send the output to client: Falsche Eingabe, gebe "help" ein, falls du nicht weiter weißt. (standard)
+
+
+[2020-12-24 00:10:17] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 76 payload bytes
+[2020-12-24 00:10:17] [frame_header] Header Bytes: 
+[0] (2) 81 4C 
+
+Befor play: input: spreche k an calling with id: alex
+[1;31mEvents: spreche k an, from: CGame::play[0m
+[1;31mtalk, k[0m
+[1;34mfirst[0m throwing: talk|k
+[1;34mzug_nach_moskau[0m throwing: talk|k
+[1;34mtutorial[0m throwing: talk|k
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(talk)[0m
+[1;34mleave[0m throwing: talk|k
+[1;34mkomische_gruppe[0m throwing: talk|k
+[1;32m ... [1;34mkomische_gruppe: [1;32mevent triggered: reden(talk)[0m
+[1;34mgeld_fuer_ticket[0m throwing: talk|k
+[1;34mbesoffene_frau[0m throwing: talk|k
+[1;34mworld[0m throwing: talk|k
+[1;34mselect[0m throwing: talk|k
+[1;34mroom[0m throwing: talk|k
+[1;34mstandard[0m throwing: talk|k
+About to set attribute that does not exist: state
+About to set attribute that does not exist: mapOptions
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_startDialog(talk)[0m
+Send the output to client: <div class='spoken'>PERZEPTION - 	Die drei merkwürdigen Passanten ignorieren dich vollkommen und zeigen weiter wild durch die Gegend.</div>1: Verehrte Herren? Ich bin auf der Suche nach jemandem, könnt ihr mir vielleicht...?
+2: Dialog beenden.
+Neue Quest: <b>Die komische Gruppe</b>: <i>Dir ist diese komische Gruppe an Passanten aufgefallen. Keine Ahnung, was die wollen.</i>
+
+
+[2020-12-24 00:10:26] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 383 payload bytes
+[2020-12-24 00:10:26] [frame_header] Header Bytes: 
+[0] (4) 81 7E 01 7F 
+
+Befor play: input: 1 calling with id: alex
+[1;31mEvents: 1, from: CGame::play[0m
+[1;31m1, 1[0m
+[1;34mfirst[0m throwing: 1|1
+[1;34mzug_nach_moskau[0m throwing: 1|1
+[1;34mtutorial[0m throwing: 1|1
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(1)[0m
+[1;34mleave[0m throwing: 1|1
+[1;34mkomische_gruppe[0m throwing: 1|1
+[1;34mgeld_fuer_ticket[0m throwing: 1|1
+[1;34mbesoffene_frau[0m throwing: 1|1
+[1;34mworld[0m throwing: 1|1
+[1;34mdialog[0m throwing: 1|1
+[1;31mEvents: endDialog, from: h_call[0m
+[1;31mendDialog, endDialog[0m
+[1;34mfirst[0m throwing: endDialog|endDialog
+[1;34mzug_nach_moskau[0m throwing: endDialog|endDialog
+[1;34mtutorial[0m throwing: endDialog|endDialog
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(endDialog)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(endDialog)[0m
+[1;34mleave[0m throwing: endDialog|endDialog
+[1;34mkomische_gruppe[0m throwing: endDialog|endDialog
+[1;34mgeld_fuer_ticket[0m throwing: endDialog|endDialog
+[1;34mbesoffene_frau[0m throwing: endDialog|endDialog
+[1;34mworld[0m throwing: endDialog|endDialog
+[1;32m ... [1;34mworld: [1;32mevent triggered: h_endDialog(endDialog)[0m
+[1;32m ... [1;34mdialog: [1;32mevent triggered: h_call(1)[0m
+Send the output to client: <div class='spoken'>PERZEPTION - 	Sie ignorieren dich weiter. Du beschließt sie für verrückt zu halten.</div>Dialog ended.
+Reden Erfolgreich
+wahrnehmung um 1 erhöht!
+
+
+[2020-12-24 00:11:00] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 174 payload bytes
+[2020-12-24 00:11:00] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 AE 
+
+Befor play: input:  calling with id: alex
+[1;31mEvents: , from: CGame::play[0m
+Send the output to client: 
+
+[2020-12-24 00:11:29] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 1 payload bytes
+[2020-12-24 00:11:29] [frame_header] Header Bytes: 
+[0] (2) 81 01 
+
+Befor play: input: zeige ausgänge calling with id: alex
+[1;31mEvents: zeige ausgänge, from: CGame::play[0m
+[1;31mshow, ausgänge[0m
+[1;34mfirst[0m throwing: show|ausgänge
+Calling:  show exits!
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|ausgänge
+[1;34mtutorial[0m throwing: show|ausgänge
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;31mEvents: printText tutorial_ausgänge, from: post-events[0m
+[1;31mprintText, tutorial_ausgänge[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|ausgänge
+[1;34mkomische_gruppe[0m throwing: show|ausgänge
+[1;34mgeld_fuer_ticket[0m throwing: show|ausgänge
+[1;34mbesoffene_frau[0m throwing: show|ausgänge
+[1;34mworld[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mroom[0m throwing: show|ausgänge
+[1;34mstandard[0m throwing: show|ausgänge
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sehe ich einen Weg <b>zum Ausgang</b>, <b>ins Freiere</b>, <b>zur ersten Kammer</b>, <b>zur vierten Kammer</b> und <b>zur Nebenhalle</b>. 
+</div>Ausgänge Erfolgreich
+wahrnehmung um 1 erhöht!
+<div class='spoken'>ERZÄHLER - 	Du bist schon ein ganzes Stück weit gekommen, auf dem Weg dir die Welt als <i>deine</i> Welt anzueignen.  $</div><div class='spoken2'>	Aber es gibt mehr als diesen Raum. Sage <b>"gehe [name]"</b>, um dich umzukehrend und Hier und Jetzt zu verlassen und in Neues einzutreten.</div>
+
+[2020-12-24 00:11:54] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 564 payload bytes
+[2020-12-24 00:11:54] [frame_header] Header Bytes: 
+[0] (4) 81 7E 02 34 
+
+Befor play: input: gehe ins freie calling with id: alex
+[1;31mEvents: gehe ins freie, from: CGame::play[0m
+[1;31mgo, ins freie[0m
+[1;34mfirst[0m throwing: go|ins freie
+[1;34mzug_nach_moskau[0m throwing: go|ins freie
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mtutorial[0m throwing: go|ins freie
+[1;31mEvents: printText tutorial_gehen, from: post-events[0m
+[1;31mprintText, tutorial_gehen[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|ins freie
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|ins freie
+[1;34mgeld_fuer_ticket[0m throwing: go|ins freie
+[1;34mbesoffene_frau[0m throwing: go|ins freie
+[1;34mworld[0m throwing: go|ins freie
+[1;34mselect[0m throwing: go|ins freie
+[1;34mselect[0m throwing: go|ins freie
+[1;34mroom[0m throwing: go|ins freie
+h_exitTrainstation, ins freie
+[1;32m ... [1;34mroom: [1;32mevent triggered: h_exitTrainstation(go)[0m
+[1;34mstandard[0m throwing: go|ins freie
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: Gehen Erfolgreich
+wahrnehmung um 1 erhöht!
+<div class='spoken'>ERZÄHLER - 	Du bist jetzt frei die Welt zu erkunden. Laufe umher, betrachte die Dinge um dich herum, denn es gibt noch viel zu entdecken und umsomehr zu lernen.$</div><div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier ist der Lärm Ohrenbetäubend, die Dampflokomotiven haben den ganzen bereich vernebelt. Schwitzige, ölbeschmierte Arbeiter reparieren notdürftig Züge, reiche Familien rennen in aufwändigen Gewändern ihren Packburschen davon, es herscht wildes Treiben. Richtung Noden liegen die Gleise des Bahnhofs, nach Süden geht es zurück zur Eingangshalle</div> <div class='spoken2'></div>
+
+[2020-12-24 00:14:05] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 671 payload bytes
+[2020-12-24 00:14:05] [frame_header] Header Bytes: 
+[0] (4) 81 7E 02 9F 
+
+Befor play: input: gehe süden calling with id: alex
+[1;31mEvents: gehe süden, from: CGame::play[0m
+[1;31mgo, süden[0m
+[1;34mfirst[0m throwing: go|süden
+[1;34mzug_nach_moskau[0m throwing: go|süden
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mtutorial[0m throwing: go|süden
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|süden
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|süden
+[1;34mgeld_fuer_ticket[0m throwing: go|süden
+[1;34mbesoffene_frau[0m throwing: go|süden
+[1;34mworld[0m throwing: go|süden
+[1;34mselect[0m throwing: go|süden
+[1;34mselect[0m throwing: go|süden
+[1;34mroom[0m throwing: go|süden
+[1;34mstandard[0m throwing: go|süden
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: Room not found.
+
+
+
+[2020-12-24 00:15:08] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 18 payload bytes
+[2020-12-24 00:15:08] [frame_header] Header Bytes: 
+[0] (2) 81 12 
+
+Befor play: input: zeige ausgänge calling with id: alex
+[1;31mEvents: zeige ausgänge, from: CGame::play[0m
+[1;31mshow, ausgänge[0m
+[1;34mfirst[0m throwing: show|ausgänge
+Calling:  show exits!
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|ausgänge
+[1;34mtutorial[0m throwing: show|ausgänge
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|ausgänge
+[1;34mkomische_gruppe[0m throwing: show|ausgänge
+[1;34mgeld_fuer_ticket[0m throwing: show|ausgänge
+[1;34mbesoffene_frau[0m throwing: show|ausgänge
+[1;34mworld[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mroom[0m throwing: show|ausgänge
+[1;34mstandard[0m throwing: show|ausgänge
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sehe ich einen Weg <b>zur Eingangshalle</b>, <b>zu Gleis 1</b>, <b>zu Gleis 2</b>, <b>zu Gleis 3</b>, <b>zu Gleis 4</b> und <b>zu Gleis 5</b>. 
+</div>
+
+[2020-12-24 00:15:21] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 203 payload bytes
+[2020-12-24 00:15:21] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 CB 
+
+Befor play: input: gehe 3 calling with id: alex
+[1;31mEvents: gehe 3, from: CGame::play[0m
+[1;31mgo, 3[0m
+[1;34mfirst[0m throwing: go|3
+[1;34mzug_nach_moskau[0m throwing: go|3
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mtutorial[0m throwing: go|3
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|3
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|3
+[1;34mgeld_fuer_ticket[0m throwing: go|3
+[1;34mbesoffene_frau[0m throwing: go|3
+[1;34mworld[0m throwing: go|3
+[1;34mselect[0m throwing: go|3
+[1;34mselect[0m throwing: go|3
+[1;34mselect[0m throwing: go|3
+[1;34mroom[0m throwing: go|3
+[1;34mstandard[0m throwing: go|3
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst.</div> <div class='spoken2'></div>
+
+[2020-12-24 00:15:51] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 162 payload bytes
+[2020-12-24 00:15:51] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 A2 
+
+Befor play: input: gehe zurück calling with id: alex
+[1;31mEvents: gehe zurück, from: CGame::play[0m
+[1;31mgo, zurück[0m
+[1;34mfirst[0m throwing: go|zurück
+[1;34mzug_nach_moskau[0m throwing: go|zurück
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mtutorial[0m throwing: go|zurück
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|zurück
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|zurück
+[1;34mgeld_fuer_ticket[0m throwing: go|zurück
+[1;34mbesoffene_frau[0m throwing: go|zurück
+[1;34mworld[0m throwing: go|zurück
+[1;34mselect[0m throwing: go|zurück
+[1;34mselect[0m throwing: go|zurück
+[1;34mselect[0m throwing: go|zurück
+[1;34mroom[0m throwing: go|zurück
+[1;34mstandard[0m throwing: go|zurück
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier ist der Lärm Ohrenbetäubend, die Dampflokomotiven haben den ganzen bereich vernebelt. Schwitzige, ölbeschmierte Arbeiter reparieren notdürftig Züge, reiche Familien rennen in aufwändigen Gewändern ihren Packburschen davon, es herscht wildes Treiben. Richtung Noden liegen die Gleise des Bahnhofs, nach Süden geht es zurück zur Eingangshalle</div> <div class='spoken2'></div>
+
+[2020-12-24 00:16:12] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 436 payload bytes
+[2020-12-24 00:16:12] [frame_header] Header Bytes: 
+[0] (4) 81 7E 01 B4 
+
+Befor play: input: gehe gleis 3 calling with id: alex
+[1;31mEvents: gehe gleis 3, from: CGame::play[0m
+[1;31mgo, gleis 3[0m
+[1;34mfirst[0m throwing: go|gleis 3
+[1;34mzug_nach_moskau[0m throwing: go|gleis 3
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mtutorial[0m throwing: go|gleis 3
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|gleis 3
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|gleis 3
+[1;34mgeld_fuer_ticket[0m throwing: go|gleis 3
+[1;34mbesoffene_frau[0m throwing: go|gleis 3
+[1;34mworld[0m throwing: go|gleis 3
+[1;34mselect[0m throwing: go|gleis 3
+[1;34mselect[0m throwing: go|gleis 3
+[1;34mselect[0m throwing: go|gleis 3
+[1;34mroom[0m throwing: go|gleis 3
+[1;34mstandard[0m throwing: go|gleis 3
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>PERZEPTION - 	Ah, Gleis 3. Hier fährt dein Zug nach Moskau. Es ist selbstsam leer.</div> <div class='spoken2'></div>
+
+[2020-12-24 00:16:27] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 139 payload bytes
+[2020-12-24 00:16:27] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 8B 
+
+Befor play: input: betrachte raum calling with id: alex
+[1;31mEvents: betrachte raum, from: CGame::play[0m
+[1;31mexamine, raum[0m
+[1;34mfirst[0m throwing: examine|raum
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_examine(examine)[0m
+[1;34mzug_nach_moskau[0m throwing: examine|raum
+[1;34mtutorial[0m throwing: examine|raum
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(examine)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(examine)[0m
+[1;34mleave[0m throwing: examine|raum
+[1;34mkomische_gruppe[0m throwing: examine|raum
+[1;34mgeld_fuer_ticket[0m throwing: examine|raum
+[1;34mbesoffene_frau[0m throwing: examine|raum
+[1;34mworld[0m throwing: examine|raum
+[1;34mselect[0m throwing: examine|raum
+[1;34mselect[0m throwing: examine|raum
+[1;34mselect[0m throwing: examine|raum
+[1;34mroom[0m throwing: examine|raum
+[1;34mstandard[0m throwing: examine|raum
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(examine)[0m
+Send the output to client: <div class='spoken'>PERZEPTION - 	Ah, Gleis 3. Hier fährt dein Zug nach Moskau. Es ist selbstsam leer.</div> <div class='spoken2'></div>
+
+[2020-12-24 00:18:36] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 139 payload bytes
+[2020-12-24 00:18:36] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 8B 
+
+Befor play: input: gehe zurück calling with id: alex
+[1;31mEvents: gehe zurück, from: CGame::play[0m
+[1;31mgo, zurück[0m
+[1;34mfirst[0m throwing: go|zurück
+[1;34mzug_nach_moskau[0m throwing: go|zurück
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mtutorial[0m throwing: go|zurück
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|zurück
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|zurück
+[1;34mgeld_fuer_ticket[0m throwing: go|zurück
+[1;34mbesoffene_frau[0m throwing: go|zurück
+[1;34mworld[0m throwing: go|zurück
+[1;34mselect[0m throwing: go|zurück
+[1;34mselect[0m throwing: go|zurück
+[1;34mselect[0m throwing: go|zurück
+[1;34mroom[0m throwing: go|zurück
+[1;34mstandard[0m throwing: go|zurück
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier ist der Lärm Ohrenbetäubend, die Dampflokomotiven haben den ganzen bereich vernebelt. Schwitzige, ölbeschmierte Arbeiter reparieren notdürftig Züge, reiche Familien rennen in aufwändigen Gewändern ihren Packburschen davon, es herscht wildes Treiben. Richtung Noden liegen die Gleise des Bahnhofs, nach Süden geht es zurück zur Eingangshalle</div> <div class='spoken2'></div>
+
+[2020-12-24 00:18:40] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 436 payload bytes
+[2020-12-24 00:18:40] [frame_header] Header Bytes: 
+[0] (4) 81 7E 01 B4 
+
+Befor play: input: gehe zur eingangshalle calling with id: alex
+[1;31mEvents: gehe zur eingangshalle, from: CGame::play[0m
+[1;31mgo, zur eingangshalle[0m
+[1;34mfirst[0m throwing: go|zur eingangshalle
+[1;34mzug_nach_moskau[0m throwing: go|zur eingangshalle
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mtutorial[0m throwing: go|zur eingangshalle
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|zur eingangshalle
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|zur eingangshalle
+[1;34mgeld_fuer_ticket[0m throwing: go|zur eingangshalle
+[1;34mbesoffene_frau[0m throwing: go|zur eingangshalle
+[1;34mworld[0m throwing: go|zur eingangshalle
+[1;34mselect[0m throwing: go|zur eingangshalle
+[1;34mselect[0m throwing: go|zur eingangshalle
+[1;34mselect[0m throwing: go|zur eingangshalle
+[1;34mroom[0m throwing: go|zur eingangshalle
+[1;34mstandard[0m throwing: go|zur eingangshalle
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>WAHRNEHMUNG - 	Die Eingangshalle des sog. "Moskauer Bahnhofs" in Sankt Petersburg ist ein eindrucksvolles Gebilde. Tausende Passanten wandern umher, es herscht Trubel und Lärm und dazu glänzt die architektonische Meisterleistung eines Konstantin Thron von allen Seiten auf einen herab. Nach Norden geht es zu den Gleisen, im Süden liegt der Ausgang und nach Osten geht es zu einer Nebenhalle.</div> <div class='spoken2'>Eine komische Gruppe an Passanten, die wild in der Gegen umherzeigen. </div>
+
+[2020-12-24 00:18:45] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 523 payload bytes
+[2020-12-24 00:18:45] [frame_header] Header Bytes: 
+[0] (4) 81 7E 02 0B 
+
+Befor play: input: zeige personen calling with id: alex
+[1;31mEvents: zeige personen, from: CGame::play[0m
+[1;31mshow, personen[0m
+[1;34mfirst[0m throwing: show|personen
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|personen
+[1;34mtutorial[0m throwing: show|personen
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|personen
+[1;34mkomische_gruppe[0m throwing: show|personen
+[1;34mgeld_fuer_ticket[0m throwing: show|personen
+[1;34mbesoffene_frau[0m throwing: show|personen
+[1;34mworld[0m throwing: show|personen
+[1;34mselect[0m throwing: show|personen
+[1;34mselect[0m throwing: show|personen
+[1;34mselect[0m throwing: show|personen
+[1;34mroom[0m throwing: show|personen
+[1;34mstandard[0m throwing: show|personen
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind <b>eine komische Gruppe von drei Passanten</b>. 
+</div>
+
+[2020-12-24 00:18:52] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 113 payload bytes
+[2020-12-24 00:18:52] [frame_header] Header Bytes: 
+[0] (2) 81 71 
+
+Befor play: input: zeige ausgänge calling with id: alex
+[1;31mEvents: zeige ausgänge, from: CGame::play[0m
+[1;31mshow, ausgänge[0m
+[1;34mfirst[0m throwing: show|ausgänge
+Calling:  show exits!
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|ausgänge
+[1;34mtutorial[0m throwing: show|ausgänge
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|ausgänge
+[1;34mkomische_gruppe[0m throwing: show|ausgänge
+[1;34mgeld_fuer_ticket[0m throwing: show|ausgänge
+[1;34mbesoffene_frau[0m throwing: show|ausgänge
+[1;34mworld[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mroom[0m throwing: show|ausgänge
+[1;34mstandard[0m throwing: show|ausgänge
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sehe ich einen Weg <b>zum Ausgang</b>, <b>ins Freiere</b>, <b>zur ersten Kammer</b>, <b>zur vierten Kammer</b> und <b>zur Nebenhalle</b>. 
+</div>
+
+[2020-12-24 00:18:58] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 198 payload bytes
+[2020-12-24 00:18:58] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 C6 
+
+Befor play: input: gehe zur vierten kammer calling with id: alex
+[1;31mEvents: gehe zur vierten kammer, from: CGame::play[0m
+[1;31mgo, zur vierten kammer[0m
+[1;34mfirst[0m throwing: go|zur vierten kammer
+[1;34mzug_nach_moskau[0m throwing: go|zur vierten kammer
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mtutorial[0m throwing: go|zur vierten kammer
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|zur vierten kammer
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|zur vierten kammer
+[1;34mgeld_fuer_ticket[0m throwing: go|zur vierten kammer
+[1;34mbesoffene_frau[0m throwing: go|zur vierten kammer
+[1;34mworld[0m throwing: go|zur vierten kammer
+[1;34mselect[0m throwing: go|zur vierten kammer
+[1;34mselect[0m throwing: go|zur vierten kammer
+[1;34mselect[0m throwing: go|zur vierten kammer
+[1;34mselect[0m throwing: go|zur vierten kammer
+[1;34mselect[0m throwing: go|zur vierten kammer
+[1;34mroom[0m throwing: go|zur vierten kammer
+h_exitTrainstation, zur vierten kammer
+[1;32m ... [1;34mroom: [1;32mevent triggered: h_exitTrainstation(go)[0m
+[1;34mstandard[0m throwing: go|zur vierten kammer
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Die Kammer ist völlig leer. In der Mitte des Raumes steht ein hoher Stein.
+Nur in der Mitte liegt auf einem Stein ein glänzendes Stück Metall.</div> <div class='spoken2'></div>
+
+[2020-12-24 00:19:04] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 227 payload bytes
+[2020-12-24 00:19:04] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 E3 
+
+Befor play: input: zeige details calling with id: alex
+[1;31mEvents: zeige details, from: CGame::play[0m
+[1;31mshow, details[0m
+[1;34mfirst[0m throwing: show|details
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|details
+[1;34mtutorial[0m throwing: show|details
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;31mEvents: printText tutorial_dahinterschauen, from: post-events[0m
+[1;31mprintText, tutorial_dahinterschauen[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|details
+[1;34mkomische_gruppe[0m throwing: show|details
+[1;34mgeld_fuer_ticket[0m throwing: show|details
+[1;34mbesoffene_frau[0m throwing: show|details
+[1;34mworld[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mroom[0m throwing: show|details
+[1;34mstandard[0m throwing: show|details
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind  <b>glatter Stein</b>. 
+</div>Durchsuchen Teil I Erfolgreich
+wahrnehmung um 1 erhöht!
+<div class='spoken'>ERZÄHLER - 	Du weißt schon, wie man hinter die Dinge schaut, aber manchmal muss man noch tiefer gehen. Gebe "<b>untersuche [Name des Gegenstandes]"</b> um noch mehr zu entdecken. Vielleicht reicht es nicht den Gegenstand nur zu durchsuchen. Vielleicht musst du <i>genauer</i> sein.</div>
+
+[2020-12-24 00:19:07] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 457 payload bytes
+[2020-12-24 00:19:07] [frame_header] Header Bytes: 
+[0] (4) 81 7E 01 C9 
+
+Befor play: input: untersuche glatter stein calling with id: alex
+[1;31mEvents: untersuche glatter stein, from: CGame::play[0m
+[1;31msearch, glatter stein[0m
+[1;34mfirst[0m throwing: search|glatter stein
+[1;34mzug_nach_moskau[0m throwing: search|glatter stein
+[1;34mtutorial[0m throwing: search|glatter stein
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(search)[0m
+[1;34mleave[0m throwing: search|glatter stein
+[1;34mkomische_gruppe[0m throwing: search|glatter stein
+[1;34mgeld_fuer_ticket[0m throwing: search|glatter stein
+[1;34mbesoffene_frau[0m throwing: search|glatter stein
+[1;34mworld[0m throwing: search|glatter stein
+[1;34mselect[0m throwing: search|glatter stein
+[1;34mselect[0m throwing: search|glatter stein
+[1;34mselect[0m throwing: search|glatter stein
+[1;34mselect[0m throwing: search|glatter stein
+[1;34mselect[0m throwing: search|glatter stein
+[1;34mroom[0m throwing: search|glatter stein
+[1;34mstandard[0m throwing: search|glatter stein
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_search(search)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Ich weiß nicht, wo ich suchen soll. Sag: "schaue [in/ unter/ ...] [gegenstand]"
+</div>
+
+[2020-12-24 00:19:24] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 135 payload bytes
+[2020-12-24 00:19:24] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 87 
+
+Befor play: input: schaue unter glatter stein calling with id: alex
+[1;31mEvents: schaue unter glatter stein, from: CGame::play[0m
+[1;31mlook, unter glatter stein[0m
+[1;34mfirst[0m throwing: look|unter glatter stein
+[1;34mzug_nach_moskau[0m throwing: look|unter glatter stein
+[1;34mtutorial[0m throwing: look|unter glatter stein
+[1;31mEvents: printText tutorial_dahinterschauen2, from: post-events[0m
+[1;31mprintText, tutorial_dahinterschauen2[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(look)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(look)[0m
+[1;34mleave[0m throwing: look|unter glatter stein
+[1;34mkomische_gruppe[0m throwing: look|unter glatter stein
+[1;34mgeld_fuer_ticket[0m throwing: look|unter glatter stein
+[1;34mbesoffene_frau[0m throwing: look|unter glatter stein
+[1;34mworld[0m throwing: look|unter glatter stein
+[1;34mselect[0m throwing: look|unter glatter stein
+[1;34mselect[0m throwing: look|unter glatter stein
+[1;34mselect[0m throwing: look|unter glatter stein
+[1;34mselect[0m throwing: look|unter glatter stein
+[1;34mselect[0m throwing: look|unter glatter stein
+[1;34mroom[0m throwing: look|unter glatter stein
+[1;34mstandard[0m throwing: look|unter glatter stein
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_look(look)[0m
+Send the output to client: Durchsuchen Teil II Erfolgreich
+wahrnehmung um 1 erhöht!
+<div class='spoken'>ERZÄHLER - 	Du hast einen Gegenstand gefunden. Du kannst ihn aufheben, indem du <b>"hebe [name des Gegenstandes] auf"</b> eingibst.</div>Ich kann nicht unter glatter Stein schauen.
+Soll ich in, auf oder unter glatter Stein schauen?
+
+
+
+[2020-12-24 00:19:38] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 316 payload bytes
+[2020-12-24 00:19:38] [frame_header] Header Bytes: 
+[0] (4) 81 7E 01 3C 
+
+Befor play: input: schaue auf glatter stein calling with id: alex
+[1;31mEvents: schaue auf glatter stein, from: CGame::play[0m
+[1;31mlook, auf glatter stein[0m
+[1;34mfirst[0m throwing: look|auf glatter stein
+[1;34mzug_nach_moskau[0m throwing: look|auf glatter stein
+[1;34mtutorial[0m throwing: look|auf glatter stein
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(look)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(look)[0m
+[1;34mleave[0m throwing: look|auf glatter stein
+[1;34mkomische_gruppe[0m throwing: look|auf glatter stein
+[1;34mgeld_fuer_ticket[0m throwing: look|auf glatter stein
+[1;34mbesoffene_frau[0m throwing: look|auf glatter stein
+[1;34mworld[0m throwing: look|auf glatter stein
+[1;34mselect[0m throwing: look|auf glatter stein
+[1;34mselect[0m throwing: look|auf glatter stein
+[1;34mselect[0m throwing: look|auf glatter stein
+[1;34mselect[0m throwing: look|auf glatter stein
+[1;34mselect[0m throwing: look|auf glatter stein
+[1;34mroom[0m throwing: look|auf glatter stein
+[1;34mstandard[0m throwing: look|auf glatter stein
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_look(look)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind <b>G.F.W. Hegel: <i>Phänemenologie des Geistes</i></b>. </div>
+
+[2020-12-24 00:20:00] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 121 payload bytes
+[2020-12-24 00:20:00] [frame_header] Header Bytes: 
+[0] (2) 81 79 
+
+Befor play: input: hebe hä auf calling with id: alex
+[1;31mEvents: hebe hä auf, from: CGame::play[0m
+[1;31mpick, hä[0m
+[1;34mfirst[0m throwing: pick|hä
+[1;34mzug_nach_moskau[0m throwing: pick|hä
+[1;34mtutorial[0m throwing: pick|hä
+[1;31mEvents: printText tutorial_pickup, from: post-events[0m
+[1;31mprintText, tutorial_pickup[0m
+[1;31mText not found![0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(pick)[0m
+[1;31mEvents: printText tutorial_ende, from: post-events[0m
+[1;31mprintText, tutorial_ende[0m
+[1;31mEvents: setNewQuest zug_nach_moskau, from: post-events[0m
+[1;31msetNewQuest, zug_nach_moskau[0m
+[1;34mfirst[0m throwing: setNewQuest|zug_nach_moskau
+[1;34mzug_nach_moskau[0m throwing: setNewQuest|zug_nach_moskau
+[1;34mtutorial[0m throwing: setNewQuest|zug_nach_moskau
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(setNewQuest)[0m
+[1;34mleave[0m throwing: setNewQuest|zug_nach_moskau
+[1;34mkomische_gruppe[0m throwing: setNewQuest|zug_nach_moskau
+[1;34mgeld_fuer_ticket[0m throwing: setNewQuest|zug_nach_moskau
+[1;34mbesoffene_frau[0m throwing: setNewQuest|zug_nach_moskau
+[1;34mworld[0m throwing: setNewQuest|zug_nach_moskau
+[1;32m ... [1;34mworld: [1;32mevent triggered: h_setNewQuest(setNewQuest)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(pick)[0m
+[1;34mleave[0m throwing: pick|hä
+[1;34mkomische_gruppe[0m throwing: pick|hä
+[1;34mgeld_fuer_ticket[0m throwing: pick|hä
+[1;34mbesoffene_frau[0m throwing: pick|hä
+[1;34mworld[0m throwing: pick|hä
+[1;34mselect[0m throwing: pick|hä
+[1;34mselect[0m throwing: pick|hä
+[1;34mselect[0m throwing: pick|hä
+[1;34mselect[0m throwing: pick|hä
+[1;34mselect[0m throwing: pick|hä
+[1;34mroom[0m throwing: pick|hä
+[1;34mstandard[0m throwing: pick|hä
+Getting item.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_take(pick)[0m
+Send the output to client: Aufheben Erfolgreich
+wahrnehmung um 1 erhöht!
+Wahrnehmung Erfolgreich
+<div class='spoken'>ERZÄHLER - 	Ich denke, jetzt sind wir erstmal fertig, mit allem, was wahrlich <i>wichtig</i> ist.</div>Quest Das Hier und das Jetzt abgeschlossen! + 1 EP
+Neue Quest: <b>Zug nach Moskau</b>: <i>Du musst dringend nach Moskau. Etwas zieht dich dorthin, du weißt nicht genau, was es ist. Kaufe ein Ticket und finde den Zug nach Moskau, dann sehen wir weiter.</i>
+<div class='spoken'>SINNLICHE GEWISSHEIT - 	<b> G.F.W. Hegel: <i>Phänemenologie des Geistes</i></b> zu ALEX's Inventar hinzugefügt.
+</div>
+
+[2020-12-24 00:20:27] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 605 payload bytes
+[2020-12-24 00:20:27] [frame_header] Header Bytes: 
+[0] (4) 81 7E 02 5D 
+
+Befor play: input: zeige ausgänge calling with id: alex
+[1;31mEvents: zeige ausgänge, from: CGame::play[0m
+[1;31mshow, ausgänge[0m
+[1;34mfirst[0m throwing: show|ausgänge
+Calling:  show exits!
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|ausgänge
+[1;34mleave[0m throwing: show|ausgänge
+[1;34mkomische_gruppe[0m throwing: show|ausgänge
+[1;34mgeld_fuer_ticket[0m throwing: show|ausgänge
+[1;34mbesoffene_frau[0m throwing: show|ausgänge
+[1;34mworld[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mroom[0m throwing: show|ausgänge
+[1;34mstandard[0m throwing: show|ausgänge
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sehe ich einen Weg nichts
+</div>
+
+[2020-12-24 00:20:49] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 85 payload bytes
+[2020-12-24 00:20:49] [frame_header] Header Bytes: 
+[0] (2) 81 55 
+
+Befor play: input: gehe zurück calling with id: alex
+[1;31mEvents: gehe zurück, from: CGame::play[0m
+[1;31mgo, zurück[0m
+[1;34mfirst[0m throwing: go|zurück
+[1;34mzug_nach_moskau[0m throwing: go|zurück
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|zurück
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|zurück
+[1;34mgeld_fuer_ticket[0m throwing: go|zurück
+[1;34mbesoffene_frau[0m throwing: go|zurück
+[1;34mworld[0m throwing: go|zurück
+[1;34mselect[0m throwing: go|zurück
+[1;34mselect[0m throwing: go|zurück
+[1;34mselect[0m throwing: go|zurück
+[1;34mselect[0m throwing: go|zurück
+[1;34mselect[0m throwing: go|zurück
+[1;34mselect[0m throwing: go|zurück
+[1;34mroom[0m throwing: go|zurück
+[1;34mstandard[0m throwing: go|zurück
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>WAHRNEHMUNG - 	Die Eingangshalle des sog. "Moskauer Bahnhofs" in Sankt Petersburg ist ein eindrucksvolles Gebilde. Tausende Passanten wandern umher, es herscht Trubel und Lärm und dazu glänzt die architektonische Meisterleistung eines Konstantin Thron von allen Seiten auf einen herab. Nach Norden geht es zu den Gleisen, im Süden liegt der Ausgang und nach Osten geht es zu einer Nebenhalle.</div> <div class='spoken2'>Eine komische Gruppe an Passanten, die wild in der Gegen umherzeigen. </div>
+
+[2020-12-24 00:20:56] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 523 payload bytes
+[2020-12-24 00:20:56] [frame_header] Header Bytes: 
+[0] (4) 81 7E 02 0B 
+
+Befor play: input: zeige ausgänge calling with id: alex
+[1;31mEvents: zeige ausgänge, from: CGame::play[0m
+[1;31mshow, ausgänge[0m
+[1;34mfirst[0m throwing: show|ausgänge
+Calling:  show exits!
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|ausgänge
+[1;34mleave[0m throwing: show|ausgänge
+[1;34mkomische_gruppe[0m throwing: show|ausgänge
+[1;34mgeld_fuer_ticket[0m throwing: show|ausgänge
+[1;34mbesoffene_frau[0m throwing: show|ausgänge
+[1;34mworld[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mroom[0m throwing: show|ausgänge
+[1;34mstandard[0m throwing: show|ausgänge
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sehe ich einen Weg <b>zum Ausgang</b>, <b>ins Freiere</b>, <b>zur ersten Kammer</b>, <b>zur vierten Kammer</b> und <b>zur Nebenhalle</b>. 
+</div>
+
+[2020-12-24 00:21:03] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 198 payload bytes
+[2020-12-24 00:21:03] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 C6 
+
+Befor play: input: gehe zur nebenhalle calling with id: alex
+[1;31mEvents: gehe zur nebenhalle, from: CGame::play[0m
+[1;31mgo, zur nebenhalle[0m
+[1;34mfirst[0m throwing: go|zur nebenhalle
+[1;34mzug_nach_moskau[0m throwing: go|zur nebenhalle
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|zur nebenhalle
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|zur nebenhalle
+[1;34mgeld_fuer_ticket[0m throwing: go|zur nebenhalle
+[1;34mbesoffene_frau[0m throwing: go|zur nebenhalle
+[1;34mworld[0m throwing: go|zur nebenhalle
+[1;34mselect[0m throwing: go|zur nebenhalle
+[1;34mselect[0m throwing: go|zur nebenhalle
+[1;34mselect[0m throwing: go|zur nebenhalle
+[1;34mselect[0m throwing: go|zur nebenhalle
+[1;34mselect[0m throwing: go|zur nebenhalle
+[1;34mselect[0m throwing: go|zur nebenhalle
+[1;34mselect[0m throwing: go|zur nebenhalle
+[1;34mroom[0m throwing: go|zur nebenhalle
+h_exitTrainstation, zur nebenhalle
+[1;32m ... [1;34mroom: [1;32mevent triggered: h_exitTrainstation(go)[0m
+[1;34mstandard[0m throwing: go|zur nebenhalle
+[1;31mEvents: changeName character|trainstation_nebenhalle_konstantin_thron|Konstantin Thron, from: pre-events[0m
+[1;31mchangeName, character|trainstation_nebenhalle_konstantin_thron|Konstantin Thron[0m
+[1;34mfirst[0m throwing: changeName|character|trainstation_nebenhalle_konstantin_thron|Konstantin Thron
+[1;34mzug_nach_moskau[0m throwing: changeName|character|trainstation_nebenhalle_konstantin_thron|Konstantin Thron
+[1;34mleave[0m throwing: changeName|character|trainstation_nebenhalle_konstantin_thron|Konstantin Thron
+[1;34mkomische_gruppe[0m throwing: changeName|character|trainstation_nebenhalle_konstantin_thron|Konstantin Thron
+[1;34mgeld_fuer_ticket[0m throwing: changeName|character|trainstation_nebenhalle_konstantin_thron|Konstantin Thron
+[1;34mbesoffene_frau[0m throwing: changeName|character|trainstation_nebenhalle_konstantin_thron|Konstantin Thron
+[1;34mworld[0m throwing: changeName|character|trainstation_nebenhalle_konstantin_thron|Konstantin Thron
+[1;32m ... [1;34mworld: [1;32mevent triggered: h_changeName(changeName)[0m
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier ist es etwas ruhiger und leerer. Aber die Personen hier kommen dir unheimlicher und auch sonderbarer vor. Ah und hier sind auch die Toiletten.</div> <div class='spoken2'>Ein Mann steht an eine Wand gelehnt, ließt Zeitung und raucht Pfeife.Das ist Konstantin Thron, der berühmte Architekt dieses Bahnhofs. Eine komische Gruppe an Passanten, die wild in der Gegen umherzeigen. Eine komische Gruppe an Passanten, die wild in der Gegen umherzeigen. Eine komische Gruppe an Passanten, die wild in der Gegen umherzeigen. </div>
+
+[2020-12-24 00:21:11] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 576 payload bytes
+[2020-12-24 00:21:11] [frame_header] Header Bytes: 
+[0] (4) 81 7E 02 40 
+
+Befor play: input: zeige ausgänge calling with id: alex
+[1;31mEvents: zeige ausgänge, from: CGame::play[0m
+[1;31mshow, ausgänge[0m
+[1;34mfirst[0m throwing: show|ausgänge
+Calling:  show exits!
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|ausgänge
+[1;34mleave[0m throwing: show|ausgänge
+[1;34mkomische_gruppe[0m throwing: show|ausgänge
+[1;34mgeld_fuer_ticket[0m throwing: show|ausgänge
+[1;34mbesoffene_frau[0m throwing: show|ausgänge
+[1;34mworld[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mroom[0m throwing: show|ausgänge
+[1;34mstandard[0m throwing: show|ausgänge
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sehe ich einen Weg <b>zur Eingangshalle</b> und <b>zu den Toiletten</b>. 
+</div>
+
+[2020-12-24 00:21:13] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 133 payload bytes
+[2020-12-24 00:21:13] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 85 
+
+Befor play: input: gehe toi calling with id: alex
+[1;31mEvents: gehe toi, from: CGame::play[0m
+[1;31mgo, toi[0m
+[1;34mfirst[0m throwing: go|toi
+[1;34mzug_nach_moskau[0m throwing: go|toi
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|toi
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|toi
+[1;34mgeld_fuer_ticket[0m throwing: go|toi
+[1;34mbesoffene_frau[0m throwing: go|toi
+[1;34mworld[0m throwing: go|toi
+[1;34mselect[0m throwing: go|toi
+[1;34mselect[0m throwing: go|toi
+[1;34mselect[0m throwing: go|toi
+[1;34mselect[0m throwing: go|toi
+[1;34mselect[0m throwing: go|toi
+[1;34mselect[0m throwing: go|toi
+[1;34mselect[0m throwing: go|toi
+[1;34mselect[0m throwing: go|toi
+[1;34mstandard[0m throwing: go|toi
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Versifte Toiletten, aber endlich Ruhe, hier scheint niemand zu sein. Zwei Türen führen zu den Männer- bzw. Frauentoiletten. Im Westen geht es zurück ins Nebengebäude.</div> <div class='spoken2'></div>
+
+[2020-12-24 00:21:35] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 253 payload bytes
+[2020-12-24 00:21:35] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 FD 
+
+Befor play: input: zeige ausgänge calling with id: alex
+[1;31mEvents: zeige ausgänge, from: CGame::play[0m
+[1;31mshow, ausgänge[0m
+[1;34mfirst[0m throwing: show|ausgänge
+Calling:  show exits!
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|ausgänge
+[1;34mleave[0m throwing: show|ausgänge
+[1;34mkomische_gruppe[0m throwing: show|ausgänge
+[1;34mgeld_fuer_ticket[0m throwing: show|ausgänge
+[1;34mbesoffene_frau[0m throwing: show|ausgänge
+[1;34mworld[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mstandard[0m throwing: show|ausgänge
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sehe ich einen Weg <b>zur Frauen-Toilette</b>, <b>zur Männer-Toilette</b> und <b>zur Nebenhalle</b>. 
+</div>
+
+[2020-12-24 00:21:37] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 162 payload bytes
+[2020-12-24 00:21:37] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 A2 
+
+Befor play: input: gehe zur mäner calling with id: alex
+[1;31mEvents: gehe zur mäner, from: CGame::play[0m
+[1;31mgo, zur mäner[0m
+[1;34mfirst[0m throwing: go|zur mäner
+[1;34mzug_nach_moskau[0m throwing: go|zur mäner
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|zur mäner
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|zur mäner
+[1;34mgeld_fuer_ticket[0m throwing: go|zur mäner
+[1;34mbesoffene_frau[0m throwing: go|zur mäner
+[1;34mworld[0m throwing: go|zur mäner
+[1;34mselect[0m throwing: go|zur mäner
+[1;34mselect[0m throwing: go|zur mäner
+[1;34mselect[0m throwing: go|zur mäner
+[1;34mselect[0m throwing: go|zur mäner
+[1;34mselect[0m throwing: go|zur mäner
+[1;34mselect[0m throwing: go|zur mäner
+[1;34mselect[0m throwing: go|zur mäner
+[1;34mselect[0m throwing: go|zur mäner
+[1;34mselect[0m throwing: go|zur mäner
+[1;34mstandard[0m throwing: go|zur mäner
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: Room not found.
+
+
+
+[2020-12-24 00:22:02] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 18 payload bytes
+[2020-12-24 00:22:02] [frame_header] Header Bytes: 
+[0] (2) 81 12 
+
+Befor play: input: gehe zur männer calling with id: alex
+[1;31mEvents: gehe zur männer, from: CGame::play[0m
+[1;31mgo, zur männer[0m
+[1;34mfirst[0m throwing: go|zur männer
+[1;34mzug_nach_moskau[0m throwing: go|zur männer
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|zur männer
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|zur männer
+[1;34mgeld_fuer_ticket[0m throwing: go|zur männer
+[1;34mbesoffene_frau[0m throwing: go|zur männer
+[1;34mworld[0m throwing: go|zur männer
+[1;34mselect[0m throwing: go|zur männer
+[1;34mselect[0m throwing: go|zur männer
+[1;34mselect[0m throwing: go|zur männer
+[1;34mselect[0m throwing: go|zur männer
+[1;34mselect[0m throwing: go|zur männer
+[1;34mselect[0m throwing: go|zur männer
+[1;34mselect[0m throwing: go|zur männer
+[1;34mselect[0m throwing: go|zur männer
+[1;34mselect[0m throwing: go|zur männer
+[1;34mstandard[0m throwing: go|zur männer
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: Finde den Ticketverkäufer Erfolgreich
+<div class='spoken'>SINNLICHE GEWISSHEIT - 	Die Männertoilette, sie ist erstaunlich sauber, in einer Ecke liegen einige zerdrückte Kippenstummel, aber es riecht nicht nach Rauch.</div> <div class='spoken2'> </div>
+
+[2020-12-24 00:22:06] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 260 payload bytes
+[2020-12-24 00:22:06] [frame_header] Header Bytes: 
+[0] (4) 81 7E 01 04 
+
+Befor play: input: zeige ausgänge calling with id: alex
+[1;31mEvents: zeige ausgänge, from: CGame::play[0m
+[1;31mshow, ausgänge[0m
+[1;34mfirst[0m throwing: show|ausgänge
+Calling:  show exits!
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|ausgänge
+[1;34mleave[0m throwing: show|ausgänge
+[1;34mkomische_gruppe[0m throwing: show|ausgänge
+[1;34mgeld_fuer_ticket[0m throwing: show|ausgänge
+[1;34mbesoffene_frau[0m throwing: show|ausgänge
+[1;34mworld[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mselect[0m throwing: show|ausgänge
+[1;34mstandard[0m throwing: show|ausgänge
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sehe ich einen Weg <b>zurück zum Vorraum</b>. 
+</div>
+
+[2020-12-24 00:22:12] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 107 payload bytes
+[2020-12-24 00:22:12] [frame_header] Header Bytes: 
+[0] (2) 81 6B 
+
+Befor play: input: zeige details calling with id: alex
+[1;31mEvents: zeige details, from: CGame::play[0m
+[1;31mshow, details[0m
+[1;34mfirst[0m throwing: show|details
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|details
+[1;34mleave[0m throwing: show|details
+[1;34mkomische_gruppe[0m throwing: show|details
+[1;34mgeld_fuer_ticket[0m throwing: show|details
+[1;34mbesoffene_frau[0m throwing: show|details
+[1;34mworld[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mselect[0m throwing: show|details
+[1;34mstandard[0m throwing: show|details
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind  nichts weiteres zu sehen.
+</div>
+
+[2020-12-24 00:22:19] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 91 payload bytes
+[2020-12-24 00:22:19] [frame_header] Header Bytes: 
+[0] (2) 81 5B 
+
+Befor play: input: zeige personen calling with id: alex
+[1;31mEvents: zeige personen, from: CGame::play[0m
+[1;31mshow, personen[0m
+[1;34mfirst[0m throwing: show|personen
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|personen
+[1;34mleave[0m throwing: show|personen
+[1;34mkomische_gruppe[0m throwing: show|personen
+[1;34mgeld_fuer_ticket[0m throwing: show|personen
+[1;34mbesoffene_frau[0m throwing: show|personen
+[1;34mworld[0m throwing: show|personen
+[1;34mselect[0m throwing: show|personen
+[1;34mselect[0m throwing: show|personen
+[1;34mselect[0m throwing: show|personen
+[1;34mselect[0m throwing: show|personen
+[1;34mselect[0m throwing: show|personen
+[1;34mselect[0m throwing: show|personen
+[1;34mselect[0m throwing: show|personen
+[1;34mselect[0m throwing: show|personen
+[1;34mselect[0m throwing: show|personen
+[1;34mselect[0m throwing: show|personen
+[1;34mstandard[0m throwing: show|personen
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind <b>der Ticketverkäufer</b>. 
+</div>
+
+[2020-12-24 00:22:41] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 94 payload bytes
+[2020-12-24 00:22:41] [frame_header] Header Bytes: 
+[0] (2) 81 5E 
+
+Befor play: input: spreche ticket an calling with id: alex
+[1;31mEvents: spreche ticket an, from: CGame::play[0m
+[1;31mtalk, ticket[0m
+[1;34mfirst[0m throwing: talk|ticket
+[1;34mzug_nach_moskau[0m throwing: talk|ticket
+[1;34mleave[0m throwing: talk|ticket
+[1;34mkomische_gruppe[0m throwing: talk|ticket
+[1;32m ... [1;34mkomische_gruppe: [1;32mevent triggered: reden(talk)[0m
+[1;34mgeld_fuer_ticket[0m throwing: talk|ticket
+[1;34mbesoffene_frau[0m throwing: talk|ticket
+[1;34mworld[0m throwing: talk|ticket
+[1;34mselect[0m throwing: talk|ticket
+[1;34mselect[0m throwing: talk|ticket
+[1;34mselect[0m throwing: talk|ticket
+[1;34mselect[0m throwing: talk|ticket
+[1;34mselect[0m throwing: talk|ticket
+[1;34mselect[0m throwing: talk|ticket
+[1;34mselect[0m throwing: talk|ticket
+[1;34mselect[0m throwing: talk|ticket
+[1;34mselect[0m throwing: talk|ticket
+[1;34mselect[0m throwing: talk|ticket
+[1;34mselect[0m throwing: talk|ticket
+[1;34mstandard[0m throwing: talk|ticket
+About to set attribute that does not exist: state
+About to set attribute that does not exist: mapOptions
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_startDialog(talk)[0m
+Send the output to client: <div class='spoken'>YOU - 	[räuspern]$</div><div class='spoken'>TICKETVERKÄUFER - 	Und sie wollen...?</div>1: Sie sind der Ticketverkäufer, richtig?
+2: Über was denken sie nach?
+
+
+[2020-12-24 00:23:17] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 185 payload bytes
+[2020-12-24 00:23:17] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 B9 
+
+Befor play: input: 1 calling with id: alex
+[1;31mEvents: 1, from: CGame::play[0m
+[1;31m1, 1[0m
+[1;34mfirst[0m throwing: 1|1
+[1;34mzug_nach_moskau[0m throwing: 1|1
+[1;34mleave[0m throwing: 1|1
+[1;34mkomische_gruppe[0m throwing: 1|1
+[1;34mgeld_fuer_ticket[0m throwing: 1|1
+[1;34mbesoffene_frau[0m throwing: 1|1
+[1;34mworld[0m throwing: 1|1
+[1;34mdialog[0m throwing: 1|1
+[1;32m ... [1;34mdialog: [1;32mevent triggered: h_call(1)[0m
+Send the output to client: <div class='spoken'>TICKETVERKÄUFER - 	Ja, das ist ganz richtig, ich bin der vielverehrte, der denkende, der wahrhaftig wahrhaftige, allen bekannte Ticketverkäufer. Der für die Strecke Petersburg - Moskau immer noch ein billiges Ticket zu verkaufen hat. Sie sind also ein Interessent?</div>1: Ja, ganz richtig, wie viel?
+2: Nein, ganz und gar nicht. Aber ich fragte mich, worüber sie nachdenken.
+3: [Dialog beenden]
+
+
+[2020-12-24 00:23:28] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 422 payload bytes
+[2020-12-24 00:23:28] [frame_header] Header Bytes: 
+[0] (4) 81 7E 01 A6 
+
+Befor play: input: 1 calling with id: alex
+[1;31mEvents: 1, from: CGame::play[0m
+[1;31m1, 1[0m
+[1;34mfirst[0m throwing: 1|1
+[1;34mzug_nach_moskau[0m throwing: 1|1
+[1;34mleave[0m throwing: 1|1
+[1;34mkomische_gruppe[0m throwing: 1|1
+[1;34mgeld_fuer_ticket[0m throwing: 1|1
+[1;34mbesoffene_frau[0m throwing: 1|1
+[1;34mworld[0m throwing: 1|1
+[1;34mselect[0m throwing: 1|1
+[1;31mEvents: go trainstation_ausgang, from: h_select[0m
+[1;31mgo, trainstation_ausgang[0m
+[1;34mfirst[0m throwing: go|trainstation_ausgang
+[1;34mzug_nach_moskau[0m throwing: go|trainstation_ausgang
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|trainstation_ausgang
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|trainstation_ausgang
+[1;34mgeld_fuer_ticket[0m throwing: go|trainstation_ausgang
+[1;34mbesoffene_frau[0m throwing: go|trainstation_ausgang
+[1;34mworld[0m throwing: go|trainstation_ausgang
+[1;34mselect[0m throwing: go|trainstation_ausgang
+[1;34mdialog[0m throwing: go|trainstation_ausgang
+[1;32m ... [1;34mselect: [1;32mevent triggered: h_select(1)[0m
+Send the output to client: Das kann ich beim besten Willen nicht sagen! go
+
+
+[2020-12-24 00:23:52] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 49 payload bytes
+[2020-12-24 00:23:52] [frame_header] Header Bytes: 
+[0] (2) 81 31 
+
+Befor play: input: 1 calling with id: alex
+[1;31mEvents: 1, from: CGame::play[0m
+[1;31m1, 1[0m
+[1;34mfirst[0m throwing: 1|1
+[1;34mzug_nach_moskau[0m throwing: 1|1
+[1;34mleave[0m throwing: 1|1
+[1;34mkomische_gruppe[0m throwing: 1|1
+[1;34mgeld_fuer_ticket[0m throwing: 1|1
+[1;34mbesoffene_frau[0m throwing: 1|1
+[1;34mworld[0m throwing: 1|1
+[1;34mselect[0m throwing: 1|1
+[1;31mEvents: talk trainstation_eingangshalle_passanten_gruppe, from: h_select[0m
+[1;31mtalk, trainstation_eingangshalle_passanten_gruppe[0m
+[1;34mfirst[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mzug_nach_moskau[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mleave[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mkomische_gruppe[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;32m ... [1;34mkomische_gruppe: [1;32mevent triggered: reden(talk)[0m
+[1;34mgeld_fuer_ticket[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mbesoffene_frau[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mworld[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mdialog[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;32m ... [1;34mselect: [1;32mevent triggered: h_select(1)[0m
+Send the output to client: Das kann ich beim besten Willen nicht sagen! talk
+
+
+[2020-12-24 00:24:00] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 51 payload bytes
+[2020-12-24 00:24:00] [frame_header] Header Bytes: 
+[0] (2) 81 33 
+
+Befor play: input: 2 calling with id: alex
+[1;31mEvents: 2, from: CGame::play[0m
+[1;31m2, 2[0m
+[1;34mfirst[0m throwing: 2|2
+[1;34mzug_nach_moskau[0m throwing: 2|2
+[1;34mleave[0m throwing: 2|2
+[1;34mkomische_gruppe[0m throwing: 2|2
+[1;34mgeld_fuer_ticket[0m throwing: 2|2
+[1;34mbesoffene_frau[0m throwing: 2|2
+[1;34mworld[0m throwing: 2|2
+[1;34mselect[0m throwing: 2|2
+[1;31mEvents: go trainstation_fernzüge, from: h_select[0m
+[1;31mgo, trainstation_fernzüge[0m
+[1;34mfirst[0m throwing: go|trainstation_fernzüge
+[1;34mzug_nach_moskau[0m throwing: go|trainstation_fernzüge
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|trainstation_fernzüge
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|trainstation_fernzüge
+[1;34mgeld_fuer_ticket[0m throwing: go|trainstation_fernzüge
+[1;34mbesoffene_frau[0m throwing: go|trainstation_fernzüge
+[1;34mworld[0m throwing: go|trainstation_fernzüge
+[1;34mselect[0m throwing: go|trainstation_fernzüge
+[1;34mdialog[0m throwing: go|trainstation_fernzüge
+[1;32m ... [1;34mselect: [1;32mevent triggered: h_select(2)[0m
+Send the output to client: Das kann ich beim besten Willen nicht sagen! go
+
+
+[2020-12-24 00:24:10] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 49 payload bytes
+[2020-12-24 00:24:10] [frame_header] Header Bytes: 
+[0] (2) 81 31 
+
+Befor play: input: 3 calling with id: alex
+[1;31mEvents: 3, from: CGame::play[0m
+[1;31m3, 3[0m
+[1;34mfirst[0m throwing: 3|3
+[1;34mzug_nach_moskau[0m throwing: 3|3
+[1;34mleave[0m throwing: 3|3
+[1;34mkomische_gruppe[0m throwing: 3|3
+[1;34mgeld_fuer_ticket[0m throwing: 3|3
+[1;34mbesoffene_frau[0m throwing: 3|3
+[1;34mworld[0m throwing: 3|3
+[1;34mselect[0m throwing: 3|3
+[1;34mselect[0m throwing: 3|3
+[1;31mEvents: go trainstation_geheime-kammer1, from: h_select[0m
+[1;31mgo, trainstation_geheime-kammer1[0m
+[1;34mfirst[0m throwing: go|trainstation_geheime-kammer1
+[1;34mzug_nach_moskau[0m throwing: go|trainstation_geheime-kammer1
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|trainstation_geheime-kammer1
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|trainstation_geheime-kammer1
+[1;34mgeld_fuer_ticket[0m throwing: go|trainstation_geheime-kammer1
+[1;34mbesoffene_frau[0m throwing: go|trainstation_geheime-kammer1
+[1;34mworld[0m throwing: go|trainstation_geheime-kammer1
+[1;34mdialog[0m throwing: go|trainstation_geheime-kammer1
+[1;32m ... [1;34mselect: [1;32mevent triggered: h_select(3)[0m
+Send the output to client: Das kann ich beim besten Willen nicht sagen! go
+
+
+[2020-12-24 00:24:13] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 49 payload bytes
+[2020-12-24 00:24:13] [frame_header] Header Bytes: 
+[0] (2) 81 31 
+
+Befor play: input: 5 calling with id: alex
+[1;31mEvents: 5, from: CGame::play[0m
+[1;31m5, 5[0m
+[1;34mfirst[0m throwing: 5|5
+[1;34mzug_nach_moskau[0m throwing: 5|5
+[1;34mleave[0m throwing: 5|5
+[1;34mkomische_gruppe[0m throwing: 5|5
+[1;34mgeld_fuer_ticket[0m throwing: 5|5
+[1;34mbesoffene_frau[0m throwing: 5|5
+[1;34mworld[0m throwing: 5|5
+[1;34mselect[0m throwing: 5|5
+[1;31mEvents: go trainstation_nebenhalle, from: h_select[0m
+[1;31mgo, trainstation_nebenhalle[0m
+[1;34mfirst[0m throwing: go|trainstation_nebenhalle
+[1;34mzug_nach_moskau[0m throwing: go|trainstation_nebenhalle
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|trainstation_nebenhalle
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|trainstation_nebenhalle
+[1;34mgeld_fuer_ticket[0m throwing: go|trainstation_nebenhalle
+[1;34mbesoffene_frau[0m throwing: go|trainstation_nebenhalle
+[1;34mworld[0m throwing: go|trainstation_nebenhalle
+[1;34mselect[0m throwing: go|trainstation_nebenhalle
+[1;34mdialog[0m throwing: go|trainstation_nebenhalle
+[1;32m ... [1;34mselect: [1;32mevent triggered: h_select(5)[0m
+Send the output to client: Das kann ich beim besten Willen nicht sagen! go
+
+
+[2020-12-24 00:24:15] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 49 payload bytes
+[2020-12-24 00:24:15] [frame_header] Header Bytes: 
+[0] (2) 81 31 
+
+Befor play: input: 1 calling with id: alex
+[1;31mEvents: 1, from: CGame::play[0m
+[1;31m1, 1[0m
+[1;34mfirst[0m throwing: 1|1
+[1;34mzug_nach_moskau[0m throwing: 1|1
+[1;34mleave[0m throwing: 1|1
+[1;34mkomische_gruppe[0m throwing: 1|1
+[1;34mgeld_fuer_ticket[0m throwing: 1|1
+[1;34mbesoffene_frau[0m throwing: 1|1
+[1;34mworld[0m throwing: 1|1
+[1;34mselect[0m throwing: 1|1
+[1;31mEvents: talk trainstation_eingangshalle_passanten_gruppe, from: h_select[0m
+[1;31mtalk, trainstation_eingangshalle_passanten_gruppe[0m
+[1;34mfirst[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mzug_nach_moskau[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mleave[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mkomische_gruppe[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;32m ... [1;34mkomische_gruppe: [1;32mevent triggered: reden(talk)[0m
+[1;34mgeld_fuer_ticket[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mbesoffene_frau[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mworld[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mdialog[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;32m ... [1;34mselect: [1;32mevent triggered: h_select(1)[0m
+Send the output to client: Das kann ich beim besten Willen nicht sagen! talk
+
+
+[2020-12-24 00:24:17] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 51 payload bytes
+[2020-12-24 00:24:17] [frame_header] Header Bytes: 
+[0] (2) 81 33 
+
+Befor play: input: ja calling with id: alex
+[1;31mEvents: ja, from: CGame::play[0m
+[1;31mja, ja[0m
+[1;34mfirst[0m throwing: ja|ja
+[1;34mzug_nach_moskau[0m throwing: ja|ja
+[1;34mleave[0m throwing: ja|ja
+[1;34mkomische_gruppe[0m throwing: ja|ja
+[1;34mgeld_fuer_ticket[0m throwing: ja|ja
+[1;34mbesoffene_frau[0m throwing: ja|ja
+[1;34mworld[0m throwing: ja|ja
+[1;34mselect[0m throwing: ja|ja
+[1;34mselect[0m throwing: ja|ja
+[1;34mselect[0m throwing: ja|ja
+[1;34mselect[0m throwing: ja|ja
+[1;34mselect[0m throwing: ja|ja
+[1;34mselect[0m throwing: ja|ja
+[1;34mselect[0m throwing: ja|ja
+[1;34mselect[0m throwing: ja|ja
+[1;34mselect[0m throwing: ja|ja
+[1;34mdialog[0m throwing: ja|ja
+Send the output to client: Das kann ich beim besten Willen nicht sagen! ja
+
+
+[2020-12-24 00:24:26] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 49 payload bytes
+[2020-12-24 00:24:26] [frame_header] Header Bytes: 
+[0] (2) 81 31 
+
+Befor play: input: 0 calling with id: alex
+[1;31mEvents: 0, from: CGame::play[0m
+[1;31m0, 0[0m
+[1;34mfirst[0m throwing: 0|0
+[1;34mzug_nach_moskau[0m throwing: 0|0
+[1;34mleave[0m throwing: 0|0
+[1;34mkomische_gruppe[0m throwing: 0|0
+[1;34mgeld_fuer_ticket[0m throwing: 0|0
+[1;34mbesoffene_frau[0m throwing: 0|0
+[1;34mworld[0m throwing: 0|0
+[1;34mselect[0m throwing: 0|0
+[1;34mdialog[0m throwing: 0|0
+Send the output to client: Das kann ich beim besten Willen nicht sagen! 0
+
+
+[2020-12-24 00:24:28] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 48 payload bytes
+[2020-12-24 00:24:28] [frame_header] Header Bytes: 
+[0] (2) 81 30 
+
+Befor play: input: 1 calling with id: alex
+[1;31mEvents: 1, from: CGame::play[0m
+[1;31m1, 1[0m
+[1;34mfirst[0m throwing: 1|1
+[1;34mzug_nach_moskau[0m throwing: 1|1
+[1;34mleave[0m throwing: 1|1
+[1;34mkomische_gruppe[0m throwing: 1|1
+[1;34mgeld_fuer_ticket[0m throwing: 1|1
+[1;34mbesoffene_frau[0m throwing: 1|1
+[1;34mworld[0m throwing: 1|1
+[1;34mselect[0m throwing: 1|1
+[1;31mEvents: talk trainstation_eingangshalle_passanten_gruppe, from: h_select[0m
+[1;31mtalk, trainstation_eingangshalle_passanten_gruppe[0m
+[1;34mfirst[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mzug_nach_moskau[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mleave[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mkomische_gruppe[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;32m ... [1;34mkomische_gruppe: [1;32mevent triggered: reden(talk)[0m
+[1;34mgeld_fuer_ticket[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mbesoffene_frau[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mworld[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;34mdialog[0m throwing: talk|trainstation_eingangshalle_passanten_gruppe
+[1;32m ... [1;34mselect: [1;32mevent triggered: h_select(1)[0m
+Send the output to client: Das kann ich beim besten Willen nicht sagen! talk
+
+
+[2020-12-24 00:24:32] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 51 payload bytes
+[2020-12-24 00:24:32] [frame_header] Header Bytes: 
+[0] (2) 81 33 
+
+Befor play: input: 2 calling with id: alex
+[1;31mEvents: 2, from: CGame::play[0m
+[1;31m2, 2[0m
+[1;34mfirst[0m throwing: 2|2
+[1;34mzug_nach_moskau[0m throwing: 2|2
+[1;34mleave[0m throwing: 2|2
+[1;34mkomische_gruppe[0m throwing: 2|2
+[1;34mgeld_fuer_ticket[0m throwing: 2|2
+[1;34mbesoffene_frau[0m throwing: 2|2
+[1;34mworld[0m throwing: 2|2
+[1;34mselect[0m throwing: 2|2
+[1;31mEvents: go trainstation_fernzüge, from: h_select[0m
+[1;31mgo, trainstation_fernzüge[0m
+[1;34mfirst[0m throwing: go|trainstation_fernzüge
+[1;34mzug_nach_moskau[0m throwing: go|trainstation_fernzüge
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|trainstation_fernzüge
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|trainstation_fernzüge
+[1;34mgeld_fuer_ticket[0m throwing: go|trainstation_fernzüge
+[1;34mbesoffene_frau[0m throwing: go|trainstation_fernzüge
+[1;34mworld[0m throwing: go|trainstation_fernzüge
+[1;34mselect[0m throwing: go|trainstation_fernzüge
+[1;34mdialog[0m throwing: go|trainstation_fernzüge
+[1;32m ... [1;34mselect: [1;32mevent triggered: h_select(2)[0m
+Send the output to client: Das kann ich beim besten Willen nicht sagen! go
+
+
+[2020-12-24 00:24:32] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 49 payload bytes
+[2020-12-24 00:24:32] [frame_header] Header Bytes: 
+[0] (2) 81 31 
+
+Befor play: input: 2 calling with id: alex
+[1;31mEvents: 2, from: CGame::play[0m
+[1;31m2, 2[0m
+[1;34mfirst[0m throwing: 2|2
+[1;34mzug_nach_moskau[0m throwing: 2|2
+[1;34mleave[0m throwing: 2|2
+[1;34mkomische_gruppe[0m throwing: 2|2
+[1;34mgeld_fuer_ticket[0m throwing: 2|2
+[1;34mbesoffene_frau[0m throwing: 2|2
+[1;34mworld[0m throwing: 2|2
+[1;34mselect[0m throwing: 2|2
+[1;34mselect[0m throwing: 2|2
+[1;31mEvents: go trainstation_fernzüge, from: h_select[0m
+[1;31mgo, trainstation_fernzüge[0m
+[1;34mfirst[0m throwing: go|trainstation_fernzüge
+[1;34mzug_nach_moskau[0m throwing: go|trainstation_fernzüge
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|trainstation_fernzüge
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|trainstation_fernzüge
+[1;34mgeld_fuer_ticket[0m throwing: go|trainstation_fernzüge
+[1;34mbesoffene_frau[0m throwing: go|trainstation_fernzüge
+[1;34mworld[0m throwing: go|trainstation_fernzüge
+[1;34mdialog[0m throwing: go|trainstation_fernzüge
+[1;32m ... [1;34mselect: [1;32mevent triggered: h_select(2)[0m
+Send the output to client: Das kann ich beim besten Willen nicht sagen! go
+
+
+[2020-12-24 00:24:33] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 49 payload bytes
+[2020-12-24 00:24:33] [frame_header] Header Bytes: 
+[0] (2) 81 31 
+
+Befor play: input: 4 calling with id: alex
+[1;31mEvents: 4, from: CGame::play[0m
+[1;31m4, 4[0m
+[1;34mfirst[0m throwing: 4|4
+[1;34mzug_nach_moskau[0m throwing: 4|4
+[1;34mleave[0m throwing: 4|4
+[1;34mkomische_gruppe[0m throwing: 4|4
+[1;34mgeld_fuer_ticket[0m throwing: 4|4
+[1;34mbesoffene_frau[0m throwing: 4|4
+[1;34mworld[0m throwing: 4|4
+[1;34mselect[0m throwing: 4|4
+[1;31mEvents: go trainstation_geheime-kammer4, from: h_select[0m
+[1;31mgo, trainstation_geheime-kammer4[0m
+[1;34mfirst[0m throwing: go|trainstation_geheime-kammer4
+[1;34mzug_nach_moskau[0m throwing: go|trainstation_geheime-kammer4
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|trainstation_geheime-kammer4
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|trainstation_geheime-kammer4
+[1;34mgeld_fuer_ticket[0m throwing: go|trainstation_geheime-kammer4
+[1;34mbesoffene_frau[0m throwing: go|trainstation_geheime-kammer4
+[1;34mworld[0m throwing: go|trainstation_geheime-kammer4
+[1;34mselect[0m throwing: go|trainstation_geheime-kammer4
+[1;34mdialog[0m throwing: go|trainstation_geheime-kammer4
+[1;32m ... [1;34mselect: [1;32mevent triggered: h_select(4)[0m
+Send the output to client: Das kann ich beim besten Willen nicht sagen! go
+
+
+[2020-12-24 00:24:34] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 49 payload bytes
+[2020-12-24 00:24:34] [frame_header] Header Bytes: 
+[0] (2) 81 31 
+
+Befor play: input: 5 calling with id: alex
+[1;31mEvents: 5, from: CGame::play[0m
+[1;31m5, 5[0m
+[1;34mfirst[0m throwing: 5|5
+[1;34mzug_nach_moskau[0m throwing: 5|5
+[1;34mleave[0m throwing: 5|5
+[1;34mkomische_gruppe[0m throwing: 5|5
+[1;34mgeld_fuer_ticket[0m throwing: 5|5
+[1;34mbesoffene_frau[0m throwing: 5|5
+[1;34mworld[0m throwing: 5|5
+[1;34mselect[0m throwing: 5|5
+[1;34mselect[0m throwing: 5|5
+[1;31mEvents: go trainstation_nebenhalle, from: h_select[0m
+[1;31mgo, trainstation_nebenhalle[0m
+[1;34mfirst[0m throwing: go|trainstation_nebenhalle
+[1;34mzug_nach_moskau[0m throwing: go|trainstation_nebenhalle
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|trainstation_nebenhalle
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkomische_gruppe[0m throwing: go|trainstation_nebenhalle
+[1;34mgeld_fuer_ticket[0m throwing: go|trainstation_nebenhalle
+[1;34mbesoffene_frau[0m throwing: go|trainstation_nebenhalle
+[1;34mworld[0m throwing: go|trainstation_nebenhalle
+[1;34mdialog[0m throwing: go|trainstation_nebenhalle
+[1;32m ... [1;34mselect: [1;32mevent triggered: h_select(5)[0m
+Send the output to client: Das kann ich beim besten Willen nicht sagen! go
+
+
+[2020-12-24 00:24:34] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 49 payload bytes
+[2020-12-24 00:24:34] [frame_header] Header Bytes: 
+[0] (2) 81 31 
+
+Befor play: input: 56 calling with id: alex
+[1;31mEvents: 56, from: CGame::play[0m
+[1;31m56, 56[0m
+[1;34mfirst[0m throwing: 56|56
+[1;34mzug_nach_moskau[0m throwing: 56|56
+[1;34mleave[0m throwing: 56|56
+[1;34mkomische_gruppe[0m throwing: 56|56
+[1;34mgeld_fuer_ticket[0m throwing: 56|56
+[1;34mbesoffene_frau[0m throwing: 56|56
+[1;34mworld[0m throwing: 56|56
+[1;34mselect[0m throwing: 56|56
+[1;34mselect[0m throwing: 56|56
+[1;34mselect[0m throwing: 56|56
+[1;34mselect[0m throwing: 56|56
+[1;34mselect[0m throwing: 56|56
+[1;34mselect[0m throwing: 56|56
+[1;34mselect[0m throwing: 56|56
+[1;34mselect[0m throwing: 56|56
+[1;34mselect[0m throwing: 56|56
+[1;34mdialog[0m throwing: 56|56
+Send the output to client: Das kann ich beim besten Willen nicht sagen! 56
+
+
+[2020-12-24 00:24:35] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 49 payload bytes
+[2020-12-24 00:24:35] [frame_header] Header Bytes: 
+[0] (2) 81 31 
+
+[2020-12-24 00:25:43] [connect] WebSocket Connection [::ffff:127.0.0.1]:39538 v13 "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gecko/20100101 Firefox/84.0" / 101
+Starting....
+Choosing login/ registerSet sign_in_up_ to l
+[2020-12-24 00:25:44] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
+[2020-12-24 00:25:44] [frame_header] Header Bytes: 
 [0] (2) 81 06 
 
 On to getting credentials

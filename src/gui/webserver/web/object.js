@@ -178,7 +178,6 @@ function GetAsType(elem) {
       if (is_number == false)
         throw(elem.value + " is not a number.");
       return parseFloat(elem.value);
-
     }
     else if (elem.getAttribute("custom") == "str_int") {
       var is_number = /^\d+$/.test(elem.value);

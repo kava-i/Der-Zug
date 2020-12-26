@@ -1,0 +1,163 @@
+Creating game.
+Room: "trainstation_gleis"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis"
+Room: "trainstation_halle"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_halle"
+Created all rooms 
+Room: "test_test_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_test_room"
+Created all rooms 
+worldFactory: done.
+Done parsing world.
+Parsing players... 
+Room: "trainstation_gleis"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis"
+Room: "trainstation_halle"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_halle"
+Created all rooms 
+Room: "test_test_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_test_room"
+Created all rooms 
+worldFactory: done.
+initializing context stack.
+Done.
+Room: "trainstation_gleis"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_gleis"
+Room: "trainstation_halle"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "trainstation_halle"
+Created all rooms 
+Room: "test_test_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_test_room"
+Created all rooms 
+worldFactory: done.
+initializing context stack.
+Done.
+Finished parsing!
+[2020-12-23 17:07:15] [connect] WebSocket Connection [::ffff:127.0.0.1]:56722 v13 "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gecko/20100101 Firefox/84.0" / 101
+Starting....
+Choosing login/ registerSet sign_in_up_ to l
+[2020-12-23 17:07:16] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
+[2020-12-23 17:07:16] [frame_header] Header Bytes: 
+[0] (2) 81 06 
+
+On to getting credentials
+[2020-12-23 17:07:18] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 16 payload bytes
+[2020-12-23 17:07:18] [frame_header] Header Bytes: 
+[0] (2) 81 05 
+[1] (2) 81 0B 
+
+On to getting credentials
+checkLogin
+[1;31mEvents: show room, from: startGame[0m
+[1;31mshow, room[0m
+[1;34mfirst[0m throwing: show|room
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mworld[0m throwing: show|room
+[1;34mroom[0m throwing: show|room
+[1;34mstandard[0m throwing: show|room
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[2020-12-23 17:07:20] [frame_header] Dispatching write containing 3 message(s) containing 6 header bytes and 105 payload bytes
+[2020-12-23 17:07:20] [frame_header] Header Bytes: 
+[0] (2) 81 0A 
+[1] (2) 81 12 
+[2] (2) 81 4D 
+
+Befor play: input: examine room calling with id: jan
+[1;31mEvents: examine room, from: CGame::play[0m
+[1;31mexamine, room[0m
+[1;34mfirst[0m throwing: examine|room
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_examine(examine)[0m
+[1;34mworld[0m throwing: examine|room
+[1;34mroom[0m throwing: examine|room
+[1;34mstandard[0m throwing: examine|room
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(examine)[0m
+Send the output to client: Das Gleis ist viel zu voll und all die Menschen machen die Kopfschmerzen.
+ 
+
+
+[2020-12-23 17:07:28] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 77 payload bytes
+[2020-12-23 17:07:28] [frame_header] Header Bytes: 
+[0] (2) 81 4D 
+
+Befor play: input: show exits calling with id: jan
+[1;31mEvents: show exits, from: CGame::play[0m
+[1;31mshow, exits[0m
+[1;34mfirst[0m throwing: show|exits
+Calling:  show exits!
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mworld[0m throwing: show|exits
+[1;34mroom[0m throwing: show|exits
+[1;34mstandard[0m throwing: show|exits
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: Hier geht es <b>zur Halle</b>. 
+
+
+
+[2020-12-23 17:07:34] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 34 payload bytes
+[2020-12-23 17:07:34] [frame_header] Header Bytes: 
+[0] (2) 81 22 
+
+Befor play: input: gehe zur halle calling with id: jan
+[1;31mEvents: gehe zur halle, from: CGame::play[0m
+[1;31mgehe, zur halle[0m
+[1;34mfirst[0m throwing: gehe|zur halle
+[1;34mworld[0m throwing: gehe|zur halle
+[1;34mselect[0m throwing: gehe|zur halle
+[1;34mroom[0m throwing: gehe|zur halle
+[1;34mstandard[0m throwing: gehe|zur halle
+Send the output to client: Falsche Eingabe, gebe "help" ein, falls du nicht weiter weißt. (standard)
+
+
+[2020-12-23 17:07:36] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 76 payload bytes
+[2020-12-23 17:07:36] [frame_header] Header Bytes: 
+[0] (2) 81 4C 
+
+Befor play: input: go to halle calling with id: jan
+[1;31mEvents: go to halle, from: CGame::play[0m
+[1;31mgo, halle[0m
+[1;34mfirst[0m throwing: go|halle
+[1;34mworld[0m throwing: go|halle
+[1;34mselect[0m throwing: go|halle
+[1;34mroom[0m throwing: go|halle
+[1;34mstandard[0m throwing: go|halle
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>LAUTSTÄRKE - 	Hier fühle ich mich zu Hause. Hier habe ich Macht! Das rennen und schreien und der Stress der anderen. Bahnhöfe: Kaum wo, fühle ich mich so wohl!</div> <div class='spoken2'></div>
+
+[2020-12-23 17:07:40] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 219 payload bytes
+[2020-12-23 17:07:40] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 DB 
+
+[2020-12-23 17:13:07] [control] Control frame received with opcode 8
+[2020-12-23 17:13:07] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2020-12-23 17:13:07] [frame_header] Header Bytes: 
+[0] (2) 88 02 
+
+[2020-12-23 17:13:07] [disconnect] Disconnect close local:[1001] remote:[1001]

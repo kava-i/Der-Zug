@@ -1,0 +1,100 @@
+Creating game.
+Room: "test_test_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_test_room"
+Created all rooms 
+worldFactory: done.
+Done parsing world.
+Parsing players... 
+Room: "test_test_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_test_room"
+Created all rooms 
+worldFactory: done.
+initializing context stack.
+Done.
+Room: "test_test_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_test_room"
+Created all rooms 
+worldFactory: done.
+initializing context stack.
+Done.
+Finished parsing!
+[2020-12-23 01:02:18] [connect] WebSocket Connection [::ffff:127.0.0.1]:58688 v13 "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:84.0) Gecko/20100101 Firefox/84.0" / 101
+Starting....
+Choosing login/ registerSet sign_in_up_ to l
+[2020-12-23 01:02:20] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
+[2020-12-23 01:02:20] [frame_header] Header Bytes: 
+[0] (2) 81 06 
+
+On to getting credentials
+[2020-12-23 01:02:21] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 16 payload bytes
+[2020-12-23 01:02:21] [frame_header] Header Bytes: 
+[0] (2) 81 05 
+[1] (2) 81 0B 
+
+On to getting credentials
+checkLogin
+[1;31mEvents: show room, from: startGame[0m
+[1;31mshow, room[0m
+[1;34mfirst[0m throwing: show|room
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mworld[0m throwing: show|room
+[1;34mroom[0m throwing: show|room
+[1;34mstandard[0m throwing: show|room
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[2020-12-23 01:02:24] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 163 payload bytes
+[2020-12-23 01:02:24] [frame_header] Header Bytes: 
+[0] (2) 81 0A 
+[1] (2) 81 12 
+[2] (4) 81 7E 00 87 
+
+Befor play: input: show people calling with id: jan
+[1;31mEvents: show people, from: CGame::play[0m
+[1;31mshow, people[0m
+[1;34mfirst[0m throwing: show|people
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mworld[0m throwing: show|people
+[1;34mroom[0m throwing: show|people
+[1;34mstandard[0m throwing: show|people
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: In diesem Raum sind keine Personen.
+
+
+
+[2020-12-23 01:02:27] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 38 payload bytes
+[2020-12-23 01:02:27] [frame_header] Header Bytes: 
+[0] (2) 81 26 
+
+Befor play: input: show exits calling with id: jan
+[1;31mEvents: show exits, from: CGame::play[0m
+[1;31mshow, exits[0m
+[1;34mfirst[0m throwing: show|exits
+Calling:  show exits!
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mworld[0m throwing: show|exits
+[1;34mselect[0m throwing: show|exits
+[1;34mroom[0m throwing: show|exits
+[1;34mstandard[0m throwing: show|exits
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: Hier geht es Nirgendwo hin.
+
+
+
+[2020-12-23 01:02:31] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 30 payload bytes
+[2020-12-23 01:02:31] [frame_header] Header Bytes: 
+[0] (2) 81 1E 
+
+[2020-12-23 01:02:33] [control] Control frame received with opcode 8
+[2020-12-23 01:02:33] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2020-12-23 01:02:33] [frame_header] Header Bytes: 
+[0] (2) 88 02 
+
+[2020-12-23 01:02:33] [disconnect] Disconnect close local:[1001] remote:[1001]
