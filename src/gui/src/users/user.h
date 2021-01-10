@@ -16,7 +16,7 @@
 #include <vector>
 
 #include <nlohmann/json.hpp>
-#include "inja.hpp"
+#include <inja/inja.hpp>
 
 #include <stdlib.h>
 #include <time.h>

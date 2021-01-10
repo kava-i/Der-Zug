@@ -271,33 +271,25 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
     resp.set_header("Location", "/overview");
   }
   else {
+    std::cout << "Access granted. Serving file..." << std::endl;
     std::string page = "";
     try {
       if (req.matches.size() == 1) {
+        std::cout << "overview..." << std::endl;
         sl.lock();
         nlohmann::json shared_worlds = user_manager_.GetSharedWorlds(username);
         nlohmann::json all_worlds = user_manager_.GetAllWorlds(username);
         sl.unlock();
         page = user->GetOverview(shared_worlds, all_worlds);
       }
-      else if (req.matches.size() == 3 && backup == false) {
+      else {
+        std::cout << "page..." << std::endl;
         sl.lock();
-        int port = user_manager_.GetPortOfWorld(req.matches[1], req.matches[2]);
+        page = user_manager_.GetPage(req.matches[0]);
         sl.unlock();
-        page = user->GetWorld(req.matches[0], req.matches[1], req.matches[2], port);
-      }
-      else if (req.matches.size() == 3 && backup == true)
-        page = user->GetBackups(req.matches[1], req.matches[2]);
-      else if (req.matches.size() == 4)
-        page = user->GetCategory(req.matches[0], req.matches[1], req.matches[2], 
-            req.matches[3]);
-      else if (req.matches.size() == 5)
-        page = user->GetObjects(req.matches[0], req.matches[1], req.matches[2], 
-            req.matches[3], req.matches[4]);
-      else if (req.matches.size() == 6) {
-        page = user->GetObject(req.matches[0], req.matches[1], req.matches[2], 
-            req.matches[3], req.matches[4], req.matches[5]);
-      }
+        if (page == "Page not found.")
+          std::cout << "PAGE NOT FOUND!" << std::endl;
+      } 
     }
     catch (std::exception& e) {
       std::cout << "ServeFile: " << e.what() << std::endl;

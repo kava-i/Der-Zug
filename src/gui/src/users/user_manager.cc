@@ -14,6 +14,9 @@ namespace fs = std::filesystem;
 UserManager::UserManager(std::string main_path, std::vector<std::string> cats) 
   : path_(main_path), categories_(cats) {
   ports_ = 9001;
+
+  worlds_ = new Worlds(path_);
+
   //Iterate over users and create user.
   for (auto& p : fs::directory_iterator(path_)) {
     std::string path = p.path();
@@ -240,8 +243,10 @@ nlohmann::json UserManager::GetSharedWorlds(std::string username) const {
     if (location.find("backups") != std::string::npos) continue;
     std::string user = location.substr(0, location.find("/"));
     std::string world = location.substr(location.rfind("/")+1);
-    shared_worlds.push_back(nlohmann::json({{"user", user}, {"name", world}, 
+    if (GetUser(user) != nullptr) {
+      shared_worlds.push_back(nlohmann::json({{"user", user}, {"name", world}, 
           {"port", GetUser(user)->worlds()["world"]}}));
+    }
   }
   return shared_worlds;
 }
