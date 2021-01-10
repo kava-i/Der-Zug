@@ -16,7 +16,10 @@ Worlds::Worlds() {
 }
 
 std::string Worlds::GetPage(std::string path) {
+  // Builds full path, as only
   std::string full_path = base_path_ + "/" + path;
+
+  // words are only saved as "[base_path]/[user]/files/[world]" thus use of "find".
   for (auto it : worlds_) {
     if (full_path.find(it.first) != std::string::npos) 
       return ParseTemplate(it.second->GetPage(full_path));
