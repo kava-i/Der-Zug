@@ -271,11 +271,9 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
     resp.set_header("Location", "/overview");
   }
   else {
-    std::cout << "Access granted. Serving file..." << std::endl;
     std::string page = "";
     try {
       if (req.matches.size() == 1) {
-        std::cout << "overview..." << std::endl;
         sl.lock();
         nlohmann::json shared_worlds = user_manager_.GetSharedWorlds(username);
         nlohmann::json all_worlds = user_manager_.GetAllWorlds(username);
@@ -283,15 +281,11 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
         page = user->GetOverview(shared_worlds, all_worlds);
       }
       else {
-        std::cout << "page..." << std::endl;
         sl.lock();
         page = user_manager_.GetPage(req.matches[0]);
         sl.unlock();
-        if (page == "Page not found.")
-          std::cout << "PAGE NOT FOUND!" << std::endl;
       } 
-    }
-    catch (std::exception& e) {
+    } catch (std::exception& e) {
       std::cout << "ServeFile: " << e.what() << std::endl;
     }
     resp.set_content(page.c_str(), "text/html");

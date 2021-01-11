@@ -15,7 +15,7 @@ UserManager::UserManager(std::string main_path, std::vector<std::string> cats)
   : path_(main_path), categories_(cats) {
   ports_ = 9001;
 
-  worlds_ = new Worlds(path_);
+  worlds_ = new Worlds(path_, 9001);
 
   //Iterate over users and create user.
   for (auto& p : fs::directory_iterator(path_)) {
@@ -259,4 +259,8 @@ int UserManager::GetPortOfWorld(std::string user, std::string world) const {
     std::cout << "World \"" << world << "\" from " << user << " not found.\n";
     return 0;
   }
+}
+
+std::string UserManager::GetPage(std::string path) const {
+  return worlds_->GetPage(path);
 }

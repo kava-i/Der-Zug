@@ -21,7 +21,7 @@
 class Area : public Page {
   public:
     Area(std::string base_path_, std::string path, nlohmann::json objects);
-    Area() {}
+    ~Area() {}
 
     nlohmann::json RenderPage(std::string path);
 

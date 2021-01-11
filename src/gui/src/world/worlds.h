@@ -17,7 +17,7 @@
 
 class Worlds {
   public:
-    Worlds(std::string base_path);
+    Worlds(std::string base_path, int start_port);
     ~Worlds();
     std::string GetPage(std::string path);
 

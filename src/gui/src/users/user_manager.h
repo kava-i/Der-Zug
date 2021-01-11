@@ -118,9 +118,7 @@ class UserManager {
 
     int GetPortOfWorld(std::string user, std::string world) const;
 
-    std::string GetPage(std::string path) const {
-      return worlds_->GetPage(path);
-    }
+    std::string GetPage(std::string path) const;
    
   private:
     std::map<std::string, User*> users_;  ///< Map of all users.

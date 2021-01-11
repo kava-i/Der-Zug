@@ -8,33 +8,28 @@ Page::Page(std::string base_path, std::string path) {
   p.replace_extension("");
   std::string new_path = p;
   path_ = new_path;
-  name_ = path_.substr(page_.rfind("/")+1);
-  page_ = "";
+  name_ = path_.substr(path_.rfind("/")+1);
   GenerateParents();
 }
     
 void Page::GenerateParents() {
-  std::vector<std::string> path_elems = func::split(path_.substr(base_path_.lengh()), "/");
-  int couter = 2;
-  for (size_t i=0; i<path_elems.lengh(); i++) {
+  std::vector<std::string> path_elems = func::Split(path_.substr(base_path_.length()), "/");
+  for (size_t i=2; i<path_elems.size()-2; i++) {
     std::string path;
-    for (size_t j=0; j<couter; j++) 
+    for (size_t j=0; j<i; j++) 
       path += path_elems[j] + "/";
-    path.pop();
-    parents_[path_elems] = path_elems[couter];
-    couter++;
+    path.pop_back();
+    parents_[path] = path_elems[i];
   }
 }
 
 nlohmann::json Page::RenderPage(std::string) {
   std::cout << "Category::RenderPage()" << std::endl;
   std::string page = "Im am a category: \n";
-  page_ += "Path: " + path_ + "\n" + "Subcategories: \n";
   nlohmann::json json;
   json["path"] = "web/category_template.html";
-  nlohmann["header"] = nlohmann::json({{"name", name_}});
-  json["header"]["nodes"] = nlohmann::json::object();
+  json["header"] = nlohmann::json({{"name", name_}, {"nodes", nlohmann::json::array()}});
   for (auto node : nodes_)
-    header[node.first] = node.second;
+    json["header"][node.first] = node.second;
   return json;
 }

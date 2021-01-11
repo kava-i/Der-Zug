@@ -11,18 +11,18 @@ World::World(std::string base_path, std::string path, int port) {
 }
 
 nlohmann::json World::GetPage(std::string path) {
-  std::cout << "World::GetPage" << std::endl;
-  if (paths_.count(path) > 0) {
-    nlohmann::json json = paths_.at(path)->RenderPage();
+  std::cout << "World::GetPage(" << path << ")" << std::endl;
+  if (all_paths_.count(path) > 0) {
+    nlohmann::json json = all_paths_.at(path)->RenderPage(path);
     json["header"]["short_paths"] = short_paths_;
     return json;
   }
-  return "File not found.";
+  return nlohmann::json({{"error", "File not found."}});
 }
 
+// paths_
 void World::InitializePaths(std::string path) {
-  paths_[path] = new Category(base_path_, next_path);
-
+  all_paths_[path] = new Category(base_path_, path);
   for (auto& p : fs::directory_iterator(path)) {
     std::cout << p.path() << ": ";
     std::string next_path = p.path();
@@ -35,13 +35,13 @@ void World::InitializePaths(std::string path) {
       std::string new_path = fs_p;
       if (p.path().extension() == ".jpg") 
         std::cout << "skipped image" << std::endl;
-      else if (!func::LoadJsonFromDisc(new_path, objects))
+      else if (!func::LoadJsonFromDisc(next_path, objects))
         std::cout << "failed to load json." << std::endl;
       else if (objects.is_array() == false) {
         std::cout << "added area" << std::endl;
-        paths_[new_path] = new Area(base_path_, new_path, objects);
+        all_paths_[new_path] = new Area(base_path_, new_path, objects);
         for (auto it=objects.begin(); it!=objects.end(); it++)
-          paths_[new_path + "/" + it.key()] = paths_[new_path];
+          all_paths_[new_path + "/" + it.key()] = all_paths_[new_path];
       }
       else
         std::cout << "skiped list type." << std::endl;
@@ -50,11 +50,11 @@ void World::InitializePaths(std::string path) {
 }
 
 void World::UpdateShortPaths() {
-  for (auto it : paths_)
+  for (auto it : all_paths_)
     short_paths_.push_back(it.first.substr(base_path_.length()));
 }
 
 World::~World() {
-  for (auto it : paths_) 
+  for (auto it : all_paths_) 
     delete it.second;
 }

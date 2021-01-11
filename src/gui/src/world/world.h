@@ -16,6 +16,8 @@
 #include <inja/inja.hpp>
 
 #include "page/page.h"
+#include "page/area.h"
+#include "page/category.h"
 #include "util/func.h"
 
 class World {

@@ -1,7 +1,12 @@
 #include "worlds.h"
 
-Worlds::Worlds() {
-  ports_ = 9001;
+namespace fs = std::filesystem;
+
+Worlds::Worlds(std::string base_path, int start_port) {
+  base_path_ = base_path;
+  ports_ = start_port;
+
+  // Iterate ver all users and user-worlds and create world elements.
   for (auto up : fs::directory_iterator(base_path_)) {
     std::string cur_path = up.path();
     std::cout << cur_path << std::endl;
@@ -16,31 +21,35 @@ Worlds::Worlds() {
 }
 
 std::string Worlds::GetPage(std::string path) {
+  std::cout << "Worlds::GetPage(" << path << ")" << std::endl;
   // Builds full path, as only
   std::string full_path = base_path_ + "/" + path;
-
   // words are only saved as "[base_path]/[user]/files/[world]" thus use of "find".
   for (auto it : worlds_) {
-    if (full_path.find(it.first) != std::string::npos) 
-      return ParseTemplate(it.second->GetPage(full_path));
+    if (full_path.find(it.first) != std::string::npos) {
+      std::cout << "WORLD FOUND!" << std::endl;
+      nlohmann::json json = it.second->GetPage(full_path);
+      return ParseTemplate(json);
+    }
   }
-  return "File not found.";
+  std::cout << "NO WORLD FOUND!" << std::endl;
+  return "No world found.";
 }
 
 std::string Worlds::ParseTemplate(nlohmann::json json) {
+  std::cout << "Worlds::ParseTemplate(" << json << ")" << std::endl;
   inja::Environment env;
   inja::Template temp;
-
   //Parse standard templates for descriptions and header and footer included in every object.
   inja::Template desc= env.parse_template("web/object_templates/description.html");
   env.include_template("web/object_templates/temp_description", desc);
   inja::Template text = env.parse_template("web/object_templates/text.html");
   env.include_template("web/object_templates/temp_text", text);
-  inja::Template room_desc= env.parse_template("web/object_templates/room_description.html");
-  env.include_template("web/object_templates/temp_room_description", room_descr);
-  inja::Template dead_descr= env.parse_template("web/object_templates/dead_description.html");
+  inja::Template room_desc = env.parse_template("web/object_templates/room_description.html");
+  env.include_template("web/object_templates/temp_room_description", room_desc);
+  inja::Template dead_desc = env.parse_template("web/object_templates/dead_description.html");
   env.include_template("web/object_templates/temp_dead_description", dead_desc);
-  inja::Template use_descr= env.parse_template("web/object_templates/use_description.html");
+  inja::Template use_desc = env.parse_template("web/object_templates/use_description.html");
   env.include_template("web/object_templates/temp_use_description", use_desc);
   inja::Template pages = env.parse_template("web/object_templates/pages.html");
   env.include_template("web/object_templates/temp_pages", pages);
