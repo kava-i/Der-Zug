@@ -22,14 +22,3 @@ void Page::GenerateParents() {
     parents_[path] = path_elems[i];
   }
 }
-
-nlohmann::json Page::RenderPage(std::string) {
-  std::cout << "Category::RenderPage()" << std::endl;
-  std::string page = "Im am a category: \n";
-  nlohmann::json json;
-  json["path"] = "web/category_template.html";
-  json["header"] = nlohmann::json({{"name", name_}, {"nodes", nlohmann::json::array()}});
-  for (auto node : nodes_)
-    json["header"][node.first] = node.second;
-  return json;
-}

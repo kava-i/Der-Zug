@@ -1,4 +1,5 @@
 #include "worlds.h"
+#include <ostream>
 
 namespace fs = std::filesystem;
 
@@ -23,16 +24,14 @@ Worlds::Worlds(std::string base_path, int start_port) {
 std::string Worlds::GetPage(std::string path) {
   std::cout << "Worlds::GetPage(" << path << ")" << std::endl;
   // Builds full path, as only
-  std::string full_path = base_path_ + "/" + path;
+  std::string full_path = base_path_ + path;
   // words are only saved as "[base_path]/[user]/files/[world]" thus use of "find".
   for (auto it : worlds_) {
     if (full_path.find(it.first) != std::string::npos) {
-      std::cout << "WORLD FOUND!" << std::endl;
       nlohmann::json json = it.second->GetPage(full_path);
       return ParseTemplate(json);
     }
   }
-  std::cout << "NO WORLD FOUND!" << std::endl;
   return "No world found.";
 }
 
