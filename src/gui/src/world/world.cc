@@ -14,7 +14,7 @@ nlohmann::json World::GetPage(std::string path) {
   std::cout << "World::GetPage(" << path << ")" << std::endl;
   if (paths_.count(path) > 0) {
     nlohmann::json json = paths_.at(path)->RenderPage(path);
-    json["header"]["short_paths"] = short_paths_;
+    json["header"]["__short_paths"] = short_paths_;
     return json;
   }
   return nlohmann::json({{"error", "File not found."}});

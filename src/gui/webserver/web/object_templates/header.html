@@ -25,17 +25,11 @@
         <li class="breadcrumb-item"><a href="/">Game*Creator</a></li>
         <li class="breadcrumb-item"><a href="/login">Login</a></li>
         <li class="breadcrumb-item"><a href="/overview">Overview</a></li>
-        <li class="breadcrumb-item"><a href="/{{header.user}}/files/{{header.world}}">{{header.world}}</a></li>
-        <li class="breadcrumb-item"><a 
-            href="/{{header.user}}/files/{{header.world}}/{{header.category}}">{{header.category}}</a></li>
-        <li class="breadcrumb-item"><a 
-            href="/{{header.user}}/files/{{header.world}}/{{header.category}}/{{header.sub}}"
-            >{{header.sub}}</a></li>
         <li class="breadcrumb-item active" aria-current="page"><a>{{id}}</a></li>
     </ol>
 </nav>
 
-<div id="fuzzy_finder_div" class="fuzzy_finder" pages={{header.pages}}>
+<div id="fuzzy_finder_div" class="fuzzy_finder" pages={{__short_paths}}>
   <div class="fuzzy_finder_center">
     <label style="color:#1fe921;">files: </label><input id="fuzzy_finder_inp">
     <ol id="fuzzy_finder_elems" class="fuzzy_finder_elems">

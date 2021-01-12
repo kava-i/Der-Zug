@@ -20,8 +20,7 @@ class Page {
   public:
     Page(std::string base_path, std::string path);
     virtual ~Page() {}
-
-    virtual nlohmann::json RenderPage(std::string path) { return nlohmann::json(); }
+    virtual nlohmann::json RenderPage(std::string path);
 
   protected:
     std::string base_path_;

@@ -1,4 +1,5 @@
 #include "area.h"
+#include "nlohmann/json.hpp"
 
 Area::Area(std::string base_path, std::string path, nlohmann::json objects) 
   : Page(base_path, path) {
@@ -11,29 +12,21 @@ nlohmann::json Area::RenderPage(std::string path) {
   nlohmann::json json;
   if (path != path_)
     json = RenderObjectPage(path);
-  else {
-    json["path"] = "web/category_template.html";
-    json["header"] = nlohmann::json({{"name", name_}, {"nodes", nlohmann::json::array()}});
-    for (auto node : nodes_)
-      json["header"]["nodes"].push_back(nlohmann::json({node.first, node.second}));
-  }
+  else
+    json = Page::RenderPage(path);
   return json;
 }
 
 nlohmann::json Area::RenderObjectPage(std::string path) {
   std::cout << "Area::RenderObjectPage(" << path << ")" << std::endl;
   nlohmann::json object;
-  try { 
-    object = objects_[path.substr(path.rfind("/"))];
-  } catch (std::exception& e) {
-    std::cout << "Area::RenderObjectPage(): object not loaded: " << e.what() << std::endl;
+  if (objects_.count(path.substr(path.rfind("/")+1)) == 0)
     return nlohmann::json({{"error", "Problem parsing json"}});
-  }
-  nlohmann::json json = nlohmann::json({{"header", nlohmann::json::object()}});
-  json["header"]["name"] = object["id"];
-  json["header"]["parents"] = parents_;
-  json["object"] = object;
-  json["path"] = "web/object_templates/" + parents_.end()->second + ".html";
+  object = objects_[path.substr(path.rfind("/")+1)];
+  object["__parents"] = parents_;
+  nlohmann::json json = nlohmann::json({{"header", object}, 
+      {"path", "web/object_templates/" + parents_.rbegin()->second + ".html"}});
+  std::cout << "Area::RenderObjectPage(): sucess." << std::endl;
   return json;
 }
 

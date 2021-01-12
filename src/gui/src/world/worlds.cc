@@ -1,5 +1,8 @@
 #include "worlds.h"
+#include "nlohmann/json.hpp"
+#include <exception>
 #include <ostream>
+#include <string>
 
 namespace fs = std::filesystem;
 
@@ -57,13 +60,26 @@ std::string Worlds::ParseTemplate(nlohmann::json json) {
   inja::Template footer = env.parse_template("web/object_templates/footer.html");
   env.include_template("web/object_templates/temp_footer", footer);
 
-  //Parse different objects.
+  // Get path and object, then crete template and render page.
+  std::string page = "";
   try {
-    temp = env.parse_template(json["path"]);
+    std::string path = json["path"];
+    std::cout << "Path: " << path << std::endl;
+      
+    std::cout << 5 << std::endl;
+    try { 
+      temp = env.parse_template(path);
+    } catch(std::exception& e){
+      std::cout << "Problem parsing object html: " << e.what() << std::endl;
+    }
+
+    std::cout << 6 << std::endl;
+    page = env.render(temp, json["header"]);
+    std::cout << 7 << std::endl;
   }
   catch (std::exception& e) {
     std::cout << "Problem parsing object html: " << e.what() << std::endl;
     return "File not found.";
   }
-  return env.render(temp, json["header"]);
+  return page;
 }
