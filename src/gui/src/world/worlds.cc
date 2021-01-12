@@ -39,7 +39,7 @@ std::string Worlds::GetPage(std::string path) {
 }
 
 std::string Worlds::ParseTemplate(nlohmann::json json) {
-  std::cout << "Worlds::ParseTemplate(" << json << ")" << std::endl;
+  std::cout << "Worlds::ParseTemplate()" << std::endl;
   inja::Environment env;
   inja::Template temp;
 
@@ -69,22 +69,13 @@ std::string Worlds::ParseTemplate(nlohmann::json json) {
   std::string page = "";
   try {
     std::string path = json["path"];
-    std::cout << "Path: " << path << std::endl;
-      
-    std::cout << 5 << std::endl;
-    try { 
-      temp = env.parse_template(path);
-    } catch(std::exception& e){
-      std::cout << "Problem parsing object html: " << e.what() << std::endl;
-    }
-
-    std::cout << 6 << std::endl;
+    temp = env.parse_template(path);
     page = env.render(temp, json["header"]);
-    std::cout << 7 << std::endl;
   }
   catch (std::exception& e) {
-    std::cout << "Problem parsing object html: " << e.what() << std::endl;
+    std::cout << "Problem parsing object html: " << e.what() << "\n\n";
     return "File not found.";
   }
+  std::cout << std::endl;
   return page;
 }

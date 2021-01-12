@@ -41,6 +41,8 @@
   </p>
 </div>
 
+{{ log("rendered header") }}
+
 <div class="box_overview center_in_box">
   <h1>{{name}}</h1>
     <div class="controlers">
@@ -60,6 +62,8 @@
     </div>
     <i class="fas fa-plus button" onclick="OpenAddElemModal();return true"></i>
 </div>
+
+{{ log("rendered subcategories") }}
 
 <div id="modal_del_elem" class="modal">
   <div class="modal-content">

@@ -1,16 +1,32 @@
 {% include "temp_header" %}
 
+  {{ log("rendered header") }}
+
   <li><label>Name:</label><input id="name" value="{{ default(name, "") }}"></li>
   <li><label>ID:</label><input id="id" value="{{ default(id, "") }}"></li>
-  <li><label class="long_lbl">description:</label>
-      <input class="long_inp" id="description" 
+
+  {{ log("rendered name+id") }}
+
+  <li>
+    <label class="long_lbl">description:</label>
+    <input class="long_inp" id="description" 
         value="{{ default(description, "") }}">
   </li>
+
+  {{ log("rendered description") }}
+
   <li><label class="long_lbl">Output:</label>
     <input class="long_inp" id="output" value="{{ default(output, "")
     }}">
   </li>
-  <li><label>Power:</label><input id="power" custom="int" value="{{
-    default(power, 0) }}"></li>
+
+  {{ log("rendered output") }}
+
+  <li>
+    <label>Power:</label><input id="power" custom="int" value="{{
+    default(power, 0) }}">
+  </li>
+
+  {{ log("rendered power") }}
 
 {% include "temp_footer" %}
