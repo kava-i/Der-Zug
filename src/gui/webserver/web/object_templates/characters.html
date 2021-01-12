@@ -1,4 +1,6 @@
 {% include "temp_header" %}
+  
+  {{log("rendered header") }}  
 
   <!-- Name and ID (default value for non-set-values) -->
   <li><label>Name:</label><input id="name" value="{{ default(name, "") }}">
@@ -9,6 +11,8 @@
     <label title="Description printed, when character is viewed.">Description:</label> 
     {% include "temp_description" %}
   </li>
+
+  {{log("rendered description") }}  
   
   <!-- Room Description (added by include) expand non-set optional values -->
   <li custom="list">
@@ -17,12 +21,14 @@
     {% include "temp_room_description" %}
   </li>
 
+  {{log("rendered room_description") }}  
   <!-- Dead Description (added by include) expand non-set optional values -->
   <li custom="list">
     <label title="Description printed when character dies/faints">Dead Description:</label> 
     {% include "temp_dead_description" %}
   </li>
 
+  {{log("rendered dead_description") }}  
 
   <!-- Attributes like (hp, money, experience etc. -->
   <li><label>HP:</label>
@@ -42,6 +48,8 @@
     {% endif %}
   </li>
 
+  {{log("rendered attributes") }}  
+
   <!-- Items (default value for non-set-values) -->
   <li custom="list">
     <label>Items:</label>
@@ -56,6 +64,8 @@
       {% endfor %}
     </ul>
   </li>
+
+  {{log("rendered items") }}  
   
   <!-- Attacks (default value for non-set-values) -->
   <li custom="map">
@@ -72,6 +82,8 @@
     </ul>
   </li>
   
+  {{log("rendered attacks") }}  
+
   <!-- Handlers (default value for non-set-values) -->
   <li custom="list">
     <label>Handlers:</label>
@@ -90,6 +102,8 @@
     </ul>
   </li>
 
+  {{log("rendered handler") }}  
+
   <!-- Default dialogs/ descriptions -->
   <li>
     <label title="only needed when no description is given. Loads a random
@@ -103,5 +117,7 @@
       >Default Dialogs:</label>
     <input id="defaultDialogs" placeholder="default dialogs" 
       value="{{ default(defaultDialogs, "") }}"></li>
+
+  {{log("rendered defaultDialogs + descriptions") }}  
 
 {% include "temp_footer" %}

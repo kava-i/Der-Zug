@@ -42,6 +42,11 @@ std::string Worlds::ParseTemplate(nlohmann::json json) {
   std::cout << "Worlds::ParseTemplate(" << json << ")" << std::endl;
   inja::Environment env;
   inja::Template temp;
+
+  env.add_void_callback("log", 1, [](inja::Arguments args) {
+	  std::cout << "logging: " << args.at(0)->get<std::string>() << std::endl;
+  });
+
   //Parse standard templates for descriptions and header and footer included in every object.
   inja::Template desc= env.parse_template("web/object_templates/description.html");
   env.include_template("web/object_templates/temp_description", desc);
