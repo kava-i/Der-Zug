@@ -25,6 +25,9 @@
         <li class="breadcrumb-item"><a href="/">Game*Creator</a></li>
         <li class="breadcrumb-item"><a href="/login">Login</a></li>
         <li class="breadcrumb-item"><a href="/overview">Overview</a></li>
+        {% for parent_path, parent_name in __parents %}
+          <li class="breadcrumb-item"><a href="/{{parent_path}}">{{parent_name}}</a></li>
+        {% endfor %}
         <li class="breadcrumb-item active" aria-current="page"><a>{{id}}</a></li>
     </ol>
 </nav>

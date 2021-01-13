@@ -22,7 +22,13 @@
         <li class="breadcrumb-item"><a href="/">Game*Creator</a></li>
         <li class="breadcrumb-item"><a href="/login">Login</a></li>
         <li class="breadcrumb-item"><a href="/overview">Overview</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><a>{{name}}</a></li>
+        {% for parent_path, parent_name in __parents %}
+          {% if loop.is_last %}
+            <li class="breadcrumb-item active" aria-current="page"><a>{{name}}</a></li>
+          {% else %}
+            <li class="breadcrumb-item"><a href="/{{parent_path}}">{{parent_name}}</a></li>
+          {% endif %}
+        {% endfor %}
     </ol>
 </nav>
 

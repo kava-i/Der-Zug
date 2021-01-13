@@ -9,24 +9,19 @@ Area::Area(std::string base_path, std::string path, nlohmann::json objects)
 
 nlohmann::json Area::RenderPage(std::string path) {
   std::cout << "Area::RenderPage(" << path << ")" << std::endl;
-  nlohmann::json json;
   if (path != path_)
-    json = RenderObjectPage(path);
-  else
-    json = Page::RenderPage(path);
-  return json;
+    return RenderObjectPage(path);
+  return Page::RenderPage(path);
 }
 
 nlohmann::json Area::RenderObjectPage(std::string path) {
   std::cout << "Area::RenderObjectPage(" << path << ")" << std::endl;
-  nlohmann::json object;
   if (objects_.count(path.substr(path.rfind("/")+1)) == 0)
     return nlohmann::json({{"error", "Problem parsing json"}});
-  object = objects_[path.substr(path.rfind("/")+1)];
+  nlohmann::json object = objects_[path.substr(path.rfind("/")+1)];
   object["__parents"] = parents_;
   nlohmann::json json = nlohmann::json({{"header", object}, 
-      {"path", "web/object_templates/" + parents_.rbegin()->second + ".html"}});
-  std::cout << "Area::RenderObjectPage(): sucess." << std::endl;
+      {"path", "web/object_templates/" + (--parents_.rbegin())->second + ".html"}});
   return json;
 }
 

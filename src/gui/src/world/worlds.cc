@@ -1,6 +1,7 @@
 #include "worlds.h"
 #include "nlohmann/json.hpp"
 #include <exception>
+#include <iostream>
 #include <ostream>
 #include <string>
 
@@ -40,6 +41,7 @@ std::string Worlds::GetPage(std::string path) {
 
 std::string Worlds::ParseTemplate(nlohmann::json json) {
   std::cout << "Worlds::ParseTemplate()" << std::endl;
+  std::cout << "parents: " << json["header"]["__parents"] << std::endl;
   inja::Environment env;
   inja::Template temp;
 
