@@ -55,12 +55,12 @@
         <table id="controller">
           {% for node in nodes %}
             <tr>
-              <td><a class="medium" href="{{node.0}}">
-                  {{node.1}}</a>
+              <td>
+                <a class="medium" href="{{node.0}}">{{node.1}}</a>
               </td>
-            <td>
-              <i class="fas fa-minus button2" 
-                onclick="OpenDelElemModal('subcategory', '{{node.1}}');return true"></i>
+              <td>
+                <i class="fas fa-minus button2" 
+                  onclick="OpenDelElemModal('subcategory', '{{node.1}}');return true"></i>
               </td>
             </tr>
           {% endfor %}

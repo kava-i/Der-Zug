@@ -1,5 +1,6 @@
 #include "category.h" 
 #include "nlohmann/json.hpp"
+#include <filesystem>
 
 namespace fs = std::filesystem;
 
@@ -15,7 +16,9 @@ nlohmann::json Category::RenderPage(std::string path) {
 
 void Category::UpdateNodes() {
   for (auto& p : fs::directory_iterator(path_)) {
-    std::string path = p.path();
+    fs::path fs_path = p.path();
+    fs_path.replace_extension("");
+    std::string path = fs_path;
     nodes_[path.substr(base_path_.length())] = p.path().stem();
   }
 }
