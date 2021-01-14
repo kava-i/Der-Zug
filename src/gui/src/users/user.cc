@@ -77,7 +77,7 @@ void User::AddLocation(std::string user, std::string world) {
   locations_.push_back(user+"/backups/"+world);
 }
 
-// ** Serve an generate pages ** //
+// ** Serve and generate pages ** //
 
 std::string User::GetOverview(nlohmann::json shared_worlds, 
     nlohmann::json all_worlds) {
@@ -102,27 +102,6 @@ std::string User::GetOverview(nlohmann::json shared_worlds,
   return env.render(temp, worlds);
 }
 
-std::string User::GetWorld(std::string path, std::string user, std::string world, 
-    int port) {
-  //Check if path to given world can be found
-  if (!func::demo_exists(path_+path))
-    return "";
-
-  //Create initial json with world and all categories.
-  if (worlds_.count(world) > 0) port = worlds_[world];
-  nlohmann::json j = nlohmann::json({{"user", user}, {"world", world}, 
-      {"categories", categories_}, {"port", port}, {"pages", GetAllPages(user, world)}});
-
-  //Create dictionaries for all categories, if they do not exist.
-  for (auto cat : categories_)
-    fs::create_directory(path_+path+"/"+cat);
-
-  //Parse world page. 
-  inja::Environment env;                                                                  
-  inja::Template temp = env.parse_template("web/in_world_template.html");
-  return env.render(temp, j);
-}
-
 std::string User::GetBackups(std::string user, std::string world) {
   //Get all backups for this world.
   std::vector<std::string> backups;
@@ -141,170 +120,7 @@ std::string User::GetBackups(std::string user, std::string world) {
   return env.render(temp, j);
 }
 
-std::string User::GetCategory(std::string path, std::string user, std::string world, 
-    std::string category) {
-
-  
-  //Create path, inja Environment and initial json.
-  path = path_ + path;
-  inja::Environment env;
-  
-  // Create header to parse in_category_template.
-  nlohmann::json j_category = nlohmann::json({{"user", user}, 
-      {"world", world}, {"category", category}, {"pages", GetAllPages(user, world)}});
-  
-  //Directly parse config page.
-  if (category == "config") {
-    nlohmann::json config_json;
-    if (!func::LoadJsonFromDisc((path+".json"), config_json))
-      return "";
-    config_json["header"] = j_category;
-    inja::Template temp = env.parse_template("web/object_templates/config.html");
-    return env.render(temp, config_json);
-  }
-
-  //Check if path to given category exists 
-  if (!func::demo_exists(path)) {
-    std::cout << "Path: " << path << " does not exist!" << std::endl;
-    return "";
-  }
-  
-  //Add all files in category to json and parse json.
-  j_category["sub_categories"] = nlohmann::json::array();
-  for (auto p : fs::directory_iterator(path+"/")) 
-    j_category["sub_categories"].push_back(p.path().stem());
-  inja::Template temp = env.parse_template("web/in_category_template.html");
-  return env.render(temp, j_category);
-}
-
-std::string User::GetObjects(std::string path, std::string user, std::string world, std::string 
-    category, std::string sub) {
-
-  // Create header to parse in_category_template.
-  nlohmann::json overview = nlohmann::json({{"user", user}, 
-      {"world", world}, {"category", category}, {"sub", sub}, 
-      {"pages", GetAllPages(user, world)}, {"objects", nlohmann::json::array()}});
-
-  //Create path and trying to load into json 
-  path = path_ + path + ".json";
-  nlohmann::json objects;
-  try{ 
-    std::ifstream read(path);
-    read>>objects;
-    read.close();
-  }
-  catch(...) { 
-    std::cout << "file: " << path << " not found.";
-    return "";
-  }
-
-  inja::Environment env;
-    
-  //Standard style, for rooms, items, ... Dictionary or dictionaries
-  if (objects.is_array() == false) {
-    size_t couter = 1;
-    for (auto obj : objects) {
-      if (obj.is_array() == false)
-        overview["objects"].push_back(obj["id"]);
-      else
-        overview["objects"].push_back(std::to_string(couter));
-      couter++;
-    }
-  }
-  
-  //Style for defaultDialogs, array of arrays
-  else {
-    for (size_t i=1; i<=objects.size(); i++) 
-      overview["objects"].push_back(sub + "_" + std::to_string(i));
-  }
-  inja::Template temp = env.parse_template("web/in_sub_category_template.html");
-  return env.render(temp, overview);
-}
-
-std::string User::GetObject(std::string path, std::string user, std::string world, 
-    std::string category, std::string sub, std::string obj) {
-  //Create path and trying to load into json 
-  path = path_ + path.substr(0, path.rfind("/")) + ".json";
-  nlohmann::json objects;
-  try{ 
-    std::ifstream read(path);
-    read>>objects;
-    read.close();
-  }
-  catch(...) { 
-    std::cout << "file: " << path << "not found.";
-    return "File not found.";
-  }
-
-  std::cout << "Got objects: " << objects << std::endl;
-
-  nlohmann::json overview;   
-  //Load object by id
-  if (objects.is_array() == false) {
-    if (objects.count(obj) > 0)
-      overview = objects[obj];
-  }
-  //Load object by number
-  else {
-    unsigned int num = std::stoi(obj.substr(obj.length()-1))-1;
-    if (objects.size() > num)
-      overview["json"] = objects[num];
-  }
-  overview["header"] = nlohmann::json({{"user", user}, {"world", world}, 
-      {"category", category}, {"sub", sub}, {"obj",obj}, 
-      {"pages", GetAllPages(user, world)}});
-
-  std::cout << "Got overview: " << overview << std::endl;
-
-  inja::Environment env;
-  inja::Template temp;
-
-  //Parse standard templates for descriptions and header and footer included 
-  //in every object.
-  inja::Template description = env.parse_template(
-      "web/object_templates/description.html");
-  env.include_template("web/object_templates/temp_description", description);
-
-
-  inja::Template text = env.parse_template("web/object_templates/text.html");
-  env.include_template("web/object_templates/temp_text", text);
-
-  inja::Template room_description = env.parse_template(
-      "web/object_templates/room_description.html");
-  env.include_template("web/object_templates/temp_room_description", 
-      room_description);
-
-  inja::Template dead_description = env.parse_template(
-      "web/object_templates/dead_description.html");
-  env.include_template("web/object_templates/temp_dead_description", 
-      dead_description);
-
-  inja::Template use_description = env.parse_template(
-      "web/object_templates/use_description.html");
-  env.include_template("web/object_templates/temp_use_description", 
-      use_description);
-
-  inja::Template pages = env.parse_template("web/object_templates/pages.html");
-  env.include_template("web/object_templates/temp_pages", pages);
-
-  inja::Template header = env.parse_template("web/object_templates/header.html");
-  env.include_template("web/object_templates/temp_header", header);
-  inja::Template footer = env.parse_template("web/object_templates/footer.html");
-  env.include_template("web/object_templates/temp_footer", footer);
-
-  //Parse different objects.
-  try {
-    temp = env.parse_template("web/object_templates/"+category+".html");
-  }
-  catch (std::exception& e) {
-    std::cout << "Problem parsing object html: " << e.what() << std::endl;
-    return "File not found.";
-  }
-  return env.render(temp, overview);
-}
-
 // ** Functions ** //
-
 
 int User::CreateNewWorld(std::string name, int port) {
   //Check for "/" which is considered bad format!
