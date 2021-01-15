@@ -6,19 +6,20 @@ namespace fs = std::filesystem;
 
 Category::Category(std::string base_path, std::string path) 
   : Page(base_path, path) {
-  UpdateNodes();
+  GenerateChildNodes();
 }
 
-nlohmann::json Category::RenderPage(std::string path) {
+nlohmann::json Category::CreatePageData(std::string path) {
   std::cout << "Category::RenderPage()" << std::endl;
-  return Page::RenderPage(path);
+  return Page::CreatePageData(path);
 }
 
-void Category::UpdateNodes() {
+void Category::GenerateChildNodes() {
+  child_nodes_.clear();
   for (auto& p : fs::directory_iterator(path_)) {
     fs::path fs_path = p.path();
     fs_path.replace_extension("");
     std::string path = fs_path;
-    nodes_[path.substr(base_path_.length())] = p.path().stem();
+    child_nodes_[path.substr(base_path_.length())] = p.path().stem();
   }
 }

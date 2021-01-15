@@ -10,20 +10,22 @@ namespace fs = std::filesystem;
 Worlds::Worlds(std::string base_path, int start_port) {
   base_path_ = base_path;
   ports_ = start_port;
-
   // Iterate ver all users and user-worlds and create world elements.
   for (auto up : fs::directory_iterator(base_path_)) {
     std::string cur_path = up.path();
-    std::cout << cur_path << std::endl;
     for (auto wp : fs::directory_iterator(cur_path + "/files")) {
-      std::cout << wp.path() << std::endl;
       worlds_[wp.path()] = new World(base_path_, wp.path(), ports_); 
       ports_+=2;
     }
-    std::cout << std::endl;
   }
-  std::cout << std::endl;
 }
+
+Worlds::~Worlds() {
+  for (auto it : worlds_)
+    delete it.second;
+}
+
+
 
 std::string Worlds::GetPage(std::string path) {
   std::cout << "Worlds::GetPage(" << path << ")" << std::endl;

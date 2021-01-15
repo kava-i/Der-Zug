@@ -13,7 +13,7 @@ World::World(std::string base_path, std::string path, int port) {
 nlohmann::json World::GetPage(std::string path) {
   std::cout << "World::GetPage(" << path << ")" << std::endl;
   if (paths_.count(path) > 0) {
-    nlohmann::json json = paths_.at(path)->RenderPage(path);
+    nlohmann::json json = paths_.at(path)->CreatePageData(path);
     json["header"]["__short_paths"] = short_paths_;
     return json;
   }

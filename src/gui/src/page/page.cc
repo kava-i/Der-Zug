@@ -9,28 +9,26 @@ Page::Page(std::string base_path, std::string path) {
   std::string new_path = p;
   path_ = new_path;
   name_ = path_.substr(path_.rfind("/")+1);
-  GenerateParents();
+  GenerateParentNodes();
 }
     
-nlohmann::json Page::RenderPage(std::string path) {
+nlohmann::json Page::CreatePageData(std::string path) {
   nlohmann::json json;
   json["path"] = "web/category_template.html";
   json["header"] = nlohmann::json({{"name", name_}, 
-      {"nodes", nlohmann::json::array()}, {"__parents", parents_}});
-  for (auto node : nodes_)
+      {"nodes", nlohmann::json::array()}, {"__parents", parent_nodes_}});
+  for (auto node : child_nodes_)
     json["header"]["nodes"].push_back(nlohmann::json({node.first, node.second}));
   return json;
 }
 
-std::string addup(std::string str) { return str + "/"; }
-
-void Page::GenerateParents() {
+void Page::GenerateParentNodes() {
   std::vector<std::string> path_elems = func::Split(path_.substr(base_path_.length()), "/");
   for (size_t i=2; i<path_elems.size(); i++) {
     std::string path = "";
     for (size_t j=0; j<=i; j++) 
       path += path_elems[j] + "/";
     path.pop_back();
-    parents_[path] = path_elems[i];
+    parent_nodes_[path] = path_elems[i];
   }
 }

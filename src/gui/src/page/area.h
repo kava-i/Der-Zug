@@ -23,12 +23,28 @@ class Area : public Page {
     Area(std::string base_path_, std::string path, nlohmann::json objects);
     ~Area() {}
 
-    nlohmann::json RenderPage(std::string path);
+    // public methods:
+
+    /**
+     * Calls base-class function for area and CreateObjectPageData for opject.
+     * @param[in] path to area or object.
+     * @return json with information.
+     */
+    nlohmann::json CreatePageData(std::string path);
 
   private:
+    // member variables:
     nlohmann::json objects_;
 
-    nlohmann::json RenderObjectPage(std::string id);
+    // private methods:
+    
+    /**
+     * Creates data for requested object.
+     * Gets object from json and adds parent-nodes.
+     * @param[in] id of requested object.
+     * @return json with information.
+     */
+    nlohmann::json CreateObjectPageData(std::string id);
     void UpdateNodes();
 };
 

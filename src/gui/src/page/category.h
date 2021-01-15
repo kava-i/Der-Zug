@@ -18,15 +18,32 @@
 
 #include "page.h"
 
+/**
+ * Class for all categories.
+ * As category is a page refering to other categories not objects.
+ */
 class Category : public Page {
   public: 
+    // constructer/ destructor
     Category(std::string base_path, std::string path);
     ~Category() {}
 
-    nlohmann::json RenderPage(std::string path);
+    // public methods:
+    /**
+     * Calls base-class function.
+     ** @param[in] path to area or object.
+     * @return json with information.
+     */
+    nlohmann::json CreatePageData(std::string path);
 
   private:
-    void UpdateNodes();
+    // private methods:
+
+    /**
+     * Generates all child nodes.
+     * Iterates of all subdirectories and creates child-entry.
+     */
+    void GenerateChildNodes();
 };
 
 #endif

@@ -15,28 +15,73 @@
 #include <nlohmann/json.hpp>
 #include <inja/inja.hpp>
 
-#include "page/page.h"
 #include "page/area.h"
 #include "page/category.h"
+#include "page/page.h"
 #include "util/func.h"
 
+/**
+ * Class storing all pages and information of a world.
+  */
 class World {
   public:
+    // constructer/ destructor:
     World() {}
+    /**
+     * Constructor generating all pages.
+     * @param[in] base_path to user-directory.
+     */
     World(std::string base_path, std::string path, int port);
+    /**
+     * Destructor deleteing all pages.
+     */
     ~World();
 
+    // getter:
     int port();
+
+    // public methods:
+   
+    /**
+     * Calls GetPage value of referenced page and add short paths to data-json.
+     * @param[in] path to category/area/object.
+     * @return json with page-data, path to template and short-paths.
+     */
     nlohmann::json GetPage(std::string path);
 
   private:
+    // member variables:
     std::string base_path_;
     std::string path_;
-    int port_;
+    int port_; // port=http-server, port+1=websocketserver.
+
+    /**
+     * All pages are stored with the full path Category/Area as value.
+     * - Categories: [base_path]/[user]/files/[world]/[path_to_directory]
+     * - Areas: [base_path]/[user]/files/[world]/[path_to_directory without ".json"
+     * - objects: [base_path]/[user]/files/[world]/[path_to_directory]/[object_id]
+     */
     std::map<std::string, Page*> paths_;
+
+    /**
+     * Stores all paths as presented in url with name as value.
+     * - Categories: [user]/files/[world]/[path_to_directory]
+     * - Areas: [user]/files/[world]/[path_to_directory without ".json"
+     * - objects: [user]/files/[world]/[path_to_directory]/[object_id]
+     */
     std::vector<std::string> short_paths_;
 
+    // privave methods:
+    
+    /**
+     * Creates all pages.
+     * @param[in] path of world.
+     */
     void InitializePaths(std::string path);
+
+    /**
+     * Generate all "short paths", t.i.~paths as presented in url.
+     */
     void UpdateShortPaths();
 };
 
