@@ -12,6 +12,7 @@
 
 #include <exception>
 #include <iostream>
+#include <ostream>
 #include <regex>
 #include <string>
 
@@ -137,7 +138,6 @@ void ServerFrame::Start(int port) {
 //Handler
 
 void ServerFrame::LoginPage(const Request& req, Response& resp) const {
-
   //Try to get username from cookie
   const char* ptr = get_header_value(req.headers, "Cookie");
   std::shared_lock sl(shared_mtx_user_manager_);
@@ -219,7 +219,6 @@ void ServerFrame::DoRegistration(const Request& req, Response& resp) {
 }
 
 void ServerFrame::DoLogout(const Request& req, Response& resp) {
-  
   //Get cookie and try to erase cookie from map in usermanager.
   const char* ptr = get_header_value(req.headers, "Cookie");
   std::shared_lock sl(shared_mtx_user_manager_);
@@ -230,40 +229,27 @@ void ServerFrame::DoLogout(const Request& req, Response& resp) {
 }
 
 void ServerFrame::DelUser(const Request& req, Response& resp) {
-  //Get cookie and try to get username from usermanager.
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-  //Sent controller value-page as respond.
-  if (username != "") {
-    std::unique_lock ul(shared_mtx_user_manager_);
-    user_manager_.DeleteUser(username);
-    ul.unlock();
-    resp.status=200;
-  }
-  //If user couldn't be found, do nothing, redirect to login page.
-  else {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-    return;
-  }
+  // Get cookie and try to get username from usermanager.
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
+
+  // Delete user.
+  std::unique_lock ul(shared_mtx_user_manager_);
+  user_manager_.DeleteUser(username);
+  ul.unlock();
+  resp.status=200;
 }
 void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup) 
     const {
   //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
+
   std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
   User* user = user_manager_.GetUser(username);
   sl.unlock();
 
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-  }
-  else if (user->CheckAccessToLocations(req.matches[0]) == false &&
+  if (user->CheckAccessToLocations(req.matches[0]) == false &&
       req.matches.size() > 1) {
     resp.status = 302;
     resp.set_header("Location", "/overview");
@@ -291,19 +277,11 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
 }
 
 void ServerFrame::AddElem(const Request& req, Response& resp) {
+  std::cout << "AddElem()" << std::endl;
   //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
 
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-    return;
-  }
-  
   //Try to parse json
   std::string name, path;
   bool force = false;
@@ -319,12 +297,12 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
     resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
     return;
   }
-  
-  //Get user
-  sl.lock();
-  User* user = user_manager_.GetUser(username);
 
+  //Get user
+  std::shared_lock sl(shared_mtx_user_manager_);
+  User* user = user_manager_.GetUser(username);
   sl.unlock();
+
   int error_code = ErrorCodes::WRONG_FORMAT;
   //Check whether user has access to this location
   if (user->CheckAccessToLocations(path) == false &&
@@ -350,17 +328,8 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
 
 void ServerFrame::DelElem(const Request& req, Response& resp) {
   //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-    return;
-  }
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
   
   //Try to parse json
   std::string name, path;
@@ -377,10 +346,10 @@ void ServerFrame::DelElem(const Request& req, Response& resp) {
   }
   
   //Get user
-  sl.lock();
+  std::shared_lock sl(shared_mtx_user_manager_);
   User* user = user_manager_.GetUser(username);
-
   sl.unlock();
+
   int error_code = ErrorCodes::WRONG_FORMAT;
   //Check whether user has access to this location
   if (user->CheckAccessToLocations(path) == false &&
@@ -404,42 +373,24 @@ void ServerFrame::DelElem(const Request& req, Response& resp) {
 
 void ServerFrame::WriteObject(const Request& req, Response& resp) {
   //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
+  
   std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
+  //Call matching function.
+  int error_code = user_manager_.GetUser(username)->WriteObject(req.body);
   sl.unlock();
-
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-  }
-  else {
-    sl.lock();
-    //Call matching function.
-    int error_code = user_manager_.GetUser(username)->WriteObject(req.body);
-    sl.unlock();
-    if (error_code == ErrorCodes::SUCCESS)
-      resp.status = 200;
-    else
-      resp.status = 401;
-    resp.set_content(std::to_string(error_code), "text/txt");
-  }
+  if (error_code == ErrorCodes::SUCCESS)
+    resp.status = 200;
+  else
+    resp.status = 401;
+  resp.set_content(std::to_string(error_code), "text/txt");
 }
 
 void ServerFrame::Backups(const Request& req, Response& resp, std::string action) {
   //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-    return;
-  }
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
 
   //Parse user, backup and world from request
   std::string user, world, backup, path;
@@ -457,7 +408,7 @@ void ServerFrame::Backups(const Request& req, Response& resp, std::string action
     return;
   }
 
-  sl.lock();
+  std::shared_lock sl(shared_mtx_user_manager_);
   //Call matching function.
   int error_code = false;
   if (user_manager_.GetUser(username)->CheckAccessToLocations(path) == false)
@@ -481,17 +432,8 @@ void ServerFrame::Backups(const Request& req, Response& resp, std::string action
 
 void ServerFrame::GrantAccessTo(const Request& req, Response& resp) {
   //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-  
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-    return;
-  }
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
   
   std::string user2, world;
   try {
@@ -506,7 +448,7 @@ void ServerFrame::GrantAccessTo(const Request& req, Response& resp) {
     return;
   }
 
-  sl.lock();
+  std::shared_lock sl(shared_mtx_user_manager_);
   int error_code = user_manager_.GrantAccessTo(username, user2, world);
   if (error_code == ErrorCodes::SUCCESS)
     resp.status = 200;
@@ -516,18 +458,9 @@ void ServerFrame::GrantAccessTo(const Request& req, Response& resp) {
 }
 
 void ServerFrame::CreateRequest(const Request& req, Response& resp) {
-  //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-  
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-    return;
-  }
+  // Try to get username from cookie.
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
 
   std::string user2, world;
   try {
@@ -541,7 +474,7 @@ void ServerFrame::CreateRequest(const Request& req, Response& resp) {
     resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
     return;
   }
-  sl.lock();
+  std::shared_lock sl(shared_mtx_user_manager_);
   if (user_manager_.GetUser(user2)->AddRequest(username, world) == false)
     resp.status = 401;
   else
@@ -550,43 +483,21 @@ void ServerFrame::CreateRequest(const Request& req, Response& resp) {
  
 void ServerFrame::CheckRunning(const Request& req, Response& resp) {
   //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-  
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-    return;
-  }
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
 
-  sl.lock();
+  std::shared_lock sl(shared_mtx_user_manager_);
   bool success = user_manager_.GetUser(username)->CheckGameRunning(req.body);
-  if (success == true) {
-    std::cout << "CheckRunning: success." << std::endl;
+  if (success == true) 
     resp.status = 200;
-  }
-  else {
+  else 
     resp.status = 401;
-    std::cout << "CheckRunning: failed." << std::endl;
-  }
 }
 
 void ServerFrame::GetLog(const Request& req, Response& resp) {
   //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-  
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-    return;
-  }
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
 
   size_t pos = req.body.find("/files/");
   std::string user = req.body.substr(1, req.body.find("/", 1));
@@ -608,17 +519,8 @@ void ServerFrame::GetLog(const Request& req, Response& resp) {
 
 void ServerFrame::StartGame(const Request& req, Response& resp) {
   //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-  
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-    return;
-  }
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
 
   //Extract data from path and build path to textadventure.
   std::string user = req.body.substr(1, req.body.find("/", 1)-1);
@@ -630,7 +532,7 @@ void ServerFrame::StartGame(const Request& req, Response& resp) {
   }
 
   //Get port
-  sl.lock();
+  std::shared_lock sl(shared_mtx_user_manager_);
   std::string port = std::to_string(user_manager_.GetPortOfWorld(user, world));
   sl.unlock();
 
@@ -642,6 +544,21 @@ void ServerFrame::StartGame(const Request& req, Response& resp) {
   resp.status = 200;
 }
 
+std::string ServerFrame::CheckLogin(const Request& req, Response& resp) const { 
+  //Try to get username from cookie
+  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::shared_lock sl(shared_mtx_user_manager_);
+  std::string username = user_manager_.GetUserFromCookie(ptr);
+  sl.unlock();
+  
+  //If user does not exist, redirect to login-page.
+  if (username == "") {
+    resp.status = 302;
+    resp.set_header("Location", "/login");
+    return "";
+  }
+  return username;
+}
 
 bool ServerFrame::IsRunning() {
   return server_.is_running();

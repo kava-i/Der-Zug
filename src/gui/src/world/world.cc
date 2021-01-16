@@ -48,6 +48,7 @@ ErrorCodes World::DelElem(std::string path, std::string name, bool force) {
       return ErrorCodes::SUCCESS;
     }
     else {
+      std::cout << "Game not running, undoing changes!" << std::endl;
       paths_.at(path)->UndoDelElem();
       return ErrorCodes::GAME_NOT_RUNNING;
     }

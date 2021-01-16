@@ -172,6 +172,8 @@ class ServerFrame {
     httplib::Server server_;  //Server
     UserManager user_manager_;  ///< currently class, later database with all users
     mutable std::shared_mutex shared_mtx_user_manager_;
+
+    std::string CheckLogin(const httplib::Request& req, httplib::Response& resp) const;
 };
 
 #endif
