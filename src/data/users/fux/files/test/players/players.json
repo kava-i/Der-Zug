@@ -1,0 +1,8 @@
+{
+  "_admin":{
+    "id":"_admin",
+    "name":"Admin",
+    "password":"password",
+    "room":"test_test_room"
+  }
+}

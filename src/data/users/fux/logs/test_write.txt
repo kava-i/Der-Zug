@@ -1,109 +1,28 @@
 Creating game.
-Room: "test_test_room"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "test_test_room"
 Created all rooms 
 worldFactory: done.
 Done parsing world.
 Parsing players... 
-Room: "test_test_room"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "test_test_room"
-Created all rooms 
-worldFactory: done.
-initializing context stack.
-Done.
-Room: "test_test_room"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "test_test_room"
-Created all rooms 
-worldFactory: done.
-initializing context stack.
-Done.
-Room: "test_test_room"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "test_test_room"
-Created all rooms 
-worldFactory: done.
-initializing context stack.
-Done.
-Room: "test_test_room"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "test_test_room"
-Created all rooms 
-worldFactory: done.
-initializing context stack.
-Done.
+Room: "test_test_room" not found!
 Finished parsing!
-[1;31mEvents: show room, from: startGame[0m
-[1;31mshow, room[0m
-[1;34mfirst[0m throwing: show|room
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mworld[0m throwing: show|room
-[1;34mroom[0m throwing: show|room
-[1;34mstandard[0m throwing: show|room
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-[1;31mEvents: show room, from: CGame::play[0m
-[1;31mshow, room[0m
-[1;34mfirst[0m throwing: show|room
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mworld[0m throwing: show|room
-[1;34mroom[0m throwing: show|room
-[1;34mstandard[0m throwing: show|room
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-[1;31mEvents: show exits, from: CGame::play[0m
-[1;31mshow, exits[0m
-[1;34mfirst[0m throwing: show|exits
-Calling:  show exits!
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mworld[0m throwing: show|exits
-[1;34mroom[0m throwing: show|exits
-[1;34mstandard[0m throwing: show|exits
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-[1;31mEvents: show people, from: CGame::play[0m
-[1;31mshow, people[0m
-[1;34mfirst[0m throwing: show|people
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mworld[0m throwing: show|people
-[1;34mselect[0m throwing: show|people
-[1;34mroom[0m throwing: show|people
-[1;34mstandard[0m throwing: show|people
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-[1;31mEvents: show items, from: CGame::play[0m
-[1;31mshow, items[0m
-[1;34mfirst[0m throwing: show|items
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mworld[0m throwing: show|items
-[1;34mselect[0m throwing: show|items
-[1;34mselect[0m throwing: show|items
-[1;34mroom[0m throwing: show|items
-[1;34mstandard[0m throwing: show|items
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-[1;31mEvents: show details, from: CGame::play[0m
-[1;31mshow, details[0m
-[1;34mfirst[0m throwing: show|details
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mworld[0m throwing: show|details
-[1;34mselect[0m throwing: show|details
-[1;34mselect[0m throwing: show|details
-[1;34mroom[0m throwing: show|details
-[1;34mstandard[0m throwing: show|details
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Player _admin not found.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+testing.o is a Catch v2.13.0 host application.
+Run with -? for options
+
+-------------------------------------------------------------------------------
+Testadventure is starting
+-------------------------------------------------------------------------------
+../src/testing/test_startup.cc:11
+...............................................................................
+
+../src/testing/test_startup.cc:19: FAILED:
+  REQUIRE( game.startGame("", params->txtad_player(), nullptr) != "" )
+with expansion:
+  "" != ""
+
 ===============================================================================
-All tests passed (6 assertions in 1 test case)
+test cases: 1 | 1 failed
+assertions: 1 | 1 failed
 
