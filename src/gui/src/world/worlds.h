@@ -12,6 +12,7 @@
 
 #include <nlohmann/json.hpp>
 #include <inja/inja.hpp>
+#include "util/error_codes.h"
 #include "util/func.h"
 #include "world.h"
 
@@ -37,7 +38,25 @@ class Worlds {
     ~Worlds();
 
     // public methods:
-    
+
+    /**
+     * Add new element:  directory, files or object.
+     * @param[in] path to category or area.
+     * @param[in] name of directory, file or object.
+     * @param[in] force indicate whether to create althouh game might crash.
+     * @return ErrorCode indicating success/ error.
+     */
+    ErrorCodes AddElem(std::string path, std::string name, bool force=false);
+
+    /**
+     * Delete new element:  directory, files or object.
+     * @param[in] path to category or area.
+     * @param[in] name of directory, file or object.
+     * @param[in] force indicate whether to delete although game might crash.
+     * @return ErrorCode indicating success/ error.
+     */
+    ErrorCodes DelElem(std::string path, std::string name, bool force=false);
+
     /**
      * Seves page of requested category/ object.
      * Acctually get json-data and path to tempate, then calls ParseTemplate().
@@ -45,7 +64,7 @@ class Worlds {
      * @return rendered page.
      */
     std::string GetPage(std::string path);
-
+    
   private:
     // member variables:
     int ports_;
@@ -61,6 +80,14 @@ class Worlds {
      * @return rendered page.
      */
     std::string ParseTemplate(nlohmann::json json);
+
+    /**
+     * Finds world in worlds.
+     * Checks if world-path is contained in given base_path + (url-) path.
+     * @param[in] path as url path.
+     * @return world, or nullptr if not found.
+     */
+    World* GetWorld(std::string path);
 };
 
 #endif

@@ -1,4 +1,8 @@
 #include "world.h"
+#include "util/error_codes.h"
+#include <iostream>
+#include <ostream>
+#include <string>
 
 namespace fs = std::filesystem;
 
@@ -6,8 +10,49 @@ World::World(std::string base_path, std::string path, int port) {
   base_path_ = base_path;
   path_ = path;
   port_ = port;
+  std::string temp = path.substr(base_path.length()+1);
+  name_ = temp.substr(temp.rfind("/")+1);
+  creator_ = temp.substr(0, temp.find("/"));
   InitializePaths(path_);
   UpdateShortPaths();
+}
+
+ErrorCodes World::AddElem(std::string path, std::string name, bool force) {
+  std::cout << "World::AddElem(" << path << ")" << std::endl;
+  if (paths_.count(path) > 0) {
+    ErrorCodes error_code = paths_.at(path)->AddElem(path, name);
+    if (error_code != ErrorCodes::SUCCESS) 
+      return error_code;
+    if (IsGameRunning() || force) {
+      InitializePaths(path_);
+      UpdateShortPaths();
+      return ErrorCodes::SUCCESS;
+    }
+    else {
+      paths_.at(path)->DelElem(path, name);
+      return ErrorCodes::GAME_NOT_RUNNING;
+    }
+  }
+  return ErrorCodes::PATH_NOT_FOUND;
+}
+
+ErrorCodes World::DelElem(std::string path, std::string name, bool force) {
+  std::cout << "World::DelElem(" << path << ")" << std::endl;
+  if (paths_.count(path) > 0) {
+    ErrorCodes error_code = paths_.at(path)->DelElem(path, name);
+    if (error_code != ErrorCodes::SUCCESS) 
+      return error_code;
+    if (IsGameRunning() || force) {
+      InitializePaths(path_);
+      UpdateShortPaths();
+      return ErrorCodes::SUCCESS;
+    }
+    else {
+      paths_.at(path)->UndoDelElem();
+      return ErrorCodes::GAME_NOT_RUNNING;
+    }
+  }
+  return ErrorCodes::PATH_NOT_FOUND;
 }
 
 nlohmann::json World::GetPage(std::string path) {
@@ -47,6 +92,7 @@ void World::InitializePaths(std::string path) {
         std::cout << "skiped list type." << std::endl;
     }
   }
+  std::cout << std::endl;
 }
 
 void World::UpdateShortPaths() {
@@ -57,4 +103,27 @@ void World::UpdateShortPaths() {
 World::~World() {
   for (auto it : paths_) 
     delete it.second;
+}
+
+bool World::IsGameRunning() {
+  //Create command
+  std::string command = "./../../textadventure/build/bin/testing.o "
+    "--path ../../data/users/" + creator_+"/files/" + name_ + "/";
+  
+  //Get players from players.json
+  nlohmann::json players;
+  if (func::LoadJsonFromDisc(path_ + "/players/players.json", players) == false) 
+    return false;
+  //Run game with every existing player.
+  bool success = true;
+  for (auto it=players.begin(); it!=players.end(); it++) {
+    std::cout << "PLAYER: " << it.value() << std::endl;
+    std::string test_p = command + " -p " + it.key() +
+      " > ../../data/users/" + creator_ + "/logs/" + name_ + "_write.txt";
+    if (system(test_p.c_str()) != 0) 
+      success = false;
+    std::cout << "Running with player \"" << it.key() << "\": " << success << std::endl;
+  }
+  std::cout << std::endl;
+  return success;
 }

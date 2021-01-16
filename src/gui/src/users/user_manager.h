@@ -29,6 +29,9 @@ class UserManager {
      */
     UserManager(std::string path, std::vector<std::string> categories);
 
+    // getter:
+    Worlds* worlds() const;
+
     /**
      * Returns given user, if exists
      * @param[in] username
@@ -118,8 +121,6 @@ class UserManager {
 
     int GetPortOfWorld(std::string user, std::string world) const;
 
-    std::string GetPage(std::string path) const;
-   
   private:
     std::map<std::string, User*> users_;  ///< Map of all users.
     mutable std::shared_mutex shared_mutex_users_;

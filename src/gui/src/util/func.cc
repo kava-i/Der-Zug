@@ -4,6 +4,7 @@
 #include <codecvt>
  
 #include <exception>
+#include <fstream>
 #include <openssl/evp.h>
 #include <openssl/sha.h>
 
@@ -81,14 +82,33 @@ bool LoadJsonFromDisc(std::string path, nlohmann::json& json) {
     std::cout << "Path: " << path << " not found!" << std::endl; 
     return false;
   }
+  std::ifstream read(path);
   try {
-    std::ifstream read(path);
     read >> json;
     read.close();
     return true;
   }
   catch (std::exception& e) {
     std::cout << "Failed loading object: " << e.what() << std::endl;
+    read.close();
+    return false;
+  }
+}
+
+bool WriteJsonToDisc(std::string path, nlohmann::json& json) {
+  if (!demo_exists(path)) {
+    std::cout << "Path: " << path << " not found!" << std::endl; 
+    return false;
+  }
+  std::ofstream write(path);
+  try {
+    write << json;
+    write.close();
+    return true;
+  }
+  catch (std::exception& e) {
+    std::cout << "Failed writing object: " << e.what() << std::endl;
+    write.close();
     return false;
   }
 }

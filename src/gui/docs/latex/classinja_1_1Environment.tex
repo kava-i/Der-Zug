@@ -1,0 +1,117 @@
+\hypertarget{classinja_1_1Environment}{}\doxysection{inja\+::Environment Class Reference}
+\label{classinja_1_1Environment}\index{inja::Environment@{inja::Environment}}
+
+
+Class for changing the configuration.  
+
+
+
+
+{\ttfamily \#include $<$inja.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_ad595ffe318565821b5265a3f05b2cefd}\label{classinja_1_1Environment_ad595ffe318565821b5265a3f05b2cefd}} 
+{\bfseries Environment} (const std\+::string \&global\+\_\+path)
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a2a93973e23ede7f154cf99c25e7a8cf9}\label{classinja_1_1Environment_a2a93973e23ede7f154cf99c25e7a8cf9}} 
+{\bfseries Environment} (const std\+::string \&input\+\_\+path, const std\+::string \&output\+\_\+path)
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a3de73df9dc768bd00633a41a58fb5d41}\label{classinja_1_1Environment_a3de73df9dc768bd00633a41a58fb5d41}} 
+void \mbox{\hyperlink{classinja_1_1Environment_a3de73df9dc768bd00633a41a58fb5d41}{set\+\_\+statement}} (const std\+::string \&open, const std\+::string \&close)
+\begin{DoxyCompactList}\small\item\em Sets the opener and closer for template statements. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a7325934e8d2fcfd2753604830519342e}\label{classinja_1_1Environment_a7325934e8d2fcfd2753604830519342e}} 
+void \mbox{\hyperlink{classinja_1_1Environment_a7325934e8d2fcfd2753604830519342e}{set\+\_\+line\+\_\+statement}} (const std\+::string \&open)
+\begin{DoxyCompactList}\small\item\em Sets the opener for template line statements. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classinja_1_1Environment_aa5cca8f0975585166e24c2c8ee7b064c}\label{classinja_1_1Environment_aa5cca8f0975585166e24c2c8ee7b064c}} 
+void \mbox{\hyperlink{classinja_1_1Environment_aa5cca8f0975585166e24c2c8ee7b064c}{set\+\_\+expression}} (const std\+::string \&open, const std\+::string \&close)
+\begin{DoxyCompactList}\small\item\em Sets the opener and closer for template expressions. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a7068e0cde9fdf7d3260930694e185ccb}\label{classinja_1_1Environment_a7068e0cde9fdf7d3260930694e185ccb}} 
+void \mbox{\hyperlink{classinja_1_1Environment_a7068e0cde9fdf7d3260930694e185ccb}{set\+\_\+comment}} (const std\+::string \&open, const std\+::string \&close)
+\begin{DoxyCompactList}\small\item\em Sets the opener and closer for template comments. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a6825801f1d4b98728b71056dddf44a85}\label{classinja_1_1Environment_a6825801f1d4b98728b71056dddf44a85}} 
+void \mbox{\hyperlink{classinja_1_1Environment_a6825801f1d4b98728b71056dddf44a85}{set\+\_\+trim\+\_\+blocks}} (bool trim\+\_\+blocks)
+\begin{DoxyCompactList}\small\item\em Sets whether to remove the first newline after a block. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a7020420515499399b851f03da31b685d}\label{classinja_1_1Environment_a7020420515499399b851f03da31b685d}} 
+void \mbox{\hyperlink{classinja_1_1Environment_a7020420515499399b851f03da31b685d}{set\+\_\+lstrip\+\_\+blocks}} (bool lstrip\+\_\+blocks)
+\begin{DoxyCompactList}\small\item\em Sets whether to strip the spaces and tabs from the start of a line to a block. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a5a7f1d50859105cad3acad42024180f8}\label{classinja_1_1Environment_a5a7f1d50859105cad3acad42024180f8}} 
+void \mbox{\hyperlink{classinja_1_1Environment_a5a7f1d50859105cad3acad42024180f8}{set\+\_\+search\+\_\+included\+\_\+templates\+\_\+in\+\_\+files}} (bool search\+\_\+in\+\_\+files)
+\begin{DoxyCompactList}\small\item\em Sets the element notation syntax. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a3306a8128013daff4e00b5b55e84f995}\label{classinja_1_1Environment_a3306a8128013daff4e00b5b55e84f995}} 
+void \mbox{\hyperlink{classinja_1_1Environment_a3306a8128013daff4e00b5b55e84f995}{set\+\_\+throw\+\_\+at\+\_\+missing\+\_\+includes}} (bool will\+\_\+throw)
+\begin{DoxyCompactList}\small\item\em Sets whether a missing include will throw an error. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classinja_1_1Environment_ac27bbd7d7789e3e6901fc6b16d4d8c5c}\label{classinja_1_1Environment_ac27bbd7d7789e3e6901fc6b16d4d8c5c}} 
+\mbox{\hyperlink{structinja_1_1Template}{Template}} {\bfseries parse} (nonstd\+::string\+\_\+view input)
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_aa46ccc27cc803933e0bfc9f58bba389c}\label{classinja_1_1Environment_aa46ccc27cc803933e0bfc9f58bba389c}} 
+\mbox{\hyperlink{structinja_1_1Template}{Template}} {\bfseries parse\+\_\+template} (const std\+::string \&filename)
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a988701e4eb7fef51f2a3bd5ec74dd156}\label{classinja_1_1Environment_a988701e4eb7fef51f2a3bd5ec74dd156}} 
+\mbox{\hyperlink{structinja_1_1Template}{Template}} {\bfseries parse\+\_\+file} (const std\+::string \&filename)
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a893933bf9e7fb5be093ecf1208e1b268}\label{classinja_1_1Environment_a893933bf9e7fb5be093ecf1208e1b268}} 
+std\+::string {\bfseries render} (nonstd\+::string\+\_\+view input, const json \&data)
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a3e4c7b484618c69656f6af463d6f775e}\label{classinja_1_1Environment_a3e4c7b484618c69656f6af463d6f775e}} 
+std\+::string {\bfseries render} (const \mbox{\hyperlink{structinja_1_1Template}{Template}} \&tmpl, const json \&data)
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_aaefdd9061b23f1764056689fe8c31e30}\label{classinja_1_1Environment_aaefdd9061b23f1764056689fe8c31e30}} 
+std\+::string {\bfseries render\+\_\+file} (const std\+::string \&filename, const json \&data)
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a6e6c345cd66ebdfe8a9d47d59efb5e84}\label{classinja_1_1Environment_a6e6c345cd66ebdfe8a9d47d59efb5e84}} 
+std\+::string {\bfseries render\+\_\+file\+\_\+with\+\_\+json\+\_\+file} (const std\+::string \&filename, const std\+::string \&filename\+\_\+data)
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_ab9334d7f4ebb85f36dcc27e1ecae2f3d}\label{classinja_1_1Environment_ab9334d7f4ebb85f36dcc27e1ecae2f3d}} 
+void {\bfseries write} (const std\+::string \&filename, const json \&data, const std\+::string \&filename\+\_\+out)
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a832e72bad384f9c59f587ff73eb9a235}\label{classinja_1_1Environment_a832e72bad384f9c59f587ff73eb9a235}} 
+void {\bfseries write} (const \mbox{\hyperlink{structinja_1_1Template}{Template}} \&temp, const json \&data, const std\+::string \&filename\+\_\+out)
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_ad3e8c39b341641a872e62010693c27c3}\label{classinja_1_1Environment_ad3e8c39b341641a872e62010693c27c3}} 
+void {\bfseries write\+\_\+with\+\_\+json\+\_\+file} (const std\+::string \&filename, const std\+::string \&filename\+\_\+data, const std\+::string \&filename\+\_\+out)
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a9c6eb9a291cf99615991f999128248a7}\label{classinja_1_1Environment_a9c6eb9a291cf99615991f999128248a7}} 
+void {\bfseries write\+\_\+with\+\_\+json\+\_\+file} (const \mbox{\hyperlink{structinja_1_1Template}{Template}} \&temp, const std\+::string \&filename\+\_\+data, const std\+::string \&filename\+\_\+out)
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a413fa0967b1a71b1eacf8257a1ee27b7}\label{classinja_1_1Environment_a413fa0967b1a71b1eacf8257a1ee27b7}} 
+std\+::ostream \& {\bfseries render\+\_\+to} (std\+::ostream \&os, const \mbox{\hyperlink{structinja_1_1Template}{Template}} \&tmpl, const json \&data)
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a686f69e3cb4f91d439aadadfc60e1ebb}\label{classinja_1_1Environment_a686f69e3cb4f91d439aadadfc60e1ebb}} 
+std\+::string {\bfseries load\+\_\+file} (const std\+::string \&filename)
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a63883423839a4c9651997e14ee9bd10b}\label{classinja_1_1Environment_a63883423839a4c9651997e14ee9bd10b}} 
+json {\bfseries load\+\_\+json} (const std\+::string \&filename)
+\item 
+\mbox{\Hypertarget{classinja_1_1Environment_aacf2afb515ec7efb0b844174093fed6d}\label{classinja_1_1Environment_aacf2afb515ec7efb0b844174093fed6d}} 
+void \mbox{\hyperlink{classinja_1_1Environment_aacf2afb515ec7efb0b844174093fed6d}{add\+\_\+callback}} (const std\+::string \&name, const Callback\+Function \&callback)
+\begin{DoxyCompactList}\small\item\em Adds a variadic callback. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classinja_1_1Environment_abf3676db94a59534d715e83f4d5e4940}\label{classinja_1_1Environment_abf3676db94a59534d715e83f4d5e4940}} 
+void \mbox{\hyperlink{classinja_1_1Environment_abf3676db94a59534d715e83f4d5e4940}{add\+\_\+void\+\_\+callback}} (const std\+::string \&name, const Void\+Callback\+Function \&callback)
+\begin{DoxyCompactList}\small\item\em Adds a variadic void callback. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classinja_1_1Environment_accda3196054131f8e8cd484ef92c0627}\label{classinja_1_1Environment_accda3196054131f8e8cd484ef92c0627}} 
+void \mbox{\hyperlink{classinja_1_1Environment_accda3196054131f8e8cd484ef92c0627}{add\+\_\+callback}} (const std\+::string \&name, int num\+\_\+args, const Callback\+Function \&callback)
+\begin{DoxyCompactList}\small\item\em Adds a callback with given number or arguments. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classinja_1_1Environment_a3467986ae633a7c546a62c387b6c613f}\label{classinja_1_1Environment_a3467986ae633a7c546a62c387b6c613f}} 
+void \mbox{\hyperlink{classinja_1_1Environment_a3467986ae633a7c546a62c387b6c613f}{add\+\_\+void\+\_\+callback}} (const std\+::string \&name, int num\+\_\+args, const Void\+Callback\+Function \&callback)
+\begin{DoxyCompactList}\small\item\em Adds a void callback with given number or arguments. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classinja_1_1Environment_ab34fc09b61acaaefbbe891036f049670}{include\+\_\+template}} (const std\+::string \&name, const \mbox{\hyperlink{structinja_1_1Template}{Template}} \&tmpl)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class for changing the configuration. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classinja_1_1Environment_ab34fc09b61acaaefbbe891036f049670}\label{classinja_1_1Environment_ab34fc09b61acaaefbbe891036f049670}} 
+\index{inja::Environment@{inja::Environment}!include\_template@{include\_template}}
+\index{include\_template@{include\_template}!inja::Environment@{inja::Environment}}
+\doxysubsubsection{\texorpdfstring{include\_template()}{include\_template()}}
+{\footnotesize\ttfamily void inja\+::\+Environment\+::include\+\_\+template (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{name,  }\item[{const \mbox{\hyperlink{structinja_1_1Template}{Template}} \&}]{tmpl }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+Includes a template with a given name into the environment. Then, a template can be rendered in another template using the include \char`\"{}$<$name$>$\char`\"{} syntax. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/fux/\+Documents/programming/\+Der-\/\+Zug/src/gui/src/users/inja.\+hpp\end{DoxyCompactItemize}

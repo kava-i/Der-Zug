@@ -1,0 +1,103 @@
+\hypertarget{classPage}{}\doxysection{Page Class Reference}
+\label{classPage}\index{Page@{Page}}
+
+
+{\ttfamily \#include $<$page.\+h$>$}
+
+Inheritance diagram for Page\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classPage}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPage_a62f135eb1f453f57e7539f5428627f07}\label{classPage_a62f135eb1f453f57e7539f5428627f07}} 
+{\bfseries Page} (std\+::string base\+\_\+path, std\+::string path)
+\item 
+virtual nlohmann\+::json \mbox{\hyperlink{classPage_a5c4760de66283f191b42fbf6c9264031}{Create\+Page\+Data}} (std\+::string path)
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{classPage_af1e242210819c62eae9a745885eb84f4}{Generate\+Parent\+Nodes}} ()
+\item 
+virtual void \mbox{\hyperlink{classPage_a19a95ca5368d37c66bd456a223abac2c}{Generate\+Child\+Nodes}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPage_afd51bdd301720cedda7336ade36fbc25}\label{classPage_afd51bdd301720cedda7336ade36fbc25}} 
+std\+::string {\bfseries base\+\_\+path\+\_\+}
+\item 
+\mbox{\Hypertarget{classPage_ab2886a25a8964e220d1c1253e157928d}\label{classPage_ab2886a25a8964e220d1c1253e157928d}} 
+std\+::string {\bfseries path\+\_\+}
+\item 
+\mbox{\Hypertarget{classPage_a5ba6d82031a4c512fe810f7e8b77cf26}\label{classPage_a5ba6d82031a4c512fe810f7e8b77cf26}} 
+std\+::string {\bfseries name\+\_\+}
+\item 
+std\+::map$<$ std\+::string, std\+::string $>$ \mbox{\hyperlink{classPage_af18d0ba31620a923fbf0623e87f676c3}{child\+\_\+nodes\+\_\+}}
+\item 
+std\+::map$<$ std\+::string, std\+::string $>$ \mbox{\hyperlink{classPage_a6fb8f3b5ffe05a7457bae9678c103993}{parent\+\_\+nodes\+\_\+}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+fux Base class for pages. Class is abstract and never instaciated. Also storing all parents and child-\/nodes. 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classPage_a5c4760de66283f191b42fbf6c9264031}\label{classPage_a5c4760de66283f191b42fbf6c9264031}} 
+\index{Page@{Page}!CreatePageData@{CreatePageData}}
+\index{CreatePageData@{CreatePageData}!Page@{Page}}
+\doxysubsubsection{\texorpdfstring{CreatePageData()}{CreatePageData()}}
+{\footnotesize\ttfamily nlohmann\+::json Page\+::\+Create\+Page\+Data (\begin{DoxyParamCaption}\item[{std\+::string}]{path }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+Creates data for page\+: json-\/data \& path to matching templae. Used by category and area, however not for objects. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em path} & path to target page. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+json with information. 
+\end{DoxyReturn}
+
+
+Reimplemented in \mbox{\hyperlink{classCategory_aac69c7e21286c0cb8f0b5ebfe425fdf4}{Category}}, and \mbox{\hyperlink{classArea_a9b9c78d379e29debf20c89e2d0a59d48}{Area}}.
+
+\mbox{\Hypertarget{classPage_a19a95ca5368d37c66bd456a223abac2c}\label{classPage_a19a95ca5368d37c66bd456a223abac2c}} 
+\index{Page@{Page}!GenerateChildNodes@{GenerateChildNodes}}
+\index{GenerateChildNodes@{GenerateChildNodes}!Page@{Page}}
+\doxysubsubsection{\texorpdfstring{GenerateChildNodes()}{GenerateChildNodes()}}
+{\footnotesize\ttfamily virtual void Page\+::\+Generate\+Child\+Nodes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}
+
+Updates all child-\/nodes. (Virtual add different for category/ area.) \mbox{\Hypertarget{classPage_af1e242210819c62eae9a745885eb84f4}\label{classPage_af1e242210819c62eae9a745885eb84f4}} 
+\index{Page@{Page}!GenerateParentNodes@{GenerateParentNodes}}
+\index{GenerateParentNodes@{GenerateParentNodes}!Page@{Page}}
+\doxysubsubsection{\texorpdfstring{GenerateParentNodes()}{GenerateParentNodes()}}
+{\footnotesize\ttfamily void Page\+::\+Generate\+Parent\+Nodes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+Generates all parents. (Identical for category and area.) 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classPage_af18d0ba31620a923fbf0623e87f676c3}\label{classPage_af18d0ba31620a923fbf0623e87f676c3}} 
+\index{Page@{Page}!child\_nodes\_@{child\_nodes\_}}
+\index{child\_nodes\_@{child\_nodes\_}!Page@{Page}}
+\doxysubsubsection{\texorpdfstring{child\_nodes\_}{child\_nodes\_}}
+{\footnotesize\ttfamily std\+::map$<$std\+::string, std\+::string$>$ Page\+::child\+\_\+nodes\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+Child nodes. key\+: url-\/path, value\+: child-\/name. \mbox{\Hypertarget{classPage_a6fb8f3b5ffe05a7457bae9678c103993}\label{classPage_a6fb8f3b5ffe05a7457bae9678c103993}} 
+\index{Page@{Page}!parent\_nodes\_@{parent\_nodes\_}}
+\index{parent\_nodes\_@{parent\_nodes\_}!Page@{Page}}
+\doxysubsubsection{\texorpdfstring{parent\_nodes\_}{parent\_nodes\_}}
+{\footnotesize\ttfamily std\+::map$<$std\+::string, std\+::string$>$ Page\+::parent\+\_\+nodes\+\_\+\hspace{0.3cm}{\ttfamily [protected]}}
+
+Parent nodes. key\+: url-\/path, value\+: parent-\/name. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/fux/\+Documents/programming/\+Der-\/\+Zug/src/gui/src/page/page.\+h\item 
+/home/fux/\+Documents/programming/\+Der-\/\+Zug/src/gui/src/page/page.\+cc\end{DoxyCompactItemize}

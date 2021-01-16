@@ -18,6 +18,7 @@
 #include "page/area.h"
 #include "page/category.h"
 #include "page/page.h"
+#include "util/error_codes.h"
 #include "util/func.h"
 
 /**
@@ -41,7 +42,25 @@ class World {
     int port();
 
     // public methods:
-   
+    
+    /**
+     * Add new element:  directory, files or object.
+     * @param[in] path to category or area.
+     * @param[in] name of directory, file or object.
+     * @param[in] force indicate whether to create althouh game might crash.
+     * @return ErrorCode indicating success/ error.
+     */
+    ErrorCodes AddElem(std::string path, std::string name, bool force);
+
+    /**
+     * Delete element:  directory, files or object.
+     * @param[in] path to category or area.
+     * @param[in] name of directory, file or object.
+     * @param[in] force indicate whether to create althouh game might crash.
+     * @return ErrorCode indicating success/ error.
+     */
+    ErrorCodes DelElem(std::string path, std::string name, bool force);
+
     /**
      * Calls GetPage value of referenced page and add short paths to data-json.
      * @param[in] path to category/area/object.
@@ -53,6 +72,8 @@ class World {
     // member variables:
     std::string base_path_;
     std::string path_;
+    std::string name_;
+    std::string creator_;
     int port_; // port=http-server, port+1=websocketserver.
 
     /**
@@ -83,6 +104,12 @@ class World {
      * Generate all "short paths", t.i.~paths as presented in url.
      */
     void UpdateShortPaths();
+
+    /**
+     * Checks if game is running. Runns game with basic tests.
+     * @return boolean indicating success.
+     */
+    bool IsGameRunning();
 };
 
 #endif

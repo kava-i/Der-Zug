@@ -1,4 +1,9 @@
 #include "page.h"
+#include "nlohmann/json.hpp"
+#include "util/error_codes.h"
+#include "util/func.h"
+#include <cctype>
+#include <string>
 
 namespace fs = std::filesystem;
 
@@ -31,4 +36,28 @@ void Page::GenerateParentNodes() {
     path.pop_back();
     parent_nodes_[path] = path_elems[i];
   }
+}
+
+nlohmann::json Page::GetObjectsFromTemplate() {
+  nlohmann::json objects;
+  std::string path_to_templates = base_path_ + "/../templates/" + category_ + ".json";
+  if (!func::LoadJsonFromDisc(path_to_templates, objects))
+    return nlohmann::json({{"error", ErrorCodes::FAILED}});
+  return objects;
+}
+
+nlohmann::json Page::GetObjectFromTemplate(std::string name) {
+  // Get all objects.
+  nlohmann::json objects = GetObjectsFromTemplate();  
+  // Get first (as probably only) object from list. Also: any object will
+  // probably do the job.
+  nlohmann::json object = *objects.begin();
+  // If object has unset id and/ or name field set field to given name.
+  if (object.count("id") > 0 && object["id"] == "") 
+    object["id"] = name;
+  if (object.count("name") > 0 && object["name"] == "") {
+    name[0] = std::toupper(name[0]);
+    object["name"] = name;
+  }
+  return object;
 }

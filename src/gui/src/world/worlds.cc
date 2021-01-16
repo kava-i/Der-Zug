@@ -1,5 +1,7 @@
 #include "worlds.h"
 #include "nlohmann/json.hpp"
+#include "util/error_codes.h"
+#include "world/world.h"
 #include <exception>
 #include <iostream>
 #include <ostream>
@@ -21,32 +23,40 @@ Worlds::Worlds(std::string base_path, int start_port) {
 }
 
 Worlds::~Worlds() {
-  for (auto it : worlds_)
-    delete it.second;
+  for (auto it : worlds_) delete it.second;
 }
 
+ErrorCodes Worlds::AddElem(std::string path, std::string name, bool force) {
+  std::cout << "Worlds::AddElem(" << path << ")" << std::endl;
+  World* world = GetWorld(path);
+  if (world == nullptr) 
+    return ErrorCodes::NO_WORLD;
+  return world->AddElem(base_path_ + path, name, force);
+}
 
+ErrorCodes Worlds::DelElem(std::string path, std::string name, bool force) {
+  std::cout << "Worlds::DelElem(" << path << ")" << std::endl;
+  World* world = GetWorld(path);
+  if (world == nullptr) 
+    return ErrorCodes::NO_WORLD;
+  return world->DelElem(base_path_ + path, name, force);
+}
 
 std::string Worlds::GetPage(std::string path) {
   std::cout << "Worlds::GetPage(" << path << ")" << std::endl;
-  // Builds full path, as only
-  std::string full_path = base_path_ + path;
-  // words are only saved as "[base_path]/[user]/files/[world]" thus use of "find".
-  for (auto it : worlds_) {
-    if (full_path.find(it.first) != std::string::npos) {
-      nlohmann::json json = it.second->GetPage(full_path);
-      return ParseTemplate(json);
-    }
-  }
-  return "No world found.";
+  World* world = GetWorld(path);
+  if (world == nullptr) 
+    return "No world found.";
+  nlohmann::json json = world->GetPage(base_path_ + path);
+  if (json.count("error") > 0) 
+    return json["error"];
+  return ParseTemplate(json);
 }
 
 std::string Worlds::ParseTemplate(nlohmann::json json) {
   std::cout << "Worlds::ParseTemplate()" << std::endl;
-  std::cout << "parents: " << json["header"]["__parents"] << std::endl;
   inja::Environment env;
   inja::Template temp;
-
   env.add_void_callback("log", 1, [](inja::Arguments args) {
 	  std::cout << "logging: " << args.at(0)->get<std::string>() << std::endl;
   });
@@ -82,4 +92,15 @@ std::string Worlds::ParseTemplate(nlohmann::json json) {
   }
   std::cout << std::endl;
   return page;
+}
+
+World* Worlds::GetWorld(std::string path) {
+  // Builds full path, as only
+  std::string full_path = base_path_ + path;
+  // words are only saved as "[base_path]/[user]/files/[world]" thus use of "find".
+  for (auto it : worlds_) {
+    if (full_path.find(it.first) != std::string::npos) 
+      return it.second;
+  }
+  return nullptr;
 }

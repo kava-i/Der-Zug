@@ -5,6 +5,7 @@
 #include "user_manager.h"
 #include "util/func.h"
 #include "util/error_codes.h"
+#include "world/worlds.h"
 
 #include <exception>
 #include <iostream>
@@ -35,6 +36,10 @@ UserManager::UserManager(std::string main_path, std::vector<std::string> cats)
 
   }
   std::cout << users_.size() << " users initialized!" << std::endl;
+}
+
+Worlds* UserManager::worlds() const {
+  return worlds_;
 }
 
 
@@ -259,8 +264,4 @@ int UserManager::GetPortOfWorld(std::string user, std::string world) const {
     std::cout << "World \"" << world << "\" from " << user << " not found.\n";
     return 0;
   }
-}
-
-std::string UserManager::GetPage(std::string path) const {
-  return worlds_->GetPage(path);
 }

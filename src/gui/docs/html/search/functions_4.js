@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['generatechildnodes_171',['GenerateChildNodes',['../classPage.html#a19a95ca5368d37c66bd456a223abac2c',1,'Page']]],
+  ['generatecookie_172',['GenerateCookie',['../classUserManager.html#a674111ca445f99abba44c9b32a288bff',1,'UserManager']]],
+  ['generateparentnodes_173',['GenerateParentNodes',['../classPage.html#af1e242210819c62eae9a745885eb84f4',1,'Page']]],
+  ['getallworlds_174',['GetAllWorlds',['../classUserManager.html#a90ce37ddc974072df4ccf875a0c96bdf',1,'UserManager']]],
+  ['getbackups_175',['GetBackups',['../classUser.html#ae1130e22b5e62a6a8ba29b43d07662b1',1,'User']]],
+  ['getcategory_176',['GetCategory',['../classUser.html#afe3c1f15f2ce483aae8b778d07d36bba',1,'User']]],
+  ['getlog_177',['GetLog',['../classServerFrame.html#a6d7b8653b56f5765d499c0b7a95d8ab0',1,'ServerFrame']]],
+  ['getnextport_178',['GetNextPort',['../classUserManager.html#aaaf10ae29eef7c63395a5238fb6e178d',1,'UserManager']]],
+  ['getobjects_179',['GetObjects',['../classUser.html#ab2624b2b405e56405459e3176a25ce81',1,'User']]],
+  ['getoverview_180',['GetOverview',['../classUser.html#ad6867a65fc236faa70236d838c6b0839',1,'User']]],
+  ['getpage_181',['GetPage',['../classWorld.html#aa1d58b63f932da9501b7ac0cf174e9aa',1,'World::GetPage()'],['../classWorlds.html#aba3ad5861c761c0219e7358bbec497c5',1,'Worlds::GetPage()']]],
+  ['getportofworld_182',['GetPortOfWorld',['../classUser.html#ab4cb0afb43b43b6844ba998066248b1c',1,'User']]],
+  ['getsharedworlds_183',['GetSharedWorlds',['../classUserManager.html#ac3eaf3e9e0e62a8d2824565cea24e73b',1,'UserManager']]],
+  ['getuser_184',['GetUser',['../classUserManager.html#ac17d64d888e553cbf5ec9e0a3befc8a8',1,'UserManager']]],
+  ['getuserfromcookie_185',['GetUserFromCookie',['../classUserManager.html#acaf99c9f0b188ffe89c7be3789947874',1,'UserManager']]],
+  ['getworld_186',['GetWorld',['../classUser.html#a7a031063a9c9d49a5277af84e5038cbf',1,'User']]],
+  ['grantaccessto_187',['GrantAccessTo',['../classUserManager.html#aaedccf73c911f07a27c11ce0da5b8686',1,'UserManager::GrantAccessTo()'],['../classServerFrame.html#a93efcb0d91878ac6f60383cd860d067e',1,'ServerFrame::GrantAccessTo()']]]
+];

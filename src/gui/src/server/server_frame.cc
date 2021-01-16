@@ -122,8 +122,6 @@ void ServerFrame::Start(int port) {
       { resp.set_content(func::GetPage("web/fuzzy_finder.js"), 
           "application/javascript");});
 
-
-
   //Images
   server_.Get("/web/background.jpg", [](const Request& req, Response& resp) {
       resp.set_content(func::GetImage("web/images/background.jpg"), "image/jpg");});
@@ -282,7 +280,7 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
       }
       else {
         sl.lock();
-        page = user_manager_.GetPage(req.matches[0]);
+        page = user_manager_.worlds()->GetPage(req.matches[0]);
         sl.unlock();
       } 
     } catch (std::exception& e) {
@@ -333,12 +331,14 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
       req.matches.size() > 1 && req.matches[1] != "world") {
     error_code = ErrorCodes::ACCESS_DENIED;
   }
-  else if (req.matches.size() > 1 && req.matches[1] == "world") 
+  else if (req.matches.size() > 1 && req.matches[1] == "world") {
+    std::cout << "Calling CreateNewWorld()" << std::endl;
     error_code = user->CreateNewWorld(name, user_manager_.GetNextPort());
-  else if (req.matches.size() > 1 && req.matches[1] == "subcategory") 
-    error_code = user->AddFile(path, name);
-  else if (req.matches.size() > 1 && req.matches[1] == "object") 
-    error_code = user->AddNewObject(path, name, force);
+  }
+  else {
+    std::cout << "Calling user_manager_.worlds()->AddElem(...)" << std::endl;
+    error_code = user_manager_.worlds()->AddElem(path, name, force);
+  }
 
   //Check whether action succeeded
   if (error_code == ErrorCodes::SUCCESS) 
@@ -389,11 +389,11 @@ void ServerFrame::DelElem(const Request& req, Response& resp) {
   }
   else if (req.matches.size() > 1 && req.matches[1] == "world")
     error_code = user->DeleteWorld(name);
-  else if (req.matches.size() > 1 && req.matches[1] == "subcategory") 
-    error_code = user->DeleteFile(path, name);
-  else if (req.matches.size() > 1 && req.matches[1] == "object") 
-    error_code = user->DeleteObject(path, name);
-
+  else {
+    std::cout << "Calling user_manager_.worlds()->DelElem(...)" << std::endl;
+    error_code = user_manager_.worlds()->DelElem(path, name, false);
+  }
+  
   //Check whether action succeeded
   if (error_code == ErrorCodes::SUCCESS) 
     resp.status = 200;
