@@ -96,6 +96,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->GetBackups("test", "Test_World").find(backup) != std::string::npos);
 
   //Modify objects and test if this works
+  /*
   nlohmann::json test_room_fail;
   REQUIRE(func::LoadJsonFromDisc("../../data/default_jsons/test_room_fail.json", 
         test_room_fail) == true);
@@ -130,7 +131,6 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   //Check that game is still running
   REQUIRE(system(command.c_str()) == 0);
 
-  //*** Test accesssing and granting access *** //
 
   //create new user
   user_manager.DoRegistration("test2", "password1234", "password1234");
@@ -162,6 +162,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user2->CreateBackup("test", "Test_World") == ErrorCodes::SUCCESS);
   REQUIRE(user2->RestoreBackup("test", "XXBACKUPYY") == ErrorCodes::ACCESS_DENIED);
   REQUIRE(user2->DeleteBackup("test", "XXBACKUPYY") == ErrorCodes::ACCESS_DENIED);
+  */
 
   //Double check that all test-users are deleted
   try {

@@ -13,6 +13,7 @@
 
 #include <httplib.h>
 
+#include "nlohmann/json.hpp"
 #include "users/user_manager.h"
 
 class ServerFrame {
@@ -173,7 +174,20 @@ class ServerFrame {
     UserManager user_manager_;  ///< currently class, later database with all users
     mutable std::shared_mutex shared_mtx_user_manager_;
 
+    /**
+     * Checks whether user is logged in.
+     * Sets http respsonse and redirects to login-page, if not.
+     * @return username or empty string.
+     */
     std::string CheckLogin(const httplib::Request& req, httplib::Response& resp) const;
+
+    /**
+     * Checks whether given keys are in json.
+     * Sets http response to parse-error if keys are not in request-json.
+     * @return json with all keys present, or empty json.
+     */
+    nlohmann::json ValidateJson(const httplib::Request& req, httplib::Response& resp,
+        std::vector<std::string> keys) const;
 };
 
 #endif

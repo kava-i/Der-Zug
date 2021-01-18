@@ -154,20 +154,12 @@ void ServerFrame::LoginPage(const Request& req, Response& resp) const {
 }
 
 void ServerFrame::DoLogin(const Request& req, Response& resp) {
-  std::string username = "", pw = "";
-  try {
-    nlohmann::json user_input = nlohmann::json::parse(req.body);
-    username = user_input["username"];
-    pw = user_input["password"];
-  }
-  catch(std::exception& e) {
-    std::cout << "Login failed: " << e.what() << std::endl;
-    resp.status = 401;
-  }
+  nlohmann::json input = ValidateJson(req, resp, {"username", "password"});
+  if (input.empty()) return;
 
   //Call DoLogin, returns "&msg: ..." in case of failure
   std::unique_lock ul(shared_mtx_user_manager_);
-  std::string error = user_manager_.DoLogin(username, pw);
+  std::string error = user_manager_.DoLogin(input["username"], input["password"]);
   ul.unlock();
   
   if (error != "") 
@@ -175,32 +167,20 @@ void ServerFrame::DoLogin(const Request& req, Response& resp) {
   else {
     //std::string cookie = "SESSID=" + GenerateCookie(username) + "; Path=/; SECURE";
     ul.lock();
-    std::string cookie = "SESSID=" + user_manager_.GenerateCookie(username)
+    std::string cookie = "SESSID=" + user_manager_.GenerateCookie(input["username"])
       + "; Path=/";
     ul.unlock();
     resp.set_header("Set-Cookie", cookie.c_str());
-    std::cout << username << " logged in.\n";
   }
 }
 
 void ServerFrame::DoRegistration(const Request& req, Response& resp) {
-  std::string username ="", pw1="", pw2="";
-  try {
-    nlohmann::json user_input = nlohmann::json::parse(req.body);
-    username = user_input["id"];
-    pw1 = user_input["pw1"];
-    pw2 = user_input["pw2"];
-  }
-  catch (std::exception& e) {
-    resp.set_content("Wrong format for username or password", "application/json");
-    std::cout << "Registration failed: " << e.what() << std::endl;
-    return;
-  }
+  nlohmann::json input = ValidateJson(req, resp, {"id", "pw1", "pw2"});
+  if (input.empty()) return;
 
   //Try to register user. Send error code if not possible.
   std::unique_lock ul(shared_mtx_user_manager_);
-  std::cout << "Registering user: " << username << std::endl;
-  std::string error = user_manager_.DoRegistration(username, pw1, pw2);
+  std::string error = user_manager_.DoRegistration(input["id"], input["pw1"], input["pw2"]);
   ul.unlock();
 
   if (error != "") {
@@ -210,11 +190,11 @@ void ServerFrame::DoRegistration(const Request& req, Response& resp) {
   //If exists, log user in, by adding cookie.
   else {
     ul.lock();
-    std::string cookie = "SESSID=" + user_manager_.GenerateCookie(username) 
+    std::string cookie = "SESSID=" + user_manager_.GenerateCookie(input["id"]) 
       + "; Path=/";
     ul.unlock();
     resp.set_header("Set-Cookie", cookie.c_str());
-    std::cout << username << " registered.\n";
+    std::cout << input["id"] << " registered.\n";
   }
 }
 
@@ -283,20 +263,10 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
   if (username == "") return;
 
   //Try to parse json
-  std::string name, path;
-  bool force = false;
-  try {
-    nlohmann::json request = nlohmann::json::parse(req.body);
-    name = request["name"];
-    path = request.value("path", "");
-    force = request.value("force", false);
-  }
-  catch (std::exception& e) {
-    std::cout << "Parsing json failed: " << e.what() << std::endl;
-    resp.status = 401;
-    resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
-    return;
-  }
+  nlohmann::json input = ValidateJson(req, resp, {"name"});
+  std::string name = input["name"];
+  std::string path = input.value("path", "");
+  bool force = input.value("force", false);
 
   //Get user
   std::shared_lock sl(shared_mtx_user_manager_);
@@ -332,19 +302,12 @@ void ServerFrame::DelElem(const Request& req, Response& resp) {
   if (username == "") return;
   
   //Try to parse json
-  std::string name, path;
-  try {
-    nlohmann::json request = nlohmann::json::parse(req.body);
-    name = request["name"];
-    path = request.value("path", "");
-  }
-  catch (std::exception& e) {
-    std::cout << "Parsing json failed: " << e.what() << std::endl;
-    resp.status = 401;
-    resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
-    return;
-  }
-  
+  nlohmann::json input = ValidateJson(req, resp, {"name"});
+  if (input.empty()) return;
+  std::string name = input["name"];
+  std::string path = input.value("path", "");
+  bool force = input.value("force", false);
+
   //Get user
   std::shared_lock sl(shared_mtx_user_manager_);
   User* user = user_manager_.GetUser(username);
@@ -360,7 +323,7 @@ void ServerFrame::DelElem(const Request& req, Response& resp) {
     error_code = user->DeleteWorld(name);
   else {
     std::cout << "Calling user_manager_.worlds()->DelElem(...)" << std::endl;
-    error_code = user_manager_.worlds()->DelElem(path, name, false);
+    error_code = user_manager_.worlds()->DelElem(path, name, force);
   }
   
   //Check whether action succeeded
@@ -391,22 +354,14 @@ void ServerFrame::Backups(const Request& req, Response& resp, std::string action
   //Try to get username from cookie
   std::string username = CheckLogin(req, resp);
   if (username == "") return;
-
-  //Parse user, backup and world from request
-  std::string user, world, backup, path;
-  try {
-    nlohmann::json json = nlohmann::json::parse(req.body);
-    user = json["user"];
-    world = json.value("world", "");
-    backup = json.value("backup", "");
-    path = "/"+user+"/files/"+json.value("world", json.value("backup", "!!!!!"));
-  } 
-  catch (std::exception& e) {
-    std::cout << "Parsing values from request failed: " << e.what() << std::endl;
-    resp.status = 401;
-    resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
-    return;
-  }
+  
+  // Parse from json
+  nlohmann::json input = ValidateJson(req, resp, {"user"});
+  if (input.empty()) return;
+  std::string user = input["user"];
+  std::string world = input.value("world", "");
+  std::string backup = input.value("backup", "");
+  std::string path = "/" + user + "/files/" + input.value("world", input.value("backup", "!!!!!"));
 
   std::shared_lock sl(shared_mtx_user_manager_);
   //Call matching function.
@@ -435,21 +390,12 @@ void ServerFrame::GrantAccessTo(const Request& req, Response& resp) {
   std::string username = CheckLogin(req, resp);
   if (username == "") return;
   
-  std::string user2, world;
-  try {
-    nlohmann::json json = nlohmann::json::parse(req.body);
-    user2 = json["user"];
-    world = json["world"];
-  }
-  catch (std::exception& e) {
-    std::cout << "GrantAccessTo, problem parsing json: " << e.what() << std::endl;
-    resp.status = 401;
-    resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
-    return;
-  }
+  // Parse from json
+  nlohmann::json input = ValidateJson(req, resp, {"user","world"});
+  if (input.empty()) return;
 
   std::shared_lock sl(shared_mtx_user_manager_);
-  int error_code = user_manager_.GrantAccessTo(username, user2, world);
+  int error_code = user_manager_.GrantAccessTo(username, input["user"], input["world"]);
   if (error_code == ErrorCodes::SUCCESS)
     resp.status = 200;
   else
@@ -462,20 +408,13 @@ void ServerFrame::CreateRequest(const Request& req, Response& resp) {
   std::string username = CheckLogin(req, resp);
   if (username == "") return;
 
-  std::string user2, world;
-  try {
-    nlohmann::json json = nlohmann::json::parse(req.body);
-    user2 = json["user"];
-    world = json["world"];
-  }
-  catch (std::exception& e) {
-    std::cout << "CreateRequest: problem parsing json: " << e.what() << std::endl;
-    resp.status = 401;
-    resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
-    return;
-  }
+  // Parse from json
+  nlohmann::json input = ValidateJson(req, resp, {"user", "world"});
+  if (input.empty()) return;
+
   std::shared_lock sl(shared_mtx_user_manager_);
-  if (user_manager_.GetUser(user2)->AddRequest(username, world) == false)
+  if (user_manager_.GetUser(input["user"])
+      ->AddRequest(username, input["world"]) == false)
     resp.status = 401;
   else
     resp.status = 200;
@@ -502,11 +441,9 @@ void ServerFrame::GetLog(const Request& req, Response& resp) {
   size_t pos = req.body.find("/files/");
   std::string user = req.body.substr(1, req.body.find("/", 1));
   std::string world = req.body.substr(pos+7, req.body.find("/", pos+7)-(pos+7));
-  std::cout << "World: " << world << std::endl;
   std::string path = "../../data/users/" + user + "logs/";
   std::string type = req.matches[1];
   path += world + "_" + type + ".txt";
-  std::cout << "Path to log: " << path << std::endl;
 
   if (func::demo_exists(path) == false)
     resp.status = 401;
@@ -558,6 +495,24 @@ std::string ServerFrame::CheckLogin(const Request& req, Response& resp) const {
     return "";
   }
   return username;
+}
+
+nlohmann::json ServerFrame::ValidateJson(const Request& req, Response& resp, 
+      std::vector<std::string> keys) const {
+  try {
+    nlohmann::json json = nlohmann::json::parse(req.body);
+    for (auto it : keys) {
+      std::string key = json[it];
+      json[it] = key;
+    }
+    return json;
+  }
+  catch (std::exception& e) {
+    resp.set_content("invalid json.", "text/txt");
+    resp.status = 401;
+    std::cout << "Error parsing request: " << e.what() << std::endl;
+    return nlohmann::json();
+  }
 }
 
 bool ServerFrame::IsRunning() {
