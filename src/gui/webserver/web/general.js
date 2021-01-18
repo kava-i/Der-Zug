@@ -37,6 +37,12 @@ window.onload = function() {
 function OpenAddElemModal() {
   document.getElementById("modal_add_elem").style.display = "block";
   document.getElementById("name").focus();
+  document.getElementById("name").addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      document.getElementById("btn_add_elem").click();
+    }
+  });
 }
 
 /**
@@ -49,6 +55,7 @@ function OpenDelElemModal(type, name) {
     + "you want to delete <i>" + name + "</i>?";
   document.getElementById("check_msg").elem_name=name;
   document.getElementById("check_msg").elem_type=type;
+  document.getElementById("btn_del_elem").focus();
 }
 
 /**

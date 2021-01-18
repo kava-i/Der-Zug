@@ -53,9 +53,9 @@ nlohmann::json Page::GetObjectFromTemplate(std::string name) {
   // probably do the job.
   nlohmann::json object = *objects.begin();
   // If object has unset id and/ or name field set field to given name.
-  if (object.count("id") > 0 && object["id"] == "") 
+  if (object.count("id")) 
     object["id"] = name;
-  if (object.count("name") > 0 && object["name"] == "") {
+  if (object.count("name") > 0) {
     name[0] = std::toupper(name[0]);
     object["name"] = name;
   }

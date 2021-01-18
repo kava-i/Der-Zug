@@ -368,7 +368,12 @@ body {
   border: none;
 }
 
-.fuzzy_finder_focused {
+.fuzzy_finder_focused_green{
   color: #1fe921;
+  text-decoration: underline;
+}
+
+.fuzzy_finder_focused_orange{
+  color: orange;
   text-decoration: underline;
 }
