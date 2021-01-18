@@ -3,6 +3,7 @@
 #include "page/category.h"
 #include "util/error_codes.h"
 #include "util/func.h"
+#include <iostream>
 #include <string>
 
 Area::Area(std::string base_path, std::string path, nlohmann::json objects) 
@@ -41,7 +42,8 @@ ErrorCodes Area::DelElem(std::string path, std::string name) {
 }
 
 ErrorCodes Area::UndoDelElem() {
-  if (last_deleted_obj == NULL || last_deleted_obj.count("id") == 0)
+  std::cout << "Area::UndoDelElem()" << std::endl;
+  if (last_deleted_obj.empty() || !(last_deleted_obj.count("id") > 0))
     return ErrorCodes::FAILED;
   objects_[last_deleted_obj["id"].get<std::string>()] = last_deleted_obj;
   return ErrorCodes::SUCCESS;
