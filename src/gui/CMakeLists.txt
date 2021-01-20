@@ -38,6 +38,7 @@ set(SRC_FILES_TESTING
   src/world/world.cc
   src/page/page.cc
   src/page/category.cc
+  src/page/sub_category.cc
   src/page/area.cc
   src/util/func.cc
   src/util/test_func.cc

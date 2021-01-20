@@ -7,7 +7,7 @@ namespace fs = std::filesystem;
 
 CWorld::CWorld(std::string path) {
   m_path_to_world = path;
-  std::ifstream readConfig(m_path_to_world + "config.json");
+  std::ifstream readConfig(m_path_to_world + "config/config.json");
   readConfig >> m_config;
   readConfig.close();
 }
@@ -16,7 +16,7 @@ CWorld::CWorld(CPlayer* p, std::string path) {
   m_path_to_world = path;
   worldFactory(p);
 
-  std::ifstream readConfig(m_path_to_world + "config.json");
+  std::ifstream readConfig(m_path_to_world + "config/config.json");
   readConfig >> m_config;
   readConfig.close();
 }

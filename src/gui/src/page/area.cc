@@ -35,7 +35,7 @@ ErrorCodes Area::DelElem(std::string path, std::string name) {
   if (objects_.count(name) == 0) 
     return ErrorCodes::PATH_NOT_FOUND;
   // Erase element from elements and write to disc.
-  last_deleted_obj = objects_[name];
+  last_deleted_obj_ = objects_[name];
   objects_.erase(name);
   func::WriteJsonToDisc(path_ + ".json", objects_);
   return ErrorCodes::SUCCESS; 
@@ -43,9 +43,9 @@ ErrorCodes Area::DelElem(std::string path, std::string name) {
 
 ErrorCodes Area::UndoDelElem() {
   std::cout << "Area::UndoDelElem()" << std::endl;
-  if (last_deleted_obj.empty() || !(last_deleted_obj.count("id") > 0))
+  if (last_deleted_obj_.empty() || !(last_deleted_obj_.count("id") > 0))
     return ErrorCodes::FAILED;
-  objects_[last_deleted_obj["id"].get<std::string>()] = last_deleted_obj;
+  objects_[last_deleted_obj_["id"].get<std::string>()] = last_deleted_obj_;
   return ErrorCodes::SUCCESS;
 }
 

@@ -139,11 +139,6 @@ Parsing characters
 Parsing Items
 Parsing details 
 Create room: "zug_compartment-d"
-Room: "zug_dach"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_dach"
 Room: "zug_trainCorridor"
 Parsing characters
 Parsing Items
@@ -294,11 +289,6 @@ Parsing characters
 Parsing Items
 Parsing details 
 Create room: "zug_compartment-d"
-Room: "zug_dach"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_dach"
 Room: "zug_trainCorridor"
 Parsing characters
 Parsing Items
@@ -450,11 +440,6 @@ Parsing characters
 Parsing Items
 Parsing details 
 Create room: "zug_compartment-d"
-Room: "zug_dach"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_dach"
 Room: "zug_trainCorridor"
 Parsing characters
 Parsing Items
@@ -465,7 +450,6 @@ Created all rooms
 worldFactory: done.
 initializing context stack.
 Done.
-Room: "trainstation_eingangshalle" not found!
 QuestFactory
 "besiege_besoffene_frau"
 "geldauftreiben"
@@ -606,11 +590,6 @@ Parsing characters
 Parsing Items
 Parsing details 
 Create room: "zug_compartment-d"
-Room: "zug_dach"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug_dach"
 Room: "zug_trainCorridor"
 Parsing characters
 Parsing Items

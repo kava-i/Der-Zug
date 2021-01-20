@@ -1,4 +1,14 @@
 Creating game.
+Room: "test_liebesbucht"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_liebesbucht"
+Room: "test_liebeshöhle"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_liebeshöhle"
 Created all rooms 
 worldFactory: done.
 Done parsing world.

@@ -2,8 +2,8 @@
  * @author fux
 */
 
-#ifndef SRC_SERVER_WORLD_CATEGORY_H
-#define SRC_SERVER_WORLD_CATEGORY_H
+#ifndef SRC_SERVER_WORLD_SUBCATEGORY_H
+#define SRC_SERVER_WORLD_SUBCATEGORY_H
 
 #include <filesystem>
 #include <fstream>
@@ -14,23 +14,22 @@
 
 #include <nlohmann/json.hpp>
 #include <inja/inja.hpp>
-#include "util/error_codes.h"
+
+#include "page/category.h"
+#include "page/page.h"
 #include "util/func.h"
 
-#include "page.h"
 
 /**
- * Class for all categories.
- * As category is a page refering to other categories not objects.
+ * Class for all subcategories.
+ * Subcategory means, that is children are all areas.
  */
-class Category : public Page {
+class SubCategory : public Category {
   public: 
     // constructer/ destructor
-    Category(std::string base_path, std::string path);
-    ~Category() {}
+    SubCategory(std::string base_path, std::string path) : Category(base_path, path) {}
+    ~SubCategory() {}
 
-    // public methods:
-    
     /**
      * Add new element:  directory, file or object.
      * @param[in] path to category or area.
@@ -51,25 +50,11 @@ class Category : public Page {
      * Restore deleted object.
      * Before deleting object, the object will be stored, and can be recreated.
      */
-    ErrorCodes UndoDelElem() { return ErrorCodes::FAILED; };
-
-    /**
-     * Calls base-class function.
-     ** @param[in] path to area or object.
-     * @return json with information.
-     */
-    nlohmann::json CreatePageData(std::string path);
+    ErrorCodes UndoDelElem() { return ErrorCodes::FAILED; }
 
   private:
     // private members:
-    std::string path_to_last_backup;
-
-    // private methods:
-    /**
-     * Generates all child nodes.
-     * Iterates of all subdirectories and creates child-entry.
-     */
-    void GenerateChildNodes();
+    nlohmann::json last_deleted_area_;
 };
 
 #endif

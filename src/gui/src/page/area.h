@@ -57,7 +57,7 @@ class Area : public Page {
   private:
     // member variables:
     nlohmann::json objects_;
-    nlohmann::json last_deleted_obj;
+    nlohmann::json last_deleted_obj_;
 
     // private methods:
     
