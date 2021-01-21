@@ -46,6 +46,7 @@ ErrorCodes Area::UndoDelElem() {
   if (last_deleted_obj_.empty() || !(last_deleted_obj_.count("id") > 0))
     return ErrorCodes::FAILED;
   objects_[last_deleted_obj_["id"].get<std::string>()] = last_deleted_obj_;
+  func::WriteJsonToDisc(path_ + ".json", objects_);
   return ErrorCodes::SUCCESS;
 }
 
