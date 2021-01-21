@@ -1,5 +1,8 @@
 #include "world.h"
+#include "page/sub_category.h"
 #include "util/error_codes.h"
+#include "util/func.h"
+#include <filesystem>
 #include <iostream>
 #include <ostream>
 #include <string>
@@ -68,26 +71,30 @@ nlohmann::json World::GetPage(std::string path) {
 
 // paths_
 void World::InitializePaths(std::string path) {
-  paths_[path] = new Category(base_path_, path);
-  for (auto& p : fs::directory_iterator(path)) {
-    std::cout << p.path() << ": ";
-    std::string next_path = p.path();
-    if (fs::is_directory(p) == true)
-      InitializePaths(next_path);
-    else {
+  // category => elements are directories:
+  if (fs::is_directory(fs::directory_iterator(path)->path())) {
+    paths_[path] = new Category(base_path_, path);
+    std::cout << "Added Category: " << path << std::endl;
+    for (auto& p : fs::directory_iterator(path)) 
+      InitializePaths(p.path());
+  }
+  // subcategories => elements are files (jsons).
+  else {
+    paths_[path] = new SubCategory(base_path_, path);
+    std::cout << "Added Subcategory: " << path << std::endl;
+    for (auto& p : fs::directory_iterator(path)) {
       nlohmann::json objects;
-      fs::path fs_p = next_path;
-      fs_p.replace_extension("");
-      std::string new_path = fs_p;
+      std::string path_without_extension = func::RemoveExtension(p.path());
       if (p.path().extension() == ".jpg") 
         std::cout << "skipped image" << std::endl;
-      else if (!func::LoadJsonFromDisc(next_path, objects))
+      else if (!func::LoadJsonFromDisc(p.path(), objects))
         std::cout << "failed to load json." << std::endl;
       else if (objects.is_array() == false) {
         std::cout << "added area" << std::endl;
-        paths_[new_path] = new Area(base_path_, new_path, objects);
+        paths_[path_without_extension] = new Area(base_path_, path_without_extension, objects);
+        // objects: objects in json of objects.
         for (auto it=objects.begin(); it!=objects.end(); it++)
-          paths_[new_path + "/" + it.key()] = paths_[new_path];
+          paths_[path_without_extension + "/" + it.key()] = paths_[path_without_extension];
       }
       else
         std::cout << "skiped list type." << std::endl;

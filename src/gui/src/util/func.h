@@ -71,6 +71,8 @@ namespace func
    */
   bool WriteJsonToDisc(std::string path, nlohmann::json& json);
 
+  std::string RemoveExtension(std::filesystem::path path);
+
   /**
    * Get current time in milliseconds.
    * @return long int (time in milliseconds)

@@ -113,6 +113,10 @@ bool WriteJsonToDisc(std::string path, nlohmann::json& json) {
   }
 }
 
+std::string RemoveExtension(std::filesystem::path path) {
+  return path.replace_extension("");
+}
+
 long int TimeSinceEpoch() {
   std::chrono::milliseconds ms = std::chrono::duration_cast
     <std::chrono::milliseconds >
