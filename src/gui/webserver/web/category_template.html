@@ -76,9 +76,12 @@
     <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
     <div class="content_center">
       <div class="item"><p id="check_msg" elem_name=""></div>
-      <div class="item"><p class="user_error"></p></div>
+      <div class="item"><p id="del_error" class="user_error"></p></div>
       <div><button type="button" class="pure-button" id="btn_del_elem"
                                  onclick="DelElem()">Delete</button></div>
+      <div><button type="button" class="pure-button" id="force_del_elem"
+                   style="display: none;" onclick="DelElem(true)">Force Delete</button></div>
+
     </div>
   </div>
 </div>
@@ -91,6 +94,8 @@
       <div class="item"><p id="add_error" class="user_error"></p></div>
       <div><button type="button" class="pure-button" id="btn_add_elem"
                                  onclick="AddElem('subcategory')">Add</button></div>
+      <div><button type="button" class="pure-button" id="force_add_elem"
+          style="display: none;" onclick="AddElem('subcategory', true)">Forece Add</button></div>
     </div>
   </div>
 </div>

@@ -16,13 +16,14 @@ Area::Area(std::string base_path, std::string path, nlohmann::json objects)
 ErrorCodes Area::AddElem(std::string path, std::string name) {
   std::cout << "Area::AddElem(" << path << ")" << std::endl;
   // If path was object-path, then no new object can be created.
-  if (IsObject(path))
+  nlohmann::json new_obj;
+  if (IsObject(path) || !GetObjectFromTemplate(new_obj, name))
     return ErrorCodes::PATH_NOT_FOUND;
   // Check if element already exists.
   if (objects_.count(name) > 0) 
     return ErrorCodes::ALREADY_EXISTS;
   // Create new element from template, add to elements and write to disc.
-  objects_[name] = GetObjectFromTemplate(name);
+  objects_[name] = new_obj;
   func::WriteJsonToDisc(path_ + ".json", objects_);
   return ErrorCodes::SUCCESS; 
 }

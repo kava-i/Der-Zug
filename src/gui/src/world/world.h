@@ -18,6 +18,7 @@
 #include "page/area.h"
 #include "page/category.h"
 #include "page/page.h"
+#include "page/sub_category.h"
 #include "util/error_codes.h"
 #include "util/func.h"
 

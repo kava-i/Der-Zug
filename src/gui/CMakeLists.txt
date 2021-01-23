@@ -20,8 +20,9 @@ set(SRC_FILES_SERVER
   src/users/user.cc 
   src/world/worlds.cc
   src/world/world.cc
-  src/page/page.cc
   src/page/category.cc
+  src/page/page.cc
+  src/page/sub_category.cc
   src/page/area.cc
   src/util/func.cc
 )

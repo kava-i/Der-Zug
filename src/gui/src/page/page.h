@@ -95,9 +95,10 @@ class Page {
      * Get template with list of (eventually multiple) objects.
      * It is expected, that only one element exists in object. However
      * some templates might contain more than one element from the beginning.
-     * @return json of objects.
+     * @param[in, out] template_area of area to create.
+     * @return boolean indicatiing success.
      */
-    nlohmann::json GetObjectsFromTemplate();
+    bool GetObjectsFromTemplate(nlohmann::json& template_area);
 
     /**
      * Create json from template.
@@ -106,10 +107,11 @@ class Page {
      * the id, only with an upper-case letter at the beginning. Thus adding the
      * id and name field (if not already set by template!) might turn out quite
      * convinient for the user.
+     * @param[in, out] object to create.
      * @param name given by user.
-     * @return json with created object.
+     * @return boolean indicatiing success.
      */
-    nlohmann::json GetObjectFromTemplate(std::string name);
+    bool GetObjectFromTemplate(nlohmann::json& object, std::string name);
 };
 
 #endif

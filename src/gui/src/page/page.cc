@@ -2,7 +2,10 @@
 #include "nlohmann/json.hpp"
 #include "util/error_codes.h"
 #include "util/func.h"
+#include <algorithm>
 #include <cctype>
+#include <iostream>
+#include <numeric>
 #include <string>
 
 namespace fs = std::filesystem;
@@ -30,34 +33,31 @@ nlohmann::json Page::CreatePageData(std::string path) {
 void Page::GenerateParentNodes() {
   std::vector<std::string> path_elems = func::Split(path_.substr(base_path_.length()), "/");
   for (size_t i=2; i<path_elems.size(); i++) {
-    std::string path = "";
-    for (size_t j=0; j<=i; j++) 
-      path += path_elems[j] + "/";
-    path.pop_back();
+    std::string path = std::accumulate(path_elems.begin()+1, path_elems.begin()+i+1, 
+        *path_elems.begin(), [](std::string& init, std::string& str) { return init + "/" + str; });
     parent_nodes_[path] = path_elems[i];
   }
 }
 
-nlohmann::json Page::GetObjectsFromTemplate() {
-  nlohmann::json objects;
+bool Page::GetObjectsFromTemplate(nlohmann::json& template_area) {
   std::string path_to_templates = base_path_ + "/../templates/" + category_ + ".json";
-  if (!func::LoadJsonFromDisc(path_to_templates, objects))
-    return nlohmann::json({{"error", ErrorCodes::FAILED}});
-  return objects;
+  return func::LoadJsonFromDisc(path_to_templates, template_area);
 }
 
-nlohmann::json Page::GetObjectFromTemplate(std::string name) {
+bool Page::GetObjectFromTemplate(nlohmann::json& object, std::string name) {
   // Get all objects.
-  nlohmann::json objects = GetObjectsFromTemplate();  
-  // Get first (as probably only) object from list. Also: any object will
-  // probably do the job.
-  nlohmann::json object = *objects.begin();
-  // If object has unset id and/ or name field set field to given name.
-  if (object.count("id")) 
+  nlohmann::json objects;
+  if (!GetObjectsFromTemplate(objects)) 
+    return false;
+  // Get first (as probably only) object from list.
+  object = *objects.begin();
+  // If object has id and/ or name field set field to given name.
+  if (object.count("id") > 0) {
     object["id"] = name;
+  }
   if (object.count("name") > 0) {
     name[0] = std::toupper(name[0]);
     object["name"] = name;
   }
-  return object;
+  return true;
 }

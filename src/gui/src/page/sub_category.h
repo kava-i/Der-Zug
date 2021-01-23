@@ -36,7 +36,7 @@ class SubCategory : public Category {
      * @param[in] name of directory, file or object.
      * @return ErrorCode indicating success/ error.
      */
-    ErrorCodes AddElem(std::string, std::string) { return ErrorCodes::FAILED; }
+    ErrorCodes AddElem(std::string, std::string); 
 
     /**
      * Delete element:  directory, file or object.
@@ -44,17 +44,18 @@ class SubCategory : public Category {
      * @param[in] name of directory, file or object.
      * @return ErrorCode indicating success/ error.
      */
-    ErrorCodes DelElem(std::string, std::string) { return ErrorCodes::FAILED; }
+    ErrorCodes DelElem(std::string, std::string);
 
     /**
      * Restore deleted object.
      * Before deleting object, the object will be stored, and can be recreated.
      */
-    ErrorCodes UndoDelElem() { return ErrorCodes::FAILED; }
+    ErrorCodes UndoDelElem(); 
 
   private:
     // private members:
     nlohmann::json last_deleted_area_;
+    std::string path_to_last_deteled_area_;
 };
 
 #endif

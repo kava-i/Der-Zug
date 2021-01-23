@@ -2,6 +2,7 @@
 #include "page/sub_category.h"
 #include "util/error_codes.h"
 #include "util/func.h"
+#include <exception>
 #include <filesystem>
 #include <iostream>
 #include <ostream>
@@ -23,16 +24,26 @@ World::World(std::string base_path, std::string path, int port) {
 ErrorCodes World::AddElem(std::string path, std::string name, bool force) {
   std::cout << "World::AddElem(" << path << ")" << std::endl;
   if (paths_.count(path) > 0) {
-    ErrorCodes error_code = paths_.at(path)->AddElem(path, name);
-    if (error_code != ErrorCodes::SUCCESS) 
+    ErrorCodes error_code;
+    try {
+      error_code = paths_.at(path)->AddElem(path, name);
+    } catch (std::exception& e) {
+      std::cout << "Failed due to error: " << e.what() << std::endl;
+      return ErrorCodes::FAILED;
+    }
+    if (error_code != ErrorCodes::SUCCESS) {
+      std::cout << "Failed with ErrorCode: " << error_code << std::endl;
       return error_code;
+    }
     if (IsGameRunning() || force) {
       InitializePaths(path_);
       UpdateShortPaths();
+      std::cout << "Successfully added new element: " << name << std::endl;
       return ErrorCodes::SUCCESS;
     }
     else {
       paths_.at(path)->DelElem(path, name);
+      std::cout << "Failed as game is not running." << std::endl;
       return ErrorCodes::GAME_NOT_RUNNING;
     }
   }

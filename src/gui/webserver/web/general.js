@@ -1,3 +1,8 @@
+// error codes
+var error_codes = {"0":"success", "1":"wrong format", "2":"access denied", 
+  "3":"path/ object not found.", "4":"action not allowed", "5":"already exists",
+  "6":"failed", "7":"no user", "8":"no world", "9":"game not running"};
+
 //Close modal, when close-span is clicked (works for both moduls)
 function CloseModul() {
   document.getElementById("modal_add_elem").style.display = "none";
@@ -81,11 +86,10 @@ function AddElem(elem, force=false) {
       msg.style = "display: block;"; 
       document.getElementById("btn_add_elem").style.display = "none";
     }
-    if (xhttp.status == 401 && this.responseText == "2") 
-      msg.innerHTML = "You have no access to this file.";
-    else if (xhttp.status == 401 && this.responseText  == "9") {
-      msg.innerHTML = "Game is not running after this change";
-      document.getElementById("force_add_elem").style.display = "inline-block";
+    if (xhttp.status == 401 && this.responseText in error_codes) {
+      msg.innerHTML = "Adding element failed due to error: " + error_codes[this.responseText];
+      if (this.responseText == "9") 
+        document.getElementById("force_add_elem").style.display = "inline-block";
     }
     else if (xhttp.status == 401) 
       msg.innerHTML = "Element couldn't be found or something went wrong.";
@@ -101,7 +105,7 @@ function AddElem(elem, force=false) {
 /**
  * function deleting.
  */
-function DelElem(what, name) {
+function DelElem(force=false) {
   
   //Get controller name and path (url) from document.
   var json_request = new Object();
@@ -115,9 +119,20 @@ function DelElem(what, name) {
 
   //Function to handle request 
   xhttp.onload = function(event){
+    let msg = document.getElementById("del_error");
     //If request fails, display message to user.
-    if (xhttp.status == 401) {
-      alert("Element couldn't be found or something went wrong.");
+    if (xhttp.status != 200) {
+      msg.style = "display: block;"; 
+      document.getElementById("btn_del_elem").style.display = "none";
+      // got error code.
+      if (this.responseText in error_codes) {
+        msg.innerHTML = "Adding element failed due to error: " + error_codes[this.responseText];
+        if (this.responseText == "9") 
+          document.getElementById("force_del_elem").style.display = "inline-block";
+      }
+      // no error code given.
+      else 
+        msg.innerHTML = "Element couldn't be found or something went wrong.";
     }
     //Display success message to user.
     else {
