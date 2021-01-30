@@ -174,7 +174,7 @@ class ServerFrame {
 
     //Member
 #ifdef _COMPILE_FOR_SERVER_
-    httplib::SSSSLServer server_; //ssl server.
+    httplib::SSLServer server_; //ssl server.
 #else
     httplib::Server server_;  //Server
 #endif
