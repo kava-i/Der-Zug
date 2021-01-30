@@ -52,6 +52,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/webserver)
 add_executable(game_builder.o ${SRC_FILES_SERVER})
 add_executable(builder_tests.o ${SRC_FILES_TESTING})
 
+if (COMPILE_FOR_SERVER)
+  message("compiling for server...")
+  target_compile_definitions(game_builder.o PUBLIC _COMPILE_FOR_SERVER_)
+else()
+  message("compiling for localhost...")
+endif()
+
 # Add directories to be included easily
 target_include_directories(game_builder.o PUBLIC "src")
 target_include_directories(builder_tests.o PUBLIC "src")

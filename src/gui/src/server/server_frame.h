@@ -11,6 +11,7 @@
 #include <shared_mutex>
 #include <string>
 
+#define CPPHTTPLIB_OPENSSL_SUPPORT
 #include <httplib.h>
 
 #include "nlohmann/json.hpp"
@@ -22,8 +23,10 @@ class ServerFrame {
     /**
      * Constructor. 
      * Creating user_manager with path to user-data and possible categories.
+     * @param path_to_cert in case of running on server: path to ssl certificate.
+     * @param path_to_key in case of running on server: path to ssl key.
      */
-    ServerFrame();
+    ServerFrame(std::string path_to_cert = "", std::string path_to_key = "");
 
     // *** getter *** //
     UserManager& user_manager() {
@@ -170,7 +173,11 @@ class ServerFrame {
   private: 
 
     //Member
+#ifdef _COMPILE_FOR_SERVER_
+    httplib::SSSSLServer server_; //ssl server.
+#else
     httplib::Server server_;  //Server
+#endif
     UserManager user_manager_;  ///< currently class, later database with all users
     mutable std::shared_mutex shared_mtx_user_manager_;
 

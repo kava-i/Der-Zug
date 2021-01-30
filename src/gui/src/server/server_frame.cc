@@ -20,9 +20,13 @@ using namespace httplib;
 
 
 //Constructor
-ServerFrame::ServerFrame() : user_manager_("../../data/users", {"attacks", 
+ServerFrame::ServerFrame(std::string path_to_cert, std::string path_to_key) 
+  : user_manager_("../../data/users", {"attacks", 
     "defaultDialogs", "dialogs", "players", "rooms", "characters", 
     "defaultDescriptions", "details", "items", "quests", "texts", "images"})
+#ifdef _COMPILE_FOR_SERVER_
+    , server_(path_to_cert.c_str(), path_to_key.c_str())
+#endif
 {}
 
 void ServerFrame::Start(int port) {
