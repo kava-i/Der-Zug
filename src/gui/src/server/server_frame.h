@@ -173,12 +173,12 @@ class ServerFrame {
   private: 
 
     //Member
+    UserManager user_manager_;  ///< currently class, later database with all users
 #ifdef _COMPILE_FOR_SERVER_
     httplib::SSLServer server_; //ssl server.
 #else
     httplib::Server server_;  //Server
 #endif
-    UserManager user_manager_;  ///< currently class, later database with all users
     mutable std::shared_mutex shared_mtx_user_manager_;
 
     /**
