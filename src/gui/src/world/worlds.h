@@ -82,12 +82,12 @@ class Worlds {
     std::string ParseTemplate(nlohmann::json json);
 
     /**
-     * Finds world in worlds.
+     * Finds world with given url in all worlds.
      * Checks if world-path is contained in given base_path + (url-) path.
      * @param[in] path as url path.
      * @return world, or nullptr if not found.
      */
-    World* GetWorld(std::string path);
+    World* GetWorldFromUrl(std::string path);
 };
 
 #endif

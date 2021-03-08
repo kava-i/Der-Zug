@@ -2,6 +2,7 @@
 #include "nlohmann/json.hpp"
 #include "util/error_codes.h"
 #include "world/world.h"
+#include <algorithm>
 #include <exception>
 #include <iostream>
 #include <ostream>
@@ -28,7 +29,7 @@ Worlds::~Worlds() {
 
 ErrorCodes Worlds::AddElem(std::string path, std::string name, bool force) {
   std::cout << "Worlds::AddElem(" << path << ")" << std::endl;
-  World* world = GetWorld(path);
+  World* world = GetWorldFromUrl(path);
   if (world == nullptr) 
     return ErrorCodes::NO_WORLD;
   return world->AddElem(base_path_ + path, name, force);
@@ -36,7 +37,7 @@ ErrorCodes Worlds::AddElem(std::string path, std::string name, bool force) {
 
 ErrorCodes Worlds::DelElem(std::string path, std::string name, bool force) {
   std::cout << "Worlds::DelElem(" << path << ")" << std::endl;
-  World* world = GetWorld(path);
+  World* world = GetWorldFromUrl(path);
   if (world == nullptr) 
     return ErrorCodes::NO_WORLD;
   return world->DelElem(base_path_ + path, name, force);
@@ -44,7 +45,7 @@ ErrorCodes Worlds::DelElem(std::string path, std::string name, bool force) {
 
 std::string Worlds::GetPage(std::string path) {
   std::cout << "Worlds::GetPage(" << path << ")" << std::endl;
-  World* world = GetWorld(path);
+  World* world = GetWorldFromUrl(path);
   if (world == nullptr) 
     return "No world found.";
   nlohmann::json json = world->GetPage(base_path_ + path);
@@ -85,8 +86,7 @@ std::string Worlds::ParseTemplate(nlohmann::json json) {
     std::string path = json["path"];
     temp = env.parse_template(path);
     page = env.render(temp, json["header"]);
-  }
-  catch (std::exception& e) {
+  } catch (std::exception& e) {
     std::cout << "Problem parsing object html: " << e.what() << "\n\n";
     return "File not found.";
   }
@@ -94,13 +94,14 @@ std::string Worlds::ParseTemplate(nlohmann::json json) {
   return page;
 }
 
-World* Worlds::GetWorld(std::string path) {
+World* Worlds::GetWorldFromUrl(std::string path) {
   // Builds full path, as only
   std::string full_path = base_path_ + path;
-  // words are only saved as "[base_path]/[user]/files/[world]" thus use of "find".
-  for (auto it : worlds_) {
-    if (full_path.find(it.first) != std::string::npos) 
-      return it.second;
-  }
+  
+  // worlds are only saved as "[base_path]/[user]/files/[world]" thus use of "find".
+  auto it = std::find_if(worlds_.begin(), worlds_.end(), [&](auto it) 
+      { return full_path.find(it.first) == std::string::npos; } );
+  if (it != worlds_.end())
+    return it->second;
   return nullptr;
 }

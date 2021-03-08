@@ -11,6 +11,7 @@
 namespace fs = std::filesystem;
 
 World::World(std::string base_path, std::string path, int port) {
+  std::cout << "Creating world: " << base_path << ", " << path << std::endl;
   base_path_ = base_path;
   path_ = path;
   port_ = port;
@@ -136,7 +137,6 @@ bool World::IsGameRunning() {
   //Run game with every existing player.
   bool success = true;
   for (auto it=players.begin(); it!=players.end(); it++) {
-    std::cout << "PLAYER: " << it.value() << std::endl;
     std::string test_p = command + " -p " + it.key() +
       " > ../../data/users/" + creator_ + "/logs/" + name_ + "_write.txt";
     if (system(test_p.c_str()) != 0) 
