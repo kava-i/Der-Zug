@@ -5,7 +5,7 @@ enum ErrorCodes
 {
   SUCCESS = 0,
   WRONG_FORMAT = 1,
-  ACCESS_DENIED= 2,
+  ACCESS_DENIED = 2,
   PATH_NOT_FOUND = 3,
   NOT_ALLOWED = 4,
   ALREADY_EXISTS = 5,

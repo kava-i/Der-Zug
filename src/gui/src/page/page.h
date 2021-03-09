@@ -28,6 +28,10 @@ class Page {
     Page(std::string base_path, std::string path);
     virtual ~Page() {}
 
+    // getter:
+    virtual std::string category() const { return ""; }
+    std::string name() const;
+
     // public methods:
     
     /**

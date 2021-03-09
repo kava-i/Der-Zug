@@ -5,26 +5,88 @@
 #include <algorithm>
 #include <exception>
 #include <iostream>
+#include <mutex>
 #include <ostream>
+#include <shared_mutex>
 #include <string>
+#include <vector>
 
 namespace fs = std::filesystem;
+
+const std::vector<std::string> Worlds::categories_ = {"attacks", "config", 
+    "defaultDialogs", "dialogs", "players", "rooms", "characters", 
+    "defaultDescriptions", "details", "items", "quests", "texts", "images"};
 
 Worlds::Worlds(std::string base_path, int start_port) {
   base_path_ = base_path;
   ports_ = start_port;
-  // Iterate ver all users and user-worlds and create world elements.
+  // Iterate over all users. 
   for (auto up : fs::directory_iterator(base_path_)) {
     std::string cur_path = up.path();
+    // Iterate over user-worlds and create world elements.
     for (auto wp : fs::directory_iterator(cur_path + "/files")) {
       worlds_[wp.path()] = new World(base_path_, wp.path(), ports_); 
-      ports_+=2;
+      ports_ += 2; // increate port (+1: game-http-server, +1: game-websocket-server.
     }
   }
 }
 
 Worlds::~Worlds() {
-  for (auto it : worlds_) delete it.second;
+  for (auto it : worlds_) 
+    delete it.second;
+}
+
+ErrorCodes Worlds::CreateNewWorld(std::string path, std::string name) {
+  std::cout << "Worlds::AddWorld(" << path << ")" << std::endl;
+  if (GetWorldFromUrl(path) != nullptr) 
+    return ErrorCodes::ALREADY_EXISTS;
+  
+  std::string full_path = base_path_ + path;
+  try {
+    //Create directory for world
+    fs::create_directories(full_path);
+
+    //Create all subcategories.
+    for (const auto& category : categories_)
+      fs::create_directory(full_path + "/" + category);
+
+    //Copy default config, room and player-file.
+    fs::copy("../../data/default_jsons/config.json", full_path + "/config/"); 
+    fs::copy("../../data/default_jsons/test.json", full_path + "/rooms/"); 
+    fs::copy("../../data/default_jsons/players.json", full_path + "/players/"); 
+    fs::copy("../../data/default_jsons/background.jpg", full_path + "/images/"); 
+    
+    // Create new world.
+    std::unique_lock ul(shared_mtx_worlds_);
+    worlds_[full_path] = new World(base_path_, full_path, ports_);
+    ports_ += 2; // increate port (+1: game-http-server, +1: game-websocket-server.
+  }
+  catch (std::exception& e) {
+    std::cout << "Failed creating directories of new world: " << e.what() << std::endl;
+    fs::remove_all(path);
+    return ErrorCodes::FAILED;
+  }
+  return ErrorCodes::SUCCESS;
+}
+
+ErrorCodes Worlds::DeleteWorld(std::string path) {
+  std::cout << "Worlds::DeleteWorld(" << path << ")" << std::endl;
+  if (GetWorldFromUrl(path) == nullptr)
+    return ErrorCodes::NO_WORLD;
+  
+  // Write remove file.
+  try {
+    std::string full_path = base_path_ + path;
+    fs::remove_all(full_path); 
+    std::unique_lock ul(shared_mtx_worlds_);
+    if (worlds_.count(full_path) > 0 && worlds_.at(full_path) != nullptr)
+      delete worlds_.at(full_path);
+    worlds_.erase(base_path_ + path);
+  } catch (std::exception& e) {
+    std::cout << "DeleteWorld failed: " << e.what() << std::endl;
+    return ErrorCodes::FAILED;
+  }
+  return ErrorCodes::SUCCESS;
 }
 
 ErrorCodes Worlds::AddElem(std::string path, std::string name, bool force) {
@@ -99,8 +161,9 @@ World* Worlds::GetWorldFromUrl(std::string path) {
   std::string full_path = base_path_ + path;
   
   // worlds are only saved as "[base_path]/[user]/files/[world]" thus use of "find".
+  std::unique_lock ul(shared_mtx_worlds_);
   auto it = std::find_if(worlds_.begin(), worlds_.end(), [&](auto it) 
-      { return full_path.find(it.first) == std::string::npos; } );
+      { return full_path.find(it.first) != std::string::npos; } );
   if (it != worlds_.end())
     return it->second;
   return nullptr;

@@ -12,8 +12,7 @@
 
 namespace fs = std::filesystem;
 
-UserManager::UserManager(std::string main_path, std::vector<std::string> cats) 
-  : path_(main_path), categories_(cats) {
+UserManager::UserManager(std::string main_path) : path_(main_path) {
   ports_ = 9001;
 
   worlds_ = new Worlds(path_, 9001);
@@ -27,13 +26,11 @@ UserManager::UserManager(std::string main_path, std::vector<std::string> cats)
     
     try {
       users_[user["username"]] = new User(user["username"], user["password"], 
-        path_, user["locations"], categories_);
+        path_, user["locations"]);
       InitWorlds(users_[user["username"]]);
-    }
-    catch(std::exception& e) {
+    } catch(std::exception& e) {
       std::cout << "Creating user at path: " << p.path() << " failed!\n";
     }
-
   }
   std::cout << users_.size() << " users initialized!" << std::endl;
 }

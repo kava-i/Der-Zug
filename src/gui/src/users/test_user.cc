@@ -28,9 +28,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   }
   
   //Create user manager.
-  UserManager user_manager("../../data/users", {"attacks", 
-    "defaultDialogs", "dialogs", "players", "rooms", "characters", 
-    "defaultDescriptions", "details", "items", "quests", "texts", "images"});
+  UserManager user_manager("../../data/users");
 
   //Create new user
   user_manager.DoRegistration("test", "password1234", "password1234");
@@ -41,6 +39,7 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(func::demo_exists("../../data/users/test/backups") == true);
 
   //Create empty world.
+  /*
   std::string world = "Test_World";
   std::string full_path = "../../data/users";
   std::string path = "/test/files/" + world;
@@ -96,7 +95,6 @@ TEST_CASE ("Loading pages from user works", "[user_pages]") {
   REQUIRE(user->GetBackups("test", "Test_World").find(backup) != std::string::npos);
 
   //Modify objects and test if this works
-  /*
   nlohmann::json test_room_fail;
   REQUIRE(func::LoadJsonFromDisc("../../data/default_jsons/test_room_fail.json", 
         test_room_fail) == true);

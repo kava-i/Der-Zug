@@ -23,6 +23,9 @@ class Area : public Page {
     Area(std::string base_path_, std::string path, nlohmann::json objects);
     ~Area() {}
 
+    // getter:
+    std::string category() const; 
+
     // public methods:
 
     /**

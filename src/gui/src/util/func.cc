@@ -96,19 +96,14 @@ bool LoadJsonFromDisc(std::string path, nlohmann::json& json) {
 }
 
 bool WriteJsonToDisc(std::string path, nlohmann::json& json) {
-  if (!demo_exists(path)) {
-    std::cout << "Path: " << path << " not found!" << std::endl; 
-    return false;
-  }
-  std::ofstream write(path);
   try {
+    std::ofstream write(path);
     write << json;
     write.close();
     return true;
   }
   catch (std::exception& e) {
     std::cout << "Failed writing object: " << e.what() << std::endl;
-    write.close();
     return false;
   }
 }

@@ -7,7 +7,7 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)  #Includes stuff added by cona
 conan_basic_setup()  #links include directories and libaries
 
 # Specify C++ standards and complitation flags
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-Wall -Werror -O3")
 add_compile_options(-fdiagnostics-color=always)

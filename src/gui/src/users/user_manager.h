@@ -27,7 +27,7 @@ class UserManager {
     /**
      * constructor loading all users stored on disc.
      */
-    UserManager(std::string path, std::vector<std::string> categories);
+    UserManager(std::string path);
 
     // getter:
     Worlds* worlds() const;

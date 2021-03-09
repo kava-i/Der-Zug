@@ -13,6 +13,10 @@ Area::Area(std::string base_path, std::string path, nlohmann::json objects)
   category_ = (--parent_nodes_.rbegin())->second;
 }
 
+std::string Area::category() const { 
+  return category_; 
+}
+
 ErrorCodes Area::AddElem(std::string path, std::string name) {
   std::cout << "Area::AddElem(" << path << ")" << std::endl;
   // If path was object-path, then no new object can be created.

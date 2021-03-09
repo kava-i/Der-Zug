@@ -21,9 +21,7 @@ using namespace httplib;
 
 //Constructor
 ServerFrame::ServerFrame(std::string path_to_cert, std::string path_to_key) 
-  : user_manager_("../../data/users", {"attacks", 
-    "defaultDialogs", "dialogs", "players", "rooms", "characters", 
-    "defaultDescriptions", "details", "items", "quests", "texts", "images"})
+  : user_manager_("../../data/users")
 #ifdef _COMPILE_FOR_SERVER_
     , server_(path_to_cert.c_str(), path_to_key.c_str())
 #endif
@@ -134,7 +132,7 @@ void ServerFrame::Start(int port) {
       resp.set_content(func::GetImage("web/images/logo.png"), "image/png");});
 
 
-  std::cout << "C++ Api server startup successfull!" << std::endl;
+  std::cout << "C++ Api server startup successfull!\n" << std::endl;
   server_.listen("0.0.0.0", port);
 }
 
@@ -198,7 +196,7 @@ void ServerFrame::DoRegistration(const Request& req, Response& resp) {
       + "; Path=/";
     ul.unlock();
     resp.set_header("Set-Cookie", cookie.c_str());
-    std::cout << input["id"] << " registered.\n";
+    std::cout << input["id"] << " registered.\n" << std::endl;
   }
 }
 
@@ -207,9 +205,9 @@ void ServerFrame::DoLogout(const Request& req, Response& resp) {
   const char* ptr = get_header_value(req.headers, "Cookie");
   std::shared_lock sl(shared_mtx_user_manager_);
   if (!user_manager_.DoLogout(ptr))
-    std::cout << "Erasing cookie failed: cookie doesn't exist!\n";
+    std::cout << "Erasing cookie failed: cookie doesn't exist!\n" << std::endl;
   else   
-    std::cout << "cookie from user erased. User logged out.\n";
+    std::cout << "cookie from user erased. User logged out.\n" << std::endl;
 }
 
 void ServerFrame::DelUser(const Request& req, Response& resp) {
@@ -245,13 +243,11 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
         sl.lock();
         nlohmann::json shared_worlds = user_manager_.GetSharedWorlds(username);
         nlohmann::json all_worlds = user_manager_.GetAllWorlds(username);
-        sl.unlock();
         page = user->GetOverview(shared_worlds, all_worlds);
       }
       else {
         sl.lock();
         page = user_manager_.worlds()->GetPage(req.matches[0]);
-        sl.unlock();
       } 
     } catch (std::exception& e) {
       std::cout << "ServeFile: " << e.what() << std::endl;
@@ -283,12 +279,12 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
       req.matches.size() > 1 && req.matches[1] != "world") {
     error_code = ErrorCodes::ACCESS_DENIED;
   }
+  // Create new world
   else if (req.matches.size() > 1 && req.matches[1] == "world") {
-    std::cout << "Calling CreateNewWorld()" << std::endl;
-    error_code = user->CreateNewWorld(name, user_manager_.GetNextPort());
+    error_code = user_manager_.worlds()->CreateNewWorld("/"+username+"/files/"+name, name);
   }
+  // Create new object or (sub-)category.
   else {
-    std::cout << "Calling user_manager_.worlds()->AddElem(...)" << std::endl;
     error_code = user_manager_.worlds()->AddElem(path, name, force);
   }
 
@@ -297,6 +293,7 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
     resp.status = 200;
   else 
     resp.status = 401;
+  std::cout << "ServerFrame::AddElem done with error_code: " << error_code << "\n\n";
   resp.set_content(std::to_string(error_code), "text/txt");
 }
 
@@ -306,10 +303,10 @@ void ServerFrame::DelElem(const Request& req, Response& resp) {
   if (username == "") return;
   
   //Try to parse json
-  nlohmann::json input = ValidateJson(req, resp, {"name"});
+  nlohmann::json input = ValidateJson(req, resp, {"name", "path"});
   if (input.empty()) return;
   std::string name = input["name"];
-  std::string path = input.value("path", "");
+  std::string path = input["path"];
   bool force = input.value("force", false);
 
   //Get user
@@ -319,22 +316,19 @@ void ServerFrame::DelElem(const Request& req, Response& resp) {
 
   int error_code = ErrorCodes::WRONG_FORMAT;
   //Check whether user has access to this location
-  if (user->CheckAccessToLocations(path) == false &&
-      req.matches.size() > 1 && req.matches[1] != "world") {
-    error_code = ErrorCodes::ACCESS_DENIED;
-  }
-  else if (req.matches.size() > 1 && req.matches[1] == "world")
-    error_code = user->DeleteWorld(name);
-  else {
-    std::cout << "Calling user_manager_.worlds()->DelElem(...)" << std::endl;
+  if (req.matches.size() > 1 && req.matches[1] == "world")
+    error_code = user_manager_.worlds()->DeleteWorld("/"+username+"/files/"+name);
+  else if (user->CheckAccessToLocations(path))
     error_code = user_manager_.worlds()->DelElem(path, name, force);
-  }
+  else
+    error_code = ErrorCodes::ACCESS_DENIED;
   
   //Check whether action succeeded
   if (error_code == ErrorCodes::SUCCESS) 
     resp.status = 200;
   else 
     resp.status = 401;
+  std::cout << "ServerFrame::DelElem done with error_code: " << error_code << "\n\n";
   resp.set_content(std::to_string(error_code), "text/txt");
 }
 
@@ -351,6 +345,7 @@ void ServerFrame::WriteObject(const Request& req, Response& resp) {
     resp.status = 200;
   else
     resp.status = 401;
+  std::cout << "ServerFrame::WriteObject done with error_code: " << error_code << "\n\n";
   resp.set_content(std::to_string(error_code), "text/txt");
 }
 
@@ -386,6 +381,7 @@ void ServerFrame::Backups(const Request& req, Response& resp, std::string action
     resp.status = 200;
   else
     resp.status = 401;
+  std::cout << "ServerFrame::Backups done with error_code: " << error_code << "\n\n";
   resp.set_content(std::to_string(error_code), "text/txt");
 }
 
@@ -404,6 +400,7 @@ void ServerFrame::GrantAccessTo(const Request& req, Response& resp) {
     resp.status = 200;
   else
     resp.status = 401;
+  std::cout << "ServerFrame::GrantAccessTo done with error_code: " << error_code << "\n\n";
   resp.set_content(std::to_string(error_code), "text/txt");
 }
 

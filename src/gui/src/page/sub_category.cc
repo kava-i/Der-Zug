@@ -18,12 +18,13 @@ ErrorCodes SubCategory::AddElem(std::string path, std::string name) {
   nlohmann::json new_area;
   if (!GetObjectsFromTemplate(new_area))
     return ErrorCodes::PATH_NOT_FOUND;
+  std::cout << new_area << std::endl;
   func::WriteJsonToDisc(path_to_elem, new_area);
   return ErrorCodes::SUCCESS; 
 }
 
 ErrorCodes SubCategory::DelElem(std::string path, std::string name) {
-  std::string path_to_elem = path_ + "/" + ".json";
+  std::string path_to_elem = path_ + "/" + name + ".json";
   std::cout << "SubCategory::DelElem(" << path_to_elem << ")" << std::endl;
   nlohmann::json cur_area;
   if (!func::LoadJsonFromDisc(path_to_elem, cur_area))

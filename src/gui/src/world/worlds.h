@@ -8,10 +8,12 @@
 #include <filesystem>
 #include <iostream>
 #include <map>
+#include <shared_mutex>
 #include <string>
 
 #include <nlohmann/json.hpp>
 #include <inja/inja.hpp>
+#include <vector>
 #include "util/error_codes.h"
 #include "util/func.h"
 #include "world.h"
@@ -38,6 +40,21 @@ class Worlds {
     ~Worlds();
 
     // public methods:
+    
+    /** 
+     * Create new world.
+     * @param[in] path ([username]/files/[world_name])
+     * @param[in] name of new world to create.
+     * @return ErrorCode indicating success/ error.
+     */
+    ErrorCodes CreateNewWorld(std::string path, std::string name);
+
+    /**
+     * Delete an existing world.
+     * @param[in] path to world which shall be deleted.
+     * @return ErrorCode indicating success/ error.
+     */
+    ErrorCodes DeleteWorld(std::string path);
 
     /**
      * Add new element:  directory, files or object.
@@ -70,6 +87,8 @@ class Worlds {
     int ports_;
     std::string base_path_;
     std::map<std::string, World*> worlds_;
+    mutable std::shared_mutex shared_mtx_worlds_;
+    static const std::vector<std::string> categories_;
 
     // privave methods:
     

@@ -15,8 +15,7 @@
 
 namespace fs = std::filesystem;
 
-User::User(std::string name, std::string pw, std::string path, std::vector
-    <std::string> cats) : username_(name), path_(path), categories_(cats) {
+User::User(std::string name, std::string pw, std::string path) : username_(name), path_(path) {
   password_ = pw;
   locations_.push_back(username_ + "/");
 
@@ -32,8 +31,7 @@ User::User(std::string name, std::string pw, std::string path, std::vector
 }
 
 User::User(std::string name, std::string pw, std::string path, 
-    std::vector<std::string> locations, std::vector <std::string> cats) 
-    : username_(name), path_(path), categories_(cats) {
+    std::vector<std::string> locations) : username_(name), path_(path) {
   password_ = pw;
   locations_ = locations;
 
@@ -121,43 +119,6 @@ std::string User::GetBackups(std::string user, std::string world) {
 }
 
 // ** Functions ** //
-
-int User::CreateNewWorld(std::string name, int port) {
-  //Check for "/" which is considered bad format!
-  if (name.find("/") != std::string::npos)
-    return ErrorCodes::WRONG_FORMAT;
-
-  //Create path to new world and check whether world already exists.
-  std::string path = path_ + "/" + username_ + "/files/" + name;
-  if (func::demo_exists(path) == true)
-    return ErrorCodes::ALREADY_EXISTS;
-
-  //Try creating world and all categories.
-  try {
-    //Create directory for world
-    fs::create_directories(path);
-
-    //Create all subcategories.
-    for (const auto& category : categories_)
-      fs::create_directory(path + "/" + category);
-
-    //Copy default config, room and player-file
-    fs::copy("../../data/default_jsons/config.json", path); 
-    fs::copy("../../data/default_jsons/test.json", path + "/rooms/"); 
-    fs::copy("../../data/default_jsons/players.json", path + "/players/"); 
-    fs::copy("../../data/default_jsons/background.jpg", path + "/images/"); 
-  }
-
-  //Return error code and delete all already created directories.
-  catch (std::exception& e) {
-    std::cout << "Error creating new world or subdirectories: "
-      << e.what() << std::endl;
-    fs::remove_all(path);
-    return ErrorCodes::FAILED; 
-  }
-  worlds_[name] = port;
-  return ErrorCodes::SUCCESS;
-}
 
 int User::AddFile(std::string path, std::string name) {
   path = path_ + path;
@@ -303,25 +264,6 @@ int User::WriteObject(std::string request) {
   write_backup << obj_backup;
   write_backup.close();
   return ErrorCodes::GAME_NOT_RUNNING;
-}
-
-int User::DeleteWorld(std::string world) {
-  //Load json 
-  std::string path = path_+"/"+username_+"/files/"+world;
-  std::cout << "Path: " << path << std::endl;
-
-  if (func::demo_exists(path) == false)
-    return ErrorCodes::NO_WORLD;
-
-  //Write remove file 
-  try {
-    fs::remove_all(path);
-  }
-  catch (std::exception& e) {
-    std::cout << "DeleteFile failed: " << e.what() << std::endl;
-    return ErrorCodes::FAILED;
-  }
-  return ErrorCodes::SUCCESS;
 }
 
 int User::DeleteFile(std::string path, std::string file) {
@@ -545,64 +487,4 @@ bool User::CheckGameRunning(std::string path) {
     std::cout << "Running with player \"" << it.key() << "\": " << success << std::endl;
   }
   return success;
-}
-
-std::vector<std::string> User::GetAllPages(std::string user, std::string world) {
-
-  std::string path = "/" + user + "/files/" + world;
-  std::string full_path = path_ + path;
-  std::vector<std::string> files;
-  if (!func::demo_exists(full_path)) full_path += ".json";
-  if (!func::demo_exists(full_path)) return files;
-  files.push_back(path);
-
-  for (auto& p : fs::directory_iterator(full_path)) {
-    std::string current_path = p.path();
-    current_path = current_path.substr(current_path.find(path));
-    if (current_path.find(".") < 7 || current_path.find(".") == std::string::npos) {
-      files.push_back(current_path);
-      files = GetAllPages(p.path(), path, files);
-    }
-    else {
-      files.push_back(current_path.substr(0, current_path.find(".")));
-      GetFiles(p.path(), current_path, files);
-    }
-  }
-  return files;
-}
-
-std::vector<std::string> User::GetAllPages(std::string full_path, std::string path,
-    std::vector<std::string>& files) {
-
-  if (!func::demo_exists(full_path)) return files;
-  for (auto& p : fs::directory_iterator(full_path)) {
-    std::string current_path = p.path();
-    current_path = current_path.substr(current_path.find(path));
-    if (current_path.find(".") < 7 || current_path.find(".") == std::string::npos) {
-      files.push_back(current_path);
-      files = GetAllPages(p.path(), path, files);
-    }
-    else {
-      files.push_back(current_path.substr(0, current_path.find(".")));
-      GetFiles(p.path(), current_path, files);
-    }
-  }
-  return files;
-}
-
-void User::GetFiles(std::string full_path, std::string path,
-    std::vector<std::string>& files) {
-  path = path.substr(0, path.find("."));
-  nlohmann::json objects;
-  
-  //Check if path exists.
-  if (!func::LoadJsonFromDisc(full_path, objects))
-    return;
-
-  //Iterate over all objects and add to path.
-  try {
-    for (auto it=objects.begin(); it!=objects.end(); it++) 
-      files.push_back(path + "/" + it.key());
-  }
-  catch (...) {}
 }
