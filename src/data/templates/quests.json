@@ -1,0 +1,26 @@
+{
+    "kuligundes_apfel": {
+        "name": "Der Apfel von Kuligunde ",
+        "id": "kuligundes_apfel",
+        "description": "Finde den Apfel von Kuligunde und bringe ihn ihr",
+        "ep": 1000,
+        "steps": [
+            {
+                "name": "Die Suche nach dem Apfel",
+                "id": "finde_apfel",
+                "description": "Um Kuligunde den Apfel zu bringen, musst du ihn finden!."
+            },
+            {
+                "name": "Der Bote des Apfels",
+                "id": "bringe_apfel",
+                "description": "Bringe den Apfel zu Kuligunde."
+            }
+
+        ],
+        "sorted": 1,
+        "active_from_beginning": [
+            "finde_apfel"
+        ],
+        "listener": []
+    }
+}
