@@ -29,6 +29,14 @@ class Area : public Page {
     // public methods:
 
     /**
+     * Modify an object. 
+     * Stores old-object until verfyfied, that game is still running. 
+     * @param[in] path to object, which shall be modified.
+     * @param[in] modified_object which will replace old object.
+     */
+    ErrorCodes ModifyObject(std::string path, std::string name, nlohmann::json modified_object);
+
+    /**
      * Add new object.
      * @param[in] path to category or area.
      * @param[in] name of directory, file or object.
@@ -45,10 +53,10 @@ class Area : public Page {
     ErrorCodes DelElem(std::string path, std::string name);
 
     /**
-     * Restore deleted object.
-     * Before deleting object, the object will be stored, and can be recreated.
+     * Restore backup object: restore deleted/ modified directory, file, object.
+     * Each derived class has it's own way of storing deleted data.
      */
-    ErrorCodes UndoDelElem();
+    ErrorCodes RestoreBackupObj();
 
     /**
      * Calls base-class function for area and CreateObjectPageData for opject.
@@ -60,7 +68,7 @@ class Area : public Page {
   private:
     // member variables:
     nlohmann::json objects_;
-    nlohmann::json last_deleted_obj_;
+    nlohmann::json backup_obj_;
 
     // private methods:
     

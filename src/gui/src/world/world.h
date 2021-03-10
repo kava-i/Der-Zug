@@ -48,6 +48,16 @@ class World {
     // public methods:
     
     /**
+     * Modify and existing object. Restores old object, if game is not running.
+     * @param[in] path to category or area.
+     * @param[in] name of directory, file or object.
+     * @param[in] modified_obj json payload of mofified object.
+     * @param[in] force indicate whether to create althouh game might crash.
+     * @return ErrorCode indicating success/ error.
+     */
+    ErrorCodes ModifyObject(std::string path, std::string name, nlohmann::json modified_object, bool force);
+
+    /**
      * Add new element:  directory, files or object.
      * @param[in] path to category or area.
      * @param[in] name of directory, file or object.
@@ -122,6 +132,13 @@ class World {
      * @param[in, out] id which is modified.
      */
     static void ConvertId(std::string& id);
+
+    /**
+     * Makes changes of action (delete, add, modify element) permanent if game
+     * is still running. Reverts changes otherwise.
+     * @return Error-code (succes, or game not running).
+     */
+    ErrorCodes RevertIfGameNotRunning(std::string path, std::string id, std::string action);
 };
 
 #endif

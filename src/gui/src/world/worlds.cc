@@ -89,20 +89,28 @@ ErrorCodes Worlds::DeleteWorld(std::string path) {
   return ErrorCodes::SUCCESS;
 }
 
-ErrorCodes Worlds::AddElem(std::string path, std::string name, bool force) {
-  std::cout << "Worlds::AddElem(" << path << ")" << std::endl;
-  World* world = GetWorldFromUrl(path);
-  if (world == nullptr) 
-    return ErrorCodes::NO_WORLD;
-  return world->AddElem(base_path_ + path, name, force);
-}
+ErrorCodes Worlds::UpdateElements(std::string path, std::string name, std::string action, bool force,
+    nlohmann::json obj) {
+  std::cout << "Worlds::UpdateElements(" << path << ")" << std::endl;
 
-ErrorCodes Worlds::DelElem(std::string path, std::string name, bool force) {
-  std::cout << "Worlds::DelElem(" << path << ")" << std::endl;
+  // Get matching world and return error when no matching world was found.
   World* world = GetWorldFromUrl(path);
   if (world == nullptr) 
     return ErrorCodes::NO_WORLD;
-  return world->DelElem(base_path_ + path, name, force);
+
+  // Call matching world-function: add, delete or modify element.
+  std::cout << "Object: " << obj << std::endl;
+  std::cout << "World port: " << world->port() << std::endl;
+  if (action == "modify") {
+    std::cout << "Calling 'ModifyObject': " << base_path_ + path << std::endl;
+    return world->ModifyObject(base_path_ + path, name, obj, force);
+  }
+  else if (action == "add")
+    return world->AddElem(base_path_ + path, name, force);
+  else if (action == "delete")
+    return world->DelElem(base_path_ + path, name, force);
+  else
+   return ErrorCodes::NOT_ALLOWED;
 }
 
 std::string Worlds::GetPage(std::string path) {

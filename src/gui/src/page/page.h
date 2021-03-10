@@ -35,6 +35,17 @@ class Page {
     // public methods:
     
     /**
+     * Modify an object. (Only for area)
+     * Stores old-object until verfyfied, that game is still running. 
+     * @param[in] path to object, which shall be modified.
+     * @param[in] name of object.
+     * @param[in] modified_object which will replace old object.
+     */
+    virtual ErrorCodes ModifyObject(std::string path, std::string name, nlohmann::json modified_object) { 
+      return ErrorCodes::FAILED; 
+    }
+
+    /**
      * Add new element:  directory, file or object.
      * @param[in] path to category or area.
      * @param[in] name of directory, file or object.
@@ -51,10 +62,10 @@ class Page {
      virtual ErrorCodes DelElem(std::string, std::string) { return ErrorCodes::FAILED; }
 
     /**
-     * Undo delete element: restore deleted directory, file, object.
+     * Restore backup object: restore deleted/ modified directory, file, object.
      * Each derived class has it's own way of storing deleted data.
      */
-     virtual ErrorCodes UndoDelElem() { return ErrorCodes::FAILED; }
+     virtual ErrorCodes RestoreBackupObj() { return ErrorCodes::FAILED; }
 
     /**
      * Creates data for page: json-data & path to matching templae.

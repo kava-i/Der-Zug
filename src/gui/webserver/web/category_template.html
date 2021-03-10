@@ -13,6 +13,7 @@
 
     <script src="/web/general.js"></script>
     <script src="/web/fuzzy_finder.js"></script>
+    {% if __is_main %}<script src="/web/run.js"></script>{% endif %}
     <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js"
        data-auto-replace-svg="nest"></script>
 </head>
@@ -53,6 +54,13 @@
 <div class="box_overview center_in_box">
   <h1>{{name}}</h1>
     <div class="controlers">
+      {% if __port != 0 and __is_main %}
+        <button class="pure-button" style="margin-bottom:0.5em;"
+                                  onclick="run({{__port}});">Run</button>
+        <button class="pure-button" style="margin-bottom:0.5em;"
+                                  onclick="end({{__port}});">Close</button><br>
+      {% endif %}
+
         <table id="controller">
           {% for node in nodes %}
             <tr>
@@ -100,5 +108,24 @@
     </div>
   </div>
 </div>
+
+{% if __is_main %}
+  <div id="modal_log" class="modal">
+    <div class="modal2-content">
+      <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
+      <div class="content_center">
+        <div class="item"><h1>Game Logs</h1></div>
+        <div class="item"><p id="check_msg"></div>
+        <div class="scroll_content" style="display: none" id="log_div">
+          <div class="item" style="text-align: left;" id="display_log_div">
+            <pre id="display_log">
+          </div>
+        </div>
+        <div class="item"><button type="button" class="pure-button" id="get_log"
+                                   onclick="get_log('run')">Show Log</button></div>
+        <br>
+      </div>
+  </div>
+{% endif %}
 
 </body>

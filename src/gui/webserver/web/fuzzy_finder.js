@@ -8,9 +8,9 @@ window.onload = function() {
   paths = document.getElementById("fuzzy_finder_div").getAttribute("pages");
   paths = JSON.parse(paths);
   if (document.getElementById("fuzzy_finder_div").hasAttribute("page_objects")) {
+    page_objects = [];
     page_objects = document.getElementById("fuzzy_finder_div").getAttribute("page_objects");
     page_objects = JSON.parse(page_objects)
-    console.log("objects found!");
     console.log(page_objects);
     for (var i=0; i<page_objects.length; i++)
       objects.push(page_objects[i][1]);

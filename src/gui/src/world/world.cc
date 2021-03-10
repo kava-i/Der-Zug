@@ -1,4 +1,6 @@
 #include "world.h"
+#include "nlohmann/json.hpp"
+#include "page/page.h"
 #include "page/sub_category.h"
 #include "util/error_codes.h"
 #include "util/func.h"
@@ -14,85 +16,85 @@ namespace fs = std::filesystem;
 
 World::World(std::string base_path, std::string path, int port) 
     : base_path_(base_path), path_(path), port_(port) {
-  std::cout << "Creating world: " << base_path << ", " << path << std::endl;
+
+  // Parse name and creator from path.
   std::string temp = path.substr(base_path.length()+1);
   name_ = temp.substr(temp.rfind("/")+1);
   creator_ = temp.substr(0, temp.find("/"));
+
+  // Init paths (map of full-path + page-object) and short_paths (vector of url-paths).
   InitializePaths(path_);
   UpdateShortPaths();
-  std::cout << "Done creating world.\n\n" << std::endl;
 }
 
 int World::port() const {
   return port_;
 }
 
-ErrorCodes World::AddElem(std::string path, std::string id, bool force) {
-  std::cout << "World::AddElem(" << path << ")" << std::endl;
-  // Convert id to lower-case and replace spaces with underscores.
-  ConvertId(id);
+ErrorCodes World::ModifyObject(std::string path, std::string id, nlohmann::json modified_obj, bool force) {
+  std::cout << "World::ModifyObject" << std::endl;
+  std::cout << "World::ModifyObject(" << path << ")" << std::endl;
+   // Check that path exists.
+  std::shared_lock sl(shared_mtx_paths_);
+  if (paths_.count(path) == 0) 
+    return ErrorCodes::PATH_NOT_FOUND;
+  
+  // Modify object. If not successfull or force-write (thus no need to do further checking), return error-code.
+  ErrorCodes error_code = paths_.at(path)->ModifyObject(path, id, modified_obj);
+  if (error_code != ErrorCodes::SUCCESS || force) 
+    return error_code;
+  
+  // Make changes permanent if game is still running, revert changes otherwise.
+  sl.unlock();
+  return RevertIfGameNotRunning(path, id, "modify");
+}
 
+ErrorCodes World::AddElem(std::string path, std::string name, bool force) {
+  std::cout << "World::AddElem(" << path << ")" << std::endl;
   // Check that path exists.
   std::shared_lock sl(shared_mtx_paths_);
-  if (paths_.count(path) > 0) {
-    ErrorCodes error_code;
-    // Add element.
-    try {
-      error_code = paths_.at(path)->AddElem(path, id);
-    } catch (std::exception& e) {
-      std::cout << "Failed due to error: " << e.what() << std::endl;
-      return ErrorCodes::FAILED;
-    }
-    if (error_code != ErrorCodes::SUCCESS)
-      return error_code;
+  if (paths_.count(path) == 0) 
+    return ErrorCodes::PATH_NOT_FOUND;
+  
+  // Convert id to lower-case and replace spaces with underscores.
+  ConvertId(name);
 
-    // Only make changes permanent, if game is still running (or force-write == true)
-    if (IsGameRunning() || force) {
-      sl.unlock();
-      InitializePaths(path_);
-      UpdateShortPaths();
-      return ErrorCodes::SUCCESS;
-    }
-    // Delete newly added element otherwise.
-    else {
-      paths_.at(path)->DelElem(path, id);
-      return ErrorCodes::GAME_NOT_RUNNING;
-    }
-  }
-  return ErrorCodes::PATH_NOT_FOUND;
+  // Add element. If not successfull or force-write (thus no need to do further checking), return error-code.
+  ErrorCodes error_code = paths_.at(path)->AddElem(path, name);
+  if (error_code != ErrorCodes::SUCCESS || force)
+    return error_code;
+
+  // Make changes permanent if game is still running, revert changes otherwise.
+  sl.unlock();
+  return RevertIfGameNotRunning(path, name, "add");
 }
 
 ErrorCodes World::DelElem(std::string path, std::string name, bool force) {
   std::cout << "World::DelElem(" << path << ")" << std::endl;
   std::shared_lock sl(shared_mtx_paths_);
-  if (paths_.count(path) > 0) {
-    ErrorCodes error_code = paths_.at(path)->DelElem(path, name);
-    if (error_code != ErrorCodes::SUCCESS) 
-      return error_code;
-    if (IsGameRunning() || force) {
-      sl.unlock();
-      InitializePaths(path_);
-      UpdateShortPaths();
-      return ErrorCodes::SUCCESS;
-    }
-    else {
-      std::cout << "Game not running, undoing changes!" << std::endl;
-      paths_.at(path)->UndoDelElem();
-      return ErrorCodes::GAME_NOT_RUNNING;
-    }
-  }
-  return ErrorCodes::PATH_NOT_FOUND;
+  if (paths_.count(path) == 0)
+    return ErrorCodes::PATH_NOT_FOUND;
+
+  // Delete element. If not successfull or force-write (thus no need to do further checking), return error-code.
+  ErrorCodes error_code = paths_.at(path)->DelElem(path, name);
+  if (error_code != ErrorCodes::SUCCESS || force) 
+    return error_code;
+ 
+  // Make changes permanent if game is still running, revert changes otherwise.
+  sl.unlock();
+  return RevertIfGameNotRunning(path, name, "delete");
 }
 
 nlohmann::json World::GetPage(std::string path) const {
   std::cout << "World::GetPage(" << path << ")" << std::endl;
   std::shared_lock sl(shared_mtx_paths_);
-  if (paths_.count(path) > 0) {
-    nlohmann::json json = paths_.at(path)->CreatePageData(path);
-    json["header"]["__short_paths"] = short_paths_;
-    return json;
-  }
-  return nlohmann::json({{"error", "File not found."}});
+  if (paths_.count(path) == 0)
+    return nlohmann::json({{"error", "File not found."}});
+  nlohmann::json json = paths_.at(path)->CreatePageData(path);
+  json["header"]["__short_paths"] = short_paths_;
+  json["header"]["__is_main"] = (path == path_);
+  json["header"]["__port"] = port_;
+  return json;
 }
 
 // paths_
@@ -138,21 +140,16 @@ void World::InitializePaths(std::string path) {
 }
 
 void World::UpdateShortPaths() {
-  std::cout << "Update paths: " << std::endl;
   std::shared_lock sl(shared_mtx_paths_);
   for (auto it : paths_)
     short_paths_.push_back(it.first.substr(base_path_.length()));
-  std::cout << "Done." << std::endl;
 }
 
 World::~World() {
   std::unique_lock ul(shared_mtx_paths_);
   while (paths_.size() > 0) {
     auto it = paths_.begin();
-    // std::string name = it->second->name();
-    std::erase_if(paths_, [&](const auto& elem) { 
-        return (elem.second->category() == it->second->name()); 
-      });
+    std::erase_if(paths_, [&](const auto& elem) { return (elem.second->category() == it->second->name()); });
     delete it->second;
     paths_.erase(it->first);
   }
@@ -184,4 +181,20 @@ bool World::IsGameRunning() const {
 void World::ConvertId(std::string& id) {
   id = func::ReturnToLower(id);
   std::replace(id.begin(), id.end(), ' ', '_');
+}
+
+ErrorCodes World::RevertIfGameNotRunning(std::string path, std::string id, std::string action) {
+  if (IsGameRunning()) {
+    InitializePaths(path_);
+    UpdateShortPaths();
+    return ErrorCodes::SUCCESS;
+  }
+  else {
+    std::shared_lock sl(shared_mtx_paths_);
+    if (action == "add")
+      paths_.at(path)->DelElem(path, id);
+    else
+      paths_.at(path)->RestoreBackupObj();
+    return ErrorCodes::GAME_NOT_RUNNING;
+  }
 }

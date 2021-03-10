@@ -56,24 +56,18 @@ class Worlds {
      */
     ErrorCodes DeleteWorld(std::string path);
 
-    /**
-     * Add new element:  directory, files or object.
-     * @param[in] path to category or area.
-     * @param[in] name of directory, file or object.
+    /** 
+     * Handles adding, deleting and modifiying elements.
+     * @param[in] path to object, which shall be modified.
+     * @param[in] name of object to add/ delete or payload of object which to modify.
+     * @param[in] action might be "add", "delete" or "modify".
      * @param[in] force indicate whether to create althouh game might crash.
+     * @param[in] obj json representation of an object. 
      * @return ErrorCode indicating success/ error.
      */
-    ErrorCodes AddElem(std::string path, std::string name, bool force=false);
-
-    /**
-     * Delete new element:  directory, files or object.
-     * @param[in] path to category or area.
-     * @param[in] name of directory, file or object.
-     * @param[in] force indicate whether to delete although game might crash.
-     * @return ErrorCode indicating success/ error.
-     */
-    ErrorCodes DelElem(std::string path, std::string name, bool force=false);
-
+    ErrorCodes UpdateElements(std::string path, std::string name, std::string action, bool force, 
+        nlohmann::json obj = nlohmann::json());
+    
     /**
      * Seves page of requested category/ object.
      * Acctually get json-data and path to tempate, then calls ParseTemplate().

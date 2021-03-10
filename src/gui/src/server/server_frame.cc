@@ -257,7 +257,7 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
 }
 
 void ServerFrame::AddElem(const Request& req, Response& resp) {
-  std::cout << "AddElem()" << std::endl;
+  std::cout << "ServerFrame::AddElem()" << std::endl;
   //Try to get username from cookie
   std::string username = CheckLogin(req, resp);
   if (username == "") return;
@@ -280,13 +280,11 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
     error_code = ErrorCodes::ACCESS_DENIED;
   }
   // Create new world
-  else if (req.matches.size() > 1 && req.matches[1] == "world") {
+  else if (req.matches.size() > 1 && req.matches[1] == "world")
     error_code = user_manager_.worlds()->CreateNewWorld("/"+username+"/files/"+name, name);
-  }
   // Create new object or (sub-)category.
-  else {
-    error_code = user_manager_.worlds()->AddElem(path, name, force);
-  }
+  else
+    error_code = user_manager_.worlds()->UpdateElements(path, name, "add", force);
 
   //Check whether action succeeded
   if (error_code == ErrorCodes::SUCCESS) 
@@ -298,6 +296,7 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
 }
 
 void ServerFrame::DelElem(const Request& req, Response& resp) {
+  std::cout << "ServerFrame::DelElem." << std::endl;
   //Try to get username from cookie
   std::string username = CheckLogin(req, resp);
   if (username == "") return;
@@ -319,11 +318,11 @@ void ServerFrame::DelElem(const Request& req, Response& resp) {
   if (req.matches.size() > 1 && req.matches[1] == "world")
     error_code = user_manager_.worlds()->DeleteWorld("/"+username+"/files/"+name);
   else if (user->CheckAccessToLocations(path))
-    error_code = user_manager_.worlds()->DelElem(path, name, force);
+    error_code = user_manager_.worlds()->UpdateElements(path, name, "delete", force);
   else
     error_code = ErrorCodes::ACCESS_DENIED;
   
-  //Check whether action succeeded
+  // Construct response.
   if (error_code == ErrorCodes::SUCCESS) 
     resp.status = 200;
   else 
@@ -333,14 +332,32 @@ void ServerFrame::DelElem(const Request& req, Response& resp) {
 }
 
 void ServerFrame::WriteObject(const Request& req, Response& resp) {
+  std::cout << "ServerFrame::WriteObject." << std::endl;
   //Try to get username from cookie
   std::string username = CheckLogin(req, resp);
   if (username == "") return;
   
+  //Try to parse json and get relevant attributes.
+  nlohmann::json json_req = ValidateJson(req, resp, {"json/id", "path"});
+  if (json_req.empty()) return;
+  std::string id = json_req["json"]["id"];
+  std::string path = json_req["path"];
+  nlohmann::json modified_obj = json_req["json"];
+  bool force = json_req.value("force", false);
+  
+  //Get user
   std::shared_lock sl(shared_mtx_user_manager_);
-  //Call matching function.
-  int error_code = user_manager_.GetUser(username)->WriteObject(req.body);
+  int error_code;
+  User* user = user_manager_.GetUser(username);
   sl.unlock();
+
+  // Call function to modify object.
+  if (user->CheckAccessToLocations(path))
+    error_code = user_manager_.worlds()->UpdateElements(path, id, "modify", force, modified_obj);
+  else 
+    error_code = ErrorCodes::ACCESS_DENIED;
+
+  // Construct response.
   if (error_code == ErrorCodes::SUCCESS)
     resp.status = 200;
   else
@@ -500,20 +517,26 @@ std::string ServerFrame::CheckLogin(const Request& req, Response& resp) const {
 
 nlohmann::json ServerFrame::ValidateJson(const Request& req, Response& resp, 
       std::vector<std::string> keys) const {
+  nlohmann::json json;
   try {
-    nlohmann::json json = nlohmann::json::parse(req.body);
-    for (auto it : keys) {
-      std::string key = json[it];
-      json[it] = key;
-    }
-    return json;
-  }
-  catch (std::exception& e) {
+    json = nlohmann::json::parse(req.body);
+  } catch (std::exception& e) {
     resp.set_content("invalid json.", "text/txt");
     resp.status = 401;
-    std::cout << "Error parsing request: " << e.what() << std::endl;
     return nlohmann::json();
   }
+  for (auto key : keys) {
+    nlohmann::json temp_json = json;
+    for (auto temp_key : func::Split(key, "/")) {
+      if (temp_json.count(temp_key) == 0) {
+        resp.set_content("invalid json.", "text/txt");
+        resp.status = 401;
+        return nlohmann::json();
+      }
+      temp_json = temp_json[temp_key];
+    }
+  }
+  return json;
 }
 
 bool ServerFrame::IsRunning() {

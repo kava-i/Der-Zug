@@ -46,11 +46,13 @@
 <div class="box_overview center_in_box">
   <h1>{{world}}</h1>
     <div class="controlers">
-      {% if port != 0 %}
+      {{ log("checking for given port") }}
+      {% if __port != 0 %}
+        {{ log("port found!") }}
         <button class="pure-button" style="margin-bottom:0.5em;"
-                                  onclick="run({{port}});">Run</button><br>
+                                  onclick="run({{__port}});">Run</button><br>
         <button class="pure-button" style="margin-bottom:0.5em;"
-                                  onclick="end({{port}});">Close</button><br>
+                                  onclick="end({{__port}});">Close</button><br>
       {% endif %}
       <table id="categorys">
         <tr>

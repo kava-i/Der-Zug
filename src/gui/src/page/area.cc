@@ -17,6 +17,19 @@ std::string Area::category() const {
   return category_; 
 }
 
+ErrorCodes Area::ModifyObject(std::string path, std::string name, nlohmann::json modified_object) {
+  std::cout << "Area::ModifyObject(" << path << ")" << std::endl;
+  // If path was object-path, or object does not exist, object cannot be modified.
+  if (objects_.count(name) == 0)
+    return ErrorCodes::PATH_NOT_FOUND;
+
+  // Create a backup of the original object, then overwrite original with modified object.
+  backup_obj_ = objects_[name];
+  objects_[name] = modified_object; 
+  func::WriteJsonToDisc(path_ + ".json", objects_);
+  return ErrorCodes::SUCCESS; 
+}
+
 ErrorCodes Area::AddElem(std::string path, std::string name) {
   std::cout << "Area::AddElem(" << path << ")" << std::endl;
   // If path was object-path, then no new object can be created.
@@ -26,6 +39,7 @@ ErrorCodes Area::AddElem(std::string path, std::string name) {
   // Check if element already exists.
   if (objects_.count(name) > 0) 
     return ErrorCodes::ALREADY_EXISTS;
+
   // Create new element from template, add to elements and write to disc.
   objects_[name] = new_obj;
   func::WriteJsonToDisc(path_ + ".json", objects_);
@@ -34,23 +48,22 @@ ErrorCodes Area::AddElem(std::string path, std::string name) {
 
 ErrorCodes Area::DelElem(std::string path, std::string name) {
   std::cout << "Area::DelElem(" << path << ")" << std::endl;
-  // If path was object-path, then no new object can be created.
-  if (IsObject(path))
+  // If path was object-path, or object does not exist, object cannot be deleted.
+  if (IsObject(path) || objects_.count(name) == 0)
     return ErrorCodes::PATH_NOT_FOUND;
-  if (objects_.count(name) == 0) 
-    return ErrorCodes::PATH_NOT_FOUND;
-  // Erase element from elements and write to disc.
-  last_deleted_obj_ = objects_[name];
+
+  // Create backup object, then erase element from elements and write to disc.
+  backup_obj_ = objects_[name];
   objects_.erase(name);
   func::WriteJsonToDisc(path_ + ".json", objects_);
   return ErrorCodes::SUCCESS; 
 }
 
-ErrorCodes Area::UndoDelElem() {
+ErrorCodes Area::RestoreBackupObj() {
   std::cout << "Area::UndoDelElem()" << std::endl;
-  if (last_deleted_obj_.empty() || !(last_deleted_obj_.count("id") > 0))
+  if (backup_obj_.empty() || !(backup_obj_.count("id") > 0))
     return ErrorCodes::FAILED;
-  objects_[last_deleted_obj_["id"].get<std::string>()] = last_deleted_obj_;
+  objects_[backup_obj_["id"].get<std::string>()] = backup_obj_;
   func::WriteJsonToDisc(path_ + ".json", objects_);
   return ErrorCodes::SUCCESS;
 }

@@ -265,7 +265,7 @@ function WriteElem(direct=false, force=false) {
     //If request fails, display message to user.
     console.log("Response: ", this.responseText);
     if (xhttp.status != 200) {
-      if (this.responseText = "9") {
+      if (this.responseText == "9") {
         document.getElementById("modal_write").style.display = "none";
         document.getElementById("modal_log").style.display = "inline-block";
         document.getElementById("check_msg_log").style.color = "red";
