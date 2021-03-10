@@ -1,4 +1,5 @@
 #include "world.h"
+#include <stdexcept>
 
 #define cRED "\033[1;31m"
 #define cCLEAR "\033[0m"
@@ -194,6 +195,16 @@ void CWorld::worldFactory(CPlayer* p)
 
     //Create rooms
     roomFactory(p);
+
+    // Verify existing exists 
+    for (auto it : m_rooms) {
+      for (auto exit : it.second->getExtits()) {
+        if (m_rooms.count(exit.first) == 0) {
+          std::cout << "Exit without matching room: " + exit.first + " in " + it.first << std::endl;
+          throw "Exit without matching room: " + exit.first + " in " + it.first;
+        }
+      }
+    }
 
     //Load texts
     textFactory();
@@ -406,7 +417,7 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room,
     auto character = it.get<std::pair<std::string, nlohmann::json>>();
     std::string sID = j_room["id"].get<std::string>() + "_" + character.first;
 
-    //Gett basic json for construction.
+    //Get basic json for construction.
     nlohmann::json jBasic;
     if(m_jCharacters.count(character.first) > 0)
       jBasic = m_jCharacters[character.first];
@@ -415,6 +426,11 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room,
 
     //Update basic with specific json
     func::updateJson(jBasic, character.second);     
+
+    if (jBasic.count("name") == 0) {
+      std::cout << "Character created without name: " << sID << std::endl; 
+      throw "Character created without name: " + sID;
+    }
 
     //Update id
     auto lambda = [] (CPerson* person) { return person->getName(); };
