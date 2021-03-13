@@ -31,6 +31,15 @@ int World::port() const {
   return port_;
 }
 
+std::string World::name() const {
+  return name_;
+}
+
+std::string World::creator() const {
+  return creator_;
+}
+
+
 ErrorCodes World::ModifyObject(std::string path, std::string id, nlohmann::json modified_obj, bool force) {
   std::cout << "World::ModifyObject" << std::endl;
   std::cout << "World::ModifyObject(" << path << ")" << std::endl;

@@ -44,6 +44,8 @@ class World {
 
     // getter:
     int port() const;
+    std::string name() const;
+    std::string creator() const;
 
     // public methods:
     

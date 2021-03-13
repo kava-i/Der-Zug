@@ -481,23 +481,23 @@ void ServerFrame::StartGame(const Request& req, Response& resp) {
   if (username == "") return;
 
   //Extract data from path and build path to textadventure.
-  std::string user = req.body.substr(1, req.body.find("/", 1)-1);
-  std::string world = req.body.substr(req.body.rfind("/")+1);
-  std::string path_to_game = "../../data/users" + req.body + "/";
-  if (!func::demo_exists(path_to_game)) {
+  std::string url_path = req.body;
+  std::string path_to_game = "../../data/users" + url_path + "/";
+    
+  //Get world (keep mutex locked to assure, that pointer is not changed. 
+  std::shared_lock sl(shared_mtx_user_manager_);
+  World* world = user_manager_.worlds()->GetWorldFromUrl(url_path);
+  if (world == nullptr || !func::demo_exists(path_to_game)) {
     resp.status = 401;
     return;
   }
 
-  //Get port
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string port = std::to_string(user_manager_.GetPortOfWorld(user, world));
-  sl.unlock();
-
   //Build command and start game
   std::string command = "../../textadventure/build/bin/txtadventure "
-    + path_to_game + " " + port
-    + " > ../../data/users/" + user + "/logs/" + world + "_run.txt &";
+    + path_to_game + " " + std::to_string(world->port())
+    + " > ../../data/users/" + world->creator() + "/logs/" + world->name() + "_run.txt &";
+  sl.unlock();
+
   std::cout << system(command.c_str()) << std::endl;
   resp.status = 200;
 }

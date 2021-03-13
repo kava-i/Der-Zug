@@ -69,13 +69,21 @@ class Worlds {
         nlohmann::json obj = nlohmann::json());
     
     /**
-     * Seves page of requested category/ object.
+     * Serves page of requested category/ object.
      * Acctually get json-data and path to tempate, then calls ParseTemplate().
      * @param[in] path (url)
      * @return rendered page.
      */
     std::string GetPage(std::string path);
-    
+
+    /**
+     * Finds world with given url in all worlds.
+     * Checks if world-path is contained in given base_path + (url-) path.
+     * @param[in] path as url path.
+     * @return world, or nullptr if not found.
+     */
+    World* GetWorldFromUrl(std::string path);
+
   private:
     // member variables:
     int ports_;
@@ -93,14 +101,6 @@ class Worlds {
      * @return rendered page.
      */
     std::string ParseTemplate(nlohmann::json json);
-
-    /**
-     * Finds world with given url in all worlds.
-     * Checks if world-path is contained in given base_path + (url-) path.
-     * @param[in] path as url path.
-     * @return world, or nullptr if not found.
-     */
-    World* GetWorldFromUrl(std::string path);
 };
 
 #endif

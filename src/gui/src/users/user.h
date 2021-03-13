@@ -83,50 +83,7 @@ class User {
 
     // ** Create New Files/ Folders ** //
 
-    /**
-     * @brief Adds new file to category
-     * Adds new file and tries to create json matching category. 
-     * @param path
-     * @param name
-     * @return error code.
-     */
-    int AddFile(std::string path, std::string name);
     
-    /**
-     * @brief Adds a new empty object
-     * @param path
-     * @param id
-     * @param force
-     * @return ErrorCode.
-     */
-    int AddNewObject(std::string path, std::string id, bool force=false);
-
-    /**
-     * Write json to disc.
-     * Used to create a new object or overwrite an existsing object.
-     * @param[in] request (request to create new, or change existsing)
-     * @param[in] force (If true, then writing is set even if game is not
-     * running.)
-     * @return ErrorCode.
-     */
-    int WriteObject(std::string request);
-
-    /**
-     * delete a given file (subcategory) 
-     * @param[in] path (path to category)
-     * @param[in] subcategory 
-     * return ErrorCode.
-     */
-    int DeleteFile(std::string path, std::string subcategory);
-
-    /**
-     * delete a given object
-     * @param[in] path (path to json)
-     * @param[in] object (object to delete from json)
-     * return ErrorCode.
-     */
-    int DeleteObject(std::string path, std::string object);
-
     // ** functions ** //
     
     /**
@@ -173,13 +130,6 @@ class User {
      * @return boolean indicating success.
      */
     bool CheckGameRunning(std::string path);
-
-    /**
-     * Get a attribute of a certain world
-     * @param[in] path (path to world)
-     * @param[in] attr 
-     */
-    int GetPortOfWorld(std::string path);
 
     /**
      * Adds a new access-request.
