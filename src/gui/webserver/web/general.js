@@ -111,6 +111,7 @@ function DelElem(force=false) {
   var json_request = new Object();
   json_request["name"] = document.getElementById("check_msg").elem_name;
   json_request["path"] = window.location.pathname;
+  json_request["force"] = force;
 
   //Send request
   var xhttp = new XMLHttpRequest();

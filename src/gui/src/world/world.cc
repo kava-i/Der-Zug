@@ -56,11 +56,8 @@ ErrorCodes World::AddElem(std::string path, std::string name, bool force) {
   if (paths_.count(path) == 0) 
     return ErrorCodes::PATH_NOT_FOUND;
   
-  // Convert id to lower-case and replace spaces with underscores.
-  ConvertId(name);
-
   // Add element. If not successfull or force-write (thus no need to do further checking), return error-code.
-  ErrorCodes error_code = paths_.at(path)->AddElem(path, name);
+  ErrorCodes error_code = paths_.at(path)->AddElem(path, func::ConvertToId(name));
   if (error_code != ErrorCodes::SUCCESS || force)
     return error_code;
 
@@ -77,6 +74,7 @@ ErrorCodes World::DelElem(std::string path, std::string name, bool force) {
 
   // Delete element. If not successfull or force-write (thus no need to do further checking), return error-code.
   ErrorCodes error_code = paths_.at(path)->DelElem(path, name);
+  std::cout << "Checking error-code: " << error_code << ". Force: " << force << std::endl;
   if (error_code != ErrorCodes::SUCCESS || force) 
     return error_code;
  

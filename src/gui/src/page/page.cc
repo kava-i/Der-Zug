@@ -57,12 +57,9 @@ bool Page::GetObjectFromTemplate(nlohmann::json& object, std::string name) {
   // Get first (as probably only) object from list.
   object = *objects.begin();
   // If object has id and/ or name field set field to given name.
-  if (object.count("id") > 0) {
+  if (object.count("id") > 0)
     object["id"] = name;
-  }
-  if (object.count("name") > 0) {
-    name[0] = std::toupper(name[0]);
-    object["name"] = name;
-  }
+  if (object.count("name") > 0)
+    object["name"] = func::ConvertFromId(name);
   return true;
 }

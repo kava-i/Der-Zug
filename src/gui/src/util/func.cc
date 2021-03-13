@@ -3,6 +3,7 @@
 
 #include <codecvt>
  
+#include <cstddef>
 #include <exception>
 #include <fstream>
 #include <openssl/evp.h>
@@ -139,6 +140,49 @@ std::string hash_sha3_512(const std::string& input) {
     stream << std::setw(2) << std::setfill('0') << (int)b;
 
   return stream.str();
+}
+
+std::string ReplaceNonUTF8(std::string& str) {
+  std::map<wchar_t, char> rep = {{L'ä','a'},{L'ö','o'},{L'ü','u'},{L'ß','s'},{L'é','e'},{L'è','e'},{L'á','a'},{L'ê','e'},{L'â','a'}, {L'ſ','s'}, {L'Ä','A'},{L'Ö','O'},{L'Ü','U'},{L'Ö','O'},{L'ß','S'},{L'É','E'},{L'È','E'},{L'Á','A'},{L'Ê','E'},{L'Â','A'}, {L'S','S'}};
+  std::vector<wchar_t> add_e = {L'ä', L'ü', L'ö', L'Ä', L'Ü', L'Ö'};
+  std::vector<wchar_t> add_s = {L'ß'};
+
+  std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+  std::wstring wide = converter.from_bytes(str); 
+  std::string new_str;
+  for(size_t i=0; i<wide.length(); i++) {
+    if(rep.count(wide[i]) > 0) {
+      new_str.push_back(rep[wide[i]]);
+      if (std::find(add_e.begin(), add_e.end(), wide[i]) != add_e.end())
+        new_str.push_back('e');
+      else if (std::find(add_s.begin(), add_s.end(), wide[i]) != add_s.end())
+        new_str.push_back('s');
+    }
+    else
+      new_str.push_back((char)wide[i]);
+  }
+  return new_str;
+}
+
+std::string ConvertToId(std::string &name) {
+  name = ReplaceNonUTF8(name);
+  std::vector<std::string> words = Split(name, " ");
+  std::string id = (char)std::tolower(words[0][0]) + words[0].substr(1);
+  for (size_t i=1; i<words.size(); i++) {
+    id += "_"; 
+    id += (char)std::tolower(words[i][0]) + words[i].substr(1);
+  }
+  return id;
+}
+
+std::string ConvertFromId(std::string &id) {
+  std::vector<std::string> words = Split(id, "_");
+  std::string name = (char)std::toupper(words[0][0]) + words[0].substr(1);
+  for (size_t i=1; i<words.size(); i++) {
+    name += " "; 
+    name += (char)std::toupper(words[i][0]) + words[i].substr(1);
+  }
+  return name;
 }
 
 } //Close namespace 

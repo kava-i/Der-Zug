@@ -88,6 +88,12 @@ namespace func
    * @return The hashed string is returned, the input remains unchanged
    */
   std::string hash_sha3_512(const std::string& input);
+
+  std::string ReplaceNonUTF8(std::string& str);
+
+  std::string ConvertToId(std::string& name);
+
+  std::string ConvertFromId(std::string &id);
 }
 
 #endif

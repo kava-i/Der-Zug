@@ -130,6 +130,8 @@ void ServerFrame::Start(int port) {
       resp.set_content(func::GetImage("web/images/background.jpg"), "image/jpg");});
   server_.Get("/web/logo.png", [](const Request& req, Response& resp) {
       resp.set_content(func::GetImage("web/images/logo.png"), "image/png");});
+  server_.Get("/favicon.png", [](const Request& req, Response& resp) {
+      resp.set_content(func::GetImage("web/images/favicon.png"), "image/png");});
 
 
   std::cout << "C++ Api server startup successfull!\n" << std::endl;
@@ -297,6 +299,7 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
 
 void ServerFrame::DelElem(const Request& req, Response& resp) {
   std::cout << "ServerFrame::DelElem." << std::endl;
+  std::cout << "Body: " << req.body << std::endl;
   //Try to get username from cookie
   std::string username = CheckLogin(req, resp);
   if (username == "") return;
