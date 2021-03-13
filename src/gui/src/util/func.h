@@ -29,10 +29,10 @@ namespace func
   std::string ReturnToLower(std::string &str);
 
   /**
-  * @param[in] str string to be splitet
-  * @param[in] delimitter 
-  * @return vector
-  */
+   * @param[in] str string to be splitet
+   * @param[in] delimitter 
+   * @return vector
+   */
   std::vector<std::string> Split(std::string str, std::string delimiter);
 
   /**

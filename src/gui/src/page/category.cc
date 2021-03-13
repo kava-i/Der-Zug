@@ -15,6 +15,7 @@ nlohmann::json Category::CreatePageData(std::string path) {
 }
 
 void Category::GenerateChildNodes() {
+  std::cout << "GenerateChildNodes" << std::endl;
   child_nodes_.clear();
   for (auto& p : fs::directory_iterator(path_)) {
     fs::path fs_path = p.path();

@@ -11,6 +11,7 @@
 #include <ostream>
 #include <shared_mutex>
 #include <string>
+#include <vector>
 
 namespace fs = std::filesystem;
 
@@ -39,10 +40,8 @@ std::string World::creator() const {
   return creator_;
 }
 
-
 ErrorCodes World::ModifyObject(std::string path, std::string id, nlohmann::json modified_obj, bool force) {
   std::cout << "World::ModifyObject" << std::endl;
-  std::cout << "World::ModifyObject(" << path << ")" << std::endl;
    // Check that path exists.
   std::shared_lock sl(shared_mtx_paths_);
   if (paths_.count(path) == 0) 
@@ -108,12 +107,9 @@ nlohmann::json World::GetPage(std::string path) const {
 void World::InitializePaths(std::string path) {
   std::cout << "InitializePaths: " << path << std::endl;
   std::unique_lock ul(shared_mtx_paths_);
-  //Check if directory is empty.
-  if (fs::is_empty(path)) {
-    std::cout << "Empty directory." << std::endl;
-  }
-  // category => elements are directories:
-  else if (fs::is_directory(fs::directory_iterator(path)->path())) {
+  
+  // category => elements are directories (we no, what all categories and can check).
+  if (path == path_) {
     paths_[path] = new Category(base_path_, path);
     std::cout << "Added Category: " << path << std::endl;
     ul.unlock();

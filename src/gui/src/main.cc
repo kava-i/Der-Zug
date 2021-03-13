@@ -5,10 +5,12 @@
 #include <string>    
     
 #include "server/server_frame.h"
+#include "world/worlds.h"
+#include "world/world.h"
     
 
 int main() {
-
+  
   //Create server frame depending on server (with ssl) or local (no ssl).
 #ifdef _COMPILE_FOR_SERVER_
   ServerFrame srv_frame(
