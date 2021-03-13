@@ -100,8 +100,6 @@ ErrorCodes Worlds::UpdateElements(std::string path, std::string name, std::strin
     return ErrorCodes::NO_WORLD;
 
   // Call matching world-function: add, delete or modify element.
-  std::cout << "Object: " << obj << std::endl;
-  std::cout << "World port: " << world->port() << std::endl;
   if (action == "modify")
     return world->ModifyObject(base_path_ + path, name, obj, force);
   else if (action == "add")

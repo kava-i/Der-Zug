@@ -50,7 +50,7 @@ class SubCategory : public Category {
      * Restore deleted object.
      * Before deleting object, the object will be stored, and can be recreated.
      */
-    ErrorCodes UndoDelElem(); 
+    ErrorCodes RestoreBackupObj(); 
 
   private:
     // private members:

@@ -193,6 +193,7 @@ void World::ConvertId(std::string& id) {
 }
 
 ErrorCodes World::RevertIfGameNotRunning(std::string path, std::string id, std::string action) {
+  std::cout << "Checking game running .. " << path << ", " << id << ", " << action << std::endl;
   ErrorCodes error_code = ErrorCodes::SUCCESS;
   // If game is not running, revert changes.
   if (!IsGameRunning()) {
@@ -202,8 +203,11 @@ ErrorCodes World::RevertIfGameNotRunning(std::string path, std::string id, std::
       paths_.at(path)->DelElem(path, id);
       std::cout << "Element deteled." << std::endl;
     }
-    else
+    else {
+      std::cout << "Game not running, restoring element." << std::endl;
       paths_.at(path)->RestoreBackupObj();
+      std::cout << "Element restored." << std::endl;
+    }
     error_code = ErrorCodes::GAME_NOT_RUNNING;
   }
   return error_code;

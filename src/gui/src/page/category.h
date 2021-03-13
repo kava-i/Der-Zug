@@ -48,12 +48,6 @@ class Category : public Page {
     ErrorCodes DelElem(std::string, std::string) { return ErrorCodes::FAILED; }
 
     /**
-     * Restore deleted object.
-     * Before deleting object, the object will be stored, and can be recreated.
-     */
-    ErrorCodes UndoDelElem() { return ErrorCodes::FAILED; };
-
-    /**
      * Calls base-class function.
      ** @param[in] path to area or object.
      * @return json with information.
