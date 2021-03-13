@@ -1,7 +1,7 @@
 {
-  "_admin":{
-    "id":"_admin",
-    "name":"Admin",
+  "new_player":{
+    "id":"new_player",
+    "name":"New Player",
     "password":"password",
     "room":"test_test_room",
     "hp":10
