@@ -141,6 +141,8 @@ class World {
      * @return Error-code (succes, or game not running).
      */
     ErrorCodes RevertIfGameNotRunning(std::string path, std::string id, std::string action);
+
+    void RefreshWorld();
 };
 
 #endif

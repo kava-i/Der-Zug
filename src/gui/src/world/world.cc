@@ -49,12 +49,14 @@ ErrorCodes World::ModifyObject(std::string path, std::string id, nlohmann::json 
   
   // Modify object. If not successfull or force-write (thus no need to do further checking), return error-code.
   ErrorCodes error_code = paths_.at(path)->ModifyObject(path, id, modified_obj);
-  if (error_code != ErrorCodes::SUCCESS || force) 
-    return error_code;
-  
-  // Make changes permanent if game is still running, revert changes otherwise.
   sl.unlock();
-  return RevertIfGameNotRunning(path, id, "modify");
+  // If successfull and force disabled, make revert, or make changes permanent.
+  if (error_code == ErrorCodes::SUCCESS && !force)
+    error_code = RevertIfGameNotRunning(path, id, "modify");
+
+  // Refresh world and return error-code.
+  RefreshWorld(); 
+  return error_code;
 }
 
 ErrorCodes World::AddElem(std::string path, std::string name, bool force) {
@@ -66,12 +68,14 @@ ErrorCodes World::AddElem(std::string path, std::string name, bool force) {
   
   // Add element. If not successfull or force-write (thus no need to do further checking), return error-code.
   ErrorCodes error_code = paths_.at(path)->AddElem(path, func::ConvertToId(name));
-  if (error_code != ErrorCodes::SUCCESS || force)
-    return error_code;
-
-  // Make changes permanent if game is still running, revert changes otherwise.
   sl.unlock();
-  return RevertIfGameNotRunning(path, name, "add");
+  // If successfull and force disabled, make revert, or make changes permanent.
+  if (error_code == ErrorCodes::SUCCESS && !force)
+    error_code = RevertIfGameNotRunning(path, name, "add");
+
+  // Refresh world and return error-code.
+  RefreshWorld(); 
+  return error_code;
 }
 
 ErrorCodes World::DelElem(std::string path, std::string name, bool force) {
@@ -82,13 +86,15 @@ ErrorCodes World::DelElem(std::string path, std::string name, bool force) {
 
   // Delete element. If not successfull or force-write (thus no need to do further checking), return error-code.
   ErrorCodes error_code = paths_.at(path)->DelElem(path, name);
-  std::cout << "Checking error-code: " << error_code << ". Force: " << force << std::endl;
-  if (error_code != ErrorCodes::SUCCESS || force) 
-    return error_code;
- 
-  // Make changes permanent if game is still running, revert changes otherwise.
   sl.unlock();
-  return RevertIfGameNotRunning(path, name, "delete");
+  std::cout << "Checking error-code: " << error_code << ". Force: " << force << std::endl;
+  // If successfull and force disabled, make revert, or make changes permanent.
+  if (error_code == ErrorCodes::SUCCESS && !force)
+    error_code = RevertIfGameNotRunning(path, name, "delete");
+
+  // Refresh world and return error-code.
+  RefreshWorld(); 
+  return error_code;
 }
 
 nlohmann::json World::GetPage(std::string path) const {
@@ -187,17 +193,21 @@ void World::ConvertId(std::string& id) {
 }
 
 ErrorCodes World::RevertIfGameNotRunning(std::string path, std::string id, std::string action) {
-  if (IsGameRunning()) {
-    InitializePaths(path_);
-    UpdateShortPaths();
-    return ErrorCodes::SUCCESS;
-  }
-  else {
+  ErrorCodes error_code = ErrorCodes::SUCCESS;
+  // If game is not running, revert changes.
+  if (!IsGameRunning()) {
     std::shared_lock sl(shared_mtx_paths_);
     if (action == "add")
       paths_.at(path)->DelElem(path, id);
     else
       paths_.at(path)->RestoreBackupObj();
-    return ErrorCodes::GAME_NOT_RUNNING;
+    error_code = ErrorCodes::GAME_NOT_RUNNING;
   }
+  return error_code;
+}
+
+void World::RefreshWorld() {
+  // Recreate paths and short-paths.
+  InitializePaths(path_);
+  UpdateShortPaths();
 }
