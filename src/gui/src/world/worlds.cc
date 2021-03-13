@@ -1,6 +1,7 @@
 #include "worlds.h"
 #include "nlohmann/json.hpp"
 #include "util/error_codes.h"
+#include "util/func.h"
 #include "world/world.h"
 #include <algorithm>
 #include <exception>
@@ -101,14 +102,12 @@ ErrorCodes Worlds::UpdateElements(std::string path, std::string name, std::strin
   // Call matching world-function: add, delete or modify element.
   std::cout << "Object: " << obj << std::endl;
   std::cout << "World port: " << world->port() << std::endl;
-  if (action == "modify") {
-    std::cout << "Calling 'ModifyObject': " << base_path_ + path << std::endl;
+  if (action == "modify")
     return world->ModifyObject(base_path_ + path, name, obj, force);
-  }
   else if (action == "add")
-    return world->AddElem(base_path_ + path, name, force);
+    return world->AddElem(base_path_ + path, func::ConvertToId(name), force);
   else if (action == "delete")
-    return world->DelElem(base_path_ + path, name, force);
+    return world->DelElem(base_path_ + path, func::ConvertToId(name), force);
   else
    return ErrorCodes::NOT_ALLOWED;
 }

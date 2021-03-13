@@ -59,38 +59,38 @@ ErrorCodes World::ModifyObject(std::string path, std::string id, nlohmann::json 
   return error_code;
 }
 
-ErrorCodes World::AddElem(std::string path, std::string name, bool force) {
-  std::cout << "World::AddElem(" << path << ")" << std::endl;
+ErrorCodes World::AddElem(std::string path, std::string id, bool force) {
+  std::cout << "World::AddElem(" << path << ", " << force << ")" << std::endl;
   // Check that path exists.
   std::shared_lock sl(shared_mtx_paths_);
   if (paths_.count(path) == 0) 
     return ErrorCodes::PATH_NOT_FOUND;
-  
+
   // Add element. If not successfull or force-write (thus no need to do further checking), return error-code.
-  ErrorCodes error_code = paths_.at(path)->AddElem(path, func::ConvertToId(name));
+  ErrorCodes error_code = paths_.at(path)->AddElem(path, id);
   sl.unlock();
   // If successfull and force disabled, make revert, or make changes permanent.
   if (error_code == ErrorCodes::SUCCESS && !force)
-    error_code = RevertIfGameNotRunning(path, name, "add");
+    error_code = RevertIfGameNotRunning(path, id, "add");
 
   // Refresh world and return error-code.
   RefreshWorld(); 
   return error_code;
 }
 
-ErrorCodes World::DelElem(std::string path, std::string name, bool force) {
+ErrorCodes World::DelElem(std::string path, std::string id, bool force) {
   std::cout << "World::DelElem(" << path << ")" << std::endl;
   std::shared_lock sl(shared_mtx_paths_);
   if (paths_.count(path) == 0)
     return ErrorCodes::PATH_NOT_FOUND;
 
   // Delete element. If not successfull or force-write (thus no need to do further checking), return error-code.
-  ErrorCodes error_code = paths_.at(path)->DelElem(path, name);
+  ErrorCodes error_code = paths_.at(path)->DelElem(path, id);
   sl.unlock();
   std::cout << "Checking error-code: " << error_code << ". Force: " << force << std::endl;
   // If successfull and force disabled, make revert, or make changes permanent.
   if (error_code == ErrorCodes::SUCCESS && !force)
-    error_code = RevertIfGameNotRunning(path, name, "delete");
+    error_code = RevertIfGameNotRunning(path, id, "delete");
 
   // Refresh world and return error-code.
   RefreshWorld(); 
@@ -197,8 +197,11 @@ ErrorCodes World::RevertIfGameNotRunning(std::string path, std::string id, std::
   // If game is not running, revert changes.
   if (!IsGameRunning()) {
     std::shared_lock sl(shared_mtx_paths_);
-    if (action == "add")
+    if (action == "add") {
+      std::cout << "Game not running, deleting element." << std::endl;
       paths_.at(path)->DelElem(path, id);
+      std::cout << "Element deteled." << std::endl;
+    }
     else
       paths_.at(path)->RestoreBackupObj();
     error_code = ErrorCodes::GAME_NOT_RUNNING;
