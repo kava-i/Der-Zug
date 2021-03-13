@@ -127,7 +127,7 @@ function DelElem(force=false) {
       document.getElementById("btn_del_elem").style.display = "none";
       // got error code.
       if (this.responseText in error_codes) {
-        msg.innerHTML = "Adding element failed due to error: " + error_codes[this.responseText];
+        msg.innerHTML = "Deleteing element failed due to error: " + error_codes[this.responseText];
         if (this.responseText == "9") 
           document.getElementById("force_del_elem").style.display = "inline-block";
       }
