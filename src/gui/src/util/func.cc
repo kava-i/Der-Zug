@@ -185,4 +185,22 @@ std::string ConvertFromId(std::string &id) {
   return name;
 }
 
+nlohmann::json ValidateJson(std::string json_string, std::vector<std::string> keys) {
+  nlohmann::json json;
+  try {
+    json = nlohmann::json::parse(json_string);
+  } catch (std::exception& e) {
+    return nlohmann::json();
+  }
+  for (auto key : keys) {
+    nlohmann::json temp_json = json;
+    for (auto temp_key : func::Split(key, "/")) {
+      if (temp_json.count(temp_key) == 0)
+        return nlohmann::json();
+      temp_json = temp_json[temp_key];
+    }
+  }
+  return json;
+}
+
 } //Close namespace 

@@ -520,24 +520,11 @@ std::string ServerFrame::CheckLogin(const Request& req, Response& resp) const {
 
 nlohmann::json ServerFrame::ValidateJson(const Request& req, Response& resp, 
       std::vector<std::string> keys) const {
-  nlohmann::json json;
-  try {
-    json = nlohmann::json::parse(req.body);
-  } catch (std::exception& e) {
+  nlohmann::json json = func::ValidateJson(req.body, keys);
+  if (json.empty()) {
     resp.set_content("invalid json.", "text/txt");
     resp.status = 401;
     return nlohmann::json();
-  }
-  for (auto key : keys) {
-    nlohmann::json temp_json = json;
-    for (auto temp_key : func::Split(key, "/")) {
-      if (temp_json.count(temp_key) == 0) {
-        resp.set_content("invalid json.", "text/txt");
-        resp.status = 401;
-        return nlohmann::json();
-      }
-      temp_json = temp_json[temp_key];
-    }
   }
   return json;
 }

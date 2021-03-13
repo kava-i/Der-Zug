@@ -89,11 +89,31 @@ namespace func
    */
   std::string hash_sha3_512(const std::string& input);
 
+  /**
+   * Replaced non utf-8 characters. (ä->a, ß->ss etc. and for german characters
+   * add 'e' for Umlaute and s to ß (ä->ae).
+   * @param[in] str string to convert.
+   * @return converted string.
+   */
   std::string ReplaceNonUTF8(std::string& str);
 
+  /**
+   * Convert name to id. to lower and replaces " " with "_", also replaces non
+   * utf8 characters.
+   * @param[in] name to convert.
+   * @return converted id.
+   */
   std::string ConvertToId(std::string& name);
 
+  /**
+   * Convert id to name. First character of each word to Upper and replaces "_"
+   * with " ".
+   * @param[in] id to convert.
+   * @return converted name.
+   */
   std::string ConvertFromId(std::string &id);
+
+  nlohmann::json ValidateJson(std::string json_string, std::vector<std::string> keys);
 }
 
 #endif
