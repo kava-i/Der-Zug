@@ -63,10 +63,11 @@ class World {
      * Add new element:  directory, files or object.
      * @param[in] path to category or area.
      * @param[in] name of directory, file or object.
+     * @param[in] infos potential additional information (f.e. name of start-room).
      * @param[in] force indicate whether to create althouh game might crash.
      * @return ErrorCode indicating success/ error.
      */
-    ErrorCodes AddElem(std::string path, std::string name, bool force);
+    ErrorCodes AddElem(std::string path, std::string name, nlohmann::json infos, bool force);
 
     /**
      * Delete element:  directory, files or object.

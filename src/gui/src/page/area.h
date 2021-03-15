@@ -39,10 +39,11 @@ class Area : public Page {
     /**
      * Add new object.
      * @param[in] path to category or area.
-     * @param[in] name of directory, file or object.
+     * @param[in] id of object to add.
+     * @param[in] infos f.e name of start-room, when adding player.
      * @return ErrorCode indicating success/ error.
      */
-    ErrorCodes AddElem(std::string path, std::string name);
+    ErrorCodes AddElem(std::string path, std::string id, nlohmann::json infos);
 
     /**
      * Delete object.

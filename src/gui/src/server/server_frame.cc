@@ -259,16 +259,19 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
 }
 
 void ServerFrame::AddElem(const Request& req, Response& resp) {
-  std::cout << "ServerFrame::AddElem()" << std::endl;
+  std::cout << "ServerFrame::AddElem()" << req.body << std::endl;
   //Try to get username from cookie
   std::string username = CheckLogin(req, resp);
   if (username == "") return;
 
   //Try to parse json
-  nlohmann::json input = ValidateJson(req, resp, {"name"});
+  nlohmann::json input = ValidateJson(req, resp, {"name", "infos"});
   std::string name = input["name"];
   std::string path = input.value("path", "");
+  nlohmann::json infos = input["infos"];
   bool force = input.value("force", false);
+
+  std::cout << "Got infos: " << infos << std::endl;
 
   //Get user
   std::shared_lock sl(shared_mtx_user_manager_);
@@ -286,7 +289,7 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
     error_code = user_manager_.worlds()->CreateNewWorld("/"+username+"/files/"+name, name);
   // Create new object or (sub-)category.
   else
-    error_code = user_manager_.worlds()->UpdateElements(path, name, "add", force);
+    error_code = user_manager_.worlds()->UpdateElements(path, name, "add", force, infos);
 
   //Check whether action succeeded
   if (error_code == ErrorCodes::SUCCESS) 

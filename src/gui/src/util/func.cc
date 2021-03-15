@@ -203,4 +203,10 @@ nlohmann::json ValidateJson(std::string json_string, std::vector<std::string> ke
   return json;
 }
 
+nlohmann::json Join(nlohmann::json &elem1, nlohmann::json &elem2) {
+  for (auto it : elem2.items())
+    elem1[it.key()] = it.value();
+  return elem1;
+}
+
 } //Close namespace 

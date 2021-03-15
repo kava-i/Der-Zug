@@ -59,7 +59,7 @@ ErrorCodes World::ModifyObject(std::string path, std::string id, nlohmann::json 
   return error_code;
 }
 
-ErrorCodes World::AddElem(std::string path, std::string id, bool force) {
+ErrorCodes World::AddElem(std::string path, std::string id, nlohmann::json infos, bool force) {
   std::cout << "World::AddElem(" << path << ", " << force << ")" << std::endl;
   // Check that path exists.
   std::shared_lock sl(shared_mtx_paths_);
@@ -67,7 +67,7 @@ ErrorCodes World::AddElem(std::string path, std::string id, bool force) {
     return ErrorCodes::PATH_NOT_FOUND;
 
   // Add element. If not successfull or force-write (thus no need to do further checking), return error-code.
-  ErrorCodes error_code = paths_.at(path)->AddElem(path, id);
+  ErrorCodes error_code = paths_.at(path)->AddElem(path, id, infos);
   sl.unlock();
   // If successfull and force disabled, make revert, or make changes permanent.
   if (error_code == ErrorCodes::SUCCESS && !force)

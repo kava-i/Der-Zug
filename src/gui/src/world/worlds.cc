@@ -103,7 +103,7 @@ ErrorCodes Worlds::UpdateElements(std::string path, std::string name, std::strin
   if (action == "modify")
     return world->ModifyObject(base_path_ + path, name, obj, force);
   else if (action == "add")
-    return world->AddElem(base_path_ + path, func::ConvertToId(name), force);
+    return world->AddElem(base_path_ + path, func::ConvertToId(name), obj, force);
   else if (action == "delete")
     return world->DelElem(base_path_ + path, func::ConvertToId(name), force);
   else

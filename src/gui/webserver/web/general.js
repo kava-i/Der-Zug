@@ -7,6 +7,10 @@ var error_codes = {"0":"success", "1":"wrong format", "2":"access denied",
 function CloseModul() {
   document.getElementById("modal_add_elem").style.display = "none";
   document.getElementById("modal_del_elem").style.display = "none";
+  document.getElementById("modal_log").style.display = "none";
+  
+  //Show button again and empty log
+  document.getElementById("get_log").style.display = "inline-block";
   window.location=window.location;
 }
 
@@ -14,10 +18,13 @@ function CloseModul() {
 window.onclick = function(event)  {
   let modal1 = document.getElementById("modal_add_elem");
   let modal2 = document.getElementById("modal_del_elem");
+  let modal3 = document.getElementById("modal_log");
   if (event.target == modal1) 
     modal1.style.display = "none";
-  else if (event.target == modal2)
+  if (event.target == modal2)
     modal2.style.display = "none";
+  if (event.target3 == modal3)
+    modal3.style.display = "none";
   else
     return;
   window.location=window.location;
@@ -42,6 +49,11 @@ window.onload = function() {
 function OpenAddElemModal() {
   document.getElementById("modal_add_elem").style.display = "block";
   document.getElementById("name").focus();
+
+  //Check if player, then add field to enter name of start-room.
+  if (window.location.pathname.indexOf("players/players") != -1)
+    document.getElementById("room").style.display = "inline-block";
+
   document.getElementById("name").addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
       event.preventDefault();
@@ -71,6 +83,12 @@ function AddElem(elem, force=false) {
   json_request.name = document.getElementById("name").value;
   json_request.force = force;
   json_request.path = window.location.pathname;
+  json_request.infos = {};
+  var inputs = document.getElementById("modal_add_elem").getElementsByTagName("input");
+  for (let i=1; i<inputs.length; i++) {
+    console.log(inputs.length, i);
+    json_request["infos"][inputs[i].id] = inputs[i].value;
+  }
 
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", "/api/add_"+elem);
@@ -88,8 +106,10 @@ function AddElem(elem, force=false) {
     }
     if (xhttp.status == 401 && this.responseText in error_codes) {
       msg.innerHTML = "Adding element failed due to error: " + error_codes[this.responseText];
-      if (this.responseText == "9") 
+      if (this.responseText == "9") {
         document.getElementById("force_add_elem").style.display = "inline-block";
+        document.getElementById("add_get_log").style.display = "inline-block";
+      }
     }
     else if (xhttp.status == 401) 
       msg.innerHTML = "Element couldn't be found or something went wrong.";
@@ -128,8 +148,10 @@ function DelElem(force=false) {
       // got error code.
       if (this.responseText in error_codes) {
         msg.innerHTML = "Deleteing element failed due to error: " + error_codes[this.responseText];
-        if (this.responseText == "9") 
+        if (this.responseText == "9") {
           document.getElementById("force_del_elem").style.display = "inline-block";
+          document.getElementById("del_get_log").style.display = "inline-block";
+        }
       }
       // no error code given.
       else 

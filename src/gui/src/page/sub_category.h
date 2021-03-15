@@ -34,9 +34,10 @@ class SubCategory : public Category {
      * Add new element:  directory, file or object.
      * @param[in] path to category or area.
      * @param[in] name of directory, file or object.
+     * @param[in] infos f.e name of start-room, when adding player.
      * @return ErrorCode indicating success/ error.
      */
-    ErrorCodes AddElem(std::string, std::string); 
+    ErrorCodes AddElem(std::string path, std::string name, nlohmann::json infos); 
 
     /**
      * Delete element:  directory, file or object.

@@ -8,7 +8,7 @@
 
 namespace fs = std::filesystem;
 
-ErrorCodes SubCategory::AddElem(std::string path, std::string name) {
+ErrorCodes SubCategory::AddElem(std::string path, std::string name, nlohmann::json infos) {
   std::string path_to_elem = path_ + "/" + name + ".json";
   std::cout << "SubCategory::AddElem(" << path_to_elem << ")" << std::endl;
   // Check if element already exists.

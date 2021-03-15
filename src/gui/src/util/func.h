@@ -114,6 +114,14 @@ namespace func
   std::string ConvertFromId(std::string &id);
 
   nlohmann::json ValidateJson(std::string json_string, std::vector<std::string> keys);
+
+  /**
+   * Adds all elements in elem2, to elem1.
+   * Thus existing values in elem1 are overwritten.
+   * @param[in] elem1 element to add entries to.
+   * @param[in] elem2 element with new entries.
+   */
+  nlohmann::json Join(nlohmann::json& elem1, nlohmann::json& elem2);
 }
 
 #endif

@@ -30,7 +30,7 @@ ErrorCodes Area::ModifyObject(std::string path, std::string name, nlohmann::json
   return ErrorCodes::SUCCESS; 
 }
 
-ErrorCodes Area::AddElem(std::string path, std::string name) {
+ErrorCodes Area::AddElem(std::string path, std::string name, nlohmann::json infos) {
   std::cout << "Area::AddElem(" << path << ")" << std::endl;
   // If path was object-path, then no new object can be created.
   nlohmann::json new_obj;
@@ -40,8 +40,12 @@ ErrorCodes Area::AddElem(std::string path, std::string name) {
   if (objects_.count(name) > 0) 
     return ErrorCodes::ALREADY_EXISTS;
 
-  // Create new element from template, add to elements and write to disc.
-  objects_[name] = new_obj;
+  // Join created object from template with given infos add to elements and write to disc.
+  std::cout << "new_obj: " << new_obj << std::endl;
+  std::cout << "infos: " << infos << std::endl;
+  infos =  func::Join(new_obj, infos);
+  std::cout << "infos: " << infos << std::endl;
+  objects_[name] = infos;
   func::WriteJsonToDisc(path_ + ".json", objects_);
   return ErrorCodes::SUCCESS; 
 }

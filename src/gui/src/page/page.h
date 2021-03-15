@@ -49,9 +49,10 @@ class Page {
      * Add new element:  directory, file or object.
      * @param[in] path to category or area.
      * @param[in] name of directory, file or object.
+     * @param[in] infos f.e name of start-room, when adding player.
      * @return ErrorCode indicating success/ error.
      */
-     virtual ErrorCodes AddElem(std::string, std::string) { return ErrorCodes::FAILED; }
+     virtual ErrorCodes AddElem(std::string, std::string, nlohmann::json) { return ErrorCodes::FAILED; }
 
     /**
      * Delete element:  directory, file or object.

@@ -14,6 +14,7 @@
     <script src="/web/general.js"></script>
     <script src="/web/fuzzy_finder.js"></script>
     {% if __is_main %}<script src="/web/run.js"></script>{% endif %}
+    <script src="/web/run.js"></script>
     <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js"
        data-auto-replace-svg="nest"></script>
 </head>
@@ -90,7 +91,8 @@
                                  onclick="DelElem()">Delete</button></div>
       <div><button type="button" class="pure-button" id="force_del_elem"
                    style="display: none;" onclick="DelElem(true)">Force Delete</button></div>
-
+      <div class="item"><button type="button" class="pure-button" id="del_get_log"
+          style="display: none;" onclick="get_log('write')">Show Log</button></div>
     </div>
   </div>
 </div>
@@ -100,32 +102,33 @@
     <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
     <div class="content_center">
       <div class="item"><input id="name" placeholder="name"></div>
+      <div class="item"><input id="room" style="display: none;" placeholder="room"></div>
       <div class="item"><p id="add_error" class="user_error"></p></div>
       <div><button type="button" class="pure-button" id="btn_add_elem"
                                  onclick="AddElem('subcategory')">Add</button></div>
       <div><button type="button" class="pure-button" id="force_add_elem"
-          style="display: none;" onclick="AddElem('subcategory', true)">Forece Add</button></div>
+          style="display: none;" onclick="AddElem('subcategory', true)">Force Add</button></div>
+      <div class="item"><button type="button" class="pure-button" id="add_get_log"
+          style="display: none;" onclick="get_log('write')">Show Log</button></div>
     </div>
   </div>
 </div>
 
-{% if __is_main %}
-  <div id="modal_log" class="modal">
-    <div class="modal2-content">
-      <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
-      <div class="content_center">
-        <div class="item"><h1>Game Logs</h1></div>
-        <div class="item"><p id="check_msg"></div>
-        <div class="scroll_content" style="display: none" id="log_div">
-          <div class="item" style="text-align: left;" id="display_log_div">
-            <pre id="display_log">
-          </div>
+<div id="modal_log" class="modal">
+  <div class="modal2-content">
+    <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
+    <div class="content_center">
+      <div class="item"><h1>Game Logs</h1></div>
+      <div class="item"><p id="check_msg"></div>
+      <div class="scroll_content" style="display: none" id="log_div">
+        <div class="item" style="text-align: left;" id="display_log_div">
+          <pre id="display_log">
         </div>
-        <div class="item"><button type="button" class="pure-button" id="get_log"
-                                   onclick="get_log('run')">Show Log</button></div>
-        <br>
       </div>
-  </div>
-{% endif %}
+      <div class="item"><button type="button" class="pure-button" id="get_log"
+                                 onclick="get_log('run')">Show Log</button></div>
+      <br>
+    </div>
+</div>
 
 </body>
