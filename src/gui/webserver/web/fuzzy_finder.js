@@ -8,10 +8,8 @@ window.onload = function() {
   paths = document.getElementById("fuzzy_finder_div").getAttribute("pages");
   paths = JSON.parse(paths);
   if (document.getElementById("fuzzy_finder_div").hasAttribute("page_objects")) {
-    page_objects = [];
     page_objects = document.getElementById("fuzzy_finder_div").getAttribute("page_objects");
     page_objects = JSON.parse(page_objects)
-    console.log(page_objects);
     for (var i=0; i<page_objects.length; i++)
       objects.push(page_objects[i][1]);
   }
@@ -23,11 +21,9 @@ function checkMatch() {
   document.getElementById("fuzzy_finder_elems").innerHTML = "";
   inp = document.getElementById("fuzzy_finder_inp").value;
   var matches = [];
-  var inps = []
-  if (delete_modus == false) 
-    inps = paths;
-  else 
-    inps = objects;
+  var inps = (delete_modus == false) ? paths : objects
+
+  // Select matching elements.
   for (var i=0; i<inps.length; i++) {
     var current_page = inps[i].toLowerCase();
 
@@ -37,7 +33,10 @@ function checkMatch() {
     // Calculate score.
     var score = current_page.length/inp.length;
     if (delete_modus == false) {
-      if (current_page.indexOf(window.location.pathname) != -1) score/=2;
+      // If current path is a child-path of the current page, increase score.
+      if (current_page.indexOf(window.location.pathname) != -1) 
+        score/=2;
+      // If last element matches the search word, increase score.
       last_elem = current_page.substr(current_page.lastIndexOf("/"));
       if (last_elem.indexOf(inp) == 0) score/=2;
     }
@@ -46,7 +45,7 @@ function checkMatch() {
 
   // Sort and take only first 8 elements
   matches.sort(function(a,b) { return a[1] - b[1]; });
-  matches = matches.slice(0,8);
+  matches = matches.slice(0,15);
 
   // Add as elements to dropdown list
   list_match = document.getElementById("fuzzy_finder_elems");
@@ -64,6 +63,10 @@ function checkMatch() {
   HighlightElem();
 }
 
+// Define keycodes for better readability:
+key_codes = {"+":61, "-":173, "esc":27, "enter":13, "up":38, "down":40, 
+  "a":65, "z":90, "/":191}
+
 var finder_counter = 0;
 var delete_modus = false;
 document.addEventListener('keydown', function(event) {
@@ -72,69 +75,65 @@ document.addEventListener('keydown', function(event) {
   pages = document.getElementById("fuzzy_finder_elems").children;
 
   // Add element.
-  if (objects.length != 0 && fuzzy_finder_inp.value == "" && event.keyCode == 61 ) {
-    event.preventDefault();
-    OpenAddElemModal();
-    document.getElementById("name").value = "";
-    return;
-  }
-
+  if (fuzzy_finder_inp.value == "" && event.keyCode == key_codes["+"])
+    SelectAddElem(event);
   // Set modus to delete
-  if (objects.length != 0 && fuzzy_finder_inp.value == "" && event.keyCode == 173) {
-    console.log("Delete modus triggered: ", event.keyCode);
-    delete_modus = true;
-    document.getElementById("fuzzy_finder_mode").innerHTML = "delete: ";
-    document.getElementById("fuzzy_finder_mode").style.color = "orange";
-  }
-
+  else if (objects.length != 0 && fuzzy_finder_inp.value == "" && event.keyCode == key_codes["-"])
+    SelectDeleteModus(event);
+  //ESC -> hide fuzzy finder
+  else if (event.keyCode == key_codes["esc"])
+    SelectCloseFinder();
   // Check if input is ment for an input field which isn't fuzzy finder.
-  var input_fields = [];
-  input_fields.push.apply(input_fields, document.getElementsByTagName('input'));
-  input_fields.push.apply(input_fields, document.getElementsByTagName('textarea'));
-  for (var index = 0; index < input_fields.length; ++index) {
-    if (event.target == input_fields[index] && event.target != fuzzy_finder_inp) 
-      return;
+  else if (NonFuzzyFinderInput(event))
+    return;
+  //Return -> Go to match
+  else if (event.keyCode == key_codes["enter"] && pages.length > 0)
+    SelectElement(event);
+  // Select matches down.
+  else if (event.keyCode == key_codes["down"]) {
+    finder_counter = mod(finder_counter+1, pages.length); 
+    console.log(finder_counter);
   }
-
-  if (event.keyCode == 27) //ESC -> hide fuzzy finder
-    CloseFinder();
-
-  else if (event.keyCode == 13 && pages.length > 0) {//Return -> Go to match
-    if (delete_modus == false)
-      window.location = pages[finder_counter].innerHTML;
-    else {
-      event.preventDefault();
-      OpenDelElemModal('subcategory', pages[finder_counter].innerHTML);
-      CloseFinder();
-    }
+  // Select matches up.
+  else if (event.keyCode == key_codes["up"]) {
+    finder_counter = mod(finder_counter-1, pages.length); 
+    console.log(finder_counter);
   }
-
-  // Select match
-  else if (event.keyCode == 40) {
-    if (finder_counter < pages.length) finder_counter+=1; 
-  }
-  else if (event.keyCode == 38) {
-    if (finder_counter > 0) finder_counter-=1; 
-  }
-
   // Add letter to entry 
-  else if ((event.keyCode >= 65 && event.keyCode <= 90) 
-      || event.keyCode == 55 || event.keyCode == 222 || event.keyCode == 59
-      || event.keyCode == 219) {
-    checkMatch();
-    if (event.target != fuzzy_finder_inp) {
-      document.getElementById("fuzzy_finder_div").style.display="block";
-    }
-    fuzzy_finder_inp.focus();
-  }
+  else if ((event.keyCode >= key_codes["a"] && event.keyCode <= key_codes["z"]) 
+    || event.keyCode == key_codes["/"])
+    SelectAddLetter(event)
 
-  if (fuzzy_finder_inp.value=="")
+  if (fuzzy_finder_inp.value == "")
     document.getElementById("fuzzy_finder_elems").innerHTML = "";
-
   HighlightElem();
+
 }, true);
 
-function CloseFinder() {
+function SelectAddElem(event) {
+  event.preventDefault();
+  OpenAddElemModal();
+  document.getElementById("name").value = "";
+}
+
+function SelectDeleteModus(event) {
+  console.log("Delete modus triggered: ", event.keyCode);
+  delete_modus = true;
+  document.getElementById("fuzzy_finder_mode").innerHTML = "delete: ";
+  document.getElementById("fuzzy_finder_mode").style.color = "orange";
+}
+
+function SelectElement(event) {
+  if (delete_modus == false)
+    window.location = pages[finder_counter].innerHTML;
+  else {
+    event.preventDefault();
+    OpenDelElemModal('subcategory', pages[finder_counter].innerHTML);
+    SelectCloseFinder();
+  }
+}
+
+function SelectCloseFinder() {
   document.getElementById("fuzzy_finder_div").style.display="none";
   document.getElementById("fuzzy_finder_inp").value = "";
   document.getElementById("fuzzy_finder_elems").innerHTML = "";
@@ -142,6 +141,24 @@ function CloseFinder() {
   document.getElementById("fuzzy_finder_mode").style.color = "#1fe921";
   delete_modus = false;
   finder_counter = 0;
+}
+
+function SelectAddLetter(event) {
+  checkMatch();
+  if (event.target != fuzzy_finder_inp)
+    document.getElementById("fuzzy_finder_div").style.display="block";
+  fuzzy_finder_inp.focus();
+}
+
+function NonFuzzyFinderInput(event) {
+  var input_fields = [];
+  input_fields.push.apply(input_fields, document.getElementsByTagName('input'));
+  input_fields.push.apply(input_fields, document.getElementsByTagName('textarea'));
+  for (var index = 0; index < input_fields.length; ++index) {
+    if (event.target == input_fields[index] && event.target != fuzzy_finder_inp) 
+      return true;
+  }
+  return false;
 }
 
 function HighlightElem() {
@@ -153,4 +170,8 @@ function HighlightElem() {
     else 
       pages[i].classList = [];
   }
+}
+
+function mod(n, m) {
+  return ((n % m) + m) % m;
 }

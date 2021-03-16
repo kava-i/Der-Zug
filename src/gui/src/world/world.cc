@@ -150,6 +150,7 @@ void World::InitializePaths(std::string path) {
 
 void World::UpdateShortPaths() {
   std::shared_lock sl(shared_mtx_paths_);
+  short_paths_.clear();
   for (auto it : paths_)
     short_paths_.push_back(it.first.substr(base_path_.length()));
 }

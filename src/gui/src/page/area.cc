@@ -91,6 +91,7 @@ nlohmann::json Area::CreateObjectPageData(std::string path) {
 }
 
 void Area::UpdateNodes() {
+  child_nodes_.clear();
   for (auto it=objects_.begin(); it!=objects_.end(); it++)
     child_nodes_[path_.substr(base_path_.length()) + "/" + it.key()] = it.key();
 }
