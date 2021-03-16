@@ -81,8 +81,10 @@ document.addEventListener('keydown', function(event) {
   else if (objects.length != 0 && fuzzy_finder_inp.value == "" && event.keyCode == key_codes["-"])
     SelectDeleteModus(event);
   //ESC -> hide fuzzy finder
-  else if (event.keyCode == key_codes["esc"])
+  else if (event.keyCode == key_codes["esc"]) {
     SelectCloseFinder();
+    SelectCloseModals(); // Regarding this "fuzzy_finder" should be renamed to "key-driven" or something.
+  }
   // Check if input is ment for an input field which isn't fuzzy finder.
   else if (NonFuzzyFinderInput(event))
     return;
@@ -90,15 +92,11 @@ document.addEventListener('keydown', function(event) {
   else if (event.keyCode == key_codes["enter"] && pages.length > 0)
     SelectElement(event);
   // Select matches down.
-  else if (event.keyCode == key_codes["down"]) {
+  else if (event.keyCode == key_codes["down"])
     finder_counter = mod(finder_counter+1, pages.length); 
-    console.log(finder_counter);
-  }
   // Select matches up.
-  else if (event.keyCode == key_codes["up"]) {
+  else if (event.keyCode == key_codes["up"])
     finder_counter = mod(finder_counter-1, pages.length); 
-    console.log(finder_counter);
-  }
   // Add letter to entry 
   else if ((event.keyCode >= key_codes["a"] && event.keyCode <= key_codes["z"]) 
     || event.keyCode == key_codes["/"])
@@ -141,6 +139,20 @@ function SelectCloseFinder() {
   document.getElementById("fuzzy_finder_mode").style.color = "#1fe921";
   delete_modus = false;
   finder_counter = 0;
+}
+
+function SelectCloseModals() {
+  //Close every modal.
+  modals = document.getElementsByClassName("modal");
+  targeted = false;
+  for (var i=0; i<modals.length; i++) {
+    if (modals[i].style.display === "block" || modals[i].style.display === "inline-block")
+      targeted = true;
+    modals[i].style.display = "none";
+  }
+  if (targeted == true) {
+    window.location = window.location;
+  }
 }
 
 function SelectAddLetter(event) {
