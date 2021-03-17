@@ -377,3 +377,10 @@ body {
   color: orange;
   text-decoration: underline;
 }
+
+.left_box {
+  float: left;
+  margin-left: 10rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white
+}
