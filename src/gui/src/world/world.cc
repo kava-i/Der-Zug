@@ -97,12 +97,18 @@ ErrorCodes World::DelElem(std::string path, std::string id, bool force) {
   return error_code;
 }
 
-nlohmann::json World::GetPage(std::string path) const {
+nlohmann::json World::GetPage(std::string path, bool only_json) const {
   std::cout << "World::GetPage(" << path << ")" << std::endl;
   std::shared_lock sl(shared_mtx_paths_);
   if (paths_.count(path) == 0)
     return nlohmann::json({{"error", "File not found."}});
   nlohmann::json json = paths_.at(path)->CreatePageData(path);
+  // If only json, we extract all actual lements from the object and return directly.
+  if (only_json) {
+    nlohmann::json object = json["header"];
+    object.erase("__parents");
+    return object;
+  }
   json["header"]["__short_paths"] = short_paths_;
   json["header"]["__is_main"] = (path == path_);
   json["header"]["__port"] = port_;

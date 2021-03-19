@@ -368,19 +368,30 @@ body {
   border: none;
 }
 
-.fuzzy_finder_focused_green{
+.fuzzy_finder_focused_green {
   color: #1fe921;
   text-decoration: underline;
 }
 
-.fuzzy_finder_focused_orange{
+.fuzzy_finder_focused_orange {
   color: orange;
   text-decoration: underline;
 }
 
-.left_box {
-  float: left;
+.side_box {
+  margin-top: 10rem;
   margin-left: 10rem;
   background-color: rgba(0, 0, 0, 0.5);
-  color: white
+  color: white;
+  padding: 2em;
+  min-width: 20rem;
+  max-width: 40rem;
+}
+
+.prev_elems {
+  color: #90a4ae;
+}
+
+.prev_list {
+  list-style-type: none;
 }

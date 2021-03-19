@@ -154,6 +154,13 @@ class ServerFrame {
      */
     void StartGame(const httplib::Request& req, httplib::Response& resp);
 
+    /**
+     * @brief Get object json
+     * @param[in] req (reference to request)
+     * @param[in, out] resp (reference to response)
+     */
+    void GetObjectJson(const httplib::Request& req, httplib::Response& resp);
+
     /**    
      * @brief Gives feedback on whether server is still running    
      * @return boolean    

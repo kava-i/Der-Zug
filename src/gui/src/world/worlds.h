@@ -77,6 +77,13 @@ class Worlds {
     std::string GetPage(std::string path);
 
     /**
+     * Serves only json of requested object.
+     * @param[in] path (url)
+     * @return json of object or empty json.
+     */
+    nlohmann::json GetObjectJson(std::string path);
+
+    /**
      * Finds world with given url in all worlds.
      * Checks if world-path is contained in given base_path + (url-) path.
      * @param[in] path as url path.

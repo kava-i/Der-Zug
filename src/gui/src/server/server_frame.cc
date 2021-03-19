@@ -29,17 +29,20 @@ ServerFrame::ServerFrame(std::string path_to_cert, std::string path_to_key)
 
 void ServerFrame::Start(int port) {
   std::cout << "Starting on Port: " << port << std::endl;
+  
+  // Get only json.
+  server_.Get("/api/get_object_json/(.*)", [&](const Request& req, Response& resp) {
+      GetObjectJson(req, resp); });
 
   // *** Pages *** //
+ 
   server_.Get("/login", [&](const Request& req, Response& resp) { 
       LoginPage(req, resp);});
   server_.Get("/overview", [&](const Request& req, Response& resp) { 
       ServeFile(req, resp); });
-  server_.Get("/(.*)/files/(.*)/(.*)/(.*)/(.*)", [&](const Request& req, 
-        Response& resp) { 
+  server_.Get("/(.*)/files/(.*)/(.*)/(.*)/(.*)", [&](const Request& req, Response& resp) { 
       ServeFile(req, resp);});
-  server_.Get("/(.*)/files/(.*)/(.*)/(.*)", [&](const Request& req, 
-        Response& resp) { 
+  server_.Get("/(.*)/files/(.*)/(.*)/(.*)", [&](const Request& req, Response& resp) { 
       ServeFile(req, resp); });
   server_.Get("/(.*)/files/(.*)/(.*)", [&](const Request& req, Response& resp) { 
       ServeFile(req, resp); });
@@ -90,7 +93,7 @@ void ServerFrame::Start(int port) {
   server_.Post("/api/start_game", [&](const Request& req, Response& resp) {
       StartGame(req, resp); });
 
-  //html
+    //html
   server_.Get("/", [&](const Request& req, Response& resp) {
       resp.set_content(func::GetPage("web/main.html"), "text/html"); });
   server_.Get("/login", [&](const Request& req, Response& resp) {
@@ -256,6 +259,40 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
     }
     resp.set_content(page.c_str(), "text/html");
   }
+}
+
+void ServerFrame::GetObjectJson(const Request& req, Response& resp) {
+  //Try to get username from cookie
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
+
+  //Try to parse json
+  std::string path = req.matches[1];
+  std::cout << "GetObjectJson(" << path << ")" << std::endl;
+
+  //Get user
+  std::shared_lock sl(shared_mtx_user_manager_);
+  User* user = user_manager_.GetUser(username);
+  sl.unlock();
+
+  nlohmann::json object_json = nlohmann::json();
+  //Check whether user has access to this location
+  if (user->CheckAccessToLocations(path) == false &&
+      req.matches.size() > 1 && req.matches[1] != "world") {
+    resp.status = 401;
+  }
+  // Create new world
+  else {
+    object_json = user_manager_.worlds()->GetObjectJson(path);
+    if (!object_json.empty())
+      resp.status = 200;
+    else
+      resp.status = 404;
+  }
+  
+  //Check whether action succeeded
+  std::cout << "ServerFrame::GetObjectJson done with.\n\n";
+  resp.set_content(object_json.dump(), "application/json");
 }
 
 void ServerFrame::AddElem(const Request& req, Response& resp) {
