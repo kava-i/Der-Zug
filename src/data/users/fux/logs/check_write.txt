@@ -1,35 +1,9 @@
 Creating game.
-Room: "berlin_mitte_"
+Room: "test_new_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "berlin_mitte_"
-Created all rooms 
-Room: "test_bens_zimmer"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_bens_zimmer"
-Room: "test_flur"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_flur"
-Room: "test_hausflur"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_hausflur"
-Room: "test_jans_zimmer"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_jans_zimmer"
-Room: "test_kueche"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_kueche"
+Create room: "test_new_room"
 Room: "test_test_room"
 Parsing characters
 Parsing Items
@@ -39,77 +13,11 @@ Created all rooms
 worldFactory: done.
 Done parsing world.
 Parsing players... 
-Room: "berlin_mitte_"
+Room: "test_new_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "berlin_mitte_"
-Created all rooms 
-Room: "test_bens_zimmer"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_bens_zimmer"
-Room: "test_flur"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_flur"
-Room: "test_hausflur"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_hausflur"
-Room: "test_jans_zimmer"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_jans_zimmer"
-Room: "test_kueche"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_kueche"
-Room: "test_test_room"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_test_room"
-Created all rooms 
-worldFactory: done.
-initializing context stack.
-Done.
-Room: "berlin_mitte_"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "berlin_mitte_"
-Created all rooms 
-Room: "test_bens_zimmer"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_bens_zimmer"
-Room: "test_flur"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_flur"
-Room: "test_hausflur"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_hausflur"
-Room: "test_jans_zimmer"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_jans_zimmer"
-Room: "test_kueche"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_kueche"
+Create room: "test_new_room"
 Room: "test_test_room"
 Parsing characters
 Parsing Items
@@ -128,6 +36,7 @@ Finished parsing!
 [1;34mroom[0m throwing: show|room
 [1;34mstandard[0m throwing: show|room
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[1;34mgame[0m throwing: show|room
 [1;31mEvents: show room, from: CGame::play[0m
 [1;31mshow, room[0m
 [1;34mfirst[0m throwing: show|room
@@ -136,6 +45,7 @@ Finished parsing!
 [1;34mroom[0m throwing: show|room
 [1;34mstandard[0m throwing: show|room
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[1;34mgame[0m throwing: show|exits
 [1;31mEvents: show exits, from: CGame::play[0m
 [1;31mshow, exits[0m
 [1;34mfirst[0m throwing: show|exits
@@ -145,6 +55,7 @@ Calling:  show exits!
 [1;34mroom[0m throwing: show|exits
 [1;34mstandard[0m throwing: show|exits
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[1;34mgame[0m throwing: show|people
 [1;31mEvents: show people, from: CGame::play[0m
 [1;31mshow, people[0m
 [1;34mfirst[0m throwing: show|people
@@ -154,6 +65,7 @@ Calling:  show exits!
 [1;34mroom[0m throwing: show|people
 [1;34mstandard[0m throwing: show|people
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[1;34mgame[0m throwing: show|items
 [1;31mEvents: show items, from: CGame::play[0m
 [1;31mshow, items[0m
 [1;34mfirst[0m throwing: show|items
@@ -164,6 +76,7 @@ Calling:  show exits!
 [1;34mroom[0m throwing: show|items
 [1;34mstandard[0m throwing: show|items
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[1;34mgame[0m throwing: show|details
 [1;31mEvents: show details, from: CGame::play[0m
 [1;31mshow, details[0m
 [1;34mfirst[0m throwing: show|details

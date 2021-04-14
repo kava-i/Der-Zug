@@ -84,24 +84,27 @@ document.addEventListener('keydown', function(event) {
   fuzzy_finder_inp = document.getElementById("fuzzy_finder_inp");
 
   pages = document.getElementById("fuzzy_finder_elems").children;
-
-    // Set modus to delete
-  if (on_page_objects_.length != 0 && fuzzy_finder_inp.value == "" && event.keyCode == key_codes["-"])
-    SelectDeleteModus(event);
+  
+  if (Typeahead())
+    return true;
+  
   //ESC -> hide fuzzy finder
-  else if (event.keyCode == key_codes["esc"]) {
-    SelectCloseFinder();
+  if (event.keyCode == key_codes["esc"]) {
     SelectCloseModals(); // Regarding this "fuzzy_finder" should be renamed to "key-driven" or something.
+    SelectCloseFinder();
   }
+  // Check if input is ment for an input field which isn't fuzzy finder.
+  else if (NonFuzzyFinderInput(event))
+    return;
   else if (event.keyCode == key_codes["right"]) {
     SelectChildElement(); 
   }
   else if (event.keyCode == key_codes["left"]) {
     SelectParentElement(); 
   }
-  // Check if input is ment for an input field which isn't fuzzy finder.
-  else if (NonFuzzyFinderInput(event))
-    return;
+  // Set modus to delete
+  else if (on_page_objects_.length != 0 && fuzzy_finder_inp.value == "" && event.keyCode == key_codes["-"])
+    SelectDeleteModus(event);
   // Delete cur element.
   else if (event.keyCode == key_codes["back"]) {
     SelectDeleteElement(event);
@@ -234,6 +237,10 @@ function NonFuzzyFinderInput(event, all) {
       return true;
   }
   return false;
+}
+
+function Typeahead() {
+  var input_fields = document.getElementsByTagName('input');
 }
 
 function HighlightElem() {

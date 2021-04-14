@@ -1,6 +1,6 @@
 /**
  * @author fux (georgbuechner)
- */
+*/
 
 global_error = false;
 

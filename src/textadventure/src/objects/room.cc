@@ -13,14 +13,14 @@ CRoom::CRoom(string sArea, nlohmann::json jAtts, std::map<string, CPerson*>
     mapExits = jAtts["exits"].get<std::map<std::string, nlohmann::json>>();
   for(const auto &it : mapExits) {
     //Create id (target room)
-    std::string sID = it.first;
-    if(it.second.count("area") > 0)
-        sID.insert(0, it.second["area"].get<std::string>() + "_");
-    else
-        sID.insert(0, sArea+"_");
+    std::string id = it.first;
+    // Only if the absolute path is not given, add the current area to the 
+    // refered room-id.
+    if (id.find(".") == std::string::npos)
+        id.insert(0, sArea+".");
 
     //Create exit.
-    m_exits[sID] = new CExit(sID, it.second, p);
+    m_exits[id] = new CExit(id, it.second, p);
   }
 
   m_characters = characters;

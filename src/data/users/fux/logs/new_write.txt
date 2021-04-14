@@ -1,120 +1,102 @@
 Creating game.
-Room: "berlin_mitte_"
+Room: "test.first_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "berlin_mitte_"
-Created all rooms 
-Room: "test_bens_zimmer"
+Create room: "test.first_room"
+Room: "test.fith_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "test_bens_zimmer"
-Room: "test_flur"
+Create room: "test.fith_room"
+Room: "test.fourth_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "test_flur"
-Room: "test_hausflur"
+Create room: "test.fourth_room"
+Room: "test.second_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "test_hausflur"
-Room: "test_jans_zimmer"
+Create room: "test.second_room"
+Room: "test.sixth_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "test_jans_zimmer"
-Room: "test_kueche"
+Create room: "test.sixth_room"
+Room: "test.third_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "test_kueche"
-Room: "test_test_room"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_test_room"
+Create room: "test.third_room"
 Created all rooms 
 worldFactory: done.
 Done parsing world.
 Parsing players... 
-Room: "berlin_mitte_"
+Room: "test.first_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "berlin_mitte_"
-Created all rooms 
-Room: "test_bens_zimmer"
+Create room: "test.first_room"
+Room: "test.fith_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "test_bens_zimmer"
-Room: "test_flur"
+Create room: "test.fith_room"
+Room: "test.fourth_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "test_flur"
-Room: "test_hausflur"
+Create room: "test.fourth_room"
+Room: "test.second_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "test_hausflur"
-Room: "test_jans_zimmer"
+Create room: "test.second_room"
+Room: "test.sixth_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "test_jans_zimmer"
-Room: "test_kueche"
+Create room: "test.sixth_room"
+Room: "test.third_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "test_kueche"
-Room: "test_test_room"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_test_room"
+Create room: "test.third_room"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
 Done.
-Room: "berlin_mitte_"
+Room: "test.first_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "berlin_mitte_"
-Created all rooms 
-Room: "test_bens_zimmer"
+Create room: "test.first_room"
+Room: "test.fith_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "test_bens_zimmer"
-Room: "test_flur"
+Create room: "test.fith_room"
+Room: "test.fourth_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "test_flur"
-Room: "test_hausflur"
+Create room: "test.fourth_room"
+Room: "test.second_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "test_hausflur"
-Room: "test_jans_zimmer"
+Create room: "test.second_room"
+Room: "test.sixth_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "test_jans_zimmer"
-Room: "test_kueche"
+Create room: "test.sixth_room"
+Room: "test.third_room"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "test_kueche"
-Room: "test_test_room"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "test_test_room"
+Create room: "test.third_room"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
