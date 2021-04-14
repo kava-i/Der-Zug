@@ -85,11 +85,8 @@ document.addEventListener('keydown', function(event) {
 
   pages = document.getElementById("fuzzy_finder_elems").children;
 
-  // Add element.
-  if (fuzzy_finder_inp.value == "" && event.keyCode == key_codes["+"])
-    SelectAddElem(event);
-  // Set modus to delete
-  else if (on_page_objects_.length != 0 && fuzzy_finder_inp.value == "" && event.keyCode == key_codes["-"])
+    // Set modus to delete
+  if (on_page_objects_.length != 0 && fuzzy_finder_inp.value == "" && event.keyCode == key_codes["-"])
     SelectDeleteModus(event);
   //ESC -> hide fuzzy finder
   else if (event.keyCode == key_codes["esc"]) {
@@ -102,12 +99,16 @@ document.addEventListener('keydown', function(event) {
   else if (event.keyCode == key_codes["left"]) {
     SelectParentElement(); 
   }
-  else if (event.keyCode == key_codes["back"]) {
-    SelectDeleteElement(event);
-  }
   // Check if input is ment for an input field which isn't fuzzy finder.
   else if (NonFuzzyFinderInput(event))
     return;
+  // Delete cur element.
+  else if (event.keyCode == key_codes["back"]) {
+    SelectDeleteElement(event);
+  }
+  // Add element.
+  else if (fuzzy_finder_inp.value == "" && event.keyCode == key_codes["+"])
+    SelectAddElem(event);
   //Return -> Go to match
   else if (event.keyCode == key_codes["enter"] && pages.length > 0)
     SelectElement(event);
@@ -168,6 +169,10 @@ function SelectElement(event) {
 }
 
 function SelectDeleteElement(event) {
+  // Check if on fuzzy_finder-input-field. (All other input fields are already checked)
+  if (event.target == fuzzy_finder_inp) {
+    return;
+  }
   event.preventDefault();
   OpenDelElemModal('subcategory', on_page_objects_[element_counter]);
 }
@@ -220,7 +225,7 @@ function SelectAddLetter(event) {
   fuzzy_finder_inp.focus();
 }
 
-function NonFuzzyFinderInput(event) {
+function NonFuzzyFinderInput(event, all) {
   var input_fields = [];
   input_fields.push.apply(input_fields, document.getElementsByTagName('input'));
   input_fields.push.apply(input_fields, document.getElementsByTagName('textarea'));
@@ -308,5 +313,17 @@ function CreateChildObjects() {
         document.getElementById("object_json").innerHTML = JSON.stringify(json, null, 2);
       }
     }
+  }
+}
+
+function ShowSideBox(x) {
+  var id = "side_box_" + x;
+  if (document.getElementById(id).style.display === "none") {
+    console.log(x, " visible")
+    document.getElementById(id).style.display = "block";
+  }
+  else {
+    console.log(x, " unvisible")
+    document.getElementById(id).style.display = "none";
   }
 }
