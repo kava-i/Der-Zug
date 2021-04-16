@@ -1067,3 +1067,17 @@ Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier se
 [2021-04-14 20:48:16] [frame_header] Header Bytes: 
 [0] (4) 81 7E 02 34 
 
+[2021-04-14 21:56:20] [connect] WebSocket Connection [::ffff:127.0.0.1]:50690 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:87.0) Gecko/20100101 Firefox/87.0" / 101
+Starting....
+[2021-04-14 22:10:39] [control] Control frame received with opcode 8
+[2021-04-14 22:10:39] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2021-04-14 22:10:39] [frame_header] Header Bytes: 
+[0] (2) 88 02 
+
+[2021-04-14 22:10:39] [disconnect] Disconnect close local:[1001] remote:[1001]
+[2021-04-14 22:25:31] [control] Control frame received with opcode 8
+[2021-04-14 22:25:31] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2021-04-14 22:25:31] [frame_header] Header Bytes: 
+[0] (2) 88 02 
+
+[2021-04-14 22:25:31] [disconnect] Disconnect close local:[1001] remote:[1001]

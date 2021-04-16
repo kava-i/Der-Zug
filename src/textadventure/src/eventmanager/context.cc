@@ -1,6 +1,8 @@
 #include "context.h"
+#include "nlohmann/json.hpp"
 #include "objects/player.h"
 #include "game/game.h"
+#include "tools/func.h"
 #define cRED "\033[1;31m"
 #define cGreen "\033[1;32m"
 #define cBlue "\033[1;34m"
@@ -113,6 +115,7 @@ void Context::initializeHanlders() {
   m_handlers["h_killCharacter"] = &Context::h_killCharacter;
   m_handlers["h_deleteCharacter"] = &Context::h_deleteCharacter;
   m_handlers["h_addItem"] = &Context::h_addItem;
+  m_handlers["h_removeItem"] = &Context::h_removeItem;
   m_handlers["h_recieveMoney"] = &Context::h_recieveMoney;
   m_handlers["h_eraseMoney"] = &Context::h_eraseMoney;
   m_handlers["h_newFight"] = &Context::h_newFight;
@@ -123,12 +126,14 @@ void Context::initializeHanlders() {
   m_handlers["h_showPersonInfo"] = &Context::h_showPersonInfo;
   m_handlers["h_showItemInfo"] = &Context::h_showItemInfo;
   m_handlers["h_changeName"] = &Context::h_changeName;
+  m_handlers["h_addExit"] = &Context::h_addExit;
   m_handlers["h_setAttribute"] = &Context::h_setAttribute;
   m_handlers["h_setNewAttribute"] = &Context::h_setNewAttribute;
   m_handlers["h_addTimeEvent"] = &Context::h_addTimeEvent;
   m_handlers["h_setNewQuest"] = &Context::h_setNewQuest;
   m_handlers["h_changeDialog"] = &Context::h_changeDialog;
   m_handlers["h_changeRoom"] = &Context::h_changeRoom;
+  m_handlers["h_startDialogDirect"] = &Context::h_startDialogDirect;
 
   // ***** STANDARD CONTEXT ***** //
   m_handlers["h_showExits"] = &Context::h_showExits;
@@ -222,6 +227,7 @@ void Context::initializeTemplates() {
                         {"killCharacter", {"h_killCharacter"}},
                         {"deleteCharacter", {"h_deleteCharacter"}},
                         {"addItem", {"h_addItem"}},
+                        {"removeItem", {"h_removeItem"}},
                         {"recieveMoney", {"h_recieveMoney"}},
                         {"eraseMoney", {"h_eraseMoney"}},
                         {"fight", {"h_newFight"}},
@@ -232,12 +238,14 @@ void Context::initializeTemplates() {
                         {"showperson",{"h_showPersonInfo"}},
                         {"showitem",{"h_showItemInfo"}},
                         {"changeName",{"h_changeName"}},
+                        {"addExit",{"h_addExit"}},
                         {"setAttribute", {"h_setAttribute"}},
                         {"setNewAttribute", {"h_setNewAttribute"}}, 
                         {"addTimeEvent", {"h_addTimeEvent"}},
                         {"setNewQuest", {"h_setNewQuest"}},
                         {"changeDialog", {"h_changeDialog"}},
-                        {"changeRoom", {"h_changeRoom"}} }}
+                        {"changeRoom", {"h_changeRoom"}},
+                        {"startDialogDirekt", {"h_startDialogDirekt"}} }}
                     };
 
     m_templates["standard"] = {
@@ -549,6 +557,10 @@ void Context::h_addItem(std::string& sIdentifier, CPlayer* p) {
     p->addItem(p->getWorld()->getItem(sIdentifier, p));
     m_curPermeable=false;
 }
+void Context::h_removeItem(std::string& sIdentifier, CPlayer* p) {
+  p->getInventory().removeItemByID(sIdentifier);
+  m_curPermeable=false;
+}
 
 void Context::h_recieveMoney(std::string& sIdentifier, CPlayer* p) {
     p->setStat("gold", p->getStat("gold") + stoi(sIdentifier));
@@ -627,6 +639,16 @@ void Context::h_changeName(std::string& sIdentifier, CPlayer* p) {
         << cCLEAR << std::endl;
     }
   }
+  m_curPermeable=false;
+}
+
+void Context::h_addExit(std::string& sIdentifier, CPlayer* p) {
+  std::cout << sIdentifier << std::endl;
+  std::string room = func::split(sIdentifier, "|")[0];
+  std::string linked_room = func::split(sIdentifier, "|")[1];
+  nlohmann::json exit = nlohmann::json::parse(func::split(sIdentifier, "|")[2]);
+  std::cout << room << ", " << linked_room << ", " << exit << std::endl;
+  p->getWorld()->getRoom(room)->getExtits()[linked_room] = new CExit(linked_room, exit, p);
   m_curPermeable=false;
 }
 
@@ -828,6 +850,16 @@ void Context::h_startDialog(std::string& sIdentifier, CPlayer* p)
         p->appendErrorPrint("Character not found");
 }
 
+void Context::h_startDialogDirect(std::string &sIdentifier, CPlayer *p) {
+  std::cout << "h_startDialogDirekt: " << sIdentifier << std::endl;
+  std::string character = sIdentifier;
+  character = "nonexist.nonexists.mirror";
+
+  if (p->getWorld()->getCharacter(character) != nullptr) {
+    p->startDialog(sIdentifier, p->getWorld()->getCharacter(character)->getDialog());
+  }
+}
+
 void Context::h_take(std::string& sIdentifier, CPlayer* p) {
     if(sIdentifier.find("all") == 0)
         p->addAll();
@@ -967,9 +999,9 @@ void Context::h_attack(std::string& sIdentifier, CPlayer* p)
 
 
 void Context::h_try(std::string& sIdentifier, CPlayer* p) {
-  p->throw_events("zeige details", "try");
-  p->throw_events("zeige personen", "try");
-  p->throw_events("zeige ausgänge", "try");
+  p->throw_events("go to second", "try");
+  p->throw_events("talk to tall", "try");
+  p->throw_events("1", "try");
   p->throw_events("go neben", "try");
   p->throw_events("go Toil", "try");
   p->throw_events("go frauen", "try");

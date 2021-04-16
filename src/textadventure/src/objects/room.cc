@@ -103,6 +103,8 @@ string CRoom::showAll(CGramma* gramma) {
 
 string CRoom::showExits(CGramma* gramma) {
   auto lambda = [](CExit* exit) {return exit->getPrep() + " " + exit->getName();};
+
+  // Get pre and post strings from show map.
   std::string pre = "Hier geht es";    
   std::string post = "Nirgendwo hin.";
   if(m_showMap.count("exits") > 0) {
@@ -119,14 +121,23 @@ string CRoom::showExits(CGramma* gramma) {
 string CRoom::showCharacters(CGramma* gramma) {
   auto lambda = [](CPerson* person) {return person->getName();};
   std::string sOutput = "";
-  if(m_characters.size() > 0) {
-    sOutput += gramma->build(func::to_vector(m_characters, lambda), 
-        "Hier sind", "niemand");
+
+  // Get pre and post strings from show map.
+  std::string pre = "Hier sind";    
+  std::string post = "niemand.";
+  std::string also = "Aber außerdem noch";
+  if(m_showMap.count("chars") > 0) {
+    if(m_showMap["chars"].size() == 2) {
+      pre = m_showMap["chars"][0];
+      post = m_showMap["chars"][1];
+      also = m_showMap["chars"][2];
+    }
+    else
+      std::cout << "Wrong size!\n";
   }
+  sOutput += gramma->build(func::to_vector(m_characters, lambda), pre, post);
   if(m_players.size() > 0)
-    sOutput += gramma->build(func::to_vector(m_players), " Aber außerdem noch ", "");
-  if(sOutput == "")
-    sOutput = "In diesem Raum sind keine Personen.";
+    sOutput += gramma->build(func::to_vector(m_players), " " + also + " ", "");
   return sOutput;
 }       
 
