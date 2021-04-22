@@ -119,26 +119,33 @@ string CRoom::showExits(CGramma* gramma) {
 }
 
 string CRoom::showCharacters(CGramma* gramma) {
+
+  std::cout << "showCharacters" << std::endl;
   auto lambda = [](CPerson* person) {return person->getName();};
-  std::string sOutput = "";
+  std::string output = "";
 
   // Get pre and post strings from show map.
   std::string pre = "Hier sind";    
   std::string post = "niemand.";
   std::string also = "Aber außerdem noch";
   if(m_showMap.count("chars") > 0) {
+    std::cout << "Getting values from show-map" << std::endl;
     if(m_showMap["chars"].size() == 2) {
       pre = m_showMap["chars"][0];
       post = m_showMap["chars"][1];
-      also = m_showMap["chars"][2];
     }
     else
       std::cout << "Wrong size!\n";
+
+    if (m_showMap["chars"].size() == 3)
+      also = m_showMap["chars"][2];
   }
-  sOutput += gramma->build(func::to_vector(m_characters, lambda), pre, post);
+  output += gramma->build(func::to_vector(m_characters, lambda), pre, post);
+  std::cout << "Got text from gramma: " << output << std::endl;
   if(m_players.size() > 0)
-    sOutput += gramma->build(func::to_vector(m_players), " " + also + " ", "");
-  return sOutput;
+    output += gramma->build(func::to_vector(m_players), " " + also + " ", "");
+  std::cout << "Returning..." << std::endl;
+  return output;
 }       
 
 string CRoom::showItems(CGramma* gramma) {

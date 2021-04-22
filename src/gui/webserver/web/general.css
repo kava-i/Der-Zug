@@ -330,7 +330,7 @@ body {
 .fuzzy_finder {
   position:fixed;
   display: none;
-  z-index: 1; 
+  z-index: 2; 
   height:3em;
   text-align:left;
   margin-top: 30em;
@@ -378,6 +378,11 @@ body {
   text-decoration: underline;
 }
 
+.fuzzy_finder_focused_blue {
+  color: blue;
+  text-decoration: underline;
+}
+
 .side_box {
   margin-top: 10rem;
   margin-left: 10rem;
@@ -394,4 +399,10 @@ body {
 
 .prev_list {
   list-style-type: none;
+}
+
+.typeahead_room {
+  position: absolute;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
 }

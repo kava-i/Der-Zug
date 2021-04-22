@@ -108,16 +108,16 @@ worldFactory: done.
 initializing context stack.
 Done.
 Finished parsing!
-[2021-04-15 02:33:54] [connect] WebSocket Connection [::ffff:127.0.0.1]:43440 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:87.0) Gecko/20100101 Firefox/87.0" / 101
+[2021-04-22 15:42:50] [connect] WebSocket Connection [::ffff:127.0.0.1]:39750 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0" / 101
 Starting....
 Choosing login/ registerSet sign_in_up_ to l
-[2021-04-15 02:33:55] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
-[2021-04-15 02:33:55] [frame_header] Header Bytes: 
+[2021-04-22 15:42:54] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
+[2021-04-22 15:42:54] [frame_header] Header Bytes: 
 [0] (2) 81 06 
 
 On to getting credentials
-[2021-04-15 02:33:56] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 17 payload bytes
-[2021-04-15 02:33:56] [frame_header] Header Bytes: 
+[2021-04-22 15:42:55] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 17 payload bytes
+[2021-04-22 15:42:55] [frame_header] Header Bytes: 
 [0] (2) 81 06 
 [1] (2) 81 0B 
 
@@ -133,191 +133,28 @@ checkLogin
 [1;34mroom[0m throwing: show|room
 [1;34mstandard[0m throwing: show|room
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-[2021-04-15 02:33:57] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 252 payload bytes
-[2021-04-15 02:33:57] [frame_header] Header Bytes: 
+[2021-04-22 15:42:57] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 252 payload bytes
+[2021-04-22 15:42:57] [frame_header] Header Bytes: 
 [0] (2) 81 0A 
 [1] (2) 81 13 
 [2] (4) 81 7E 00 DF 
 
-Befor play: input: go to second calling with id: jack
-[1;31mEvents: go to second, from: CGame::play[0m
-[1;31mgo, second[0m
-[1;34mfirst[0m throwing: go|second
-[1;34mworld[0m throwing: go|second
-[1;34mroom[0m throwing: go|second
-[1;34mstandard[0m throwing: go|second
-done.
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
-Send the output to client: <div class='spoken'>LORETELLER - 	Another empty room.</div> <div class='spoken2'>Tall slithly ugly man in long old army coat is standing right next to the door. He's looking a bit shady. He seems to be sweating under his coat.  A woman is sitting an an arm chair, smoking and drinking scotch. </div>
-
-[2021-04-15 02:34:01] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 303 payload bytes
-[2021-04-15 02:34:01] [frame_header] Header Bytes: 
-[0] (4) 81 7E 01 2F 
-
-Befor play: input: talk to tall calling with id: jack
-[1;31mEvents: talk to tall, from: CGame::play[0m
-[1;31mtalk, tall[0m
-[1;34mfirst[0m throwing: talk|tall
-[1;34mworld[0m throwing: talk|tall
-[1;34mroom[0m throwing: talk|tall
-[1;34mstandard[0m throwing: talk|tall
-About to set attribute that does not exist: state
-About to set attribute that does not exist: mapOptions
-[1;31mEvents: changeName character|test.raum2.greg|Greg , from: pre-events[0m
-[1;31mchangeName, character|test.raum2.greg|Greg [0m
-[1;34mfirst[0m throwing: changeName|character|test.raum2.greg|Greg 
-[1;34mworld[0m throwing: changeName|character|test.raum2.greg|Greg 
-[1;32m ... [1;34mworld: [1;32mevent triggered: h_changeName(changeName)[0m
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_startDialog(talk)[0m
-Send the output to client: <div class='spoken'>GREG - 	Hey there fella. I'm Greg. </div>1: Hi I'm Jack
-2: Hey there.
-
-
-[2021-04-15 02:34:05] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 94 payload bytes
-[2021-04-15 02:34:05] [frame_header] Header Bytes: 
-[0] (2) 81 5E 
-
-Befor play: input: 1 calling with id: jack
-[1;31mEvents: 1, from: CGame::play[0m
-[1;31m1, 1[0m
-[1;34mfirst[0m throwing: 1|1
-[1;34mworld[0m throwing: 1|1
-[1;34mdialog[0m throwing: 1|1
-[1;32m ... [1;34mdialog: [1;32mevent triggered: h_call(1)[0m
-Send the output to client: <div class='spoken'>GREG - 	Nice... Eh.. To meet you.$</div><div class='spoken'>LORETELLER - 	You're looking greg in the face and you can think of nothing but all the sweat he's covered in.$</div><div class='spoken'>GREG - 	Ehm. It's hot in here ain't it?</div>1: No, not really
-
-
-[2021-04-15 02:34:08] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 289 payload bytes
-[2021-04-15 02:34:08] [frame_header] Header Bytes: 
-[0] (4) 81 7E 01 21 
-
-Befor play: input: 1 calling with id: jack
-[1;31mEvents: 1, from: CGame::play[0m
-[1;31m1, 1[0m
-[1;34mfirst[0m throwing: 1|1
-[1;34mworld[0m throwing: 1|1
-[1;34mdialog[0m throwing: 1|1
-[1;31mEvents: endDialog, from: h_call[0m
-[1;31mendDialog, endDialog[0m
-[1;34mfirst[0m throwing: endDialog|endDialog
-[1;34mworld[0m throwing: endDialog|endDialog
-[1;32m ... [1;34mworld: [1;32mevent triggered: h_endDialog(endDialog)[0m
-[1;32m ... [1;34mdialog: [1;32mevent triggered: h_call(1)[0m
-Send the output to client: <div class='spoken'>GREG - 	Hmm. I thought so though. But yeah... never mind.</div>Dialog ended.
-
-
-[2021-04-15 02:34:24] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 101 payload bytes
-[2021-04-15 02:34:24] [frame_header] Header Bytes: 
-[0] (2) 81 65 
-
-Befor play: input:  calling with id: jack
-[1;31mEvents: , from: CGame::play[0m
-Send the output to client: 
-
-[2021-04-15 02:34:28] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 1 payload bytes
-[2021-04-15 02:34:28] [frame_header] Header Bytes: 
-[0] (2) 81 01 
-
-Befor play: input: show people calling with id: jack
-[1;31mEvents: show people, from: CGame::play[0m
-[1;31mshow, people[0m
-[1;34mfirst[0m throwing: show|people
+Befor play: input: show eixts calling with id: jack
+[1;31mEvents: show eixts, from: CGame::play[0m
+[1;31mshow, eixts[0m
+[1;34mfirst[0m throwing: show|eixts
 [1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mworld[0m throwing: show|people
-[1;34mroom[0m throwing: show|people
-[1;34mstandard[0m throwing: show|people
+[1;34mworld[0m throwing: show|eixts
+[1;34mroom[0m throwing: show|eixts
+[1;34mstandard[0m throwing: show|eixts
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: Here are <b>Greg </b> und <b>Smocking woman drinking scotch</b>. 
+Send the output to client: Unbekannte "zeige-function"
 
 
 
-[2021-04-15 02:34:32] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 68 payload bytes
-[2021-04-15 02:34:32] [frame_header] Header Bytes: 
-[0] (2) 81 44 
-
-Befor play: input: talk to woman calling with id: jack
-[1;31mEvents: talk to woman, from: CGame::play[0m
-[1;31mtalk, woman[0m
-[1;34mfirst[0m throwing: talk|woman
-[1;34mworld[0m throwing: talk|woman
-[1;34mselect[0m throwing: talk|woman
-[1;34mroom[0m throwing: talk|woman
-[1;34mstandard[0m throwing: talk|woman
-About to set attribute that does not exist: state
-About to set attribute that does not exist: mapOptions
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_startDialog(talk)[0m
-Send the output to client: <div class='spoken'>SMOKING WOMAN - 	You talk to him? Did he tell you, why he's sweating?</div>1: he simply said it's hot... 
-
-
-[2021-04-15 02:34:38] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 128 payload bytes
-[2021-04-15 02:34:38] [frame_header] Header Bytes: 
-[0] (4) 81 7E 00 80 
-
-Befor play: input: 1 calling with id: jack
-[1;31mEvents: 1, from: CGame::play[0m
-[1;31m1, 1[0m
-[1;34mfirst[0m throwing: 1|1
-[1;34mworld[0m throwing: 1|1
-[1;34mdialog[0m throwing: 1|1
-[1;32m ... [1;34mdialog: [1;32mevent triggered: h_call(1)[0m
-Send the output to client: <div class='spoken'>JACK - 	He just said it's hot in here. That's all.$</div><div class='spoken'>SMOKING WOMAN - 	Well maybe he need's a drink and then he'll talk? </div>1: Do you have some booze?
-
-
-[2021-04-15 02:34:49] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 200 payload bytes
-[2021-04-15 02:34:49] [frame_header] Header Bytes: 
-[0] (4) 81 7E 00 C8 
-
-Befor play: input: 1 calling with id: jack
-[1;31mEvents: 1, from: CGame::play[0m
-[1;31m1, 1[0m
-[1;34mfirst[0m throwing: 1|1
-[1;34mworld[0m throwing: 1|1
-[1;34mdialog[0m throwing: 1|1
-[1;31mEvents: changeName character|test.raum2.lucy|Lucy , from: pre-events[0m
-[1;31mchangeName, character|test.raum2.lucy|Lucy [0m
-[1;34mfirst[0m throwing: changeName|character|test.raum2.lucy|Lucy 
-[1;34mworld[0m throwing: changeName|character|test.raum2.lucy|Lucy 
-[1;32m ... [1;34mworld: [1;32mevent triggered: h_changeName(changeName)[0m
-[1;31mEvents: endDialog;addItem booze, from: h_call[0m
-[1;31mendDialog, endDialog[0m
-[1;34mfirst[0m throwing: endDialog|endDialog
-[1;34mworld[0m throwing: endDialog|endDialog
-[1;32m ... [1;34mworld: [1;32mevent triggered: h_endDialog(endDialog)[0m
-[1;31maddItem, booze[0m
-[1;34mfirst[0m throwing: addItem|booze
-[1;34mworld[0m throwing: addItem|booze
-[1;32m ... [1;34mworld: [1;32mevent triggered: h_addItem(addItem)[0m
-[1;32m ... [1;34mdialog: [1;32mevent triggered: h_call(1)[0m
-Send the output to client: <div class='spoken'>LUCY - 	Sure. Here take this. I'm Lucy by the way.</div>Dialog ended.
-<b> Booze</b> zu JACK's Inventar hinzugefügt.
-
-
-
-[2021-04-15 02:34:51] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 142 payload bytes
-[2021-04-15 02:34:51] [frame_header] Header Bytes: 
-[0] (4) 81 7E 00 8E 
-
-Befor play: input: consume booze calling with id: jack
-[1;31mEvents: consume booze, from: CGame::play[0m
-[1;31mconsume, booze[0m
-[1;34mfirst[0m throwing: consume|booze
-[1;34mworld[0m throwing: consume|booze
-[1;34mselect[0m throwing: consume|booze
-[1;34mroom[0m throwing: consume|booze
-[1;34mstandard[0m throwing: consume|booze
-[1;31mEvents: addExit test.raum2|test.raum3|{"name":"third room", "prep":"to"}, from: post-events[0m
-[1;31maddExit, test.raum2|test.raum3|{"name":"third room", "prep":"to"}[0m
-[1;34mfirst[0m throwing: addExit|test.raum2|test.raum3|{"name":"third room", "prep":"to"}
-[1;34mworld[0m throwing: addExit|test.raum2|test.raum3|{"name":"third room", "prep":"to"}
-test.raum2|test.raum3|{"name":"third room", "prep":"to"}
-test.raum2, test.raum3, {"name":"third room","prep":"to"}
-[1;32m ... [1;34mworld: [1;32mevent triggered: h_addExit(addExit)[0m
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_consume(consume)[0m
-Send the output to client: <div class='spoken'>LORETELLER - 	You drink the ohle bottle and usdlendy feel... absolutely amagzni. You're on pot of the lorwd. Now you go girl! </div>
-
-[2021-04-15 02:35:08] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 156 payload bytes
-[2021-04-15 02:35:08] [frame_header] Header Bytes: 
-[0] (4) 81 7E 00 9C 
+[2021-04-22 15:43:00] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 30 payload bytes
+[2021-04-22 15:43:00] [frame_header] Header Bytes: 
+[0] (2) 81 1E 
 
 Befor play: input: show exits calling with id: jack
 [1;31mEvents: show exits, from: CGame::play[0m
@@ -327,165 +164,84 @@ Calling:  show exits!
 Wrong size!
 [1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
 [1;34mworld[0m throwing: show|exits
-[1;34mselect[0m throwing: show|exits
 [1;34mroom[0m throwing: show|exits
 [1;34mstandard[0m throwing: show|exits
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: iHre geht es <b>to first room</b> dnu <b>to third moor</b>. 
- 
+Send the output to client: Hier geht es <b>to second room</b>. 
 
 
-[2021-04-15 02:35:27] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 64 payload bytes
-[2021-04-15 02:35:27] [frame_header] Header Bytes: 
-[0] (2) 81 40 
 
-Befor play: input: go to thrid room calling with id: jack
-[1;31mEvents: go to thrid room, from: CGame::play[0m
-[1;31mgo, thrid room[0m
-[1;34mfirst[0m throwing: go|thrid room
-[1;34mworld[0m throwing: go|thrid room
-[1;34mselect[0m throwing: go|thrid room
-[1;34mselect[0m throwing: go|thrid room
-[1;34mroom[0m throwing: go|thrid room
-[1;34mstandard[0m throwing: go|thrid room
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
-Send the output to client: mRoo not found.
- 
+[2021-04-22 15:43:05] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 39 payload bytes
+[2021-04-22 15:43:05] [frame_header] Header Bytes: 
+[0] (2) 81 27 
 
-
-[2021-04-15 02:35:35] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 19 payload bytes
-[2021-04-15 02:35:35] [frame_header] Header Bytes: 
-[0] (2) 81 13 
-
-Befor play: input: go to third calling with id: jack
-[1;31mEvents: go to third, from: CGame::play[0m
-[1;31mgo, third[0m
-[1;34mfirst[0m throwing: go|third
-[1;34mworld[0m throwing: go|third
-[1;34mselect[0m throwing: go|third
-[1;34mselect[0m throwing: go|third
-[1;34mroom[0m throwing: go|third
-[1;34mstandard[0m throwing: go|third
-done.
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
-Send the output to client: <div class='spoken'>LORETELLER - 	uoY enter the eoilettt. </div> <div class='spoken2'></div>
-
-[2021-04-15 02:35:43] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 96 payload bytes
-[2021-04-15 02:35:43] [frame_header] Header Bytes: 
-[0] (2) 81 60 
-
-Befor play: input: show details calling with id: jack
-[1;31mEvents: show details, from: CGame::play[0m
-[1;31mshow, details[0m
-[1;34mfirst[0m throwing: show|details
+Befor play: input: show people calling with id: jack
+[1;31mEvents: show people, from: CGame::play[0m
+[1;31mshow, people[0m
+[1;34mfirst[0m throwing: show|people
 [1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mworld[0m throwing: show|details
-[1;34mselect[0m throwing: show|details
-[1;34mselect[0m throwing: show|details
-[1;34mroom[0m throwing: show|details
-[1;34mstandard[0m throwing: show|details
+[1;34mworld[0m throwing: show|people
+[1;34mselect[0m throwing: show|people
+[1;34mroom[0m throwing: show|people
+[1;34mstandard[0m throwing: show|people
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: rieH sind <b>Mirror</b>. 
- 
+Send the output to client: Here are no people at all.
 
 
-[2021-04-15 02:35:49] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 29 payload bytes
-[2021-04-15 02:35:49] [frame_header] Header Bytes: 
+
+[2021-04-22 15:43:08] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 29 payload bytes
+[2021-04-22 15:43:08] [frame_header] Header Bytes: 
 [0] (2) 81 1D 
 
-Befor play: input: examine mirror calling with id: jack
-[1;31mEvents: examine mirror, from: CGame::play[0m
-[1;31mexamine, mirror[0m
-[1;34mfirst[0m throwing: examine|mirror
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_examine(examine)[0m
-[1;34mworld[0m throwing: examine|mirror
-[1;34mselect[0m throwing: examine|mirror
-[1;34mselect[0m throwing: examine|mirror
-[1;34mroom[0m throwing: examine|mirror
-h_startDialogDirekt: mirror
-[1;31mFATAL! Accessing character which does not exist: mirror[0m
-About to set attribute that does not exist: state
-About to set attribute that does not exist: mapOptions
-[1;32m ... [1;34mroom: [1;32mevent triggered: h_startDialogDirect(examine)[0m
-[1;34mstandard[0m throwing: examine|mirror
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(examine)[0m
-Send the output to client: <div class='spoken'>LORETELLER - 	The mirror is lgarign at you. nikaTg a a clsoer look, it's ton the mirror, ts'i your and nefreltioc. YOU are rtatsnig at YOURSELF!$ </div><div class='spoken'>MIRROR - 	hat looks like oyu again, Jack, tnsaeid of just onidg your quest, eou'vy decided on uciqk fun. </div>1: what am i doing here, this is neither time nor place to fool around, i have to sober up again...
-2: what do i care i am here for the fun!
+Befor play: input: go to second calling with id: jack
+[1;31mEvents: go to second, from: CGame::play[0m
+[1;31mgo, second[0m
+[1;34mfirst[0m throwing: go|second
+[1;34mworld[0m throwing: go|second
+[1;34mselect[0m throwing: go|second
+[1;34mselect[0m throwing: go|second
+[1;34mroom[0m throwing: go|second
+[1;34mstandard[0m throwing: go|second
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>LORETELLER - 	Another empty room.</div> <div class='spoken2'>Tall slithly ugly man in long old army coat is standing right next to the door. He's looking a bit shady. He seems to be sweating under his coat.  A woman is sitting an an arm chair, smoking and drinking scotch. </div>
 
+[2021-04-22 15:43:14] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 303 payload bytes
+[2021-04-22 15:43:14] [frame_header] Header Bytes: 
+[0] (4) 81 7E 01 2F 
 
-[2021-04-15 02:35:54] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 450 payload bytes
-[2021-04-15 02:35:54] [frame_header] Header Bytes: 
-[0] (4) 81 7E 01 C2 
-
-Befor play: input: 2 calling with id: jack
-[1;31mEvents: 2, from: CGame::play[0m
-[1;31m2, 2[0m
-[1;34mfirst[0m throwing: 2|2
-[1;34mworld[0m throwing: 2|2
-[1;34mdialog[0m throwing: 2|2
-[1;32m ... [1;34mdialog: [1;32mevent triggered: h_call(2)[0m
-Send the output to client: <div class='spoken'>JACK - 	Wtah do i acer i am rehe for the fun!$ </div><div class='spoken'>MIRROR - 	erA you even old enough to irdnk scotch? </div>1: You are me you know how old i am!
-
-
-[2021-04-15 02:36:34] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 191 payload bytes
-[2021-04-15 02:36:34] [frame_header] Header Bytes: 
-[0] (4) 81 7E 00 BF 
-
-Befor play: input: 1 calling with id: jack
-[1;31mEvents: 1, from: CGame::play[0m
-[1;31m1, 1[0m
-[1;34mfirst[0m throwing: 1|1
-[1;34mworld[0m throwing: 1|1
-[1;34mdialog[0m throwing: 1|1
-[1;32m ... [1;34mdialog: [1;32mevent triggered: h_call(1)[0m
-Send the output to client: <div class='spoken'>JACK - 	You are me oyu know how dlo i am!$ </div><div class='spoken'>MIRROR - 	nTeh you should at least be dlo enough to taek responsibility for ryuo actions! </div>1: nobody tells me what to do, not even myself!
-
-
-[2021-04-15 02:36:44] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 237 payload bytes
-[2021-04-15 02:36:44] [frame_header] Header Bytes: 
-[0] (4) 81 7E 00 ED 
-
-Befor play: input: 1 calling with id: jack
-[1;31mEvents: 1, from: CGame::play[0m
-[1;31m1, 1[0m
-[1;34mfirst[0m throwing: 1|1
-[1;34mworld[0m throwing: 1|1
-[1;34mdialog[0m throwing: 1|1
-[1;31mEvents: endDialog, from: h_call[0m
-[1;31mendDialog, endDialog[0m
-[1;34mfirst[0m throwing: endDialog|endDialog
-[1;34mworld[0m throwing: endDialog|endDialog
-[1;32m ... [1;34mworld: [1;32mevent triggered: h_endDialog(endDialog)[0m
-[1;32m ... [1;34mdialog: [1;32mevent triggered: h_call(1)[0m
-Send the output to client: <div class='spoken'>JACK - 	oNbody tells me what to do, ont even myself!$ </div><div class='spoken'>LORETELLER - 	oYu hit your nlreectiof in the feca with the ilnbd power of a drunken man.$ </div><div class='spoken2'>	Shortly after the broken pieces hit the ground with a clatter, you see that something was hidden inside the mirror</div>Dialog ended.
-
-
-[2021-04-15 02:36:56] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 358 payload bytes
-[2021-04-15 02:36:56] [frame_header] Header Bytes: 
-[0] (4) 81 7E 01 66 
-
-Befor play: input: look at mirror calling with id: jack
-[1;31mEvents: look at mirror, from: CGame::play[0m
-BACKPASS: 
-[1;31mlook, at mirror[0m
-[1;34mfirst[0m throwing: look|at mirror
-[1;34mworld[0m throwing: look|at mirror
-[1;34mselect[0m throwing: look|at mirror
-[1;34mselect[0m throwing: look|at mirror
-[1;34mroom[0m throwing: look|at mirror
-[1;34mstandard[0m throwing: look|at mirror
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_look(look)[0m
-Send the output to client: <div class='spoken'>LORETELLER - 	eTmi always comes ot give you a hand; Things nigeb to become crearel again. Highness decaersed by 1.
- </div>iHer sind leider nichts. 
-
-
-[2021-04-15 02:37:59] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 172 payload bytes
-[2021-04-15 02:37:59] [frame_header] Header Bytes: 
-[0] (4) 81 7E 00 AC 
-
-[2021-04-15 02:39:20] [control] Control frame received with opcode 8
-[2021-04-15 02:39:20] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
-[2021-04-15 02:39:20] [frame_header] Header Bytes: 
+[2021-04-22 15:43:16] [control] Control frame received with opcode 8
+[2021-04-22 15:43:16] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2021-04-22 15:43:16] [frame_header] Header Bytes: 
 [0] (2) 88 02 
 
-[2021-04-15 02:39:20] [disconnect] Disconnect close local:[1001] remote:[1001]
+[2021-04-22 15:43:16] [disconnect] Disconnect close local:[1001] remote:[1001]
+[2021-04-22 15:43:18] [connect] WebSocket Connection [::ffff:127.0.0.1]:39754 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0" / 101
+Starting....
+Choosing login/ registerSet sign_in_up_ to l
+On to getting credentials
+[2021-04-22 15:43:18] [frame_header] Dispatching write containing 3 message(s) containing 6 header bytes and 25 payload bytes
+[2021-04-22 15:43:18] [frame_header] Header Bytes: 
+[0] (2) 81 06 
+[1] (2) 81 08 
+[2] (2) 81 0B 
+
+On to getting credentials
+checkLogin
+[1;31mEvents: show room, from: startGame[0m
+[1;31mshow, room[0m
+[1;34mfirst[0m throwing: show|room
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mworld[0m throwing: show|room
+[1;34mroom[0m throwing: show|room
+[1;34mstandard[0m throwing: show|room
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Befor play: input: [end_game] calling with id: _admin
+Sending to all online players
+Sending to host.
+Game is getting closed...
+Befor play: input: [end_game] calling with id: _admin
+Sending to all online players
+Sending to host.
+Game is getting closed...
+Webgame started on port 9010

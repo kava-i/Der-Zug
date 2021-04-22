@@ -5,9 +5,11 @@ var cur_object_ = window.location.pathname;
 var finder_counter = 0;
 var element_counter = 0;
 var fuzzy_finder_active = false;
-var delete_modus = false;
+// var delete_modus = false;
 var pages = []
 var child_elements_ = false;
+let inps = [];
+let cur_input_field_ = "";
 
 window.onload = function() {
   document.getElementById("fuzzy_finder_div").style.display="none";
@@ -15,6 +17,7 @@ window.onload = function() {
   document.getElementById("fuzzy_finder_elems").innerHTML = "";
   paths_ = document.getElementById("fuzzy_finder_div").getAttribute("pages");
   paths_ = JSON.parse(paths_);
+  inps_ = paths_;
   if (document.getElementById("fuzzy_finder_div").hasAttribute("page_objects")) {
     page_objects = document.getElementById("fuzzy_finder_div").getAttribute("page_objects");
     page_objects = JSON.parse(page_objects)
@@ -29,22 +32,30 @@ window.onload = function() {
   HighlightElem();
 }
 
+let mode_ = "normal"
+
 function checkMatch() {
   document.getElementById("fuzzy_finder_elems").innerHTML = "";
   inp = document.getElementById("fuzzy_finder_inp").value;
+
+  // If typeahead, add current user input to list.
+  if (mode_ == "typeahead")
+    inps_.push(inp);
+
   var matches = [];
-  var inps = (delete_modus == false) ? paths_ : on_page_objects_
+  // var inps_ = (delete_modus == false) ? paths_ : on_page_objects_
 
   // Select matching elements.
-  for (var i=0; i<inps.length; i++) {
-    var current_page = inps[i].toLowerCase();
+  for (var i=0; i<inps_.length; i++) {
+    var current_page = inps_[i].toLowerCase();
 
     //If not found, continue
     if (current_page.indexOf(inp) == -1) continue;
 
     // Calculate score.
     var score = current_page.length/inp.length;
-    if (delete_modus == false) {
+    // if (delete_modus == false) {
+    if (mode_ == "normal") {
       // If current path is a child-path of the current page, increase score.
       if (current_page.indexOf(cur_object_) != -1) 
         score/=2;
@@ -52,7 +63,7 @@ function checkMatch() {
       last_elem = current_page.substr(current_page.lastIndexOf("/"));
       if (last_elem.indexOf(inp) == 0) score/=2;
     }
-    matches.push([inps[i], score])
+    matches.push([inps_[i], score])
   }
 
   // Sort and take only first 8 elements
@@ -85,17 +96,16 @@ document.addEventListener('keydown', function(event) {
 
   pages = document.getElementById("fuzzy_finder_elems").children;
   
-  if (Typeahead())
-    return true;
-  
   //ESC -> hide fuzzy finder
   if (event.keyCode == key_codes["esc"]) {
     SelectCloseModals(); // Regarding this "fuzzy_finder" should be renamed to "key-driven" or something.
     SelectCloseFinder();
   }
   // Check if input is ment for an input field which isn't fuzzy finder.
-  else if (NonFuzzyFinderInput(event))
+  else if (NonFuzzyFinderInput(event)) {
+    console.log("Stopping fuzzy_finder.");
     return;
+  }
   else if (event.keyCode == key_codes["right"]) {
     SelectChildElement(); 
   }
@@ -117,9 +127,12 @@ document.addEventListener('keydown', function(event) {
     SelectElement(event);
   // Select matches down.
   else if (event.keyCode == key_codes["down"]) {
-    if (fuzzy_finder_active)
+    if (fuzzy_finder_active) {
       finder_counter = mod(finder_counter+1, pages.length); 
+      console.log("finder active.");
+    }
     else {
+      console.log("finder not active.");
       element_counter = mod(element_counter+1, on_page_objects_.length); 
       CreateChildObjects();
     }
@@ -154,6 +167,8 @@ function SelectDeleteModus(event) {
   console.log("Delete modus triggered: ", event.keyCode);
   // Get current element.
   delete_modus = true;
+  mode_ = "delete";
+  inps_ = on_page_objects_;
   document.getElementById("fuzzy_finder_mode").innerHTML = "delete: ";
   document.getElementById("fuzzy_finder_mode").style.color = "orange";
 }
@@ -161,8 +176,13 @@ function SelectDeleteModus(event) {
 function SelectElement(event) {
   console.log("SelectElement");
   if (fuzzy_finder_active) {
-    if (delete_modus == false)
+    if (mode_ == "normal")
       window.location = pages[finder_counter].innerHTML;
+    else if (mode_ == "typeahead") {
+      console.log("Writing ", pages[finder_counter].innerHTML, " to ", cur_input_field_);
+      cur_input_field_.value = pages[finder_counter].innerHTML;
+      SelectCloseFinder();
+    }
     else {
       event.preventDefault();
       OpenDelElemModal('subcategory', pages[finder_counter].innerHTML);
@@ -202,6 +222,8 @@ function SelectCloseFinder() {
   document.getElementById("fuzzy_finder_mode").innerHTML = "files: ";
   document.getElementById("fuzzy_finder_mode").style.color = "#1fe921";
   delete_modus = false;
+  mode_ = "normal";
+  inps_ = paths_; 
   finder_counter = 0;
   fuzzy_finder_active = false;
 }
@@ -233,22 +255,42 @@ function NonFuzzyFinderInput(event, all) {
   input_fields.push.apply(input_fields, document.getElementsByTagName('input'));
   input_fields.push.apply(input_fields, document.getElementsByTagName('textarea'));
   for (var index = 0; index < input_fields.length; ++index) {
-    if (event.target == input_fields[index] && event.target != fuzzy_finder_inp) 
-      return true;
+    if (event.target == input_fields[index] && event.target != fuzzy_finder_inp) {
+      // If typeahead, then mode will be changed, otherwiese stop using fuzzy_finder
+      if (Typeahead(input_fields[index]))
+        return false;
+      else
+        return true;
+    }
   }
   return false;
 }
 
-function Typeahead() {
-  var input_fields = document.getElementsByTagName('input');
+function Typeahead(input_field) {
+  // Room type-ahead 
+  // - "room": when adding new-player and selecting start-room, 
+  // "linked_room id": when adding an exit to a room.
+  if (input_field.id == "room" || input_field.placeholder == "linked_room id") {
+    inps_ = GetAllX("room");
+    mode_ = "typeahead";
+    console.log("typeahead modus selected.");
+    cur_input_field_ = input_field;
+    document.getElementById("fuzzy_finder_mode").innerHTML = "rooms: ";
+    document.getElementById("fuzzy_finder_mode").style.color = "blue";
+    return true;
+  }
+  else
+    return false;
 }
 
 function HighlightElem() {
   for (var i=0; i<pages.length; i++) {
-    if (i==finder_counter && delete_modus == false)
+    if (i==finder_counter && mode_ == "normal")
       pages[i].classList.add("fuzzy_finder_focused_green")
-    else if (i==finder_counter && delete_modus == true)
+    else if (i==finder_counter && mode_ == "delete")
       pages[i].classList.add("fuzzy_finder_focused_orange")
+    else if (i==finder_counter && mode_ == "typeahead")
+      pages[i].classList.add("fuzzy_finder_focused_blue")
     else 
       pages[i].classList = [];
   }
@@ -321,6 +363,24 @@ function CreateChildObjects() {
       }
     }
   }
+}
+
+function GetAllX(category) {
+  results = []
+  paths_.forEach(path => {
+    let pos = path.indexOf(category)
+    if (pos != -1) {
+      url_path = window.location.pathname;
+      cur_path_without_cur_elem = url_path.substr(0, url_path.lastIndexOf("/"));
+      let cur_path = ""
+      if (path.indexOf(cur_path_without_cur_elem) != -1)
+        cur_path = path.substr(path.lastIndexOf("/")+1);
+      else
+        cur_path = path.substr(pos + category.length+2);
+      results.push(cur_path.replaceAll("/", "."));
+    }
+  });
+  return results;
 }
 
 function ShowSideBox(x) {
