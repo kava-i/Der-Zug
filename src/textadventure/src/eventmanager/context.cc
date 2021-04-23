@@ -352,10 +352,8 @@ void Context::add_listener(std::string sID, std::map<std::string, std::string>
 void Context::initializeHandlers(std::vector<nlohmann::json> 
     listeners) {
   for (auto it : listeners) {
-    if (it.count("regex") > 0) {
-      add_listener(it["id"], (std::regex)it["regex"], it.value("take", 1), 
-          it.value("priority", 0)); 
-    }
+    if (it.count("regex") > 0)
+      add_listener(it["id"], (std::regex)it["regex"], it.value("take", 1), it.value("priority", 0)); 
     else if (it.count("string") > 0)
       add_listener(it["id"], (std::string)it["string"], it.value("priority", 0));
   }
@@ -382,8 +380,7 @@ bool Context::throw_event(event e, CPlayer* p) {
           << "(" << cur_event.first << ")" << cCLEAR << std::endl;
       }
       else {
-        p->printError("ERROR, given handler not found: " 
-            + sortedEventmanager[i]->getID() + "\n");
+        p->printError("ERROR, given handler not found: " + sortedEventmanager[i]->getID() + "\n");
       }
       called = true;
     }
@@ -395,37 +392,34 @@ bool Context::throw_event(event e, CPlayer* p) {
   return m_curPermeable;
 }
 
-void Context::throw_timeEvents(CPlayer* p)
-{
-    //Check if player is currently occupied.
-    if(p->getContexts().nonPermeableContextInList() == true)
-        return;
+void Context::throw_timeEvents(CPlayer* p) {
+  //Check if player is currently occupied.
+  if (p->getContexts().nonPermeableContextInList() == true)
+    return;
 
-    //Get current time.
-    auto end = std::chrono::system_clock::now();
+  //Get current time.
+  auto end = std::chrono::system_clock::now();
 
-    //Check if a time event is ready to throw, then throw.
-    std::deque<CTimeEvent*> sortedEvents = m_timeevents.getSortedCtxList();
-    for(size_t i=0; i<sortedEvents.size(); i++)
-    {
-        std::chrono::duration<double> diff = end - sortedEvents[i]->getStart();
-        if(diff.count() >= sortedEvents[i]->getDuration())
-        {
-            std::string str = sortedEvents[i]->getInfo();
-            (this->*m_handlers[sortedEvents[i]->getID()])(str, p);
-            std::cout << "BACKPASS: " << str << std::endl;
-            if(str == "delete")
-                m_timeevents.eraseHighest(sortedEvents[i]->getID());
-        }
+  //Check if a time event is ready to throw, then throw.
+  std::deque<CTimeEvent*> sortedEvents = m_timeevents.getSortedCtxList();
+  for (size_t i=0; i<sortedEvents.size(); i++) {
+    std::chrono::duration<double> diff = end - sortedEvents[i]->getStart();
+    if (diff.count() >= sortedEvents[i]->getDuration()) {
+      std::string str = sortedEvents[i]->getInfo();
+      (this->*m_handlers[sortedEvents[i]->getID()])(str, p);
+      std::cout << "BACKPASS: " << str << std::endl;
+      if (str == "delete")
+        m_timeevents.eraseHighest(sortedEvents[i]->getID());
     }
+  }
 }
 
 // ***** ERROR FUNCTIONS ****** ***** //
 
 void Context::error(CPlayer* p) {
-  if(m_permeable == false && m_sError != "")
-      p->appendErrorPrint(m_sError + " " + m_curEvent.first);
-  else if(m_permeable == false) {
+  if (m_permeable == false && m_sError != "")
+    p->appendErrorPrint(m_sError + " " + m_curEvent.first);
+  else if (m_permeable == false) {
     p->appendTechPrint("Falsche Eingabe, gebe \"help\" ein, falls du nicht "
         "weiter weißt. (" + m_sName + ")");
   }
@@ -833,57 +827,61 @@ void Context::h_goTo(std::string& sIdentifier, CPlayer* p) {
   p->changeRoom(sIdentifier);
 }
 
-void Context::h_startDialog(std::string& sIdentifier, CPlayer* p)
-{
-    //Get selected character
-    auto lambda1 = [](CPerson* person) { return person->getName(); };
-    std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda1);
-    auto lambda2 = [](CPlayer* player) { return player->getName(); };
-    std::string player = func::getObjectId(p->getMapOFOnlinePlayers(), sIdentifier, lambda2);
+void Context::h_startDialog(std::string& sIdentifier, CPlayer* p) {
+  //Get selected character
+  auto lambda1 = [](CPerson* person) { return person->getName(); };
+  std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda1);
+  auto lambda2 = [](CPlayer* player) { return player->getName(); };
+  std::string player = func::getObjectId(p->getMapOFOnlinePlayers(), sIdentifier, lambda2);
 
-    //Check if character was found
-    if(character != "") 
-        p->startDialog(character);  
-    else if(player != "") 
-        p->startChat(p->getPlayer(player));
-    else
-        p->appendErrorPrint("Character not found");
+  //Check if character was found
+  if (character != "") 
+    p->startDialog(character);  
+  else if (player != "") 
+    p->startChat(p->getPlayer(player));
+  else
+    p->appendErrorPrint("Character not found");
 }
 
 void Context::h_startDialogDirect(std::string &sIdentifier, CPlayer *p) {
   std::cout << "h_startDialogDirekt: " << sIdentifier << std::endl;
-  std::string character = sIdentifier;
-  character = "nonexist.nonexists.mirror";
 
+  std::string aim_identified = m_jAttributes["infos"]["h_startDialogDirect"]["identifier"];
+  std::string character = m_jAttributes["infos"]["h_startDialogDirect"]["character"];
+
+  // Check if identifier matches entered identifier.
+  if (aim_identified != sIdentifier) {
+    return;
+  }
+
+  // Check if given character exists. If he does, call dialog.
   if (p->getWorld()->getCharacter(character) != nullptr) {
     p->startDialog(sIdentifier, p->getWorld()->getCharacter(character)->getDialog());
   }
 }
 
 void Context::h_take(std::string& sIdentifier, CPlayer* p) {
-    if(sIdentifier.find("all") == 0)
-        p->addAll();
-    else if(p->getRoom()->getItem(sIdentifier) == NULL)
-    {
-        std::cout << "Not found.\n";
-        p->appendErrorPrint("Item not found.\n");
-    }
-    else
-    {
-        std::cout << "Getting item.\n";
-        p->addItem(p->getRoom()->getItem(sIdentifier));
-    }
+  if (sIdentifier.find("all") == 0)
+    p->addAll();
+  else if (p->getRoom()->getItem(sIdentifier) == NULL) {
+    std::cout << "Not found.\n";
+    p->appendErrorPrint("Item not found.\n");
+  }
+  else {
+    std::cout << "Getting item.\n";
+    p->addItem(p->getRoom()->getItem(sIdentifier));
+  }
 }
 
 void Context::h_consume(std::string& sIdentifier, CPlayer* p) {
-    if(p->getInventory().getItem(sIdentifier) != NULL) {
-        if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
-            p->appendTechPrint("Dieser Gegenstand kann nicht konsumiert werden.\n");
-    }
-    else {
-        p->appendErrorPrint("Gegenstand nicht in deinem Inventar! "
-            "(benutze \"zeige Inventar\" um deine Items zu sehen.)\n");
-    }
+  if (p->getInventory().getItem(sIdentifier) != NULL) {
+    if (p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
+      p->appendTechPrint("Dieser Gegenstand kann nicht konsumiert werden.\n");
+  }
+  else {
+    p->appendErrorPrint("Gegenstand nicht in deinem Inventar! "
+          "(benutze \"zeige Inventar\" um deine Items zu sehen.)\n");
+  }
 }
 
 void Context::h_read(std::string& sIdentifier, CPlayer* p) {
@@ -971,30 +969,27 @@ void Context::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
     m_block=true;
 }
 
-void Context::h_thieve(std::string& sIdentifier, CPlayer* p)
-{
-    if(m_jAttributes["infos"].count("h_thieve") > 0)
-    {
-        std::string str = m_jAttributes["infos"]["h_thieve"];
-        p->startDialog(str, p->getWorld()->getCharacter(str)->getDialog("thieve"));
-    }
+void Context::h_thieve(std::string& sIdentifier, CPlayer* p) {
+  if (m_jAttributes["infos"].count("h_thieve") > 0) {
+    std::string str = m_jAttributes["infos"]["h_thieve"];
+    p->startDialog(str, p->getWorld()->getCharacter(str)->getDialog("thieve"));
+  }
 
-    else
-        p->appendStoryPrint("You know, me son. You should not be stealing!");
-    m_curPermeable = false;
+  else
+    p->appendStoryPrint("You know, me son. You should not be stealing!");
+  m_curPermeable = false;
 }
 
-void Context::h_attack(std::string& sIdentifier, CPlayer* p)
-{
-    std::cout << "h_attack: " << sIdentifier << std::endl;
+void Context::h_attack(std::string& sIdentifier, CPlayer* p) {
+  std::cout << "h_attack: " << sIdentifier << std::endl;
 
-    if(m_jAttributes["infos"].count("h_attack") == 0)
-        return; 
+  if (m_jAttributes["infos"].count("h_attack") == 0)
+    return; 
 
-    std::string character = m_jAttributes["infos"]["h_attack"];
-    std::cout << "Infos: " << character << std::endl;
-    p->setFight(new CFight(p, p->getWorld()->getCharacter(character)));
-    m_curPermeable = false;
+  std::string character = m_jAttributes["infos"]["h_attack"];
+  std::cout << "Infos: " << character << std::endl;
+  p->setFight(new CFight(p, p->getWorld()->getCharacter(character)));
+  m_curPermeable = false;
 }
 
 

@@ -139,6 +139,10 @@ Wrong size!
 [1;31mEvents: show people, from: CGame::play[0m
 [1;31mshow, people[0m
 [1;34mfirst[0m throwing: show|people
+showCharacters
+Getting values from show-map
+Got text from gramma: Here are no people at all.
+Returning...
 [1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
 [1;34mworld[0m throwing: show|people
 [1;34mselect[0m throwing: show|people

@@ -840,16 +840,16 @@ worldFactory: done.
 initializing context stack.
 Done.
 Finished parsing!
-[2021-04-22 16:05:26] [connect] WebSocket Connection [::ffff:127.0.0.1]:46318 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0" / 101
+[2021-04-23 19:33:40] [connect] WebSocket Connection [::ffff:127.0.0.1]:51192 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0" / 101
 Starting....
 Choosing login/ registerSet sign_in_up_ to l
-[2021-04-22 16:05:27] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
-[2021-04-22 16:05:27] [frame_header] Header Bytes: 
+[2021-04-23 19:33:42] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
+[2021-04-23 19:33:42] [frame_header] Header Bytes: 
 [0] (2) 81 06 
 
 On to getting credentials
-[2021-04-22 16:05:28] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 17 payload bytes
-[2021-04-22 16:05:28] [frame_header] Header Bytes: 
+[2021-04-23 19:33:43] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 17 payload bytes
+[2021-04-23 19:33:43] [frame_header] Header Bytes: 
 [0] (2) 81 06 
 [1] (2) 81 0B 
 
@@ -876,439 +876,70 @@ checkLogin
 [1;34mroom[0m throwing: show|room
 [1;34mstandard[0m throwing: show|room
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-[2021-04-22 16:05:30] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 873 payload bytes
-[2021-04-22 16:05:30] [frame_header] Header Bytes: 
+[2021-04-23 19:33:45] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 873 payload bytes
+[2021-04-23 19:33:45] [frame_header] Header Bytes: 
 [0] (2) 81 0A 
 [1] (2) 81 13 
 [2] (4) 81 7E 03 4C 
 
-Befor play: input: zeige details calling with id: alex
-[1;31mEvents: zeige details, from: CGame::play[0m
-[1;31mshow, details[0m
-[1;34mfirst[0m throwing: show|details
+Befor play: input: zeige ausgänge calling with id: alex
+[1;31mEvents: zeige ausgänge, from: CGame::play[0m
+[1;31mshow, ausgänge[0m
+[1;34mfirst[0m throwing: show|ausgänge
+Calling:  show exits!
 [1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|details
-[1;34mtutorial[0m throwing: show|details
+[1;34mzug_nach_moskau[0m throwing: show|ausgänge
+[1;34mtutorial[0m throwing: show|ausgänge
 [1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;31mEvents: printText tutorial_details, from: post-events[0m
-[1;31mprintText, tutorial_details[0m
 [1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|details
-[1;34mkuligundes_apfel[0m throwing: show|details
-[1;34mkomische_gruppe[0m throwing: show|details
-[1;34mgeld_fuer_ticket[0m throwing: show|details
-[1;34mbesoffene_frau[0m throwing: show|details
-[1;34mworld[0m throwing: show|details
-[1;34mroom[0m throwing: show|details
-[1;34mstandard[0m throwing: show|details
+[1;34mleave[0m throwing: show|ausgänge
+[1;34mkuligundes_apfel[0m throwing: show|ausgänge
+[1;34mkomische_gruppe[0m throwing: show|ausgänge
+[1;34mgeld_fuer_ticket[0m throwing: show|ausgänge
+[1;34mbesoffene_frau[0m throwing: show|ausgänge
+[1;34mworld[0m throwing: show|ausgänge
+[1;34mroom[0m throwing: show|ausgänge
+[1;34mstandard[0m throwing: show|ausgänge
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind  <b>Fenster mit aufwendiger Glasmalerei</b>, <b>Steintafel</b> und <b>Statur</b>. 
-</div>Details Erfolgreich
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sehe ich einen Weg <b>zur Treppe</b>, <b>zum Ausgang</b>, <b>ins Freiere</b>, <b>zur ersten Kammer</b>, <b>zur vierten Kammer</b> und <b>zur Nebenhalle</b>. 
+</div>
+
+[2021-04-23 19:33:49] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 217 payload bytes
+[2021-04-23 19:33:49] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 D9 
+
+Befor play: input: gehe zur treppe calling with id: alex
+[1;31mEvents: gehe zur treppe, from: CGame::play[0m
+[1;31mgo, zur treppe[0m
+[1;34mfirst[0m throwing: go|zur treppe
+[1;34mzug_nach_moskau[0m throwing: go|zur treppe
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mtutorial[0m throwing: go|zur treppe
+[1;31mEvents: printText tutorial_gehen, from: post-events[0m
+[1;31mprintText, tutorial_gehen[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|zur treppe
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkuligundes_apfel[0m throwing: go|zur treppe
+[1;34mkomische_gruppe[0m throwing: go|zur treppe
+[1;34mgeld_fuer_ticket[0m throwing: go|zur treppe
+[1;34mbesoffene_frau[0m throwing: go|zur treppe
+[1;34mworld[0m throwing: go|zur treppe
+[1;34mselect[0m throwing: go|zur treppe
+[1;34mroom[0m throwing: go|zur treppe
+h_exitTrainstation, zur treppe
+[1;32m ... [1;34mroom: [1;32mevent triggered: h_exitTrainstation(go)[0m
+[1;34mstandard[0m throwing: go|zur treppe
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: Gehen Erfolgreich
 wahrnehmung um 1 erhöht!
-<div class='spoken'>ERZÄHLER - 	Sehr gut. Willst du die Dinge näher sehen? Dich ihnen anschauend hingeben?$</div><div class='spoken2'>	Aber sei wachsam, schau dir die Wahrheit, die du jetzt siehst nicht <i>nachher</i> oder <i>entfernt</i> davon an, sie hätte dann <i>gar keine Bedeutung</i> mehr.$</div><div class='spoken2'>	Sage <b>"betrachte [name des details]"</b> und tauche tiefer in (deine) Welt ein. (Es reicht einen eindeutigen Teil des Gegenstandes einzugeben, den du betrachten magst.)</div>
+<div class='spoken'>ERZÄHLER - 	Du bist jetzt frei die Welt zu erkunden. Laufe umher, betrachte die Dinge um dich herum, denn es gibt noch viel zu entdecken und umsomehr zu lernen.$</div><div class='spoken'>PERZEPTION - 	The stairs are built of beautiful marmor. Another sign that this hospital probably hosts rich guests. You feel uneasy as you take step after step.
+ Downstairs the statue in the foyer seems to be followiung your steps. Upstairs a door leads to the corridor.</div> <div class='spoken2'> </div>
 
-[2021-04-22 16:05:35] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 702 payload bytes
-[2021-04-22 16:05:35] [frame_header] Header Bytes: 
-[0] (4) 81 7E 02 BE 
-
-Befor play: input: show room calling with id: alex
-[1;31mEvents: show room, from: CGame::play[0m
-[1;31mshow, room[0m
-[1;34mfirst[0m throwing: show|room
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|room
-[1;34mtutorial[0m throwing: show|room
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|room
-[1;34mkuligundes_apfel[0m throwing: show|room
-[1;34mkomische_gruppe[0m throwing: show|room
-[1;34mgeld_fuer_ticket[0m throwing: show|room
-[1;34mbesoffene_frau[0m throwing: show|room
-[1;34mworld[0m throwing: show|room
-[1;34mroom[0m throwing: show|room
-[1;34mstandard[0m throwing: show|room
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier ist ein großes Gebäude. Ich stehe in dem großen Gebäude. Viele Gestalten sind hier auch.</div> <div class='spoken2'>Eine komische Gruppe an Passanten, die wild in der Gegen umherzeigen. </div>
-
-[2021-04-22 16:06:43] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 249 payload bytes
-[2021-04-22 16:06:43] [frame_header] Header Bytes: 
-[0] (4) 81 7E 00 F9 
-
-Befor play: input: show exits calling with id: alex
-[1;31mEvents: show exits, from: CGame::play[0m
-[1;31mshow, exits[0m
-[1;34mfirst[0m throwing: show|exits
-Calling:  show exits!
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|exits
-[1;34mtutorial[0m throwing: show|exits
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|exits
-[1;34mkuligundes_apfel[0m throwing: show|exits
-[1;34mkomische_gruppe[0m throwing: show|exits
-[1;34mgeld_fuer_ticket[0m throwing: show|exits
-[1;34mbesoffene_frau[0m throwing: show|exits
-[1;34mworld[0m throwing: show|exits
-[1;34mroom[0m throwing: show|exits
-[1;34mstandard[0m throwing: show|exits
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sehe ich einen Weg <b>zum Ausgang</b>, <b>ins Freiere</b>, <b>zur ersten Kammer</b>, <b>zur vierten Kammer</b> und <b>zur Nebenhalle</b>. 
-</div>
-
-[2021-04-22 16:06:46] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 198 payload bytes
-[2021-04-22 16:06:46] [frame_header] Header Bytes: 
-[0] (4) 81 7E 00 C6 
-
-Befor play: input: show people calling with id: alex
-[1;31mEvents: show people, from: CGame::play[0m
-[1;31mshow, people[0m
-[1;34mfirst[0m throwing: show|people
-showCharacters
-Getting values from show-map
-Got text from gramma: Hier sind <b>eine komische Gruppe von drei Passanten</b>. 
-Returning...
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|people
-[1;34mtutorial[0m throwing: show|people
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|people
-[1;34mkuligundes_apfel[0m throwing: show|people
-[1;34mkomische_gruppe[0m throwing: show|people
-[1;34mgeld_fuer_ticket[0m throwing: show|people
-[1;34mbesoffene_frau[0m throwing: show|people
-[1;34mworld[0m throwing: show|people
-[1;34mselect[0m throwing: show|people
-[1;34mroom[0m throwing: show|people
-[1;34mstandard[0m throwing: show|people
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind <b>eine komische Gruppe von drei Passanten</b>. 
-</div>
-
-[2021-04-22 16:06:50] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 113 payload bytes
-[2021-04-22 16:06:50] [frame_header] Header Bytes: 
-[0] (2) 81 71 
-
-Befor play: input: show items calling with id: alex
-[1;31mEvents: show items, from: CGame::play[0m
-[1;31mshow, items[0m
-[1;34mfirst[0m throwing: show|items
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|items
-[1;34mtutorial[0m throwing: show|items
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|items
-[1;34mkuligundes_apfel[0m throwing: show|items
-[1;34mkomische_gruppe[0m throwing: show|items
-[1;34mgeld_fuer_ticket[0m throwing: show|items
-[1;34mbesoffene_frau[0m throwing: show|items
-[1;34mworld[0m throwing: show|items
-[1;34mselect[0m throwing: show|items
-[1;34mselect[0m throwing: show|items
-[1;34mroom[0m throwing: show|items
-[1;34mstandard[0m throwing: show|items
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind nichts zu finden.
-</div>
-
-[2021-04-22 16:06:54] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 82 payload bytes
-[2021-04-22 16:06:54] [frame_header] Header Bytes: 
-[0] (2) 81 52 
-
-Befor play: input: show details calling with id: alex
-[1;31mEvents: show details, from: CGame::play[0m
-[1;31mshow, details[0m
-[1;34mfirst[0m throwing: show|details
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|details
-[1;34mtutorial[0m throwing: show|details
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|details
-[1;34mkuligundes_apfel[0m throwing: show|details
-[1;34mkomische_gruppe[0m throwing: show|details
-[1;34mgeld_fuer_ticket[0m throwing: show|details
-[1;34mbesoffene_frau[0m throwing: show|details
-[1;34mworld[0m throwing: show|details
-[1;34mselect[0m throwing: show|details
-[1;34mselect[0m throwing: show|details
-[1;34mroom[0m throwing: show|details
-[1;34mstandard[0m throwing: show|details
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind  <b>Fenster mit aufwendiger Glasmalerei</b>, <b>Steintafel</b> und <b>Statur</b>. 
-</div>
-
-[2021-04-22 16:06:58] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 147 payload bytes
-[2021-04-22 16:06:58] [frame_header] Header Bytes: 
-[0] (4) 81 7E 00 93 
-
-[2021-04-22 16:07:02] [control] Control frame received with opcode 8
-[2021-04-22 16:07:02] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
-[2021-04-22 16:07:02] [frame_header] Header Bytes: 
-[0] (2) 88 02 
-
-[2021-04-22 16:07:02] [disconnect] Disconnect close local:[1001] remote:[1001]
-[2021-04-22 16:07:07] [connect] WebSocket Connection [::ffff:127.0.0.1]:46360 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0" / 101
-Starting....
-Choosing login/ registerSet sign_in_up_ to l
-[2021-04-22 16:07:08] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
-[2021-04-22 16:07:08] [frame_header] Header Bytes: 
-[0] (2) 81 06 
-
-On to getting credentials
-[2021-04-22 16:07:10] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 19 payload bytes
-[2021-04-22 16:07:10] [frame_header] Header Bytes: 
-[0] (2) 81 08 
-[1] (2) 81 0B 
-
-On to getting credentials
-checkLogin
-[1;31mEvents: show room, from: startGame[0m
-[1;31mshow, room[0m
-[1;34mfirst[0m throwing: show|room
-[1;31mEvents: addQuest leave, from: post-events[0m
-[1;31maddQuest, leave[0m
-[1;34mfirst[0m throwing: addQuest|leave
-[1;34mzug_nach_moskau[0m throwing: addQuest|leave
-[1;34mtutorial[0m throwing: addQuest|leave
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(addQuest)[0m
-[1;34mleave[0m throwing: addQuest|leave
-[1;34mkuligundes_apfel[0m throwing: addQuest|leave
-[1;34mkomische_gruppe[0m throwing: addQuest|leave
-[1;34mgeld_fuer_ticket[0m throwing: addQuest|leave
-[1;34mbesoffene_frau[0m throwing: addQuest|leave
-[1;34mworld[0m throwing: addQuest|leave
-[1;32m ... [1;34mworld: [1;32mevent triggered: h_addQuest(addQuest)[0m
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|room
-[1;34mtutorial[0m throwing: show|room
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|room
-[1;34mkuligundes_apfel[0m throwing: show|room
-[1;34mkomische_gruppe[0m throwing: show|room
-[1;34mgeld_fuer_ticket[0m throwing: show|room
-[1;34mbesoffene_frau[0m throwing: show|room
-[1;34mworld[0m throwing: show|room
-[1;34mroom[0m throwing: show|room
-[1;34mstandard[0m throwing: show|room
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-[2021-04-22 16:07:12] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 324 payload bytes
-[2021-04-22 16:07:12] [frame_header] Header Bytes: 
-[0] (2) 81 0A 
-[1] (2) 81 15 
-[2] (4) 81 7E 01 25 
-
-Befor play: input: show people calling with id: sophia
-[1;31mEvents: show people, from: CGame::play[0m
-[1;31mshow, people[0m
-[1;34mfirst[0m throwing: show|people
-showCharacters
-Getting values from show-map
-Got text from gramma: Hier sind <b>Parsen</b>. 
-Returning...
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|people
-[1;34mtutorial[0m throwing: show|people
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|people
-[1;34mkuligundes_apfel[0m throwing: show|people
-[1;34mkomische_gruppe[0m throwing: show|people
-[1;34mgeld_fuer_ticket[0m throwing: show|people
-[1;34mbesoffene_frau[0m throwing: show|people
-[1;34mworld[0m throwing: show|people
-[1;34mroom[0m throwing: show|people
-[1;34mstandard[0m throwing: show|people
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind <b>Parsen</b>. 
-</div>
-
-[2021-04-22 16:07:14] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 80 payload bytes
-[2021-04-22 16:07:14] [frame_header] Header Bytes: 
-[0] (2) 81 50 
-
-Befor play: input: show exits calling with id: sophia
-[1;31mEvents: show exits, from: CGame::play[0m
-[1;31mshow, exits[0m
-[1;34mfirst[0m throwing: show|exits
-Calling:  show exits!
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|exits
-[1;34mtutorial[0m throwing: show|exits
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|exits
-[1;34mkuligundes_apfel[0m throwing: show|exits
-[1;34mkomische_gruppe[0m throwing: show|exits
-[1;34mgeld_fuer_ticket[0m throwing: show|exits
-[1;34mbesoffene_frau[0m throwing: show|exits
-[1;34mworld[0m throwing: show|exits
-[1;34mselect[0m throwing: show|exits
-[1;34mroom[0m throwing: show|exits
-[1;34mstandard[0m throwing: show|exits
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sehe ich einen Weg <b>zum Korridor</b>. 
-</div>
-
-[2021-04-22 16:07:16] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 100 payload bytes
-[2021-04-22 16:07:16] [frame_header] Header Bytes: 
-[0] (2) 81 64 
-
-Befor play: input: show items calling with id: sophia
-[1;31mEvents: show items, from: CGame::play[0m
-[1;31mshow, items[0m
-[1;34mfirst[0m throwing: show|items
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|items
-[1;34mtutorial[0m throwing: show|items
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|items
-[1;34mkuligundes_apfel[0m throwing: show|items
-[1;34mkomische_gruppe[0m throwing: show|items
-[1;34mgeld_fuer_ticket[0m throwing: show|items
-[1;34mbesoffene_frau[0m throwing: show|items
-[1;34mworld[0m throwing: show|items
-[1;34mselect[0m throwing: show|items
-[1;34mselect[0m throwing: show|items
-[1;34mroom[0m throwing: show|items
-[1;34mstandard[0m throwing: show|items
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind zwei <b>Wein</b>. 
-</div>
-
-[2021-04-22 16:07:19] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 83 payload bytes
-[2021-04-22 16:07:19] [frame_header] Header Bytes: 
-[0] (2) 81 53 
-
-Befor play: input: show details calling with id: sophia
-[1;31mEvents: show details, from: CGame::play[0m
-[1;31mshow, details[0m
-[1;34mfirst[0m throwing: show|details
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|details
-[1;34mtutorial[0m throwing: show|details
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|details
-[1;34mkuligundes_apfel[0m throwing: show|details
-[1;34mkomische_gruppe[0m throwing: show|details
-[1;34mgeld_fuer_ticket[0m throwing: show|details
-[1;34mbesoffene_frau[0m throwing: show|details
-[1;34mworld[0m throwing: show|details
-[1;34mselect[0m throwing: show|details
-[1;34mselect[0m throwing: show|details
-[1;34mroom[0m throwing: show|details
-[1;34mstandard[0m throwing: show|details
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind  nichts weiteres zu sehen.
-</div>
-
-[2021-04-22 16:07:22] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 91 payload bytes
-[2021-04-22 16:07:22] [frame_header] Header Bytes: 
-[0] (2) 81 5B 
-
-Befor play: input: show room calling with id: sophia
-[1;31mEvents: show room, from: CGame::play[0m
-[1;31mshow, room[0m
-[1;34mfirst[0m throwing: show|room
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|room
-[1;34mtutorial[0m throwing: show|room
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|room
-[1;34mkuligundes_apfel[0m throwing: show|room
-[1;34mkomische_gruppe[0m throwing: show|room
-[1;34mgeld_fuer_ticket[0m throwing: show|room
-[1;34mbesoffene_frau[0m throwing: show|room
-[1;34mworld[0m throwing: show|room
-[1;34mselect[0m throwing: show|room
-[1;34mselect[0m throwing: show|room
-[1;34mroom[0m throwing: show|room
-[1;34mstandard[0m throwing: show|room
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Du sitzt in einem leeren Abteil. Nur ein einzelner Begleiter sitzt dir schräg gegenüber: Parsen</div> <div class='spoken2'> </div>
-
-[2021-04-22 16:07:25] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 180 payload bytes
-[2021-04-22 16:07:25] [frame_header] Header Bytes: 
-[0] (4) 81 7E 00 B4 
-
-[2021-04-22 16:07:28] [control] Control frame received with opcode 8
-[2021-04-22 16:07:28] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
-[2021-04-22 16:07:28] [frame_header] Header Bytes: 
-[0] (2) 88 02 
-
-[2021-04-22 16:07:28] [disconnect] Disconnect close local:[1001] remote:[1001]
-[2021-04-22 16:07:28] [connect] WebSocket Connection [::ffff:127.0.0.1]:46366 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0" / 101
-Starting....
-Choosing login/ registerSet sign_in_up_ to l
-[2021-04-22 16:07:29] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
-[2021-04-22 16:07:29] [frame_header] Header Bytes: 
-[0] (2) 81 06 
-
-On to getting credentials
-[2021-04-22 16:07:31] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 17 payload bytes
-[2021-04-22 16:07:31] [frame_header] Header Bytes: 
-[0] (2) 81 06 
-[1] (2) 81 0B 
-
-On to getting credentials
-checkLogin
-[1;31mEvents: show room, from: startGame[0m
-[1;31mshow, room[0m
-[1;34mfirst[0m throwing: show|room
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|room
-[1;34mtutorial[0m throwing: show|room
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|room
-[1;34mkuligundes_apfel[0m throwing: show|room
-[1;34mkomische_gruppe[0m throwing: show|room
-[1;34mgeld_fuer_ticket[0m throwing: show|room
-[1;34mbesoffene_frau[0m throwing: show|room
-[1;34mworld[0m throwing: show|room
-[1;34mselect[0m throwing: show|room
-[1;34mselect[0m throwing: show|room
-[1;34mroom[0m throwing: show|room
-[1;34mstandard[0m throwing: show|room
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-[2021-04-22 16:07:32] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 426 payload bytes
-[2021-04-22 16:07:32] [frame_header] Header Bytes: 
-[0] (2) 81 0A 
-[1] (2) 81 13 
-[2] (4) 81 7E 01 8D 
-
-Befor play: input: show room calling with id: alex
-[1;31mEvents: show room, from: CGame::play[0m
-[1;31mshow, room[0m
-[1;34mfirst[0m throwing: show|room
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|room
-[1;34mtutorial[0m throwing: show|room
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|room
-[1;34mkuligundes_apfel[0m throwing: show|room
-[1;34mkomische_gruppe[0m throwing: show|room
-[1;34mgeld_fuer_ticket[0m throwing: show|room
-[1;34mbesoffene_frau[0m throwing: show|room
-[1;34mworld[0m throwing: show|room
-[1;34mselect[0m throwing: show|room
-[1;34mselect[0m throwing: show|room
-[1;34mroom[0m throwing: show|room
-[1;34mstandard[0m throwing: show|room
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier ist ein großes Gebäude. Ich stehe in dem großen Gebäude. Viele Gestalten sind hier auch.</div> <div class='spoken2'>Eine komische Gruppe an Passanten, die wild in der Gegen umherzeigen. </div>
-
-[2021-04-22 16:07:36] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 249 payload bytes
-[2021-04-22 16:07:36] [frame_header] Header Bytes: 
-[0] (4) 81 7E 00 F9 
+[2021-04-23 19:33:52] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 562 payload bytes
+[2021-04-23 19:33:52] [frame_header] Header Bytes: 
+[0] (4) 81 7E 02 32 
 
 Befor play: input: show exits calling with id: alex
 [1;31mEvents: show exits, from: CGame::play[0m
@@ -1327,126 +958,262 @@ Calling:  show exits!
 [1;34mbesoffene_frau[0m throwing: show|exits
 [1;34mworld[0m throwing: show|exits
 [1;34mselect[0m throwing: show|exits
-[1;34mselect[0m throwing: show|exits
 [1;34mroom[0m throwing: show|exits
-[1;34mstandard[0m throwing: show|exits
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sehe ich einen Weg <b>zum Ausgang</b>, <b>ins Freiere</b>, <b>zur ersten Kammer</b>, <b>zur vierten Kammer</b> und <b>zur Nebenhalle</b>. 
-</div>
+h_attack: show exits
+Infos: hospital.stairs.zombie
+[1;32m ... [1;34mroom: [1;32mevent triggered: h_attack(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sehe ich einen Weg <b>zum Corridor</b> und <b>zum Foyer</b>. 
+</div>Fighting against Zombie
+<div style="display: flex;justify-content: center;"><div style="padding-right: 3rem;"><span style="color:green;padding-right:1rem">ALEX</span><div style="position:relative;left:0;top:0;display:inline-block;width:10rem;height:1rem;"><div style="height:100%;background-color: #E74C3C;width:100%;"></div><div style="position: absolute;top:0;left:0;right:0;color:white;text-align: center;">HP:55/55</div></div> <span style="padding-left: 1rem;color:#2e86c1;">Strength: 8</span>
 
-[2021-04-22 16:07:40] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 198 payload bytes
-[2021-04-22 16:07:40] [frame_header] Header Bytes: 
-[0] (4) 81 7E 00 C6 
+<span style="color: #c39bd3">1. Normaler Tritt </span>[<span style="color: #f7dc6f;">Power: 12</span>]
+Ein harter und kräftiger Tritt.
 
-Befor play: input: show people calling with id: alex
-[1;31mEvents: show people, from: CGame::play[0m
-[1;31mshow, people[0m
-[1;34mfirst[0m throwing: show|people
+<span style="color: #c39bd3">2. Schlag </span>[<span style="color: #f7dc6f;">Power: 10</span>]
+Ein Normaler und simpler Schlag; gezielt auf Gesicht, Bauch, oder was auch immer erreichbar ist.
+
+</div><span style='padding-right: 3rem;'>|
+|
+|
+|
+|
+|
+|
+|
+</span><div style="padding-right: 3rem;"><span style="color:green;padding-right:1rem">Zombie</span><div style="position:relative;left:0;top:0;display:inline-block;width:10rem;height:1rem;"><div style="height:100%;background-color: #E74C3C;width:100%;"></div><div style="position: absolute;top:0;left:0;right:0;color:white;text-align: center;">HP:40/40</div></div> <span style="padding-left: 1rem;color:#2e86c1;">Strength: 12</span>
+
+Sieht auf wie ein Kiffer: rote Augen, leerer Blick, langsame Bewegungen.
+
+</div></div>
+
+[2021-04-23 19:34:00] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 1526 payload bytes
+[2021-04-23 19:34:00] [frame_header] Header Bytes: 
+[0] (4) 81 7E 05 F6 
+
+Befor play: input: 1 calling with id: alex
+[1;31mEvents: 1, from: CGame::play[0m
+[1;31m1, 1[0m
+[1;34mfirst[0m throwing: 1|1
+[1;34mzug_nach_moskau[0m throwing: 1|1
+[1;34mtutorial[0m throwing: 1|1
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(1)[0m
+[1;34mleave[0m throwing: 1|1
+[1;34mkuligundes_apfel[0m throwing: 1|1
+[1;34mkomische_gruppe[0m throwing: 1|1
+[1;34mgeld_fuer_ticket[0m throwing: 1|1
+[1;34mbesoffene_frau[0m throwing: 1|1
+[1;34mworld[0m throwing: 1|1
+[1;34mfight[0m throwing: 1|1
+[1;32m ... [1;34mfight: [1;32mevent triggered: h_fight(1)[0m
+Send the output to client: 
+<div style="display: flex;justify-content: center;">ALEX benutzt Normaler Tritt
+Du benutzt all deine Kraft, um deinem Gegner in den Bauch zu treten
+Angerichteter Schaden: 20
+</div>$
+
+<div style="display: flex;justify-content: center;"><div style="padding-right: 3rem;"><span style="color:green;padding-right:1rem">ALEX</span><div style="position:relative;left:0;top:0;display:inline-block;width:10rem;height:1rem;"><div style="height:100%;background-color: #E74C3C;width:100%;"></div><div style="position: absolute;top:0;left:0;right:0;color:white;text-align: center;">HP:55/55</div></div> <span style="padding-left: 1rem;color:#2e86c1;">Strength: 8</span>
+
+<span style="color: #c39bd3">1. Normaler Tritt </span>[<span style="color: #f7dc6f;">Power: 12</span>]
+Ein harter und kräftiger Tritt.
+
+<span style="color: #c39bd3">2. Schlag </span>[<span style="color: #f7dc6f;">Power: 10</span>]
+Ein Normaler und simpler Schlag; gezielt auf Gesicht, Bauch, oder was auch immer erreichbar ist.
+
+</div><span style='padding-right: 3rem;'>|
+|
+|
+|
+|
+|
+|
+|
+</span><div style="padding-right: 3rem;"><span style="color:green;padding-right:1rem">Zombie</span><div style="position:relative;left:0;top:0;display:inline-block;width:10rem;height:1rem;"><div style="height:100%;background-color: #E74C3C;width:50%;"></div><div style="position: absolute;top:0;left:0;right:0;color:white;text-align: center;">HP:20/40</div></div> <span style="padding-left: 1rem;color:#2e86c1;">Strength: 12</span>
+
+Sieht auf wie ein Kiffer: rote Augen, leerer Blick, langsame Bewegungen.
+
+</div></div>
+<div style="display: flex;justify-content: center;">Zombie benutzt Biss
+Biss war erflogreich!
+Angerichteter Schaden: 24
+</div>
+
+<div style="display: flex;justify-content: center;"><div style="padding-right: 3rem;"><span style="color:green;padding-right:1rem">ALEX</span><div style="position:relative;left:0;top:0;display:inline-block;width:10rem;height:1rem;"><div style="height:100%;background-color: #E74C3C;width:56%;"></div><div style="position: absolute;top:0;left:0;right:0;color:white;text-align: center;">HP:31/55</div></div> <span style="padding-left: 1rem;color:#2e86c1;">Strength: 8</span>
+
+<span style="color: #c39bd3">1. Normaler Tritt </span>[<span style="color: #f7dc6f;">Power: 12</span>]
+Ein harter und kräftiger Tritt.
+
+<span style="color: #c39bd3">2. Schlag </span>[<span style="color: #f7dc6f;">Power: 10</span>]
+Ein Normaler und simpler Schlag; gezielt auf Gesicht, Bauch, oder was auch immer erreichbar ist.
+
+</div><span style='padding-right: 3rem;'>|
+|
+|
+|
+|
+|
+|
+|
+</span><div style="padding-right: 3rem;"><span style="color:green;padding-right:1rem">Zombie</span><div style="position:relative;left:0;top:0;display:inline-block;width:10rem;height:1rem;"><div style="height:100%;background-color: #E74C3C;width:50%;"></div><div style="position: absolute;top:0;left:0;right:0;color:white;text-align: center;">HP:20/40</div></div> <span style="padding-left: 1rem;color:#2e86c1;">Strength: 12</span>
+
+Sieht auf wie ein Kiffer: rote Augen, leerer Blick, langsame Bewegungen.
+
+</div></div>
+
+[2021-04-23 19:34:03] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 3073 payload bytes
+[2021-04-23 19:34:03] [frame_header] Header Bytes: 
+[0] (4) 81 7E 0C 01 
+
+Befor play: input: 1 calling with id: alex
+[1;31mEvents: 1, from: CGame::play[0m
+[1;31m1, 1[0m
+[1;34mfirst[0m throwing: 1|1
+[1;34mzug_nach_moskau[0m throwing: 1|1
+[1;34mtutorial[0m throwing: 1|1
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(1)[0m
+[1;34mleave[0m throwing: 1|1
+[1;34mkuligundes_apfel[0m throwing: 1|1
+[1;34mkomische_gruppe[0m throwing: 1|1
+[1;34mgeld_fuer_ticket[0m throwing: 1|1
+[1;34mbesoffene_frau[0m throwing: 1|1
+[1;34mworld[0m throwing: 1|1
+[1;34mfight[0m throwing: 1|1
+[1;31mEvents: endFight;finishCharacter hospital.stairs.zombie, from: h_fight[0m
+[1;31mendFight, endFight[0m
+[1;34mfirst[0m throwing: endFight|endFight
+[1;34mzug_nach_moskau[0m throwing: endFight|endFight
+[1;34mtutorial[0m throwing: endFight|endFight
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(endFight)[0m
+[1;34mleave[0m throwing: endFight|endFight
+[1;34mkuligundes_apfel[0m throwing: endFight|endFight
+[1;34mkomische_gruppe[0m throwing: endFight|endFight
+[1;34mgeld_fuer_ticket[0m throwing: endFight|endFight
+[1;34mbesoffene_frau[0m throwing: endFight|endFight
+[1;34mworld[0m throwing: endFight|endFight
+[1;32m ... [1;34mworld: [1;32mevent triggered: h_endFight(endFight)[0m
+[1;31mfinishCharacter, hospital.stairs.zombie[0m
+[1;34mfirst[0m throwing: finishCharacter|hospital.stairs.zombie
+[1;34mzug_nach_moskau[0m throwing: finishCharacter|hospital.stairs.zombie
+[1;34mtutorial[0m throwing: finishCharacter|hospital.stairs.zombie
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(finishCharacter)[0m
+[1;34mleave[0m throwing: finishCharacter|hospital.stairs.zombie
+[1;34mkuligundes_apfel[0m throwing: finishCharacter|hospital.stairs.zombie
+[1;34mkomische_gruppe[0m throwing: finishCharacter|hospital.stairs.zombie
+[1;34mgeld_fuer_ticket[0m throwing: finishCharacter|hospital.stairs.zombie
+[1;34mbesoffene_frau[0m throwing: finishCharacter|hospital.stairs.zombie
+[1;32m ... [1;34mbesoffene_frau: [1;32mevent triggered: h_react(finishCharacter)[0m
+[1;34mworld[0m throwing: finishCharacter|hospital.stairs.zombie
+h_finishCharacter: hospital.stairs.zombie
+kill character
+[1;31mEvents: killCharacter hospital.stairs.zombie, from: h_finishCharacter[0m
+[1;31mkillCharacter, hospital.stairs.zombie[0m
+[1;34mfirst[0m throwing: killCharacter|hospital.stairs.zombie
+[1;34mzug_nach_moskau[0m throwing: killCharacter|hospital.stairs.zombie
+[1;34mtutorial[0m throwing: killCharacter|hospital.stairs.zombie
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(killCharacter)[0m
+[1;34mleave[0m throwing: killCharacter|hospital.stairs.zombie
+[1;34mkuligundes_apfel[0m throwing: killCharacter|hospital.stairs.zombie
+[1;34mkomische_gruppe[0m throwing: killCharacter|hospital.stairs.zombie
+[1;34mgeld_fuer_ticket[0m throwing: killCharacter|hospital.stairs.zombie
+[1;34mbesoffene_frau[0m throwing: killCharacter|hospital.stairs.zombie
+[1;34mworld[0m throwing: killCharacter|hospital.stairs.zombie
+[1;32m ... [1;34mworld: [1;32mevent triggered: h_killCharacter(killCharacter)[0m
+[1;32m ... [1;34mworld: [1;32mevent triggered: h_finishCharacter(finishCharacter)[0m
+[1;32m ... [1;34mfight: [1;32mevent triggered: h_fight(1)[0m
+Send the output to client: 
+<div style="display: flex;justify-content: center;">ALEX benutzt Normaler Tritt
+Du benutzt all deine Kraft, um deinem Gegner in den Bauch zu treten
+Angerichteter Schaden: 20
+</div>
+Du hast Zombie besiegt!
++ 10 EP
+Fight ended.
+
+
+[2021-04-23 19:34:05] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 230 payload bytes
+[2021-04-23 19:34:05] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 E6 
+
+Befor play: input: zeige personen calling with id: alex
+[1;31mEvents: zeige personen, from: CGame::play[0m
+[1;31mshow, personen[0m
+[1;34mfirst[0m throwing: show|personen
 showCharacters
 Getting values from show-map
-Got text from gramma: Hier sind <b>eine komische Gruppe von drei Passanten</b>. 
+Got text from gramma: Hier sind 
 Returning...
 [1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|people
-[1;34mtutorial[0m throwing: show|people
+[1;34mzug_nach_moskau[0m throwing: show|personen
+[1;34mtutorial[0m throwing: show|personen
 [1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
 [1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|people
-[1;34mkuligundes_apfel[0m throwing: show|people
-[1;34mkomische_gruppe[0m throwing: show|people
-[1;34mgeld_fuer_ticket[0m throwing: show|people
-[1;34mbesoffene_frau[0m throwing: show|people
-[1;34mworld[0m throwing: show|people
-[1;34mselect[0m throwing: show|people
-[1;34mselect[0m throwing: show|people
-[1;34mselect[0m throwing: show|people
-[1;34mroom[0m throwing: show|people
-[1;34mstandard[0m throwing: show|people
+[1;34mleave[0m throwing: show|personen
+[1;34mkuligundes_apfel[0m throwing: show|personen
+[1;34mkomische_gruppe[0m throwing: show|personen
+[1;34mgeld_fuer_ticket[0m throwing: show|personen
+[1;34mbesoffene_frau[0m throwing: show|personen
+[1;34mworld[0m throwing: show|personen
+[1;34mselect[0m throwing: show|personen
+[1;34mselect[0m throwing: show|personen
+[1;34mroom[0m throwing: show|personen
+[1;34mstandard[0m throwing: show|personen
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind <b>eine komische Gruppe von drei Passanten</b>. 
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind 
 </div>
 
-[2021-04-22 16:07:42] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 113 payload bytes
-[2021-04-22 16:07:42] [frame_header] Header Bytes: 
-[0] (2) 81 71 
+[2021-04-23 19:34:09] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 65 payload bytes
+[2021-04-23 19:34:09] [frame_header] Header Bytes: 
+[0] (2) 81 41 
 
-Befor play: input: show items calling with id: alex
-[1;31mEvents: show items, from: CGame::play[0m
-[1;31mshow, items[0m
-[1;34mfirst[0m throwing: show|items
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|items
-[1;34mtutorial[0m throwing: show|items
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|items
-[1;34mkuligundes_apfel[0m throwing: show|items
-[1;34mkomische_gruppe[0m throwing: show|items
-[1;34mgeld_fuer_ticket[0m throwing: show|items
-[1;34mbesoffene_frau[0m throwing: show|items
-[1;34mworld[0m throwing: show|items
-[1;34mselect[0m throwing: show|items
-[1;34mselect[0m throwing: show|items
-[1;34mselect[0m throwing: show|items
-[1;34mselect[0m throwing: show|items
-[1;34mroom[0m throwing: show|items
-[1;34mstandard[0m throwing: show|items
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind nichts zu finden.
-</div>
+Befor play: input:  calling with id: alex
+[1;31mEvents: , from: CGame::play[0m
+Send the output to client: 
 
-[2021-04-22 16:07:44] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 82 payload bytes
-[2021-04-22 16:07:44] [frame_header] Header Bytes: 
-[0] (2) 81 52 
+[2021-04-23 19:34:16] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 1 payload bytes
+[2021-04-23 19:34:16] [frame_header] Header Bytes: 
+[0] (2) 81 01 
 
-Befor play: input: show details calling with id: alex
-[1;31mEvents: show details, from: CGame::play[0m
-[1;31mshow, details[0m
-[1;34mfirst[0m throwing: show|details
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|details
-[1;34mtutorial[0m throwing: show|details
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|details
-[1;34mkuligundes_apfel[0m throwing: show|details
-[1;34mkomische_gruppe[0m throwing: show|details
-[1;34mgeld_fuer_ticket[0m throwing: show|details
-[1;34mbesoffene_frau[0m throwing: show|details
-[1;34mworld[0m throwing: show|details
-[1;34mselect[0m throwing: show|details
-[1;34mselect[0m throwing: show|details
-[1;34mselect[0m throwing: show|details
-[1;34mselect[0m throwing: show|details
-[1;34mroom[0m throwing: show|details
-[1;34mstandard[0m throwing: show|details
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind  <b>Fenster mit aufwendiger Glasmalerei</b>, <b>Steintafel</b> und <b>Statur</b>. 
-</div>
+Befor play: input: gehe zurück calling with id: alex
+[1;31mEvents: gehe zurück, from: CGame::play[0m
+[1;31mgo, zurück[0m
+[1;34mfirst[0m throwing: go|zurück
+[1;34mzug_nach_moskau[0m throwing: go|zurück
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mtutorial[0m throwing: go|zurück
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|zurück
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkuligundes_apfel[0m throwing: go|zurück
+[1;34mkomische_gruppe[0m throwing: go|zurück
+[1;34mgeld_fuer_ticket[0m throwing: go|zurück
+[1;34mbesoffene_frau[0m throwing: go|zurück
+[1;34mworld[0m throwing: go|zurück
+[1;34mselect[0m throwing: go|zurück
+[1;34mselect[0m throwing: go|zurück
+[1;34mselect[0m throwing: go|zurück
+[1;34mroom[0m throwing: go|zurück
+[1;34mstandard[0m throwing: go|zurück
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier ist ein großes Gebäude. Ich stehe in dem großen Gebäude. Viele Gestalten sind hier auch.</div> <div class='spoken2'>Eine komische Gruppe an Passanten, die wild in der Gegen umherzeigen. </div>
 
-[2021-04-22 16:07:47] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 147 payload bytes
-[2021-04-22 16:07:47] [frame_header] Header Bytes: 
-[0] (4) 81 7E 00 93 
+[2021-04-23 19:34:20] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 249 payload bytes
+[2021-04-23 19:34:20] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 F9 
 
-[2021-04-22 16:07:49] [control] Control frame received with opcode 8
-[2021-04-22 16:07:49] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
-[2021-04-22 16:07:49] [frame_header] Header Bytes: 
+[2021-04-23 19:34:36] [control] Control frame received with opcode 8
+[2021-04-23 19:34:36] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2021-04-23 19:34:36] [frame_header] Header Bytes: 
 [0] (2) 88 02 
 
-[2021-04-22 16:07:49] [disconnect] Disconnect close local:[1001] remote:[1001]
-[2021-04-22 16:07:49] [connect] WebSocket Connection [::ffff:127.0.0.1]:46374 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0" / 101
+[2021-04-23 19:34:36] [disconnect] Disconnect close local:[1001] remote:[1001]
+[2021-04-23 19:34:37] [connect] WebSocket Connection [::ffff:127.0.0.1]:51202 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0" / 101
 Starting....
 Choosing login/ registerSet sign_in_up_ to l
-[2021-04-22 16:07:51] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
-[2021-04-22 16:07:51] [frame_header] Header Bytes: 
+[2021-04-23 19:34:38] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
+[2021-04-23 19:34:38] [frame_header] Header Bytes: 
 [0] (2) 81 06 
 
 On to getting credentials
-[2021-04-22 16:07:52] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 16 payload bytes
-[2021-04-22 16:07:52] [frame_header] Header Bytes: 
-[0] (2) 81 05 
-[1] (2) 81 0B 
-
 On to getting credentials
 checkLogin
 [1;31mEvents: show room, from: startGame[0m
@@ -1466,189 +1233,12 @@ checkLogin
 [1;34mroom[0m throwing: show|room
 [1;34mstandard[0m throwing: show|room
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-[2021-04-22 16:07:54] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 318 payload bytes
-[2021-04-22 16:07:54] [frame_header] Header Bytes: 
-[0] (2) 81 0A 
-[1] (2) 81 12 
-[2] (4) 81 7E 01 22 
-
-Befor play: input: show room calling with id: jan
-[1;31mEvents: show room, from: CGame::play[0m
-[1;31mshow, room[0m
-[1;34mfirst[0m throwing: show|room
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|room
-[1;34mtutorial[0m throwing: show|room
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|room
-[1;34mkuligundes_apfel[0m throwing: show|room
-[1;34mkomische_gruppe[0m throwing: show|room
-[1;34mgeld_fuer_ticket[0m throwing: show|room
-[1;34mbesoffene_frau[0m throwing: show|room
-[1;34mworld[0m throwing: show|room
-[1;34mroom[0m throwing: show|room
-[1;34mstandard[0m throwing: show|room
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>PERZEPTION - 	The corridor feels empty and silent. Red carbet is flushing the floor. And the other compartments are wispering in their oldfashioned skin.</div> <div class='spoken2'>A man is standing shy between compartment B and C and seems to be having a piss. </div>
-
-[2021-04-22 16:07:58] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 290 payload bytes
-[2021-04-22 16:07:58] [frame_header] Header Bytes: 
-[0] (4) 81 7E 01 22 
-
-Befor play: input: show people calling with id: jan
-[1;31mEvents: show people, from: CGame::play[0m
-[1;31mshow, people[0m
-[1;34mfirst[0m throwing: show|people
-showCharacters
-Getting values from show-map
-Got text from gramma: Hier sind <b>Pissing man</b>. 
-Returning...
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|people
-[1;34mtutorial[0m throwing: show|people
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|people
-[1;34mkuligundes_apfel[0m throwing: show|people
-[1;34mkomische_gruppe[0m throwing: show|people
-[1;34mgeld_fuer_ticket[0m throwing: show|people
-[1;34mbesoffene_frau[0m throwing: show|people
-[1;34mworld[0m throwing: show|people
-[1;34mroom[0m throwing: show|people
-[1;34mstandard[0m throwing: show|people
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind <b>Pissing man</b>. 
-</div>
-
-[2021-04-22 16:08:00] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 85 payload bytes
-[2021-04-22 16:08:00] [frame_header] Header Bytes: 
-[0] (2) 81 55 
-
-Befor play: input: show exits calling with id: jan
-[1;31mEvents: show exits, from: CGame::play[0m
-[1;31mshow, exits[0m
-[1;34mfirst[0m throwing: show|exits
-Calling:  show exits!
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|exits
-[1;34mtutorial[0m throwing: show|exits
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|exits
-[1;34mkuligundes_apfel[0m throwing: show|exits
-[1;34mkomische_gruppe[0m throwing: show|exits
-[1;34mgeld_fuer_ticket[0m throwing: show|exits
-[1;34mbesoffene_frau[0m throwing: show|exits
-[1;34mworld[0m throwing: show|exits
-[1;34mselect[0m throwing: show|exits
-[1;34mroom[0m throwing: show|exits
-[1;34mstandard[0m throwing: show|exits
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sehe ich einen Weg <b>zum Compartment A</b>, <b>zum Compartment B</b>, <b>zum Compartment C</b> und <b>zum Compartment D</b>. 
-</div>
-
-[2021-04-22 16:08:03] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 186 payload bytes
-[2021-04-22 16:08:03] [frame_header] Header Bytes: 
-[0] (4) 81 7E 00 BA 
-
-Befor play: input: show items calling with id: jan
-[1;31mEvents: show items, from: CGame::play[0m
-[1;31mshow, items[0m
-[1;34mfirst[0m throwing: show|items
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|items
-[1;34mtutorial[0m throwing: show|items
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|items
-[1;34mkuligundes_apfel[0m throwing: show|items
-[1;34mkomische_gruppe[0m throwing: show|items
-[1;34mgeld_fuer_ticket[0m throwing: show|items
-[1;34mbesoffene_frau[0m throwing: show|items
-[1;34mworld[0m throwing: show|items
-[1;34mselect[0m throwing: show|items
-[1;34mselect[0m throwing: show|items
-[1;34mroom[0m throwing: show|items
-[1;34mstandard[0m throwing: show|items
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind nichts zu finden.
-</div>
-
-[2021-04-22 16:08:06] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 82 payload bytes
-[2021-04-22 16:08:06] [frame_header] Header Bytes: 
-[0] (2) 81 52 
-
-Befor play: input: show details calling with id: jan
-[1;31mEvents: show details, from: CGame::play[0m
-[1;31mshow, details[0m
-[1;34mfirst[0m throwing: show|details
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|details
-[1;34mtutorial[0m throwing: show|details
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|details
-[1;34mkuligundes_apfel[0m throwing: show|details
-[1;34mkomische_gruppe[0m throwing: show|details
-[1;34mgeld_fuer_ticket[0m throwing: show|details
-[1;34mbesoffene_frau[0m throwing: show|details
-[1;34mworld[0m throwing: show|details
-[1;34mselect[0m throwing: show|details
-[1;34mselect[0m throwing: show|details
-[1;34mroom[0m throwing: show|details
-[1;34mstandard[0m throwing: show|details
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sind  nichts weiteres zu sehen.
-</div>
-
-[2021-04-22 16:08:08] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 91 payload bytes
-[2021-04-22 16:08:08] [frame_header] Header Bytes: 
-[0] (2) 81 5B 
-
-[2021-04-22 16:08:09] [control] Control frame received with opcode 8
-[2021-04-22 16:08:09] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
-[2021-04-22 16:08:09] [frame_header] Header Bytes: 
-[0] (2) 88 02 
-
-[2021-04-22 16:08:09] [disconnect] Disconnect close local:[1001] remote:[1001]
-[2021-04-22 16:08:09] [connect] WebSocket Connection [::ffff:127.0.0.1]:46384 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0" / 101
-Starting....
-Choosing login/ registerSet sign_in_up_ to l
-[2021-04-22 16:08:10] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
-[2021-04-22 16:08:10] [frame_header] Header Bytes: 
-[0] (2) 81 06 
-
-On to getting credentials
-[2021-04-22 16:08:12] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 19 payload bytes
-[2021-04-22 16:08:12] [frame_header] Header Bytes: 
-[0] (2) 81 08 
-[1] (2) 81 0B 
-
-On to getting credentials
-checkLogin
-[1;31mEvents: show room, from: startGame[0m
-[1;31mshow, room[0m
-[1;34mfirst[0m throwing: show|room
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mzug_nach_moskau[0m throwing: show|room
-[1;34mtutorial[0m throwing: show|room
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
-[1;34mleave[0m throwing: show|room
-[1;34mkuligundes_apfel[0m throwing: show|room
-[1;34mkomische_gruppe[0m throwing: show|room
-[1;34mgeld_fuer_ticket[0m throwing: show|room
-[1;34mbesoffene_frau[0m throwing: show|room
-[1;34mworld[0m throwing: show|room
-[1;34mroom[0m throwing: show|room
-[1;34mstandard[0m throwing: show|room
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-[2021-04-22 16:08:14] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 321 payload bytes
-[2021-04-22 16:08:14] [frame_header] Header Bytes: 
-[0] (2) 81 0A 
-[1] (2) 81 15 
-[2] (4) 81 7E 01 22 
-
-Befor play: input: show room calling with id: _admin
-[1;34mgame[0m throwing: reload_player|_admin
+Befor play: input: [end_game] calling with id: _admin
+Sending to all online players
+Sending to host.
+Game is getting closed...
+Befor play: input: [end_game] calling with id: _admin
+Sending to all online players
+Sending to host.
+Game is getting closed...
+Webgame started on port 9004
