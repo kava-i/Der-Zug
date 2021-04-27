@@ -86,6 +86,13 @@ class World {
      */
     nlohmann::json GetPage(std::string path, bool only_json=false) const;
 
+    /**
+     * Provides a graph representation if availibe and an empty json otherwise.
+     * @return json with graph-representation of area.
+     */
+    nlohmann::json GetGraph(std::string path) const;
+
+
   private:
     // member variables:
     const std::string base_path_;

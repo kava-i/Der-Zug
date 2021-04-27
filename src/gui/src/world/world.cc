@@ -115,6 +115,14 @@ nlohmann::json World::GetPage(std::string path, bool only_json) const {
   return json;
 }
 
+nlohmann::json World::GetGraph(std::string path) const {
+  std::cout << "World::GetGraph(" << path << ")" << std::endl;
+  std::shared_lock sl(shared_mtx_paths_);
+  if (paths_.count(path) == 0)
+    return nlohmann::json::object();
+  return paths_.at(path)->GetGraph(path);
+}
+
 // paths_
 void World::InitializePaths(std::string path) {
   std::cout << "InitializePaths: " << path << std::endl;

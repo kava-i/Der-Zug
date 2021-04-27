@@ -76,6 +76,17 @@ class Page {
      */
     virtual nlohmann::json CreatePageData(std::string path);
 
+    /**
+     * Provides a graph representation if availibe and an empty json otherwise.
+     * This function is only implemented for areas!
+     * @return json with graph-representation of area.
+     */
+    virtual nlohmann::json GetGraph(std::string) { 
+      std::cout << "Page::GetGraph()" << std::endl;
+      return nlohmann::json::object(); 
+    };
+
+
   protected:
     // member variables:
     std::string base_path_;

@@ -159,7 +159,7 @@ class ServerFrame {
      * @param[in] req (reference to request)
      * @param[in, out] resp (reference to response)
      */
-    void GetObjectJson(const httplib::Request& req, httplib::Response& resp);
+    void GetObjectInfo(const httplib::Request& req, httplib::Response& resp);
 
     /**    
      * @brief Gives feedback on whether server is still running    

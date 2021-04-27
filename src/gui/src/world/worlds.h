@@ -84,6 +84,12 @@ class Worlds {
     nlohmann::json GetObjectJson(std::string path);
 
     /**
+     * Provides a graph representation if availibe and an empty json otherwise.
+     * @return json with graph-representation of area.
+     */
+    nlohmann::json GetGraph(std::string path);
+
+    /**
      * Finds world with given url in all worlds.
      * Checks if world-path is contained in given base_path + (url-) path.
      * @param[in] path as url path.

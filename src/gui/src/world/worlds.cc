@@ -129,6 +129,15 @@ nlohmann::json Worlds::GetObjectJson(std::string path) {
   return  world->GetPage(base_path_ + path, true);
 }
 
+nlohmann::json Worlds::GetGraph(std::string path) {
+  World* world = GetWorldFromUrl(path);
+  if (world == nullptr) {
+    return nlohmann::json();
+  }
+  return  world->GetGraph(base_path_ + path);
+}
+
+
 std::string Worlds::ParseTemplate(nlohmann::json json) {
   std::cout << "Worlds::ParseTemplate()" << std::endl;
   inja::Environment env;

@@ -1,1 +1,294 @@
-{"besoffene_frau":{"active_from_beginning":["besiege_besoffene_frau"],"description":"Eine besoffene Frau auf der Toilette, die dich plötzlich angreift.","id":"besoffene_frau","listener":[{"id":"h_react","string":"finishCharacter"}],"name":"Die besoffene Frau","sorted":1,"steps":[{"_events":"printText besoffene_frauGeld;recieveMoney 3","description":"Oh, die wurde wohl agressiv. Jetzt heißt anwenden, was du in deinen Jahren auf der Straße gelernt hast.","id":"besiege_besoffene_frau","logic":"(input=trainstation_frauenToilette_besoffene_frau)","name":"Die besoffene Frau besiegen"}]},"geld_fuer_ticket":{"active_from_beginning":["geldauftreiben"],"description":"Okay, auch 10 Schillinge ist noch mehr als gedacht. Heißt also Geld auftreiben.","id":"geld_fuer_ticket","listener":[{"id":"geldauftreiben","string":"recieveMoney"}],"name":"Geld Auftreiben","sorted":1,"steps":[{"description":"Dann muss ich wohl mal suchen, wo ich etwas herbekomme, oder wer mir helfen kann.","id":"geldauftreiben","name":"Geld Auftreiben"}]},"komische_gruppe":{"active_from_beginning":["reden"],"description":"Dir ist diese komische Gruppe an Passanten aufgefallen. Keine Ahnung, was die wollen.","id":"komische_gruppe","listener":[{"id":"reden","string":"talk"}],"name":"Die komische Gruppe","sorted":1,"steps":[{"description":"Finde alle Passanten Gruppen und rede mit ihnen.","id":"reden","linkedSteps":["hilfe"],"list":3,"name":"Rede mit allen Passanten"},{"description":"Seltsame Menschen, haben of seltsame Ansprüche, aber bieten seltene Hilfe.","id":"hilfe","name":"Um Hilfe beten"}]},"tutorial":{"active_from_beginning":["details","ende"],"description":"Kennenlernen, heißt verstehen. doch zunächst: wo bin ich, was ist hier?","ep":1,"id":"tutorial","listener":[{"id":"h_react","priority":0,"string":"show"},{"id":"h_react","priority":0,"string":"examine"},{"id":"h_react","priority":0,"string":"endDialog"},{"id":"h_react","priority":0,"string":"look"},{"id":"h_react","priority":0,"string":"pick"},{"id":"h_react","priority":0,"regex":"(.*)"}],"name":"Das Hier und das Jetzt","steps":[{"description":"Die Details aufnehmen.","events":"printText tutorial_details","id":"details","linkedSteps":["betrachten"],"logic":"(input=details) & (cmd=show)","name":"Details","updates":{"wahrnehmung":1}},{"description":"Um die Dinge genauer zu sehen, muss einer genauer <i>hin</i>sehen","events":"printText tutorial_betrachten","id":"betrachten","linkedSteps":["menschen"],"logic":"(cmd=examine)","name":"Betrachten","updates":{"wahrnehmung":1}},{"description":"Der Mensch vor dir.","events":"printText tutorial_menschen","id":"menschen","linkedSteps":["reden"],"logic":"(input=personen) & (cmd=show)","name":"Menschen","updates":{"wahrnehmung":1}},{"_events":"printText tutorial_reden","description":"Mehr als stummes Betrachten.","id":"reden","linkedSteps":["ausgänge"],"logic":"(cmd=endDialog)","name":"Reden","updates":{"wahrnehmung":1}},{"description":"Die Wege und wie sich das Jetzt, wie das Hier verändern können.","events":"printText tutorial_ausgänge","id":"ausgänge","linkedSteps":["gehen"],"logic":"(input=ausgänge) & (cmd=show)","name":"Ausgänge","updates":{"wahrnehmung":1}},{"description":"Wie das Hier sich verändert hat","events":"printText tutorial_gehen","id":"gehen","linkedSteps":["examine1","examine2"],"logic":"(cmd=go)","name":"Gehen","updates":{"wahrnehmung":1}},{"description":"Du weißt nun, dass es nicht bloßes dahinter<i>schauen</i> ist!","events":"printText tutorial_dahinterschauen","id":"examine1","linkedSteps":[],"logic":"((room=trainstation_geheime-kammer4) | (room=trainstation_geheime-kammer1)) & (cmd=show) & (input=details)","name":"Durchsuchen Teil I","updates":{"wahrnehmung":1}},{"description":"Du kannst nun die Dinge auch </i>entdecken</i>","events":"printText tutorial_dahinterschauen2","id":"examine2","linkedSteps":["pickup"],"logic":"(cmd=look)","name":"Durchsuchen Teil II","updates":{"wahrnehmung":1}},{"description":"Du kannst dir nun Dinge zu eigen machen und sie dein <i>Eigentum</i> nennen.","events":"printText tutorial_pickup","id":"pickup","linkedSteps":[],"logic":"(cmd=pick)","name":"Aufheben","updates":{"wahrnehmung":1}},{"description":"Du hast das Tutorial abgeschlossen!","events":"printText tutorial_ende","id":"ende","linkedSteps":[],"logic":"(wahrnehmung>8)","name":"Wahrnehmung"}]},"zug_nach_moskau":{"active_from_beginning":["ticketverkaeufer"],"description":"Du musst dringend nach Moskau. Etwas zieht dich dorthin, du weißt nicht genau, was es ist. Kaufe ein Ticket und finde den Zug nach Moskau, dann sehen wir weiter.","id":"zug_nach_moskau","listener":[{"id":"h_react","string":"go"},{"id":"h_react","string":"addItem"}],"name":"Zug nach Moskau","sorted":1,"steps":[{"description":"Tickets sind teuer. Du hast von einem Mann, der viel denkt und an komischen Orten abhängt gehört, der wohl immer noch ein günstigeres Ticket zu verkaufen hat.","id":"ticketverkaeufer","linkedSteps":["ticketkauf"],"logic":"((input=transtation_maennerToilette) | (input~zur männer-toilette)) & (room=trainstation_toiletten) & (cmd=go)","name":"Finde den Ticketverkäufer"},{"description":"Okay, jetzt geschickt anstellen, dich nicht vollquatschen lassen und einfach schnell das Ticket bekommen...","id":"ticketkauf","linkedSteps":["zum_gleis"],"logic":"(input=ticket)","name":"Ticketkauf"},{"_events":"printText zug-nach-moskau_finished;changeRoom zug_compartment-a;show room","description":"Du hast das Ticket. Jetzt auf zum Gleis!","id":"zum_gleis","info":{"break":""},"logic":"(input~zu Gleis 3) & (room=trainstation_fernzüge) & (inventory:ticket)","name":"Zum Gleis"}]}}
+{
+    "besoffene_frau": {
+        "active_from_beginning": [
+            "besiege_besoffene_frau"
+        ],
+        "description": "Eine besoffene Frau auf der Toilette, die dich pl\u00f6tzlich angreift.",
+        "id": "besoffene_frau",
+        "listener": [
+            {
+                "id": "h_react",
+                "string": "finishCharacter"
+            }
+        ],
+        "name": "Die besoffene Frau",
+        "sorted": 1,
+        "steps": [
+            {
+                "_events": "printText besoffene_frauGeld;recieveMoney 3",
+                "description": "Oh, die wurde wohl agressiv. Jetzt hei\u00dft anwenden, was du in deinen Jahren auf der Stra\u00dfe gelernt hast.",
+                "id": "besiege_besoffene_frau",
+                "logic": "(input=trainstation_frauenToilette_besoffene_frau)",
+                "name": "Die besoffene Frau besiegen"
+            }
+        ]
+    },
+    "geld_fuer_ticket": {
+        "active_from_beginning": [
+            "geldauftreiben"
+        ],
+        "description": "Okay, auch 10 Schillinge ist noch mehr als gedacht. Hei\u00dft also Geld auftreiben.",
+        "id": "geld_fuer_ticket",
+        "listener": [
+            {
+                "id": "geldauftreiben",
+                "string": "recieveMoney"
+            }
+        ],
+        "name": "Geld Auftreiben",
+        "sorted": 1,
+        "steps": [
+            {
+                "description": "Dann muss ich wohl mal suchen, wo ich etwas herbekomme, oder wer mir helfen kann.",
+                "id": "geldauftreiben",
+                "name": "Geld Auftreiben"
+            }
+        ]
+    },
+    "komische_gruppe": {
+        "active_from_beginning": [
+            "reden"
+        ],
+        "description": "Dir ist diese komische Gruppe an Passanten aufgefallen. Keine Ahnung, was die wollen.",
+        "id": "komische_gruppe",
+        "listener": [
+            {
+                "id": "reden",
+                "string": "talk"
+            }
+        ],
+        "name": "Die komische Gruppe",
+        "sorted": 1,
+        "steps": [
+            {
+                "description": "Finde alle Passanten Gruppen und rede mit ihnen.",
+                "id": "reden",
+                "linkedSteps": [
+                    "hilfe"
+                ],
+                "list": 3,
+                "name": "Rede mit allen Passanten"
+            },
+            {
+                "description": "Seltsame Menschen, haben of seltsame Anspr\u00fcche, aber bieten seltene Hilfe.",
+                "id": "hilfe",
+                "name": "Um Hilfe beten"
+            }
+        ]
+    },
+    "tutorial": {
+        "active_from_beginning": [
+            "details",
+            "ende"
+        ],
+        "description": "Kennenlernen, hei\u00dft verstehen. doch zun\u00e4chst: wo bin ich, was ist hier?",
+        "ep": 1,
+        "id": "tutorial",
+        "listener": [
+            {
+                "id": "h_react",
+                "priority": 0,
+                "string": "show"
+            },
+            {
+                "id": "h_react",
+                "priority": 0,
+                "string": "examine"
+            },
+            {
+                "id": "h_react",
+                "priority": 0,
+                "string": "endDialog"
+            },
+            {
+                "id": "h_react",
+                "priority": 0,
+                "string": "look"
+            },
+            {
+                "id": "h_react",
+                "priority": 0,
+                "string": "pick"
+            },
+            {
+                "id": "h_react",
+                "priority": 0,
+                "regex": "(.*)"
+            }
+        ],
+        "name": "Das Hier und das Jetzt",
+        "steps": [
+            {
+                "description": "Die Details aufnehmen.",
+                "events": "printText tutorial_details",
+                "id": "details",
+                "linkedSteps": [
+                    "betrachten"
+                ],
+                "logic": "(input=details) & (cmd=show)",
+                "name": "Details",
+                "updates": {
+                    "wahrnehmung": 1
+                }
+            },
+            {
+                "description": "Um die Dinge genauer zu sehen, muss einer genauer <i>hin</i>sehen",
+                "events": "printText tutorial_betrachten",
+                "id": "betrachten",
+                "linkedSteps": [
+                    "menschen"
+                ],
+                "logic": "(cmd=examine)",
+                "name": "Betrachten",
+                "updates": {
+                    "wahrnehmung": 1
+                }
+            },
+            {
+                "description": "Der Mensch vor dir.",
+                "events": "printText tutorial_menschen",
+                "id": "menschen",
+                "linkedSteps": [
+                    "reden"
+                ],
+                "logic": "(input=personen) & (cmd=show)",
+                "name": "Menschen",
+                "updates": {
+                    "wahrnehmung": 1
+                }
+            },
+            {
+                "_events": "printText tutorial_reden",
+                "description": "Mehr als stummes Betrachten.",
+                "id": "reden",
+                "linkedSteps": [
+                    "ausg\u00e4nge"
+                ],
+                "logic": "(cmd=endDialog)",
+                "name": "Reden",
+                "updates": {
+                    "wahrnehmung": 1
+                }
+            },
+            {
+                "description": "Die Wege und wie sich das Jetzt, wie das Hier ver\u00e4ndern k\u00f6nnen.",
+                "events": "printText tutorial_ausg\u00e4nge",
+                "id": "ausg\u00e4nge",
+                "linkedSteps": [
+                    "gehen"
+                ],
+                "logic": "(input=ausg\u00e4nge) & (cmd=show)",
+                "name": "Ausg\u00e4nge",
+                "updates": {
+                    "wahrnehmung": 1
+                }
+            },
+            {
+                "description": "Wie das Hier sich ver\u00e4ndert hat",
+                "events": "printText tutorial_gehen",
+                "id": "gehen",
+                "linkedSteps": [
+                    "examine1",
+                    "examine2"
+                ],
+                "logic": "(cmd=go)",
+                "name": "Gehen",
+                "updates": {
+                    "wahrnehmung": 1
+                }
+            },
+            {
+                "description": "Du wei\u00dft nun, dass es nicht blo\u00dfes dahinter<i>schauen</i> ist!",
+                "events": "printText tutorial_dahinterschauen",
+                "id": "examine1",
+                "linkedSteps": [],
+                "logic": "((room=trainstation_geheime-kammer4) | (room=trainstation_geheime-kammer1)) & (cmd=show) & (input=details)",
+                "name": "Durchsuchen Teil I",
+                "updates": {
+                    "wahrnehmung": 1
+                }
+            },
+            {
+                "description": "Du kannst nun die Dinge auch </i>entdecken</i>",
+                "events": "printText tutorial_dahinterschauen2",
+                "id": "examine2",
+                "linkedSteps": [
+                    "pickup"
+                ],
+                "logic": "(cmd=look)",
+                "name": "Durchsuchen Teil II",
+                "updates": {
+                    "wahrnehmung": 1
+                }
+            },
+            {
+                "description": "Du kannst dir nun Dinge zu eigen machen und sie dein <i>Eigentum</i> nennen.",
+                "events": "printText tutorial_pickup",
+                "id": "pickup",
+                "linkedSteps": [],
+                "logic": "(cmd=pick)",
+                "name": "Aufheben",
+                "updates": {
+                    "wahrnehmung": 1
+                }
+            },
+            {
+                "description": "Du hast das Tutorial abgeschlossen!",
+                "events": "printText tutorial_ende",
+                "id": "ende",
+                "linkedSteps": [],
+                "logic": "(wahrnehmung>8)",
+                "name": "Wahrnehmung"
+            }
+        ]
+    },
+    "zug_nach_moskau": {
+        "active_from_beginning": [
+            "ticketverkaeufer"
+        ],
+        "description": "Du musst dringend nach Moskau. Etwas zieht dich dorthin, du wei\u00dft nicht genau, was es ist. Kaufe ein Ticket und finde den Zug nach Moskau, dann sehen wir weiter.",
+        "id": "zug_nach_moskau",
+        "listener": [
+            {
+                "id": "h_react",
+                "string": "go"
+            },
+            {
+                "id": "h_react",
+                "string": "addItem"
+            }
+        ],
+        "name": "Zug nach Moskau",
+        "sorted": 1,
+        "steps": [
+            {
+                "description": "Tickets sind teuer. Du hast von einem Mann, der viel denkt und an komischen Orten abh\u00e4ngt geh\u00f6rt, der wohl immer noch ein g\u00fcnstigeres Ticket zu verkaufen hat.",
+                "id": "ticketverkaeufer",
+                "linkedSteps": [
+                    "ticketkauf"
+                ],
+                "logic": "((input=transtation_maennerToilette) | (input~zur m\u00e4nner-toilette)) & (room=trainstation_toiletten) & (cmd=go)",
+                "name": "Finde den Ticketverk\u00e4ufer"
+            },
+            {
+                "description": "Okay, jetzt geschickt anstellen, dich nicht vollquatschen lassen und einfach schnell das Ticket bekommen...",
+                "id": "ticketkauf",
+                "linkedSteps": [
+                    "zum_gleis"
+                ],
+                "logic": "(input=ticket)",
+                "name": "Ticketkauf"
+            },
+            {
+                "_events": "printText zug-nach-moskau_finished;changeRoom zug_compartment-a;show room",
+                "description": "Du hast das Ticket. Jetzt auf zum Gleis!",
+                "id": "zum_gleis",
+                "info": {
+                    "break": ""
+                },
+                "logic": "(input~zu Gleis 3) & (room=trainstation_fernz\u00fcge) & (inventory:ticket)",
+                "name": "Zum Gleis"
+            }
+        ]
+    }
+}
