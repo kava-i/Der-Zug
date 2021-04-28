@@ -495,7 +495,7 @@ void ServerFrame::CheckRunning(const Request& req, Response& resp) {
 }
 
 void ServerFrame::GetLog(const Request& req, Response& resp) {
-  //Try to get username from cookie
+  // Try to get username from cookie
   std::string username = CheckLogin(req, resp);
   if (username == "") return;
 
@@ -516,15 +516,15 @@ void ServerFrame::GetLog(const Request& req, Response& resp) {
 }
 
 void ServerFrame::StartGame(const Request& req, Response& resp) {
-  //Try to get username from cookie
+  // Try to get username from cookie
   std::string username = CheckLogin(req, resp);
   if (username == "") return;
 
-  //Extract data from path and build path to textadventure.
+  // Extract data from path and build path to textadventure.
   std::string url_path = req.body;
   std::string path_to_game = "../../data/users" + url_path + "/";
     
-  //Get world (keep mutex locked to assure, that pointer is not changed. 
+  // Get world (keep mutex locked to assure, that pointer is not changed. 
   std::shared_lock sl(shared_mtx_user_manager_);
   World* world = user_manager_.worlds()->GetWorldFromUrl(url_path);
   if (world == nullptr || !func::demo_exists(path_to_game)) {
@@ -532,7 +532,7 @@ void ServerFrame::StartGame(const Request& req, Response& resp) {
     return;
   }
 
-  //Build command and start game
+  // Build command and start game
   std::string command = "../../textadventure/build/bin/txtadventure "
     + path_to_game + " " + std::to_string(world->port())
     + " > ../../data/users/" + world->creator() + "/logs/" + world->name() + "_run.txt &";

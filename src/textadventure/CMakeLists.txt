@@ -72,6 +72,14 @@ set(SRC_FILES_TESTING
 add_executable(txtadventure ${SRC_FILES_TXTAD})
 add_executable(txtadventure_server EXCLUDE_FROM_ALL ${SRC_FILES_TXTAD})
 add_executable(testing.o ${SRC_FILES_TESTING})
+
+if (COMPILE_FOR_SERVER)
+  message("compiling for server...")
+  target_compile_definitions(txtadventure PUBLIC _COMPILE_FOR_SERVER_)
+else()
+  message("compiling for localhost...")
+endif()
+
 target_link_libraries(txtadventure PUBLIC ${CONAN_LIBS})
 target_link_libraries(txtadventure_server PUBLIC ${CONAN_LIBS})
 target_link_libraries(testing.o PUBLIC ${CONAN_LIBS})

@@ -37,11 +37,15 @@ function get_log(x) {
   }
 }
 
-var ip = location.host.substr(0, location.host.indexOf(":"));
 async function run(port) {
   //Check if game is already running.
-  var adress = "ws://" + ip + ":" + parseInt(port+1) + "/";
-  socket = new WebSocket(adress);
+  var host = location.host.substr(0, location.host.indexOf(":"));
+  var socket = null
+  if (host == "localhost" || host == "127.0.0.1")
+    socket = new WebSocket("ws://" + host + ":" + parseInt(port+1));
+  else
+    socket = new WebSocket("wss://" + host + ":" + parseInt(port+1));
+
   await new Promise(r => setTimeout(r, 1000));
   console.log("Connection:", socket.readyState); 
   if (socket.readyState === 0 || socket.readyState === 1) {
@@ -71,9 +75,13 @@ async function run(port) {
 
 async function end(port) {
   //Check if game is already running.
-  var adress = "ws://" + ip + ":" + parseInt(port+1) + "/";
-  socket = new WebSocket(adress);
-  await new Promise(r => setTimeout(r, 500));
+  var socket = null
+  var host = location.host.substr(0, location.host.indexOf(":"));
+  if (host == "localhost" || host == "127.0.0.1")
+    socket = new WebSocket("ws://" + host + ":" + parseInt(port+1));
+  else
+    socket = new WebSocket("wss://" + host + ":" + parseInt(port+1));
+  await new Promise(r => setTimeout(r, 1000));
   console.log("Connection:", socket.readyState); 
   if (socket.readyState === 2 || socket.readyState === 3) {
     document.getElementById("check_msg").innerHTML = "Game was not running.";
