@@ -1,11 +1,4 @@
 Creating game.
-Room: "nonexist.nonexists"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "nonexist.nonexists"
-Created all rooms 
 Room: "test.raum1"
 Parsing characters
 Parsing Items
@@ -31,17 +24,17 @@ Parsing characters
 Parsing Items
 Parsing details 
 Create room: "test.test_room"
+Created all rooms 
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
 Created all rooms 
 worldFactory: done.
 Done parsing world.
 Parsing players... 
-Room: "nonexist.nonexists"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "nonexist.nonexists"
-Created all rooms 
 Room: "test.raum1"
 Parsing characters
 Parsing Items
@@ -67,17 +60,17 @@ Parsing characters
 Parsing Items
 Parsing details 
 Create room: "test.test_room"
+Created all rooms 
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
 Done.
-Room: "nonexist.nonexists"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "nonexist.nonexists"
-Created all rooms 
 Room: "test.raum1"
 Parsing characters
 Parsing Items
@@ -103,6 +96,13 @@ Parsing characters
 Parsing Items
 Parsing details 
 Create room: "test.test_room"
+Created all rooms 
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
