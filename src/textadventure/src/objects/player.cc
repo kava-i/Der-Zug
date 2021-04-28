@@ -47,10 +47,10 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks,
   }
 
   //Attributes
-  if(m_world->getConfig().count("attributes")>0) {
+  if (m_world->getConfig().count("attributes")>0) {
     std::vector<std::string> attributes = m_world->getConfig()["attributes"];
-    for(auto it : attributes)   
-        m_stats[it] = 0;
+    for (auto it : attributes)   
+      m_stats[it] = 0;
   }
 
   //States, f.e. current fight, Dialog-partner
@@ -830,23 +830,22 @@ void CPlayer::showMinds()
 * Print player's stats by using table function.
 */
 void CPlayer::showStats() {
-
-    m_sPrint += "--- " + m_sName + "---\n";
-    
-    std::map<std::string, std::map<std::string, std::string>> mapStats = m_world->getConfig()["mapAttributes"];
-    std::map<std::string, int> mStats;
-    for(auto it : m_stats)
-    {
-        if(mapStats.count(it.first) == 0)
-            mStats[it.first] = it.second;
-    }
-    auto lambda = [](int stat) { return std::to_string(stat); };
-    m_sPrint += func::table(mStats, lambda);
-    for(auto it : m_stats)
-    {
-        if(mapStats.count(it.first) > 0)
-            m_sPrint += mapStats[it.first][std::to_string(it.second)] + "\n";
-    }
+  m_sPrint += "--- " + m_sName + "---\n";
+  
+  // Get mapping from config.
+  std::map<std::string, std::map<std::string, std::string>> stats_mapping 
+    = m_world->getConfig()["mapAttributes"];
+  std::map<std::string, int> stats;
+  for (auto it : m_stats) {  
+    if (stats_mapping.count(it.first) == 0)
+      stats[it.first] = it.second;
+  }
+  auto lambda = [](int stat) { return std::to_string(stat); };
+  m_sPrint += func::table(stats, lambda);
+  for (auto it : m_stats) {  
+    if (stats_mapping.count(it.first) > 0)
+      m_sPrint += stats_mapping[it.first][std::to_string(it.second)] + "\n";
+  }
 }
 
 /**
