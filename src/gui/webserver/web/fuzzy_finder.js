@@ -350,19 +350,6 @@ function CreateChildObjects() {
       document.getElementById("child_paths").appendChild(li);
     }
   });
-  if (document.getElementById("child_paths").children.length == 0) {
-    console.log("Requesting object json for: ", cur_object_ + "/" + on_page_objects_[element_counter]);
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "/api/get_object_json/" + cur_object_ + "/" + on_page_objects_[element_counter]);
-    xhttp.send();
-    xhttp.onload = function(event){
-      //If request fails, display message to user.
-      if (xhttp.status == 200) {
-        var json = JSON.parse(this.responseText);   
-        document.getElementById("object_json").innerHTML = JSON.stringify(json, null, 2);
-      }
-    }
-  }
 }
 
 function GetAllX(category) {

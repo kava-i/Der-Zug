@@ -1,1 +1,11 @@
-{"START":{"id":"START","text":[{"speaker":"SMOKING WOMAN","text":"You see that man across the room? Why is here sweating. <i>she makes a short pause</i> so annoying."}]}}
+{
+    "START": {
+        "id": "START",
+        "text": [
+            {
+                "speaker": "SMOKING WOMAN",
+                "text": "You see that man across the room? Why is here sweating. <i>she makes a short pause</i> so annoying."
+            }
+        ]
+    }
+}

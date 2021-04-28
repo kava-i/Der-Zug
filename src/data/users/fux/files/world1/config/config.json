@@ -80,7 +80,7 @@
     {
       "color": "blue",
       "id": "sinnliche gewissheit",
-      "level": 3,
+      "level": 10,
       "relevance": 0.1
     },
     {
@@ -123,11 +123,13 @@
   "show": {
     "chars": [
       "Hier sind",
-      ""
+      "niemand"
     ],
     "exits": [
       "Hier sehe ich einen Weg",
       "nichts"
     ]
-  }
+  },
+  "attributes":[],
+  "mapAttributes":{}
 }

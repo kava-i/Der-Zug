@@ -210,3 +210,42 @@ function GrantAccessTo(user, world) {
     }
   }
 }
+
+function ToggleGraph() {
+  var tab_elemens = document.getElementById("tab_elemens");
+  var tab_graph = document.getElementById("tab_graph");
+  
+  if (tab_elemens.style.display === "block") {
+    console.log("switched to graph view");
+    tab_elemens.style.display = "none";
+    tab_graph.style.display = "block";
+
+    // Get graph from object.
+    var xhttp = new XMLHttpRequest();
+    var query = "?type=graph&path=" + window.location.pathname;
+    console.log("Query: " + query);
+    xhttp.open("GET", "/api/get_object" + query);
+    xhttp.send();
+    
+    //Function to handle request 
+    xhttp.onload = function(event){
+      //If request fails, display message to user.
+      console.log(this.responseText);
+      if (this.responseText == "{}") {
+        alert("No graph availibe.");
+        ToggleGraph();
+      }
+      else if (xhttp.status == 200)
+        LoadGraph(JSON.parse(this.responseText));
+      else {
+        alert("could not load graph.");
+        ToggleGraph();
+      }
+    }
+  }
+  else {
+    console.log("switched to list view");
+    tab_elemens.style.display = "block";
+    tab_graph.style.display = "none";
+  }
+}

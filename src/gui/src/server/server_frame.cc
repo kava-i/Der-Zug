@@ -31,8 +31,8 @@ void ServerFrame::Start(int port) {
   std::cout << "Starting on Port: " << port << std::endl;
   
   // Get only json.
-  server_.Get("/api/get_object_json/(.*)", [&](const Request& req, Response& resp) {
-      GetObjectJson(req, resp); });
+  server_.Get("/api/get_object", [&](const Request& req, Response& resp) {
+      GetObjectInfo(req, resp); });
 
   // *** Pages *** //
  
@@ -112,6 +112,10 @@ void ServerFrame::Start(int port) {
       resp.set_content(func::GetPage("web/object.js"), "application/javascript"); });
   server_.Get("/web/backup.js", [&](const Request& req, Response& resp) {
       resp.set_content(func::GetPage("web/backup.js"), "application/javascript"); });
+  server_.Get("/web/cytoscape.min.js", [&](const Request& req, Response& resp) {
+      resp.set_content(func::GetPage("web/cytoscape.min.js"), "application/javascript"); });
+  server_.Get("/web/graph.js", [&](const Request& req, Response& resp) {
+      resp.set_content(func::GetPage("web/graph.js"), "application/javascript"); });
   server_.Get("/web/registration.js", [](const Request& req, Response& resp)
       { resp.set_content(func::GetPage("web/registration.js"), 
           "application/javascript");});
@@ -261,14 +265,23 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
   }
 }
 
-void ServerFrame::GetObjectJson(const Request& req, Response& resp) {
+void ServerFrame::GetObjectInfo(const Request& req, Response& resp) {
   //Try to get username from cookie
   std::string username = CheckLogin(req, resp);
-  if (username == "") return;
+  if (username == "") {
+    resp.status = 404;
+    return;
+  }
 
-  //Try to parse json
-  std::string path = req.matches[1];
-  std::cout << "GetObjectJson(" << path << ")" << std::endl;
+  // Get query parameters and return error code if query parameters are missing.
+  if (!req.has_param("type") || !req.has_param("path")) {
+    std::cout << "Missing parameters." << std::endl;
+    resp.status = 400;
+    return;
+  }
+  std::string path = req.get_param_value("path");
+  std::string info_type = req.get_param_value("type");
+  std::cout << "GetObjectJson(" << info_type << ", " << path << ")" << std::endl;
 
   //Get user
   std::shared_lock sl(shared_mtx_user_manager_);
@@ -278,20 +291,27 @@ void ServerFrame::GetObjectJson(const Request& req, Response& resp) {
   nlohmann::json object_json = nlohmann::json();
   //Check whether user has access to this location
   if (user->CheckAccessToLocations(path) == false &&
-      req.matches.size() > 1 && req.matches[1] != "world") {
+      req.matches.size() > 1 && req.matches[2] != "world") {
     resp.status = 401;
   }
-  // Create new world
+  // Get Object Infos
   else {
-    object_json = user_manager_.worlds()->GetObjectJson(path);
-    if (!object_json.empty())
-      resp.status = 200;
-    else
-      resp.status = 404;
+    if (info_type == "json") {
+      std::cout << "calling GetObjectJson" << std::endl;
+      object_json = user_manager_.worlds()->GetObjectJson(path);
+      if (!object_json.empty())
+        resp.status = 200;
+      else
+        resp.status = 404;
+    }
+    else if (info_type == "graph") {
+      std::cout << "calling Graph" << std::endl;
+      object_json = user_manager_.worlds()->GetGraph(path);
+    }
   }
   
   //Check whether action succeeded
-  std::cout << "ServerFrame::GetObjectJson done with.\n\n";
+  std::cout << "ServerFrame::GetObject" << info_type << " done with: " << object_json << ".\n\n";
   resp.set_content(object_json.dump(), "application/json");
 }
 

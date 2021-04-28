@@ -275,7 +275,6 @@ body {
 }
 
 .scroll_content{
-  width:95%;
   height:90%;
   overflow-y: auto;
   white-space: nowrap;
@@ -405,4 +404,13 @@ body {
   position: absolute;
   display: none;
   background-color: rgba(0, 0, 0, 0.5);
+}
+
+#cy {
+  height: 600px;
+  display: block;
+  margin-bottom: 2rem;
+  border-style: inset;
+  border-width: thin;
+  background-color: rgba(0, 0, 0, 0.2);
 }

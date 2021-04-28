@@ -66,6 +66,12 @@ class Area : public Page {
      */
     nlohmann::json CreatePageData(std::string path);
 
+    /**
+     * Provides a graph representation if availibe and an empty json otherwise.
+     * @return json with graph-representation of area.
+     */
+    nlohmann::json GetGraph(std::string name);
+
   private:
     // member variables:
     nlohmann::json objects_;
@@ -82,6 +88,15 @@ class Area : public Page {
     nlohmann::json CreateObjectPageData(std::string id);
 
     void UpdateNodes();
+
+    /** 
+     * Checks whether a edge aready exists.
+     * @param[in] links already added.
+     * @param[in] source current source node.
+     * @param[in] target current target node.
+     * @return boolean, indicating whether edge already exists or not.
+     */
+    bool LinkExists(const nlohmann::json& links, std::string source, std::string target);
 
     /**
      * Checks whether the the area, or one of it objects is referred to.

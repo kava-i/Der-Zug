@@ -16,7 +16,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src='/web/object.js'></script>
+    <script src='/web/general.js'></script>
     <script src="/web/fuzzy_finder.js"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="/web/graph.js"></script>
 </head>
 
 <body>
@@ -55,7 +58,17 @@
 </div>
 
   <div class="box_overview center_in_box">
+
+    <div style="float: right;">
+      <button onclick="ToggleGraph();">
+        <i class="fas fa-project-diagram"></i>
+      </button>
+    </div>
+
+
     <h1>{{ default(name, id) }}</h1>
+
+    <div id="tab_elemens" style="display: block;">
       <div class="object">
         <ul id="object">
 

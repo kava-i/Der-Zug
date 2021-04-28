@@ -15,8 +15,9 @@
     <script src="/web/fuzzy_finder.js"></script>
     {% if __is_main %}<script src="/web/run.js"></script>{% endif %}
     <script src="/web/run.js"></script>
-    <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js"
-       data-auto-replace-svg="nest"></script>
+    <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg="nest"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="/web/graph.js"></script>
 </head>
 
 <body>
@@ -64,7 +65,16 @@
 </div>
 
 <div class="box_overview center_in_box">
+
+  <div style="float: right;">
+    <button onclick="ToggleGraph();">
+      <i class="fas fa-project-diagram"></i>
+    </button>
+  </div>
+
   <h1>{{name}}</h1>
+
+  <div id="tab_elemens" style="display: block;">
     <div class="controlers">
       {% if __port != 0 and __is_main %}
         <button class="pure-button" style="margin-bottom:0.5em;"
@@ -87,7 +97,15 @@
           {% endfor %}
         </table>
     </div>
-    <i class="fas fa-plus button" onclick="OpenAddElemModal();return true"></i>
+  </div>
+
+  <div id="tab_graph" style="display: none">
+    <h2>Graph-view</h2>
+    <div id="cy"></div>
+  </div>
+
+  <i class="fas fa-plus button" onclick="OpenAddElemModal();return true"></i>
+
 </div>
 
 {{ log("rendered subcategories") }}
