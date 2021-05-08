@@ -18,6 +18,7 @@
     <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg="nest"></script>
     <script src="https://d3js.org/d3.v4.js"></script>
     <script src="/web/graph.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body>
@@ -71,6 +72,12 @@
       <i class="fas fa-project-diagram"></i>
     </button>
   </div>
+  <div style="float: right;">
+    <button onclick="ToggleNotes();">
+      <i class="fas fa-sticky-notes"></i>
+    </button>
+  </div>
+
 
   <h1>{{name}}</h1>
 
@@ -102,6 +109,17 @@
   <div id="tab_graph" style="display: none">
     <h2>Graph-view</h2>
     <div id="cy"></div>
+  </div>
+
+  <div id="tab_notes" style="display: none">
+    <h2>Notes</h2>
+    <div contenteditable="true" id="notes" class="notes" style="display: block"></div>
+    <br>
+    <div id="notes_md" class="markdown" style="display: none"></div>
+    <br>
+    <button id="write" class="pure-button" 
+        onclick="SetNotes()">Write</button>
+    </div>
   </div>
 
   <i class="fas fa-plus button" onclick="OpenAddElemModal();return true"></i>

@@ -16,12 +16,29 @@ Page::Page(std::string base_path, std::string path) {
   p.replace_extension("");
   std::string new_path = p;
   path_ = new_path;
-  name_ = path_.substr(path_.rfind("/")+1);
+  name_ = func::GetLastElemFromPath(path);
+  notes_ = "";
   GenerateParentNodes();
+  std::ifstream read(base_path_ + "/" + path_ + "/" + name_ + ".md");
+  if (read) {
+    read >> notes_;
+    read.close();
+  }
 }
 
 std::string Page::name() const { 
   return name_; 
+}
+
+std::string Page::notes(std::string) const {
+  return notes_;
+}
+
+void Page::set_notes(std::string, std::string description) {
+  notes_ = description;
+  std::ofstream write(base_path_ + "/" + path_ + "/" + name_ + ".md");
+  write << notes_;
+  write.close();
 }
     
 nlohmann::json Page::CreatePageData(std::string path) {

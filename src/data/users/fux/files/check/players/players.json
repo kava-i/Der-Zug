@@ -1,1 +1,9 @@
-{"_admin":{"hp":10,"id":"_admin","name":"Admin","password":"password","room":"test_new_room","strength":0}}
+{
+  "_admin":{
+    "id":"_admin",
+    "name":"Admin",
+    "password":"password",
+    "room":"test.test_room",
+    "hp":10
+  }
+}

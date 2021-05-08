@@ -90,6 +90,18 @@ class Worlds {
     nlohmann::json GetGraph(std::string path);
 
     /**
+     * Provides the notes of an object.
+     * @return string with notes.
+     */
+    nlohmann::json GetNotes(std::string path);
+
+    /**
+     * Provides the notes of an object.
+     * @return string with notes.
+     */
+    void SetNotes(std::string path, std::string notes);
+
+    /**
      * Finds world with given url in all worlds.
      * Checks if world-path is contained in given base_path + (url-) path.
      * @param[in] path as url path.

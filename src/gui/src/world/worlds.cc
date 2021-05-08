@@ -137,6 +137,20 @@ nlohmann::json Worlds::GetGraph(std::string path) {
   return  world->GetGraph(base_path_ + path);
 }
 
+nlohmann::json Worlds::GetNotes(std::string path) {
+  World* world = GetWorldFromUrl(path);
+  if (world == nullptr) {
+    return nlohmann::json();
+  }
+  return  world->GetNotes(base_path_ + path);
+}
+
+void Worlds::SetNotes(std::string path, std::string notes) {
+  World* world = GetWorldFromUrl(path);
+  if (world != nullptr) {
+    world->SetNotes(base_path_ + path, notes);
+  }
+}
 
 std::string Worlds::ParseTemplate(nlohmann::json json) {
   std::cout << "Worlds::ParseTemplate()" << std::endl;
@@ -168,6 +182,9 @@ std::string Worlds::ParseTemplate(nlohmann::json json) {
   std::string page = "";
   try {
     std::string path = json["path"];
+    if (!func::demo_exists(json["path"]))
+      path = json["path2"];
+    std::cout << "Loading template: " << path << std::endl;
     temp = env.parse_template(path);
     page = env.render(temp, json["header"]);
   } catch (std::exception& e) {

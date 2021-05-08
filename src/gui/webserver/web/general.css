@@ -262,7 +262,10 @@ body {
 .content_center {
   display: inline-block;
   text-align: center;
-  width:80%;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: stretch;
+
   height:80%;
   margin:auto;
   margin-bottom: 2rem;
@@ -412,5 +415,29 @@ body {
   margin-bottom: 2rem;
   border-style: inset;
   border-width: thin;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.notes {
+  height: 600px;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: stretch;
+  display: block;
+  border-style: inset;
+  border-width: thin;
+  text-align: left;
+
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 2em;
+}
+
+.markdown {
+  height: 600px;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: stretch;
+  display: none;
+  text-align: left;
   background-color: rgba(0, 0, 0, 0.2);
 }

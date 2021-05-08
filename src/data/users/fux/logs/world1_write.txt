@@ -1,7 +1,5 @@
 Creating game.
 QuestFactory
-"leave"
-QuestFactory
 "besiege_besoffene_frau"
 "geldauftreiben"
 "reden"
@@ -20,37 +18,29 @@ QuestFactory
 "ticketkauf"
 "zum_gleis"
 QuestFactory
+"leave"
+QuestFactory
 "finde_apfel"
 "bringe_apfel"
-Room: "zug.compartment-a"
+Room: "hospital.corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital.corridor"
+Room: "hospital.foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital.foyer.kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital.foyer"
+Room: "hospital.stairs"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug.compartment-a"
-Room: "zug.compartment-b"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-b"
-Room: "zug.compartment-c"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-c"
-Room: "zug.compartment-d"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-d"
-Room: "zug.trainCorridor"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.trainCorridor"
+Create room: "hospital.stairs"
 Created all rooms 
 Room: "trainstation.ausgang"
 Parsing characters
@@ -144,32 +134,40 @@ Parsing Items
 Parsing details 
 Create room: "trainstation.toiletten"
 Created all rooms 
-Room: "hospital.corridor"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "hospital.corridor"
-Room: "hospital.foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital.foyer.kleine_kiste"
-parseRandomItemsToDetail
-Parsing Items
-Create room: "hospital.foyer"
-Room: "hospital.stairs"
+Room: "zug.compartment-a"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital.stairs"
+Create room: "zug.compartment-a"
+Room: "zug.compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-b"
+Room: "zug.compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-c"
+Room: "zug.compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-d"
+Room: "zug.trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.trainCorridor"
 Created all rooms 
 worldFactory: done.
 Done parsing world.
 Parsing players... 
 QuestFactory
-"leave"
-QuestFactory
 "besiege_besoffene_frau"
 "geldauftreiben"
 "reden"
@@ -188,37 +186,29 @@ QuestFactory
 "ticketkauf"
 "zum_gleis"
 QuestFactory
+"leave"
+QuestFactory
 "finde_apfel"
 "bringe_apfel"
-Room: "zug.compartment-a"
+Room: "hospital.corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital.corridor"
+Room: "hospital.foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital.foyer.kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital.foyer"
+Room: "hospital.stairs"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug.compartment-a"
-Room: "zug.compartment-b"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-b"
-Room: "zug.compartment-c"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-c"
-Room: "zug.compartment-d"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-d"
-Room: "zug.trainCorridor"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.trainCorridor"
+Create room: "hospital.stairs"
 Created all rooms 
 Room: "trainstation.ausgang"
 Parsing characters
@@ -312,32 +302,40 @@ Parsing Items
 Parsing details 
 Create room: "trainstation.toiletten"
 Created all rooms 
-Room: "hospital.corridor"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "hospital.corridor"
-Room: "hospital.foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital.foyer.kleine_kiste"
-parseRandomItemsToDetail
-Parsing Items
-Create room: "hospital.foyer"
-Room: "hospital.stairs"
+Room: "zug.compartment-a"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital.stairs"
+Create room: "zug.compartment-a"
+Room: "zug.compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-b"
+Room: "zug.compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-c"
+Room: "zug.compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-d"
+Room: "zug.trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.trainCorridor"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
 Done.
 QuestFactory
-"leave"
-QuestFactory
 "besiege_besoffene_frau"
 "geldauftreiben"
 "reden"
@@ -356,37 +354,29 @@ QuestFactory
 "ticketkauf"
 "zum_gleis"
 QuestFactory
+"leave"
+QuestFactory
 "finde_apfel"
 "bringe_apfel"
-Room: "zug.compartment-a"
+Room: "hospital.corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital.corridor"
+Room: "hospital.foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital.foyer.kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital.foyer"
+Room: "hospital.stairs"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug.compartment-a"
-Room: "zug.compartment-b"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-b"
-Room: "zug.compartment-c"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-c"
-Room: "zug.compartment-d"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-d"
-Room: "zug.trainCorridor"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.trainCorridor"
+Create room: "hospital.stairs"
 Created all rooms 
 Room: "trainstation.ausgang"
 Parsing characters
@@ -480,32 +470,40 @@ Parsing Items
 Parsing details 
 Create room: "trainstation.toiletten"
 Created all rooms 
-Room: "hospital.corridor"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "hospital.corridor"
-Room: "hospital.foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital.foyer.kleine_kiste"
-parseRandomItemsToDetail
-Parsing Items
-Create room: "hospital.foyer"
-Room: "hospital.stairs"
+Room: "zug.compartment-a"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital.stairs"
+Create room: "zug.compartment-a"
+Room: "zug.compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-b"
+Room: "zug.compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-c"
+Room: "zug.compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-d"
+Room: "zug.trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.trainCorridor"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
 Done.
 QuestFactory
-"leave"
-QuestFactory
 "besiege_besoffene_frau"
 "geldauftreiben"
 "reden"
@@ -524,37 +522,29 @@ QuestFactory
 "ticketkauf"
 "zum_gleis"
 QuestFactory
+"leave"
+QuestFactory
 "finde_apfel"
 "bringe_apfel"
-Room: "zug.compartment-a"
+Room: "hospital.corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital.corridor"
+Room: "hospital.foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital.foyer.kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital.foyer"
+Room: "hospital.stairs"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug.compartment-a"
-Room: "zug.compartment-b"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-b"
-Room: "zug.compartment-c"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-c"
-Room: "zug.compartment-d"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-d"
-Room: "zug.trainCorridor"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.trainCorridor"
+Create room: "hospital.stairs"
 Created all rooms 
 Room: "trainstation.ausgang"
 Parsing characters
@@ -648,32 +638,40 @@ Parsing Items
 Parsing details 
 Create room: "trainstation.toiletten"
 Created all rooms 
-Room: "hospital.corridor"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "hospital.corridor"
-Room: "hospital.foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital.foyer.kleine_kiste"
-parseRandomItemsToDetail
-Parsing Items
-Create room: "hospital.foyer"
-Room: "hospital.stairs"
+Room: "zug.compartment-a"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital.stairs"
+Create room: "zug.compartment-a"
+Room: "zug.compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-b"
+Room: "zug.compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-c"
+Room: "zug.compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-d"
+Room: "zug.trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.trainCorridor"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
 Done.
 QuestFactory
-"leave"
-QuestFactory
 "besiege_besoffene_frau"
 "geldauftreiben"
 "reden"
@@ -692,37 +690,29 @@ QuestFactory
 "ticketkauf"
 "zum_gleis"
 QuestFactory
+"leave"
+QuestFactory
 "finde_apfel"
 "bringe_apfel"
-Room: "zug.compartment-a"
+Room: "hospital.corridor"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "hospital.corridor"
+Room: "hospital.foyer"
+Parsing characters
+Parsing Items
+Parsing details 
+"hospital.foyer.kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital.foyer"
+Room: "hospital.stairs"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug.compartment-a"
-Room: "zug.compartment-b"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-b"
-Room: "zug.compartment-c"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-c"
-Room: "zug.compartment-d"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-d"
-Room: "zug.trainCorridor"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.trainCorridor"
+Create room: "hospital.stairs"
 Created all rooms 
 Room: "trainstation.ausgang"
 Parsing characters
@@ -816,25 +806,35 @@ Parsing Items
 Parsing details 
 Create room: "trainstation.toiletten"
 Created all rooms 
-Room: "hospital.corridor"
-Parsing characters
-Parsing Items
-Parsing details 
-Create room: "hospital.corridor"
-Room: "hospital.foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital.foyer.kleine_kiste"
-parseRandomItemsToDetail
-Parsing Items
-Create room: "hospital.foyer"
-Room: "hospital.stairs"
+Room: "zug.compartment-a"
 Parsing characters
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital.stairs"
+Create room: "zug.compartment-a"
+Room: "zug.compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-b"
+Room: "zug.compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-c"
+Room: "zug.compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-d"
+Room: "zug.trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.trainCorridor"
 Created all rooms 
 worldFactory: done.
 initializing context stack.

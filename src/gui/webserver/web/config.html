@@ -1,0 +1,110 @@
+{% include "temp_header" %}
+{{ log("rendered header") }}
+
+   <li custom="map">
+     <label title="Select, who is speaking, when a story element, a
+                   description, an error or a technical aspect is
+                   printed. Select \"\" if no speaker-type is wanted.">
+       Printing:
+     </label>
+     <ul id="printing">
+       {% for key, val in default(printing, {"":""}) %}
+         <li custom="pair">
+           <input id="id" placeholder="what" value="{{ key }}">
+           <input id="name" placeholder="name" value="{{ val }}">
+           <span class="mod_elem" onclick="del_elem('printing',{{loop.index}})">-</span>
+           <span class="mod_elem" onclick="add_elem('printing',{{loop.index}})">+</span>
+         </li>
+       {% endfor %}
+     </ul>
+   </li>
+
+   {{ log("rendered printing") }}
+
+   <li custom="map">
+     <label title="Select how showing characters, items, details, exits
+                   etc. is framed.">
+       Show:
+     </label>
+     <ul id="show">
+       {% for key, val in default(show, {"":[]}) %}
+         <li custom="key_list">
+           <input id="id" placeholder="what" value="{{ key }}">
+           <input id="desc" class="long_inp" placeholder="pre" value="{{ val.0 }}">
+           <input id="error" placeholder="nothing" value="{{ val.1 }}">
+           <span class="mod_elem" onclick="del_elem('show',{{loop.index}})">-</span>
+           <span class="mod_elem" onclick="add_elem('show',{{loop.index}})">+</span>
+         </li>
+       {% endfor %}
+     </ul>
+   </li>
+
+   {{ log("rendered show") }}
+
+   <li custom="list">
+     <label title="Add minds. The concept of minds is explained here:
+                    ... . You may set no minds at all">
+       Minds:
+     </label>
+     <ul id="minds">
+       {% for mind in default(minds, {"":[]}) %}
+         <li custom="object">
+           <input id="id" placeholder="id" value="{{ mind.id }}">
+           <input id="color" placeholder="color" value="{{ mind.color }}">
+           <input id="level" custom="int" placeholder="level" value="{{ mind.level}}">
+           <input id="relevance" custom="float" placeholder="relevance" value="{{
+           mind.relevance }}">
+           <span class="mod_elem" onclick="del_elem('minds',{{loop.index}})">-</span>
+           <span class="mod_elem" onclick="add_elem('minds',{{loop.index}})">+</span>
+         </li>
+       {% endfor %}
+     </ul>
+   </li>
+
+   {{ log("rendered minds") }}
+
+   <li custom="list">
+     <label title="You may map a custom command to an existing one. F.e.
+                   in case you're gaming is not in english, mapping a
+                   german equivalent to the english command is userfull.
+                   All command are regex expressions. f.e. show me (.*).
+                   The original commands will remain available.">
+    Commands:
+     </label>
+     <ul id="commands">
+       {% for cmd in default(commands, {"":[]}) %}
+         <li custom="object">
+           <input id="id" placeholder="original" value="{{ cmd.id }}">
+           <input class="long_inp" id="regex" placeholder="new command" 
+                      value="{{ cmd.regex }}">
+           <input id="take" title="Optional argument to tell game which
+                      regex match shall be user." placeholder="new command" 
+                      custom="int" value="{{ default(cmd.take, 1) }}">
+           <span class="mod_elem" onclick="del_elem('commands',{{loop.index}})">-</span>
+           <span class="mod_elem" onclick="add_elem('commands',{{loop.index}})">+</span>
+         </li>
+       {% endfor %}
+     </ul>
+   </li>
+
+   {{ log("rendered commands") }}
+
+   <li custom="map">
+     <label title="Add standard fields for newly created players">
+       New Players:
+     </label>
+     <ul id="new_player">
+       {% for key, val in default(new_player, {"":""}) %}
+         <li custom="pair">
+           <input id="id" placeholder="what" value="{{ key }}">
+           <input id="name" placeholder="name" value="{{ val }}">
+           <span class="mod_elem" onclick="del_elem('printing',{{loop.index}})">-</span>
+           <span class="mod_elem" onclick="add_elem('printing',{{loop.index}})">+</span>
+         </li>
+       {% endfor %}
+     </ul>
+   </li>
+
+   {{ log("rendered players") }}
+
+{% include "temp_footer" %}

@@ -88,9 +88,43 @@ function checkMatch() {
 
 // Define keycodes for better readability:
 key_codes = {"+":61, "-":173, "esc":27, "enter":13, "up":38, "down":40, 
-  "a":65, "z":90, "/":191, "left":37, "right":39, "back":8}
+  "a":65, "z":90, "/":191, "left":37, "right":39, "back":8, "strg":17, "1":49, 
+  "2":50, "3":51
+}
 
+var ctrlpressed = false;
+var gpressed = false;
+var npressed = false;
+var mpressed = false;
 document.addEventListener('keydown', function(event) {
+
+  // Shortcuts for switching to graph/ notes/ markdown
+  if (event.keyCode == key_codes["strg"])
+    ctrlpressed = true;
+  if (event.keyCode == key_codes["1"])
+    gpressed = true;
+  if (event.keyCode == key_codes["2"])
+    npressed = true;
+  if (event.keyCode == key_codes["3"])
+    mpressed = true;
+  if (ctrlpressed === true && gpressed === true) {
+    ToggleGraph();
+    ctrlpressed=false; gpressed=false;
+  }
+  if (ctrlpressed === true && npressed === true) {
+    ctrlpressed=false; npressed=false;
+    ToggleNotes();
+  }
+  if (ctrlpressed === true && mpressed === true) {
+    ctrlpressed=false; mpressed=false;
+    ToggleMarkdown();
+  }
+  if (ctrlpressed === true) {
+    return;
+  }
+  else {
+    ctrlpressed = false;
+  }
 
   fuzzy_finder_inp = document.getElementById("fuzzy_finder_inp");
 
@@ -254,6 +288,10 @@ function NonFuzzyFinderInput(event, all) {
   var input_fields = [];
   input_fields.push.apply(input_fields, document.getElementsByTagName('input'));
   input_fields.push.apply(input_fields, document.getElementsByTagName('textarea'));
+
+  if (event.target.hasAttribute("contenteditable"))
+    return true;
+
   for (var index = 0; index < input_fields.length; ++index) {
     if (event.target == input_fields[index] && event.target != fuzzy_finder_inp) {
       // If typeahead, then mode will be changed, otherwiese stop using fuzzy_finder

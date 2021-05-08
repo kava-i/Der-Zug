@@ -108,7 +108,7 @@ string CRoom::showExits(CGramma* gramma) {
   std::string pre = "Hier geht es";    
   std::string post = "Nirgendwo hin.";
   if(m_showMap.count("exits") > 0) {
-    if(m_showMap["exits"].size() == 2) {
+    if(m_showMap["exits"].size() >= 2) {
         pre = m_showMap["exits"][0];
         post = m_showMap["exits"][1];
     }

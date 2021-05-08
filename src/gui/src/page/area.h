@@ -25,6 +25,10 @@ class Area : public Page {
 
     // getter:
     std::string category() const; 
+    std::string notes(std::string path) const;
+
+    // setter:
+    void set_notes(std::string path, std::string note);
 
     // public methods:
 
@@ -75,6 +79,7 @@ class Area : public Page {
   private:
     // member variables:
     nlohmann::json objects_;
+    std::map<std::string, std::string> obj_notes_;
     nlohmann::json backup_obj_;
 
     // private methods:
@@ -103,7 +108,7 @@ class Area : public Page {
      * @param[in] path selected path (might be path to object or to area itself)
      * @return true if path is not path to area, false otherwise.
      */
-    bool IsObject(std::string path);
+    bool IsObject(std::string path) const;
 };
 
 #endif

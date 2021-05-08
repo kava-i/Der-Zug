@@ -34,6 +34,10 @@ void ServerFrame::Start(int port) {
   server_.Get("/api/get_object", [&](const Request& req, Response& resp) {
       GetObjectInfo(req, resp); });
 
+  server_.Post("/api/set_notes", [&](const Request& req, Response& resp) {
+      SetNotes(req, resp); });
+
+
   // *** Pages *** //
  
   server_.Get("/login", [&](const Request& req, Response& resp) { 
@@ -308,11 +312,50 @@ void ServerFrame::GetObjectInfo(const Request& req, Response& resp) {
       std::cout << "calling Graph" << std::endl;
       object_json = user_manager_.worlds()->GetGraph(path);
     }
+    else if (info_type == "notes") {
+      std::cout << "calling Graph" << std::endl;
+      object_json = user_manager_.worlds()->GetNotes(path);
+    }
+
   }
   
   //Check whether action succeeded
   std::cout << "ServerFrame::GetObject" << info_type << " done with: " << object_json << ".\n\n";
   resp.set_content(object_json.dump(), "application/json");
+}
+
+void ServerFrame::SetNotes(const Request& req, Response& resp) {
+  //Try to get username from cookie
+  std::string username = CheckLogin(req, resp);
+  if (username == "") {
+    resp.status = 404;
+    return;
+  }
+
+  //Try to parse json
+  nlohmann::json input = ValidateJson(req, resp, {"notes", "path"});
+  std::string notes = input["notes"];
+  std::string path = input.value("path", "");
+
+  std::cout << "SetNotes(" << path << "< " << notes << std::endl;
+
+  //Get user
+  std::shared_lock sl(shared_mtx_user_manager_);
+  User* user = user_manager_.GetUser(username);
+  sl.unlock();
+
+  nlohmann::json object_json = nlohmann::json();
+  //Check whether user has access to this location
+  if (user->CheckAccessToLocations(path) == false &&
+      req.matches.size() > 1 && req.matches[2] != "world") {
+    resp.status = 401;
+  }
+  // Get Object Infos
+  else {
+    std::cout << "calling Graph" << std::endl;
+    user_manager_.worlds()->SetNotes(path, notes);
+    resp.status = 200;
+  }
 }
 
 void ServerFrame::AddElem(const Request& req, Response& resp) {
@@ -401,9 +444,19 @@ void ServerFrame::WriteObject(const Request& req, Response& resp) {
   if (username == "") return;
   
   //Try to parse json and get relevant attributes.
-  nlohmann::json json_req = ValidateJson(req, resp, {"json/id", "path"});
-  if (json_req.empty()) return;
-  std::string id = json_req["json"]["id"];
+  nlohmann::json json_req = ValidateJson(req, resp, {"json", "path"});
+  if (json_req.empty()) 
+    return;
+  std::string id = "";
+  if (json_req["json"].contains("id"))
+    id = json_req["json"]["id"];
+  else {
+    for (const auto& it : json_req["json"].items()) {
+      id = it.key();
+      json_req["json"] = it.value();
+      break;
+    }
+  }
   std::string path = json_req["path"];
   nlohmann::json modified_obj = json_req["json"];
   bool force = json_req.value("force", false);

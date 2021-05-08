@@ -1,1 +1,11 @@
-{"new_room":{"description":[{"speaker":"WHATEVER","text":"Enter any text here. Choose whatever you like as speaker, refere to your custom config, or our pre-set speaker's for more functionality."}],"id":"new_room","name":"New Room"},"test_room":{"description":[{"speaker":"TUTORIAL MASTER","text":"You're in the first test-room with nothing in it whatsoever!"}],"id":"test_room","name":"Test Room"}}
+{
+  "test_room": {
+    "id":"test_room",
+    "name":"Test Room",
+    "description": [
+      {
+        "speaker":"TUTORIAL MASTER",
+        "text":"You're in the first test-room with nothing in it whatsoever!"
+      }]
+    }
+}

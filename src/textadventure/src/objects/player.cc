@@ -1,4 +1,6 @@
 #include "player.h"
+#include <cctype>
+#include <string>
 
 #define BLACK Webcmd::set_color(Webcmd::color::BLACK)
 #define GREEN Webcmd::set_color(Webcmd::color::GREEN)
@@ -835,17 +837,20 @@ void CPlayer::showStats() {
   // Get mapping from config.
   std::map<std::string, std::map<std::string, std::string>> stats_mapping 
     = m_world->getConfig()["mapAttributes"];
-  std::map<std::string, int> stats;
+  std::map<std::string, std::string> stats;
   for (auto it : m_stats) {  
-    if (stats_mapping.count(it.first) == 0)
-      stats[it.first] = it.second;
+    std::string key = it.first;
+    key.front() = std::toupper(key.front());
+
+    if (stats_mapping.count(it.first) == 0) {
+      stats[key] = std::to_string(it.second);
+    }
+    else {
+      stats[key] = stats_mapping[it.first][std::to_string(it.second)];
+    }
   }
-  auto lambda = [](int stat) { return std::to_string(stat); };
-  m_sPrint += func::table(stats, lambda);
-  for (auto it : m_stats) {  
-    if (stats_mapping.count(it.first) > 0)
-      m_sPrint += stats_mapping[it.first][std::to_string(it.second)] + "\n";
-  }
+  auto lambda = [](std::string stat) { return stat; };
+  m_sPrint += func::table(stats, lambda, "width:20%");
 }
 
 /**

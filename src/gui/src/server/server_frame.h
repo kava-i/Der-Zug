@@ -161,6 +161,8 @@ class ServerFrame {
      */
     void GetObjectInfo(const httplib::Request& req, httplib::Response& resp);
 
+    void SetNotes(const httplib::Request& req, httplib::Response& resp);
+
     /**    
      * @brief Gives feedback on whether server is still running    
      * @return boolean    

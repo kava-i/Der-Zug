@@ -123,6 +123,21 @@ nlohmann::json World::GetGraph(std::string path) const {
   return paths_.at(path)->GetGraph(path);
 }
 
+nlohmann::json World::GetNotes(std::string path) const {
+  std::cout << "World::GetGraph(" << path << ")" << std::endl;
+  std::shared_lock sl(shared_mtx_paths_);
+  if (paths_.count(path) == 0)
+    return nlohmann::json::object();
+  return paths_.at(path)->notes(path);
+}
+
+void World::SetNotes(std::string path, std::string notes) {
+  std::cout << "World::SetGraph(" << path << ")" << std::endl;
+  std::shared_lock sl(shared_mtx_paths_);
+  if (paths_.contains(path))
+    paths_.at(path)->set_notes(path, notes);
+}
+
 // paths_
 void World::InitializePaths(std::string path) {
   std::cout << "InitializePaths: " << path << std::endl;
@@ -133,8 +148,14 @@ void World::InitializePaths(std::string path) {
     paths_[path] = new Category(base_path_, path);
     std::cout << "Added Category: " << path << std::endl;
     ul.unlock();
-    for (auto& p : fs::directory_iterator(path)) 
-      InitializePaths(p.path());
+    for (auto& p : fs::directory_iterator(path)) {
+      std::string tmp_path = p.path();
+      if (tmp_path.find(".md") == std::string::npos) {
+        InitializePaths(p.path());
+      }
+      else
+        std::cout << "SKIPPED MARKDOWN" << std::endl;
+    }
   }
   // subcategories => elements are files (jsons).
   else {
@@ -142,6 +163,12 @@ void World::InitializePaths(std::string path) {
     paths_[path] = new SubCategory(base_path_, path);
     std::cout << "Added Subcategory: " << path << std::endl;
     for (auto& p : fs::directory_iterator(path)) {
+      std::string tmp_path = p.path();
+      if (tmp_path.find(".md") != std::string::npos) {
+        std::cout << "SKIPPED MARKDOWN" << std::endl;
+        continue;
+      }
+ 
       nlohmann::json objects;
       std::string path_without_extension = func::RemoveExtension(p.path());
       if (p.path().extension() == ".jpg") 

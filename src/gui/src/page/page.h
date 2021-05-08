@@ -31,6 +31,10 @@ class Page {
     // getter:
     virtual std::string category() const { return ""; }
     std::string name() const;
+    std::string notes(std::string path) const;
+
+    // setter
+    void set_notes(std::string path, std::string description);
 
     // public methods:
     
@@ -93,6 +97,7 @@ class Page {
     std::string path_;
     std::string category_;
     std::string name_;
+    std::string notes_;
 
     /**
      * Child nodes.

@@ -92,6 +92,14 @@ class World {
      */
     nlohmann::json GetGraph(std::string path) const;
 
+    /**
+     * Provides the notes of a object.
+     * @return string with notes.
+     */
+    nlohmann::json GetNotes(std::string path) const;
+
+    void SetNotes(std::string path, std::string notes);
+
 
   private:
     // member variables:

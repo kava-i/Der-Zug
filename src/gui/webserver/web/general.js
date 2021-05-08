@@ -167,6 +167,7 @@ function DelElem(force=false) {
 function play_game(port) {
   var cur_loc = window.location.href;
   cur_loc = cur_loc.substr(0, cur_loc.indexOf(":", 7));
+
   window.open(cur_loc + ":" + parseInt(port) + "/");
 }
 
@@ -214,8 +215,9 @@ function GrantAccessTo(user, world) {
 function ToggleGraph() {
   var tab_elemens = document.getElementById("tab_elemens");
   var tab_graph = document.getElementById("tab_graph");
+  var tab_notes = document.getElementById("tab_notes");
   
-  if (tab_elemens.style.display === "block") {
+  if (tab_elemens.style.display === "block" || tab_notes.style.display === "block") {
     console.log("switched to graph view");
     tab_elemens.style.display = "none";
     tab_graph.style.display = "block";
@@ -238,7 +240,7 @@ function ToggleGraph() {
       else if (xhttp.status == 200)
         LoadGraph(JSON.parse(this.responseText));
       else {
-        alert("could not load graph.");
+        alert("could not load notes.");
         ToggleGraph();
       }
     }
@@ -248,4 +250,94 @@ function ToggleGraph() {
     tab_elemens.style.display = "block";
     tab_graph.style.display = "none";
   }
+  tab_notes.style.display = "none";
+}
+
+function ToggleNotes() {
+  var tab_elemens = document.getElementById("tab_elemens");
+  var tab_notes = document.getElementById("tab_notes");
+  var tab_graph = document.getElementById("tab_graph");
+
+  if (tab_elemens.style.display === "block" || tab_graph.style.display === "block") {
+    console.log("switched to graph view");
+    tab_elemens.style.display = "none";
+    tab_notes.style.display = "block";
+
+    // Get graph from object.
+    var xhttp = new XMLHttpRequest();
+    var query = "?type=notes&path=" + window.location.pathname;
+    console.log("Query: " + query);
+    xhttp.open("GET", "/api/get_object" + query);
+    xhttp.send();
+    
+    //Function to handle request 
+    xhttp.onload = function(event){
+      //If request fails, display message to user.
+      console.log(this.responseText);
+      if (this.responseText == "{}") {
+        alert("No notes availibe.");
+        ToggleNotes();
+      }
+      else if (xhttp.status == 200) {
+        var notes = this.responseText;
+        if (notes.length >= 2)
+          notes = notes.substr(1, notes.length-2);
+        document.getElementById("notes").innerHTML = notes;
+        let md_notes = notes.replaceAll("<div>", "\n");
+        md_notes = md_notes.replaceAll("</div>", "");
+        md_notes = md_notes.replaceAll("<br>", "\n");
+        console.log(md_notes);
+        console.log(marked(md_notes));
+        document.getElementById("notes_md").innerHTML = marked(md_notes);
+      }
+      else {
+        alert("could not load .");
+        ToggleNotes();
+      }
+    }
+  }
+  else {
+    console.log("switched to list view");
+    tab_elemens.style.display = "block";
+    tab_notes.style.display = "none";
+  }
+  tab_graph.style.display = "none";
+}
+
+function ToggleMarkdown() {
+  console.log("ToggleMarkdown");
+  if (document.getElementById("tab_notes").style.display === "none") {
+    console.log("abort");
+    return;
+  }
+
+  var notes = document.getElementById("notes");
+  var md_notes = document.getElementById("notes_md");
+  console.log("elem ", notes);
+  console.log("elem ", md_notes);
+  console.log("Block? ", notes.style.display);
+  console.log("Block? ", md_notes.style.display);
+
+  if (notes.style.display === "none") {
+    console.log("edit");
+    notes.style.display = "block";
+    md_notes.style.display = "none";
+  }
+
+  else if (md_notes.style.display === "none") {
+    console.log("preview");
+    md_notes.style.display = "block";
+    notes.style.display = "none";
+  }
+  else
+    console.log("none");
+}
+
+function SetNotes() {
+  // Get graph from object.
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/api/set_notes");
+  var notes = document.getElementById("notes").innerHTML;
+  var request = {"path": window.location.pathname, "notes":notes};
+  xhttp.send(JSON.stringify(request));
 }

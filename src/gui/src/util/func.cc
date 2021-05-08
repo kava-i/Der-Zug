@@ -209,4 +209,8 @@ nlohmann::json Join(nlohmann::json &elem1, nlohmann::json &elem2) {
   return elem1;
 }
 
+std::string GetLastElemFromPath(std::string path) {
+  return path.substr(path.rfind("/")+1);
+}
+
 } //Close namespace 

@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <exception>
 #include <iostream>
+#include <math.h>
 #include <string>
 
 Area::Area(std::string base_path, std::string path, nlohmann::json objects) 
@@ -13,10 +14,35 @@ Area::Area(std::string base_path, std::string path, nlohmann::json objects)
   objects_ = objects;
   UpdateNodes();
   category_ = (--parent_nodes_.rbegin())->second;
+  std::ifstream read(base_path_ + "/" + path_ + "/" + name_ + ".md");
+  if (read) {
+    read >> notes_;
+    read.close();
+  }
 }
 
 std::string Area::category() const { 
   return category_; 
+}
+
+std::string Area::notes(std::string path) const {
+  if (IsObject(path)) {
+    if (obj_notes_.contains(func::GetLastElemFromPath(path)))
+      return obj_notes_.at(func::GetLastElemFromPath(path)); 
+    return "";
+  }
+  std::ofstream write(base_path_ + "/" + path_ + "/" + name_ + ".md");
+  write << notes_;
+  write.close();
+  return notes_;
+}
+
+void Area::set_notes(std::string path, std::string notes) {
+  if (IsObject(path)) {
+    if (obj_notes_.contains(func::GetLastElemFromPath(path)))
+      obj_notes_[func::GetLastElemFromPath(path)] = notes;
+  }
+  notes_ = notes;
 }
 
 ErrorCodes Area::ModifyObject(std::string path, std::string name, nlohmann::json modified_object) {
@@ -83,12 +109,25 @@ nlohmann::json Area::CreatePageData(std::string path) {
 
 nlohmann::json Area::CreateObjectPageData(std::string path) {
   std::cout << "Area::RenderObjectPage(" << path << ")" << std::endl;
-  if (objects_.count(path.substr(path.rfind("/")+1)) == 0)
+  if (objects_.count(func::GetLastElemFromPath(path)) == 0)
     return nlohmann::json({{"error", "Problem parsing json"}});
-  nlohmann::json object = objects_[path.substr(path.rfind("/")+1)];
+  std::string name = func::GetLastElemFromPath(path);
+  nlohmann::json object = objects_[name];
+  // If array or no id exists. Convert to object and add id, based on map-key.
+  // This is probably due to the object being a section in the config, which is 
+  // used slightly differently, but may be usefull, for future stuff.
+  if (object.is_array()) {
+    object = {{"id", name}, {"content", object}};
+  }
+  else if (!object.contains("id")) {
+    object = {{"id", name}, {"content", object}};
+  }
   object["__parents"] = parent_nodes_;
-  nlohmann::json json = nlohmann::json({{"header", object}, 
-      {"path", "web/object_templates/" + category_ + ".html"}});
+  nlohmann::json json = nlohmann::json({
+      {"header", object}, 
+      {"path", "web/object_templates/" + category_ + ".html"},
+      {"path2", "web/object_templates/" + category_ + "_" + name + ".html"}
+    });
   return json;
 }
 
@@ -138,7 +177,7 @@ nlohmann::json Area::GetGraph(std::string path) {
   }
 
   if (category_ == "quests" && IsObject(path)) {
-    std::string name = path.substr(path.rfind("/")+1);
+    std::string name = func::GetLastElemFromPath(path);
     nlohmann::json quest = objects_[name];
 
     nodes.push_back({{"id", "start"}, {"group","1"}});
@@ -181,6 +220,6 @@ void Area::UpdateNodes() {
     child_nodes_[path_.substr(base_path_.length()) + "/" + it.key()] = it.key();
 }
 
-bool Area::IsObject(std::string path) { 
+bool Area::IsObject(std::string path) const { 
   return (path_ != path); 
 }

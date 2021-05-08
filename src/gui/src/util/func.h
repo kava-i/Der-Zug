@@ -122,6 +122,8 @@ namespace func
    * @param[in] elem2 element with new entries.
    */
   nlohmann::json Join(nlohmann::json& elem1, nlohmann::json& elem2);
+
+  std::string GetLastElemFromPath(std::string path);
 }
 
 #endif
