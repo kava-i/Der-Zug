@@ -46,35 +46,33 @@
 
 <div class="top_right">
   <img src="/web/logo.png" style="width:120px; height:63px;margin-bottom:0.5em;"><br>
-  <p class="fuzzy_finder_focused" 
-    title="Fuzzy finder active. Press any key to fuzzy search for pages/files/objects">
+  <p class="fuzzy_finder_focused_green" 
+    title="Fuzzy finder active. 
+      Press any key to fuzzy search for pages/files/objects.
+      Press '-' to switch to delete-mode.
+      Fuzzy-finder may help you entering id's."
+  >
       fuzzy_finder
   </p>
 </div>
 
+<div id="notification" class="notification"></div>
+
 {{ log("rendered header") }}
-
-<div class="side_box" style="float: left; display: none;">
-  Parent level
-  <ol class="prev_elems prev_list" id="parent_paths"></ol>
-</div>
-
-<div class="side_box" style="float: right; display: none;">
-  Child level
-  <ol class="prev_elems prev_list" id="child_paths"></ol>
-  <pre class="prev_elems" id="object_json"></pre>
-</div>
 
 <div class="box_overview center_in_box">
 
   <div style="float: right;">
-    <button onclick="ToggleGraph();">
+    <button class="pure-button" style="width:2rem;"
+      title="Show graph. Shortcut: 1" onclick="ToggleGraph();">
       <i class="fas fa-project-diagram"></i>
     </button>
   </div>
-  <div style="float: right;">
-    <button onclick="ToggleNotes();">
-      <i class="fas fa-sticky-notes"></i>
+
+  <div style="float: right; margin-right: 1em;">
+    <button class="pure-button" style="width:2rem;"
+      title="Show notes: Shortcut: 2 (toggle markdown-preview: 3)" onclick="ToggleNotes();">
+      <i class="fas fa-sticky-note"></i>
     </button>
   </div>
 
@@ -98,7 +96,9 @@
               </td>
               <td>
                 <i class="fas fa-minus button2" 
-                  onclick="OpenDelElemModal('subcategory', '{{node.1}}');return true"></i>
+                   title="Delete element. Shortcut: Backspace"
+                  onclick="OpenDelElemModal('subcategory', '{{node.1}}');return true">
+                </i>
               </td>
             </tr>
           {% endfor %}
@@ -117,12 +117,12 @@
     <br>
     <div id="notes_md" class="markdown" style="display: none"></div>
     <br>
-    <button id="write" class="pure-button" 
-        onclick="SetNotes()">Write</button>
-    </div>
+    <button id="write" class="pure-button" onclick="SetNotes()">Write</button>
   </div>
 
-  <i class="fas fa-plus button" onclick="OpenAddElemModal();return true"></i>
+  <i class="fas fa-plus button" title="Add element. Shortcut: +" 
+    onclick="OpenAddElemModal();return true">
+  </i>
 
 </div>
 

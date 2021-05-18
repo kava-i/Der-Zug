@@ -8,8 +8,17 @@
       <h2>Graph-view</h2>
       <div id="cy"></div>
     </div>
-  </div>
 
+    <div id="tab_notes" style="display: none">
+      <h2>Notes</h2>
+      <div contenteditable="true" id="notes" class="notes" style="display: block"></div>
+      <br>
+      <div id="notes_md" class="markdown" style="display: none"></div>
+      <br>
+      <button id="write" class="pure-button" onclick="SetNotes()">Write</button>
+    </div>
+
+  </div>
 
 
     <div id="modal_write" class="modal">

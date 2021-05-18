@@ -51,20 +51,16 @@
   </p>
 </div>
 
-<div class="side_box" style="float: left; display: none;">
-  Parent level
-  <ol id="parent_paths">
-  </ol>
-</div>
+<div id="notification" class="notification"></div>
 
   <div class="box_overview center_in_box">
 
     <div style="float: right;">
-      <button onclick="ToggleGraph();">
-        <i class="fas fa-project-diagram"></i>
+      <button class="pure-button" style="width:2rem;"
+        title="Show notes: Shortcut: 2 (toggle markdown-preview: 3)" onclick="ToggleNotes();">
+        <i class="fas fa-sticky-note"></i>
       </button>
     </div>
-
 
     <h1>{{ default(name, id) }}</h1>
 

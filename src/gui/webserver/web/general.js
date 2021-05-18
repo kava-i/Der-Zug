@@ -34,6 +34,8 @@ window.onclick = function(event)  {
  * Trigger button click by pressing enter, when on last input field
  */
 window.onload = function() {
+    
+
   if (document.getElementById("modal_add_elem").style.display == "none")
     return;
   var r_input_pw2 = document.getElementById("name");
@@ -117,6 +119,7 @@ function AddElem(elem, force=false) {
     else {
       msg.style= "display: block; color: green;"; 
       msg.innerHTML = "Successfully add " + json_request["name"];
+      sessionStorage.setItem("notification", "Element added.");
       window.location = window.location;
     }
   }
@@ -126,7 +129,6 @@ function AddElem(elem, force=false) {
  * function deleting.
  */
 function DelElem(force=false) {
-  
   //Get controller name and path (url) from document.
   var json_request = new Object();
   json_request["name"] = document.getElementById("check_msg").elem_name;
@@ -159,6 +161,7 @@ function DelElem(force=false) {
     }
     //Display success message to user.
     else {
+      sessionStorage.setItem("notification", "Element removed.");
       window.location=window.location;
     }
   }
@@ -213,6 +216,7 @@ function GrantAccessTo(user, world) {
 }
 
 function ToggleGraph() {
+  SetNotes();
   var tab_elemens = document.getElementById("tab_elemens");
   var tab_graph = document.getElementById("tab_graph");
   var tab_notes = document.getElementById("tab_notes");
@@ -274,11 +278,7 @@ function ToggleNotes() {
     xhttp.onload = function(event){
       //If request fails, display message to user.
       console.log(this.responseText);
-      if (this.responseText == "{}") {
-        alert("No notes availibe.");
-        ToggleNotes();
-      }
-      else if (xhttp.status == 200) {
+      if (xhttp.status == 200) {
         var notes = this.responseText;
         if (notes.length >= 2)
           notes = notes.substr(1, notes.length-2);
@@ -300,37 +300,30 @@ function ToggleNotes() {
     console.log("switched to list view");
     tab_elemens.style.display = "block";
     tab_notes.style.display = "none";
+    SetNotes();
   }
   tab_graph.style.display = "none";
 }
 
 function ToggleMarkdown() {
+  SetNotes();
   console.log("ToggleMarkdown");
   if (document.getElementById("tab_notes").style.display === "none") {
-    console.log("abort");
     return;
   }
 
   var notes = document.getElementById("notes");
   var md_notes = document.getElementById("notes_md");
-  console.log("elem ", notes);
-  console.log("elem ", md_notes);
-  console.log("Block? ", notes.style.display);
-  console.log("Block? ", md_notes.style.display);
 
   if (notes.style.display === "none") {
-    console.log("edit");
     notes.style.display = "block";
     md_notes.style.display = "none";
   }
 
   else if (md_notes.style.display === "none") {
-    console.log("preview");
     md_notes.style.display = "block";
     notes.style.display = "none";
   }
-  else
-    console.log("none");
 }
 
 function SetNotes() {
@@ -338,6 +331,48 @@ function SetNotes() {
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", "/api/set_notes");
   var notes = document.getElementById("notes").innerHTML;
+  if (notes.length < 1)
+    return;
   var request = {"path": window.location.pathname, "notes":notes};
+  console.log(request);
   xhttp.send(JSON.stringify(request));
+  xhttp.onload = function() {
+    if (xhttp.status === 200)
+      notify("Notes updated.");
+    else
+      notify("Failed to update notes.");
+  }
+}
+
+async function notify(text) {
+  let notification = document.getElementById("notification");
+  notification.innerHTML = text;
+  unfade(notification);
+  await new Promise(r => setTimeout(r, 1000));
+  fade(notification);
+}
+
+function unfade(element) {
+    var op = 0.1;  // initial opacity
+    element.style.display = 'block';
+    var timer = setInterval(function () {
+        if (op >= 1){
+            clearInterval(timer);
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op += op * 0.1;
+    }, 20);
+}
+function fade(element) {
+    var op = 1;  // initial opacity
+    var timer = setInterval(function () {
+        if (op <= 0.1){
+            clearInterval(timer);
+            element.style.display = 'none';
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op -= op * 0.1;
+    }, 50);
 }

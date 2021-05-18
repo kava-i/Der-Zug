@@ -8,6 +8,7 @@
 #include <exception>
 #include <filesystem>
 #include <iostream>
+#include <mutex>
 #include <ostream>
 #include <shared_mutex>
 #include <string>
@@ -22,6 +23,13 @@ World::World(std::string base_path, std::string path, int port)
   std::string temp = path.substr(base_path.length()+1);
   name_ = temp.substr(temp.rfind("/")+1);
   creator_ = temp.substr(0, temp.find("/"));
+
+  // Load notes.
+  nlohmann::json notes;
+  if (func::LoadJsonFromDisc(path_ + "/data/notes.json", notes)) {
+    std::cout << "GOT NOTES FROM DISC." << std::endl;
+    notes_ = notes.get<std::map<std::string, std::string>>();
+  }
 
   // Init paths (map of full-path + page-object) and short_paths (vector of url-paths).
   InitializePaths(path_);
@@ -125,17 +133,26 @@ nlohmann::json World::GetGraph(std::string path) const {
 
 nlohmann::json World::GetNotes(std::string path) const {
   std::cout << "World::GetGraph(" << path << ")" << std::endl;
-  std::shared_lock sl(shared_mtx_paths_);
-  if (paths_.count(path) == 0)
+  std::shared_lock sl(shared_mtx_notes_);
+  if (notes_.count(path) == 0)
     return nlohmann::json::object();
-  return paths_.at(path)->notes(path);
+  return notes_.at(path);
 }
 
-void World::SetNotes(std::string path, std::string notes) {
-  std::cout << "World::SetGraph(" << path << ")" << std::endl;
+ErrorCodes World::SetNotes(std::string path, std::string notes) {
+  std::cout << "World::SetNotes(" << path << ")" << std::endl;
   std::shared_lock sl(shared_mtx_paths_);
-  if (paths_.contains(path))
-    paths_.at(path)->set_notes(path, notes);
+  // If path does not exist, don't add note.
+  if (paths_.count(path) == 0)
+    return ErrorCodes::PATH_NOT_FOUND;
+  sl.unlock();
+
+  // Overwrite or set new note and safe all notes to disc.
+  std::unique_lock ul(shared_mtx_notes_);
+  notes_[path] = notes;
+  nlohmann::json notes_json = notes_;
+  func::WriteJsonToDisc(path_ + "/data/notes.json", notes_json);
+  return ErrorCodes::SUCCESS;
 }
 
 // paths_
@@ -149,26 +166,15 @@ void World::InitializePaths(std::string path) {
     std::cout << "Added Category: " << path << std::endl;
     ul.unlock();
     for (auto& p : fs::directory_iterator(path)) {
-      std::string tmp_path = p.path();
-      if (tmp_path.find(".md") == std::string::npos) {
+      if (p.path() != path + "/data")
         InitializePaths(p.path());
-      }
-      else
-        std::cout << "SKIPPED MARKDOWN" << std::endl;
     }
   }
   // subcategories => elements are files (jsons).
   else {
-    std::cout << "Adding subcategory: " << path << std::endl;
     paths_[path] = new SubCategory(base_path_, path);
     std::cout << "Added Subcategory: " << path << std::endl;
     for (auto& p : fs::directory_iterator(path)) {
-      std::string tmp_path = p.path();
-      if (tmp_path.find(".md") != std::string::npos) {
-        std::cout << "SKIPPED MARKDOWN" << std::endl;
-        continue;
-      }
- 
       nlohmann::json objects;
       std::string path_without_extension = func::RemoveExtension(p.path());
       if (p.path().extension() == ".jpg") 

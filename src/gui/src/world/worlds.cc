@@ -27,7 +27,10 @@ Worlds::Worlds(std::string base_path, int start_port) {
     // Iterate over user-worlds and create world elements.
     for (auto wp : fs::directory_iterator(cur_path + "/files")) {
       worlds_[wp.path()] = new World(base_path_, wp.path(), ports_); 
-      ports_ += 2; // increate port (+1: game-http-server, +1: game-websocket-server.
+      ports_ += 2; // increase port (+1: game-http-server, +1: game-websocket-server.
+     //Create all subcategories.
+      for (const auto& category : categories_)
+        fs::create_directory(wp.path().string() + "/" + category);
     }
   }
 }
@@ -50,6 +53,7 @@ ErrorCodes Worlds::CreateNewWorld(std::string path, std::string name) {
     //Create all subcategories.
     for (const auto& category : categories_)
       fs::create_directory(full_path + "/" + category);
+    fs::create_directory(full_path + "/data"); // data is a folder necessary but no category.
 
     //Copy default config, room and player-file.
     fs::copy("../../data/default_jsons/config.json", full_path + "/config/"); 

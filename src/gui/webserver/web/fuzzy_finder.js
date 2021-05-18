@@ -5,13 +5,17 @@ var cur_object_ = window.location.pathname;
 var finder_counter = 0;
 var element_counter = 0;
 var fuzzy_finder_active = false;
-// var delete_modus = false;
 var pages = []
-var child_elements_ = false;
+var child_elements_ = (document.getElementsByClassName("side_box").length < 2);
 let inps = [];
 let cur_input_field_ = "";
 
 window.onload = function() {
+  if (sessionStorage.getItem("notification") && sessionStorage.getItem("notification") != "") {
+    notify(sessionStorage.getItem("notification"));
+    sessionStorage.setItem("notification", "");
+  }
+
   document.getElementById("fuzzy_finder_div").style.display="none";
   document.getElementById("fuzzy_finder_inp").value = "";
   document.getElementById("fuzzy_finder_elems").innerHTML = "";
@@ -27,8 +31,6 @@ window.onload = function() {
   else 
     console.log("no objects on this page!");
 
-  CreateParentObjects();
-  CreateChildObjects();
   HighlightElem();
 }
 
@@ -43,22 +45,18 @@ function checkMatch() {
     inps_.push(inp);
 
   var matches = [];
-  // var inps_ = (delete_modus == false) ? paths_ : on_page_objects_
 
   // Select matching elements.
   for (var i=0; i<inps_.length; i++) {
     var current_page = inps_[i].toLowerCase();
-
     //If not found, continue
     if (current_page.indexOf(inp) == -1) continue;
 
     // Calculate score.
     var score = current_page.length/inp.length;
-    // if (delete_modus == false) {
     if (mode_ == "normal") {
       // If current path is a child-path of the current page, increase score.
-      if (current_page.indexOf(cur_object_) != -1) 
-        score/=2;
+      if (current_page.indexOf(cur_object_) != -1) score/=2;
       // If last element matches the search word, increase score.
       last_elem = current_page.substr(current_page.lastIndexOf("/"));
       if (last_elem.indexOf(inp) == 0) score/=2;
@@ -92,53 +90,29 @@ key_codes = {"+":61, "-":173, "esc":27, "enter":13, "up":38, "down":40,
   "2":50, "3":51
 }
 
-var ctrlpressed = false;
-var gpressed = false;
-var npressed = false;
-var mpressed = false;
 document.addEventListener('keydown', function(event) {
-
-  // Shortcuts for switching to graph/ notes/ markdown
-  if (event.keyCode == key_codes["strg"])
-    ctrlpressed = true;
-  if (event.keyCode == key_codes["1"])
-    gpressed = true;
-  if (event.keyCode == key_codes["2"])
-    npressed = true;
-  if (event.keyCode == key_codes["3"])
-    mpressed = true;
-  if (ctrlpressed === true && gpressed === true) {
-    ToggleGraph();
-    ctrlpressed=false; gpressed=false;
-  }
-  if (ctrlpressed === true && npressed === true) {
-    ctrlpressed=false; npressed=false;
-    ToggleNotes();
-  }
-  if (ctrlpressed === true && mpressed === true) {
-    ctrlpressed=false; mpressed=false;
-    ToggleMarkdown();
-  }
-  if (ctrlpressed === true) {
-    return;
-  }
-  else {
-    ctrlpressed = false;
-  }
-
   fuzzy_finder_inp = document.getElementById("fuzzy_finder_inp");
 
   pages = document.getElementById("fuzzy_finder_elems").children;
   
   //ESC -> hide fuzzy finder
   if (event.keyCode == key_codes["esc"]) {
-    SelectCloseModals(); // Regarding this "fuzzy_finder" should be renamed to "key-driven" or something.
+    SelectCloseModals(); 
     SelectCloseFinder();
   }
+
   // Check if input is ment for an input field which isn't fuzzy finder.
   else if (NonFuzzyFinderInput(event)) {
-    console.log("Stopping fuzzy_finder.");
     return;
+  }
+  else if (event.keyCode === key_codes["1"]) {
+    ToggleGraph();
+  }
+  else if (event.keyCode === key_codes["2"]) {
+    ToggleNotes();
+  }
+  else if (event.keyCode === key_codes["3"]) {
+    ToggleMarkdown();
   }
   else if (event.keyCode == key_codes["right"]) {
     SelectChildElement(); 
@@ -161,24 +135,17 @@ document.addEventListener('keydown', function(event) {
     SelectElement(event);
   // Select matches down.
   else if (event.keyCode == key_codes["down"]) {
-    if (fuzzy_finder_active) {
+    if (fuzzy_finder_active)
       finder_counter = mod(finder_counter+1, pages.length); 
-      console.log("finder active.");
-    }
-    else {
-      console.log("finder not active.");
+    else
       element_counter = mod(element_counter+1, on_page_objects_.length); 
-      CreateChildObjects();
-    }
   }
   // Select matches up.
   else if (event.keyCode == key_codes["up"]) {
     if (fuzzy_finder_active)
       finder_counter = mod(finder_counter-1, pages.length); 
-    else {
+    else
       element_counter = mod(element_counter-1, on_page_objects_.length); 
-      CreateChildObjects();
-    }
   }
   // Add letter to entry 
   else if ((event.keyCode >= key_codes["a"] && event.keyCode <= key_codes["z"]) 
@@ -188,7 +155,6 @@ document.addEventListener('keydown', function(event) {
   if (fuzzy_finder_inp.value == "")
     document.getElementById("fuzzy_finder_elems").innerHTML = "";
   HighlightElem();
-
 }, true);
 
 function SelectAddElem(event) {
@@ -200,7 +166,6 @@ function SelectAddElem(event) {
 function SelectDeleteModus(event) {
   console.log("Delete modus triggered: ", event.keyCode);
   // Get current element.
-  delete_modus = true;
   mode_ = "delete";
   inps_ = on_page_objects_;
   document.getElementById("fuzzy_finder_mode").innerHTML = "delete: ";
@@ -227,22 +192,18 @@ function SelectElement(event) {
 
 function SelectDeleteElement(event) {
   // Check if on fuzzy_finder-input-field. (All other input fields are already checked)
-  if (event.target == fuzzy_finder_inp) {
+  if (event.target == fuzzy_finder_inp)
     return;
-  }
   event.preventDefault();
   OpenDelElemModal('subcategory', on_page_objects_[element_counter]);
 }
 
 function SelectChildElement() {
-  if (child_elements_)
-    window.location = cur_object_ + "/" + on_page_objects_[element_counter];
+  if (child_elements_) window.location = cur_object_ + "/" + on_page_objects_[element_counter];
 }
 
 function SelectParentElement() {
   var cur_depts = (cur_object_.match(/\//g) || []).length;
-  console.log("Current depth: ", cur_depts);
-
   if (cur_depts > 3)
     window.location = cur_object_.substr(0, cur_object_.lastIndexOf("/"));
   else
@@ -255,7 +216,6 @@ function SelectCloseFinder() {
   document.getElementById("fuzzy_finder_elems").innerHTML = "";
   document.getElementById("fuzzy_finder_mode").innerHTML = "files: ";
   document.getElementById("fuzzy_finder_mode").style.color = "#1fe921";
-  delete_modus = false;
   mode_ = "normal";
   inps_ = paths_; 
   finder_counter = 0;
@@ -349,47 +309,6 @@ function mod(n, m) {
   return ((n % m) + m) % m;
 }
 
-function CreateParentObjects() {
-  var cur_depts = (cur_object_.match(/\//g) || []).length;
-  paths_.forEach(path => {
-    var path_deps = (path.match(/\//g) || []).length;
-    var path_parent = path.substr(0, path.lastIndexOf("/"));
-    if (cur_depts == path_deps && cur_object_.indexOf(path_parent) == 0) {
-      var path_name = path.substr(path.lastIndexOf("/")+1);
-      var li = document.createElement("li");
-      if (cur_object_.indexOf(path) == 0) {
-        li.classList.add("fuzzy_finder_focused_green");
-        parent_object_ = path;
-      }
-      li.setAttribute("path", path);
-      li.innerHTML = path_name;
-      document.getElementById("parent_paths").appendChild(li);
-    }
-  })
-}
-
-function CreateChildObjects() {
-  if (document.getElementsByClassName("side_box").length < 2) {
-    child_elements_ = false;
-    return;
-  }
-  child_elements_ = true
-  document.getElementById("child_paths").innerHTML = "";
-  document.getElementById("object_json").innerHTML = "";
-  var cur_depts = (cur_object_.match(/\//g) || []).length;
-  var cur_elem_path = cur_object_ + "/" + on_page_objects_[element_counter];
-  paths_.forEach(path => {
-    var path_deps = (path.match(/\//g) || []).length;
-    if (cur_depts+2 == path_deps && path.indexOf(cur_elem_path) == 0) {
-      var path_name = path.substr(path.lastIndexOf("/")+1);
-      var li = document.createElement("li");
-      li.setAttribute("path", path);
-      li.innerHTML = path_name;
-      document.getElementById("child_paths").appendChild(li);
-    }
-  });
-}
-
 function GetAllX(category) {
   results = []
   paths_.forEach(path => {
@@ -406,16 +325,4 @@ function GetAllX(category) {
     }
   });
   return results;
-}
-
-function ShowSideBox(x) {
-  var id = "side_box_" + x;
-  if (document.getElementById(id).style.display === "none") {
-    console.log(x, " visible")
-    document.getElementById(id).style.display = "block";
-  }
-  else {
-    console.log(x, " unvisible")
-    document.getElementById(id).style.display = "none";
-  }
 }

@@ -280,7 +280,8 @@ function WriteElem(direct=false, force=false) {
     }
     //Display success message to user.
     else {
-      window.location=window.location;
+      sessionStorage.setItem("notification", "Changes written to disc.");
+      window.location = window.location;
     }
   }
 }

@@ -337,7 +337,7 @@ void ServerFrame::SetNotes(const Request& req, Response& resp) {
   std::string notes = input["notes"];
   std::string path = input.value("path", "");
 
-  std::cout << "SetNotes(" << path << "< " << notes << std::endl;
+  std::cout << "SetNotes(" << path << ")\n" << notes << std::endl;
 
   //Get user
   std::shared_lock sl(shared_mtx_user_manager_);

@@ -98,7 +98,7 @@ class World {
      */
     nlohmann::json GetNotes(std::string path) const;
 
-    void SetNotes(std::string path, std::string notes);
+    ErrorCodes SetNotes(std::string path, std::string notes);
 
 
   private:
@@ -108,6 +108,9 @@ class World {
     std::string name_;
     std::string creator_;
     const int port_; // port=http-server, port+1=websocketserver.
+
+    mutable std::shared_mutex shared_mtx_notes_;
+    std::map<std::string, std::string> notes_;
 
     /**
      * All pages are stored with the full path Category/Area as value.

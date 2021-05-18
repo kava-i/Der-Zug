@@ -441,3 +441,14 @@ body {
   text-align: left;
   background-color: rgba(0, 0, 0, 0.2);
 }
+
+.notification {
+  float: inherit;
+  position: fixed;
+  width: 100%;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 1em;
+  color: white;
+  opacity: 0;
+}
