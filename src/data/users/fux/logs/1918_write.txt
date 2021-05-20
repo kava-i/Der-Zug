@@ -1,11 +1,4 @@
 Creating game.
-Room: "nonexist.nonexists"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "nonexist.nonexists"
-Created all rooms 
 Room: "test.raum1"
 Parsing characters
 Parsing Items
@@ -31,17 +24,17 @@ Parsing characters
 Parsing Items
 Parsing details 
 Create room: "test.test_room"
+Created all rooms 
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
 Created all rooms 
 worldFactory: done.
 Done parsing world.
 Parsing players... 
-Room: "nonexist.nonexists"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "nonexist.nonexists"
-Created all rooms 
 Room: "test.raum1"
 Parsing characters
 Parsing Items
@@ -67,17 +60,17 @@ Parsing characters
 Parsing Items
 Parsing details 
 Create room: "test.test_room"
+Created all rooms 
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
 Done.
-Room: "nonexist.nonexists"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "nonexist.nonexists"
-Created all rooms 
 Room: "test.raum1"
 Parsing characters
 Parsing Items
@@ -103,6 +96,13 @@ Parsing characters
 Parsing Items
 Parsing details 
 Create room: "test.test_room"
+Created all rooms 
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
 Created all rooms 
 worldFactory: done.
 initializing context stack.
@@ -130,6 +130,7 @@ Finished parsing!
 [1;31mshow, exits[0m
 [1;34mfirst[0m throwing: show|exits
 Calling:  show exits!
+Wrong size!
 [1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
 [1;34mworld[0m throwing: show|exits
 [1;34mroom[0m throwing: show|exits

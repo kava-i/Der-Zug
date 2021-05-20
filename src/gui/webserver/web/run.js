@@ -37,6 +37,14 @@ function get_log(x) {
   }
 }
 
+async function try_game(port) {
+  notify("Closing running game...");
+  end(port, true);
+  await new Promise(r => setTimeout(r, 1800));
+  notify("Starting game...");
+  run(port);
+}
+
 async function run(port) {
   //Check if game is already running.
   var host = location.host.substr(0, location.host.indexOf(":"));
@@ -45,24 +53,23 @@ async function run(port) {
     socket = new WebSocket("ws://" + host + ":" + parseInt(port+1));
   else
     socket = new WebSocket("wss://" + host + ":" + parseInt(port+1));
-
   await new Promise(r => setTimeout(r, 1000));
   console.log("Connection:", socket.readyState); 
   if (socket.readyState === 0 || socket.readyState === 1) {
-    alert("Game already running.");
+    notify("Game already running.");
     return;
   }
 
   //Send request
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", "/api/start_game");
-  xhttp.send(window.location.pathname);
+  xhttp.send(GetWorldFromPath());
 
   //Redirect to game
   xhttp.onload = function(event){
     //Fame already running 
     if (this.status != 200)
-      alert("Unkown problem starting game.");
+      notify("Unkown problem starting game.");
 
     //Start game if not already running.
     else {
@@ -73,7 +80,7 @@ async function run(port) {
   }
 }
 
-async function end(port) {
+async function end(port, silent=false) {
   //Check if game is already running.
   var socket = null
   var host = location.host.substr(0, location.host.indexOf(":"));
@@ -100,5 +107,18 @@ async function end(port) {
     else
       document.getElementById("check_msg").innerHTML = "Failed closing game!";
   }
-  document.getElementById("modal_log").style.display = "block";
+  if (!silent)
+    document.getElementById("modal_log").style.display = "block";
+}
+
+function GetWorldFromPath() {
+  let path = window.location.pathname;
+  console.log("path: ", path);
+  let parts = path.split("/");
+  console.log("world: ", parts);
+  parts = parts.slice(0,4)
+  console.log("world: ", parts);
+  path = parts.join('/');
+  console.log("world: ", path);
+  return path;
 }

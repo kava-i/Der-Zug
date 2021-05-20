@@ -56,11 +56,20 @@
   <div class="box_overview center_in_box">
 
     <div style="float: right;">
-      <button class="pure-button" style="width:2rem;"
+      <button class="pure-button" style="width:2rem;height:2rem;"
         title="Show notes: Shortcut: 2 (toggle markdown-preview: 3)" onclick="ToggleNotes();">
         <i class="fas fa-sticky-note"></i>
       </button>
     </div>
+
+    <div style="float: right;margin-right: 1em;">
+      <button id="try_game_btn" class="pure-button" style="width:2rem;height:2rem;"
+        title="Try game (closes game if open): Shortcut: 0." 
+        onclick="try_game({{__port}});">
+        <i class="fas fa-gamepad"></i>
+      </button>
+    </div>
+
 
     <h1>{{ default(name, id) }}</h1>
 

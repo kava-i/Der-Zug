@@ -344,12 +344,18 @@ function SetNotes() {
   }
 }
 
-async function notify(text) {
+notification_running_ = false;
+async function notify(text, color) {
+  while(notification_running_ == true)
+    await new Promise(r => setTimeout(r, 100));
+  notification_running_ = true;
+    
   let notification = document.getElementById("notification");
   notification.innerHTML = text;
   unfade(notification);
   await new Promise(r => setTimeout(r, 1000));
   fade(notification);
+  notification_running_ = false;
 }
 
 function unfade(element) {
@@ -364,6 +370,7 @@ function unfade(element) {
         op += op * 0.1;
     }, 20);
 }
+
 function fade(element) {
     var op = 1;  // initial opacity
     var timer = setInterval(function () {

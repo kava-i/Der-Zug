@@ -87,7 +87,7 @@ function checkMatch() {
 // Define keycodes for better readability:
 key_codes = {"+":61, "-":173, "esc":27, "enter":13, "up":38, "down":40, 
   "a":65, "z":90, "/":191, "left":37, "right":39, "back":8, "strg":17, "1":49, 
-  "2":50, "3":51
+  "2":50, "3":51, "0":48
 }
 
 document.addEventListener('keydown', function(event) {
@@ -104,6 +104,9 @@ document.addEventListener('keydown', function(event) {
   // Check if input is ment for an input field which isn't fuzzy finder.
   else if (NonFuzzyFinderInput(event)) {
     return;
+  }
+  else if (event.keyCode === key_codes["0"]) {
+    document.getElementById("try_game_btn").click();
   }
   else if (event.keyCode === key_codes["1"]) {
     ToggleGraph();
