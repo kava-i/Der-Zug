@@ -7,10 +7,13 @@ var error_codes = {"0":"success", "1":"wrong format", "2":"access denied",
 function CloseModul() {
   document.getElementById("modal_add_elem").style.display = "none";
   document.getElementById("modal_del_elem").style.display = "none";
-  document.getElementById("modal_log").style.display = "none";
-  
-  //Show button again and empty log
-  document.getElementById("get_log").style.display = "inline-block";
+
+  // Handle log-modal.
+  let log_modal = document.getElementById("modal_log");
+  if (log_modal != null && log_modal != undefined) {
+    log_modal.style.display= "none";
+    document.getElementById("get_log").style.display = "inline-block"; // show button again.
+  }
   window.location=window.location;
 }
 
@@ -23,7 +26,7 @@ window.onclick = function(event)  {
     modal1.style.display = "none";
   if (event.target == modal2)
     modal2.style.display = "none";
-  if (event.target3 == modal3)
+  if (event.target == modal3)
     modal3.style.display = "none";
   else
     return;
@@ -34,8 +37,6 @@ window.onclick = function(event)  {
  * Trigger button click by pressing enter, when on last input field
  */
 window.onload = function() {
-    
-
   if (document.getElementById("modal_add_elem").style.display == "none")
     return;
   var r_input_pw2 = document.getElementById("name");

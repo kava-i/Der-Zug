@@ -25,7 +25,6 @@ window.onclick = function(event)  {
  * function to logout user.
  */
 function DoLogout() {
-  
   //Send request
   console.log("sending logout-request!");
   var xhttp = new XMLHttpRequest();
@@ -34,8 +33,8 @@ function DoLogout() {
 
   //Reload, which redirects to main-page.
   xhttp.onload = function(event){
-      window.location="/";
-    };
+    window.location="/";
+  };
 }
 
 
@@ -43,6 +42,8 @@ function DoLogout() {
  * function deleting deleteing.
  */
 function DelUser() {
+  console.log("DelUser()");
+  notify("Deleting...");
   //Send request
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", "/api/user_delete");
@@ -51,17 +52,14 @@ function DelUser() {
   //Function to handle request 
   xhttp.onload = function(event){
     //If request fails, display message to user.
-    let msg = document.getElementsByClassName("user_error")[2];
     if (xhttp.status == 401) {
-      msg.style = "display: block;"; 
-      msg.innerHTML = "Could not be deleted. Sorry for that, try again later.";
+      notify("Could not be deleted. Sorry for that, try again later");
     }
     //Display success message to user.
     else {
-      msg.style= "display: block; color: green;"; 
-      msg.innerHTML = "Successfully deleted account.";
-      document.getElementById("btn_del_user").style="display: none;";
+      notify("Successfully deleted account.");
       window.location="/";
     }
+    document.getElementById("btn_del_user").style="display: none;";
   }
 }
