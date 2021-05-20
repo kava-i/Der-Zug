@@ -16,7 +16,7 @@
 #include <vector>
 
 #include <nlohmann/json.hpp>
-#include "inja.hpp"
+#include <inja/inja.hpp>
 
 #include <stdlib.h>
 #include <time.h>
@@ -31,8 +31,7 @@ class User {
      * @param[in] path (path to folders).
      * @param[in] categories (all currently available categories)
     */
-    User(std::string username, std::string pw, std::string path, std::vector
-        <std::string> categories);
+    User(std::string username, std::string pw, std::string path);
 
     /**
      * Constructor creating a (new) user.
@@ -42,9 +41,8 @@ class User {
      * @param[in] locations (locations available for this user).
      * @param[in] categories (all currently available categories)
     */
-    User(std::string username, std::string pw, std::string path, std::vector
-        <std::string> locations, std::vector<std::string> categories);
-
+    User(std::string username, std::string pw, std::string path, 
+        std::vector<std::string> locations);
 
     // ** getter ** //
     const std::string username() const;
@@ -75,23 +73,6 @@ class User {
     std::string GetOverview(nlohmann::json shared_worlds, nlohmann::json all_worlds);
 
     /**
-     * @brief Get Overview of categories in one world.
-     * @param path (path to current world)
-     * @param world (name of accessed world)
-     * @param port (port of world, as it might not be the current users port)
-     * @return HTML page or empty string.
-     */
-    std::string GetWorld(std::string path, std::string user, std::string world, 
-        int port);
-
-    /**
-     * Get Overview of a category. 
-     * (f.e. world1/rooms = trainstation, hospital...)
-     */
-    std::string GetCategory(std::string path, std::string user, std::string world, 
-        std::string category);
-
-    /**
      * Get Overview of a backups. 
      * (f.e. world1/rooms = trainstation, hospital...)
      * @param[in] user
@@ -100,81 +81,9 @@ class User {
      */
     std::string GetBackups(std::string user, std::string world);
 
-    /**
-     * Get Overview of a SubCategory.
-     * (f.e. world1/rooms/trainstation = platform a, great_hall ...)
-     */
-    std::string GetObjects(std::string path, std::string user, std::string world, 
-        std::string category, std::string sub);
-
-    /*
-     * Get one object.
-     */
-    std::string GetObject(std::string path, std::string user, std::string world, 
-        std::string category, std::string sub, std::string obj);
-
     // ** Create New Files/ Folders ** //
 
-    /**
-     * @brief Creates a new world for this user
-     * @param name (Name of the world)
-     * @param port 
-     * @return Success code.
-     */
-    int CreateNewWorld(std::string name, int port); 
-
-    /**
-     * @brief Adds new file to category
-     * Adds new file and tries to create json matching category. 
-     * @param path
-     * @param name
-     * @return error code.
-     */
-    int AddFile(std::string path, std::string name);
     
-
-    /**
-     * @brief Adds a new empty object
-     * @param path
-     * @param id
-     * @param force
-     * @return ErrorCode.
-     */
-    int AddNewObject(std::string path, std::string id, bool force=false);
-
-    /**
-     * Write json to disc.
-     * Used to create a new object or overwrite an existsing object.
-     * @param[in] request (request to create new, or change existsing)
-     * @param[in] force (If true, then writing is set even if game is not
-     * running.)
-     * @return ErrorCode.
-     */
-    int WriteObject(std::string request);
-
-    /**
-     * delete a given file (subcategory) 
-     * @param[in] world 
-     * return ErrorCode.
-     */
-    int DeleteWorld(std::string world);
-
-    /**
-     * delete a given file (subcategory) 
-     * @param[in] path (path to category)
-     * @param[in] subcategory 
-     * return ErrorCode.
-     */
-    int DeleteFile(std::string path, std::string subcategory);
-
-    /**
-     * delete a given object
-     * @param[in] path (path to json)
-     * @param[in] object (object to delete from json)
-     * return ErrorCode.
-     */
-    int DeleteObject(std::string path, std::string object);
-
     // ** functions ** //
     
     /**
@@ -223,13 +132,6 @@ class User {
     bool CheckGameRunning(std::string path);
 
     /**
-     * Get a attribute of a certain world
-     * @param[in] path (path to world)
-     * @param[in] attr 
-     */
-    int GetPortOfWorld(std::string path);
-
-    /**
      * Adds a new access-request.
      * @param[in] user (user who asks for access)
      * @param[in] world (world to gran access for)
@@ -252,7 +154,6 @@ class User {
     const std::string path_;
     std::vector<std::string> locations_;
     mutable std::shared_mutex shared_mtx_locations_;
-    const std::vector<std::string> categories_;
     std::map<std::string, int> worlds_;
     mutable std::shared_mutex shared_mtx_worlds_;
     std::vector<nlohmann::json> requests_;
@@ -263,12 +164,6 @@ class User {
      * @return return json of user.
      */
     nlohmann::json ConstructJson() const;
-
-    std::vector<std::string> GetAllPages(std::string user, std::string world);
-    std::vector<std::string> GetAllPages(std::string full_path, std::string path,
-      std::vector<std::string>& files);
-    void GetFiles(std::string full_path, std::string path, 
-        std::vector<std::string>& files);
 };
 
 #endif

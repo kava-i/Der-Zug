@@ -5,15 +5,18 @@
 #include "user_manager.h"
 #include "util/func.h"
 #include "util/error_codes.h"
+#include "world/worlds.h"
 
 #include <exception>
 #include <iostream>
 
 namespace fs = std::filesystem;
 
-UserManager::UserManager(std::string main_path, std::vector<std::string> cats) 
-  : path_(main_path), categories_(cats) {
+UserManager::UserManager(std::string main_path) : path_(main_path) {
   ports_ = 9001;
+
+  worlds_ = new Worlds(path_, 9001);
+
   //Iterate over users and create user.
   for (auto& p : fs::directory_iterator(path_)) {
     std::string path = p.path();
@@ -23,15 +26,17 @@ UserManager::UserManager(std::string main_path, std::vector<std::string> cats)
     
     try {
       users_[user["username"]] = new User(user["username"], user["password"], 
-        path_, user["locations"], categories_);
+        path_, user["locations"]);
       InitWorlds(users_[user["username"]]);
-    }
-    catch(std::exception& e) {
+    } catch(std::exception& e) {
       std::cout << "Creating user at path: " << p.path() << " failed!\n";
     }
-
   }
   std::cout << users_.size() << " users initialized!" << std::endl;
+}
+
+Worlds* UserManager::worlds() const {
+  return worlds_;
 }
 
 
@@ -240,8 +245,10 @@ nlohmann::json UserManager::GetSharedWorlds(std::string username) const {
     if (location.find("backups") != std::string::npos) continue;
     std::string user = location.substr(0, location.find("/"));
     std::string world = location.substr(location.rfind("/")+1);
-    shared_worlds.push_back(nlohmann::json({{"user", user}, {"name", world}, 
+    if (GetUser(user) != nullptr) {
+      shared_worlds.push_back(nlohmann::json({{"user", user}, {"name", world}, 
           {"port", GetUser(user)->worlds()["world"]}}));
+    }
   }
   return shared_worlds;
 }

@@ -71,8 +71,12 @@ string CGame::checkLogin(string in_id, string password, bool login, std::string&
   
   //Log player in
   if (login == true) {
-    for(auto &it : m_players) {
-      string tmp = it.second->doLogin(in_id, password);
+    if (m_players.count(in_id) == 0) {
+      return Webcmd::set_color(Webcmd::color::RED) + "username not found."
+        + Webcmd::set_color(Webcmd::color::WHITE) + "\n\nid: ";
+    }
+    else {
+      string tmp = m_players[in_id]->doLogin(in_id, password);
       if(tmp != "") {
         id = tmp;
         return "Loggen in as " + id + "\n\n";

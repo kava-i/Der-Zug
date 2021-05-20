@@ -1,0 +1,452 @@
+\hypertarget{classUser}{}\doxysection{User Class Reference}
+\label{classUser}\index{User@{User}}
+
+
+{\ttfamily \#include $<$user.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classUser_a1b656cf7374392facc77af5a1341166e}{User}} (std\+::string username, std\+::string pw, std\+::string path, std\+::vector$<$ std\+::string $>$ categories)
+\item 
+\mbox{\hyperlink{classUser_a43fb0ab8469f1196ba709ab73715b6b7}{User}} (std\+::string username, std\+::string pw, std\+::string path, std\+::vector$<$ std\+::string $>$ locations, std\+::vector$<$ std\+::string $>$ categories)
+\item 
+\mbox{\Hypertarget{classUser_aa6d5477c69e0a0ec9f1b1ec48762dde8}\label{classUser_aa6d5477c69e0a0ec9f1b1ec48762dde8}} 
+const std\+::string {\bfseries username} () const
+\item 
+\mbox{\Hypertarget{classUser_a02b0b2530b5efbffd2e17161c7b31615}\label{classUser_a02b0b2530b5efbffd2e17161c7b31615}} 
+std\+::string {\bfseries password} () const
+\item 
+\mbox{\Hypertarget{classUser_add585e5fdb328fcc593d6e37b0c18e7b}\label{classUser_add585e5fdb328fcc593d6e37b0c18e7b}} 
+std\+::map$<$ std\+::string, int $>$ \& {\bfseries worlds} ()
+\item 
+\mbox{\Hypertarget{classUser_a2aee3d660c5b6656b2f238f02b0473b6}\label{classUser_a2aee3d660c5b6656b2f238f02b0473b6}} 
+const std\+::vector$<$ std\+::string $>$ \& {\bfseries locations} () const
+\item 
+\mbox{\Hypertarget{classUser_a16ef6d582f9c506e3c4e274c347e1d58}\label{classUser_a16ef6d582f9c506e3c4e274c347e1d58}} 
+void {\bfseries set\+\_\+password} (std\+::string password)
+\item 
+void \mbox{\hyperlink{classUser_aa1ba7752c6b3f4080dff7dd30bc8613d}{Add\+Location}} (std\+::string user, std\+::string world)
+\item 
+std\+::string \mbox{\hyperlink{classUser_ad6867a65fc236faa70236d838c6b0839}{Get\+Overview}} (nlohmann\+::json shared\+\_\+worlds, nlohmann\+::json all\+\_\+worlds)
+\item 
+std\+::string \mbox{\hyperlink{classUser_a7a031063a9c9d49a5277af84e5038cbf}{Get\+World}} (std\+::string path, std\+::string user, std\+::string world, int port)
+\begin{DoxyCompactList}\small\item\em Get Overview of categories in one world. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{classUser_afe3c1f15f2ce483aae8b778d07d36bba}{Get\+Category}} (std\+::string path, std\+::string user, std\+::string world, std\+::string category)
+\item 
+std\+::string \mbox{\hyperlink{classUser_ae1130e22b5e62a6a8ba29b43d07662b1}{Get\+Backups}} (std\+::string user, std\+::string world)
+\item 
+std\+::string \mbox{\hyperlink{classUser_ab2624b2b405e56405459e3176a25ce81}{Get\+Objects}} (std\+::string path, std\+::string user, std\+::string world, std\+::string category, std\+::string sub)
+\item 
+\mbox{\Hypertarget{classUser_aa274506c37fc70c29ac565d32ad07f7c}\label{classUser_aa274506c37fc70c29ac565d32ad07f7c}} 
+std\+::string {\bfseries Get\+Object} (std\+::string path, std\+::string user, std\+::string world, std\+::string category, std\+::string sub, std\+::string obj)
+\item 
+int \mbox{\hyperlink{classUser_a5264ccf68039e67d5a6d2f179119c203}{Create\+New\+World}} (std\+::string name, int port)
+\begin{DoxyCompactList}\small\item\em Creates a new world for this user. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classUser_a2270b06247da7a946ea6e7862b300906}{Add\+File}} (std\+::string path, std\+::string name)
+\begin{DoxyCompactList}\small\item\em Adds new file to category Adds new file and tries to create json matching category. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classUser_af04c2ca740500684647296657f61b0e8}{Add\+New\+Object}} (std\+::string path, std\+::string id, bool force=false)
+\begin{DoxyCompactList}\small\item\em Adds a new empty object. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classUser_af4713aee33f5bbea683817a873338a6a}{Write\+Object}} (std\+::string request)
+\item 
+int \mbox{\hyperlink{classUser_aa26c1f5ece51b462f4f2b074acc68517}{Delete\+World}} (std\+::string world)
+\item 
+int \mbox{\hyperlink{classUser_a715fe278b08fe6c56ce889c0e1227423}{Delete\+File}} (std\+::string path, std\+::string subcategory)
+\item 
+int \mbox{\hyperlink{classUser_a3984584a989bb7d71a2e02ee753240a1}{Delete\+Object}} (std\+::string path, std\+::string object)
+\item 
+void \mbox{\hyperlink{classUser_aafc2ffb6e48e3645f2e770be45b97525}{Safe\+User}} () const
+\item 
+bool \mbox{\hyperlink{classUser_ac51102b552ffdc125a6e0d1901742474}{Check\+Access\+To\+Locations}} (std\+::string path)
+\item 
+int \mbox{\hyperlink{classUser_a4168ab994b8eaf500b86cec7adde69af}{Create\+Backup}} (std\+::string user, std\+::string world)
+\item 
+int \mbox{\hyperlink{classUser_a1def35094506ab9883041706370c7a48}{Restore\+Backup}} (std\+::string user, std\+::string backup)
+\item 
+int \mbox{\hyperlink{classUser_a00315e666417c9002280ebc9095be92f}{Delete\+Backup}} (std\+::string user, std\+::string backup)
+\item 
+bool \mbox{\hyperlink{classUser_a1b64d3b33b7c58045d21ff40a21c6dc0}{Check\+Game\+Running}} (std\+::string path)
+\item 
+int \mbox{\hyperlink{classUser_ab4cb0afb43b43b6844ba998066248b1c}{Get\+Port\+Of\+World}} (std\+::string path)
+\item 
+bool \mbox{\hyperlink{classUser_ae4704ed6b74499db227a23607998ea40}{Add\+Request}} (std\+::string user, std\+::string world)
+\item 
+void \mbox{\hyperlink{classUser_aa40b19ef7c777d78216295102760af84}{Remove\+Request}} (std\+::string user, std\+::string world)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+fux 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classUser_a1b656cf7374392facc77af5a1341166e}\label{classUser_a1b656cf7374392facc77af5a1341166e}} 
+\index{User@{User}!User@{User}}
+\index{User@{User}!User@{User}}
+\doxysubsubsection{\texorpdfstring{User()}{User()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily User\+::\+User (\begin{DoxyParamCaption}\item[{std\+::string}]{name,  }\item[{std\+::string}]{pw,  }\item[{std\+::string}]{path,  }\item[{std\+::vector$<$ std\+::string $>$}]{cats }\end{DoxyParamCaption})}
+
+Constructor creating a (new) user. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em username.} & \\
+\hline
+\mbox{\texttt{ in}}  & {\em pw} & (password). \\
+\hline
+\mbox{\texttt{ in}}  & {\em path} & (path to folders). \\
+\hline
+\mbox{\texttt{ in}}  & {\em categories} & (all currently available categories)\\
+\hline
+\end{DoxyParams}
+\begin{DoxyAuthor}{Author}
+fux 
+\end{DoxyAuthor}
+\mbox{\Hypertarget{classUser_a43fb0ab8469f1196ba709ab73715b6b7}\label{classUser_a43fb0ab8469f1196ba709ab73715b6b7}} 
+\index{User@{User}!User@{User}}
+\index{User@{User}!User@{User}}
+\doxysubsubsection{\texorpdfstring{User()}{User()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily User\+::\+User (\begin{DoxyParamCaption}\item[{std\+::string}]{username,  }\item[{std\+::string}]{pw,  }\item[{std\+::string}]{path,  }\item[{std\+::vector$<$ std\+::string $>$}]{locations,  }\item[{std\+::vector$<$ std\+::string $>$}]{categories }\end{DoxyParamCaption})}
+
+Constructor creating a (new) user. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em username.} & \\
+\hline
+\mbox{\texttt{ in}}  & {\em pw} & (password). \\
+\hline
+\mbox{\texttt{ in}}  & {\em path} & (path to folders). \\
+\hline
+\mbox{\texttt{ in}}  & {\em locations} & (locations available for this user). \\
+\hline
+\mbox{\texttt{ in}}  & {\em categories} & (all currently available categories) \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classUser_a2270b06247da7a946ea6e7862b300906}\label{classUser_a2270b06247da7a946ea6e7862b300906}} 
+\index{User@{User}!AddFile@{AddFile}}
+\index{AddFile@{AddFile}!User@{User}}
+\doxysubsubsection{\texorpdfstring{AddFile()}{AddFile()}}
+{\footnotesize\ttfamily int User\+::\+Add\+File (\begin{DoxyParamCaption}\item[{std\+::string}]{path,  }\item[{std\+::string}]{name }\end{DoxyParamCaption})}
+
+
+
+Adds new file to category Adds new file and tries to create json matching category. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & \\
+\hline
+{\em name} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+error code. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUser_aa1ba7752c6b3f4080dff7dd30bc8613d}\label{classUser_aa1ba7752c6b3f4080dff7dd30bc8613d}} 
+\index{User@{User}!AddLocation@{AddLocation}}
+\index{AddLocation@{AddLocation}!User@{User}}
+\doxysubsubsection{\texorpdfstring{AddLocation()}{AddLocation()}}
+{\footnotesize\ttfamily void User\+::\+Add\+Location (\begin{DoxyParamCaption}\item[{std\+::string}]{user,  }\item[{std\+::string}]{world }\end{DoxyParamCaption})}
+
+Add a new location. Adds a new location (a new world) to list of locations by adding path\+: \char`\"{}\mbox{[}new\+\_\+username\mbox{]}/files/\mbox{[}new\+\_\+world\mbox{]}\char`\"{} to locations. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em user} & (user who granted access) \\
+\hline
+\mbox{\texttt{ in}}  & {\em world} & (new world which is added) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classUser_af04c2ca740500684647296657f61b0e8}\label{classUser_af04c2ca740500684647296657f61b0e8}} 
+\index{User@{User}!AddNewObject@{AddNewObject}}
+\index{AddNewObject@{AddNewObject}!User@{User}}
+\doxysubsubsection{\texorpdfstring{AddNewObject()}{AddNewObject()}}
+{\footnotesize\ttfamily int User\+::\+Add\+New\+Object (\begin{DoxyParamCaption}\item[{std\+::string}]{path,  }\item[{std\+::string}]{id,  }\item[{bool}]{force = {\ttfamily false} }\end{DoxyParamCaption})}
+
+
+
+Adds a new empty object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & \\
+\hline
+{\em id} & \\
+\hline
+{\em force} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Error\+Code. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUser_ae4704ed6b74499db227a23607998ea40}\label{classUser_ae4704ed6b74499db227a23607998ea40}} 
+\index{User@{User}!AddRequest@{AddRequest}}
+\index{AddRequest@{AddRequest}!User@{User}}
+\doxysubsubsection{\texorpdfstring{AddRequest()}{AddRequest()}}
+{\footnotesize\ttfamily bool User\+::\+Add\+Request (\begin{DoxyParamCaption}\item[{std\+::string}]{user,  }\item[{std\+::string}]{world }\end{DoxyParamCaption})}
+
+Adds a new access-\/request. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em user} & (user who asks for access) \\
+\hline
+\mbox{\texttt{ in}}  & {\em world} & (world to gran access for) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+success. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUser_ac51102b552ffdc125a6e0d1901742474}\label{classUser_ac51102b552ffdc125a6e0d1901742474}} 
+\index{User@{User}!CheckAccessToLocations@{CheckAccessToLocations}}
+\index{CheckAccessToLocations@{CheckAccessToLocations}!User@{User}}
+\doxysubsubsection{\texorpdfstring{CheckAccessToLocations()}{CheckAccessToLocations()}}
+{\footnotesize\ttfamily bool User\+::\+Check\+Access\+To\+Locations (\begin{DoxyParamCaption}\item[{std\+::string}]{path }\end{DoxyParamCaption})}
+
+Check whether user has access to given path. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em path.} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classUser_a1b64d3b33b7c58045d21ff40a21c6dc0}\label{classUser_a1b64d3b33b7c58045d21ff40a21c6dc0}} 
+\index{User@{User}!CheckGameRunning@{CheckGameRunning}}
+\index{CheckGameRunning@{CheckGameRunning}!User@{User}}
+\doxysubsubsection{\texorpdfstring{CheckGameRunning()}{CheckGameRunning()}}
+{\footnotesize\ttfamily bool User\+::\+Check\+Game\+Running (\begin{DoxyParamCaption}\item[{std\+::string}]{path }\end{DoxyParamCaption})}
+
+Tries to run game. Extracts user and world from path and tries to run game with all existing players. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em path} & (path to extract information from) \\
+\hline
+\mbox{\texttt{ in}}  & {\em number} & (of players to check) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+boolean indicating success. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUser_a4168ab994b8eaf500b86cec7adde69af}\label{classUser_a4168ab994b8eaf500b86cec7adde69af}} 
+\index{User@{User}!CreateBackup@{CreateBackup}}
+\index{CreateBackup@{CreateBackup}!User@{User}}
+\doxysubsubsection{\texorpdfstring{CreateBackup()}{CreateBackup()}}
+{\footnotesize\ttfamily int User\+::\+Create\+Backup (\begin{DoxyParamCaption}\item[{std\+::string}]{user,  }\item[{std\+::string}]{world }\end{DoxyParamCaption})}
+
+Create a backup of given world. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em user} & \\
+\hline
+\mbox{\texttt{ in}}  & {\em world} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Error\+Code. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUser_a5264ccf68039e67d5a6d2f179119c203}\label{classUser_a5264ccf68039e67d5a6d2f179119c203}} 
+\index{User@{User}!CreateNewWorld@{CreateNewWorld}}
+\index{CreateNewWorld@{CreateNewWorld}!User@{User}}
+\doxysubsubsection{\texorpdfstring{CreateNewWorld()}{CreateNewWorld()}}
+{\footnotesize\ttfamily int User\+::\+Create\+New\+World (\begin{DoxyParamCaption}\item[{std\+::string}]{name,  }\item[{int}]{port }\end{DoxyParamCaption})}
+
+
+
+Creates a new world for this user. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & (Name of the world) \\
+\hline
+{\em port} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Success code. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUser_a00315e666417c9002280ebc9095be92f}\label{classUser_a00315e666417c9002280ebc9095be92f}} 
+\index{User@{User}!DeleteBackup@{DeleteBackup}}
+\index{DeleteBackup@{DeleteBackup}!User@{User}}
+\doxysubsubsection{\texorpdfstring{DeleteBackup()}{DeleteBackup()}}
+{\footnotesize\ttfamily int User\+::\+Delete\+Backup (\begin{DoxyParamCaption}\item[{std\+::string}]{user,  }\item[{std\+::string}]{backup }\end{DoxyParamCaption})}
+
+Delete a backup of given world. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em user} & \\
+\hline
+\mbox{\texttt{ in}}  & {\em backup} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Error\+Code. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUser_a715fe278b08fe6c56ce889c0e1227423}\label{classUser_a715fe278b08fe6c56ce889c0e1227423}} 
+\index{User@{User}!DeleteFile@{DeleteFile}}
+\index{DeleteFile@{DeleteFile}!User@{User}}
+\doxysubsubsection{\texorpdfstring{DeleteFile()}{DeleteFile()}}
+{\footnotesize\ttfamily int User\+::\+Delete\+File (\begin{DoxyParamCaption}\item[{std\+::string}]{path,  }\item[{std\+::string}]{subcategory }\end{DoxyParamCaption})}
+
+delete a given file (subcategory) 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em path} & (path to category) \\
+\hline
+\mbox{\texttt{ in}}  & {\em subcategory} & return Error\+Code. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classUser_a3984584a989bb7d71a2e02ee753240a1}\label{classUser_a3984584a989bb7d71a2e02ee753240a1}} 
+\index{User@{User}!DeleteObject@{DeleteObject}}
+\index{DeleteObject@{DeleteObject}!User@{User}}
+\doxysubsubsection{\texorpdfstring{DeleteObject()}{DeleteObject()}}
+{\footnotesize\ttfamily int User\+::\+Delete\+Object (\begin{DoxyParamCaption}\item[{std\+::string}]{path,  }\item[{std\+::string}]{object }\end{DoxyParamCaption})}
+
+delete a given object 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em path} & (path to json) \\
+\hline
+\mbox{\texttt{ in}}  & {\em object} & (object to delete from json) return Error\+Code. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classUser_aa26c1f5ece51b462f4f2b074acc68517}\label{classUser_aa26c1f5ece51b462f4f2b074acc68517}} 
+\index{User@{User}!DeleteWorld@{DeleteWorld}}
+\index{DeleteWorld@{DeleteWorld}!User@{User}}
+\doxysubsubsection{\texorpdfstring{DeleteWorld()}{DeleteWorld()}}
+{\footnotesize\ttfamily int User\+::\+Delete\+World (\begin{DoxyParamCaption}\item[{std\+::string}]{world }\end{DoxyParamCaption})}
+
+delete a given file (subcategory) 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em world} & return Error\+Code. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classUser_ae1130e22b5e62a6a8ba29b43d07662b1}\label{classUser_ae1130e22b5e62a6a8ba29b43d07662b1}} 
+\index{User@{User}!GetBackups@{GetBackups}}
+\index{GetBackups@{GetBackups}!User@{User}}
+\doxysubsubsection{\texorpdfstring{GetBackups()}{GetBackups()}}
+{\footnotesize\ttfamily std\+::string User\+::\+Get\+Backups (\begin{DoxyParamCaption}\item[{std\+::string}]{user,  }\item[{std\+::string}]{world }\end{DoxyParamCaption})}
+
+Get Overview of a backups. (f.\+e. world1/rooms = trainstation, hospital...) 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em user} & \\
+\hline
+\mbox{\texttt{ in}}  & {\em world} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+overview page of all backups 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUser_afe3c1f15f2ce483aae8b778d07d36bba}\label{classUser_afe3c1f15f2ce483aae8b778d07d36bba}} 
+\index{User@{User}!GetCategory@{GetCategory}}
+\index{GetCategory@{GetCategory}!User@{User}}
+\doxysubsubsection{\texorpdfstring{GetCategory()}{GetCategory()}}
+{\footnotesize\ttfamily std\+::string User\+::\+Get\+Category (\begin{DoxyParamCaption}\item[{std\+::string}]{path,  }\item[{std\+::string}]{user,  }\item[{std\+::string}]{world,  }\item[{std\+::string}]{category }\end{DoxyParamCaption})}
+
+Get Overview of a category. (f.\+e. world1/rooms = trainstation, hospital...) \mbox{\Hypertarget{classUser_ab2624b2b405e56405459e3176a25ce81}\label{classUser_ab2624b2b405e56405459e3176a25ce81}} 
+\index{User@{User}!GetObjects@{GetObjects}}
+\index{GetObjects@{GetObjects}!User@{User}}
+\doxysubsubsection{\texorpdfstring{GetObjects()}{GetObjects()}}
+{\footnotesize\ttfamily std\+::string User\+::\+Get\+Objects (\begin{DoxyParamCaption}\item[{std\+::string}]{path,  }\item[{std\+::string}]{user,  }\item[{std\+::string}]{world,  }\item[{std\+::string}]{category,  }\item[{std\+::string}]{sub }\end{DoxyParamCaption})}
+
+Get Overview of a Sub\+Category. (f.\+e. world1/rooms/trainstation = platform a, great\+\_\+hall ...) \mbox{\Hypertarget{classUser_ad6867a65fc236faa70236d838c6b0839}\label{classUser_ad6867a65fc236faa70236d838c6b0839}} 
+\index{User@{User}!GetOverview@{GetOverview}}
+\index{GetOverview@{GetOverview}!User@{User}}
+\doxysubsubsection{\texorpdfstring{GetOverview()}{GetOverview()}}
+{\footnotesize\ttfamily std\+::string User\+::\+Get\+Overview (\begin{DoxyParamCaption}\item[{nlohmann\+::json}]{shared\+\_\+worlds,  }\item[{nlohmann\+::json}]{all\+\_\+worlds }\end{DoxyParamCaption})}
+
+Gets all worlds and parses them into the overview page. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em shared\+\_\+worlds} & (json with all shared\+\_\+worlds and ports) \\
+\hline
+\mbox{\texttt{ in}}  & {\em all\+\_\+worlds} & (json with all worlds and ports) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+overview-\/page. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUser_ab4cb0afb43b43b6844ba998066248b1c}\label{classUser_ab4cb0afb43b43b6844ba998066248b1c}} 
+\index{User@{User}!GetPortOfWorld@{GetPortOfWorld}}
+\index{GetPortOfWorld@{GetPortOfWorld}!User@{User}}
+\doxysubsubsection{\texorpdfstring{GetPortOfWorld()}{GetPortOfWorld()}}
+{\footnotesize\ttfamily int User\+::\+Get\+Port\+Of\+World (\begin{DoxyParamCaption}\item[{std\+::string}]{path }\end{DoxyParamCaption})}
+
+Get a attribute of a certain world 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em path} & (path to world) \\
+\hline
+\mbox{\texttt{ in}}  & {\em attr} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classUser_a7a031063a9c9d49a5277af84e5038cbf}\label{classUser_a7a031063a9c9d49a5277af84e5038cbf}} 
+\index{User@{User}!GetWorld@{GetWorld}}
+\index{GetWorld@{GetWorld}!User@{User}}
+\doxysubsubsection{\texorpdfstring{GetWorld()}{GetWorld()}}
+{\footnotesize\ttfamily std\+::string User\+::\+Get\+World (\begin{DoxyParamCaption}\item[{std\+::string}]{path,  }\item[{std\+::string}]{user,  }\item[{std\+::string}]{world,  }\item[{int}]{port }\end{DoxyParamCaption})}
+
+
+
+Get Overview of categories in one world. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em path} & (path to current world) \\
+\hline
+{\em world} & (name of accessed world) \\
+\hline
+{\em port} & (port of world, as it might not be the current users port) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+H\+T\+ML page or empty string. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUser_aa40b19ef7c777d78216295102760af84}\label{classUser_aa40b19ef7c777d78216295102760af84}} 
+\index{User@{User}!RemoveRequest@{RemoveRequest}}
+\index{RemoveRequest@{RemoveRequest}!User@{User}}
+\doxysubsubsection{\texorpdfstring{RemoveRequest()}{RemoveRequest()}}
+{\footnotesize\ttfamily void User\+::\+Remove\+Request (\begin{DoxyParamCaption}\item[{std\+::string}]{user,  }\item[{std\+::string}]{world }\end{DoxyParamCaption})}
+
+Removes an access-\/request. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em user} & (user who asks for access) \\
+\hline
+\mbox{\texttt{ in}}  & {\em world} & (world to gran access for) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+success. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUser_a1def35094506ab9883041706370c7a48}\label{classUser_a1def35094506ab9883041706370c7a48}} 
+\index{User@{User}!RestoreBackup@{RestoreBackup}}
+\index{RestoreBackup@{RestoreBackup}!User@{User}}
+\doxysubsubsection{\texorpdfstring{RestoreBackup()}{RestoreBackup()}}
+{\footnotesize\ttfamily int User\+::\+Restore\+Backup (\begin{DoxyParamCaption}\item[{std\+::string}]{user,  }\item[{std\+::string}]{backup }\end{DoxyParamCaption})}
+
+Restores a backup of given world. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em user} & \\
+\hline
+\mbox{\texttt{ in}}  & {\em backup} & (given backup to restore) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Error\+Code. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUser_aafc2ffb6e48e3645f2e770be45b97525}\label{classUser_aafc2ffb6e48e3645f2e770be45b97525}} 
+\index{User@{User}!SafeUser@{SafeUser}}
+\index{SafeUser@{SafeUser}!User@{User}}
+\doxysubsubsection{\texorpdfstring{SafeUser()}{SafeUser()}}
+{\footnotesize\ttfamily void User\+::\+Safe\+User (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+Write users jsons to disc. \mbox{\Hypertarget{classUser_af4713aee33f5bbea683817a873338a6a}\label{classUser_af4713aee33f5bbea683817a873338a6a}} 
+\index{User@{User}!WriteObject@{WriteObject}}
+\index{WriteObject@{WriteObject}!User@{User}}
+\doxysubsubsection{\texorpdfstring{WriteObject()}{WriteObject()}}
+{\footnotesize\ttfamily int User\+::\+Write\+Object (\begin{DoxyParamCaption}\item[{std\+::string}]{request }\end{DoxyParamCaption})}
+
+Write json to disc. Used to create a new object or overwrite an existsing object. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em request} & (request to create new, or change existsing) \\
+\hline
+\mbox{\texttt{ in}}  & {\em force} & (If true, then writing is set even if game is not running.) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Error\+Code. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/fux/\+Documents/programming/\+Der-\/\+Zug/src/gui/src/users/user.\+h\item 
+/home/fux/\+Documents/programming/\+Der-\/\+Zug/src/gui/src/users/user.\+cc\end{DoxyCompactItemize}

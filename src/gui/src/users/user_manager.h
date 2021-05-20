@@ -13,8 +13,10 @@
 #include <shared_mutex>
 #include <string>
 
-#include "user.h"
 #include "nlohmann/json.hpp"
+
+#include "user.h"
+#include "world/worlds.h"
 
 /**
  * class storing all users.
@@ -25,7 +27,10 @@ class UserManager {
     /**
      * constructor loading all users stored on disc.
      */
-    UserManager(std::string path, std::vector<std::string> categories);
+    UserManager(std::string path);
+
+    // getter:
+    Worlds* worlds() const;
 
     /**
      * Returns given user, if exists
@@ -115,7 +120,7 @@ class UserManager {
     nlohmann::json GetSharedWorlds(std::string username) const;
 
     int GetPortOfWorld(std::string user, std::string world) const;
-   
+
   private:
     std::map<std::string, User*> users_;  ///< Map of all users.
     mutable std::shared_mutex shared_mutex_users_;
@@ -125,6 +130,8 @@ class UserManager {
     const std::vector<std::string> categories_;
     int ports_;
     mutable std::shared_mutex shared_mutex_ports_;
+
+    Worlds* worlds_;
 
     /**
      * Adds new user

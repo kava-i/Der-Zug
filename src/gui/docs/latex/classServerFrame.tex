@@ -1,0 +1,344 @@
+\hypertarget{classServerFrame}{}\doxysection{Server\+Frame Class Reference}
+\label{classServerFrame}\index{ServerFrame@{ServerFrame}}
+
+
+{\ttfamily \#include $<$server\+\_\+frame.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classServerFrame_a84d4ec7b4c9437a19e1ffc3b25d160c0}{Server\+Frame}} ()
+\item 
+\mbox{\Hypertarget{classServerFrame_ac92f81b92b9f408bf0adf63145b7cc30}\label{classServerFrame_ac92f81b92b9f408bf0adf63145b7cc30}} 
+\mbox{\hyperlink{classUserManager}{User\+Manager}} \& {\bfseries user\+\_\+manager} ()
+\item 
+void \mbox{\hyperlink{classServerFrame_ac2e95bdceb25f11c6debee87243ec597}{Start}} (int port)
+\item 
+void \mbox{\hyperlink{classServerFrame_a423d4eac3d457f6b44c8598ec852d7f0}{Login\+Page}} (const httplib\+::\+Request \&req, httplib\+::\+Response \&resp) const
+\item 
+void \mbox{\hyperlink{classServerFrame_a038bd8ffc3ef32e1744ccbc83a232561}{Do\+Login}} (const httplib\+::\+Request \&req, httplib\+::\+Response \&resp)
+\item 
+void \mbox{\hyperlink{classServerFrame_a090a7cdebeadb1d6aa597bdbac1f0399}{Do\+Registration}} (const httplib\+::\+Request \&req, httplib\+::\+Response \&resp)
+\item 
+void \mbox{\hyperlink{classServerFrame_a36bb0d728be3341a26e2896f9938aed1}{Do\+Logout}} (const httplib\+::\+Request \&req, httplib\+::\+Response \&resp)
+\item 
+void \mbox{\hyperlink{classServerFrame_ac3924317926abe37f21703e2741c59b7}{Del\+User}} (const httplib\+::\+Request \&req, httplib\+::\+Response \&resp)
+\begin{DoxyCompactList}\small\item\em Deletes a user. \mbox{\hyperlink{classUser}{User}} is deleted on own request. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerFrame_a9420c89b4f73240cf7e89fb2bb222197}{Serve\+File}} (const httplib\+::\+Request \&req, httplib\+::\+Response \&resp, bool backup=false) const
+\item 
+void \mbox{\hyperlink{classServerFrame_aeb889ff316696c1e4dc9d247663f4516}{Add\+Elem}} (const httplib\+::\+Request \&req, httplib\+::\+Response \&resp)
+\begin{DoxyCompactList}\small\item\em Add new element (world, subcategory, object). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerFrame_a9abeb7563bb69a9e59da307c2161651b}{Del\+Elem}} (const httplib\+::\+Request \&req, httplib\+::\+Response \&resp)
+\begin{DoxyCompactList}\small\item\em Delete element (world, subcategory, object). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerFrame_a5c24f675afee5b311f9c3afc1598e582}{Write\+Object}} (const httplib\+::\+Request \&req, httplib\+::\+Response \&resp)
+\begin{DoxyCompactList}\small\item\em Write (modified) object. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerFrame_af9fc5b007c3c71eb5cd276c92051fa52}{Backups}} (const httplib\+::\+Request \&req, httplib\+::\+Response \&resp, std\+::string action)
+\begin{DoxyCompactList}\small\item\em Creates a backup of the selected world. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerFrame_a93efcb0d91878ac6f60383cd860d067e}{Grant\+Access\+To}} (const httplib\+::\+Request \&req, httplib\+::\+Response \&resp)
+\begin{DoxyCompactList}\small\item\em Grants given user access to world of other user. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerFrame_a2d7702a53d018b2139dc9e1e2b8fa559}{Create\+Request}} (const httplib\+::\+Request \&req, httplib\+::\+Response \&resp)
+\begin{DoxyCompactList}\small\item\em Grants given user access to world of other user. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerFrame_a633732bb90b812959ca710de7334209e}{Check\+Running}} (const httplib\+::\+Request \&req, httplib\+::\+Response \&resp)
+\begin{DoxyCompactList}\small\item\em Checks whether game is still running. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerFrame_a6d7b8653b56f5765d499c0b7a95d8ab0}{Get\+Log}} (const httplib\+::\+Request \&req, httplib\+::\+Response \&resp)
+\begin{DoxyCompactList}\small\item\em Checks whether game is still running. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classServerFrame_a2c50ae6e7aa603925efa3d9bbd25be6f}{Start\+Game}} (const httplib\+::\+Request \&req, httplib\+::\+Response \&resp)
+\begin{DoxyCompactList}\small\item\em Checks whether game is still running. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classServerFrame_afa3fdb344e0b03ca90b497a592b8bea4}{Is\+Running}} ()
+\begin{DoxyCompactList}\small\item\em Gives feedback on whether server is still running ~\newline
+ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classServerFrame_ac95a56f473602173256ef7de5f2a4a98}\label{classServerFrame_ac95a56f473602173256ef7de5f2a4a98}} 
+void \mbox{\hyperlink{classServerFrame_ac95a56f473602173256ef7de5f2a4a98}{Stop}} ()
+\begin{DoxyCompactList}\small\item\em Makes server stop running. ~\newline
+ \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classServerFrame_a75c20c241e907a38eceec201d028d25c}\label{classServerFrame_a75c20c241e907a38eceec201d028d25c}} 
+\mbox{\hyperlink{classServerFrame_a75c20c241e907a38eceec201d028d25c}{$\sim$\+Server\+Frame}} ()
+\begin{DoxyCompactList}\small\item\em Destructor, which stops server. ~\newline
+ \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+fux 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classServerFrame_a84d4ec7b4c9437a19e1ffc3b25d160c0}\label{classServerFrame_a84d4ec7b4c9437a19e1ffc3b25d160c0}} 
+\index{ServerFrame@{ServerFrame}!ServerFrame@{ServerFrame}}
+\index{ServerFrame@{ServerFrame}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{ServerFrame()}{ServerFrame()}}
+{\footnotesize\ttfamily Server\+Frame\+::\+Server\+Frame (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Constructor. Creating user\+\_\+manager with path to user-\/data and possible categories. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classServerFrame_aeb889ff316696c1e4dc9d247663f4516}\label{classServerFrame_aeb889ff316696c1e4dc9d247663f4516}} 
+\index{ServerFrame@{ServerFrame}!AddElem@{AddElem}}
+\index{AddElem@{AddElem}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{AddElem()}{AddElem()}}
+{\footnotesize\ttfamily void Server\+Frame\+::\+Add\+Elem (\begin{DoxyParamCaption}\item[{const httplib\+::\+Request \&}]{req,  }\item[{httplib\+::\+Response \&}]{resp }\end{DoxyParamCaption})}
+
+
+
+Add new element (world, subcategory, object). 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em req} & (reference to request) \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em resp} & (reference to response) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServerFrame_af9fc5b007c3c71eb5cd276c92051fa52}\label{classServerFrame_af9fc5b007c3c71eb5cd276c92051fa52}} 
+\index{ServerFrame@{ServerFrame}!Backups@{Backups}}
+\index{Backups@{Backups}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{Backups()}{Backups()}}
+{\footnotesize\ttfamily void Server\+Frame\+::\+Backups (\begin{DoxyParamCaption}\item[{const httplib\+::\+Request \&}]{req,  }\item[{httplib\+::\+Response \&}]{resp,  }\item[{std\+::string}]{action }\end{DoxyParamCaption})}
+
+
+
+Creates a backup of the selected world. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em req} & (reference to request) \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em resp} & (reference to response) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServerFrame_a633732bb90b812959ca710de7334209e}\label{classServerFrame_a633732bb90b812959ca710de7334209e}} 
+\index{ServerFrame@{ServerFrame}!CheckRunning@{CheckRunning}}
+\index{CheckRunning@{CheckRunning}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{CheckRunning()}{CheckRunning()}}
+{\footnotesize\ttfamily void Server\+Frame\+::\+Check\+Running (\begin{DoxyParamCaption}\item[{const httplib\+::\+Request \&}]{req,  }\item[{httplib\+::\+Response \&}]{resp }\end{DoxyParamCaption})}
+
+
+
+Checks whether game is still running. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em req} & (reference to request) \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em resp} & (reference to response) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServerFrame_a2d7702a53d018b2139dc9e1e2b8fa559}\label{classServerFrame_a2d7702a53d018b2139dc9e1e2b8fa559}} 
+\index{ServerFrame@{ServerFrame}!CreateRequest@{CreateRequest}}
+\index{CreateRequest@{CreateRequest}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{CreateRequest()}{CreateRequest()}}
+{\footnotesize\ttfamily void Server\+Frame\+::\+Create\+Request (\begin{DoxyParamCaption}\item[{const httplib\+::\+Request \&}]{req,  }\item[{httplib\+::\+Response \&}]{resp }\end{DoxyParamCaption})}
+
+
+
+Grants given user access to world of other user. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em req} & (reference to request) \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em resp} & (reference to response) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServerFrame_a9abeb7563bb69a9e59da307c2161651b}\label{classServerFrame_a9abeb7563bb69a9e59da307c2161651b}} 
+\index{ServerFrame@{ServerFrame}!DelElem@{DelElem}}
+\index{DelElem@{DelElem}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{DelElem()}{DelElem()}}
+{\footnotesize\ttfamily void Server\+Frame\+::\+Del\+Elem (\begin{DoxyParamCaption}\item[{const httplib\+::\+Request \&}]{req,  }\item[{httplib\+::\+Response \&}]{resp }\end{DoxyParamCaption})}
+
+
+
+Delete element (world, subcategory, object). 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em req} & (reference to request) \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em resp} & (reference to response) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServerFrame_ac3924317926abe37f21703e2741c59b7}\label{classServerFrame_ac3924317926abe37f21703e2741c59b7}} 
+\index{ServerFrame@{ServerFrame}!DelUser@{DelUser}}
+\index{DelUser@{DelUser}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{DelUser()}{DelUser()}}
+{\footnotesize\ttfamily void Server\+Frame\+::\+Del\+User (\begin{DoxyParamCaption}\item[{const httplib\+::\+Request \&}]{req,  }\item[{httplib\+::\+Response \&}]{resp }\end{DoxyParamCaption})}
+
+
+
+Deletes a user. \mbox{\hyperlink{classUser}{User}} is deleted on own request. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em req} & (reference to request) \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em resp} & (reference to response) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServerFrame_a038bd8ffc3ef32e1744ccbc83a232561}\label{classServerFrame_a038bd8ffc3ef32e1744ccbc83a232561}} 
+\index{ServerFrame@{ServerFrame}!DoLogin@{DoLogin}}
+\index{DoLogin@{DoLogin}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{DoLogin()}{DoLogin()}}
+{\footnotesize\ttfamily void Server\+Frame\+::\+Do\+Login (\begin{DoxyParamCaption}\item[{const httplib\+::\+Request \&}]{req,  }\item[{httplib\+::\+Response \&}]{resp }\end{DoxyParamCaption})}
+
+function to handle login 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em req} & (reference to request) \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em resp} & (server response) \\
+\hline
+\mbox{\texttt{ in}}  & {\em user\+\_\+manager} & (user\+\_\+manager to check whether user exists) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServerFrame_a36bb0d728be3341a26e2896f9938aed1}\label{classServerFrame_a36bb0d728be3341a26e2896f9938aed1}} 
+\index{ServerFrame@{ServerFrame}!DoLogout@{DoLogout}}
+\index{DoLogout@{DoLogout}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{DoLogout()}{DoLogout()}}
+{\footnotesize\ttfamily void Server\+Frame\+::\+Do\+Logout (\begin{DoxyParamCaption}\item[{const httplib\+::\+Request \&}]{req,  }\item[{httplib\+::\+Response \&}]{resp }\end{DoxyParamCaption})}
+
+logout a user 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em req} & (reference to request) \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em resp} & (server response) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServerFrame_a090a7cdebeadb1d6aa597bdbac1f0399}\label{classServerFrame_a090a7cdebeadb1d6aa597bdbac1f0399}} 
+\index{ServerFrame@{ServerFrame}!DoRegistration@{DoRegistration}}
+\index{DoRegistration@{DoRegistration}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{DoRegistration()}{DoRegistration()}}
+{\footnotesize\ttfamily void Server\+Frame\+::\+Do\+Registration (\begin{DoxyParamCaption}\item[{const httplib\+::\+Request \&}]{req,  }\item[{httplib\+::\+Response \&}]{resp }\end{DoxyParamCaption})}
+
+function to handle registration 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em req} & (reference to request) \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em resp} & (server response) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServerFrame_a6d7b8653b56f5765d499c0b7a95d8ab0}\label{classServerFrame_a6d7b8653b56f5765d499c0b7a95d8ab0}} 
+\index{ServerFrame@{ServerFrame}!GetLog@{GetLog}}
+\index{GetLog@{GetLog}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{GetLog()}{GetLog()}}
+{\footnotesize\ttfamily void Server\+Frame\+::\+Get\+Log (\begin{DoxyParamCaption}\item[{const httplib\+::\+Request \&}]{req,  }\item[{httplib\+::\+Response \&}]{resp }\end{DoxyParamCaption})}
+
+
+
+Checks whether game is still running. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em req} & (reference to request) \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em resp} & (reference to response) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServerFrame_a93efcb0d91878ac6f60383cd860d067e}\label{classServerFrame_a93efcb0d91878ac6f60383cd860d067e}} 
+\index{ServerFrame@{ServerFrame}!GrantAccessTo@{GrantAccessTo}}
+\index{GrantAccessTo@{GrantAccessTo}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{GrantAccessTo()}{GrantAccessTo()}}
+{\footnotesize\ttfamily void Server\+Frame\+::\+Grant\+Access\+To (\begin{DoxyParamCaption}\item[{const httplib\+::\+Request \&}]{req,  }\item[{httplib\+::\+Response \&}]{resp }\end{DoxyParamCaption})}
+
+
+
+Grants given user access to world of other user. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em req} & (reference to request) \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em resp} & (reference to response) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServerFrame_afa3fdb344e0b03ca90b497a592b8bea4}\label{classServerFrame_afa3fdb344e0b03ca90b497a592b8bea4}} 
+\index{ServerFrame@{ServerFrame}!IsRunning@{IsRunning}}
+\index{IsRunning@{IsRunning}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{IsRunning()}{IsRunning()}}
+{\footnotesize\ttfamily bool Server\+Frame\+::\+Is\+Running (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Gives feedback on whether server is still running ~\newline
+ 
+
+\begin{DoxyReturn}{Returns}
+boolean ~\newline
+ 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classServerFrame_a423d4eac3d457f6b44c8598ec852d7f0}\label{classServerFrame_a423d4eac3d457f6b44c8598ec852d7f0}} 
+\index{ServerFrame@{ServerFrame}!LoginPage@{LoginPage}}
+\index{LoginPage@{LoginPage}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{LoginPage()}{LoginPage()}}
+{\footnotesize\ttfamily void Server\+Frame\+::\+Login\+Page (\begin{DoxyParamCaption}\item[{const httplib\+::\+Request \&}]{req,  }\item[{httplib\+::\+Response \&}]{resp }\end{DoxyParamCaption}) const}
+
+Function to send login page, or overview page, depending on status\+: logged in/ not logged in. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em req} & (reference to request) \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em resp} & (server response) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServerFrame_a9420c89b4f73240cf7e89fb2bb222197}\label{classServerFrame_a9420c89b4f73240cf7e89fb2bb222197}} 
+\index{ServerFrame@{ServerFrame}!ServeFile@{ServeFile}}
+\index{ServeFile@{ServeFile}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{ServeFile()}{ServeFile()}}
+{\footnotesize\ttfamily void Server\+Frame\+::\+Serve\+File (\begin{DoxyParamCaption}\item[{const httplib\+::\+Request \&}]{req,  }\item[{httplib\+::\+Response \&}]{resp,  }\item[{bool}]{backup = {\ttfamily false} }\end{DoxyParamCaption}) const}
+
+Function to send all pages (except login and start page). Redirect to login depending on status\+: logged in/ not logged in. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em req} & (reference to request) \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em resp} & (server response) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServerFrame_ac2e95bdceb25f11c6debee87243ec597}\label{classServerFrame_ac2e95bdceb25f11c6debee87243ec597}} 
+\index{ServerFrame@{ServerFrame}!Start@{Start}}
+\index{Start@{Start}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{Start()}{Start()}}
+{\footnotesize\ttfamily void Server\+Frame\+::\+Start (\begin{DoxyParamCaption}\item[{int}]{port }\end{DoxyParamCaption})}
+
+Starts server. Server is started on given port. Also handlers are initialized. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em port} & (Port to start server on) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServerFrame_a2c50ae6e7aa603925efa3d9bbd25be6f}\label{classServerFrame_a2c50ae6e7aa603925efa3d9bbd25be6f}} 
+\index{ServerFrame@{ServerFrame}!StartGame@{StartGame}}
+\index{StartGame@{StartGame}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{StartGame()}{StartGame()}}
+{\footnotesize\ttfamily void Server\+Frame\+::\+Start\+Game (\begin{DoxyParamCaption}\item[{const httplib\+::\+Request \&}]{req,  }\item[{httplib\+::\+Response \&}]{resp }\end{DoxyParamCaption})}
+
+
+
+Checks whether game is still running. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em req} & (reference to request) \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em resp} & (reference to response) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classServerFrame_a5c24f675afee5b311f9c3afc1598e582}\label{classServerFrame_a5c24f675afee5b311f9c3afc1598e582}} 
+\index{ServerFrame@{ServerFrame}!WriteObject@{WriteObject}}
+\index{WriteObject@{WriteObject}!ServerFrame@{ServerFrame}}
+\doxysubsubsection{\texorpdfstring{WriteObject()}{WriteObject()}}
+{\footnotesize\ttfamily void Server\+Frame\+::\+Write\+Object (\begin{DoxyParamCaption}\item[{const httplib\+::\+Request \&}]{req,  }\item[{httplib\+::\+Response \&}]{resp }\end{DoxyParamCaption})}
+
+
+
+Write (modified) object. 
+
+
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em req} & (reference to request) \\
+\hline
+\mbox{\texttt{ in,out}}  & {\em resp} & (reference to response) \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/fux/\+Documents/programming/\+Der-\/\+Zug/src/gui/src/server/server\+\_\+frame.\+h\item 
+/home/fux/\+Documents/programming/\+Der-\/\+Zug/src/gui/src/server/server\+\_\+frame.\+cc\end{DoxyCompactItemize}

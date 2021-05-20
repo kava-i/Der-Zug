@@ -1,6 +1,6 @@
 /**
  * @author fux (georgbuechner)
- */
+*/
 
 global_error = false;
 
@@ -178,7 +178,6 @@ function GetAsType(elem) {
       if (is_number == false)
         throw(elem.value + " is not a number.");
       return parseFloat(elem.value);
-
     }
     else if (elem.getAttribute("custom") == "str_int") {
       var is_number = /^\d+$/.test(elem.value);
@@ -266,7 +265,7 @@ function WriteElem(direct=false, force=false) {
     //If request fails, display message to user.
     console.log("Response: ", this.responseText);
     if (xhttp.status != 200) {
-      if (this.responseText = "9") {
+      if (this.responseText == "9") {
         document.getElementById("modal_write").style.display = "none";
         document.getElementById("modal_log").style.display = "inline-block";
         document.getElementById("check_msg_log").style.color = "red";
@@ -281,7 +280,8 @@ function WriteElem(direct=false, force=false) {
     }
     //Display success message to user.
     else {
-      window.location=window.location;
+      sessionStorage.setItem("notification", "Changes written to disc.");
+      window.location = window.location;
     }
   }
 }

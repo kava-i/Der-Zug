@@ -1,14 +1,20 @@
 {% include "temp_header" %}
 
+  {{ log("rendered header") }}
+
   <!-- Name and ID (default value for non-set-values -->
   <li><label>Name:</label><input id="name" value="{{ default(name, "") }}"></li>
   <li><label>Id:</label><input id="id" value="{{ id }}"></li>
+
+  {{ log("rendered name+id") }}
 
   <!-- Description (added by include) expand non-set optional values -->
   <li custom="list">
     <label>Description:</label> 
     {% include "temp_description" %}
   </li>
+
+  {{ log("rendered description") }}
 
   <!-- Exits (default value for non-set-values) -->
   <li custom="map">
@@ -27,6 +33,8 @@
     </ul>
   </li>
 
+  {{ log("rendered exits") }}
+
   <!-- Characters (default value for non-set-values) -->
   <li custom="list">
     <label>Characters:</label>
@@ -42,6 +50,8 @@
     </ul>
   </li>
     
+  {{ log("rendered characters") }}
+
   <!-- Details (default value for non-set-values) -->
   <li custom="list">
     <label>Details:</label>
@@ -56,6 +66,8 @@
       {% endfor %}
     </ul>
   </li>
+
+  {{ log("rendered details") }}
 
   <!-- Items (default value for non-set-values) -->
   <li custom="list">
@@ -72,21 +84,34 @@
     </ul>
   </li>
   
+  {{ log("rendered items") }}
+
   <!-- Handlers (default value for non-set-values) -->
   <li custom="list">
     <label>Handlers:</label>
     <ul id="handlers">
       {% for handler in default(handlers, [{}]) %}
         <li custom="object">
-          <input id="id" placeholder="function" value="{{default(handler.id, "")}}">
-          <input id="string" placeholder="cmd (string)" value="{{default(handler.string, "")}}">
-          <input id="regex" placeholder="cmd (regex)" value="{{default(handler.regex, "")}}">
-          <input custom="int" id="priority" placeholder="priority" class="short" 
-              value="{{default(handler.priority, 0)}}">
+          <input class="long_inp" id="id" placeholder="function" 
+                             value="{{default(handler.id,"")}}">
           <span class="mod_elem" onclick="del_elem('handlers',{{loop.index}})">-</span>
           <span class="mod_elem" onclick="add_elem('handlers',{{loop.index}})">+</span>
+          <br>
+          <input class="long_inp" id="infos" placeholder="pass arguments (json)"
+                                  custom="json" value={{default(handler.infos,{})}}>
+          <br>
+          <input id="string" placeholder="cmd (string)"
+                             value="{{default(handler.string, "")}}">
+          <input id="regex" placeholder="cmd (regex)" 
+                             value="{{default(handler.regex, "")}}">
+          <input custom="int" id="priority" placeholder="priority" class="short" 
+              value="{{default(handler.priority, 0)}}">
+          <br>
         </li>
       {% endfor %}
     </ul>
   </li>
+
+  {{ log("rendered handler") }}
+  
 {% include "temp_footer" %}

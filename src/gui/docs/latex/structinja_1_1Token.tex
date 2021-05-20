@@ -1,0 +1,87 @@
+\hypertarget{structinja_1_1Token}{}\doxysection{inja\+::Token Struct Reference}
+\label{structinja_1_1Token}\index{inja::Token@{inja::Token}}
+
+
+Helper-\/class for the inja \mbox{\hyperlink{classinja_1_1Lexer}{Lexer}}.  
+
+
+
+
+{\ttfamily \#include $<$inja.\+hpp$>$}
+
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structinja_1_1Token_a2e482ca14ccd167bf744a85c83af14fa}\label{structinja_1_1Token_a2e482ca14ccd167bf744a85c83af14fa}} 
+enum {\bfseries Kind} \{ \newline
+{\bfseries Text}, 
+{\bfseries Expression\+Open}, 
+{\bfseries Expression\+Close}, 
+{\bfseries Line\+Statement\+Open}, 
+\newline
+{\bfseries Line\+Statement\+Close}, 
+{\bfseries Statement\+Open}, 
+{\bfseries Statement\+Close}, 
+{\bfseries Comment\+Open}, 
+\newline
+{\bfseries Comment\+Close}, 
+{\bfseries Id}, 
+{\bfseries Number}, 
+{\bfseries String}, 
+\newline
+{\bfseries Plus}, 
+{\bfseries Minus}, 
+{\bfseries Times}, 
+{\bfseries Slash}, 
+\newline
+{\bfseries Percent}, 
+{\bfseries Power}, 
+{\bfseries Comma}, 
+{\bfseries Dot}, 
+\newline
+{\bfseries Colon}, 
+{\bfseries Left\+Paren}, 
+{\bfseries Right\+Paren}, 
+{\bfseries Left\+Bracket}, 
+\newline
+{\bfseries Right\+Bracket}, 
+{\bfseries Left\+Brace}, 
+{\bfseries Right\+Brace}, 
+{\bfseries Equal}, 
+\newline
+{\bfseries Not\+Equal}, 
+{\bfseries Greater\+Than}, 
+{\bfseries Greater\+Equal}, 
+{\bfseries Less\+Than}, 
+\newline
+{\bfseries Less\+Equal}, 
+{\bfseries Unknown}, 
+{\bfseries Eof}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structinja_1_1Token_abaf4df4076ae96e0a26156435b2a1a30}\label{structinja_1_1Token_abaf4df4076ae96e0a26156435b2a1a30}} 
+constexpr {\bfseries Token} (Kind kind, nonstd\+::string\+\_\+view text)
+\item 
+\mbox{\Hypertarget{structinja_1_1Token_adc8c0a84e2d4ce0a3625c399bd259f1f}\label{structinja_1_1Token_adc8c0a84e2d4ce0a3625c399bd259f1f}} 
+std\+::string {\bfseries describe} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structinja_1_1Token_a969a46afd6dc5eb2a526b62092389648}\label{structinja_1_1Token_a969a46afd6dc5eb2a526b62092389648}} 
+Kind {\bfseries kind} \{Kind\+::\+Unknown\}
+\item 
+\mbox{\Hypertarget{structinja_1_1Token_a01dd6b28129c66b4d1aba30a151c4802}\label{structinja_1_1Token_a01dd6b28129c66b4d1aba30a151c4802}} 
+nonstd\+::string\+\_\+view {\bfseries text}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Helper-\/class for the inja \mbox{\hyperlink{classinja_1_1Lexer}{Lexer}}. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/fux/\+Documents/programming/\+Der-\/\+Zug/src/gui/src/users/inja.\+hpp\end{DoxyCompactItemize}

@@ -1,0 +1,67 @@
+\hypertarget{classWorld}{}\doxysection{World Class Reference}
+\label{classWorld}\index{World@{World}}
+
+
+{\ttfamily \#include $<$world.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classWorld_a56a5ee75e607a7072617bff92b11fc75}{World}} (std\+::string base\+\_\+path, std\+::string path, int port)
+\item 
+\mbox{\hyperlink{classWorld_a8c73fba541a5817fff65147ba47cd827}{$\sim$\+World}} ()
+\item 
+\mbox{\Hypertarget{classWorld_a654e22c54c304be01293060b717116ff}\label{classWorld_a654e22c54c304be01293060b717116ff}} 
+int {\bfseries port} ()
+\item 
+nlohmann\+::json \mbox{\hyperlink{classWorld_aa1d58b63f932da9501b7ac0cf174e9aa}{Get\+Page}} (std\+::string path)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+fux Class storing all pages and information of a world. 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classWorld_a56a5ee75e607a7072617bff92b11fc75}\label{classWorld_a56a5ee75e607a7072617bff92b11fc75}} 
+\index{World@{World}!World@{World}}
+\index{World@{World}!World@{World}}
+\doxysubsubsection{\texorpdfstring{World()}{World()}}
+{\footnotesize\ttfamily World\+::\+World (\begin{DoxyParamCaption}\item[{std\+::string}]{base\+\_\+path,  }\item[{std\+::string}]{path,  }\item[{int}]{port }\end{DoxyParamCaption})}
+
+Constructor generating all pages. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em base\+\_\+path} & to user-\/directory. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classWorld_a8c73fba541a5817fff65147ba47cd827}\label{classWorld_a8c73fba541a5817fff65147ba47cd827}} 
+\index{World@{World}!````~World@{$\sim$World}}
+\index{````~World@{$\sim$World}!World@{World}}
+\doxysubsubsection{\texorpdfstring{$\sim$World()}{~World()}}
+{\footnotesize\ttfamily World\+::$\sim$\+World (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Destructor deleteing all pages. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classWorld_aa1d58b63f932da9501b7ac0cf174e9aa}\label{classWorld_aa1d58b63f932da9501b7ac0cf174e9aa}} 
+\index{World@{World}!GetPage@{GetPage}}
+\index{GetPage@{GetPage}!World@{World}}
+\doxysubsubsection{\texorpdfstring{GetPage()}{GetPage()}}
+{\footnotesize\ttfamily nlohmann\+::json World\+::\+Get\+Page (\begin{DoxyParamCaption}\item[{std\+::string}]{path }\end{DoxyParamCaption})}
+
+Calls Get\+Page value of referenced page and add short paths to data-\/json. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em path} & to category/area/object. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+json with page-\/data, path to template and short-\/paths. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/fux/\+Documents/programming/\+Der-\/\+Zug/src/gui/src/world/world.\+h\item 
+/home/fux/\+Documents/programming/\+Der-\/\+Zug/src/gui/src/world/world.\+cc\end{DoxyCompactItemize}

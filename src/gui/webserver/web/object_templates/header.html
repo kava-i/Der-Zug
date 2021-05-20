@@ -16,7 +16,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src='/web/object.js'></script>
+    <script src='/web/general.js'></script>
     <script src="/web/fuzzy_finder.js"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="/web/graph.js"></script>
 </head>
 
 <body>
@@ -25,19 +28,16 @@
         <li class="breadcrumb-item"><a href="/">Game*Creator</a></li>
         <li class="breadcrumb-item"><a href="/login">Login</a></li>
         <li class="breadcrumb-item"><a href="/overview">Overview</a></li>
-        <li class="breadcrumb-item"><a href="/{{header.user}}/files/{{header.world}}">{{header.world}}</a></li>
-        <li class="breadcrumb-item"><a 
-            href="/{{header.user}}/files/{{header.world}}/{{header.category}}">{{header.category}}</a></li>
-        <li class="breadcrumb-item"><a 
-            href="/{{header.user}}/files/{{header.world}}/{{header.category}}/{{header.sub}}"
-            >{{header.sub}}</a></li>
+        {% for parent_path, parent_name in __parents %}
+          <li class="breadcrumb-item"><a href="/{{parent_path}}">{{parent_name}}</a></li>
+        {% endfor %}
         <li class="breadcrumb-item active" aria-current="page"><a>{{id}}</a></li>
     </ol>
 </nav>
 
-<div id="fuzzy_finder_div" class="fuzzy_finder" pages={{header.pages}}>
+<div id="fuzzy_finder_div" class="fuzzy_finder" pages={{__short_paths}}>
   <div class="fuzzy_finder_center">
-    <label style="color:#1fe921;">files: </label><input id="fuzzy_finder_inp">
+    <label id="fuzzy_finder_mode" style="color:#1fe921;">files: </label><input id="fuzzy_finder_inp">
     <ol id="fuzzy_finder_elems" class="fuzzy_finder_elems">
   </div>
 </div>
@@ -51,8 +51,29 @@
   </p>
 </div>
 
+<div id="notification" class="notification"></div>
+
   <div class="box_overview center_in_box">
+
+    <div style="float: right;">
+      <button class="pure-button" style="width:2rem;height:2rem;"
+        title="Show notes: Shortcut: 2 (toggle markdown-preview: 3)" onclick="ToggleNotes();">
+        <i class="fas fa-sticky-note"></i>
+      </button>
+    </div>
+
+    <div style="float: right;margin-right: 1em;">
+      <button id="try_game_btn" class="pure-button" style="width:2rem;height:2rem;"
+        title="Try game (closes game if open): Shortcut: 0." 
+        onclick="try_game({{__port}});">
+        <i class="fas fa-gamepad"></i>
+      </button>
+    </div>
+
+
     <h1>{{ default(name, id) }}</h1>
+
+    <div id="tab_elemens" style="display: block;">
       <div class="object">
         <ul id="object">
 

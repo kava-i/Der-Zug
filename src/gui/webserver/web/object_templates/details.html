@@ -1,9 +1,13 @@
 {% include "temp_header" %}
 
+  {{ log("rendered header") }}
+
   <!-- Name and ID (default value for non-set-values) -->
   <li><label>Name:</label><input id="name" value="{{ default(name, "") }}">
   <li><label>Id:</label><input id="id" value="{{ default(id, "") }}">
   <li><label>Look:</label><input id="look" value="{{ default(look, "") }}">
+
+  {{ log("rendered basic attributes") }}
 
   <!-- Description (added by include) expand non-set optional values -->
   <li custom="list">
@@ -11,6 +15,8 @@
     {% include "temp_description" %}
   </li>
 
+  {{ log("rendered description") }}
+  
   <!-- Items (default value for non-set-values)  -->
   <li custom="list">
     <label>Items:</label>
@@ -26,6 +32,8 @@
     </ul>
   </li>
   
+  {{ log("rendered items") }}
+
   <!-- Default items(default value for non-set-values) -->
   <li id="defaultItems" custom="just_object">
     <label title="Select items to automatically be added.">Default Items:</label>
@@ -42,5 +50,7 @@
     <input class="long" id="categories" custom="json" placeholder="item categories" value={{
         default(defaultItems.categories, "[]") }}>
   </li>
+
+  {{ log("rendered defaultItems") }}
 
 {% include "temp_footer" %}

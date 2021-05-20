@@ -7,7 +7,7 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)  #Includes stuff added by cona
 conan_basic_setup()  #links include directories and libaries
 
 # Specify C++ standards and complitation flags
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-Wall -Werror -O3")
 add_compile_options(-fdiagnostics-color=always)
@@ -18,6 +18,12 @@ set(SRC_FILES_SERVER
   src/server/server_frame.cc 
   src/users/user_manager.cc 
   src/users/user.cc 
+  src/world/worlds.cc
+  src/world/world.cc
+  src/page/category.cc
+  src/page/page.cc
+  src/page/sub_category.cc
+  src/page/area.cc
   src/util/func.cc
 )
 
@@ -29,6 +35,12 @@ set(SRC_FILES_TESTING
   src/users/test_user_manager.cc
   src/users/user.cc
   src/users/test_user.cc
+  src/world/worlds.cc
+  src/world/world.cc
+  src/page/page.cc
+  src/page/category.cc
+  src/page/sub_category.cc
+  src/page/area.cc
   src/util/func.cc
   src/util/test_func.cc
 )
@@ -39,6 +51,13 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/webserver)
 # Create executables.
 add_executable(game_builder.o ${SRC_FILES_SERVER})
 add_executable(builder_tests.o ${SRC_FILES_TESTING})
+
+if (COMPILE_FOR_SERVER)
+  message("compiling for server...")
+  target_compile_definitions(game_builder.o PUBLIC _COMPILE_FOR_SERVER_)
+else()
+  message("compiling for localhost...")
+endif()
 
 # Add directories to be included easily
 target_include_directories(game_builder.o PUBLIC "src")

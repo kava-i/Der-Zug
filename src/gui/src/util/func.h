@@ -29,10 +29,10 @@ namespace func
   std::string ReturnToLower(std::string &str);
 
   /**
-  * @param[in] str string to be splitet
-  * @param[in] delimitter 
-  * @return vector
-  */
+   * @param[in] str string to be splitet
+   * @param[in] delimitter 
+   * @return vector
+   */
   std::vector<std::string> Split(std::string str, std::string delimiter);
 
   /**
@@ -64,6 +64,16 @@ namespace func
   bool LoadJsonFromDisc(std::string path, nlohmann::json& json);
 
   /**
+   * Write json to disc.
+   * @param[in] path
+   * @param[in] json to write
+   * @return boolean indicating success.
+   */
+  bool WriteJsonToDisc(std::string path, nlohmann::json& json);
+
+  std::string RemoveExtension(std::filesystem::path path);
+
+  /**
    * Get current time in milliseconds.
    * @return long int (time in milliseconds)
    */
@@ -78,6 +88,42 @@ namespace func
    * @return The hashed string is returned, the input remains unchanged
    */
   std::string hash_sha3_512(const std::string& input);
+
+  /**
+   * Replaced non utf-8 characters. (ä->a, ß->ss etc. and for german characters
+   * add 'e' for Umlaute and s to ß (ä->ae).
+   * @param[in] str string to convert.
+   * @return converted string.
+   */
+  std::string ReplaceNonUTF8(std::string& str);
+
+  /**
+   * Convert name to id. to lower and replaces " " with "_", also replaces non
+   * utf8 characters.
+   * @param[in] name to convert.
+   * @return converted id.
+   */
+  std::string ConvertToId(std::string& name);
+
+  /**
+   * Convert id to name. First character of each word to Upper and replaces "_"
+   * with " ".
+   * @param[in] id to convert.
+   * @return converted name.
+   */
+  std::string ConvertFromId(std::string &id);
+
+  nlohmann::json ValidateJson(std::string json_string, std::vector<std::string> keys);
+
+  /**
+   * Adds all elements in elem2, to elem1.
+   * Thus existing values in elem1 are overwritten.
+   * @param[in] elem1 element to add entries to.
+   * @param[in] elem2 element with new entries.
+   */
+  nlohmann::json Join(nlohmann::json& elem1, nlohmann::json& elem2);
+
+  std::string GetLastElemFromPath(std::string path);
 }
 
 #endif

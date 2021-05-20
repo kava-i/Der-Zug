@@ -262,7 +262,10 @@ body {
 .content_center {
   display: inline-block;
   text-align: center;
-  width:80%;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: stretch;
+
   height:80%;
   margin:auto;
   margin-bottom: 2rem;
@@ -275,7 +278,6 @@ body {
 }
 
 .scroll_content{
-  width:95%;
   height:90%;
   overflow-y: auto;
   white-space: nowrap;
@@ -330,7 +332,7 @@ body {
 .fuzzy_finder {
   position:fixed;
   display: none;
-  z-index: 1; 
+  z-index: 2; 
   height:3em;
   text-align:left;
   margin-top: 30em;
@@ -343,7 +345,7 @@ body {
   position: absolute;
   width:100%;
   margin-top=3em;
-  height: 15em;
+  height: 25em;
   margin: 0;
   top: 50%;
   left: 50%;
@@ -368,7 +370,85 @@ body {
   border: none;
 }
 
-.fuzzy_finder_focused {
+.fuzzy_finder_focused_green {
   color: #1fe921;
   text-decoration: underline;
+}
+
+.fuzzy_finder_focused_orange {
+  color: orange;
+  text-decoration: underline;
+}
+
+.fuzzy_finder_focused_blue {
+  color: blue;
+  text-decoration: underline;
+}
+
+.side_box {
+  margin-top: 10rem;
+  margin-left: 10rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 2em;
+  min-width: 20rem;
+  max-width: 40rem;
+}
+
+.prev_elems {
+  color: #90a4ae;
+}
+
+.prev_list {
+  list-style-type: none;
+}
+
+.typeahead_room {
+  position: absolute;
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#cy {
+  height: 600px;
+  display: block;
+  margin-bottom: 2rem;
+  border-style: inset;
+  border-width: thin;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.notes {
+  height: 600px;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: stretch;
+  display: block;
+  border-style: inset;
+  border-width: thin;
+  text-align: left;
+
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 2em;
+}
+
+.markdown {
+  height: 600px;
+  width: -moz-available;
+  width: -webkit-fill-available;
+  width: stretch;
+  display: none;
+  text-align: left;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.notification {
+  float: inherit;
+  position: fixed;
+  width: 100%;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 1em;
+  color: white;
+  opacity: 0;
 }

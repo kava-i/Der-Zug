@@ -1,0 +1,12 @@
+{
+    "example": {
+        "name": "Example",
+        "id": "example",
+        "description": [
+            {
+                "speaker": "",
+                "text": ""
+            }
+        ]
+    }
+}

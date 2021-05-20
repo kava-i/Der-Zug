@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 
+#define CPPHTTPLIB_OPENSSL_SUPPORT
 #include <httplib.h>
 #include <inja/inja.hpp>
 #include <nlohmann/json.hpp>
@@ -12,7 +13,14 @@
 #include "tools/webcmd.h"
 
 CGame *game;
+#ifdef _COMPILE_FOR_SERVER_
+httplib::SSLServer srv(
+    "/etc/letsencrypt/live/kava-i.de/cert.pem",
+    "/etc/letsencrypt/live/kava-i.de/privkey.pem"
+); 
+#else
 httplib::Server srv;
+#endif
 
 class WebserverGame {
   private:

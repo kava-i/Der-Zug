@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Game*Creator - {{name}}</title>
+
+    <link href="/favicon.png" rel="icon" type="image/png"/>
+
+    <!-- <link rel="stylesheet", href="bootstrap/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link href="/web/general.css" rel="stylesheet">
+
+    <script src="/web/general.js"></script>
+    <script src="/web/fuzzy_finder.js"></script>
+    {% if __is_main %}<script src="/web/run.js"></script>{% endif %}
+    <script src="/web/run.js"></script>
+    <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg="nest"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="/web/graph.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+<body>
+<nav aria-label="breadcrumb">
+    <ol class=breadcrumb>
+        <li class="breadcrumb-item"><a href="/">Game*Creator</a></li>
+        <li class="breadcrumb-item"><a href="/login">Login</a></li>
+        <li class="breadcrumb-item"><a href="/overview">Overview</a></li>
+        {% for parent_path, parent_name in __parents %}
+          {% if loop.is_last %}
+            <li class="breadcrumb-item active" aria-current="page"><a>{{name}}</a></li>
+          {% else %}
+            <li class="breadcrumb-item"><a href="/{{parent_path}}">{{parent_name}}</a></li>
+          {% endif %}
+        {% endfor %}
+    </ol>
+</nav>
+
+<div id="fuzzy_finder_div" class="fuzzy_finder" pages={{__short_paths}} page_objects={{nodes}}>
+  <div class="fuzzy_finder_center">
+    <label id="fuzzy_finder_mode" style="color:#1fe921;">files: </label><input id="fuzzy_finder_inp">
+    <ol id="fuzzy_finder_elems" class="fuzzy_finder_elems">
+  </div>
+</div>
+
+<div class="top_right">
+  <img src="/web/logo.png" style="width:120px; height:63px;margin-bottom:0.5em;"><br>
+  <p class="fuzzy_finder_focused_green" 
+    title="Fuzzy finder active. 
+      Press any key to fuzzy search for pages/files/objects.
+      Press '-' to switch to delete-mode.
+      Fuzzy-finder may help you entering id's."
+  >
+      fuzzy_finder
+  </p>
+</div>
+
+<div id="notification" class="notification"></div>
+
+{{ log("rendered header") }}
+
+<div class="box_overview center_in_box">
+
+  <div style="float: right;">
+    <button id="try_game_btn" class="pure-button" style="width:2rem;height:2rem;"
+      title="Try game (closes game if open): Shortcut: 0" 
+      onclick="try_game({{__port}});">
+      <i class="fas fa-gamepad"></i>
+    </button>
+  </div>
+
+  <div style="float: right;margin-right: 1em;">
+    <button class="pure-button" style="width:2rem;height:2rem;"
+      title="Show graph. Shortcut: 1" onclick="ToggleGraph();">
+      <i class="fas fa-project-diagram"></i>
+    </button>
+  </div>
+
+  <div style="float: right; margin-right: 1em;">
+    <button class="pure-button" style="width:2rem;height:2rem;"
+      title="Show notes: Shortcut: 2 (toggle markdown-preview: 3)" onclick="ToggleNotes();">
+      <i class="fas fa-sticky-note"></i>
+    </button>
+  </div>
+
+
+  <h1>{{name}}</h1>
+
+  <div id="tab_elemens" style="display: block;">
+    <div class="controlers">
+      {% if __port != 0 and __is_main %}
+        <button class="pure-button" style="margin-bottom:0.5em;"
+                                  onclick="run({{__port}});">Run</button>
+        <button class="pure-button" style="margin-bottom:0.5em;"
+                                  onclick="end({{__port}});">Close</button><br>
+      {% endif %}
+
+        <table id="controller">
+          {% for node in nodes %}
+            <tr>
+              <td>
+                <a class="medium" href="{{node.0}}">{{node.1}}</a>
+              </td>
+              <td>
+                <i class="fas fa-minus button2" 
+                   title="Delete element. Shortcut: Backspace"
+                  onclick="OpenDelElemModal('subcategory', '{{node.1}}');return true">
+                </i>
+              </td>
+            </tr>
+          {% endfor %}
+        </table>
+    </div>
+  </div>
+
+  <div id="tab_graph" style="display: none">
+    <h2>Graph-view</h2>
+    <div id="cy"></div>
+  </div>
+
+  <div id="tab_notes" style="display: none">
+    <h2>Notes</h2>
+    <div contenteditable="true" id="notes" class="notes" style="display: block"></div>
+    <br>
+    <div id="notes_md" class="markdown" style="display: none"></div>
+    <br>
+    <button id="write" class="pure-button" onclick="SetNotes()">Write</button>
+  </div>
+
+  <i class="fas fa-plus button" title="Add element. Shortcut: +" 
+    onclick="OpenAddElemModal();return true">
+  </i>
+
+</div>
+
+{{ log("rendered subcategories") }}
+
+<div id="modal_del_elem" class="modal">
+  <div class="modal-content">
+    <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
+    <div class="content_center">
+      <div class="item"><p id="check_msg" elem_name=""></div>
+      <div class="item"><p id="del_error" class="user_error"></p></div>
+      <div><button type="button" class="pure-button" id="btn_del_elem"
+                                 onclick="DelElem()">Delete</button></div>
+      <div><button type="button" class="pure-button" id="force_del_elem"
+                   style="display: none;" onclick="DelElem(true)">Force Delete</button></div>
+      <div class="item"><button type="button" class="pure-button" id="del_get_log"
+          style="display: none;" onclick="get_log('write')">Show Log</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="modal_add_elem" class="modal">
+  <div class="modal-content">
+    <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
+    <div class="content_center">
+      <div class="item"><input id="name" placeholder="name"></div>
+      <div class="item"><input id="room" style="display: none;" placeholder="room"></div>
+      <div id="typeahead_room" class="typeahead_modal"><ol id="th-r_list"><ol></div>
+      <div class="item"><p id="add_error" class="user_error"></p></div>
+      <div><button type="button" class="pure-button" id="btn_add_elem"
+                                 onclick="AddElem('subcategory')">Add</button></div>
+      <div><button type="button" class="pure-button" id="force_add_elem"
+          style="display: none;" onclick="AddElem('subcategory', true)">Force Add</button></div>
+      <div class="item"><button type="button" class="pure-button" id="add_get_log"
+          style="display: none;" onclick="get_log('write')">Show Log</button></div>
+    </div>
+  </div>
+</div>
+
+<div id="modal_log" class="modal">
+  <div class="modal2-content">
+    <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
+    <div class="content_center">
+      <div class="item"><h1>Game Logs</h1></div>
+      <div class="item"><p id="check_msg"></div>
+      <div class="scroll_content" style="display: none" id="log_div">
+        <div class="item" style="text-align: left;" id="display_log_div">
+          <pre id="display_log">
+        </div>
+      </div>
+      <div class="item"><button type="button" class="pure-button" id="get_log"
+                                 onclick="get_log('run')">Show Log</button></div>
+      <br>
+    </div>
+</div>
+
+</body>

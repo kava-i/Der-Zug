@@ -11,8 +11,10 @@
 #include <shared_mutex>
 #include <string>
 
+#define CPPHTTPLIB_OPENSSL_SUPPORT
 #include <httplib.h>
 
+#include "nlohmann/json.hpp"
 #include "users/user_manager.h"
 
 class ServerFrame {
@@ -21,8 +23,10 @@ class ServerFrame {
     /**
      * Constructor. 
      * Creating user_manager with path to user-data and possible categories.
+     * @param path_to_cert in case of running on server: path to ssl certificate.
+     * @param path_to_key in case of running on server: path to ssl key.
      */
-    ServerFrame();
+    ServerFrame(std::string path_to_cert = "", std::string path_to_key = "");
 
     // *** getter *** //
     UserManager& user_manager() {
@@ -150,6 +154,15 @@ class ServerFrame {
      */
     void StartGame(const httplib::Request& req, httplib::Response& resp);
 
+    /**
+     * @brief Get object json
+     * @param[in] req (reference to request)
+     * @param[in, out] resp (reference to response)
+     */
+    void GetObjectInfo(const httplib::Request& req, httplib::Response& resp);
+
+    void SetNotes(const httplib::Request& req, httplib::Response& resp);
+
     /**    
      * @brief Gives feedback on whether server is still running    
      * @return boolean    
@@ -169,9 +182,28 @@ class ServerFrame {
   private: 
 
     //Member
-    httplib::Server server_;  //Server
     UserManager user_manager_;  ///< currently class, later database with all users
+#ifdef _COMPILE_FOR_SERVER_
+    httplib::SSLServer server_; //ssl server.
+#else
+    httplib::Server server_;  //Server
+#endif
     mutable std::shared_mutex shared_mtx_user_manager_;
+
+    /**
+     * Checks whether user is logged in.
+     * Sets http respsonse and redirects to login-page, if not.
+     * @return username or empty string.
+     */
+    std::string CheckLogin(const httplib::Request& req, httplib::Response& resp) const;
+
+    /**
+     * Checks whether given keys are in json.
+     * Sets http response to parse-error if keys are not in request-json.
+     * @return json with all keys present, or empty json.
+     */
+    nlohmann::json ValidateJson(const httplib::Request& req, httplib::Response& resp,
+        std::vector<std::string> keys) const;
 };
 
 #endif

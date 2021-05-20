@@ -1,11 +1,17 @@
 {% include "temp_header" %}
 
+  {{ log("rendered header") }}
+
   <li><label>Id:</label><input id="id" value="{{ id }}"></li> 
+
+  {{ log("rendered id") }}
 
   <li custom="list">
     <label>Text</label>
     {% include "temp_text" %}
   </li>
+
+  {{ log("rendered text") }}
 
   <li custom="list">
     <label>Options</label>
@@ -24,7 +30,11 @@
     </ul>
   </li>
 
+  {{ log("rendered options") }}
+
   <li><label>Events:</label><input id="events" value="{{ default(events, "") }}"></li>
   <li><label>Actions:</label><input id="actions" value="{{ default(actions, "") }}"></li>
+
+  {{ log("rendered events+actions") }}
 
 {% include "temp_footer" %}

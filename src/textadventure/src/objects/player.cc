@@ -1,4 +1,6 @@
 #include "player.h"
+#include <cctype>
+#include <string>
 
 #define BLACK Webcmd::set_color(Webcmd::color::BLACK)
 #define GREEN Webcmd::set_color(Webcmd::color::GREEN)
@@ -47,10 +49,10 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks,
   }
 
   //Attributes
-  if(m_world->getConfig().count("attributes")>0) {
+  if (m_world->getConfig().count("attributes")>0) {
     std::vector<std::string> attributes = m_world->getConfig()["attributes"];
-    for(auto it : attributes)   
-        m_stats[it] = 0;
+    for (auto it : attributes)   
+      m_stats[it] = 0;
   }
 
   //States, f.e. current fight, Dialog-partner
@@ -71,9 +73,9 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks,
   m_vistited[m_room->getID()] = true;
 
   std::cout << "initializing context stack.\n";
-  //Initialize context stack
-  for(auto it : m_world->getQuests()) {
-    if(it.second->getOnlineFromBeginning() == true) {
+  // Initialize context stack
+  for (auto it : m_world->getQuests()) {
+    if (it.second->getOnlineFromBeginning() == true) {
       Context* context = new Context(
           (nlohmann::json){{"name", it.first}, {"permeable",true}, 
           {"questID",it.first}});
@@ -830,23 +832,25 @@ void CPlayer::showMinds()
 * Print player's stats by using table function.
 */
 void CPlayer::showStats() {
+  m_sPrint += "--- " + m_sName + "---\n";
+  
+  // Get mapping from config.
+  std::map<std::string, std::map<std::string, std::string>> stats_mapping 
+    = m_world->getConfig()["mapAttributes"];
+  std::map<std::string, std::string> stats;
+  for (auto it : m_stats) {  
+    std::string key = it.first;
+    key.front() = std::toupper(key.front());
 
-    m_sPrint += "--- " + m_sName + "---\n";
-    
-    std::map<std::string, std::map<std::string, std::string>> mapStats = m_world->getConfig()["mapAttributes"];
-    std::map<std::string, int> mStats;
-    for(auto it : m_stats)
-    {
-        if(mapStats.count(it.first) == 0)
-            mStats[it.first] = it.second;
+    if (stats_mapping.count(it.first) == 0) {
+      stats[key] = std::to_string(it.second);
     }
-    auto lambda = [](int stat) { return std::to_string(stat); };
-    m_sPrint += func::table(mStats, lambda);
-    for(auto it : m_stats)
-    {
-        if(mapStats.count(it.first) > 0)
-            m_sPrint += mapStats[it.first][std::to_string(it.second)] + "\n";
+    else {
+      stats[key] = stats_mapping[it.first][std::to_string(it.second)];
     }
+  }
+  auto lambda = [](std::string stat) { return stat; };
+  m_sPrint += func::table(stats, lambda, "width:20%");
 }
 
 /**
@@ -971,49 +975,28 @@ CPlayer* CPlayer::getPlayer(string sIdentifier)
     return nullptr;
 }
 
-/**
-* Add a select-context to context-stack.
-* @param mapObjects map of objects from which to select.
-* @param sEventType type of event.
-*/
-void CPlayer::addSelectContest(std::map<std::string, std::string> mapObjects, std::string sEventType)
-{
-    //Add context.
-    Context* context = new Context((nlohmann::json){{"name", "select"}, {"permeable",true},{"eventtype",sEventType}, {"map_objects",mapObjects}});
+void CPlayer::addSelectContest(std::map<std::string, std::string> mapObjects, std::string sEventType) {
+  //Add context.
+  Context* context = new Context((nlohmann::json){{"name", "select"}, {"permeable",true},{"eventtype",sEventType}, {"map_objects",mapObjects}});
 
-    //Set error function, to delete context when not called 
-    context->setErrorFunction(&Context::error_delete); 
+  //Set error function, to delete context when not called 
+  context->setErrorFunction(&Context::error_delete); 
 
-    //Add listeners/ eventhandlers
-    context->add_listener("h_select", mapObjects);
-    
-    //Insert context into context-stack.
-    m_contextStack.insert(context, 1, "select");
+  //Add listeners/ eventhandlers
+  context->add_listener("h_select", mapObjects);
+  
+  //Insert context into context-stack.
+  m_contextStack.insert(context, 1, "select");
 }
 
-/**
-* In the case of a serious error, leading game not not continue, let the player no
-* that something went wrong and print error in console.
-*/
-void CPlayer::printError(std::string sError)
-{
-    std::cout << "\033[1;31m"+sError+"\033[0m"<< std::endl;
-    appendTechPrint("Sorry, but something went wrong. Maybe try something else.\n");
+void CPlayer::printError(std::string sError) {
+  std::cout << "\033[1;31m"+sError+"\033[0m"<< std::endl;
+  appendTechPrint("Sorry, but something went wrong. Maybe try something else.\n");
 }
 
 
 // *** Eventmanager functions *** //
 
-/**
-* Throw event. This is the key function in the program. The parser first parses the command
-* into an event which will then be thrown. An event consists of and event type 
-* and an identifier indicating what will happen. For example "show people", where "show"
-* is the event type and "people" tells the event handler what to do. (similar: "go to foyer").
-* this event will be send through all contexts. Each context has a list of handlers. If the 
-* event type matches with a handler a function is triggered. If a context is not permeable the 
-* loop breaks.
-* @param sInput
-*/
 void CPlayer::throw_events(string sInput, std::string sMessage) {
   updateRoomContext();
   std::cout << cRED << "Events: " << sInput << ", from: " << sMessage 

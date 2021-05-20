@@ -1,10 +1,15 @@
 {% include "temp_header" %}
 
+  {{ log("rendered header") }}
   <li><label>Id:</label><input id="id" value="{{ id }}"></li>
+
+  {{ log("rendered id") }}
 
   <li custom="list">
     <label>Text</label>
     {% include "temp_text" %}
   </li>
+
+  {{ log("rendered text") }}
 
 {% include "temp_footer" %}

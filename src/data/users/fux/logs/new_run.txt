@@ -1,0 +1,143 @@
+Creating game.
+Room: "test_first_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_first_room"
+Room: "test_fourth_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_fourth_room"
+Room: "test_second_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_second_room"
+Room: "test_third_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_third_room"
+Created all rooms 
+worldFactory: done.
+Done parsing world.
+Parsing players... 
+Room: "test_first_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_first_room"
+Room: "test_fourth_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_fourth_room"
+Room: "test_second_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_second_room"
+Room: "test_third_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_third_room"
+Created all rooms 
+worldFactory: done.
+initializing context stack.
+Done.
+Room: "test_first_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_first_room"
+Room: "test_fourth_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_fourth_room"
+Room: "test_second_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_second_room"
+Room: "test_third_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test_third_room"
+Created all rooms 
+worldFactory: done.
+initializing context stack.
+Done.
+Finished parsing!
+[2021-03-15 18:30:13] [connect] WebSocket Connection [::ffff:127.0.0.1]:33712 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:86.0) Gecko/20100101 Firefox/86.0" / 101
+Starting....
+Choosing login/ registerSet sign_in_up_ to l
+[2021-03-15 18:30:23] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
+[2021-03-15 18:30:23] [frame_header] Header Bytes: 
+[0] (2) 81 06 
+
+On to getting credentials
+[2021-03-15 18:30:25] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 16 payload bytes
+[2021-03-15 18:30:25] [frame_header] Header Bytes: 
+[0] (2) 81 05 
+[1] (2) 81 0B 
+
+On to getting credentials
+checkLogin
+[1;31mEvents: show room, from: startGame[0m
+[1;31mshow, room[0m
+[1;34mfirst[0m throwing: show|room
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mworld[0m throwing: show|room
+[1;34mroom[0m throwing: show|room
+[1;34mstandard[0m throwing: show|room
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[2021-03-15 18:30:27] [frame_header] Dispatching write containing 3 message(s) containing 6 header bytes and 122 payload bytes
+[2021-03-15 18:30:27] [frame_header] Header Bytes: 
+[0] (2) 81 0A 
+[1] (2) 81 12 
+[2] (2) 81 5E 
+
+Befor play: input: show exits calling with id: new
+[1;31mEvents: show exits, from: CGame::play[0m
+[1;31mshow, exits[0m
+[1;34mfirst[0m throwing: show|exits
+Calling:  show exits!
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mworld[0m throwing: show|exits
+[1;34mroom[0m throwing: show|exits
+[1;34mstandard[0m throwing: show|exits
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: Hier geht es <b>to Second Room</b>. 
+
+
+
+[2021-03-15 18:30:31] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 39 payload bytes
+[2021-03-15 18:30:31] [frame_header] Header Bytes: 
+[0] (2) 81 27 
+
+Befor play: input: go to second room calling with id: new
+[1;31mEvents: go to second room, from: CGame::play[0m
+[1;31mgo, second room[0m
+[1;34mfirst[0m throwing: go|second room
+[1;34mworld[0m throwing: go|second room
+[1;34mselect[0m throwing: go|second room
+[1;34mroom[0m throwing: go|second room
+[1;34mstandard[0m throwing: go|second room
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>WHATEVER - 	You're in room number two.</div> <div class='spoken2'></div>
+
+[2021-03-15 18:30:36] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 94 payload bytes
+[2021-03-15 18:30:36] [frame_header] Header Bytes: 
+[0] (2) 81 5E 
+
+[2021-03-15 18:30:50] [control] Control frame received with opcode 8
+[2021-03-15 18:30:50] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2021-03-15 18:30:50] [frame_header] Header Bytes: 
+[0] (2) 88 02 
+
+[2021-03-15 18:30:50] [disconnect] Disconnect close local:[1001] remote:[1001]

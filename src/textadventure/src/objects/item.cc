@@ -127,7 +127,7 @@ void CItem::consume(CPlayer* p)
     {
         p->setStat("highness", p->getStat("highness") + getEffekt());
         if(!p->getContext("standard")->timeevent_exists("t_highness"))
-            p->getContext("standard")->add_timeEvent("t_highness", "standard", "", 0.2);
+            p->getContext("standard")->add_timeEvent("t_highness", "standard", "", 2.0);
         if(m_useDescription != nullptr)
             p->appendPrint(m_useDescription->print());
         else

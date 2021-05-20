@@ -1,5 +1,7 @@
 {% include "temp_header" %}
 
+  {{ log("rendered header") }}
+
   <!-- Name and ID (default value for non-set-values) -->
   <li><label>Name:</label><input id="name" value="{{ default(name, "") }}">
   <li><label>Id:</label><input id="id" value="{{ default(id, "") }}">
@@ -10,6 +12,9 @@
       custom="json">Active from beginning:</label>
         <input id="active_from_beginning" custom="json" style="width:20em;" 
                                         value={{default(active_from_beginning,[]) }}>
+
+  {{ log("rendered basic attributes") }}
+
   <!-- Listeners -->
   <li custom="list">
     <label>Listeners:</label>
@@ -27,6 +32,8 @@
       {% endfor %}
     </ul>
   </li>
+
+  {{ log("rendered listener") }}
 
   <!-- (default value for non-set-values) -->
   <li custom="list">
@@ -56,7 +63,7 @@
           <br>
           <label style="width:10em" title="Events/ commands executed before success message."
             >Pre Events</label>
-          <input style="width:20em" id=_"events" placeholder="pre events" 
+          <input style="width:20em" id="_events" placeholder="pre events" 
                     value="{{default(step._events, "")}}">
           <br>
           <label style="width:10em" title="json of attributes/ minds to update after
@@ -79,5 +86,7 @@
       {% endfor %}
     </ul>
   </li>
+
+  {{ log("rendered steps") }}
   
 {% include "temp_footer" %}

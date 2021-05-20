@@ -122,6 +122,7 @@ public:
     void h_killCharacter(std::string&, CPlayer*);
     void h_deleteCharacter(std::string&, CPlayer*);
     void h_addItem(std::string&, CPlayer*);
+    void h_removeItem(std::string&, CPlayer*);
     void h_recieveMoney(std::string&, CPlayer*);
     void h_eraseMoney(std::string&, CPlayer*);
     void h_newFight(std::string&, CPlayer*);
@@ -132,6 +133,7 @@ public:
     void h_showPersonInfo(std::string&, CPlayer*);
     void h_showItemInfo(std::string&, CPlayer*);
     void h_changeName(std::string&, CPlayer*);
+    void h_addExit(std::string&, CPlayer*);
     void h_setAttribute(std::string&, CPlayer*);
     void h_setNewAttribute(std::string&, CPlayer*);
     void h_addTimeEvent(std::string&, CPlayer*);
@@ -140,6 +142,7 @@ public:
     void h_thieve(std::string&, CPlayer*);
     void h_attack(std::string&, CPlayer*);
     void h_changeRoom(std::string&, CPlayer*);
+    void h_startDialogDirect(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
     void h_ignore(std::string&, CPlayer*);

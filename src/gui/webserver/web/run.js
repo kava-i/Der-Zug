@@ -1,21 +1,3 @@
-//Close modal, when close-span is clicked (works for both moduls)
-function CloseModul() {
-  document.getElementById("modal_log").style.display = "none";
-
-  //Show button again and empty log
-  document.getElementById("get_log").style.display = "inline-block";
-}
-
-//Close modal when users clicks anywhere outside of the modal. (works for both)
-window.onclick = function(event)  {
-  let modal = document.getElementById("modal_log");
-  if (event.target == modal) 
-    modal.style.display = "none";
-  else
-    return;
-  window.location=window.location;
-}
-
 //Function to send request, to check whether game is still running
 function check_running() {
   var xhttp = new XMLHttpRequest();
@@ -44,6 +26,8 @@ function get_log(x) {
   xhttp.onload = function(event){
     console.log("Got response: ", this.responseText);
     if (xhttp.status == 200) {
+      // Make sure that log-modal is visible
+      document.getElementById("modal_log").style.display = "block";
       document.getElementById("log_div").style.display="block";
       document.getElementById("display_log").innerHTML = this.responseText;
       document.getElementById("get_log").style.display = "none";
@@ -53,28 +37,39 @@ function get_log(x) {
   }
 }
 
-var ip = location.host.substr(0, location.host.indexOf(":"));
+async function try_game(port) {
+  notify("Closing running game...");
+  end(port, true);
+  await new Promise(r => setTimeout(r, 1800));
+  notify("Starting game...");
+  run(port);
+}
+
 async function run(port) {
   //Check if game is already running.
-  var adress = "ws://" + ip + ":" + parseInt(port+1) + "/";
-  socket = new WebSocket(adress);
+  var host = location.host.substr(0, location.host.indexOf(":"));
+  var socket = null
+  if (host == "localhost" || host == "127.0.0.1")
+    socket = new WebSocket("ws://" + host + ":" + parseInt(port+1));
+  else
+    socket = new WebSocket("wss://" + host + ":" + parseInt(port+1));
   await new Promise(r => setTimeout(r, 1000));
   console.log("Connection:", socket.readyState); 
   if (socket.readyState === 0 || socket.readyState === 1) {
-    alert("Game already running.");
+    notify("Game already running.");
     return;
   }
 
   //Send request
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", "/api/start_game");
-  xhttp.send(window.location.pathname);
+  xhttp.send(GetWorldFromPath());
 
   //Redirect to game
   xhttp.onload = function(event){
     //Fame already running 
     if (this.status != 200)
-      alert("Unkown problem starting game.");
+      notify("Unkown problem starting game.");
 
     //Start game if not already running.
     else {
@@ -85,11 +80,15 @@ async function run(port) {
   }
 }
 
-async function end(port) {
+async function end(port, silent=false) {
   //Check if game is already running.
-  var adress = "ws://" + ip + ":" + parseInt(port+1) + "/";
-  socket = new WebSocket(adress);
-  await new Promise(r => setTimeout(r, 500));
+  var socket = null
+  var host = location.host.substr(0, location.host.indexOf(":"));
+  if (host == "localhost" || host == "127.0.0.1")
+    socket = new WebSocket("ws://" + host + ":" + parseInt(port+1));
+  else
+    socket = new WebSocket("wss://" + host + ":" + parseInt(port+1));
+  await new Promise(r => setTimeout(r, 1000));
   console.log("Connection:", socket.readyState); 
   if (socket.readyState === 2 || socket.readyState === 3) {
     document.getElementById("check_msg").innerHTML = "Game was not running.";
@@ -108,5 +107,18 @@ async function end(port) {
     else
       document.getElementById("check_msg").innerHTML = "Failed closing game!";
   }
-  document.getElementById("modal_log").style.display = "block";
+  if (!silent)
+    document.getElementById("modal_log").style.display = "block";
+}
+
+function GetWorldFromPath() {
+  let path = window.location.pathname;
+  console.log("path: ", path);
+  let parts = path.split("/");
+  console.log("world: ", parts);
+  parts = parts.slice(0,4)
+  console.log("world: ", parts);
+  path = parts.join('/');
+  console.log("world: ", path);
+  return path;
 }

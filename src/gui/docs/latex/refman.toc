@@ -1,0 +1,146 @@
+\@ifundefined {etoctocstyle}{\let \etoc@startlocaltoc \@gobble \let \etoc@settocdepth \@gobble \let \etoc@depthtag \@gobble \let \etoc@setlocaltop \@gobble }{}
+\contentsline {chapter}{\numberline {1}Hierarchical Index}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Class Hierarchy}{1}{section.1.1}%
+\contentsline {chapter}{\numberline {2}Class Index}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Class List}{3}{section.2.1}%
+\contentsline {chapter}{\numberline {3}Class Documentation}{5}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Area Class Reference}{5}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Detailed Description}{5}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}Member Function Documentation}{5}{subsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.2.1}CreatePageData()}{5}{subsubsection.3.1.2.1}%
+\contentsline {section}{\numberline {3.2}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Ast\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node Class Reference}{6}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Detailed Description}{6}{subsection.3.2.1}%
+\contentsline {section}{\numberline {3.3}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Block\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node Class Reference}{7}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Category Class Reference}{7}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Detailed Description}{7}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Member Function Documentation}{8}{subsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {3.4.2.1}CreatePageData()}{8}{subsubsection.3.4.2.1}%
+\contentsline {section}{\numberline {3.5}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Environment Class Reference}{8}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Detailed Description}{9}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Member Function Documentation}{9}{subsection.3.5.2}%
+\contentsline {subsubsection}{\numberline {3.5.2.1}include\_template()}{9}{subsubsection.3.5.2.1}%
+\contentsline {section}{\numberline {3.6}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Expression\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}List\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node Class Reference}{10}{section.3.6}%
+\contentsline {section}{\numberline {3.7}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Expression\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node Class Reference}{10}{section.3.7}%
+\contentsline {section}{\numberline {3.8}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::File\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Error Struct Reference}{11}{section.3.8}%
+\contentsline {section}{\numberline {3.9}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::For\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Array\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Statement\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node Class Reference}{11}{section.3.9}%
+\contentsline {section}{\numberline {3.10}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::For\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Object\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Statement\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node Class Reference}{12}{section.3.10}%
+\contentsline {section}{\numberline {3.11}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::For\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Statement\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node Class Reference}{12}{section.3.11}%
+\contentsline {section}{\numberline {3.12}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Function\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Storage\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Function\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Data Struct Reference}{13}{section.3.12}%
+\contentsline {section}{\numberline {3.13}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Function\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node Class Reference}{13}{section.3.13}%
+\contentsline {section}{\numberline {3.14}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Function\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Storage Class Reference}{14}{section.3.14}%
+\contentsline {subsection}{\numberline {3.14.1}Detailed Description}{15}{subsection.3.14.1}%
+\contentsline {section}{\numberline {3.15}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::If\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Statement\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node Class Reference}{15}{section.3.15}%
+\contentsline {section}{\numberline {3.16}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Include\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Statement\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node Class Reference}{15}{section.3.16}%
+\contentsline {section}{\numberline {3.17}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Error Struct Reference}{16}{section.3.17}%
+\contentsline {section}{\numberline {3.18}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Json\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Error Struct Reference}{17}{section.3.18}%
+\contentsline {section}{\numberline {3.19}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Json\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node Class Reference}{17}{section.3.19}%
+\contentsline {section}{\numberline {3.20}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Lexer Class Reference}{18}{section.3.20}%
+\contentsline {subsection}{\numberline {3.20.1}Detailed Description}{18}{subsection.3.20.1}%
+\contentsline {section}{\numberline {3.21}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Literal\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node Class Reference}{18}{section.3.21}%
+\contentsline {section}{\numberline {3.22}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Node\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Visitor Class Reference}{19}{section.3.22}%
+\contentsline {section}{\numberline {3.23}Page Class Reference}{20}{section.3.23}%
+\contentsline {subsection}{\numberline {3.23.1}Detailed Description}{20}{subsection.3.23.1}%
+\contentsline {subsection}{\numberline {3.23.2}Member Function Documentation}{20}{subsection.3.23.2}%
+\contentsline {subsubsection}{\numberline {3.23.2.1}CreatePageData()}{20}{subsubsection.3.23.2.1}%
+\contentsline {subsubsection}{\numberline {3.23.2.2}GenerateChildNodes()}{21}{subsubsection.3.23.2.2}%
+\contentsline {subsubsection}{\numberline {3.23.2.3}GenerateParentNodes()}{21}{subsubsection.3.23.2.3}%
+\contentsline {subsection}{\numberline {3.23.3}Member Data Documentation}{21}{subsection.3.23.3}%
+\contentsline {subsubsection}{\numberline {3.23.3.1}child\_nodes\_}{21}{subsubsection.3.23.3.1}%
+\contentsline {subsubsection}{\numberline {3.23.3.2}parent\_nodes\_}{21}{subsubsection.3.23.3.2}%
+\contentsline {section}{\numberline {3.24}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Parser Class Reference}{22}{section.3.24}%
+\contentsline {subsection}{\numberline {3.24.1}Detailed Description}{22}{subsection.3.24.1}%
+\contentsline {section}{\numberline {3.25}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Parser\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Error Struct Reference}{22}{section.3.25}%
+\contentsline {section}{\numberline {3.26}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Renderer Class Reference}{23}{section.3.26}%
+\contentsline {subsection}{\numberline {3.26.1}Detailed Description}{23}{subsection.3.26.1}%
+\contentsline {section}{\numberline {3.27}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Render\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Error Struct Reference}{23}{section.3.27}%
+\contentsline {section}{\numberline {3.28}Server\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Frame Class Reference}{24}{section.3.28}%
+\contentsline {subsection}{\numberline {3.28.1}Detailed Description}{25}{subsection.3.28.1}%
+\contentsline {subsection}{\numberline {3.28.2}Constructor \& Destructor Documentation}{25}{subsection.3.28.2}%
+\contentsline {subsubsection}{\numberline {3.28.2.1}ServerFrame()}{25}{subsubsection.3.28.2.1}%
+\contentsline {subsection}{\numberline {3.28.3}Member Function Documentation}{25}{subsection.3.28.3}%
+\contentsline {subsubsection}{\numberline {3.28.3.1}AddElem()}{25}{subsubsection.3.28.3.1}%
+\contentsline {subsubsection}{\numberline {3.28.3.2}Backups()}{25}{subsubsection.3.28.3.2}%
+\contentsline {subsubsection}{\numberline {3.28.3.3}CheckRunning()}{26}{subsubsection.3.28.3.3}%
+\contentsline {subsubsection}{\numberline {3.28.3.4}CreateRequest()}{26}{subsubsection.3.28.3.4}%
+\contentsline {subsubsection}{\numberline {3.28.3.5}DelElem()}{26}{subsubsection.3.28.3.5}%
+\contentsline {subsubsection}{\numberline {3.28.3.6}DelUser()}{27}{subsubsection.3.28.3.6}%
+\contentsline {subsubsection}{\numberline {3.28.3.7}DoLogin()}{27}{subsubsection.3.28.3.7}%
+\contentsline {subsubsection}{\numberline {3.28.3.8}DoLogout()}{27}{subsubsection.3.28.3.8}%
+\contentsline {subsubsection}{\numberline {3.28.3.9}DoRegistration()}{27}{subsubsection.3.28.3.9}%
+\contentsline {subsubsection}{\numberline {3.28.3.10}GetLog()}{28}{subsubsection.3.28.3.10}%
+\contentsline {subsubsection}{\numberline {3.28.3.11}GrantAccessTo()}{28}{subsubsection.3.28.3.11}%
+\contentsline {subsubsection}{\numberline {3.28.3.12}IsRunning()}{28}{subsubsection.3.28.3.12}%
+\contentsline {subsubsection}{\numberline {3.28.3.13}LoginPage()}{29}{subsubsection.3.28.3.13}%
+\contentsline {subsubsection}{\numberline {3.28.3.14}ServeFile()}{29}{subsubsection.3.28.3.14}%
+\contentsline {subsubsection}{\numberline {3.28.3.15}Start()}{29}{subsubsection.3.28.3.15}%
+\contentsline {subsubsection}{\numberline {3.28.3.16}StartGame()}{30}{subsubsection.3.28.3.16}%
+\contentsline {subsubsection}{\numberline {3.28.3.17}WriteObject()}{30}{subsubsection.3.28.3.17}%
+\contentsline {section}{\numberline {3.29}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Set\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Statement\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node Class Reference}{30}{section.3.29}%
+\contentsline {section}{\numberline {3.30}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Source\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Location Struct Reference}{31}{section.3.30}%
+\contentsline {section}{\numberline {3.31}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Statement\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node Class Reference}{31}{section.3.31}%
+\contentsline {section}{\numberline {3.32}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Statistics\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Visitor Class Reference}{32}{section.3.32}%
+\contentsline {subsection}{\numberline {3.32.1}Detailed Description}{32}{subsection.3.32.1}%
+\contentsline {section}{\numberline {3.33}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Template Struct Reference}{32}{section.3.33}%
+\contentsline {subsection}{\numberline {3.33.1}Detailed Description}{33}{subsection.3.33.1}%
+\contentsline {section}{\numberline {3.34}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Text\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Node Class Reference}{33}{section.3.34}%
+\contentsline {section}{\numberline {3.35}inja\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}::Token Struct Reference}{33}{section.3.35}%
+\contentsline {subsection}{\numberline {3.35.1}Detailed Description}{34}{subsection.3.35.1}%
+\contentsline {section}{\numberline {3.36}User Class Reference}{34}{section.3.36}%
+\contentsline {subsection}{\numberline {3.36.1}Detailed Description}{35}{subsection.3.36.1}%
+\contentsline {subsection}{\numberline {3.36.2}Constructor \& Destructor Documentation}{35}{subsection.3.36.2}%
+\contentsline {subsubsection}{\numberline {3.36.2.1}User()\hspace {0.1cm}{\footnotesize \ttfamily [1/2]}}{35}{subsubsection.3.36.2.1}%
+\contentsline {subsubsection}{\numberline {3.36.2.2}User()\hspace {0.1cm}{\footnotesize \ttfamily [2/2]}}{35}{subsubsection.3.36.2.2}%
+\contentsline {subsection}{\numberline {3.36.3}Member Function Documentation}{36}{subsection.3.36.3}%
+\contentsline {subsubsection}{\numberline {3.36.3.1}AddFile()}{36}{subsubsection.3.36.3.1}%
+\contentsline {subsubsection}{\numberline {3.36.3.2}AddLocation()}{36}{subsubsection.3.36.3.2}%
+\contentsline {subsubsection}{\numberline {3.36.3.3}AddNewObject()}{37}{subsubsection.3.36.3.3}%
+\contentsline {subsubsection}{\numberline {3.36.3.4}AddRequest()}{37}{subsubsection.3.36.3.4}%
+\contentsline {subsubsection}{\numberline {3.36.3.5}CheckAccessToLocations()}{38}{subsubsection.3.36.3.5}%
+\contentsline {subsubsection}{\numberline {3.36.3.6}CheckGameRunning()}{38}{subsubsection.3.36.3.6}%
+\contentsline {subsubsection}{\numberline {3.36.3.7}CreateBackup()}{38}{subsubsection.3.36.3.7}%
+\contentsline {subsubsection}{\numberline {3.36.3.8}CreateNewWorld()}{39}{subsubsection.3.36.3.8}%
+\contentsline {subsubsection}{\numberline {3.36.3.9}DeleteBackup()}{39}{subsubsection.3.36.3.9}%
+\contentsline {subsubsection}{\numberline {3.36.3.10}DeleteFile()}{39}{subsubsection.3.36.3.10}%
+\contentsline {subsubsection}{\numberline {3.36.3.11}DeleteObject()}{40}{subsubsection.3.36.3.11}%
+\contentsline {subsubsection}{\numberline {3.36.3.12}DeleteWorld()}{40}{subsubsection.3.36.3.12}%
+\contentsline {subsubsection}{\numberline {3.36.3.13}GetBackups()}{40}{subsubsection.3.36.3.13}%
+\contentsline {subsubsection}{\numberline {3.36.3.14}GetCategory()}{41}{subsubsection.3.36.3.14}%
+\contentsline {subsubsection}{\numberline {3.36.3.15}GetObjects()}{41}{subsubsection.3.36.3.15}%
+\contentsline {subsubsection}{\numberline {3.36.3.16}GetOverview()}{41}{subsubsection.3.36.3.16}%
+\contentsline {subsubsection}{\numberline {3.36.3.17}GetPortOfWorld()}{41}{subsubsection.3.36.3.17}%
+\contentsline {subsubsection}{\numberline {3.36.3.18}GetWorld()}{42}{subsubsection.3.36.3.18}%
+\contentsline {subsubsection}{\numberline {3.36.3.19}RemoveRequest()}{42}{subsubsection.3.36.3.19}%
+\contentsline {subsubsection}{\numberline {3.36.3.20}RestoreBackup()}{42}{subsubsection.3.36.3.20}%
+\contentsline {subsubsection}{\numberline {3.36.3.21}SafeUser()}{43}{subsubsection.3.36.3.21}%
+\contentsline {subsubsection}{\numberline {3.36.3.22}WriteObject()}{43}{subsubsection.3.36.3.22}%
+\contentsline {section}{\numberline {3.37}User\discretionary {\mbox {\scriptsize $\hookleftarrow $}}{}{}Manager Class Reference}{43}{section.3.37}%
+\contentsline {subsection}{\numberline {3.37.1}Detailed Description}{44}{subsection.3.37.1}%
+\contentsline {subsection}{\numberline {3.37.2}Constructor \& Destructor Documentation}{44}{subsection.3.37.2}%
+\contentsline {subsubsection}{\numberline {3.37.2.1}UserManager()}{44}{subsubsection.3.37.2.1}%
+\contentsline {subsection}{\numberline {3.37.3}Member Function Documentation}{44}{subsection.3.37.3}%
+\contentsline {subsubsection}{\numberline {3.37.3.1}DeleteUser()}{44}{subsubsection.3.37.3.1}%
+\contentsline {subsubsection}{\numberline {3.37.3.2}DoLogin()}{45}{subsubsection.3.37.3.2}%
+\contentsline {subsubsection}{\numberline {3.37.3.3}DoLogout()}{45}{subsubsection.3.37.3.3}%
+\contentsline {subsubsection}{\numberline {3.37.3.4}DoRegistration()}{45}{subsubsection.3.37.3.4}%
+\contentsline {subsubsection}{\numberline {3.37.3.5}GenerateCookie()}{47}{subsubsection.3.37.3.5}%
+\contentsline {subsubsection}{\numberline {3.37.3.6}GetAllWorlds()}{47}{subsubsection.3.37.3.6}%
+\contentsline {subsubsection}{\numberline {3.37.3.7}GetNextPort()}{47}{subsubsection.3.37.3.7}%
+\contentsline {subsubsection}{\numberline {3.37.3.8}GetSharedWorlds()}{48}{subsubsection.3.37.3.8}%
+\contentsline {subsubsection}{\numberline {3.37.3.9}GetUser()}{48}{subsubsection.3.37.3.9}%
+\contentsline {subsubsection}{\numberline {3.37.3.10}GetUserFromCookie()}{48}{subsubsection.3.37.3.10}%
+\contentsline {subsubsection}{\numberline {3.37.3.11}GrantAccessTo()}{49}{subsubsection.3.37.3.11}%
+\contentsline {section}{\numberline {3.38}World Class Reference}{49}{section.3.38}%
+\contentsline {subsection}{\numberline {3.38.1}Detailed Description}{49}{subsection.3.38.1}%
+\contentsline {subsection}{\numberline {3.38.2}Constructor \& Destructor Documentation}{49}{subsection.3.38.2}%
+\contentsline {subsubsection}{\numberline {3.38.2.1}World()}{49}{subsubsection.3.38.2.1}%
+\contentsline {subsubsection}{\numberline {3.38.2.2}$\sim $World()}{50}{subsubsection.3.38.2.2}%
+\contentsline {subsection}{\numberline {3.38.3}Member Function Documentation}{50}{subsection.3.38.3}%
+\contentsline {subsubsection}{\numberline {3.38.3.1}GetPage()}{50}{subsubsection.3.38.3.1}%
+\contentsline {section}{\numberline {3.39}Worlds Class Reference}{50}{section.3.39}%
+\contentsline {subsection}{\numberline {3.39.1}Detailed Description}{51}{subsection.3.39.1}%
+\contentsline {subsection}{\numberline {3.39.2}Constructor \& Destructor Documentation}{51}{subsection.3.39.2}%
+\contentsline {subsubsection}{\numberline {3.39.2.1}Worlds()}{51}{subsubsection.3.39.2.1}%
+\contentsline {subsubsection}{\numberline {3.39.2.2}$\sim $Worlds()}{51}{subsubsection.3.39.2.2}%
+\contentsline {subsection}{\numberline {3.39.3}Member Function Documentation}{51}{subsection.3.39.3}%
+\contentsline {subsubsection}{\numberline {3.39.3.1}GetPage()}{51}{subsubsection.3.39.3.1}%
+\contentsline {chapter}{Index}{53}{section*.99}%

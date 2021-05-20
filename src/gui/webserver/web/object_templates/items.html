@@ -1,22 +1,32 @@
 {% include "temp_header" %}
   
+  {{ log("rendered header") }}
+
   <li><label>Name:</label><input id="name" value="{{ default(name, "") }}"></li>
   <li><label>Id:</label><input id="id" value="{{ id }}"></li>
+
+  {{ log("rendered name and id") }}
 
   <li custom="list">
     <label>Description</label>
     {% include "temp_description" %} 
   </li>
 
+  {{ log("rendered description") }}
+
   <li custom="list">
     <label>Use Description</label>
     {% include "temp_use_description" %} 
   </li>
 
+  {{ log("rendered use description") }}
+
   <li><label>Category:</label><input id="category" value="{{ default(category,"")}}"></li>
   <li><label>Type:</label><input id="type" value="{{ default(type,"") }}"></li>
   <li><label>Effekt:</label><input id="effekt" custom="int" value="{{ default(effekt,"")}}"></li>
   <li><label>Value:</label><input id="value" custom="int" value="{{ default(value,"")}}"></li>
+
+  {{ log("rendered attributes") }}
 
   {% if default(category, "") == "read" %}
   <li custom="list">
@@ -24,5 +34,7 @@
     {% include "temp_pages" %}
   </li>
   {% endif %}
+
+  {{ log("rendered pages") }}
 
 {% include "temp_footer" %}

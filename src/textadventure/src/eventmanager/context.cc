@@ -1,6 +1,8 @@
 #include "context.h"
+#include "nlohmann/json.hpp"
 #include "objects/player.h"
 #include "game/game.h"
+#include "tools/func.h"
 #define cRED "\033[1;31m"
 #define cGreen "\033[1;32m"
 #define cBlue "\033[1;34m"
@@ -113,6 +115,7 @@ void Context::initializeHanlders() {
   m_handlers["h_killCharacter"] = &Context::h_killCharacter;
   m_handlers["h_deleteCharacter"] = &Context::h_deleteCharacter;
   m_handlers["h_addItem"] = &Context::h_addItem;
+  m_handlers["h_removeItem"] = &Context::h_removeItem;
   m_handlers["h_recieveMoney"] = &Context::h_recieveMoney;
   m_handlers["h_eraseMoney"] = &Context::h_eraseMoney;
   m_handlers["h_newFight"] = &Context::h_newFight;
@@ -123,12 +126,14 @@ void Context::initializeHanlders() {
   m_handlers["h_showPersonInfo"] = &Context::h_showPersonInfo;
   m_handlers["h_showItemInfo"] = &Context::h_showItemInfo;
   m_handlers["h_changeName"] = &Context::h_changeName;
+  m_handlers["h_addExit"] = &Context::h_addExit;
   m_handlers["h_setAttribute"] = &Context::h_setAttribute;
   m_handlers["h_setNewAttribute"] = &Context::h_setNewAttribute;
   m_handlers["h_addTimeEvent"] = &Context::h_addTimeEvent;
   m_handlers["h_setNewQuest"] = &Context::h_setNewQuest;
   m_handlers["h_changeDialog"] = &Context::h_changeDialog;
   m_handlers["h_changeRoom"] = &Context::h_changeRoom;
+  m_handlers["h_startDialogDirect"] = &Context::h_startDialogDirect;
 
   // ***** STANDARD CONTEXT ***** //
   m_handlers["h_showExits"] = &Context::h_showExits;
@@ -222,6 +227,7 @@ void Context::initializeTemplates() {
                         {"killCharacter", {"h_killCharacter"}},
                         {"deleteCharacter", {"h_deleteCharacter"}},
                         {"addItem", {"h_addItem"}},
+                        {"removeItem", {"h_removeItem"}},
                         {"recieveMoney", {"h_recieveMoney"}},
                         {"eraseMoney", {"h_eraseMoney"}},
                         {"fight", {"h_newFight"}},
@@ -232,12 +238,14 @@ void Context::initializeTemplates() {
                         {"showperson",{"h_showPersonInfo"}},
                         {"showitem",{"h_showItemInfo"}},
                         {"changeName",{"h_changeName"}},
+                        {"addExit",{"h_addExit"}},
                         {"setAttribute", {"h_setAttribute"}},
                         {"setNewAttribute", {"h_setNewAttribute"}}, 
                         {"addTimeEvent", {"h_addTimeEvent"}},
                         {"setNewQuest", {"h_setNewQuest"}},
                         {"changeDialog", {"h_changeDialog"}},
-                        {"changeRoom", {"h_changeRoom"}} }}
+                        {"changeRoom", {"h_changeRoom"}},
+                        {"startDialogDirekt", {"h_startDialogDirekt"}} }}
                     };
 
     m_templates["standard"] = {
@@ -344,10 +352,8 @@ void Context::add_listener(std::string sID, std::map<std::string, std::string>
 void Context::initializeHandlers(std::vector<nlohmann::json> 
     listeners) {
   for (auto it : listeners) {
-    if (it.count("regex") > 0) {
-      add_listener(it["id"], (std::regex)it["regex"], it.value("take", 1), 
-          it.value("priority", 0)); 
-    }
+    if (it.count("regex") > 0)
+      add_listener(it["id"], (std::regex)it["regex"], it.value("take", 1), it.value("priority", 0)); 
     else if (it.count("string") > 0)
       add_listener(it["id"], (std::string)it["string"], it.value("priority", 0));
   }
@@ -374,8 +380,7 @@ bool Context::throw_event(event e, CPlayer* p) {
           << "(" << cur_event.first << ")" << cCLEAR << std::endl;
       }
       else {
-        p->printError("ERROR, given handler not found: " 
-            + sortedEventmanager[i]->getID() + "\n");
+        p->printError("ERROR, given handler not found: " + sortedEventmanager[i]->getID() + "\n");
       }
       called = true;
     }
@@ -387,37 +392,34 @@ bool Context::throw_event(event e, CPlayer* p) {
   return m_curPermeable;
 }
 
-void Context::throw_timeEvents(CPlayer* p)
-{
-    //Check if player is currently occupied.
-    if(p->getContexts().nonPermeableContextInList() == true)
-        return;
+void Context::throw_timeEvents(CPlayer* p) {
+  //Check if player is currently occupied.
+  if (p->getContexts().nonPermeableContextInList() == true)
+    return;
 
-    //Get current time.
-    auto end = std::chrono::system_clock::now();
+  //Get current time.
+  auto end = std::chrono::system_clock::now();
 
-    //Check if a time event is ready to throw, then throw.
-    std::deque<CTimeEvent*> sortedEvents = m_timeevents.getSortedCtxList();
-    for(size_t i=0; i<sortedEvents.size(); i++)
-    {
-        std::chrono::duration<double> diff = end - sortedEvents[i]->getStart();
-        if(diff.count() >= sortedEvents[i]->getDuration())
-        {
-            std::string str = sortedEvents[i]->getInfo();
-            (this->*m_handlers[sortedEvents[i]->getID()])(str, p);
-            std::cout << "BACKPASS: " << str << std::endl;
-            if(str == "delete")
-                m_timeevents.eraseHighest(sortedEvents[i]->getID());
-        }
+  //Check if a time event is ready to throw, then throw.
+  std::deque<CTimeEvent*> sortedEvents = m_timeevents.getSortedCtxList();
+  for (size_t i=0; i<sortedEvents.size(); i++) {
+    std::chrono::duration<double> diff = end - sortedEvents[i]->getStart();
+    if (diff.count() >= sortedEvents[i]->getDuration()) {
+      std::string str = sortedEvents[i]->getInfo();
+      (this->*m_handlers[sortedEvents[i]->getID()])(str, p);
+      std::cout << "BACKPASS: " << str << std::endl;
+      if (str == "delete")
+        m_timeevents.eraseHighest(sortedEvents[i]->getID());
     }
+  }
 }
 
 // ***** ERROR FUNCTIONS ****** ***** //
 
 void Context::error(CPlayer* p) {
-  if(m_permeable == false && m_sError != "")
-      p->appendErrorPrint(m_sError + " " + m_curEvent.first);
-  else if(m_permeable == false) {
+  if (m_permeable == false && m_sError != "")
+    p->appendErrorPrint(m_sError + " " + m_curEvent.first);
+  else if (m_permeable == false) {
     p->appendTechPrint("Falsche Eingabe, gebe \"help\" ein, falls du nicht "
         "weiter weißt. (" + m_sName + ")");
   }
@@ -549,6 +551,10 @@ void Context::h_addItem(std::string& sIdentifier, CPlayer* p) {
     p->addItem(p->getWorld()->getItem(sIdentifier, p));
     m_curPermeable=false;
 }
+void Context::h_removeItem(std::string& sIdentifier, CPlayer* p) {
+  p->getInventory().removeItemByID(sIdentifier);
+  m_curPermeable=false;
+}
 
 void Context::h_recieveMoney(std::string& sIdentifier, CPlayer* p) {
     p->setStat("gold", p->getStat("gold") + stoi(sIdentifier));
@@ -627,6 +633,16 @@ void Context::h_changeName(std::string& sIdentifier, CPlayer* p) {
         << cCLEAR << std::endl;
     }
   }
+  m_curPermeable=false;
+}
+
+void Context::h_addExit(std::string& sIdentifier, CPlayer* p) {
+  std::cout << sIdentifier << std::endl;
+  std::string room = func::split(sIdentifier, "|")[0];
+  std::string linked_room = func::split(sIdentifier, "|")[1];
+  nlohmann::json exit = nlohmann::json::parse(func::split(sIdentifier, "|")[2]);
+  std::cout << room << ", " << linked_room << ", " << exit << std::endl;
+  p->getWorld()->getRoom(room)->getExtits()[linked_room] = new CExit(linked_room, exit, p);
   m_curPermeable=false;
 }
 
@@ -780,8 +796,10 @@ void Context::h_look(std::string& sIdentifier, CPlayer* p) {
   CDetail* detail  = p->getRoom()->getDetails()[sDetail];
   if(detail->getLook() == sWhere)
     p->appendDescPrint(p->getRoom()->look(sDetail, p->getGramma()));
-  else
-    p->appendErrorPrint("Ich kann nicht " + sWhere + " " + detail->getName() + " schauen.\nSoll ich in, auf oder unter " + detail->getName() + " schauen?\n");
+  else {
+    p->appendErrorPrint("Ich kann nicht " + sWhere + " " + detail->getName() 
+        + " schauen.\nSoll ich in, auf oder unter " + detail->getName() + " schauen?\n");
+  }
 }
 
 void Context::h_search(std::string& sIdentifier, CPlayer* p) {
@@ -809,63 +827,83 @@ void Context::h_goTo(std::string& sIdentifier, CPlayer* p) {
   p->changeRoom(sIdentifier);
 }
 
-void Context::h_startDialog(std::string& sIdentifier, CPlayer* p)
-{
-    //Get selected character
-    auto lambda1 = [](CPerson* person) { return person->getName(); };
-    std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda1);
-    auto lambda2 = [](CPlayer* player) { return player->getName(); };
-    std::string player = func::getObjectId(p->getMapOFOnlinePlayers(), sIdentifier, lambda2);
+void Context::h_startDialog(std::string& sIdentifier, CPlayer* p) {
+  //Get selected character
+  auto lambda1 = [](CPerson* person) { return person->getName(); };
+  std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda1);
+  auto lambda2 = [](CPlayer* player) { return player->getName(); };
+  std::string player = func::getObjectId(p->getMapOFOnlinePlayers(), sIdentifier, lambda2);
 
-    //Check if character was found
-    if(character != "") 
-        p->startDialog(character);  
-    else if(player != "") 
-        p->startChat(p->getPlayer(player));
-    else
-        p->appendErrorPrint("Character not found");
+  //Check if character was found
+  if (character != "") 
+    p->startDialog(character);  
+  else if (player != "") 
+    p->startChat(p->getPlayer(player));
+  else
+    p->appendErrorPrint("Character not found");
+}
+
+void Context::h_startDialogDirect(std::string &sIdentifier, CPlayer *p) {
+  std::cout << "h_startDialogDirekt: " << sIdentifier << std::endl;
+
+  std::string aim_identified = m_jAttributes["infos"]["h_startDialogDirect"]["identifier"];
+  std::string character = m_jAttributes["infos"]["h_startDialogDirect"]["character"];
+
+  // Check if identifier matches entered identifier.
+  if (aim_identified != sIdentifier) {
+    return;
+  }
+
+  // Check if given character exists. If he does, call dialog.
+  if (p->getWorld()->getCharacter(character) != nullptr) {
+    p->startDialog(sIdentifier, p->getWorld()->getCharacter(character)->getDialog());
+  }
 }
 
 void Context::h_take(std::string& sIdentifier, CPlayer* p) {
-    if(sIdentifier.find("all") == 0)
-        p->addAll();
-    else if(p->getRoom()->getItem(sIdentifier) == NULL)
-    {
-        std::cout << "Not found.\n";
-        p->appendErrorPrint("Item not found.\n");
-    }
-    else
-    {
-        std::cout << "Getting item.\n";
-        p->addItem(p->getRoom()->getItem(sIdentifier));
-    }
+  if (sIdentifier.find("all") == 0)
+    p->addAll();
+  else if (p->getRoom()->getItem(sIdentifier) == NULL) {
+    std::cout << "Not found.\n";
+    p->appendErrorPrint("Item not found.\n");
+  }
+  else {
+    std::cout << "Getting item.\n";
+    p->addItem(p->getRoom()->getItem(sIdentifier));
+  }
 }
 
 void Context::h_consume(std::string& sIdentifier, CPlayer* p) {
-    if(p->getInventory().getItem(sIdentifier) != NULL) {
-        if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
-            p->appendTechPrint("Dieser Gegenstand kann nicht konsumiert werden.\n");
-    }
-    else
-        p->appendErrorPrint("Gegenstand nicht in deinem Inventar! (benutze \"zeige Inventar\" um deine Items zu sehen.)\n");
+  if (p->getInventory().getItem(sIdentifier) != NULL) {
+    if (p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
+      p->appendTechPrint("Dieser Gegenstand kann nicht konsumiert werden.\n");
+  }
+  else {
+    p->appendErrorPrint("Gegenstand nicht in deinem Inventar! "
+          "(benutze \"zeige Inventar\" um deine Items zu sehen.)\n");
+  }
 }
 
 void Context::h_read(std::string& sIdentifier, CPlayer* p) {
-    if(p->getInventory().getItem(sIdentifier) != NULL) {
-        if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
-            p->appendTechPrint("Dieser Gegenstand kann nicht gelesen werden.\n");
-    }
-    else
-        p->appendErrorPrint("Gegenstand nicht in deinem Inventar! (benutze \"zeige Inventar\" um alle deine Gegenstande zu sehen.)\n");
+  if(p->getInventory().getItem(sIdentifier) != NULL) {
+    if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
+        p->appendTechPrint("Dieser Gegenstand kann nicht gelesen werden.\n");
+  }
+  else {
+      p->appendErrorPrint("Gegenstand nicht in deinem Inventar! "
+          "(benutze \"zeige Inventar\" um alle deine Gegenstande zu sehen.)\n");
+  }
 }
 
 void Context::h_equipe(std::string& sIdentifier, CPlayer* p) {
-    if(p->getInventory().getItem(sIdentifier) != NULL) {
-        if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
-            p->appendErrorPrint("Dieser Gegenstand kann nicht ausgerüstet werden.\n");
-    }
-    else
-        p->appendErrorPrint("Gegenstand nicht in deinem Inventar! (benutze \"zeige Inventar\" um deine Items zu sehen.)\n");
+  if(p->getInventory().getItem(sIdentifier) != NULL) {
+      if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
+          p->appendErrorPrint("Dieser Gegenstand kann nicht ausgerüstet werden.\n");
+  }
+  else {
+      p->appendErrorPrint("Gegenstand nicht in deinem Inventar! "
+          "(benutze \"zeige Inventar\" um deine Items zu sehen.)\n");
+  }
 }
 
 void Context::h_dequipe(std::string& sIdentifier, CPlayer* p) {
@@ -900,22 +938,22 @@ void Context::h_examine(std::string &sIdentifier, CPlayer*p) {
 }
 
 void Context::h_test(std::string& sIdentifier, CPlayer* p) {
-    p->appendPrint(sIdentifier);
+  p->appendPrint(sIdentifier);
 }
 
 
 // **** SPECIAL HANDLER ***** //
 
-void Context::h_moveToHospital(std::string& sIdentifier, CPlayer* p)
-{
-    //Get selected room
-    auto lambda = [](CExit* exit) { return exit->getPrep() + "_" + exit->getName();};
-    if(p->getRoom()->getID().find("zug_compartment") == std::string::npos || func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lambda) != "zug_trainCorridor")
-        return;
+void Context::h_moveToHospital(std::string& sIdentifier, CPlayer* p) {
+  //Get selected room
+  auto lambda = [](CExit* exit) { return exit->getPrep() + "_" + exit->getName();};
+  if (p->getRoom()->getID().find("zug.compartment") == std::string::npos 
+      || func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lambda) != "zug.trainCorridor")
+    return;
 
-    p->changeRoom(p->getWorld()->getRoom("hospital_foyer"));
-    m_block = true;
-    m_curPermeable=false;
+  p->changeRoom(p->getWorld()->getRoom("hospital.foyer"));
+  m_block = true;
+  m_curPermeable=false;
 }
 
 void Context::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
@@ -923,7 +961,7 @@ void Context::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
     std::cout << "h_exitTrainstation, " << sIdentifier << std::endl;
 
     auto lambda= [](CExit* exit) { return exit->getPrep() + " " + exit->getName(); };
-    if(p->getRoom()->getID() != "trainstation_eingangshalle" || func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lambda) != "trainstation_ausgang")
+    if(p->getRoom()->getID() != "trainstation.eingangshalle" || func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lambda) != "trainstation.ausgang")
         return;
 
     p->appendStoryPrint("Du drehst dich zum dem großen, offen stehenden Eingangstor der Bahnhofshalle. Und kurz kommt dir der Gedanke doch den Zug nicht zu nehmen, doch alles beim Alten zu belassen. Doch etwas sagt dir, dass es einen guten Grund gab das nicht zu tun, einen guten Grund nach Moskau zu fahren. Und auch, wenn du ihn gerade nicht mehr erkennst. Vielleicht ist gerade das der beste Grund: rausfinden, was dich dazu getrieben hat, diesen termin in Moskau zu vereinbaren.\n Du guckst dich wieder in der Halle um, und überlegst, wo du anfängst zu suchen.\n");
@@ -931,37 +969,34 @@ void Context::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
     m_block=true;
 }
 
-void Context::h_thieve(std::string& sIdentifier, CPlayer* p)
-{
-    if(m_jAttributes["infos"].count("h_thieve") > 0)
-    {
-        std::string str = m_jAttributes["infos"]["h_thieve"];
-        p->startDialog(str, p->getWorld()->getCharacter(str)->getDialog("thieve"));
-    }
+void Context::h_thieve(std::string& sIdentifier, CPlayer* p) {
+  if (m_jAttributes["infos"].count("h_thieve") > 0) {
+    std::string str = m_jAttributes["infos"]["h_thieve"];
+    p->startDialog(str, p->getWorld()->getCharacter(str)->getDialog("thieve"));
+  }
 
-    else
-        p->appendStoryPrint("You know, me son. You should not be stealing!");
-    m_curPermeable = false;
+  else
+    p->appendStoryPrint("You know, me son. You should not be stealing!");
+  m_curPermeable = false;
 }
 
-void Context::h_attack(std::string& sIdentifier, CPlayer* p)
-{
-    std::cout << "h_attack: " << sIdentifier << std::endl;
+void Context::h_attack(std::string& sIdentifier, CPlayer* p) {
+  std::cout << "h_attack: " << sIdentifier << std::endl;
 
-    if(m_jAttributes["infos"].count("h_attack") == 0)
-        return; 
+  if (m_jAttributes["infos"].count("h_attack") == 0)
+    return; 
 
-    std::string character = m_jAttributes["infos"]["h_attack"];
-    std::cout << "Infos: " << character << std::endl;
-    p->setFight(new CFight(p, p->getWorld()->getCharacter(character)));
-    m_curPermeable = false;
+  std::string character = m_jAttributes["infos"]["h_attack"];
+  std::cout << "Infos: " << character << std::endl;
+  p->setFight(new CFight(p, p->getWorld()->getCharacter(character)));
+  m_curPermeable = false;
 }
 
 
 void Context::h_try(std::string& sIdentifier, CPlayer* p) {
-  p->throw_events("zeige details", "try");
-  p->throw_events("zeige personen", "try");
-  p->throw_events("zeige ausgänge", "try");
+  p->throw_events("go to second", "try");
+  p->throw_events("talk to tall", "try");
+  p->throw_events("1", "try");
   p->throw_events("go neben", "try");
   p->throw_events("go Toil", "try");
   p->throw_events("go frauen", "try");
@@ -1094,101 +1129,90 @@ void Context::h_exit(std::string&, CPlayer* p)
 }
 
 // ***** ***** CHAT CONTEXT ***** ***** //
-void Context::h_send(string& sInput, CPlayer* p)
-{
-    CPlayer* chatPartner = p->getPlayer(getAttribute<std::string>("partner"));
-    chatPartner->send(p->returnSpeakerPrint(func::returnToUpper(p->getName()), sInput + "\n"));
-    p->appendSpeackerPrint("YOU", sInput + "\n");
+void Context::h_send(string& sInput, CPlayer* p) {
+  CPlayer* chatPartner = p->getPlayer(getAttribute<std::string>("partner"));
+  chatPartner->send(p->returnSpeakerPrint(func::returnToUpper(p->getName()), sInput + "\n"));
+  p->appendSpeackerPrint("YOU", sInput + "\n");
 }
 
-void Context::h_end(string& sMessage, CPlayer* p)
-{
-    CPlayer* chatPartner = p->getPlayer(getAttribute<std::string>("partner"));
-    if(sMessage == "[end]")
-        chatPartner->send("[Gespräch beendet].\n");
-    else
-    {
-        chatPartner->send(p->returnSpeakerPrint(func::returnToUpper(p->getName()), sMessage));
-        chatPartner->send("[Gespräch beendet].\n");
-    }
+void Context::h_end(string& sMessage, CPlayer* p) {
+  CPlayer* chatPartner = p->getPlayer(getAttribute<std::string>("partner"));
+  if(sMessage == "[end]")
+      chatPartner->send("[Gespräch beendet].\n");
+  else {
+    chatPartner->send(p->returnSpeakerPrint(func::returnToUpper(p->getName()), sMessage));
+    chatPartner->send("[Gespräch beendet].\n");
+  }
 
-    chatPartner->getContexts().erase("chat");
+  chatPartner->getContexts().erase("chat");
 
-    p->appendPrint("Gespräch mit " + chatPartner->getName() + " beendet.\n");
-    p->getContexts().erase("chat");
-    m_block = true; 
+  p->appendPrint("Gespräch mit " + chatPartner->getName() + " beendet.\n");
+  p->getContexts().erase("chat");
+  m_block = true; 
 }
 
 
 // ***** ***** CHAT CONTEXT ***** ***** //
 
-void Context::h_next(std::string&, CPlayer* p)
-{
-    std::cout << "h_next\n";
-    std::cout << "Item: " << m_jAttributes["item"] << std::endl;
-    CItem* item = p->getInventory().getItem_byID(m_jAttributes["item"]);
+void Context::h_next(std::string&, CPlayer* p) {
+  std::cout << "h_next\n";
+  std::cout << "Item: " << m_jAttributes["item"] << std::endl;
+  CItem* item = p->getInventory().getItem_byID(m_jAttributes["item"]);
 
-    std::cout << "Mark: " << m_jAttributes["mark"] << std::endl;
-    std::cout << "Pages.size(): " << item->getPages()->getNumPages() << std::endl;
-    if(m_jAttributes["mark"] == item->getPages()->getNumPages()-1)
-        p->appendDescPrint("Das Buch ist zuende.");
-    else
-    {
-        m_jAttributes["mark"] = m_jAttributes["mark"].get<size_t>()+1;
-        p->appendPrint(
-              "Seite: " + std::to_string(m_jAttributes["mark"].get<int>()+1) + ": \n"
-            + item->getPages()->pagePrint(m_jAttributes["mark"]) + "\n");
-    }
+  std::cout << "Mark: " << m_jAttributes["mark"] << std::endl;
+  std::cout << "Pages.size(): " << item->getPages()->getNumPages() << std::endl;
+  if(m_jAttributes["mark"] == item->getPages()->getNumPages()-1)
+    p->appendDescPrint("Das Buch ist zuende.");
+  else {
+    m_jAttributes["mark"] = m_jAttributes["mark"].get<size_t>()+1;
+    p->appendPrint(
+          "Seite: " + std::to_string(m_jAttributes["mark"].get<int>()+1) + ": \n"
+        + item->getPages()->pagePrint(m_jAttributes["mark"]) + "\n");
+  }
 }
 
-void Context::h_prev(std::string&, CPlayer* p)
-{
-    std::cout << "h_prev\n";
-    std::cout << "Item: " << m_jAttributes["item"] << std::endl;
-    CItem* item = p->getInventory().getItem_byID(m_jAttributes["item"]);
-    if(m_jAttributes["mark"] == 0)
-        p->appendDescPrint("Das Buch ist bereits auf der ersten Seite aufgeschlagen.");
-    else
-    {
-        m_jAttributes["mark"] = m_jAttributes["mark"].get<size_t>() -1;
-        p->appendPrint(
-              "Seite: " + std::to_string(m_jAttributes["mark"].get<int>()+1) + ": \n"
-            + item->getPages()->pagePrint(m_jAttributes["mark"]) + "\n");
-    }
+void Context::h_prev(std::string&, CPlayer* p) {
+  std::cout << "h_prev\n";
+  std::cout << "Item: " << m_jAttributes["item"] << std::endl;
+  CItem* item = p->getInventory().getItem_byID(m_jAttributes["item"]);
+  if(m_jAttributes["mark"] == 0)
+    p->appendDescPrint("Das Buch ist bereits auf der ersten Seite aufgeschlagen.");
+  else {
+    m_jAttributes["mark"] = m_jAttributes["mark"].get<size_t>() -1;
+    p->appendPrint(
+          "Seite: " + std::to_string(m_jAttributes["mark"].get<int>()+1) + ": \n"
+        + item->getPages()->pagePrint(m_jAttributes["mark"]) + "\n");
+  }
 }
 
-void Context::h_mark(std::string&, CPlayer* p)
-{
-    std::cout << "h_mark\n";
-    std::cout << "Item: " << m_jAttributes["item"] << std::endl;
+void Context::h_mark(std::string&, CPlayer* p) {
+  std::cout << "h_mark\n";
+  std::cout << "Item: " << m_jAttributes["item"] << std::endl;
 
-    p->getInventory().getItem_byID(m_jAttributes["item"])->setMark(m_jAttributes["mark"]);
-    size_t mark = m_jAttributes["mark"];
-    p->appendPrint("Leesezeichen auf Seite " + std::to_string(mark+1) + " gesetzt.");
+  p->getInventory().getItem_byID(m_jAttributes["item"])->setMark(m_jAttributes["mark"]);
+  size_t mark = m_jAttributes["mark"];
+  p->appendPrint("Leesezeichen auf Seite " + std::to_string(mark+1) + " gesetzt.");
 }
 
-void Context::h_underline(std::string& sIdentifier, CPlayer* p)
-{
-    if(sIdentifier.find(",") == std::string::npos)
-    {
-        p->appendErrorPrint("Leider nicht das richtige Format \"[von], [bis]\"");
-        return;
-    }
-    std::string str1 = func::split(sIdentifier, ", ")[0];
-    std::string str2 = func::split(sIdentifier, ", ")[1];
-    
-    CItem* item = p->getInventory().getItem_byID(m_jAttributes["item"]);
-    bool success = item->getPages()->underline(m_jAttributes["mark"], str1, str2);
-    if(success == false)
-        p->appendErrorPrint("Eines der Wörter konnte nicht gefunden werden.");
-    else
-        p->appendPrint(item->getPages()->pagePrint(m_jAttributes["mark"]));
+void Context::h_underline(std::string& sIdentifier, CPlayer* p) {
+  if(sIdentifier.find(",") == std::string::npos) {
+    p->appendErrorPrint("Leider nicht das richtige Format \"[von], [bis]\"");
+    return;
+  }
+  std::string str1 = func::split(sIdentifier, ", ")[0];
+  std::string str2 = func::split(sIdentifier, ", ")[1];
+  
+  CItem* item = p->getInventory().getItem_byID(m_jAttributes["item"]);
+  bool success = item->getPages()->underline(m_jAttributes["mark"], str1, str2);
+  if(success == false)
+      p->appendErrorPrint("Eines der Wörter konnte nicht gefunden werden.");
+  else
+      p->appendPrint(item->getPages()->pagePrint(m_jAttributes["mark"]));
 }
 
-void Context::h_stop(std::string&, CPlayer* p)
-{
-    p->appendDescPrint("Ich habe das Buch wieder zugeschlagen.\n");
-    p->getContexts().erase("read"); 
+void Context::h_stop(std::string&, CPlayer* p) {
+  p->appendDescPrint("Ich habe das Buch wieder zugeschlagen.\n");
+  p->getContexts().erase("read"); 
 }
 
 
@@ -1253,28 +1277,27 @@ void Context::h_reden(std::string& sIdentifier, CPlayer* p) {
   //Change dialog of all "Passanten"
   if(step->getSolved() == true) {
     std::cout << "CHANGING DIALOGS OF PASSANTEN\n";
-    p->getWorld()->getCharacter("trainstation_eingangshalle_passanten_gruppe")
+    p->getWorld()->getCharacter("trainstation.eingangshalle.passanten_gruppe")
         ->setDialog("2");
-    p->getWorld()->getCharacter("trainstation_nebenhalle_passanten_gruppe")
+    p->getWorld()->getCharacter("trainstation.nebenhalle.passanten_gruppe")
         ->setDialog("2");
-    p->getWorld()->getCharacter("trainstation_gleis5_passanten_gruppe")
+    p->getWorld()->getCharacter("trainstation.gleis5.passanten_gruppe")
         ->setDialog("2");
     p->getContexts().erase(quest->getID());
   }
 }
 
 // *** *** GELD AUFTREIBEN *** *** //
-void Context::h_geldauftreiben(std::string& sIdentifier, CPlayer* p)
-{
-    if(p->getStat("gold") + stoi(sIdentifier) < 10)
-        return;
+void Context::h_geldauftreiben(std::string& sIdentifier, CPlayer* p) {
+  if (p->getStat("gold") + stoi(sIdentifier) < 10)
+    return;
 
-    CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
-    if(quest->getActive() == true)
-        p->appendDescPrint("Wundervoll, genug Geld, um das Ticket zu kaufen!\n");
+  CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
+  if (quest->getActive() == true)
+    p->appendDescPrint("Wundervoll, genug Geld, um das Ticket zu kaufen!\n");
 
-    p->questSolved(quest->getID(), "geldauftreiben");
-    p->getContexts().erase(quest->getID());
+  p->questSolved(quest->getID(), "geldauftreiben");
+  p->getContexts().erase(quest->getID());
 }
 
 

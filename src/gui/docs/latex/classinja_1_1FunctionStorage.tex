@@ -1,0 +1,101 @@
+\hypertarget{classinja_1_1FunctionStorage}{}\doxysection{inja\+::Function\+Storage Class Reference}
+\label{classinja_1_1FunctionStorage}\index{inja::FunctionStorage@{inja::FunctionStorage}}
+
+
+Class for builtin functions and user-\/defined callbacks.  
+
+
+
+
+{\ttfamily \#include $<$inja.\+hpp$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structinja_1_1FunctionStorage_1_1FunctionData}{Function\+Data}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classinja_1_1FunctionStorage_aeb78440163bb7cd83add1d3dfbd31522}\label{classinja_1_1FunctionStorage_aeb78440163bb7cd83add1d3dfbd31522}} 
+enum {\bfseries Operation} \{ \newline
+{\bfseries Not}, 
+{\bfseries And}, 
+{\bfseries Or}, 
+{\bfseries In}, 
+\newline
+{\bfseries Equal}, 
+{\bfseries Not\+Equal}, 
+{\bfseries Greater}, 
+{\bfseries Greater\+Equal}, 
+\newline
+{\bfseries Less}, 
+{\bfseries Less\+Equal}, 
+{\bfseries Add}, 
+{\bfseries Subtract}, 
+\newline
+{\bfseries Multiplication}, 
+{\bfseries Division}, 
+{\bfseries Power}, 
+{\bfseries Modulo}, 
+\newline
+{\bfseries At\+Id}, 
+{\bfseries At}, 
+{\bfseries Default}, 
+{\bfseries Divisible\+By}, 
+\newline
+{\bfseries Even}, 
+{\bfseries Exists}, 
+{\bfseries Exists\+In\+Object}, 
+{\bfseries First}, 
+\newline
+{\bfseries Float}, 
+{\bfseries Int}, 
+{\bfseries Is\+Array}, 
+{\bfseries Is\+Boolean}, 
+\newline
+{\bfseries Is\+Float}, 
+{\bfseries Is\+Integer}, 
+{\bfseries Is\+Number}, 
+{\bfseries Is\+Object}, 
+\newline
+{\bfseries Is\+String}, 
+{\bfseries Last}, 
+{\bfseries Length}, 
+{\bfseries Lower}, 
+\newline
+{\bfseries Max}, 
+{\bfseries Min}, 
+{\bfseries Odd}, 
+{\bfseries Range}, 
+\newline
+{\bfseries Round}, 
+{\bfseries Sort}, 
+{\bfseries Upper}, 
+{\bfseries Callback}, 
+\newline
+{\bfseries Paren\+Left}, 
+{\bfseries Paren\+Right}, 
+{\bfseries None}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classinja_1_1FunctionStorage_a9d70e6ca8200f9023c1d73d9921a7ea8}\label{classinja_1_1FunctionStorage_a9d70e6ca8200f9023c1d73d9921a7ea8}} 
+void {\bfseries add\+\_\+builtin} (nonstd\+::string\+\_\+view name, int num\+\_\+args, Operation op)
+\item 
+\mbox{\Hypertarget{classinja_1_1FunctionStorage_aeb21c55f367cea9cb94d1c7ea56c61a1}\label{classinja_1_1FunctionStorage_aeb21c55f367cea9cb94d1c7ea56c61a1}} 
+void {\bfseries add\+\_\+callback} (nonstd\+::string\+\_\+view name, int num\+\_\+args, const Callback\+Function \&callback)
+\item 
+\mbox{\Hypertarget{classinja_1_1FunctionStorage_a9c65142e5a7d9d4d74440f83e1049785}\label{classinja_1_1FunctionStorage_a9c65142e5a7d9d4d74440f83e1049785}} 
+\mbox{\hyperlink{structinja_1_1FunctionStorage_1_1FunctionData}{Function\+Data}} {\bfseries find\+\_\+function} (nonstd\+::string\+\_\+view name, int num\+\_\+args) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class for builtin functions and user-\/defined callbacks. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/home/fux/\+Documents/programming/\+Der-\/\+Zug/src/gui/src/users/inja.\+hpp\end{DoxyCompactItemize}

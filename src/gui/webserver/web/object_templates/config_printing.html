@@ -1,0 +1,44 @@
+{% include "temp_header" %}
+{{ log("rendered header") }}
+
+  <li custom="map">
+    <label title="Use this to define variables for speaker printing,
+                   which will be translated according to this mapping. 
+                   F.e. map 'story' to 'JACK'. This way, when the story-teller
+                   changes, you can simply modify the config (modConfig ...) 
+                   and chang 'JACK' to something else, without having to change
+                   all speakers.">
+      Printing:
+     </label>
+     <ul id="printing">
+       {% if length(content) == 0 %}
+          <li custom="pair">
+             <label>Name:</label>
+             <input placeholder="attribue" value="">
+             <br>
+             <label>Value:</label>
+             <input placeholder="mapping" value="">
+             <span class="mod_elem" onclick="del_elem('printing',1)">-</span>
+             <span class="mod_elem" onclick="add_elem('printing',1)">+</span>
+           </li>
+
+       {% else %}
+         {% for key, value in default(content, {"":""}) %}
+           <li custom="pair">
+             <label>Name:</label>
+             <input placeholder="attribue" value="{{default(key, "")}}">
+             <br>
+             <label>Value:</label>
+             <input placeholder="mapping" value={{default(value, "")}}>
+             <br>
+             <span class="mod_elem" onclick="del_elem('printing',{{loop.index}})">-</span>
+             <span class="mod_elem" onclick="add_elem('printing',{{loop.index}})">+</span>
+           </li>
+         {% endfor %}
+       {% endif %}
+     </ul>
+   </li>
+
+   {{ log("rendered printing") }}
+
+{% include "temp_footer" %}

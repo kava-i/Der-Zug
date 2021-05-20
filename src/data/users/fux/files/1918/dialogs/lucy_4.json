@@ -1,0 +1,14 @@
+{
+    "START": {
+        "id": "START",
+        "text": [
+            {
+                "post_otEvents": [
+                    "addExit test.raum2|test.raum4|{\"name\":\"thrid room\", \"prep\":\"to\"}"
+                ],
+                "speaker": "LUCY",
+                "text": "So he is sick? maybe you can see the doctor and find out more about this disease."
+            }
+        ]
+    }
+}

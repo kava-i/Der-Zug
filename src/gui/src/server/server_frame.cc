@@ -12,6 +12,7 @@
 
 #include <exception>
 #include <iostream>
+#include <ostream>
 #include <regex>
 #include <string>
 
@@ -19,24 +20,33 @@ using namespace httplib;
 
 
 //Constructor
-ServerFrame::ServerFrame() : user_manager_("../../data/users", {"attacks", 
-    "defaultDialogs", "dialogs", "players", "rooms", "characters", 
-    "defaultDescriptions", "details", "items", "quests", "texts", "images"})
+ServerFrame::ServerFrame(std::string path_to_cert, std::string path_to_key) 
+  : user_manager_("../../data/users")
+#ifdef _COMPILE_FOR_SERVER_
+    , server_(path_to_cert.c_str(), path_to_key.c_str())
+#endif
 {}
 
 void ServerFrame::Start(int port) {
   std::cout << "Starting on Port: " << port << std::endl;
+  
+  // Get only json.
+  server_.Get("/api/get_object", [&](const Request& req, Response& resp) {
+      GetObjectInfo(req, resp); });
+
+  server_.Post("/api/set_notes", [&](const Request& req, Response& resp) {
+      SetNotes(req, resp); });
+
 
   // *** Pages *** //
+ 
   server_.Get("/login", [&](const Request& req, Response& resp) { 
       LoginPage(req, resp);});
   server_.Get("/overview", [&](const Request& req, Response& resp) { 
       ServeFile(req, resp); });
-  server_.Get("/(.*)/files/(.*)/(.*)/(.*)/(.*)", [&](const Request& req, 
-        Response& resp) { 
+  server_.Get("/(.*)/files/(.*)/(.*)/(.*)/(.*)", [&](const Request& req, Response& resp) { 
       ServeFile(req, resp);});
-  server_.Get("/(.*)/files/(.*)/(.*)/(.*)", [&](const Request& req, 
-        Response& resp) { 
+  server_.Get("/(.*)/files/(.*)/(.*)/(.*)", [&](const Request& req, Response& resp) { 
       ServeFile(req, resp); });
   server_.Get("/(.*)/files/(.*)/(.*)", [&](const Request& req, Response& resp) { 
       ServeFile(req, resp); });
@@ -87,7 +97,7 @@ void ServerFrame::Start(int port) {
   server_.Post("/api/start_game", [&](const Request& req, Response& resp) {
       StartGame(req, resp); });
 
-  //html
+    //html
   server_.Get("/", [&](const Request& req, Response& resp) {
       resp.set_content(func::GetPage("web/main.html"), "text/html"); });
   server_.Get("/login", [&](const Request& req, Response& resp) {
@@ -106,6 +116,10 @@ void ServerFrame::Start(int port) {
       resp.set_content(func::GetPage("web/object.js"), "application/javascript"); });
   server_.Get("/web/backup.js", [&](const Request& req, Response& resp) {
       resp.set_content(func::GetPage("web/backup.js"), "application/javascript"); });
+  server_.Get("/web/cytoscape.min.js", [&](const Request& req, Response& resp) {
+      resp.set_content(func::GetPage("web/cytoscape.min.js"), "application/javascript"); });
+  server_.Get("/web/graph.js", [&](const Request& req, Response& resp) {
+      resp.set_content(func::GetPage("web/graph.js"), "application/javascript"); });
   server_.Get("/web/registration.js", [](const Request& req, Response& resp)
       { resp.set_content(func::GetPage("web/registration.js"), 
           "application/javascript");});
@@ -122,16 +136,16 @@ void ServerFrame::Start(int port) {
       { resp.set_content(func::GetPage("web/fuzzy_finder.js"), 
           "application/javascript");});
 
-
-
   //Images
   server_.Get("/web/background.jpg", [](const Request& req, Response& resp) {
       resp.set_content(func::GetImage("web/images/background.jpg"), "image/jpg");});
   server_.Get("/web/logo.png", [](const Request& req, Response& resp) {
       resp.set_content(func::GetImage("web/images/logo.png"), "image/png");});
+  server_.Get("/favicon.png", [](const Request& req, Response& resp) {
+      resp.set_content(func::GetImage("web/images/favicon.png"), "image/png");});
 
 
-  std::cout << "C++ Api server startup successfull!" << std::endl;
+  std::cout << "C++ Api server startup successfull!\n" << std::endl;
   server_.listen("0.0.0.0", port);
 }
 
@@ -139,7 +153,6 @@ void ServerFrame::Start(int port) {
 //Handler
 
 void ServerFrame::LoginPage(const Request& req, Response& resp) const {
-
   //Try to get username from cookie
   const char* ptr = get_header_value(req.headers, "Cookie");
   std::shared_lock sl(shared_mtx_user_manager_);
@@ -156,20 +169,12 @@ void ServerFrame::LoginPage(const Request& req, Response& resp) const {
 }
 
 void ServerFrame::DoLogin(const Request& req, Response& resp) {
-  std::string username = "", pw = "";
-  try {
-    nlohmann::json user_input = nlohmann::json::parse(req.body);
-    username = user_input["username"];
-    pw = user_input["password"];
-  }
-  catch(std::exception& e) {
-    std::cout << "Login failed: " << e.what() << std::endl;
-    resp.status = 401;
-  }
+  nlohmann::json input = ValidateJson(req, resp, {"username", "password"});
+  if (input.empty()) return;
 
   //Call DoLogin, returns "&msg: ..." in case of failure
   std::unique_lock ul(shared_mtx_user_manager_);
-  std::string error = user_manager_.DoLogin(username, pw);
+  std::string error = user_manager_.DoLogin(input["username"], input["password"]);
   ul.unlock();
   
   if (error != "") 
@@ -177,32 +182,20 @@ void ServerFrame::DoLogin(const Request& req, Response& resp) {
   else {
     //std::string cookie = "SESSID=" + GenerateCookie(username) + "; Path=/; SECURE";
     ul.lock();
-    std::string cookie = "SESSID=" + user_manager_.GenerateCookie(username)
+    std::string cookie = "SESSID=" + user_manager_.GenerateCookie(input["username"])
       + "; Path=/";
     ul.unlock();
     resp.set_header("Set-Cookie", cookie.c_str());
-    std::cout << username << " logged in.\n";
   }
 }
 
 void ServerFrame::DoRegistration(const Request& req, Response& resp) {
-  std::string username ="", pw1="", pw2="";
-  try {
-    nlohmann::json user_input = nlohmann::json::parse(req.body);
-    username = user_input["id"];
-    pw1 = user_input["pw1"];
-    pw2 = user_input["pw2"];
-  }
-  catch (std::exception& e) {
-    resp.set_content("Wrong format for username or password", "application/json");
-    std::cout << "Registration failed: " << e.what() << std::endl;
-    return;
-  }
+  nlohmann::json input = ValidateJson(req, resp, {"id", "pw1", "pw2"});
+  if (input.empty()) return;
 
   //Try to register user. Send error code if not possible.
   std::unique_lock ul(shared_mtx_user_manager_);
-  std::cout << "Registering user: " << username << std::endl;
-  std::string error = user_manager_.DoRegistration(username, pw1, pw2);
+  std::string error = user_manager_.DoRegistration(input["id"], input["pw1"], input["pw2"]);
   ul.unlock();
 
   if (error != "") {
@@ -212,60 +205,46 @@ void ServerFrame::DoRegistration(const Request& req, Response& resp) {
   //If exists, log user in, by adding cookie.
   else {
     ul.lock();
-    std::string cookie = "SESSID=" + user_manager_.GenerateCookie(username) 
+    std::string cookie = "SESSID=" + user_manager_.GenerateCookie(input["id"]) 
       + "; Path=/";
     ul.unlock();
     resp.set_header("Set-Cookie", cookie.c_str());
-    std::cout << username << " registered.\n";
+    std::cout << input["id"] << " registered.\n" << std::endl;
   }
 }
 
 void ServerFrame::DoLogout(const Request& req, Response& resp) {
-  
   //Get cookie and try to erase cookie from map in usermanager.
   const char* ptr = get_header_value(req.headers, "Cookie");
   std::shared_lock sl(shared_mtx_user_manager_);
   if (!user_manager_.DoLogout(ptr))
-    std::cout << "Erasing cookie failed: cookie doesn't exist!\n";
+    std::cout << "Erasing cookie failed: cookie doesn't exist!\n" << std::endl;
   else   
-    std::cout << "cookie from user erased. User logged out.\n";
+    std::cout << "cookie from user erased. User logged out.\n" << std::endl;
 }
 
 void ServerFrame::DelUser(const Request& req, Response& resp) {
-  //Get cookie and try to get username from usermanager.
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-  //Sent controller value-page as respond.
-  if (username != "") {
-    std::unique_lock ul(shared_mtx_user_manager_);
-    user_manager_.DeleteUser(username);
-    ul.unlock();
-    resp.status=200;
-  }
-  //If user couldn't be found, do nothing, redirect to login page.
-  else {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-    return;
-  }
+  // Get cookie and try to get username from usermanager.
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
+
+  // Delete user.
+  std::unique_lock ul(shared_mtx_user_manager_);
+  user_manager_.DeleteUser(username);
+  ul.unlock();
+  resp.status=200;
 }
 void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup) 
     const {
   //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
+
   std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
   User* user = user_manager_.GetUser(username);
   sl.unlock();
 
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-  }
-  else if (user->CheckAccessToLocations(req.matches[0]) == false &&
+  if (user->CheckAccessToLocations(req.matches[0]) == false &&
       req.matches.size() > 1) {
     resp.status = 302;
     resp.set_header("Location", "/overview");
@@ -277,201 +256,246 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
         sl.lock();
         nlohmann::json shared_worlds = user_manager_.GetSharedWorlds(username);
         nlohmann::json all_worlds = user_manager_.GetAllWorlds(username);
-        sl.unlock();
         page = user->GetOverview(shared_worlds, all_worlds);
       }
-      else if (req.matches.size() == 3 && backup == false) {
+      else {
         sl.lock();
-        int port = user_manager_.GetPortOfWorld(req.matches[1], req.matches[2]);
-        sl.unlock();
-        page = user->GetWorld(req.matches[0], req.matches[1], req.matches[2], port);
-      }
-      else if (req.matches.size() == 3 && backup == true)
-        page = user->GetBackups(req.matches[1], req.matches[2]);
-      else if (req.matches.size() == 4)
-        page = user->GetCategory(req.matches[0], req.matches[1], req.matches[2], 
-            req.matches[3]);
-      else if (req.matches.size() == 5)
-        page = user->GetObjects(req.matches[0], req.matches[1], req.matches[2], 
-            req.matches[3], req.matches[4]);
-      else if (req.matches.size() == 6) {
-        page = user->GetObject(req.matches[0], req.matches[1], req.matches[2], 
-            req.matches[3], req.matches[4], req.matches[5]);
-      }
-    }
-    catch (std::exception& e) {
+        page = user_manager_.worlds()->GetPage(req.matches[0]);
+      } 
+    } catch (std::exception& e) {
       std::cout << "ServeFile: " << e.what() << std::endl;
     }
     resp.set_content(page.c_str(), "text/html");
   }
 }
 
-void ServerFrame::AddElem(const Request& req, Response& resp) {
+void ServerFrame::GetObjectInfo(const Request& req, Response& resp) {
   //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-
-  //If user does not exist, redirect to login-page.
+  std::string username = CheckLogin(req, resp);
   if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
+    resp.status = 404;
     return;
   }
-  
-  //Try to parse json
-  std::string name, path;
-  bool force = false;
-  try {
-    nlohmann::json request = nlohmann::json::parse(req.body);
-    name = request["name"];
-    path = request.value("path", "");
-    force = request.value("force", false);
-  }
-  catch (std::exception& e) {
-    std::cout << "Parsing json failed: " << e.what() << std::endl;
-    resp.status = 401;
-    resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
-    return;
-  }
-  
-  //Get user
-  sl.lock();
-  User* user = user_manager_.GetUser(username);
 
+  // Get query parameters and return error code if query parameters are missing.
+  if (!req.has_param("type") || !req.has_param("path")) {
+    std::cout << "Missing parameters." << std::endl;
+    resp.status = 400;
+    return;
+  }
+  std::string path = req.get_param_value("path");
+  std::string info_type = req.get_param_value("type");
+  std::cout << "GetObjectJson(" << info_type << ", " << path << ")" << std::endl;
+
+  //Get user
+  std::shared_lock sl(shared_mtx_user_manager_);
+  User* user = user_manager_.GetUser(username);
   sl.unlock();
+
+  nlohmann::json object_json = nlohmann::json();
+  //Check whether user has access to this location
+  if (user->CheckAccessToLocations(path) == false &&
+      req.matches.size() > 1 && req.matches[2] != "world") {
+    resp.status = 401;
+  }
+  // Get Object Infos
+  else {
+    if (info_type == "json") {
+      std::cout << "calling GetObjectJson" << std::endl;
+      object_json = user_manager_.worlds()->GetObjectJson(path);
+      if (!object_json.empty())
+        resp.status = 200;
+      else
+        resp.status = 404;
+    }
+    else if (info_type == "graph") {
+      std::cout << "calling Graph" << std::endl;
+      object_json = user_manager_.worlds()->GetGraph(path);
+    }
+    else if (info_type == "notes") {
+      std::cout << "calling Graph" << std::endl;
+      object_json = user_manager_.worlds()->GetNotes(path);
+    }
+
+  }
+  
+  //Check whether action succeeded
+  std::cout << "ServerFrame::GetObject" << info_type << " done with: " << object_json << ".\n\n";
+  resp.set_content(object_json.dump(), "application/json");
+}
+
+void ServerFrame::SetNotes(const Request& req, Response& resp) {
+  //Try to get username from cookie
+  std::string username = CheckLogin(req, resp);
+  if (username == "") {
+    resp.status = 404;
+    return;
+  }
+
+  //Try to parse json
+  nlohmann::json input = ValidateJson(req, resp, {"notes", "path"});
+  std::string notes = input["notes"];
+  std::string path = input.value("path", "");
+
+  std::cout << "SetNotes(" << path << ")\n" << notes << std::endl;
+
+  //Get user
+  std::shared_lock sl(shared_mtx_user_manager_);
+  User* user = user_manager_.GetUser(username);
+  sl.unlock();
+
+  nlohmann::json object_json = nlohmann::json();
+  //Check whether user has access to this location
+  if (user->CheckAccessToLocations(path) == false &&
+      req.matches.size() > 1 && req.matches[2] != "world") {
+    resp.status = 401;
+  }
+  // Get Object Infos
+  else {
+    std::cout << "calling Graph" << std::endl;
+    user_manager_.worlds()->SetNotes(path, notes);
+    resp.status = 200;
+  }
+}
+
+void ServerFrame::AddElem(const Request& req, Response& resp) {
+  std::cout << "ServerFrame::AddElem()" << req.body << std::endl;
+  //Try to get username from cookie
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
+
+  //Try to parse json
+  nlohmann::json input = ValidateJson(req, resp, {"name", "infos"});
+  std::string name = input["name"];
+  std::string path = input.value("path", "");
+  nlohmann::json infos = input["infos"];
+  bool force = input.value("force", false);
+
+  std::cout << "Got infos: " << infos << std::endl;
+
+  //Get user
+  std::shared_lock sl(shared_mtx_user_manager_);
+  User* user = user_manager_.GetUser(username);
+  sl.unlock();
+
   int error_code = ErrorCodes::WRONG_FORMAT;
   //Check whether user has access to this location
   if (user->CheckAccessToLocations(path) == false &&
       req.matches.size() > 1 && req.matches[1] != "world") {
     error_code = ErrorCodes::ACCESS_DENIED;
   }
-  else if (req.matches.size() > 1 && req.matches[1] == "world") 
-    error_code = user->CreateNewWorld(name, user_manager_.GetNextPort());
-  else if (req.matches.size() > 1 && req.matches[1] == "subcategory") 
-    error_code = user->AddFile(path, name);
-  else if (req.matches.size() > 1 && req.matches[1] == "object") 
-    error_code = user->AddNewObject(path, name, force);
+  // Create new world
+  else if (req.matches.size() > 1 && req.matches[1] == "world")
+    error_code = user_manager_.worlds()->CreateNewWorld("/"+username+"/files/"+name, name);
+  // Create new object or (sub-)category.
+  else
+    error_code = user_manager_.worlds()->UpdateElements(path, name, "add", force, infos);
 
   //Check whether action succeeded
   if (error_code == ErrorCodes::SUCCESS) 
     resp.status = 200;
   else 
     resp.status = 401;
+  std::cout << "ServerFrame::AddElem done with error_code: " << error_code << "\n\n";
   resp.set_content(std::to_string(error_code), "text/txt");
 }
 
 void ServerFrame::DelElem(const Request& req, Response& resp) {
+  std::cout << "ServerFrame::DelElem." << std::endl;
+  std::cout << "Body: " << req.body << std::endl;
   //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-    return;
-  }
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
   
   //Try to parse json
-  std::string name, path;
-  try {
-    nlohmann::json request = nlohmann::json::parse(req.body);
-    name = request["name"];
-    path = request.value("path", "");
-  }
-  catch (std::exception& e) {
-    std::cout << "Parsing json failed: " << e.what() << std::endl;
-    resp.status = 401;
-    resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
-    return;
-  }
-  
-  //Get user
-  sl.lock();
-  User* user = user_manager_.GetUser(username);
+  nlohmann::json input = ValidateJson(req, resp, {"name", "path"});
+  if (input.empty()) return;
+  std::string name = input["name"];
+  std::string path = input["path"];
+  bool force = input.value("force", false);
 
+  //Get user
+  std::shared_lock sl(shared_mtx_user_manager_);
+  User* user = user_manager_.GetUser(username);
   sl.unlock();
+
   int error_code = ErrorCodes::WRONG_FORMAT;
   //Check whether user has access to this location
-  if (user->CheckAccessToLocations(path) == false &&
-      req.matches.size() > 1 && req.matches[1] != "world") {
+  if (req.matches.size() > 1 && req.matches[1] == "world")
+    error_code = user_manager_.worlds()->DeleteWorld("/"+username+"/files/"+name);
+  else if (user->CheckAccessToLocations(path))
+    error_code = user_manager_.worlds()->UpdateElements(path, name, "delete", force);
+  else
     error_code = ErrorCodes::ACCESS_DENIED;
-  }
-  else if (req.matches.size() > 1 && req.matches[1] == "world")
-    error_code = user->DeleteWorld(name);
-  else if (req.matches.size() > 1 && req.matches[1] == "subcategory") 
-    error_code = user->DeleteFile(path, name);
-  else if (req.matches.size() > 1 && req.matches[1] == "object") 
-    error_code = user->DeleteObject(path, name);
-
-  //Check whether action succeeded
+  
+  // Construct response.
   if (error_code == ErrorCodes::SUCCESS) 
     resp.status = 200;
   else 
     resp.status = 401;
+  std::cout << "ServerFrame::DelElem done with error_code: " << error_code << "\n\n";
   resp.set_content(std::to_string(error_code), "text/txt");
 }
 
 void ServerFrame::WriteObject(const Request& req, Response& resp) {
+  std::cout << "ServerFrame::WriteObject." << std::endl;
   //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
+  
+  //Try to parse json and get relevant attributes.
+  nlohmann::json json_req = ValidateJson(req, resp, {"json", "path"});
+  if (json_req.empty()) 
+    return;
+  std::string id = "";
+  if (json_req["json"].contains("id"))
+    id = json_req["json"]["id"];
+  else {
+    for (const auto& it : json_req["json"].items()) {
+      id = it.key();
+      json_req["json"] = it.value();
+      break;
+    }
+  }
+  std::string path = json_req["path"];
+  nlohmann::json modified_obj = json_req["json"];
+  bool force = json_req.value("force", false);
+  
+  //Get user
   std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
+  int error_code;
+  User* user = user_manager_.GetUser(username);
   sl.unlock();
 
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-  }
-  else {
-    sl.lock();
-    //Call matching function.
-    int error_code = user_manager_.GetUser(username)->WriteObject(req.body);
-    sl.unlock();
-    if (error_code == ErrorCodes::SUCCESS)
-      resp.status = 200;
-    else
-      resp.status = 401;
-    resp.set_content(std::to_string(error_code), "text/txt");
-  }
+  // Call function to modify object.
+  if (user->CheckAccessToLocations(path))
+    error_code = user_manager_.worlds()->UpdateElements(path, id, "modify", force, modified_obj);
+  else 
+    error_code = ErrorCodes::ACCESS_DENIED;
+
+  // Construct response.
+  if (error_code == ErrorCodes::SUCCESS)
+    resp.status = 200;
+  else
+    resp.status = 401;
+  std::cout << "ServerFrame::WriteObject done with error_code: " << error_code << "\n\n";
+  resp.set_content(std::to_string(error_code), "text/txt");
 }
 
 void ServerFrame::Backups(const Request& req, Response& resp, std::string action) {
   //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
+  
+  // Parse from json
+  nlohmann::json input = ValidateJson(req, resp, {"user"});
+  if (input.empty()) return;
+  std::string user = input["user"];
+  std::string world = input.value("world", "");
+  std::string backup = input.value("backup", "");
+  std::string path = "/" + user + "/files/" + input.value("world", input.value("backup", "!!!!!"));
+
   std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-    return;
-  }
-
-  //Parse user, backup and world from request
-  std::string user, world, backup, path;
-  try {
-    nlohmann::json json = nlohmann::json::parse(req.body);
-    user = json["user"];
-    world = json.value("world", "");
-    backup = json.value("backup", "");
-    path = "/"+user+"/files/"+json.value("world", json.value("backup", "!!!!!"));
-  } 
-  catch (std::exception& e) {
-    std::cout << "Parsing values from request failed: " << e.what() << std::endl;
-    resp.status = 401;
-    resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
-    return;
-  }
-
-  sl.lock();
   //Call matching function.
   int error_code = false;
   if (user_manager_.GetUser(username)->CheckAccessToLocations(path) == false)
@@ -490,73 +514,41 @@ void ServerFrame::Backups(const Request& req, Response& resp, std::string action
     resp.status = 200;
   else
     resp.status = 401;
+  std::cout << "ServerFrame::Backups done with error_code: " << error_code << "\n\n";
   resp.set_content(std::to_string(error_code), "text/txt");
 }
 
 void ServerFrame::GrantAccessTo(const Request& req, Response& resp) {
   //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
   
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-    return;
-  }
-  
-  std::string user2, world;
-  try {
-    nlohmann::json json = nlohmann::json::parse(req.body);
-    user2 = json["user"];
-    world = json["world"];
-  }
-  catch (std::exception& e) {
-    std::cout << "GrantAccessTo, problem parsing json: " << e.what() << std::endl;
-    resp.status = 401;
-    resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
-    return;
-  }
+  // Parse from json
+  nlohmann::json input = ValidateJson(req, resp, {"user","world"});
+  if (input.empty()) return;
 
-  sl.lock();
-  int error_code = user_manager_.GrantAccessTo(username, user2, world);
+  std::shared_lock sl(shared_mtx_user_manager_);
+  int error_code = user_manager_.GrantAccessTo(username, input["user"], input["world"]);
   if (error_code == ErrorCodes::SUCCESS)
     resp.status = 200;
   else
     resp.status = 401;
+  std::cout << "ServerFrame::GrantAccessTo done with error_code: " << error_code << "\n\n";
   resp.set_content(std::to_string(error_code), "text/txt");
 }
 
 void ServerFrame::CreateRequest(const Request& req, Response& resp) {
-  //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-  
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-    return;
-  }
+  // Try to get username from cookie.
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
 
-  std::string user2, world;
-  try {
-    nlohmann::json json = nlohmann::json::parse(req.body);
-    user2 = json["user"];
-    world = json["world"];
-  }
-  catch (std::exception& e) {
-    std::cout << "CreateRequest: problem parsing json: " << e.what() << std::endl;
-    resp.status = 401;
-    resp.set_content(std::to_string(ErrorCodes::WRONG_FORMAT), "text/txt");
-    return;
-  }
-  sl.lock();
-  if (user_manager_.GetUser(user2)->AddRequest(username, world) == false)
+  // Parse from json
+  nlohmann::json input = ValidateJson(req, resp, {"user", "world"});
+  if (input.empty()) return;
+
+  std::shared_lock sl(shared_mtx_user_manager_);
+  if (user_manager_.GetUser(input["user"])
+      ->AddRequest(username, input["world"]) == false)
     resp.status = 401;
   else
     resp.status = 200;
@@ -564,52 +556,28 @@ void ServerFrame::CreateRequest(const Request& req, Response& resp) {
  
 void ServerFrame::CheckRunning(const Request& req, Response& resp) {
   //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-  
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-    return;
-  }
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
 
-  sl.lock();
+  std::shared_lock sl(shared_mtx_user_manager_);
   bool success = user_manager_.GetUser(username)->CheckGameRunning(req.body);
-  if (success == true) {
-    std::cout << "CheckRunning: success." << std::endl;
+  if (success == true) 
     resp.status = 200;
-  }
-  else {
+  else 
     resp.status = 401;
-    std::cout << "CheckRunning: failed." << std::endl;
-  }
 }
 
 void ServerFrame::GetLog(const Request& req, Response& resp) {
-  //Try to get username from cookie
-  const char* ptr = get_header_value(req.headers, "Cookie");
-  std::shared_lock sl(shared_mtx_user_manager_);
-  std::string username = user_manager_.GetUserFromCookie(ptr);
-  sl.unlock();
-  
-  //If user does not exist, redirect to login-page.
-  if (username == "") {
-    resp.status = 302;
-    resp.set_header("Location", "/login");
-    return;
-  }
+  // Try to get username from cookie
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
 
   size_t pos = req.body.find("/files/");
   std::string user = req.body.substr(1, req.body.find("/", 1));
   std::string world = req.body.substr(pos+7, req.body.find("/", pos+7)-(pos+7));
-  std::cout << "World: " << world << std::endl;
   std::string path = "../../data/users/" + user + "logs/";
   std::string type = req.matches[1];
   path += world + "_" + type + ".txt";
-  std::cout << "Path to log: " << path << std::endl;
 
   if (func::demo_exists(path) == false)
     resp.status = 401;
@@ -621,6 +589,33 @@ void ServerFrame::GetLog(const Request& req, Response& resp) {
 }
 
 void ServerFrame::StartGame(const Request& req, Response& resp) {
+  // Try to get username from cookie
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
+
+  // Extract data from path and build path to textadventure.
+  std::string url_path = req.body;
+  std::string path_to_game = "../../data/users" + url_path + "/";
+    
+  // Get world (keep mutex locked to assure, that pointer is not changed. 
+  std::shared_lock sl(shared_mtx_user_manager_);
+  World* world = user_manager_.worlds()->GetWorldFromUrl(url_path);
+  if (world == nullptr || !func::demo_exists(path_to_game)) {
+    resp.status = 401;
+    return;
+  }
+
+  // Build command and start game
+  std::string command = "../../textadventure/build/bin/txtadventure "
+    + path_to_game + " " + std::to_string(world->port())
+    + " > ../../data/users/" + world->creator() + "/logs/" + world->name() + "_run.txt &";
+  sl.unlock();
+
+  std::cout << system(command.c_str()) << std::endl;
+  resp.status = 200;
+}
+
+std::string ServerFrame::CheckLogin(const Request& req, Response& resp) const { 
   //Try to get username from cookie
   const char* ptr = get_header_value(req.headers, "Cookie");
   std::shared_lock sl(shared_mtx_user_manager_);
@@ -631,31 +626,21 @@ void ServerFrame::StartGame(const Request& req, Response& resp) {
   if (username == "") {
     resp.status = 302;
     resp.set_header("Location", "/login");
-    return;
+    return "";
   }
-
-  //Extract data from path and build path to textadventure.
-  std::string user = req.body.substr(1, req.body.find("/", 1)-1);
-  std::string world = req.body.substr(req.body.rfind("/")+1);
-  std::string path_to_game = "../../data/users" + req.body + "/";
-  if (!func::demo_exists(path_to_game)) {
-    resp.status = 401;
-    return;
-  }
-
-  //Get port
-  sl.lock();
-  std::string port = std::to_string(user_manager_.GetPortOfWorld(user, world));
-  sl.unlock();
-
-  //Build command and start game
-  std::string command = "../../textadventure/build/bin/txtadventure "
-    + path_to_game + " " + port
-    + " > ../../data/users/" + user + "/logs/" + world + "_run.txt &";
-  std::cout << system(command.c_str()) << std::endl;
-  resp.status = 200;
+  return username;
 }
 
+nlohmann::json ServerFrame::ValidateJson(const Request& req, Response& resp, 
+      std::vector<std::string> keys) const {
+  nlohmann::json json = func::ValidateJson(req.body, keys);
+  if (json.empty()) {
+    resp.set_content("invalid json.", "text/txt");
+    resp.status = 401;
+    return nlohmann::json();
+  }
+  return json;
+}
 
 bool ServerFrame::IsRunning() {
   return server_.is_running();

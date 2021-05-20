@@ -1,0 +1,9 @@
+{
+  "new_player":{
+    "id":"new_player",
+    "name":"New Player",
+    "password":"password",
+    "room":"test.test_room",
+    "hp":10
+  }
+}

@@ -1,0 +1,147 @@
+Creating game.
+Room: "test.raum1"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test.raum1"
+Room: "test.raum2"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "test.raum2"
+Room: "test.raum3"
+Parsing characters
+Parsing Items
+Parsing details 
+"test.raum3.mirror"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "test.raum3"
+Room: "test.test_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test.test_room"
+Created all rooms 
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
+Created all rooms 
+worldFactory: done.
+Done parsing world.
+Parsing players... 
+Room: "test.raum1"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test.raum1"
+Room: "test.raum2"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "test.raum2"
+Room: "test.raum3"
+Parsing characters
+Parsing Items
+Parsing details 
+"test.raum3.mirror"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "test.raum3"
+Room: "test.test_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test.test_room"
+Created all rooms 
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
+Created all rooms 
+worldFactory: done.
+initializing context stack.
+Done.
+Room: "test.raum1"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test.raum1"
+Room: "test.raum2"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "test.raum2"
+Room: "test.raum3"
+Parsing characters
+Parsing Items
+Parsing details 
+"test.raum3.mirror"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "test.raum3"
+Room: "test.test_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test.test_room"
+Created all rooms 
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
+Created all rooms 
+worldFactory: done.
+initializing context stack.
+Done.
+Finished parsing!
+[2021-05-20 16:07:34] [connect] WebSocket Connection [::ffff:127.0.0.1]:46270 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0" / 101
+Starting....
+Choosing login/ registerSet sign_in_up_ to l
+[2021-05-20 16:07:36] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
+[2021-05-20 16:07:36] [frame_header] Header Bytes: 
+[0] (2) 81 06 
+
+On to getting credentials
+[2021-05-20 16:07:40] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 17 payload bytes
+[2021-05-20 16:07:40] [frame_header] Header Bytes: 
+[0] (2) 81 06 
+[1] (2) 81 0B 
+
+On to getting credentials
+checkLogin
+[1;31mEvents: show room, from: startGame[0m
+[1;31mshow, room[0m
+[1;34mfirst[0m throwing: show|room
+[1;31mEvents: printText start, from: pre-events[0m
+[1;31mprintText, start[0m
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mworld[0m throwing: show|room
+[1;34mroom[0m throwing: show|room
+[1;34mstandard[0m throwing: show|room
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+[2021-05-20 16:07:41] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 590 payload bytes
+[2021-05-20 16:07:41] [frame_header] Header Bytes: 
+[0] (2) 81 0A 
+[1] (2) 81 13 
+[2] (4) 81 7E 02 31 
+
+[2021-05-20 16:07:59] [control] Control frame received with opcode 8
+[2021-05-20 16:07:59] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2021-05-20 16:07:59] [frame_header] Header Bytes: 
+[0] (2) 88 02 
+
+[2021-05-20 16:07:59] [disconnect] Disconnect close local:[1001] remote:[1001]

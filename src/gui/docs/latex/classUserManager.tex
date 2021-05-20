@@ -1,0 +1,215 @@
+\hypertarget{classUserManager}{}\doxysection{User\+Manager Class Reference}
+\label{classUserManager}\index{UserManager@{UserManager}}
+
+
+{\ttfamily \#include $<$user\+\_\+manager.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classUserManager_a98fe17e3cd41a8d68573e59524c1e7bc}{User\+Manager}} (std\+::string path, std\+::vector$<$ std\+::string $>$ categories)
+\item 
+\mbox{\hyperlink{classUser}{User}} $\ast$ \mbox{\hyperlink{classUserManager_ac17d64d888e553cbf5ec9e0a3befc8a8}{Get\+User}} (std\+::string username) const
+\item 
+void \mbox{\hyperlink{classUserManager_a68d110216a75cea8e4e62cc06b819fab}{Delete\+User}} (std\+::string username)
+\item 
+bool \mbox{\hyperlink{classUserManager_ae5f0812c93ddbb72434877d6cc39a2e4}{Do\+Logout}} (const char $\ast$ptr)
+\item 
+std\+::string \mbox{\hyperlink{classUserManager_ac66455334a5162f31dade81b61f5e148}{Do\+Login}} (std\+::string username, std\+::string password)
+\item 
+std\+::string \mbox{\hyperlink{classUserManager_a966527e36a8f7d4ba232fac2b2a4345f}{Do\+Registration}} (std\+::string username, std\+::string pw1, std\+::string pw2)
+\item 
+std\+::string \mbox{\hyperlink{classUserManager_a674111ca445f99abba44c9b32a288bff}{Generate\+Cookie}} (std\+::string username)
+\item 
+std\+::string \mbox{\hyperlink{classUserManager_acaf99c9f0b188ffe89c7be3789947874}{Get\+User\+From\+Cookie}} (const char $\ast$ptr) const
+\item 
+int \mbox{\hyperlink{classUserManager_aaedccf73c911f07a27c11ce0da5b8686}{Grant\+Access\+To}} (std\+::string user1, std\+::string user2, std\+::string world)
+\item 
+int \mbox{\hyperlink{classUserManager_aaaf10ae29eef7c63395a5238fb6e178d}{Get\+Next\+Port}} ()
+\item 
+nlohmann\+::json \mbox{\hyperlink{classUserManager_a90ce37ddc974072df4ccf875a0c96bdf}{Get\+All\+Worlds}} (std\+::string username) const
+\item 
+nlohmann\+::json \mbox{\hyperlink{classUserManager_ac3eaf3e9e0e62a8d2824565cea24e73b}{Get\+Shared\+Worlds}} (std\+::string username) const
+\item 
+\mbox{\Hypertarget{classUserManager_a278c42062ce16492b23f1a89ab78e513}\label{classUserManager_a278c42062ce16492b23f1a89ab78e513}} 
+int {\bfseries Get\+Port\+Of\+World} (std\+::string user, std\+::string world) const
+\item 
+\mbox{\Hypertarget{classUserManager_ad3f0c02f720412e7f032d0110112d2c3}\label{classUserManager_ad3f0c02f720412e7f032d0110112d2c3}} 
+std\+::string {\bfseries Get\+Page} (std\+::string path) const
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+fux class storing all users. T\+O\+DO (fux)\+: replace this class with a database. 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classUserManager_a98fe17e3cd41a8d68573e59524c1e7bc}\label{classUserManager_a98fe17e3cd41a8d68573e59524c1e7bc}} 
+\index{UserManager@{UserManager}!UserManager@{UserManager}}
+\index{UserManager@{UserManager}!UserManager@{UserManager}}
+\doxysubsubsection{\texorpdfstring{UserManager()}{UserManager()}}
+{\footnotesize\ttfamily User\+Manager\+::\+User\+Manager (\begin{DoxyParamCaption}\item[{std\+::string}]{main\+\_\+path,  }\item[{std\+::vector$<$ std\+::string $>$}]{cats }\end{DoxyParamCaption})}
+
+constructor loading all users stored on disc.
+
+\begin{DoxyAuthor}{Author}
+fux 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classUserManager_a68d110216a75cea8e4e62cc06b819fab}\label{classUserManager_a68d110216a75cea8e4e62cc06b819fab}} 
+\index{UserManager@{UserManager}!DeleteUser@{DeleteUser}}
+\index{DeleteUser@{DeleteUser}!UserManager@{UserManager}}
+\doxysubsubsection{\texorpdfstring{DeleteUser()}{DeleteUser()}}
+{\footnotesize\ttfamily void User\+Manager\+::\+Delete\+User (\begin{DoxyParamCaption}\item[{std\+::string}]{username }\end{DoxyParamCaption})}
+
+detele user. deletes object, erases from map and delete users jsons file. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em username} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classUserManager_ac66455334a5162f31dade81b61f5e148}\label{classUserManager_ac66455334a5162f31dade81b61f5e148}} 
+\index{UserManager@{UserManager}!DoLogin@{DoLogin}}
+\index{DoLogin@{DoLogin}!UserManager@{UserManager}}
+\doxysubsubsection{\texorpdfstring{DoLogin()}{DoLogin()}}
+{\footnotesize\ttfamily std\+::string User\+Manager\+::\+Do\+Login (\begin{DoxyParamCaption}\item[{std\+::string}]{username,  }\item[{std\+::string}]{password }\end{DoxyParamCaption})}
+
+Check whether login was successful. Return error if not. 
+\begin{DoxyParams}{Parameters}
+{\em username} & \\
+\hline
+{\em password} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+error or empty string 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUserManager_ae5f0812c93ddbb72434877d6cc39a2e4}\label{classUserManager_ae5f0812c93ddbb72434877d6cc39a2e4}} 
+\index{UserManager@{UserManager}!DoLogout@{DoLogout}}
+\index{DoLogout@{DoLogout}!UserManager@{UserManager}}
+\doxysubsubsection{\texorpdfstring{DoLogout()}{DoLogout()}}
+{\footnotesize\ttfamily bool User\+Manager\+::\+Do\+Logout (\begin{DoxyParamCaption}\item[{const char $\ast$}]{ptr }\end{DoxyParamCaption})}
+
+Logout user. try to get user from cookie. Logout user, reset controller update interval and erase cookie. If user does not exist, try only to delete cookie from map. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em cookie.} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+false if cookie does not exist in map. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUserManager_a966527e36a8f7d4ba232fac2b2a4345f}\label{classUserManager_a966527e36a8f7d4ba232fac2b2a4345f}} 
+\index{UserManager@{UserManager}!DoRegistration@{DoRegistration}}
+\index{DoRegistration@{DoRegistration}!UserManager@{UserManager}}
+\doxysubsubsection{\texorpdfstring{DoRegistration()}{DoRegistration()}}
+{\footnotesize\ttfamily std\+::string User\+Manager\+::\+Do\+Registration (\begin{DoxyParamCaption}\item[{std\+::string}]{username,  }\item[{std\+::string}]{pw1,  }\item[{std\+::string}]{pw2 }\end{DoxyParamCaption})}
+
+Check whether registration was successful. Return error or empty string. 
+\begin{DoxyParams}{Parameters}
+{\em username} & \\
+\hline
+{\em pw1} & \\
+\hline
+{\em pw2} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+error code or empty string. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUserManager_a674111ca445f99abba44c9b32a288bff}\label{classUserManager_a674111ca445f99abba44c9b32a288bff}} 
+\index{UserManager@{UserManager}!GenerateCookie@{GenerateCookie}}
+\index{GenerateCookie@{GenerateCookie}!UserManager@{UserManager}}
+\doxysubsubsection{\texorpdfstring{GenerateCookie()}{GenerateCookie()}}
+{\footnotesize\ttfamily std\+::string User\+Manager\+::\+Generate\+Cookie (\begin{DoxyParamCaption}\item[{std\+::string}]{username }\end{DoxyParamCaption})}
+
+Create random 32 characters to generates cookie. And maps cookie and given user. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em username} & (username which is mapped on cookie) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+returns cookie as string. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUserManager_a90ce37ddc974072df4ccf875a0c96bdf}\label{classUserManager_a90ce37ddc974072df4ccf875a0c96bdf}} 
+\index{UserManager@{UserManager}!GetAllWorlds@{GetAllWorlds}}
+\index{GetAllWorlds@{GetAllWorlds}!UserManager@{UserManager}}
+\doxysubsubsection{\texorpdfstring{GetAllWorlds()}{GetAllWorlds()}}
+{\footnotesize\ttfamily nlohmann\+::json User\+Manager\+::\+Get\+All\+Worlds (\begin{DoxyParamCaption}\item[{std\+::string}]{username }\end{DoxyParamCaption}) const}
+
+Get all worlds. Array of jsons returned with values\+: user, name (of world) and port. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em user} & to create list for. return json \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classUserManager_aaaf10ae29eef7c63395a5238fb6e178d}\label{classUserManager_aaaf10ae29eef7c63395a5238fb6e178d}} 
+\index{UserManager@{UserManager}!GetNextPort@{GetNextPort}}
+\index{GetNextPort@{GetNextPort}!UserManager@{UserManager}}
+\doxysubsubsection{\texorpdfstring{GetNextPort()}{GetNextPort()}}
+{\footnotesize\ttfamily int User\+Manager\+::\+Get\+Next\+Port (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Returns next port. \mbox{\Hypertarget{classUserManager_ac3eaf3e9e0e62a8d2824565cea24e73b}\label{classUserManager_ac3eaf3e9e0e62a8d2824565cea24e73b}} 
+\index{UserManager@{UserManager}!GetSharedWorlds@{GetSharedWorlds}}
+\index{GetSharedWorlds@{GetSharedWorlds}!UserManager@{UserManager}}
+\doxysubsubsection{\texorpdfstring{GetSharedWorlds()}{GetSharedWorlds()}}
+{\footnotesize\ttfamily nlohmann\+::json User\+Manager\+::\+Get\+Shared\+Worlds (\begin{DoxyParamCaption}\item[{std\+::string}]{username }\end{DoxyParamCaption}) const}
+
+Get all shared worlds of a user. Array of jsons returned with values\+: user, name (of world) and port. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em user} & to create list for. return json \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classUserManager_ac17d64d888e553cbf5ec9e0a3befc8a8}\label{classUserManager_ac17d64d888e553cbf5ec9e0a3befc8a8}} 
+\index{UserManager@{UserManager}!GetUser@{GetUser}}
+\index{GetUser@{GetUser}!UserManager@{UserManager}}
+\doxysubsubsection{\texorpdfstring{GetUser()}{GetUser()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classUser}{User}} $\ast$ User\+Manager\+::\+Get\+User (\begin{DoxyParamCaption}\item[{std\+::string}]{username }\end{DoxyParamCaption}) const}
+
+Returns given user, if exists 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em username} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+user, if exists, nullptr otherwise 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUserManager_acaf99c9f0b188ffe89c7be3789947874}\label{classUserManager_acaf99c9f0b188ffe89c7be3789947874}} 
+\index{UserManager@{UserManager}!GetUserFromCookie@{GetUserFromCookie}}
+\index{GetUserFromCookie@{GetUserFromCookie}!UserManager@{UserManager}}
+\doxysubsubsection{\texorpdfstring{GetUserFromCookie()}{GetUserFromCookie()}}
+{\footnotesize\ttfamily std\+::string User\+Manager\+::\+Get\+User\+From\+Cookie (\begin{DoxyParamCaption}\item[{const char $\ast$}]{ptr }\end{DoxyParamCaption}) const}
+
+Get user from cookie. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em resp} & (reference to response) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+username, \char`\"{}\$no\+\_\+cookie\char`\"{} or \char`\"{}\$no\+\_\+user\char`\"{} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classUserManager_aaedccf73c911f07a27c11ce0da5b8686}\label{classUserManager_aaedccf73c911f07a27c11ce0da5b8686}} 
+\index{UserManager@{UserManager}!GrantAccessTo@{GrantAccessTo}}
+\index{GrantAccessTo@{GrantAccessTo}!UserManager@{UserManager}}
+\doxysubsubsection{\texorpdfstring{GrantAccessTo()}{GrantAccessTo()}}
+{\footnotesize\ttfamily int User\+Manager\+::\+Grant\+Access\+To (\begin{DoxyParamCaption}\item[{std\+::string}]{user1,  }\item[{std\+::string}]{user2,  }\item[{std\+::string}]{world }\end{DoxyParamCaption})}
+
+Grant other user acces to a own world. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em user1} & (user which gives access world to) \\
+\hline
+\mbox{\texttt{ in}}  & {\em user2} & (user to give access to) \\
+\hline
+\mbox{\texttt{ in}}  & {\em world} & (world which to grant access to) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+error\+\_\+code 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/fux/\+Documents/programming/\+Der-\/\+Zug/src/gui/src/users/user\+\_\+manager.\+h\item 
+/home/fux/\+Documents/programming/\+Der-\/\+Zug/src/gui/src/users/user\+\_\+manager.\+cc\end{DoxyCompactItemize}

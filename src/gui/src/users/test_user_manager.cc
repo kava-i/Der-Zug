@@ -20,9 +20,7 @@ TEST_CASE ("Registering, loading and removing users works", "[creating]") {
   }
   
   //Create user manager.
-  UserManager user_manager("../../data/users", {"attacks", 
-    "defaultDialogs", "dialogs", "players", "rooms", "characters", 
-    "defaultDescriptions", "details", "items", "quests", "texts"});
+  UserManager user_manager("../../data/users");
 
   //Tries registering a user.
   REQUIRE(user_manager.DoRegistration("test", "pw", 
@@ -39,9 +37,7 @@ TEST_CASE ("Registering, loading and removing users works", "[creating]") {
   REQUIRE(user_manager.GetUser("test") != nullptr);
 
   //Reloads manager and sees whether test-user was found.
-  UserManager user_manager2("../../data/users/", {"attacks", 
-    "defaultDialogs", "dialogs", "players", "rooms", "characters", 
-    "defaultDescriptions", "details", "items", "quests", "texts"});
+  UserManager user_manager2("../../data/users/");
   REQUIRE(user_manager.GetUser("test") != nullptr);
 
   //Delete users.
@@ -51,9 +47,7 @@ TEST_CASE ("Registering, loading and removing users works", "[creating]") {
 
 TEST_CASE ("Login and Logout user", "[logging]") {
   //Create user manager.
-  UserManager user_manager("../../data/users", {"attacks", 
-    "defaultDialogs", "dialogs", "players", "rooms", "characters", 
-    "defaultDescriptions", "details", "items", "quests", "texts"});
+  UserManager user_manager("../../data/users");
 
   REQUIRE(user_manager.DoRegistration("test", "password1234", 
         "password1234") == "");

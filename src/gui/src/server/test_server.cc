@@ -125,6 +125,11 @@ TEST_CASE("Server is working as expected", "[server]") {
 
           //Log user in.
           request["username"] = "test";
+          //invalid:
+          resp = cl.Post("/api/user_login", {}, request.dump(), 
+              "application/x-www-form-urlencoded");
+          REQUIRE(resp->status == 401);
+          // valid:
           request["password"] = "password0408";
           resp = cl.Post("/api/user_login", {}, request.dump(), 
               "application/x-www-form-urlencoded");
@@ -140,6 +145,7 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->body != "");
         }
 
+        /*
         SECTION("Accessing and creating files works") {
           //Register new test user
           nlohmann::json request;
@@ -179,7 +185,7 @@ TEST_CASE("Server is working as expected", "[server]") {
           //Check accessing categories-page
           resp = cl.Get("/test/files/new_world", headers_1);
           REQUIRE(resp->status == 200);
-          REQUIRE(resp->body.find("config") != std::string::npos);
+           REQUIRE(resp->body.find("config") != std::string::npos);
           REQUIRE(resp->body.find("attacks") != std::string::npos);
 
           //Check accessing categories
@@ -447,6 +453,7 @@ TEST_CASE("Server is working as expected", "[server]") {
           REQUIRE(resp->body == std::to_string(ErrorCodes::SUCCESS));
 
         }
+        */
         server.Stop();
     });
   t1.join();

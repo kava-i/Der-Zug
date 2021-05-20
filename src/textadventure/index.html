@@ -118,16 +118,12 @@ hr {
 
 </style>
 <script>
-let host = "127.0.0.1";
-let socket=null;
-/*
-if(window.location.hostname!="")
-{
-  host = window.location.hostname;
-	socket = new WebSocket("wss://"+host+":9002");
-}
-*/
-socket = new WebSocket("ws://"+host+":{{port}}");
+var host = location.host.substr(0, location.host.indexOf(":"));
+var socket = null
+if (host == "localhost" || host == "127.0.0.1")
+  socket = new WebSocket("ws://" + host + ":{{port}}");
+else
+  socket = new WebSocket("wss://" + host + ":{{port}}");
 
 let clicked = false;
 let aud = new Audio("sounds/piano.mp3");

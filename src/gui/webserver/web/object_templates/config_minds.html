@@ -1,0 +1,35 @@
+{% include "temp_header" %}
+{{ log("rendered header") }}
+
+  <li custom="list">
+     <label title="Add minds. The concept of minds is explained here:
+                    ... . You may set no minds at all">
+       Minds:
+     </label>
+     <ul id="minds">
+       {% for mind in default(content, [{}]) %}
+         <li custom="object">
+           <label>Id:</label>
+           <input id="id" placeholder="id" value="{{default(mind.id, "")}}">
+           <br>
+           <label>Color:</label>
+           <input id="color" placeholder="color" value="{{default(mind.color, "")}}">
+           <br>
+           <label>Level:</label>
+           <input class="short" id="level" custom="int" placeholder="level"
+           value="{{default(mind.level, 0) }}">
+           <label>Relevance:</label>
+           <input class="short" id="relevance" custom="float" placeholder="relevance"
+           value="{{default(mind.relevance, 0.0) }}">
+           <span class="mod_elem" onclick="del_elem('minds',{{loop.index}})">-</span>
+           <span class="mod_elem" onclick="add_elem('minds',{{loop.index}})">+</span>
+         </li>
+       {% endfor %}
+     </ul>
+   </li>
+
+   {{ log("rendered minds") }}
+
+
+
+{% include "temp_footer" %}

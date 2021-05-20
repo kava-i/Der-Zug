@@ -1,0 +1,66 @@
+\hypertarget{classWorlds}{}\doxysection{Worlds Class Reference}
+\label{classWorlds}\index{Worlds@{Worlds}}
+
+
+{\ttfamily \#include $<$worlds.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classWorlds_a12d81e6db90fe727645db8272c1642ae}{Worlds}} (std\+::string base\+\_\+path, int start\+\_\+port)
+\item 
+\mbox{\hyperlink{classWorlds_afb97eb29ffee4530490875bfd9976825}{$\sim$\+Worlds}} ()
+\item 
+std\+::string \mbox{\hyperlink{classWorlds_aba3ad5861c761c0219e7358bbec497c5}{Get\+Page}} (std\+::string path)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+fux Class storing all existing worlds by it\textquotesingle{}s full path. Full path means\+: \mbox{[}base\+\_\+path\mbox{]}/\mbox{[}user\mbox{]}/files/\mbox{[}world\mbox{]} Apart from storing, the class redirects all requests to the matching world and assignes port to every world, to potentially run on. 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classWorlds_a12d81e6db90fe727645db8272c1642ae}\label{classWorlds_a12d81e6db90fe727645db8272c1642ae}} 
+\index{Worlds@{Worlds}!Worlds@{Worlds}}
+\index{Worlds@{Worlds}!Worlds@{Worlds}}
+\doxysubsubsection{\texorpdfstring{Worlds()}{Worlds()}}
+{\footnotesize\ttfamily Worlds\+::\+Worlds (\begin{DoxyParamCaption}\item[{std\+::string}]{base\+\_\+path,  }\item[{int}]{start\+\_\+port }\end{DoxyParamCaption})}
+
+Constructor, loading all worlds. 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em base\+\_\+path} & to user-\/directories. \\
+\hline
+\mbox{\texttt{ in}}  & {\em start\+\_\+port} & from which to increment and assign ports. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classWorlds_afb97eb29ffee4530490875bfd9976825}\label{classWorlds_afb97eb29ffee4530490875bfd9976825}} 
+\index{Worlds@{Worlds}!````~Worlds@{$\sim$Worlds}}
+\index{````~Worlds@{$\sim$Worlds}!Worlds@{Worlds}}
+\doxysubsubsection{\texorpdfstring{$\sim$Worlds()}{~Worlds()}}
+{\footnotesize\ttfamily Worlds\+::$\sim$\+Worlds (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Destructor deleteing all worlds. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classWorlds_aba3ad5861c761c0219e7358bbec497c5}\label{classWorlds_aba3ad5861c761c0219e7358bbec497c5}} 
+\index{Worlds@{Worlds}!GetPage@{GetPage}}
+\index{GetPage@{GetPage}!Worlds@{Worlds}}
+\doxysubsubsection{\texorpdfstring{GetPage()}{GetPage()}}
+{\footnotesize\ttfamily std\+::string Worlds\+::\+Get\+Page (\begin{DoxyParamCaption}\item[{std\+::string}]{path }\end{DoxyParamCaption})}
+
+Seves page of requested category/ object. Acctually get json-\/data and path to tempate, then calls Parse\+Template(). 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em path} & (url) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+rendered page. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/home/fux/\+Documents/programming/\+Der-\/\+Zug/src/gui/src/world/worlds.\+h\item 
+/home/fux/\+Documents/programming/\+Der-\/\+Zug/src/gui/src/world/worlds.\+cc\end{DoxyCompactItemize}

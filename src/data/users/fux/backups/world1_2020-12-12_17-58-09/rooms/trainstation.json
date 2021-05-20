@@ -1,1 +1,365 @@
-{"ausgang":{"description":[{"speaker":"PERZEPTION","text":"You have left this world"}],"exits":{"eingangshalle":{"name":"Eingangshalle"}},"id":"ausgang","name":"Ausgang"},"eingangshalle":{"characters":[["passanten_gruppe",{}]],"description":[{"logic":"(wahrnehmung>sinnliche gewissheit)","speaker":"WAHRNEHMUNG","text":"Die Eingangshalle des sog. \"Moskauer Bahnhofs\" in Sankt Petersburg ist ein eindrucksvolles Gebilde. Tausende Passanten wandern umher, es herscht Trubel und Lärm und dazu glänzt die architektonische Meisterleistung eines Konstantin Thron von allen Seiten auf einen herab. Nach Norden geht es zu den Gleisen, im Süden liegt der Ausgang und nach Osten geht es zu einer Nebenhalle."},{"logic":"(sinnliche gewissheit>wahrnehmung)","post_otEvents":["printText start2"],"pre_otEvents":["printText start"],"speaker":"SINNLICHE GEWISSHEIT","text":"Hier ist ein großes Gebäude. Ich stehe in dem großen Gebäude. Viele Gestalten sind hier auch."}],"details":[["glasmalerei",{}],["katharina_die_große",{}],["hegel_tafel",{}],["buecherregal",{}]],"exits":{"ausgang":{"name":"Ausgang","prep":"zum"},"fernzüge":{"name":"Freiere","prep":"ins"},"geheime-kammer1":{"name":"ersten Kammer","prep":"zur"},"geheime-kammer4":{"name":"vierten Kammer","prep":"zur"},"nebenhalle":{"name":"Nebenhalle","prep":"zur"}},"handlers":[{"id":"h_exitTrainstation","priority":0,"string":"go"}],"id":"eingangshalle","name":"Eingangshalle"},"fernzüge":{"description":[{"speaker":"desc","text":"Hier ist der Lärm Ohrenbetäubend, die Dampflokomotiven haben den ganzen bereich vernebelt. Schwitzige, ölbeschmierte Arbeiter reparieren notdürftig Züge, reiche Familien rennen in aufwändigen Gewändern ihren Packburschen davon, es herscht wildes Treiben. Richtung Noden liegen die Gleise des Bahnhofs, nach Süden geht es zurück zur Eingangshalle"}],"exits":{"eingangshalle":{"name":"Eingangshalle","prep":"zur"},"gleis1":{"name":"Gleis 1","prep":"zu"},"gleis2":{"name":"Gleis 2","prep":"zu"},"gleis3":{"name":"Gleis 3","prep":"zu"},"gleis4":{"name":"Gleis 4","prep":"zu"},"gleis5":{"name":"Gleis 5","prep":"zu"}},"id":"fernzüge","name":"Fernzüge"},"frauenToilette":{"characters":[["besoffene_frau",{}]],"description":[{"speaker":"PERZEPTION","text":"Die Frauentoilette:  es stinkt nach Alkohol, Kippen und Sex. Der Boden ist voller Alkohol und Glasscherben."}],"exits":{"toiletten":{"name":"Vorraum","prep":"zurück zum"}},"id":"frauenToilette","name":"Frauen-Toilette"},"geheime-kammer1":{"description":[{"speaker":"SINNLICHE GEWISSHEIT","text":"Ein leerer Raum, in der Mitte des Raumes steht ein hoher Stein."}],"details":[["sockel",{"items":[["gold-münze",{"value":10}]]}]],"exits":{"eingangshalle":{"name":"großen Halle","prep":"zur"}},"id":"geheime-kammer1","name":"Erste Kammer"},"geheime-kammer4":{"description":[{"speaker":"SINNLICHE GEWISSHEIT","text":"Die Kammer ist völlig leer. In der Mitte des Raumes steht ein hoher Stein.\nNur in der Mitte liegt auf einem Stein ein glänzendes Stück Metall."}],"details":[["sockel",{"items":[["buch_PdG",{"value":0}]]}]],"id":"geheime-kammer4","name":"vierte Kammer"},"gleis1":{"description":[{"speaker":"desc","text":"Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst."}],"exits":{"bahnhof_fernzüge":{"name":"Zurück zu den Gleisen/ Fernzügen"}},"id":"gleis1","name":"Gleis 1"},"gleis2":{"description":[{"speaker":"desc","text":"Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst."}],"exits":{"bahnhof_fernzüge":{"name":"Zurück zu den Gleisen/ Fernzügen"}},"id":"gleis2","name":"Gleis 2"},"gleis3":{"description":[{"speaker":"PERZEPTION","text":"Ah, Gleis 3. Hier fährt dein Zug nach Moskau. Es ist selbstsam leer."}],"exits":{"bahnhof_fernzüge":{"name":"Zurück zu den Gleisen/ Fernzügen"}},"id":"gleis3","name":"Gleis 3"},"gleis4":{"description":[{"speaker":"PERZEPTION","text":"Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst."}],"exits":{"bahnhof_fernzüge":{"name":"Zurück zu den Gleisen/ Fernzügen"}},"id":"gleis4","name":"Gleis 4"},"gleis5":{"characters":[["passanten_gruppe",{}]],"description":[{"speaker":"desc","text":"Hier ist es laut, die Züge fahren in irgendwelche Städte, die du nicht kennst."}],"exits":{"bahnhof_fernzüge":{"name":"Zurück zu den Gleisen/ Fernzügen"}},"id":"gleis5","name":"Gleis 5"},"maennerToilette":{"characters":[["ticketVerkäufer",{}]],"description":[{"speaker":"desc","text":"Die Männertoilette, sie ist erstaunlich sauber, in einer Ecke liegen einige zerdrückte Kippenstummel, aber es riecht nicht nach Rauch."}],"exits":{"toiletten":{"name":"Vorraum","prep":"zurück zum"}},"id":"maennerToilette","name":"Männer-Toilette"},"nebenhalle":{"characters":[["passanten_gruppe",{"amount":3}],["konstantin_thron",{}]],"description":[{"speaker":"desc","text":"Hier ist es etwas ruhiger und leerer. Aber die Personen hier kommen dir unheimlicher und auch sonderbarer vor. Ah und hier sind auch die Toiletten."}],"exits":{"eingangshalle":{"name":"Eingangshalle","prep":"zur"},"toiletten":{"name":"Toiletten","prep":"zu den"}},"id":"nebenhalle","name":"Nebenhalle"},"toiletten":{"description":[{"speaker":"desc","text":"Versifte Toiletten, aber endlich Ruhe, hier scheint niemand zu sein. Zwei Türen führen zu den Männer- bzw. Frauentoiletten. Im Westen geht es zurück ins Nebengebäude."}],"exits":{"frauenToilette":{"name":"Frauen-Toilette","prep":"zur"},"maennerToilette":{"name":"Männer-Toilette","prep":"zur"},"nebenhalle":{"name":"Nebenhalle","prep":"zur"}},"id":"toiletten","name":"Toiletten"}}
+{
+    "ausgang": {
+        "description": [
+            {
+                "speaker": "PERZEPTION",
+                "text": "You have left this world"
+            }
+        ],
+        "exits": {
+            "eingangshalle": {
+                "name": "Eingangshalle"
+            }
+        },
+        "id": "ausgang",
+        "name": "Ausgang"
+    },
+    "eingangshalle": {
+        "characters": [
+            [
+                "passanten_gruppe",
+                {}
+            ]
+        ],
+        "description": [
+            {
+                "logic": "(wahrnehmung>sinnliche gewissheit)",
+                "speaker": "WAHRNEHMUNG",
+                "text": "Die Eingangshalle des sog. \"Moskauer Bahnhofs\" in Sankt Petersburg ist ein eindrucksvolles Gebilde. Tausende Passanten wandern umher, es herscht Trubel und L\u00e4rm und dazu gl\u00e4nzt die architektonische Meisterleistung eines Konstantin Thron von allen Seiten auf einen herab. Nach Norden geht es zu den Gleisen, im S\u00fcden liegt der Ausgang und nach Osten geht es zu einer Nebenhalle."
+            },
+            {
+                "logic": "(sinnliche gewissheit>wahrnehmung)",
+                "post_otEvents": [
+                    "printText start2"
+                ],
+                "pre_otEvents": [
+                    "printText start"
+                ],
+                "speaker": "SINNLICHE GEWISSHEIT",
+                "text": "Hier ist ein gro\u00dfes Geb\u00e4ude. Ich stehe in dem gro\u00dfen Geb\u00e4ude. Viele Gestalten sind hier auch."
+            }
+        ],
+        "details": [
+            [
+                "glasmalerei",
+                {}
+            ],
+            [
+                "katharina_die_gro\u00dfe",
+                {}
+            ],
+            [
+                "hegel_tafel",
+                {}
+            ],
+            [
+                "buecherregal",
+                {}
+            ]
+        ],
+        "exits": {
+            "ausgang": {
+                "name": "Ausgang",
+                "prep": "zum"
+            },
+            "fernz\u00fcge": {
+                "name": "Freiere",
+                "prep": "ins"
+            },
+            "geheime-kammer1": {
+                "name": "ersten Kammer",
+                "prep": "zur"
+            },
+            "geheime-kammer4": {
+                "name": "vierten Kammer",
+                "prep": "zur"
+            },
+            "nebenhalle": {
+                "name": "Nebenhalle",
+                "prep": "zur"
+            }
+        },
+        "handlers": [
+            {
+                "id": "h_exitTrainstation",
+                "priority": 0,
+                "string": "go"
+            }
+        ],
+        "id": "eingangshalle",
+        "name": "Eingangshalle"
+    },
+    "fernz\u00fcge": {
+        "description": [
+            {
+                "speaker": "desc",
+                "text": "Hier ist der L\u00e4rm Ohrenbet\u00e4ubend, die Dampflokomotiven haben den ganzen bereich vernebelt. Schwitzige, \u00f6lbeschmierte Arbeiter reparieren notd\u00fcrftig Z\u00fcge, reiche Familien rennen in aufw\u00e4ndigen Gew\u00e4ndern ihren Packburschen davon, es herscht wildes Treiben. Richtung Noden liegen die Gleise des Bahnhofs, nach S\u00fcden geht es zur\u00fcck zur Eingangshalle"
+            }
+        ],
+        "exits": {
+            "eingangshalle": {
+                "name": "Eingangshalle",
+                "prep": "zur"
+            },
+            "gleis1": {
+                "name": "Gleis 1",
+                "prep": "zu"
+            },
+            "gleis2": {
+                "name": "Gleis 2",
+                "prep": "zu"
+            },
+            "gleis3": {
+                "name": "Gleis 3",
+                "prep": "zu"
+            },
+            "gleis4": {
+                "name": "Gleis 4",
+                "prep": "zu"
+            },
+            "gleis5": {
+                "name": "Gleis 5",
+                "prep": "zu"
+            }
+        },
+        "id": "fernz\u00fcge",
+        "name": "Fernz\u00fcge"
+    },
+    "frauenToilette": {
+        "characters": [
+            [
+                "besoffene_frau",
+                {}
+            ]
+        ],
+        "description": [
+            {
+                "speaker": "PERZEPTION",
+                "text": "Die Frauentoilette:  es stinkt nach Alkohol, Kippen und Sex. Der Boden ist voller Alkohol und Glasscherben."
+            }
+        ],
+        "exits": {
+            "toiletten": {
+                "name": "Vorraum",
+                "prep": "zur\u00fcck zum"
+            }
+        },
+        "id": "frauenToilette",
+        "name": "Frauen-Toilette"
+    },
+    "geheime-kammer1": {
+        "description": [
+            {
+                "speaker": "SINNLICHE GEWISSHEIT",
+                "text": "Ein leerer Raum, in der Mitte des Raumes steht ein hoher Stein."
+            }
+        ],
+        "details": [
+            [
+                "sockel",
+                {
+                    "items": [
+                        [
+                            "gold-m\u00fcnze",
+                            {
+                                "value": 10
+                            }
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "exits": {
+            "eingangshalle": {
+                "name": "gro\u00dfen Halle",
+                "prep": "zur"
+            }
+        },
+        "id": "geheime-kammer1",
+        "name": "Erste Kammer"
+    },
+    "geheime-kammer4": {
+        "description": [
+            {
+                "speaker": "SINNLICHE GEWISSHEIT",
+                "text": "Die Kammer ist v\u00f6llig leer. In der Mitte des Raumes steht ein hoher Stein.\nNur in der Mitte liegt auf einem Stein ein gl\u00e4nzendes St\u00fcck Metall."
+            }
+        ],
+        "details": [
+            [
+                "sockel",
+                {
+                    "items": [
+                        [
+                            "buch_PdG",
+                            {
+                                "value": 0
+                            }
+                        ]
+                    ]
+                }
+            ]
+        ],
+        "id": "geheime-kammer4",
+        "name": "vierte Kammer"
+    },
+    "gleis1": {
+        "description": [
+            {
+                "speaker": "desc",
+                "text": "Hier ist es laut, die Z\u00fcge fahren in irgendwelche St\u00e4dte, die du nicht kennst."
+            }
+        ],
+        "exits": {
+            "bahnhof_fernz\u00fcge": {
+                "name": "Zur\u00fcck zu den Gleisen/ Fernz\u00fcgen"
+            }
+        },
+        "id": "gleis1",
+        "name": "Gleis 1"
+    },
+    "gleis2": {
+        "description": [
+            {
+                "speaker": "desc",
+                "text": "Hier ist es laut, die Z\u00fcge fahren in irgendwelche St\u00e4dte, die du nicht kennst."
+            }
+        ],
+        "exits": {
+            "bahnhof_fernz\u00fcge": {
+                "name": "Zur\u00fcck zu den Gleisen/ Fernz\u00fcgen"
+            }
+        },
+        "id": "gleis2",
+        "name": "Gleis 2"
+    },
+    "gleis3": {
+        "description": [
+            {
+                "speaker": "PERZEPTION",
+                "text": "Ah, Gleis 3. Hier f\u00e4hrt dein Zug nach Moskau. Es ist selbstsam leer."
+            }
+        ],
+        "exits": {
+            "bahnhof_fernz\u00fcge": {
+                "name": "Zur\u00fcck zu den Gleisen/ Fernz\u00fcgen"
+            }
+        },
+        "id": "gleis3",
+        "name": "Gleis 3"
+    },
+    "gleis4": {
+        "description": [
+            {
+                "speaker": "PERZEPTION",
+                "text": "Hier ist es laut, die Z\u00fcge fahren in irgendwelche St\u00e4dte, die du nicht kennst."
+            }
+        ],
+        "exits": {
+            "bahnhof_fernz\u00fcge": {
+                "name": "Zur\u00fcck zu den Gleisen/ Fernz\u00fcgen"
+            }
+        },
+        "id": "gleis4",
+        "name": "Gleis 4"
+    },
+    "gleis5": {
+        "characters": [
+            [
+                "passanten_gruppe",
+                {}
+            ]
+        ],
+        "description": [
+            {
+                "speaker": "desc",
+                "text": "Hier ist es laut, die Z\u00fcge fahren in irgendwelche St\u00e4dte, die du nicht kennst."
+            }
+        ],
+        "exits": {
+            "bahnhof_fernz\u00fcge": {
+                "name": "Zur\u00fcck zu den Gleisen/ Fernz\u00fcgen"
+            }
+        },
+        "id": "gleis5",
+        "name": "Gleis 5"
+    },
+    "maennerToilette": {
+        "characters": [
+            [
+                "ticketVerk\u00e4ufer",
+                {}
+            ]
+        ],
+        "description": [
+            {
+                "speaker": "desc",
+                "text": "Die M\u00e4nnertoilette, sie ist erstaunlich sauber, in einer Ecke liegen einige zerdr\u00fcckte Kippenstummel, aber es riecht nicht nach Rauch."
+            }
+        ],
+        "exits": {
+            "toiletten": {
+                "name": "Vorraum",
+                "prep": "zur\u00fcck zum"
+            }
+        },
+        "id": "maennerToilette",
+        "name": "M\u00e4nner-Toilette"
+    },
+    "nebenhalle": {
+        "characters": [
+            [
+                "passanten_gruppe",
+                {
+                    "amount": 3
+                }
+            ],
+            [
+                "konstantin_thron",
+                {}
+            ]
+        ],
+        "description": [
+            {
+                "speaker": "desc",
+                "text": "Hier ist es etwas ruhiger und leerer. Aber die Personen hier kommen dir unheimlicher und auch sonderbarer vor. Ah und hier sind auch die Toiletten."
+            }
+        ],
+        "exits": {
+            "eingangshalle": {
+                "name": "Eingangshalle",
+                "prep": "zur"
+            },
+            "toiletten": {
+                "name": "Toiletten",
+                "prep": "zu den"
+            }
+        },
+        "id": "nebenhalle",
+        "name": "Nebenhalle"
+    },
+    "toiletten": {
+        "description": [
+            {
+                "speaker": "desc",
+                "text": "Versifte Toiletten, aber endlich Ruhe, hier scheint niemand zu sein. Zwei T\u00fcren f\u00fchren zu den M\u00e4nner- bzw. Frauentoiletten. Im Westen geht es zur\u00fcck ins Nebengeb\u00e4ude."
+            }
+        ],
+        "exits": {
+            "frauenToilette": {
+                "name": "Frauen-Toilette",
+                "prep": "zur"
+            },
+            "maennerToilette": {
+                "name": "M\u00e4nner-Toilette",
+                "prep": "zur"
+            },
+            "nebenhalle": {
+                "name": "Nebenhalle",
+                "prep": "zur"
+            }
+        },
+        "id": "toiletten",
+        "name": "Toiletten"
+    }
+}
