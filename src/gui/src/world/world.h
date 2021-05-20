@@ -136,7 +136,12 @@ class World {
      * Creates all pages.
      * @param[in] path of world.
      */
-    void InitializePaths(std::string path);
+    void LoadWorld();
+
+    /** 
+     * Initialize one category
+     */
+    void InitializeCategory(std::string path);
 
     /**
      * Generate all "short paths", t.i.~paths as presented in url.

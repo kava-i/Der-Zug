@@ -32,7 +32,7 @@ World::World(std::string base_path, std::string path, int port)
   }
 
   // Init paths (map of full-path + page-object) and short_paths (vector of url-paths).
-  InitializePaths(path_);
+  LoadWorld();
   UpdateShortPaths();
 }
 
@@ -156,41 +156,37 @@ ErrorCodes World::SetNotes(std::string path, std::string notes) {
 }
 
 // paths_
-void World::InitializePaths(std::string path) {
-  std::cout << "InitializePaths: " << path << std::endl;
+void World::LoadWorld() {
   std::unique_lock ul(shared_mtx_paths_);
-  
+  paths_[path_] = new Category(base_path_, path_);
+  ul.unlock();
   // category => elements are directories (we no, what all categories and can check).
-  if (path == path_) {
-    paths_[path] = new Category(base_path_, path);
-    std::cout << "Added Category: " << path << std::endl;
-    ul.unlock();
-    for (auto& p : fs::directory_iterator(path)) {
-      if (p.path() != path + "/data")
-        InitializePaths(p.path());
-    }
+  for (auto& p : fs::directory_iterator(path_)) {
+    if (p.path() != path_ + "/data")
+      InitializeCategory(p.path());
   }
+}
+void World::InitializeCategory(std::string path) {
+  std::cout << "InitializePaths: " << path << std::endl;
   // subcategories => elements are files (jsons).
-  else {
-    paths_[path] = new SubCategory(base_path_, path);
-    std::cout << "Added Subcategory: " << path << std::endl;
-    for (auto& p : fs::directory_iterator(path)) {
-      nlohmann::json objects;
-      std::string path_without_extension = func::RemoveExtension(p.path());
-      if (p.path().extension() == ".jpg") 
-        std::cout << "skipped image" << std::endl;
-      else if (!func::LoadJsonFromDisc(p.path(), objects))
-        std::cout << "failed to load json." << std::endl;
-      else if (objects.is_array() == false) {
-        std::cout << "added area" << std::endl;
-        paths_[path_without_extension] = new Area(base_path_, path_without_extension, objects);
-        // objects: objects in json of objects.
-        for (auto it=objects.begin(); it!=objects.end(); it++)
-          paths_[path_without_extension + "/" + it.key()] = paths_.at(path_without_extension);
-      }
-      else
-        std::cout << "skiped list type." << std::endl;
+  paths_[path] = new SubCategory(base_path_, path);
+  std::cout << "Added Subcategory: " << path << std::endl;
+  for (auto& p : fs::directory_iterator(path)) {
+    nlohmann::json objects;
+    std::string path_without_extension = func::RemoveExtension(p.path());
+    if (p.path().extension() == ".jpg") 
+      std::cout << "skipped image" << std::endl;
+    else if (!func::LoadJsonFromDisc(p.path(), objects))
+      std::cout << "failed to load json." << std::endl;
+    else if (objects.is_array() == false) {
+      std::cout << "added area" << std::endl;
+      paths_[path_without_extension] = new Area(base_path_, path_without_extension, objects);
+      // objects: objects in json of objects.
+      for (auto it=objects.begin(); it!=objects.end(); it++)
+        paths_[path_without_extension + "/" + it.key()] = paths_.at(path_without_extension);
     }
+    else
+      std::cout << "skiped list type." << std::endl;
   }
   std::cout << "Done initializing paths." << std::endl;
 }
@@ -263,6 +259,6 @@ ErrorCodes World::RevertIfGameNotRunning(std::string path, std::string id, std::
 
 void World::RefreshWorld() {
   // Recreate paths and short-paths.
-  InitializePaths(path_);
+  LoadWorld();
   UpdateShortPaths();
 }
