@@ -27,7 +27,6 @@
 using std::string;
 using std::map;
 using std::vector;
-using std::pair;
 
 class CPlayer : public CPerson
 {
@@ -66,6 +65,8 @@ private:
     // *** States, like current fight *** //
     CFight* m_curFight;  ///< Current fight player is engaged in
     CPerson* m_curDialogPartner;  ///< Current dialog partner
+    std::string cur_music_;
+    std::string cur_image_;
 
     // *** Others *** //
     map<string, CPlayer*> m_players;  ///< List of all online players in game
@@ -136,7 +137,6 @@ public:
 
     //Get current status
     std::map<std::string, std::string> GetCurrentStatus();
- 
 
     // *** SETTER *** //
 
@@ -397,6 +397,8 @@ public:
 
 
     // ** Eventmanager functions ** // 
+
+    void updateMusic();
 
     /**
     * Throw event. This is the key function in the program. The parser first parses the command

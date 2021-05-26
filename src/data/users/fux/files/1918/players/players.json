@@ -1,1 +1,1 @@
-{"_admin":{"hp":10,"id":"_admin","name":"Admin","password":"password","quests":[],"room":"test.test_room","strength":0},"jack":{"hp":10,"id":"jack","name":"Jack","password":"password","room":"test.raum1"}}
+{"_admin":{"hp":10,"id":"_admin","name":"Admin","password":"password","quests":[],"room":"test.test_room","strength":0},"jack":{"hp":10,"id":"jack","name":"Jack","password":"password","quests":[],"room":"test.raum1","strength":0},"jan":{"hp":10,"id":"jan","music":"fight","name":"Jan","password":"password","quests":[],"room":"test.raum1","strength":0}}

@@ -192,18 +192,20 @@ function isspanret(isspan,colname)
 
 function parse_file(strin,x)
 {
-    name = '';
-    for(let i = x+1; i < strin.length; i++)
-	if(strin[i] == '\x07')
-	{
+  name = '';
+  for(let i = x+1; i < strin.length; i++)
+  {
+	  if(strin[i] == '\x07')
+	  {
 	    console.log("Playing soundfile: " + name);
 	    aud.pause();
-	    aud = new Audio(name);
+	    aud = new Audio("sounds/" + name + ".mp3");
 	    if(clicked) aud.play();
 	    return i+1;
-	}
-	else
+	  }
+	  else
 	    name+=strin[i]
+  }
 }
 
 function printString(theString)
@@ -303,6 +305,6 @@ function closeFullscreen(elem) {
         <p id="output" class="output"></p>
         <div class="input">
                 <hr>
-                <span>$> <input type="text" id="input" style="display:inline-block" placeholder='type command here...'/></span>
+                <span>$ <input type="text" id="input" style="display:inline-block" placeholder='type command here...'/></span>
         </div>
 </body>

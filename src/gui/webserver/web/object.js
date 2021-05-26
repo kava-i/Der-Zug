@@ -8,7 +8,6 @@ global_error = false;
 
 //Generate json of an object.
 function GenerateJson(element) {
-
   //Get list of elements and create empty json.
   var json = new Object();
   var object_list = document.getElementById(element).children;

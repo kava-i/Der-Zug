@@ -56,7 +56,8 @@ class Page {
      * @param[in] infos f.e name of start-room, when adding player.
      * @return ErrorCode indicating success/ error.
      */
-     virtual ErrorCodes AddElem(std::string, std::string, nlohmann::json) { return ErrorCodes::FAILED; }
+     virtual ErrorCodes AddElem(std::string, std::string, nlohmann::json) { 
+      return ErrorCodes::FAILED; }
 
     /**
      * Delete element:  directory, file or object.

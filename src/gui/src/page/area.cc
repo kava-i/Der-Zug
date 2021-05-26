@@ -48,8 +48,15 @@ void Area::set_notes(std::string path, std::string notes) {
 ErrorCodes Area::ModifyObject(std::string path, std::string name, nlohmann::json modified_object) {
   std::cout << "Area::ModifyObject(" << path << ")" << std::endl;
   // If path was object-path, or object does not exist, object cannot be modified.
-  if (objects_.count(name) == 0)
-    return ErrorCodes::PATH_NOT_FOUND;
+  if (objects_.count(name) == 0) {
+    name = path.substr(path.rfind("/")+1);
+
+    if (objects_.count(name) == 0) {
+      std::cout << "Object not found with name: " << name << std::endl;
+      std::cout << objects_ << std::endl;
+      return ErrorCodes::PATH_NOT_FOUND;
+    }
+  }
 
   // Create a backup of the original object, then overwrite original with modified object.
   backup_obj_ = objects_[name];

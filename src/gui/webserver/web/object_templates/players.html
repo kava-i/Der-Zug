@@ -12,6 +12,18 @@
                                                value={{default(quests,
                                                       [])}}></li>
 
+  <!-- Music and image for this object (default value for non-set-values -->
+  <li>
+    <label>music:</label>
+    <input id="music" placeholder="music" title="no fileextension!" 
+        value="{{ default(music, "") }}">
+  </li>
+  <li>
+    <label>image:</label>
+    <input id="image" placeholder="image" title="no fileextension!" 
+        value="{{ default(image, "") }}">
+  </li>
+
   <!-- Attacks (default value for non-set-values) -->
   <li custom="map">
     <label>Attacks:</label>

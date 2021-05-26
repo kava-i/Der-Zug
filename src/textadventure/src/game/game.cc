@@ -1,4 +1,5 @@
 #include "game.h" 
+#include "tools/webcmd.h"
 #include <chrono>
 #include <thread>
 
@@ -136,6 +137,7 @@ string CGame::startGame(string sInput, string player_id, Webconsole* _cout) {
   }
   if(m_players[player_id]->getFirstLogin() == true)
     m_players[player_id]->setFirstLogin(false);
+  // m_players[player_id]->throw_events("changeSound " + m_players[player_id]->music(), "startGame");
   m_players[player_id]->throw_events("show room", "startGame");
 
   return m_players[player_id]->getPrint();
@@ -149,10 +151,10 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>&
   std::map<string, string> mapOnlinePlayers;
   std::map<string, CPlayer*> mapOnlinePlayers2;
   for(auto it : onlinePlayers) {
-    if(it != m_players[sPlayerID]->getID() && m_players[sPlayerID]->getRoom()->getID() 
-        == m_players[it]->getRoom()->getID()) {
-      mapOnlinePlayers[m_players[it]->getID()] = m_players[it]->getName();
-      mapOnlinePlayers2[m_players[it]->getID()] = m_players[it];
+    if(it != m_players[sPlayerID]->id() && m_players[sPlayerID]->getRoom()->id() 
+        == m_players[it]->getRoom()->id()) {
+      mapOnlinePlayers[m_players[it]->id()] = m_players[it]->name();
+      mapOnlinePlayers2[m_players[it]->id()] = m_players[it];
     }
   }
 
@@ -162,10 +164,10 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>&
   m_curPlayer->getRoom()->setPlayers(mapOnlinePlayers);
   m_curPlayer->setPlayers(mapOnlinePlayers2);
 
-  if (sInput == "[end_game]" && m_curPlayer->getID() == "_admin") {
+  if (sInput == "[end_game]" && m_curPlayer->id() == "_admin") {
     std::cout << "Sending to all online players" << std::endl;
     for (auto it : onlinePlayers) {
-      if (it == m_curPlayer->getID()) continue;
+      if (it == m_curPlayer->id()) continue;
       m_players[it]->send("Game closed by host.\n");
     }
     std::cout << "Sending to host." << std::endl;
@@ -177,7 +179,7 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>&
   //Check whether player is dead
   if(m_curPlayer->getStat("hp") <= 0) {
     m_context->throw_event(std::make_pair("reload_player", 
-          m_curPlayer->getID()), m_players["programmer"]);
+          m_curPlayer->id()), m_players["programmer"]);
   }
 
   //Parse commands
@@ -185,7 +187,7 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>&
   std::vector<event> events = parser.parse(sInput);
 
   //Check for programmer commands
-  if(m_curPlayer->getID() == "_admin") {
+  if(m_curPlayer->id() == "_admin") {
     for(size_t i=0; i<events.size(); i++)
       m_context->throw_event(events[i], m_curPlayer);
   }
@@ -228,7 +230,7 @@ bool CGame::reloadWorld(string sID) {
         m_world->getPathToWorld()));
 
   m_players[sID]->setRoom(m_players[sID]->getWorld()->getRooms()[m_players[sID]
-      ->getRoom()->getID()]);
+      ->getRoom()->id()]);
 
   return true;
 }

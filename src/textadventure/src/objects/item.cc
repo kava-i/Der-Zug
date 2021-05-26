@@ -105,7 +105,7 @@ void CItem::initializeFunctions()
 // ***** VARIOUS FUNCTIONS ***** //
 std::string CItem::getAllInfos()
 {
-    return "id: " + m_sID + ", name: " + m_sName + ", catagory: " + m_sCategory + ", type: " + m_sType + ", function: " + m_sFunction + ", attack: " + m_sAttack + ", effekt: " + std::to_string(m_effekt) + ", value: " + std::to_string(m_value) + ", hidden: " + std::to_string(m_hidden) + "\n"; 
+    return "id: " + id_ + ", name: " + name_ + ", catagory: " + m_sCategory + ", type: " + m_sType + ", function: " + m_sFunction + ", attack: " + m_sAttack + ", effekt: " + std::to_string(m_effekt) + ", value: " + std::to_string(m_value) + ", hidden: " + std::to_string(m_hidden) + "\n"; 
 }
 
 // ***** FUNCTION-CALLER ***** // 
@@ -132,7 +132,7 @@ void CItem::consume(CPlayer* p)
             p->appendPrint(m_useDescription->print());
         else
             p->appendDescPrint("Du consumierst eine Droge: deine Highness erhöht sich um " + std::to_string(getEffekt()));
-        p->getInventory().removeItemByID(getID());
+        p->getInventory().removeItemByID(id());
     }
 }
 
@@ -148,5 +148,5 @@ void CItem::read(CPlayer* p)
 {
     p->appendDescPrint("Du schlägst das Buch auf der ersten Seite auf.");
     p->appendPrint(m_pages->pagePrint(m_mark) + "\n");
-    p->addReadContext(m_sID);
+    p->addReadContext(id_);
 }

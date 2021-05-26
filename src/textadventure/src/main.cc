@@ -158,10 +158,10 @@ std::string GetPage(std::string path) {
  * @return Return image as string.
  */
 std::string GetImage(std::string path, std::string image) {
-  path = path + "images" + image + ".jpg";
+  path = path + "images/" + image + ".jpg";
   std::ifstream f(path, std::ios::in|std::ios::binary|std::ios::ate);    
   if (!f.is_open()) {
-    std::cout << "file could not be found: " << path << std::endl;    
+    std::cout << "Image could not be found: " << path << std::endl;    
     return "";
   }
   FILE* file_stream = fopen(path.c_str(), "rb");    
@@ -176,6 +176,31 @@ std::string GetImage(std::string path, std::string image) {
   return s;
 }
 
+/**
+* Function to load an image from disc.
+* @param[in] path (to images)
+* @param[in] iamge (name of image to load)
+* @return Return image as string.
+*/
+std::string GetSound(std::string path, std::string sound) {
+ path = path + sound + ".mp3";
+ std::ifstream f(path, std::ios::in|std::ios::binary|std::ios::ate);    
+ if (!f.is_open()) {
+   std::cout << "Audio could not be found: " << path << std::endl;    
+   return "";
+ }
+ FILE* file_stream = fopen(path.c_str(), "rb");    
+ std::vector<char> buffer;    
+ fseek(file_stream, 0, SEEK_END);    
+ long length = ftell(file_stream);    
+ rewind(file_stream);    
+ buffer.resize(length);    
+ length = fread(&buffer[0], 1, length, file_stream);    
+     
+ std::string s(buffer.begin(), buffer.end());    
+ std::cout << "Audio loaded, size: " << s.size() << std::endl;
+ return s;
+}
 
 /**
  * main loop
@@ -199,8 +224,11 @@ int main(int x, char **argc) {
           "text/html"); 
       });
     //Function to serve images
-    srv.Get("(.*).jpg", [&](const httplib::Request& req, httplib::Response& resp)  {
+    srv.Get("/(.*).jpg", [&](const httplib::Request& req, httplib::Response& resp)  {
         resp.set_content(GetImage(argc[1], req.matches[1]), "image/jpg"); });
+    //Function to serve images
+    srv.Get("/(.*).mp3", [&](const httplib::Request& req, httplib::Response& resp)  {
+        resp.set_content(GetSound(argc[1], req.matches[1]), "audio/mp3"); });
 
     //Start main loop.
     srv.listen("0.0.0.0", port);

@@ -1,5 +1,6 @@
 #include "world.h"
 #include "nlohmann/json.hpp"
+#include "page/media.h"
 #include "page/page.h"
 #include "page/sub_category.h"
 #include "util/error_codes.h"
@@ -105,6 +106,7 @@ ErrorCodes World::DelElem(std::string path, std::string id, bool force) {
   return error_code;
 }
 
+
 nlohmann::json World::GetPage(std::string path, bool only_json) const {
   std::cout << "World::GetPage(" << path << ")" << std::endl;
   std::shared_lock sl(shared_mtx_paths_);
@@ -174,8 +176,11 @@ void World::InitializeCategory(std::string path) {
   for (auto& p : fs::directory_iterator(path)) {
     nlohmann::json objects;
     std::string path_without_extension = func::RemoveExtension(p.path());
-    if (p.path().extension() == ".jpg") 
-      std::cout << "skipped image" << std::endl;
+    if (p.path().extension() == ".jpg" || p.path().extension() == ".mp3") {
+      std::string type = (p.path().extension() == ".jpg") ? "image" : "sound";
+      paths_[path_without_extension] = new Media(base_path_, path_without_extension, 
+          type, p.path().extension());
+    }
     else if (!func::LoadJsonFromDisc(p.path(), objects))
       std::cout << "failed to load json." << std::endl;
     else if (objects.is_array() == false) {
@@ -201,7 +206,6 @@ void World::UpdateShortPaths() {
 World::~World() {
   std::unique_lock ul(shared_mtx_paths_);
   while (paths_.size() > 0) {
-    auto it = paths_.begin();
     std::erase_if(paths_, [&](const auto& elem) { return (elem.second->category() == it->second->name()); });
     delete it->second;
     paths_.erase(it->first);

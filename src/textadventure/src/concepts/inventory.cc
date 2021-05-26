@@ -21,7 +21,7 @@ std::string CInventory::printInventory(std::string color, int highlight)
 
 void CInventory::addItem(CItem* item)
 {
-    m_inventory[item->getCategory()][item->getName()].push_back(item); 
+    m_inventory[item->getCategory()][item->name()].push_back(item); 
 }
 
 void CInventory::removeItemByID(std::string sItemID)
@@ -30,7 +30,7 @@ void CInventory::removeItemByID(std::string sItemID)
         for(auto jt = it.second.begin(); jt != it.second.end(); ++jt) {
             for(auto it2 = (*jt).second.begin(); it2 != (*jt).second.end(); ++it2)
             {
-                if((*it2)->getID() == sItemID)
+                if((*it2)->id() == sItemID)
                 {
                     if((*jt).second.size() == 1)
                     {
@@ -50,7 +50,7 @@ CItem* CInventory::getItem(std::string sName)
 {
     for(auto& it : m_inventory) {
         for(auto& jt : it.second) {
-            if(fuzzy::fuzzy_cmp(jt.second[0]->getName(), sName) <= 0.2)
+            if(fuzzy::fuzzy_cmp(jt.second[0]->name(), sName) <= 0.2)
                 return jt.second.back();
         }
     }
@@ -72,7 +72,7 @@ CItem* CInventory::getItem_byID(std::string sID)
     for(auto it : m_inventory) {
         for(auto jt : it.second) {
 	        for(auto kl : jt.second ) {
-		        if(kl->getID() == sID)
+		        if(kl->id() == sID)
 		            return kl;
 	        }
         }
@@ -116,7 +116,7 @@ std::map<std::string, CItem*> CInventory::mapItems()
         for(auto jt : it.second)
         {
             for(auto kt : jt.second)
-                mapItems[kt->getID()] = kt;
+                mapItems[kt->id()] = kt;
         }
     }
     return mapItems;

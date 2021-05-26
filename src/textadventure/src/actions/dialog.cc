@@ -1,6 +1,7 @@
 #include "dialog.h"
 #include "objects/player.h"
 #include "tools/logic_parser.h"
+#include <string>
 
 // ***** ***** CDialog ***** *****
 
@@ -66,7 +67,7 @@ void CDialog::moveStart(string sStateID) {
 
 
 void CDialog::changeDialog(string sCharacter, string sDialog, CPlayer* p) {
-  auto lambda = [](CPerson* person) { return person->getName(); };
+  auto lambda = [](CPerson* person) { return person->name(); };
   std::string character = func::getObjectId(p->getRoom()->getCharacters(), sCharacter, lambda);
   if(character == "")
     character = sCharacter;
@@ -85,6 +86,7 @@ CDState::CDState(nlohmann::json jAtts, dialogoptions opts, CDialog* dia,
   m_options = opts;
   m_dialog = dia;
   visited_ = false;
+  music_ = jAtts.value("music", "");
 }
 
 // *** GETTER *** //
@@ -101,7 +103,14 @@ bool CDState::visited() {
   return visited_;
 }
 
+std::string CDState::music() {
+  return music_;
+}
+
 // *** SETTER *** //
+void CDState::set_music(std::string filename) {
+  music_ = filename;
+}
 
 // *** FUNCTIONS *** // 
 
@@ -199,7 +208,7 @@ std::vector<size_t> CDState::getActiveOptions(CPlayer* p) {
 
 string CDState::toeten(CPlayer* p) {
   string sOutput=standard(p);
-  m_sEvents += ";killCharacter " + p->getCurDialogPartner()->getID();
+  m_sEvents += ";killCharacter " + p->getCurDialogPartner()->id();
   return sOutput; 
 }
 

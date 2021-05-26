@@ -48,6 +48,7 @@ private:
     map<string, vector<CDialog*>> m_defaultDialogs;
 
     nlohmann::json m_config;
+    std::map<std::string, std::string> media_;
     std::string m_path_to_world;
 public:
 
@@ -61,7 +62,9 @@ public:
 
     ///Return json for configuration
     nlohmann::json& getConfig();
- 
+
+    ///Return standard-media (images, audio-files etc.)
+    std::string media(std::string type) const;
     
     ///Return dictionary of all rooms in the game.
     map<string, CRoom*>& getRooms();

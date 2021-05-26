@@ -55,7 +55,9 @@ void Page::GenerateParentNodes() {
   std::vector<std::string> path_elems = func::Split(path_.substr(base_path_.length()), "/");
   for (size_t i=2; i<path_elems.size(); i++) {
     std::string path = std::accumulate(path_elems.begin()+1, path_elems.begin()+i+1, 
-        *path_elems.begin(), [](const std::string& init, std::string& str) { return init + "/" + str; });
+        *path_elems.begin(), [](const std::string& init, std::string& str) { 
+        return init + "/" + str; 
+    });
     parent_nodes_[path] = path_elems[i];
   }
 }

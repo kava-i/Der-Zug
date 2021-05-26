@@ -48,7 +48,7 @@ std::map<string, CExit*>& CRoom::getExtits() {
 }
 
 CRoom::objectmap CRoom::getExtits2() { 
-  auto lambda = [](CExit* exit) { return exit->getName(); };
+  auto lambda = [](CExit* exit) { return exit->name(); };
   return func::convertToObjectmap(m_exits, lambda); 
 }
 
@@ -62,9 +62,9 @@ std::map<string, CDetail*>& CRoom::getDetails() {
 
 std::vector<nlohmann::json> CRoom::getHandler() {
   std::vector<nlohmann::json> handler;
-  handler.insert(handler.begin(), m_handler.begin(), m_handler.end());
+  handler.insert(handler.begin(), handler_.begin(), handler_.end());
   for(auto it : m_characters) {
-    std::vector<nlohmann::json> c_handler = it.second->getHandler();
+    std::vector<nlohmann::json> c_handler = it.second->handler();
     for(auto &jt : c_handler) {
       if(jt.count("infos") > 0)
         jt["infos"] = it.first;
@@ -89,11 +89,11 @@ string CRoom::showDescription(std::map<std::string, CPerson*> mapCharacters) {
   for(auto it : m_characters)
     sDesc += mapCharacters[it.first]->getRoomDescription() + " ";
 
-  if(m_text->print().find("</div") != std::string::npos)
+  if(text_->print().find("</div") != std::string::npos)
     sDesc = "<div class='spoken2'>"+sDesc+"</div>";
   else
     sDesc += "\n";
-  return m_text->print() + " " + sDesc;
+  return text_->print() + " " + sDesc;
 }
 
 string CRoom::showAll(CGramma* gramma) {
@@ -102,7 +102,7 @@ string CRoom::showAll(CGramma* gramma) {
 }
 
 string CRoom::showExits(CGramma* gramma) {
-  auto lambda = [](CExit* exit) {return exit->getPrep() + " " + exit->getName();};
+  auto lambda = [](CExit* exit) {return exit->getPrep() + " " + exit->name();};
 
   // Get pre and post strings from show map.
   std::string pre = "Hier geht es";    
@@ -121,7 +121,7 @@ string CRoom::showExits(CGramma* gramma) {
 string CRoom::showCharacters(CGramma* gramma) {
 
   std::cout << "showCharacters" << std::endl;
-  auto lambda = [](CPerson* person) {return person->getName();};
+  auto lambda = [](CPerson* person) {return person->name();};
   std::string output = "";
 
   // Get pre and post strings from show map.
@@ -152,7 +152,7 @@ string CRoom::showItems(CGramma* gramma) {
   string sOutput = "";
 
   //TODO (fux): condition to not print when hidden might be missing.
-  auto printing = [](CItem* item) { return item->getName(); };
+  auto printing = [](CItem* item) { return item->name(); };
 
   return gramma->build(func::to_vector(m_items, printing), "Hier sind", 
       "nichts zu finden.");
@@ -160,14 +160,14 @@ string CRoom::showItems(CGramma* gramma) {
 
 string CRoom::showDetails(CGramma* gramma) {
   std::string details = "";
-  auto lambda = [](CDetail* detail) { return detail->getName(); };
+  auto lambda = [](CDetail* detail) { return detail->name(); };
   return gramma->build(func::to_vector(m_details, lambda), "Hier sind ", 
       "nichts weiteres zu sehen.");
 }
 
 string CRoom::look(string sDetail, CGramma* gramma) {
   CDetail* detail = m_details[sDetail];
-  auto lambda = [](CItem* item) { return item->getName(); };
+  auto lambda = [](CItem* item) { return item->name(); };
   std::string sOutput = "";
 
   sOutput = gramma->build(func::to_vector(detail->getItems(), lambda), 
@@ -184,7 +184,7 @@ CItem* CRoom::getItem(std::string sPlayerChoice) {
   for(auto it : m_items) {
     if(it.second->getHidden() == true) 
       continue;
-    if(fuzzy::fuzzy_cmp(it.second->getName(), sPlayerChoice) <= 0.2)
+    if(fuzzy::fuzzy_cmp(it.second->name(), sPlayerChoice) <= 0.2)
       return it.second;
   }
   return NULL;

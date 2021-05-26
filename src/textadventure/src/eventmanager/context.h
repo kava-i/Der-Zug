@@ -30,6 +30,7 @@ protected:
     
     nlohmann::json m_jAttributes;
     std::string m_sName;
+    std::map<std::string, std::string> media_;
     bool m_permeable;
     bool m_curPermeable;
     bool m_block;
@@ -55,6 +56,8 @@ public:
     nlohmann::json getTemplate(std::string sTemplate);
     nlohmann::json& getAttributes();
 
+    std::string GetFromMedia(std::string type);
+
     CContextStack<CTimeEvent> getTimeEvents() { return m_timeevents; }
 
     template<typename T> 
@@ -71,6 +74,8 @@ public:
     void setErrorFunction(void(Context::*func)(CPlayer*));
     void setTimeEvents(CContextStack<CTimeEvent> stack) { m_timeevents=stack; } 
     void setCurPermeable(bool permeable);
+
+    void SetMedia(std::string type, std::string filename);
 
     template<typename T> 
     T setAttribute(std::string sAttribute, T attribute)
@@ -143,6 +148,7 @@ public:
     void h_attack(std::string&, CPlayer*);
     void h_changeRoom(std::string&, CPlayer*);
     void h_startDialogDirect(std::string&, CPlayer*);
+    void h_changeSound(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
     void h_ignore(std::string&, CPlayer*);

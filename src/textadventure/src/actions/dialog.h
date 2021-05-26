@@ -21,6 +21,8 @@ class CDialog
 private: 
     std::string m_sName;
     std::map<std::string, CDState*> m_states;
+    std::string music_;
+    std::string image_;
 
 public:
     CDialog() {}
@@ -78,6 +80,7 @@ private:
     string m_sFunction;  //< Function called when calling state.
     string m_sActions;  //< Actions executed after call.
     string m_sEvents;  //< string holding a list of events, which will be executed.
+    std::string music_;
 
     bool visited_;
 
@@ -98,13 +101,16 @@ public:
     string getText();
     dialogoptions& getOptions();
     bool visited();
+    std::string music();
 
     // *** SETTER *** //
+    void set_music(std::string file_name);
 
     static void initializeFunctions();
     string callState(CPlayer*);
     string getNextState(string sPlayerChoice, CPlayer* p);
     void executeActions(CPlayer* P);
+
 
     // *** functions *** //
     string toeten(CPlayer*);

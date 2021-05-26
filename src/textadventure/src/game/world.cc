@@ -1,5 +1,6 @@
 #include "world.h"
 #include <stdexcept>
+#include <string>
 
 #define cRED "\033[1;31m"
 #define cCLEAR "\033[0m"
@@ -20,6 +21,8 @@ CWorld::CWorld(CPlayer* p, std::string path) {
   std::ifstream readConfig(m_path_to_world + "config/config.json");
   readConfig >> m_config;
   readConfig.close();
+
+  media_["music"] = m_config.value("music", "");
 }
 
 // *** GETTER *** // 
@@ -30,6 +33,10 @@ std::string CWorld::getPathToWorld() {
 
 nlohmann::json& CWorld::getConfig() {
   return m_config;
+}
+
+std::string CWorld::media(std::string type) const {
+  return media_.count(type) ? media_.at(type) : "";
 }
 
 map<string, CRoom*>& CWorld::getRooms() { 
@@ -251,7 +258,7 @@ map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room,
     func::updateJson(jBasic, detail.second);
 
     //Update id
-    auto lambda = [](CDetail* detail) { return detail->getName(); };
+    auto lambda = [](CDetail* detail) { return detail->name(); };
     jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapDetails,lambda), sID);
 
     //Create items
@@ -340,7 +347,7 @@ map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, CPlayer* p) {
     func::updateJson(jBasic, item.second);
 
     // Update id
-    auto lambda = [](CItem* item) { return item->getName(); };
+    auto lambda = [](CItem* item) { return item->name(); };
     jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapItems, lambda), sID);
 
     // Create item
@@ -400,7 +407,7 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room,
     }
 
     // Update id
-    auto lambda = [] (CPerson* person) { return person->getName(); };
+    auto lambda = [] (CPerson* person) { return person->name(); };
     jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapCharacters, lambda), sID);
 
     // ** Create dialog ** //

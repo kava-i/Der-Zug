@@ -26,7 +26,7 @@ CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttac
     m_deadDescription = jAttributes.value("deadDescription", nlohmann::json::parse("{}"));
 
     if(text!=nullptr)
-        m_text = text;
+        text_ = text;
 
     //Set dialogue and attacks
     m_attacks = newAttacks;
@@ -99,7 +99,7 @@ std::string CPerson::getRoomDescription() {
 
 ///Brief description of character
 std::string CPerson::getReducedDescription() {
-    return m_text->reducedPrint(false);
+    return text_->reducedPrint(false);
 }
 
 ///Get description of character, when he is dead.
@@ -190,7 +190,7 @@ bool CPerson::attributeExists(std::string sAttribute) {
 std::string CPerson::getAllInformation()
 {
     std::string sOutput = "";
-    sOutput += "id: " + m_sID + ", name: " + m_sName + ", ";
+    sOutput += "id: " + id_ + ", name: " + name_ + ", ";
     for(auto it : m_stats)
         sOutput += it.first + ": " + std::to_string(it.second) + ", ";
     sOutput + ", ";

@@ -445,21 +445,28 @@ void ServerFrame::WriteObject(const Request& req, Response& resp) {
   
   //Try to parse json and get relevant attributes.
   nlohmann::json json_req = ValidateJson(req, resp, {"json", "path"});
+  std::string path = json_req["path"];
+  bool force = json_req.value("force", false);
   if (json_req.empty()) 
     return;
   std::string id = "";
+  // Use id 
   if (json_req["json"].contains("id"))
     id = json_req["json"]["id"];
+  // Use last element of path as id
+  // If values is array (for config-objects), us first key, and reduce json to value.
   else {
     for (const auto& it : json_req["json"].items()) {
-      id = it.key();
-      json_req["json"] = it.value();
+      if (it.value().is_array()) {
+        id = it.key();
+        json_req["json"] = it.value();
+      }
+      id = path.substr(path.rfind("/")+1);
       break;
     }
   }
-  std::string path = json_req["path"];
+
   nlohmann::json modified_obj = json_req["json"];
-  bool force = json_req.value("force", false);
   
   //Get user
   std::shared_lock sl(shared_mtx_user_manager_);

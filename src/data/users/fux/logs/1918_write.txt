@@ -107,8 +107,45 @@ Created all rooms
 worldFactory: done.
 initializing context stack.
 Done.
+Room: "test.raum1"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test.raum1"
+Room: "test.raum2"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "test.raum2"
+Room: "test.raum3"
+Parsing characters
+Parsing Items
+Parsing details 
+"test.raum3.mirror"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "test.raum3"
+Room: "test.test_room"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test.test_room"
+Created all rooms 
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
+Created all rooms 
+worldFactory: done.
+initializing context stack.
+Done.
 Finished parsing!
 [1;31mEvents: show room, from: startGame[0m
+Updated music to: fight
 [1;31mshow, room[0m
 [1;34mfirst[0m throwing: show|room
 [1;31mEvents: printText start, from: pre-events[0m
@@ -130,7 +167,6 @@ Finished parsing!
 [1;31mshow, exits[0m
 [1;34mfirst[0m throwing: show|exits
 Calling:  show exits!
-Wrong size!
 [1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
 [1;34mworld[0m throwing: show|exits
 [1;34mroom[0m throwing: show|exits

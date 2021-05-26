@@ -1,4 +1,6 @@
-#include "player.h"
+#include "player.h" 
+#include "tools/webcmd.h"
+#include "tools/webcmd.h"
 #include <cctype>
 #include <string>
 
@@ -22,7 +24,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks,
     CGramma* gramma, std::string path) : CPerson(jAtts, nullptr, lAttacks, nullptr, this, 
       std::map<std::string, CDialog*>()) {
   //Set login data and player information
-  func::convertToUpper(m_sName);
+  func::convertToUpper(name_);
   m_sPassword = jAtts["password"];
   m_firstLogin = true; 
   m_abbilities = {"strength", "skill"};
@@ -55,7 +57,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks,
       m_stats[it] = 0;
   }
 
-  //States, f.e. current fight, Dialog-partner
+  // States, f.e. current fight, Dialog-partner
   m_curFight = nullptr;
   m_curDialogPartner = nullptr;
 
@@ -68,9 +70,9 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks,
   
   //Initialize all rooms as not visited
   for(const auto& it : m_world->getRooms())
-    m_vistited[it.second->getID()] = false;
-  m_room = m_world->getRoom(m_room->getID());
-  m_vistited[m_room->getID()] = true;
+    m_vistited[it.second->id()] = false;
+  m_room = m_world->getRoom(m_room->id());
+  m_vistited[m_room->id()] = true;
 
   std::cout << "initializing context stack.\n";
   // Initialize context stack
@@ -174,7 +176,7 @@ std::map<std::string, CPlayer*>& CPlayer::getMapOFOnlinePlayers() {
 std::map<std::string, std::string> CPlayer::GetCurrentStatus() {
   //Setup basic elements
   std::map<std::string, std::string> status = {{"room", (std::string)m_room
-    ->getID()}, {"inventory", (std::string)m_inventory.getItemList()}};
+    ->id()}, {"inventory", (std::string)m_inventory.getItemList()}};
 
   //Add extra substitutes
   status.insert(subsitutes_.begin(), subsitutes_.end());
@@ -420,18 +422,18 @@ void CPlayer::startDialog(string sCharacter, CDialog* dialog) {
 * context-stack and throw event 'Hey + player-name'.
 */
 void CPlayer::startChat(CPlayer* player) {
-  appendStoryPrint("Du gehst auf " + player->getName() + 
+  appendStoryPrint("Du gehst auf " + player->name() + 
       " zu und räusperst dich...\n");
 
   if(player->getContexts().nonPermeableContextInList() == true)
-    appendStoryPrint(player->getName() + " ist zur Zeit beschäftigt.\n");
+    appendStoryPrint(player->name() + " ist zur Zeit beschäftigt.\n");
   else { 
     //Add Chat context for both players
-    addChatContext(player->getID());
-    player->addChatContext(m_sID);
+    addChatContext(player->id());
+    player->addChatContext(id_);
     
     //Send text by throwing event
-    throw_events("Hey " + player->getName() + ".", "CPlayer::startChat");
+    throw_events("Hey " + player->name() + ".", "CPlayer::startChat");
   }
 }
 
@@ -487,7 +489,7 @@ void CPlayer::changeRoom(string sIdentifier) {
   }
 
   //Get selected room, checking exits in current room.
-  auto lamda1= [](CExit* exit) { return exit->getPrep() + " " + exit->getName(); };
+  auto lamda1= [](CExit* exit) { return exit->getPrep() + " " + exit->name(); };
   string room = func::getObjectId(getRoom()->getExtits(), sIdentifier, lamda1);
 
   if(room != "") {
@@ -496,7 +498,7 @@ void CPlayer::changeRoom(string sIdentifier) {
   }
 
   //Check all rooms already visited.
-  auto lamda2 = [](CRoom* room) { return room->getName(); };
+  auto lamda2 = [](CRoom* room) { return room->name(); };
   room = func::getObjectId(m_world->getRooms(), sIdentifier, lamda2);
   std::vector<std::string> path = findWay(m_room, room);
 
@@ -518,16 +520,16 @@ void CPlayer::changeRoom(string sIdentifier) {
 * Change room to given room and print entry description. Set last room to current room.
 * @param newRoom new room the player changes to
 */
-void CPlayer::changeRoom(CRoom* newRoom) {
+void CPlayer::changeRoom(CRoom* new_room) {
   m_lastRoom = m_room; 
-  m_room = newRoom;
-  std::string entry = newRoom->getEntry();
+  m_room = new_room;
+  std::string entry = new_room->getEntry();
   if(entry != "")
     appendDescPrint(entry);
   appendPrint(m_room->showDescription(m_world->getCharacters()));
-  m_vistited[m_room->getID()] = true;
-
+  m_vistited[m_room->id()] = true;
   updateRoomContext();
+
   std::cout << "done.\n";
 }
 
@@ -538,7 +540,7 @@ void CPlayer::showVisited() {
   std::map<std::string, std::string> mapRooms;
   for(auto const& it : m_vistited) {
     if(it.second == true)
-      mapRooms[it.first] = m_world->getRoom(it.first)->getName();
+      mapRooms[it.first] = m_world->getRoom(it.first)->name();
   }
   appendDescPrint(m_gramma->build(func::to_vector(mapRooms), "Du warst schon in",
         "keinem anderen Raum.") + "\nGebe \"gehe [name des Raumes]\" ein, um "
@@ -554,7 +556,7 @@ void CPlayer::showVisited() {
 */
 std::vector<std::string> CPlayer::findWay(CRoom* room, std::string roomID) {
   //Check whether current room is target room
-  if(room->getID() == roomID)
+  if(room->id() == roomID)
     return {};
 
   //Set variables
@@ -563,22 +565,22 @@ std::vector<std::string> CPlayer::findWay(CRoom* room, std::string roomID) {
 
   //Set parent of every room to ""
   for(auto it : m_world->getRooms())
-    parents[it.second->getID()] = "";
+    parents[it.second->id()] = "";
 
   //Normal breadth-first search
   q.push(room);
-  parents[room->getID()] = room->getID();
+  parents[room->id()] = room->id();
   while(!q.empty()) {
     CRoom* node = q.front(); 
     q.pop();
-    if(node->getID() == roomID)
+    if(node->id() == roomID)
       break;
     for(auto& it : node->getExtits()) {
       //Also check, that target-room is visited and in the same area as current room.
       if(parents[it.first] == "" && m_vistited[it.first] == true 
           && node->getArea() == m_room->getArea()) {
         q.push(m_world->getRoom(it.first));
-        parents[it.first] = node->getID();
+        parents[it.first] = node->id();
       }
     } 
   }
@@ -589,7 +591,7 @@ std::vector<std::string> CPlayer::findWay(CRoom* room, std::string roomID) {
 
   //Create path from parents.  
   std::vector<std::string> path = { roomID };
-  while(path.back() != room->getID())
+  while(path.back() != room->id())
     path.push_back(parents[path.back()]);
   path.pop_back();
 
@@ -609,8 +611,8 @@ void CPlayer::addAll() {
   for(auto it = m_room->getItems().begin(); it != m_room->getItems().end();) {
     if((*it).second->getHidden() == false)  {
       m_inventory.addItem((*it).second);
-      items_names.push_back((*it).second->getName());
-      m_room->getItems().erase((*(it++)).second->getID());
+      items_names.push_back((*it).second->name());
+      m_room->getItems().erase((*(it++)).second->id());
       continue;
     }
     ++it;
@@ -624,8 +626,8 @@ void CPlayer::addAll() {
 */
 void CPlayer::addItem(CItem* item) {
   m_inventory.addItem(item);
-  appendDescPrint("<b> "+item->getName() + "</b> zu {name}'s Inventar hinzugefügt.\n");
-  m_room->getItems().erase(item->getID());
+  appendDescPrint("<b> "+item->name() + "</b> zu {name}'s Inventar hinzugefügt.\n");
+  m_room->getItems().erase(item->id());
 }
 
 /**
@@ -648,7 +650,7 @@ void CPlayer::printEquiped() {
     auto getElem = [](CItem* item){ 
       std::string str; 
       if(item) 
-        str = item->getName(); 
+        str = item->name(); 
       else 
         str="nichts ausgerüstet.";
       return str;
@@ -665,7 +667,7 @@ void CPlayer::printEquiped() {
 void CPlayer::equipeItem(CItem* item, string sType) {
   //If nothing is equipped in this category -> equip.
   if(m_equipment[sType] == NULL) {
-    appendDescPrint("Du hast " + item->getName() + " als " + sType + " ausgerüstet.\n");
+    appendDescPrint("Du hast " + item->name() + " als " + sType + " ausgerüstet.\n");
     string sAttack = item->getAttack();
 
     //Check for new attack
@@ -677,7 +679,7 @@ void CPlayer::equipeItem(CItem* item, string sType) {
   }
 
   //If this item is already equipped -> print error message.
-  else if(m_equipment[sType]->getID() == item->getID())
+  else if(m_equipment[sType]->id() == item->id())
     appendErrorPrint(sType + " bereits ausgerüstet.\n");
 
   //If another item is equipped in this category -> add choice-context
@@ -687,7 +689,7 @@ void CPlayer::equipeItem(CItem* item, string sType) {
     //Create Choice-Context
     m_contextStack.insert(new Context((nlohmann::json){{"name", "equipe"}, 
           {"permeable", false},{"error", "Wähle ja oder nein\n"},{"itemID", 
-          item->getID()},{"handlers",{{"ja",{ "h_choose_equipe"}},{"nein",
+          item->id()},{"handlers",{{"ja",{ "h_choose_equipe"}},{"nein",
           {"h_choose_equipe"}}}}}), 1, "equipe");
   }
 }
@@ -702,7 +704,7 @@ void CPlayer::dequipeItem(string sType) {
   else if(m_equipment[sType] == NULL)
     appendErrorPrint("Nothing to dequipe.\n");
   else {
-    appendDescPrint(sType + " " + m_equipment[sType]->getName() + " abgelegt.\n");
+    appendDescPrint(sType + " " + m_equipment[sType]->name() + " abgelegt.\n");
 
     //Erase attack
     if(m_equipment[sType]->getAttack() != "")
@@ -820,7 +822,7 @@ void CPlayer::updateStats(int numPoints)
 */
 void CPlayer::showMinds()
 {
-    m_sPrint += " --- " + m_sName + " --- \n"
+    m_sPrint += " --- " + name_ + " --- \n"
             += "Level: " + std::to_string(m_level) + "\n"
             += "Ep: " + std::to_string(m_ep) + "/20.\n";
 
@@ -832,7 +834,7 @@ void CPlayer::showMinds()
 * Print player's stats by using table function.
 */
 void CPlayer::showStats() {
-  m_sPrint += "--- " + m_sName + "---\n";
+  m_sPrint += "--- " + name_ + "---\n";
   
   // Get mapping from config.
   std::map<std::string, std::map<std::string, std::string>> stats_mapping 
@@ -907,8 +909,8 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps) {
 // *** Others *** // 
 
 /**
-* Check if player's output contains special commands such as printing player name or else.
-*/ 
+ * Check if player's output contains special commands such as printing player name or else.
+ */ 
 void CPlayer::checkCommands()
 {
     while(m_sPrint.find("{") != std::string::npos)
@@ -918,9 +920,9 @@ void CPlayer::checkCommands()
         std::string cmd = m_sPrint.substr(pos+1, pos2-(pos+1));
         std::string replace = "";
         if(cmd.find("cname") != std::string::npos && m_curDialogPartner != nullptr)
-            replace = m_curDialogPartner->getName();
+            replace = m_curDialogPartner->name();
         else if(cmd.find("name") != std::string::npos)
-            replace = getName();
+            replace = name();
 
         m_sPrint = m_sPrint.substr(0, pos) + replace + m_sPrint.substr(pos2+1);
     }
@@ -950,8 +952,8 @@ void CPlayer::checkCommands()
 * @param sPassword password to compare to player's password.
 */
 string CPlayer::doLogin(string id, string password) {
-  if(id == func::returnToLower(m_sID) && password== m_sPassword) 
-    return m_sID;
+  if(id == func::returnToLower(id_) && password== m_sPassword) 
+    return id_;
   else 
     return "";
 }
@@ -963,7 +965,7 @@ string CPlayer::doLogin(string id, string password) {
 CPlayer* CPlayer::getPlayer(string sIdentifier)
 {
     //Try to get player's id by using function from func.h
-    auto lambda = [](CPlayer* player) { return player->getName(); };
+    auto lambda = [](CPlayer* player) { return player->name(); };
     std::string sPlayerID = func::getObjectId(m_players, sIdentifier, lambda);
 
     //Check if player's id could be retrieved.
@@ -994,13 +996,29 @@ void CPlayer::printError(std::string sError) {
   appendTechPrint("Sorry, but something went wrong. Maybe try something else.\n");
 }
 
+void CPlayer::updateMusic() {
+  std::string music = m_world->media("music");
+  if (m_contextStack.getContext("fight"))
+    music = m_contextStack.getContext("fight")->GetFromMedia("music");
+  else if (m_contextStack.getContext("dialog"))
+    music = m_contextStack.getContext("dialog")->GetFromMedia("music");
+  else if (m_room->music() != "")
+    music = m_room->music();
+  else if (music_ != "")
+    music = music_;
+
+  if (music != cur_music_) {
+    std::cout << "Updated music to: " << music << std::endl; 
+    cur_music_ = music;
+    m_sPrint += Webcmd::set_sound(music) + "\n";
+  }
+}
 
 // *** Eventmanager functions *** //
 
 void CPlayer::throw_events(string sInput, std::string sMessage) {
   updateRoomContext();
-  std::cout << cRED << "Events: " << sInput << ", from: " << sMessage 
-    << cCLEAR << std::endl;
+  std::cout << cRED << "Events: " << sInput << ", from: " << sMessage << cCLEAR << std::endl;
 
   //Check for time triggered events
   getContext("room")->throw_timeEvents(this);
@@ -1018,8 +1036,8 @@ void CPlayer::throw_events(string sInput, std::string sMessage) {
   //Iterate over parsed events and call throw_event for each context and each event
   std::deque<Context*> sortedCtxList = m_contextStack.getSortedCtxList();
   for (size_t i=0; i<events.size(); i++) {
+    updateMusic();
     std::cout << cRED << events[i].first << ", " << events[i].second << cCLEAR <<"\n";
-
     //Check for non-event type commands
     if (events[i].first == "printText") 
       printText(events[i].second);
@@ -1029,5 +1047,6 @@ void CPlayer::throw_events(string sInput, std::string sMessage) {
           break;
       }
     }
+    updateMusic();
   }
 }

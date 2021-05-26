@@ -1,8 +1,10 @@
 #include "context.h"
+#include "actions/dialog.h"
 #include "nlohmann/json.hpp"
 #include "objects/player.h"
 #include "game/game.h"
 #include "tools/func.h"
+#include "tools/webcmd.h"
 #define cRED "\033[1;31m"
 #define cGreen "\033[1;32m"
 #define cBlue "\033[1;34m"
@@ -80,6 +82,12 @@ nlohmann::json& Context::getAttributes() {
   return m_jAttributes;
 }
 
+std::string Context::GetFromMedia(std::string type) {
+  if (media_.count(type) > 0)
+    return media_.at(type);
+  return "";
+}
+
 
 // ***** ***** SETTER ***** ***** //
 void Context::setName(std::string sName) {
@@ -96,6 +104,10 @@ void Context::setErrorFunction(void(Context::*func)(CPlayer* p)) {
 
 void Context::setCurPermeable(bool permeable) {
   m_curPermeable = permeable;
+}
+
+void Context::SetMedia(std::string type, std::string filename) {
+  media_[type] = filename;
 }
 
 // ***** ***** INITIALIZERS ***** ***** //
@@ -134,6 +146,7 @@ void Context::initializeHanlders() {
   m_handlers["h_changeDialog"] = &Context::h_changeDialog;
   m_handlers["h_changeRoom"] = &Context::h_changeRoom;
   m_handlers["h_startDialogDirect"] = &Context::h_startDialogDirect;
+  m_handlers["h_changeSound"] = &Context::h_changeSound;
 
   // ***** STANDARD CONTEXT ***** //
   m_handlers["h_showExits"] = &Context::h_showExits;
@@ -245,7 +258,8 @@ void Context::initializeTemplates() {
                         {"setNewQuest", {"h_setNewQuest"}},
                         {"changeDialog", {"h_changeDialog"}},
                         {"changeRoom", {"h_changeRoom"}},
-                        {"startDialogDirekt", {"h_startDialogDirekt"}} }}
+                        {"startDialogDirekt", {"h_startDialogDirekt"}},
+                        {"changeSound", {"h_changeSound"}} }}
                     };
 
     m_templates["standard"] = {
@@ -520,8 +534,8 @@ void Context::h_killCharacter(std::string& sIdentifier, CPlayer* p) {
 
   //Create json for details
   nlohmann::json jDetail = {
-              {"id", person->getID()},  
-              {"name", person->getName()}, 
+              {"id", person->id()},  
+              {"name", person->name()}, 
               {"look", ""}};
 
   //Parse details-description
@@ -535,7 +549,7 @@ void Context::h_killCharacter(std::string& sIdentifier, CPlayer* p) {
 
   //Create new detail and add to room and map of details
   CDetail* detail = new CDetail(jDetail, p, person->getInventory().mapItems());
-  p->getRoom()->getDetails()[person->getID()] = detail;
+  p->getRoom()->getDetails()[person->id()] = detail;
   h_deleteCharacter(sIdentifier, p);
 }
 
@@ -582,7 +596,7 @@ void Context::h_endDialog(std::string& sIdentifier, CPlayer* p) {
 void Context::h_newFight(std::string& sIdentifier, CPlayer* p) {
 
     std::cout << "h_newFight: " << sIdentifier << std::endl;
-    auto lambda = [](CPerson* person){return person->getName(); };
+    auto lambda = [](CPerson* person){return person->name(); };
     std::string str =func::getObjectId(p->getRoom()->getCharacters(),sIdentifier,lambda);
    
     if(p->getWorld()->getCharacter(str) != nullptr)
@@ -602,7 +616,7 @@ void Context::h_addQuest(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_showPersonInfo(std::string& sIdentifier, CPlayer* p) {
-    auto lambda = [](CPerson* person) { return person->getName();};
+    auto lambda = [](CPerson* person) { return person->name();};
     std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda);
 
     if(character != "")
@@ -613,7 +627,7 @@ void Context::h_showPersonInfo(std::string& sIdentifier, CPlayer* p) {
 }
 void Context::h_showItemInfo(std::string& sIdentifier, CPlayer* p) 
 {
-    auto lambda = [](CItem* item) { return item->getName(); };
+    auto lambda = [](CItem* item) { return item->name(); };
     std::string item = func::getObjectId(p->getRoom()->getItems(), sIdentifier, lambda);
 
     if(item != "")
@@ -627,7 +641,7 @@ void Context::h_changeName(std::string& sIdentifier, CPlayer* p) {
   std::vector<std::string> v_atts = func::split(sIdentifier, "|");
   if(v_atts[0] == "character") {
     if(p->getWorld()->getCharacter(v_atts[1]) != NULL) 
-        p->getWorld()->getCharacter(v_atts[1])->setName(v_atts[2]);
+        p->getWorld()->getCharacter(v_atts[1])->set_name(v_atts[2]);
     else {
       std::cout << cRED << "Character not found: " << v_atts[1] 
         << cCLEAR << std::endl;
@@ -707,7 +721,7 @@ void Context::h_changeDialog(std::string& sIdentifier, CPlayer* p) {
       return;
   }
 
-  auto lambda = [](CPerson* person) { return person->getName(); };
+  auto lambda = [](CPerson* person) { return person->name(); };
   std::string str = func::getObjectId(p->getRoom()->getCharacters(), atts[0], 
       lambda);
   p->getWorld()->getCharacter(str)->setDialog(atts[1]);
@@ -743,7 +757,7 @@ void Context::h_show(std::string& sIdentifier, CPlayer* p) {
     p->showVisited();
   else if(sIdentifier == "people" || sIdentifier == "personen") {
     p->appendDescPrint(p->getRoom()->showCharacters(p->getGramma()) + "\n"); 
-    auto lambda = [](CPerson* person) {return person->getName();};
+    auto lambda = [](CPerson* person) {return person->name();};
     p->addSelectContest(func::convertToObjectmap(p->getRoom()->getCharacters(), 
           lambda) , "talk");
   }
@@ -783,7 +797,7 @@ void Context::h_look(std::string& sIdentifier, CPlayer* p) {
   
   std::string sWhere = sIdentifier.substr(0, pos);
   std::string sWhat = sIdentifier.substr(pos+1);
-  auto lambda = [](CDetail* detail) { return detail->getName();};
+  auto lambda = [](CDetail* detail) { return detail->name();};
   std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), sWhat, lambda);
 
   //Check whether input is correct/ detail could be found.
@@ -797,13 +811,13 @@ void Context::h_look(std::string& sIdentifier, CPlayer* p) {
   if(detail->getLook() == sWhere)
     p->appendDescPrint(p->getRoom()->look(sDetail, p->getGramma()));
   else {
-    p->appendErrorPrint("Ich kann nicht " + sWhere + " " + detail->getName() 
-        + " schauen.\nSoll ich in, auf oder unter " + detail->getName() + " schauen?\n");
+    p->appendErrorPrint("Ich kann nicht " + sWhere + " " + detail->name() 
+        + " schauen.\nSoll ich in, auf oder unter " + detail->name() + " schauen?\n");
   }
 }
 
 void Context::h_search(std::string& sIdentifier, CPlayer* p) {
-  auto lambda = [](CDetail* detail) { return detail->getName();};
+  auto lambda = [](CDetail* detail) { return detail->name();};
   std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), 
       sIdentifier, lambda);
 
@@ -829,9 +843,9 @@ void Context::h_goTo(std::string& sIdentifier, CPlayer* p) {
 
 void Context::h_startDialog(std::string& sIdentifier, CPlayer* p) {
   //Get selected character
-  auto lambda1 = [](CPerson* person) { return person->getName(); };
+  auto lambda1 = [](CPerson* person) { return person->name(); };
   std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda1);
-  auto lambda2 = [](CPlayer* player) { return player->getName(); };
+  auto lambda2 = [](CPlayer* player) { return player->name(); };
   std::string player = func::getObjectId(p->getMapOFOnlinePlayers(), sIdentifier, lambda2);
 
   //Check if character was found
@@ -858,6 +872,11 @@ void Context::h_startDialogDirect(std::string &sIdentifier, CPlayer *p) {
   if (p->getWorld()->getCharacter(character) != nullptr) {
     p->startDialog(sIdentifier, p->getWorld()->getCharacter(character)->getDialog());
   }
+}
+
+void Context::h_changeSound(std::string &sIdentifier, CPlayer *p) {
+  std::cout << "h_changeSound: " << sIdentifier << std::endl;
+  p->appendPrint(Webcmd::set_sound(sIdentifier));
 }
 
 void Context::h_take(std::string& sIdentifier, CPlayer* p) {
@@ -918,23 +937,23 @@ void Context::h_examine(std::string &sIdentifier, CPlayer*p) {
   }
 
   //Check for detail
-  auto lambda1 = [](CDetail* detail) { return detail->getName(); };
+  auto lambda1 = [](CDetail* detail) { return detail->name(); };
   std::string sObject = func::getObjectId(p->getRoom()->getDetails(), sIdentifier, lambda1);
   if(sObject != "")
-    p->appendPrint(p->getRoom()->getDetails()[sObject]->getDescription());
+    p->appendPrint(p->getRoom()->getDetails()[sObject]->text());
 
-  auto lambda2 = [](CItem* item) { return item->getName(); };
+  auto lambda2 = [](CItem* item) { return item->name(); };
   sObject = func::getObjectId(p->getRoom()->getItems(), sIdentifier, lambda2);
   //Check for item
   if(sObject != "")
-    p->appendPrint(p->getRoom()->getItems()[sObject]->getDescription());
+    p->appendPrint(p->getRoom()->getItems()[sObject]->text());
 
   //Check for person
-  auto lambda3 = [](CPerson* person) { return person->getName();};
+  auto lambda3 = [](CPerson* person) { return person->name();};
   sObject = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda3);
   //Check for item
   if(sObject != "")
-    p->appendPrint(p->getWorld()->getCharacter(sObject)->getDescription());
+    p->appendPrint(p->getWorld()->getCharacter(sObject)->text());
 }
 
 void Context::h_test(std::string& sIdentifier, CPlayer* p) {
@@ -946,8 +965,8 @@ void Context::h_test(std::string& sIdentifier, CPlayer* p) {
 
 void Context::h_moveToHospital(std::string& sIdentifier, CPlayer* p) {
   //Get selected room
-  auto lambda = [](CExit* exit) { return exit->getPrep() + "_" + exit->getName();};
-  if (p->getRoom()->getID().find("zug.compartment") == std::string::npos 
+  auto lambda = [](CExit* exit) { return exit->getPrep() + "_" + exit->name();};
+  if (p->getRoom()->id().find("zug.compartment") == std::string::npos 
       || func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lambda) != "zug.trainCorridor")
     return;
 
@@ -960,8 +979,8 @@ void Context::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
 {
     std::cout << "h_exitTrainstation, " << sIdentifier << std::endl;
 
-    auto lambda= [](CExit* exit) { return exit->getPrep() + " " + exit->getName(); };
-    if(p->getRoom()->getID() != "trainstation.eingangshalle" || func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lambda) != "trainstation.ausgang")
+    auto lambda= [](CExit* exit) { return exit->getPrep() + " " + exit->name(); };
+    if(p->getRoom()->id() != "trainstation.eingangshalle" || func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lambda) != "trainstation.ausgang")
         return;
 
     p->appendStoryPrint("Du drehst dich zum dem großen, offen stehenden Eingangstor der Bahnhofshalle. Und kurz kommt dir der Gedanke doch den Zug nicht zu nehmen, doch alles beim Alten zu belassen. Doch etwas sagt dir, dass es einen guten Grund gab das nicht zu tun, einen guten Grund nach Moskau zu fahren. Und auch, wenn du ihn gerade nicht mehr erkennst. Vielleicht ist gerade das der beste Grund: rausfinden, was dich dazu getrieben hat, diesen termin in Moskau zu vereinbaren.\n Du guckst dich wieder in der Halle um, und überlegst, wo du anfängst zu suchen.\n");
@@ -1052,15 +1071,19 @@ void Context::h_call(std::string& sIdentifier, CPlayer* p) {
   size_t option = getAttribute<std::map<size_t, size_t>>
     ("mapOptions")[stoi(sIdentifier)];
 
-  std::string curState = getAttribute<std::string>("state");
-  std::string nextState = p->getDialog()->getState(curState)
+  std::string cur_state = getAttribute<std::string>("state");
+  std::string next_state = p->getDialog()->getState(cur_state)
     ->getNextState(std::to_string(option), p);
+  CDState* state = p->getDialog()->getState(next_state);
+ 
+  // Change sound to room-sound or to player sound, if changed.
+  media_["music"] = (state->music() != "") ? state->music() : p->getCurDialogPartner()->music();
 
-  if(nextState == "trade")
+  if(next_state == "trade")
     p->startTrade(getAttribute<std::string>("partner"));
   else {
-    initializeDialogListeners(nextState, p);
-    std::string newCommand = p->getDialog()->getState(nextState)->callState(p);
+    initializeDialogListeners(next_state, p);
+    std::string newCommand = p->getDialog()->getState(next_state)->callState(p);
     if(newCommand != "")
       p->throw_events(newCommand, "h_call");
   }
@@ -1070,9 +1093,9 @@ void Context::h_call(std::string& sIdentifier, CPlayer* p) {
 
 void Context::print(CPlayer* p) {
   CPerson* partner = p->getWorld()->getCharacter(getAttribute<std::string>("partner"));
-  p->appendPrint("<b>" + p->getName() + "s Inventar:</b>\n" 
+  p->appendPrint("<b>" + p->name() + "s Inventar:</b>\n" 
                   + p->getInventory().printInventory()
-                  + "\n<b>" + partner->getName() + "s Inventar: </b>\n" 
+                  + "\n<b>" + partner->name() + "s Inventar: </b>\n" 
                   + partner->getInventory().printInventory());
 }
 
@@ -1084,16 +1107,16 @@ void Context::h_sell(std::string& sIdentifier, CPlayer* p) {
         "Inventar, du kannst ihn logischerwiese dehalb nicht verkaufen!\n");
   }
   else if(p->getEquipment().count(curItem->getType()) > 0 
-      && p->getEquipment()[curItem->getType()]->getID() == curItem->getID()) {
+      && p->getEquipment()[curItem->getType()]->id() == curItem->id()) {
     p->appendErrorPrint("Du kannst ausgerüstete Gegenstände nicht "
         "verkaufen.\n");
   }
   else {
-    p->appendDescPrint("Du hast " + curItem->getName() + " verkauft.\n\n");
+    p->appendDescPrint("Du hast " + curItem->name() + " verkauft.\n\n");
     p->throw_events("recieveMoney " + std::to_string(curItem->getValue()), "h_sell");
     CItem* item = new CItem(curItem->getAttributes(), p);
     partner->getInventory().addItem(item);
-    p->getInventory().removeItemByID(curItem->getID());
+    p->getInventory().removeItemByID(curItem->id());
   }
   print(p);
 }
@@ -1108,14 +1131,14 @@ void Context::h_buy(std::string& sIdentifier, CPlayer* p) {
   else {
     if(p->getStat("gold") < curItem->getValue()) {
       p->appendErrorPrint("Du hast nicht genuegend Geld um "
-          + curItem->getName() + " zu kaufen");
+          + curItem->name() + " zu kaufen");
       return;
     }
 
-    p->appendDescPrint("Du hast " + curItem->getName() + " gekauft.\n\n");
+    p->appendDescPrint("Du hast " + curItem->name() + " gekauft.\n\n");
     p->setStat("gold", p->getStat("gold") - curItem->getValue());
     p->getInventory().addItem(new CItem(curItem->getAttributes(), p));
-    partner->getInventory().removeItemByID(curItem->getID());
+    partner->getInventory().removeItemByID(curItem->id());
   }
   print(p);
 }
@@ -1125,13 +1148,13 @@ void Context::h_exit(std::string&, CPlayer* p)
     CPerson* partner = p->getWorld()->getCharacter(getAttribute<std::string>("partner"));
     p->getContexts().erase("trade");
     p->getContexts().erase("dialog");
-    p->startDialog(partner->getID());
+    p->startDialog(partner->id());
 }
 
 // ***** ***** CHAT CONTEXT ***** ***** //
 void Context::h_send(string& sInput, CPlayer* p) {
   CPlayer* chatPartner = p->getPlayer(getAttribute<std::string>("partner"));
-  chatPartner->send(p->returnSpeakerPrint(func::returnToUpper(p->getName()), sInput + "\n"));
+  chatPartner->send(p->returnSpeakerPrint(func::returnToUpper(p->name()), sInput + "\n"));
   p->appendSpeackerPrint("YOU", sInput + "\n");
 }
 
@@ -1140,13 +1163,13 @@ void Context::h_end(string& sMessage, CPlayer* p) {
   if(sMessage == "[end]")
       chatPartner->send("[Gespräch beendet].\n");
   else {
-    chatPartner->send(p->returnSpeakerPrint(func::returnToUpper(p->getName()), sMessage));
+    chatPartner->send(p->returnSpeakerPrint(func::returnToUpper(p->name()), sMessage));
     chatPartner->send("[Gespräch beendet].\n");
   }
 
   chatPartner->getContexts().erase("chat");
 
-  p->appendPrint("Gespräch mit " + chatPartner->getName() + " beendet.\n");
+  p->appendPrint("Gespräch mit " + chatPartner->name() + " beendet.\n");
   p->getContexts().erase("chat");
   m_block = true; 
 }
@@ -1252,7 +1275,7 @@ void Context::h_startTutorial(std::string&, CPlayer* p)
 
 // *** *** Die komische Gruppe *** *** //
 void Context::h_reden(std::string& sIdentifier, CPlayer* p) {
-  auto lambda = [](CPerson* person) { return person->getName();};
+  auto lambda = [](CPerson* person) { return person->name();};
   std::string character = func::getObjectId(p->getRoom()->getCharacters(), 
       sIdentifier, lambda);
   if(character == "" || character.find("passanten_gruppe") == std::string::npos)
@@ -1321,9 +1344,9 @@ void Context::h_choose_equipe(std::string& sIdentifier, CPlayer* p) {
   }
 
   else if(sIdentifier == "no") {
-    p->appendDescPrint("Du entscheidest dich " + 
-        p->getInventory().getItem_byID(getAttribute<std::string>("itemID"))
-        ->getName() + " nicht auszurüsten.\n");
+    p->appendDescPrint("Du entscheidest dich "
+        + p->getInventory().getItem_byID(getAttribute<std::string>("itemID"))->name() 
+        + " nicht auszurüsten.\n");
     p->getContexts().erase("equipe");
   }
 
