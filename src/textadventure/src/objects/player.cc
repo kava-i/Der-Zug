@@ -215,6 +215,14 @@ std::map<std::string, std::string> CPlayer::GetCurrentStatus() {
 
 // *** SETTER *** // 
 
+void CPlayer::set_cur_music(std::string music) {
+  cur_music_ = music;
+}
+
+void CPlayer::set_cur_image(std::string image) {
+  cur_image_ = image;
+}
+
 void CPlayer::setFirstLogin(bool val) { 
   m_firstLogin = val; 
 }
@@ -977,40 +985,83 @@ CPlayer* CPlayer::getPlayer(string sIdentifier)
     return nullptr;
 }
 
-void CPlayer::addSelectContest(std::map<std::string, std::string> mapObjects, std::string sEventType) {
-  //Add context.
-  Context* context = new Context((nlohmann::json){{"name", "select"}, {"permeable",true},{"eventtype",sEventType}, {"map_objects",mapObjects}});
-
-  //Set error function, to delete context when not called 
-  context->setErrorFunction(&Context::error_delete); 
-
-  //Add listeners/ eventhandlers
-  context->add_listener("h_select", mapObjects);
-  
-  //Insert context into context-stack.
-  m_contextStack.insert(context, 1, "select");
-}
-
 void CPlayer::printError(std::string sError) {
   std::cout << "\033[1;31m"+sError+"\033[0m"<< std::endl;
   appendTechPrint("Sorry, but something went wrong. Maybe try something else.\n");
 }
 
-void CPlayer::updateMusic() {
-  std::string music = m_world->media("music");
+std::string CPlayer::getContextMusic(std::string new_music) {
+  std::string music = "";
+
+  // Priorize context-specific music.
+  if (new_music != "")
+    music = new_music;
   if (m_contextStack.getContext("fight"))
     music = m_contextStack.getContext("fight")->GetFromMedia("music");
   else if (m_contextStack.getContext("dialog"))
     music = m_contextStack.getContext("dialog")->GetFromMedia("music");
   else if (m_room->music() != "")
     music = m_room->music();
-  else if (music_ != "")
-    music = music_;
 
-  if (music != cur_music_) {
+  // If not, priorize player-specific.
+  if (music == "")
+    music = music_;
+  // Finally game-music.
+  if (music == "") 
+    music = m_world->media("music/background");
+
+  if (music != "" && music != cur_music_) {
     std::cout << "Updated music to: " << music << std::endl; 
     cur_music_ = music;
-    m_sPrint += Webcmd::set_sound(music) + "\n";
+    return Webcmd::set_sound(music) + " ";
+  }
+  else {
+    return "";
+  }
+}
+
+std::string CPlayer::getContextImage(std::string new_image) {
+  std::string image = "";
+  //
+  // Priorize context-specific image.
+  if (new_image != "")
+    image = new_image;
+  if (m_contextStack.getContext("fight"))
+    image = m_contextStack.getContext("fight")->GetFromMedia("image");
+  else if (m_contextStack.getContext("dialog"))
+    image = m_contextStack.getContext("dialog")->GetFromMedia("image");
+  else if (m_room->music() != "")
+    image = m_room->image();
+
+  // If not, priorize player-specific.
+  if (image == "")
+    image = image_;
+  // Finally game-image.
+  if (image == "") 
+    image = m_world->media("image/background");
+
+  if (image != "" && image != cur_image_) {
+    std::cout << "Updated image to: " << image << std::endl; 
+    cur_image_ = image;
+    return Webcmd::set_image(image) + " ";
+  }
+  else {
+    return "";
+  }
+}
+
+void CPlayer::updateMedia() {
+  std::string music = getContextMusic("");
+  if (music != "" && music != cur_music_) {
+    std::cout << "Updated music to: " << music << std::endl; 
+    cur_music_ = music;
+    m_sPrint += music;
+  }
+  std::string image = getContextImage("");
+  if (image != "" && image != cur_image_) {
+    std::cout << "Updated image to: " << image << std::endl; 
+    cur_image_ = image;
+    m_sPrint += image;
   }
 }
 
@@ -1036,7 +1087,7 @@ void CPlayer::throw_events(string sInput, std::string sMessage) {
   //Iterate over parsed events and call throw_event for each context and each event
   std::deque<Context*> sortedCtxList = m_contextStack.getSortedCtxList();
   for (size_t i=0; i<events.size(); i++) {
-    updateMusic();
+    updateMedia();
     std::cout << cRED << events[i].first << ", " << events[i].second << cCLEAR <<"\n";
     //Check for non-event type commands
     if (events[i].first == "printText") 
@@ -1047,6 +1098,6 @@ void CPlayer::throw_events(string sInput, std::string sMessage) {
           break;
       }
     }
-    updateMusic();
+    updateMedia();
   }
 }

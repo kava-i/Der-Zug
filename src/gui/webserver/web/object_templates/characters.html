@@ -6,6 +6,20 @@
   <li><label>Name:</label><input id="name" value="{{ default(name, "") }}">
   <li><label>Id:</label><input id="id" value="{{ default(id, "") }}">
 
+  <!-- Music and image for this object (default value for non-set-values -->
+  <li>
+    <label>music:</label>
+    <input id="music" placeholder="music" title="no fileextension!" 
+        value="{{ default(music, "") }}">
+  </li>
+  <li>
+    <label>image:</label>
+    <input id="image" placeholder="image" title="no fileextension!" 
+        value="{{ default(image, "") }}">
+  </li>
+  {{ log("rendered name,id, image and music") }}
+
+
   <!-- Description (added by include) expand non-set optional values -->
   <li custom="list">
     <label title="Description printed, when character is viewed.">Description:</label> 

@@ -149,6 +149,7 @@ public:
     void h_changeRoom(std::string&, CPlayer*);
     void h_startDialogDirect(std::string&, CPlayer*);
     void h_changeSound(std::string&, CPlayer*);
+    void h_changeImage(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
     void h_ignore(std::string&, CPlayer*);

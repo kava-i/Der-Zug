@@ -1,4 +1,11 @@
 Creating game.
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
+Created all rooms 
 Room: "test.raum1"
 Parsing characters
 Parsing Items
@@ -25,16 +32,20 @@ Parsing Items
 Parsing details 
 Create room: "test.test_room"
 Created all rooms 
-Room: "nonexist.nonexists"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "nonexist.nonexists"
-Created all rooms 
 worldFactory: done.
+Loading config. 
+Config: {"attributes":["smoker"],"commands":[{"id":"consume","regex":"(drink) (.*)","take":2}],"image":{"background":"background_2"},"mapAttributes":{"smoker":{"0":"non-smoker","1":"smoker"}},"minds":[{"color":"blue","id":"loreteller","level":3,"relevance":0.1},{"color":"red","id":"lucy","level":3,"relevance":0.1},{"color":"yellow","id":"mirror","level":3,"relevance":0.1},{"color":"green","id":"greg","level":3,"relevance":0.1}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"","error":"","player":"JACK","story":"LORETELLER","tech":""},"show":{"chars":["Here are","no people at all."],"exits":["You can go","nowhere",""]}}
+Config loaded. 
+Media set. 
 Done parsing world.
-Parsing players... 
+Parsing players...
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
+Created all rooms 
 Room: "test.raum1"
 Parsing characters
 Parsing Items
@@ -61,16 +72,20 @@ Parsing Items
 Parsing details 
 Create room: "test.test_room"
 Created all rooms 
-Room: "nonexist.nonexists"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "nonexist.nonexists"
-Created all rooms 
 worldFactory: done.
+Loading config. 
+Config: {"attributes":["smoker"],"commands":[{"id":"consume","regex":"(drink) (.*)","take":2}],"image":{"background":"background_2"},"mapAttributes":{"smoker":{"0":"non-smoker","1":"smoker"}},"minds":[{"color":"blue","id":"loreteller","level":3,"relevance":0.1},{"color":"red","id":"lucy","level":3,"relevance":0.1},{"color":"yellow","id":"mirror","level":3,"relevance":0.1},{"color":"green","id":"greg","level":3,"relevance":0.1}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"","error":"","player":"JACK","story":"LORETELLER","tech":""},"show":{"chars":["Here are","no people at all."],"exits":["You can go","nowhere",""]}}
+Config loaded. 
+Media set. 
 initializing context stack.
 Done.
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
+Created all rooms 
 Room: "test.raum1"
 Parsing characters
 Parsing Items
@@ -97,16 +112,20 @@ Parsing Items
 Parsing details 
 Create room: "test.test_room"
 Created all rooms 
-Room: "nonexist.nonexists"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "nonexist.nonexists"
-Created all rooms 
 worldFactory: done.
+Loading config. 
+Config: {"attributes":["smoker"],"commands":[{"id":"consume","regex":"(drink) (.*)","take":2}],"image":{"background":"background_2"},"mapAttributes":{"smoker":{"0":"non-smoker","1":"smoker"}},"minds":[{"color":"blue","id":"loreteller","level":3,"relevance":0.1},{"color":"red","id":"lucy","level":3,"relevance":0.1},{"color":"yellow","id":"mirror","level":3,"relevance":0.1},{"color":"green","id":"greg","level":3,"relevance":0.1}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"","error":"","player":"JACK","story":"LORETELLER","tech":""},"show":{"chars":["Here are","no people at all."],"exits":["You can go","nowhere",""]}}
+Config loaded. 
+Media set. 
 initializing context stack.
 Done.
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
+Created all rooms 
 Room: "test.raum1"
 Parsing characters
 Parsing Items
@@ -133,23 +152,25 @@ Parsing Items
 Parsing details 
 Create room: "test.test_room"
 Created all rooms 
-Room: "nonexist.nonexists"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "nonexist.nonexists"
-Created all rooms 
 worldFactory: done.
+Loading config. 
+Config: {"attributes":["smoker"],"commands":[{"id":"consume","regex":"(drink) (.*)","take":2}],"image":{"background":"background_2"},"mapAttributes":{"smoker":{"0":"non-smoker","1":"smoker"}},"minds":[{"color":"blue","id":"loreteller","level":3,"relevance":0.1},{"color":"red","id":"lucy","level":3,"relevance":0.1},{"color":"yellow","id":"mirror","level":3,"relevance":0.1},{"color":"green","id":"greg","level":3,"relevance":0.1}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"","error":"","player":"JACK","story":"LORETELLER","tech":""},"show":{"chars":["Here are","no people at all."],"exits":["You can go","nowhere",""]}}
+Config loaded. 
+Media set. 
 initializing context stack.
 Done.
 Finished parsing!
 [1;31mEvents: show room, from: startGame[0m
 Updated music to: fight
+Updated image to: background_2
 [1;31mshow, room[0m
 [1;34mfirst[0m throwing: show|room
+Updated music to: fight
+Updated image to: background_2
 [1;31mEvents: printText start, from: pre-events[0m
 [1;31mprintText, start[0m
+Updated music to: piano
+Updated music to: fight
 [1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
 [1;34mworld[0m throwing: show|room
 [1;34mroom[0m throwing: show|room
@@ -181,7 +202,6 @@ Got text from gramma: Here are no people at all.
 Returning...
 [1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
 [1;34mworld[0m throwing: show|people
-[1;34mselect[0m throwing: show|people
 [1;34mroom[0m throwing: show|people
 [1;34mstandard[0m throwing: show|people
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
@@ -190,8 +210,6 @@ Returning...
 [1;34mfirst[0m throwing: show|items
 [1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
 [1;34mworld[0m throwing: show|items
-[1;34mselect[0m throwing: show|items
-[1;34mselect[0m throwing: show|items
 [1;34mroom[0m throwing: show|items
 [1;34mstandard[0m throwing: show|items
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
@@ -200,8 +218,6 @@ Returning...
 [1;34mfirst[0m throwing: show|details
 [1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
 [1;34mworld[0m throwing: show|details
-[1;34mselect[0m throwing: show|details
-[1;34mselect[0m throwing: show|details
 [1;34mroom[0m throwing: show|details
 [1;34mstandard[0m throwing: show|details
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m

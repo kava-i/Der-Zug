@@ -18,5 +18,6 @@ namespace Webcmd {
 
   std::string set_color(color cl);
   std::string set_sound(std::string filename);
+  std::string set_image(std::string filename);
 };
 

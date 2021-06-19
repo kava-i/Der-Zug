@@ -87,6 +87,7 @@ CDState::CDState(nlohmann::json jAtts, dialogoptions opts, CDialog* dia,
   m_dialog = dia;
   visited_ = false;
   music_ = jAtts.value("music", "");
+  image_ = jAtts.value("image", "");
 }
 
 // *** GETTER *** //
@@ -105,6 +106,10 @@ bool CDState::visited() {
 
 std::string CDState::music() {
   return music_;
+}
+
+std::string CDState::image() {
+  return image_;
 }
 
 // *** SETTER *** //

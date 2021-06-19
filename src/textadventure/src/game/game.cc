@@ -1,6 +1,9 @@
 #include "game.h" 
+#include "eventmanager/context.h"
+#include "game/world.h"
 #include "tools/webcmd.h"
 #include <chrono>
+#include <exception>
 #include <thread>
 
 // *** GETTER ***
@@ -11,8 +14,24 @@ map<string, nlohmann::json> CGame::getPlayerJsons() {
   return m_playerJsons;
 }
 
+std::string CGame::get_music() const {
+  std::string music = "";
+  try {
+    music = m_world->media("music/background");
+  }
+  catch (std::exception& e) {
+    std::cout << "Failed getting music: " << e.what() << std::endl;
+  }
+  std::cout << "GOT MUSIC: " << music << std::endl;
+  return music;
+}
+
+std::string CGame::get_background_image() const {
+  return m_world->media("image/background");
+}
+
 CGame::CGame(std::string path) {
-  std::cout << "Creating game.\n";
+  std::cout << "Creating game." << std::endl;
 
   //Set path 
   path_ = path;
@@ -31,12 +50,11 @@ CGame::CGame(std::string path) {
 
   //Create players
   playerFactory();
-  std::cout << "Finished parsing!\n";
+  std::cout << "Finished parsing!" << std::endl;
 }
     
-
 void CGame::playerFactory(bool update) {
-  std::cout << "Parsing players... \n";
+  std::cout << "Parsing players..." << std::endl;
 
   //Read json creating all rooms
   std::ifstream read(m_world->getPathToWorld() + "players/players.json");
@@ -137,7 +155,6 @@ string CGame::startGame(string sInput, string player_id, Webconsole* _cout) {
   }
   if(m_players[player_id]->getFirstLogin() == true)
     m_players[player_id]->setFirstLogin(false);
-  // m_players[player_id]->throw_events("changeSound " + m_players[player_id]->music(), "startGame");
   m_players[player_id]->throw_events("show room", "startGame");
 
   return m_players[player_id]->getPrint();
@@ -234,18 +251,3 @@ bool CGame::reloadWorld(string sID) {
 
   return true;
 }
-
-
-/*
-void CGame::toJson(string filename)
-{
-    //Convert yaml to json using python
-	Py_Initialize();
-	FILE* fp = _Py_fopen(filename, "r");
-	PyRun_SimpleFile(fp, filename);
-
-	Py_Finalize();
-}
-*/ 
-
-

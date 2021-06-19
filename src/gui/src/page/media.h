@@ -38,7 +38,7 @@ class Media : public Page {
      * @param[in] name of directory, file or object.
      * @return ErrorCode indicating success/ error.
      */
-    //ErrorCodes DelElem(std::string path, std::string name);
+    ErrorCodes DelElem(std::string path, std::string name);
 
     /**
      * Restore backup object: restore deleted/ modified directory, file, object.

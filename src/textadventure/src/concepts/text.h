@@ -33,6 +33,8 @@ class COutput
 private:
     std::string m_sSpeaker;
     std::string m_sText;
+    std::string music_;
+    std::string image_;
 
     std::string logic_;
     nlohmann::json m_jUpdates;

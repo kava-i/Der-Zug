@@ -50,7 +50,9 @@ namespace func
    * @param[in] path (path to image)                                 
    * @param[in] mime (immage type (jpg, png...)    
    */    
-  std::string GetImage(std::string path);
+  std::string GetMedia(std::string path);
+
+  void StoreMedia(std::string path, std::string content);
 
   bool demo_exists(const std::filesystem::path& p, 
       std::filesystem::file_status s = std::filesystem::file_status{});

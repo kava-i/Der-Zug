@@ -73,8 +73,11 @@ class WebserverGame {
           password_ = "";
           name_ = "";
         }
-        else
-          send(game->startGame(in, id_, cout_));
+        else {
+          std::string output = game->startGame(in, id_, cout_);
+          std::cout << "Got output: " << output << std::endl;
+          send(output);
+        }
       }
     }
 
@@ -114,8 +117,8 @@ class WebserverGame {
         lk.push_back(it.second->GetID());
 
       //Call main play-loop
-      std::cout<<"Befor play: input: "<< input << " calling with id: " 
-        << id_ <<std::endl;
+      std::cout << "Befor play: input: " << input << " calling with id: " 
+        << id_ << std::endl;
       std::string sOutput = game->play(input, id_, lk);
 
       //Check if game is ended -> close game
@@ -127,7 +130,7 @@ class WebserverGame {
       }
       else {
         send(sOutput);
-        std::cout<<"Send the output to client: " << sOutput <<std::endl;
+        std::cout << "Send the output to client: " << sOutput <<std::endl;
       }
     }
 };
@@ -207,6 +210,8 @@ std::string GetSound(std::string path, std::string sound) {
  */
 int main(int x, char **argc) {
   CGame currentGame(argc[1]);
+  std::cout << "MUSIC: " << currentGame.get_music() << std::endl;
+  std::cout << "IMAGE: " << currentGame.get_background_image() << std::endl;
   game = &currentGame;
   Webgame<WebserverGame> gl;
   int port = 9002;
@@ -220,7 +225,12 @@ int main(int x, char **argc) {
     srv.Get("/", [&](const httplib::Request& req, httplib::Response& resp)  {
       inja::Environment env;
       inja::Template temp = env.parse_template("index.html");
-      resp.set_content(env.render(temp, nlohmann::json({{"port",port+1}})), 
+      resp.set_content(env.render(temp, 
+          nlohmann::json({
+            {"port",port+1},
+            {"music", currentGame.get_music()},
+            {"image", currentGame.get_background_image()}
+          })), 
           "text/html"); 
       });
     //Function to serve images

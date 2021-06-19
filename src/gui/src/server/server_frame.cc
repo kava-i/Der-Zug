@@ -39,7 +39,19 @@ void ServerFrame::Start(int port) {
 
 
   // *** Pages *** //
- 
+
+  server_.Get("/(.*)/files/(.*)/images/(.*).jpg", [](const Request& req, Response& resp) {
+      std::string path_to_image = "../../data/users/"; 
+      path_to_image += req.matches[0];
+      resp.set_content(func::GetMedia(path_to_image), "image/png");
+  });
+
+  server_.Get("/(.*)/files/(.*)/sounds/(.*).mp3", [](const Request& req, Response& resp) {
+      std::string path_to_image = "../../data/users/"; 
+      path_to_image += req.matches[0];
+      resp.set_content(func::GetMedia(path_to_image), "audio/mp3");
+  });
+
   server_.Get("/login", [&](const Request& req, Response& resp) { 
       LoginPage(req, resp);});
   server_.Get("/overview", [&](const Request& req, Response& resp) { 
@@ -82,6 +94,11 @@ void ServerFrame::Start(int port) {
       WriteObject(req, resp); });
   server_.Post("/api/delete_(.*)", [&](const Request& req, Response& resp) {
       DelElem(req, resp); });
+  server_.Post("/api/upload/images",  [&](const Request& req, Response& resp) {
+      WriteMedia(req, resp, "image"); });
+  server_.Post("/api/upload/sounds",  [&](const Request& req, Response& resp) {
+      WriteMedia(req, resp, "audio"); });
+
 
   //Access-rights
   server_.Post("/api/grant_access_to", [&](const Request& req, Response& resp) {
@@ -138,12 +155,11 @@ void ServerFrame::Start(int port) {
 
   //Images
   server_.Get("/web/background.jpg", [](const Request& req, Response& resp) {
-      resp.set_content(func::GetImage("web/images/background.jpg"), "image/jpg");});
+      resp.set_content(func::GetMedia("web/images/background.jpg"), "image/jpg");});
   server_.Get("/web/logo.png", [](const Request& req, Response& resp) {
-      resp.set_content(func::GetImage("web/images/logo.png"), "image/png");});
+      resp.set_content(func::GetMedia("web/images/logo.png"), "image/png");});
   server_.Get("/favicon.png", [](const Request& req, Response& resp) {
-      resp.set_content(func::GetImage("web/images/favicon.png"), "image/png");});
-
+      resp.set_content(func::GetMedia("web/images/favicon.png"), "image/png");});
 
   std::cout << "C++ Api server startup successfull!\n" << std::endl;
   server_.listen("0.0.0.0", port);
@@ -487,6 +503,53 @@ void ServerFrame::WriteObject(const Request& req, Response& resp) {
     resp.status = 401;
   std::cout << "ServerFrame::WriteObject done with error_code: " << error_code << "\n\n";
   resp.set_content(std::to_string(error_code), "text/txt");
+}
+
+void ServerFrame::WriteMedia(const Request& req, Response& resp, std::string media_type) {
+  //Try to get username from cookie
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
+  
+  //Get user
+  std::shared_lock sl(shared_mtx_user_manager_);
+  User* user = user_manager_.GetUser(username);
+  sl.unlock();
+
+  std::cout << "GOT IMAGE" << std::endl;
+  std::cout << "files: " << req.files.size() << std::endl;
+
+  if (req.files.size() != 2) {
+    resp.status = 400;
+    return;
+  }
+
+  const auto& file = req.get_file_value("photo");
+  const auto& data = req.get_file_value("data");
+  std::string json_str = data.content;
+  nlohmann::json req_data = nlohmann::json::parse(json_str);
+  std::cout << "Json request: " << req_data << std::endl;
+
+  if (!req_data.contains("name") || !req_data.contains("path")) { 
+    std::cout << "Wrong json format." << std::endl;
+    resp.status = 400;
+    return;
+  }
+
+  if (!user->CheckAccessToLocations(req_data["path"])) {
+    std::cout << "No acces writes." << std::endl;
+    resp.status = 400;
+    return;
+  }
+
+  std::cout << "Saving media-file..." << std::endl;
+
+  std::string path_to_media_loc = "../../data/users/"; 
+  path_to_media_loc += req_data["path"].get<std::string>() + "/" + req_data["name"].get<std::string>();
+  path_to_media_loc += (media_type == "image") ? ".jpg" : ".mp3";
+  func::StoreMedia(path_to_media_loc, file.content);
+  user_manager_.worlds()->GetWorldFromUrl(req_data["path"])->LoadWorld();
+
+  resp.status = 200;
 }
 
 void ServerFrame::Backups(const Request& req, Response& resp, std::string action) {

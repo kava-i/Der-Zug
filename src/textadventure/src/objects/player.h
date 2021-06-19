@@ -139,6 +139,12 @@ public:
     std::map<std::string, std::string> GetCurrentStatus();
 
     // *** SETTER *** //
+    
+    /// Set current music 
+    void set_cur_music(std::string music);
+
+    /// Set current background image 
+    void set_cur_image(std::string image);
 
     ///Set first login.
     void setFirstLogin(bool val); 
@@ -383,13 +389,6 @@ public:
     CPlayer* getPlayer(string sIdentifier);
 
     /**
-    * Add a select-context to context-stack.
-    * @param mapObjects map of objects from which to select.
-    * @param sEventType type of event.
-    */
-    void addSelectContest(std::map<std::string, std::string> mapObjects, std::string sEventType);
-
-    /**
     * In the case of a serious error, leading game not not continue, let the player no
     * that something went wrong and print error in console.
     */
@@ -398,7 +397,9 @@ public:
 
     // ** Eventmanager functions ** // 
 
-    void updateMusic();
+    void updateMedia();
+    std::string getContextMusic(std::string music);
+    std::string getContextImage(std::string music);
 
     /**
     * Throw event. This is the key function in the program. The parser first parses the command

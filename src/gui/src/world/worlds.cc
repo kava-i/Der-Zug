@@ -33,6 +33,7 @@ Worlds::Worlds(std::string base_path, int start_port) {
         fs::create_directory(wp.path().string() + "/" + category);
     }
   }
+  std::cout << "Done creating worlds." << std::endl;
 }
 
 Worlds::~Worlds() {

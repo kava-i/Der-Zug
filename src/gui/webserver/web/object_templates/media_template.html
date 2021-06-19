@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Game*Creator - {{ name }}</title>
+
+    <link href="/favicon.png" rel="icon" type="image/png"/>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link href="/web/general.css" rel="stylesheet">
+    <link href="/web/object.css" rel="stylesheet">
+
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script src='/web/run.js'></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src='/web/object.js'></script>
+    <script src='/web/general.js'></script>
+    <script src="/web/fuzzy_finder.js"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="/web/graph.js"></script>
+</head>
+
+<body>
+<nav aria-label="breadcrumb">
+    <ol class=breadcrumb>
+        <li class="breadcrumb-item"><a href="/">Game*Creator</a></li>
+        <li class="breadcrumb-item"><a href="/login">Login</a></li>
+        <li class="breadcrumb-item"><a href="/overview">Overview</a></li>
+        {% for parent_path, parent_name in __parents %}
+          <li class="breadcrumb-item"><a href="/{{parent_path}}">{{parent_name}}</a></li>
+        {% endfor %}
+        <li class="breadcrumb-item active" aria-current="page"><a>{{name}}</a></li>
+    </ol>
+</nav>
+
+<div id="fuzzy_finder_div" class="fuzzy_finder" pages={{__short_paths}}>
+  <div class="fuzzy_finder_center">
+    <label id="fuzzy_finder_mode" style="color:#1fe921;">files: </label><input id="fuzzy_finder_inp">
+    <ol id="fuzzy_finder_elems" class="fuzzy_finder_elems">
+  </div>
+</div>
+
+<div class="top_right">
+  <img class="top_right_image" src="/web/logo.png">
+  <br>
+  <p class="fuzzy_finder_focused" 
+    title="Fuzzy finder active. Press any key to fuzzy search for pages/files/objects">
+      fuzzy_finder
+  </p>
+</div>
+
+<div id="notification" class="notification"></div>
+
+  <div class="box_overview center_in_box">
+
+    <div style="float: right;">
+      <button class="pure-button" style="width:2rem;height:2rem;"
+        title="Show notes: Shortcut: 2 (toggle markdown-preview: 3)" onclick="ToggleNotes();">
+        <i class="fas fa-sticky-note"></i>
+      </button>
+    </div>
+
+    <div style="float: right;margin-right: 1em;">
+      <button id="try_game_btn" class="pure-button" style="width:2rem;height:2rem;"
+        title="Try game (closes game if open): Shortcut: 0." 
+        onclick="try_game({{__port}});">
+        <i class="fas fa-gamepad"></i>
+      </button>
+    </div>
+
+
+    <h1>{{ name }}</h1>
+    
+    {% if type == "image" %}
+      <img src="{{name}}{{extension}}" style="width: inherit;">
+    {% else %} 
+    <audio id="audio_with_controls" 
+      controls
+      src="{{name}}{{extension}}" 
+      type="audio/mp3" 
+    >
+         Ihr Browser kann dieses Tondokument nicht wiedergeben.<br>
+         Es enthält eine Aufführung der Europahymne. 
+         Sie können es unter
+         <a href="/local/Europahymne.mp3">diesem Link</a>
+         abrufen.
+    </audio>
+    {% endif %}
+
+    <div id="tab_notes" style="display: none">
+      <h2>Notes</h2>
+      <div contenteditable="true" id="notes" class="notes" style="display: block"></div>
+      <br>
+      <div id="notes_md" class="markdown" style="display: none"></div>
+      <br>
+      <button id="write" class="pure-button" onclick="SetNotes()">Write</button>
+    </div>
+
+  </div>
+  </div>
+</body>

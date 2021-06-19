@@ -126,7 +126,7 @@ else
   socket = new WebSocket("wss://" + host + ":{{port}}");
 
 let clicked = false;
-let aud = new Audio("sounds/piano.mp3");
+let aud = new Audio("sounds/{{ default(music, 'piano') }}.mp3");
 function playMusik() 
 {
     if(clicked == false) {

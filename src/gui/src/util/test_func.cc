@@ -44,8 +44,8 @@ TEST_CASE ("Loading pages from disc is working", "[get_page]") {
 
 
 TEST_CASE ("Loading images from disc is working", "[get_image]") {
-  REQUIRE(func::GetImage("humbug") == "");
-  REQUIRE(func::GetImage("web/images/background.jpg").length() > 0);
+  REQUIRE(func::GetMedia("humbug") == "");
+  REQUIRE(func::GetMedia("web/images/background.jpg").length() > 0);
 }
 
 TEST_CASE ("Checking if file exists is working", "[file_exists]") {

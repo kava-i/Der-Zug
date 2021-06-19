@@ -51,6 +51,8 @@ public:
     // *** GETTER *** //
     map<string, CPlayer*> getPlayers();
     map<string, nlohmann::json> getPlayerJsons();
+    std::string get_music() const;
+    std::string get_background_image() const;
 
     // *** FACTORYS *** // 
     void playerFactory(bool update=false);

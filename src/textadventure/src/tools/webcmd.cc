@@ -19,3 +19,13 @@ std::string Webcmd::set_sound(std::string filename)
     ret.push_back(ch);
     return ret;
 }
+
+std::string Webcmd::set_image(std::string filename)
+{
+    char ch = 11;
+    std::string ret;
+    ret.push_back(ch);
+    ret+=filename;
+    ret.push_back(ch);
+    return ret;
+}

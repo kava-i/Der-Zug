@@ -6,8 +6,9 @@
 <style>
 body {
     background: black;
-    background-image: url("background.jpg");
+    background-image: url('{{ default(image, "background") }}.jpg');
     background-size: cover;
+    height: 100vh;
     background-repeat: no-repeat;
     color: white;
 }
@@ -104,21 +105,25 @@ else
 
 
 let clicked = false;
-let aud = new Audio("sounds/piano.mp3");
-function playMusik() 
-{
-    if(clicked == false) {
-        aud.play();
-        document.getElementById("symbol").className = "fa fa-volume-up";
-        clicked = true;
-    }
+let aud = new Audio('sounds/{{ default(music, "piano") }}.mp3');
+aud.addEventListener('ended', function() {
+    this.currentTime = 0;
+    this.play();
+  }, false);
 
-    else
-    {
-        aud.pause();
-        document.getElementById("symbol").className = "fa fa-volume-off";
-        clicked = false;
-    }
+
+function playMusik() {
+  if (clicked == false) {
+    aud.play();
+    document.getElementById("symbol").className = "fa fa-volume-up";
+    clicked = true;
+  }
+
+  else {
+    aud.pause();
+    document.getElementById("symbol").className = "fa fa-volume-off";
+    clicked = false;
+  }
 }
 
 
@@ -126,81 +131,77 @@ let gPipelinedOutput = null;
 let gPipelineNextEnter = false;
 let listOfCommands = [];
 let currentIter = -1;
-function bdyonload()
-{
+function bdyonload() {
   printString("login/register (l/r):");
-
-    document.getElementById("input").addEventListener("keydown",function(event)
-    {
-        if(event.key === "Enter")
-        {
-            if(gPipelineNextEnter)
-            {
-                gPipelineNextEnter = false;
-                if(gPipelinedOutput!=null)
-                {
-                    output.innerHTML = output.innerHTML.substr(0, output.innerHTML.lastIndexOf("Press Enter to continue"));
-                    console.log(gPipelinedOutput);
-                    printString(gPipelinedOutput);
-                }
-            }
-            else
-            {
-                let st = document.getElementById("input").value;
-                let k = st.toLowerCase();
-                document.getElementById("input").value ="";
-                if(k=="")
-                    printString('\x06'+". . ."+'\n');
-                //else
-                //    printString('\x06'+k+'\n');
-                listOfCommands.push(k);
-                socket.send(k);
-                let val = document.getElementById("output");
-                val.scrollTop = val.scrollHeight;
-                currentIter = -1;
-            }
+  document.getElementById("input").addEventListener("keydown",function(event) {
+    if (event.key === "Enter") {
+      if (gPipelineNextEnter) {
+        gPipelineNextEnter = false;
+        if (gPipelinedOutput!=null) {
+            output.innerHTML = output.innerHTML.substr(0, output.innerHTML.lastIndexOf(
+                  "Press Enter to continue"));
+            console.log(gPipelinedOutput);
+            printString(gPipelinedOutput);
         }
-        if(listOfCommands.length==0)
-            return;
-        if(event.keyCode === 38)
-        {
-            currentIter--;
-            if(currentIter<0)
-            currentIter = listOfCommands.length-1;
-            document.getElementById("input").value = listOfCommands[currentIter];
-        }
-        else if(event.keyCode === 40)
-        {
-            currentIter++;
-            if(currentIter == listOfCommands.length)
-            currentIter = 0;
-            document.getElementById("input").value = listOfCommands[currentIter];
-        }
-    });
-    document.getElementById("input").focus();
-    
-    socket.onmessage = function(event){console.log("Received: "+event.data);printString(event.data);};
+      }
+      else {
+        let st = document.getElementById("input").value;
+        let k = st.toLowerCase();
+        document.getElementById("input").value ="";
+        if(k=="")
+            printString('\x06'+". . ."+'\n');
+        //else
+        //    printString('\x06'+k+'\n');
+        listOfCommands.push(k);
+        socket.send(k);
+        let val = document.getElementById("output");
+        val.scrollTop = val.scrollHeight;
+        currentIter = -1;
+      }
+    }
+    if(listOfCommands.length==0)
+      return;
+    if(event.keyCode === 38) {
+      currentIter--;
+      if (currentIter<0)
+        currentIter = listOfCommands.length-1;
+      document.getElementById("input").value = listOfCommands[currentIter];
+    }
+    else if(event.keyCode === 40) {
+      currentIter++;
+      if(currentIter == listOfCommands.length)
+      currentIter = 0;
+      document.getElementById("input").value = listOfCommands[currentIter];
+    }
+  });
+  document.getElementById("input").focus();
+  socket.onmessage = function(event){console.log("Received: "+event.data);printString(event.data);};
 }
 
-function isspanret(isspan,colname)
-{
-    if(isspan)
-        return "</span><span class='"+colname+"'>";
-    else
-        return "<span class='"+colname+"'>";
+function isspanret(isspan,colname) {
+  if (isspan)
+    return "</span><span class='"+colname+"'>";
+  else
+    return "<span class='"+colname+"'>";
 }
 
-function parse_file(strin,x)
-{
+function parse_file(strin,x) {
   name = '';
-  for(let i = x+1; i < strin.length; i++)
-  {
-	  if(strin[i] == '\x07')
-	  {
-	    console.log("Playing soundfile: " + name);
+  for (let i = x+1; i < strin.length; i++) {
+    if (strin[i] == '\x07') {
 	    aud.pause();
 	    aud = new Audio("sounds/" + name + ".mp3");
-	    if(clicked) aud.play();
+      aud.addEventListener('ended', function() {
+        this.currentTime = 0;
+        this.play();
+      }, false);
+
+	    if (clicked) 
+        aud.play();
+	    return i+1;
+	  }
+    if (strin[i] == '\x0B') {
+      document.body.style.backgroundImage = "url('" + name + ".jpg')";
 	    return i+1;
 	  }
 	  else
@@ -234,7 +235,7 @@ function printString(theString)
             out+=isspanret(isspanopen,"orange");
         else if(theString[i] == '\x09')
             out+=isspanret(isspanopen, "whitedark");
-        else if(theString[i] == '\x07')
+        else if(theString[i] == '\x07' || theString[i] == '\x0B')
             i=parse_file(theString,i);
         else if(theString[i] == '$')
         {
@@ -248,7 +249,6 @@ function printString(theString)
             out+=theString[i];
         if(theString[i] >= '\x01' && theString[i] <= '\x05')
             isspanopen = true;
-
     }
     if(isspanopen)
     {

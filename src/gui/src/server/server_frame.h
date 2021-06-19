@@ -111,6 +111,13 @@ class ServerFrame {
      */
     void WriteObject(const httplib::Request& req, httplib::Response& resp);
 
+    /** 
+     * @brief Write media to disc.
+     * @param[in] req (reference to request)
+     * @param[in, out] resp (reference to response)
+     */
+    void WriteMedia(const httplib::Request& req, httplib::Response& resp, std::string media_type);
+
     /**
      * @brief Creates a backup of the selected world.
      * @param[in] req (reference to request)

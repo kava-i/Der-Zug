@@ -79,7 +79,7 @@ function OpenDelElemModal(type, name) {
 }
 
 /**
- * function to delete an element
+ * function to add an element
  */
 function AddElem(elem, force=false) {
   var json_request = new Object();
@@ -124,6 +124,53 @@ function AddElem(elem, force=false) {
       window.location = window.location;
     }
   }
+}
+
+/**
+ * function to add an element
+ */
+function AddMedia(media_type, force=false) {
+  let formData = new FormData();
+  let req_data = {'name': document.getElementById("name").value, "path": window.location.pathname };
+  let media = document.getElementById("media_file").files[0];  
+  console.log("request data: ", req_data);
+  console.log("media: ", media);
+  formData.append("data", JSON.stringify(req_data));
+  formData.append("photo", media); 
+
+  console.log(...formData);
+
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/api/upload/"+media_type);
+  xhttp.send(formData);
+  xhttp.onload = function(event) {
+    if (xhttp.status == 200)
+      notify("Media file upload.");
+    else
+      notify("Media file could not be uploaded.");
+  }
+
+  /*
+  fetch("/api/upload/" + media_type, {
+    method: "POST", 
+    body: formData
+    // headers: {
+    //   'Content-Type': 'multipart/form-data'
+    // }
+  })
+  .then(result => {
+    //sessionStorage.setItem("notification", "Media file upload.");
+    if (result.status == 200)
+      notify("Media file upload.");
+    else
+      notify("Media file could not be uploaded.");
+    // window.location = window.location;
+  })
+  .catch(error => {
+    notify("Sending data failed!");
+    document.getElementById("btn_add_elem").style.display = "none";
+  });
+  */
 }
 
 /**

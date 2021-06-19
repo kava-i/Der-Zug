@@ -1,6 +1,7 @@
 #include "text.h"
 #include "objects/player.h"
 #include "tools/logic_parser.h"
+#include "tools/webcmd.h"
 
 #define WHITE Webcmd::set_color(Webcmd::color::WHITE)
 #define WHITEDARK Webcmd::set_color(Webcmd::color::WHITEDARK)
@@ -71,6 +72,8 @@ COutput::COutput(nlohmann::json jAttributes) {
   m_pre_oneTimeEvents = jAttributes.value("pre_otEvents", std::vector<std::string>());
   m_post_permanentEvents = jAttributes.value("post_pEvents", std::vector<std::string>());
   m_post_oneTimeEvents = jAttributes.value("post_otEvents", std::vector<std::string>());
+  music_ = jAttributes.value("music", "");
+  image_ = jAttributes.value("image", "");
 
   //In case of book, or read-item
   m_page = stoi(jAttributes.value("page", (std::string)"0")); 
@@ -107,11 +110,19 @@ std::string COutput::print(CPlayer* p, bool events) {
   if(events == true)
     addEvents(p);  
 
+  // Create output:
+  std::string music = p->getContextMusic(music_);
+  std::string image = p->getContextImage(image_);
+  if (music != "")
+    std::cout << "TEXT: updated music: " << music << std::endl;
+  std::string output = ((music != "") ? music : "") + ((image != "") ? image : "")
+    + m_sText + "$" + sUpdated;
+
   //Return text 
   if(m_sSpeaker == "indent")
-    return p->returnBlackPrint(m_sText + "$" + sUpdated);
+    return p->returnBlackPrint(output);
 
-  return p->returnSpeakerPrint(sSpeaker + sSuccess, m_sText + "$" + sUpdated);
+  return p->returnSpeakerPrint(sSpeaker + sSuccess, output);
 }
 
 std::string COutput::reducedPrint(CPlayer* p, bool events) {

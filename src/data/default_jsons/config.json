@@ -11,5 +11,13 @@
     "room":"test_test_room",
     "hp":10,
     "stength":10
-    }
+    },
+  "music": {
+      "background": "",
+      "fight": ""
+  },
+  "image": {
+      "background": "",
+      "fight": ""
+  }
 }

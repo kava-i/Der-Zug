@@ -1,0 +1,15 @@
+{% include "temp_header" %}
+{{ log("rendered header") }}
+
+    <li>
+        <label>background</label>
+        <input id="background" value={{ default(content.background, "") }}>
+    </li>
+    <li>
+        <label>Fight</label>
+        <input id="fight" value={{ default(content.fight, "") }}>
+    </li>
+
+   {{ log("rendered image-config") }}
+
+{% include "temp_footer" %}

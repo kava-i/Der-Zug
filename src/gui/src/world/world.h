@@ -99,7 +99,12 @@ class World {
     nlohmann::json GetNotes(std::string path) const;
 
     ErrorCodes SetNotes(std::string path, std::string notes);
-
+    
+    /**
+     * Creates all pages.
+     * @param[in] path of world.
+     */
+    void LoadWorld();
 
   private:
     // member variables:
@@ -131,12 +136,6 @@ class World {
     std::vector<std::string> short_paths_;
 
     // privave methods:
-    
-    /**
-     * Creates all pages.
-     * @param[in] path of world.
-     */
-    void LoadWorld();
 
     /** 
      * Initialize one category

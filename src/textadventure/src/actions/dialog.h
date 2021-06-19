@@ -81,6 +81,7 @@ private:
     string m_sActions;  //< Actions executed after call.
     string m_sEvents;  //< string holding a list of events, which will be executed.
     std::string music_;
+    std::string image_;
 
     bool visited_;
 
@@ -102,6 +103,7 @@ public:
     dialogoptions& getOptions();
     bool visited();
     std::string music();
+    std::string image();
 
     // *** SETTER *** //
     void set_music(std::string file_name);

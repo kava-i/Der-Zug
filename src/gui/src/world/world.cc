@@ -193,7 +193,7 @@ void World::InitializeCategory(std::string path) {
     else
       std::cout << "skiped list type." << std::endl;
   }
-  std::cout << "Done initializing paths." << std::endl;
+  std::cout << "Done initializing paths under: " << path << "." << std::endl;
 }
 
 void World::UpdateShortPaths() {
@@ -206,6 +206,7 @@ void World::UpdateShortPaths() {
 World::~World() {
   std::unique_lock ul(shared_mtx_paths_);
   while (paths_.size() > 0) {
+    auto it = paths_.begin();
     std::erase_if(paths_, [&](const auto& elem) { return (elem.second->category() == it->second->name()); });
     delete it->second;
     paths_.erase(it->first);

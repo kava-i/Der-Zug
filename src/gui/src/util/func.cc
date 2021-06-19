@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <exception>
 #include <fstream>
+#include <iostream>
 #include <openssl/evp.h>
 #include <openssl/sha.h>
 
@@ -53,7 +54,7 @@ std::string GetPage(std::string path) {
   return page;
 }
 
-std::string GetImage(std::string path) {
+std::string GetMedia(std::string path) {
   std::ifstream f(path, std::ios::in|std::ios::binary|std::ios::ate);    
   if (!f.is_open()) {
     std::cout << "file could not be found!" << std::endl;    
@@ -69,6 +70,19 @@ std::string GetImage(std::string path) {
       
   std::string s(buffer.begin(), buffer.end());    
   return s;
+}
+
+void StoreMedia(std::string path, std::string content) {
+  try {
+    std::fstream mediaout(path, std::ios::out | std::ios::binary);
+    mediaout.write(content.c_str(), content.size());
+    mediaout.close();
+  }
+  catch (std::exception& e) {
+    std::cout << "Writing media-file failed: " << e.what() << std::endl;
+    return;
+  }
+  std::cout << "Writing media-file success." << std::endl;
 }
 
 bool demo_exists(const fs::path& p, fs::file_status s) {

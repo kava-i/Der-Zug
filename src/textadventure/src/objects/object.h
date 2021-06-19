@@ -63,7 +63,7 @@ public:
     }
 
     std::string image() {
-      return music_;
+      return image_;
     }
 
     std::string music() {
@@ -81,12 +81,12 @@ public:
     }
 
     /// set media.
-    void image(std::string file_name) {
+    void set_image(std::string file_name) {
       image_ = file_name;
     }
     
     /// set new music.
-    void music(std::string file_name) {
+    void set_music(std::string file_name) {
       music_ = file_name;
     }
 };

@@ -5,6 +5,7 @@
 #include "game/game.h"
 #include "tools/func.h"
 #include "tools/webcmd.h"
+#include <string>
 #define cRED "\033[1;31m"
 #define cGreen "\033[1;32m"
 #define cBlue "\033[1;34m"
@@ -147,6 +148,7 @@ void Context::initializeHanlders() {
   m_handlers["h_changeRoom"] = &Context::h_changeRoom;
   m_handlers["h_startDialogDirect"] = &Context::h_startDialogDirect;
   m_handlers["h_changeSound"] = &Context::h_changeSound;
+  m_handlers["h_changeImage"] = &Context::h_changeImage;
 
   // ***** STANDARD CONTEXT ***** //
   m_handlers["h_showExits"] = &Context::h_showExits;
@@ -259,6 +261,7 @@ void Context::initializeTemplates() {
                         {"changeDialog", {"h_changeDialog"}},
                         {"changeRoom", {"h_changeRoom"}},
                         {"startDialogDirekt", {"h_startDialogDirekt"}},
+                        {"changeImage", {"h_changeImage"}},
                         {"changeSound", {"h_changeSound"}} }}
                     };
 
@@ -743,7 +746,6 @@ void Context::h_ignore(std::string&, CPlayer*) {}
 
 void Context::h_showExits(std::string& sIdentifier, CPlayer* p) {
   p->appendDescPrint(p->getRoom()->showExits(p->getGramma())+"\n");
-  p->addSelectContest(p->getRoom()->getExtits2(), "go");
 }
 
 
@@ -751,15 +753,11 @@ void Context::h_show(std::string& sIdentifier, CPlayer* p) {
   if(sIdentifier == "exits" || sIdentifier == "ausgänge") {
     std::cout << "Calling: " << " show exits!" << std::endl;
     p->appendDescPrint(p->getRoom()->showExits(p->getGramma())+"\n");
-    p->addSelectContest(p->getRoom()->getExtits2(), "go");
   }
   else if(sIdentifier == "visited" || sIdentifier == "besuchte räume")
     p->showVisited();
   else if(sIdentifier == "people" || sIdentifier == "personen") {
     p->appendDescPrint(p->getRoom()->showCharacters(p->getGramma()) + "\n"); 
-    auto lambda = [](CPerson* person) {return person->name();};
-    p->addSelectContest(func::convertToObjectmap(p->getRoom()->getCharacters(), 
-          lambda) , "talk");
   }
   else if(sIdentifier == "room")
     p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
@@ -876,7 +874,12 @@ void Context::h_startDialogDirect(std::string &sIdentifier, CPlayer *p) {
 
 void Context::h_changeSound(std::string &sIdentifier, CPlayer *p) {
   std::cout << "h_changeSound: " << sIdentifier << std::endl;
-  p->appendPrint(Webcmd::set_sound(sIdentifier));
+  p->set_cur_music(sIdentifier);
+}
+
+void Context::h_changeImage(std::string &sIdentifier, CPlayer *p) {
+  std::cout << "h_changeImage: " << sIdentifier << std::endl;
+  p->set_cur_image(sIdentifier);
 }
 
 void Context::h_take(std::string& sIdentifier, CPlayer* p) {
@@ -1048,14 +1051,14 @@ void Context::h_fight_show(std::string& sIdentifier, CPlayer* p) {
 
 // ***** ***** DIALOG CONTEXT ***** *****
 
-void Context::initializeDialogListeners(std::string newState, CPlayer* p) {
+void Context::initializeDialogListeners(std::string new_state, CPlayer* p) {
   //Set (new) state, clear listeners and add help-listener
-  setAttribute<std::string>("state", newState); 
+  setAttribute<std::string>("state", new_state); 
   m_eventmanager.clear();
   add_listener("h_help", "help");
 
   //Add listener for each dialog option.
-  std::vector<size_t> activeOptions = p->getDialog()->getState(newState)
+  std::vector<size_t> activeOptions = p->getDialog()->getState(new_state)
     ->getActiveOptions(p);
   std::map<size_t, size_t> mapOtptions;
   size_t counter = 1;
@@ -1065,11 +1068,15 @@ void Context::initializeDialogListeners(std::string newState, CPlayer* p) {
     counter++;
   }
   setAttribute<std::map<size_t, size_t>>("mapOptions", mapOtptions);
+
+  CDState* state = p->getDialog()->getState(new_state);
+  media_["music"] = (state->music() != "") ? state->music() : p->getCurDialogPartner()->music();
+  media_["image"] = (state->image() != "") ? state->image() : p->getCurDialogPartner()->image();
+  p->updateMedia();
 }
 
 void Context::h_call(std::string& sIdentifier, CPlayer* p) {
-  size_t option = getAttribute<std::map<size_t, size_t>>
-    ("mapOptions")[stoi(sIdentifier)];
+  size_t option = getAttribute<std::map<size_t, size_t>>("mapOptions")[stoi(sIdentifier)];
 
   std::string cur_state = getAttribute<std::string>("state");
   std::string next_state = p->getDialog()->getState(cur_state)
@@ -1078,6 +1085,8 @@ void Context::h_call(std::string& sIdentifier, CPlayer* p) {
  
   // Change sound to room-sound or to player sound, if changed.
   media_["music"] = (state->music() != "") ? state->music() : p->getCurDialogPartner()->music();
+  media_["image"] = (state->image() != "") ? state->image() : p->getCurDialogPartner()->image();
+  p->updateMedia();
 
   if(next_state == "trade")
     p->startTrade(getAttribute<std::string>("partner"));

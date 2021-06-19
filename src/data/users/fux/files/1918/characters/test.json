@@ -1,1 +1,52 @@
-{"greg":{"description":[{"speaker":"LORETELLER","text":"Tall slithly ugly man in long old army coat. He's looking a bit shady. He seems to be sweating under his coat.   "}],"faint":1,"hp":10,"id":"greg","name":"Tall guy in a black army coat","roomDescription":[{"speaker":"LORETELLER","text":"Tall slithly ugly man in long old army coat is standing right next to the door. He's looking a bit shady. He seems to be sweating under his coat. "}],"strength":10},"lucy":{"description":[{"speaker":"LORETELLER","text":"Smocking woman, wearing a red dress. She's drinking scotch and sitting a leather armchair.  "}],"faint":1,"hp":10,"id":"lucy","name":"Smocking woman drinking scotch","roomDescription":[{"speaker":"LORETELLER","text":"A woman is sitting an an arm chair, smoking and drinking scotch."}],"strength":10},"mirror":{"description":[{"speaker":"","text":""}],"id":"mirror","name":"Mirror","room":""}}
+{
+    "greg": {
+        "description": [
+            {
+                "speaker": "LORETELLER",
+                "text": "Tall slithly ugly man in long old army coat. He's looking a bit shady. He seems to be sweating under his coat.   "
+            }
+        ],
+        "faint": 1,
+        "hp": 10,
+        "id": "greg",
+        "music": "piano",
+        "name": "Tall guy in a black army coat",
+        "roomDescription": [
+            {
+                "speaker": "LORETELLER",
+                "text": "Tall slithly ugly man in long old army coat is standing right next to the door. He's looking a bit shady. He seems to be sweating under his coat. "
+            }
+        ],
+        "strength": 10
+    },
+    "lucy": {
+        "description": [
+            {
+                "speaker": "LORETELLER",
+                "text": "Smocking woman, wearing a red dress. She's drinking scotch and sitting a leather armchair.  "
+            }
+        ],
+        "faint": 1,
+        "hp": 10,
+        "id": "lucy",
+        "name": "Smocking woman drinking scotch",
+        "roomDescription": [
+            {
+                "speaker": "LORETELLER",
+                "text": "A woman is sitting an an arm chair, smoking and drinking scotch."
+            }
+        ],
+        "strength": 10
+    },
+    "mirror": {
+        "description": [
+            {
+                "speaker": "",
+                "text": ""
+            }
+        ],
+        "id": "mirror",
+        "name": "Mirror",
+        "room": ""
+    }
+}

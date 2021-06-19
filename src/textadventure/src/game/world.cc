@@ -1,4 +1,5 @@
 #include "world.h"
+#include <exception>
 #include <stdexcept>
 #include <string>
 
@@ -18,11 +19,28 @@ CWorld::CWorld(CPlayer* p, std::string path) {
   m_path_to_world = path;
   worldFactory(p);
 
+  std::cout << "Loading config. " << std::endl;
+
   std::ifstream readConfig(m_path_to_world + "config/config.json");
   readConfig >> m_config;
   readConfig.close();
 
-  media_["music"] = m_config.value("music", "");
+  std::cout << "Config: " << m_config << std::endl;
+
+  std::cout << "Config loaded. " << std::endl;
+
+  if (m_config.contains("music")) {
+    for (const auto& [key, value] : m_config["music"].items()) {
+      media_["music/"+key] = value;
+    }
+  }
+  if (m_config.contains("image")) {
+    for (const auto& [key, value] : m_config["image"].items()) {
+      media_["image/"+key] = value;
+    }
+  }
+  
+  std::cout << "Media set. " << std::endl;
 }
 
 // *** GETTER *** // 
@@ -36,7 +54,7 @@ nlohmann::json& CWorld::getConfig() {
 }
 
 std::string CWorld::media(std::string type) const {
-  return media_.count(type) ? media_.at(type) : "";
+  return (media_.count(type) > 0) ? media_.at(type) : "";
 }
 
 map<string, CRoom*>& CWorld::getRooms() { 

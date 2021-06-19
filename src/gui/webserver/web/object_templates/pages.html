@@ -29,6 +29,19 @@
           <input id="updates" placeholder="updates" custom="json" 
                                                     value={{default(desc.updates,{})}}>
         </li>
+        
+        </li>
+        <li id="optional" class="full_length" style="display: none;">
+          <label>Music:</label>
+          <input id="music" placeholder="music" value={{default(desc.music,"")}}>
+        </li>
+
+        </li>
+        <li id="optional" class="full_length" style="display: none;">
+          <label>Image:</label>
+          <input id="image" placeholder="image" value={{default(desc.image,"")}}>
+        </li>
+
         <li id="optional" style="display: none;" custom="list">
           <label style="width:auto;">Pre permanent Events:</label>
           <ul id="pre_pEvents">
