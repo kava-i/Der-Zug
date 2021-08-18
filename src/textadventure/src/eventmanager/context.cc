@@ -874,7 +874,16 @@ void Context::h_startDialogDirect(std::string &sIdentifier, CPlayer *p) {
 
 void Context::h_changeSound(std::string &sIdentifier, CPlayer *p) {
   std::cout << "h_changeSound: " << sIdentifier << std::endl;
-  p->set_cur_music(sIdentifier);
+  // Change overall music, if no seperator.
+  if (sIdentifier.find("|") == std::string::npos)
+    p->set_cur_music(sIdentifier);
+  // Otherwise update the music of one context.
+  else {
+    std::string context = func::split(sIdentifier, "|")[0];
+    std::string music = func::split(sIdentifier, "|")[1];
+    if (p->getContext(context)) 
+      p->getContext(context)->SetMedia("music", music);
+  }
 }
 
 void Context::h_changeImage(std::string &sIdentifier, CPlayer *p) {

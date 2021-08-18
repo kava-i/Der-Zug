@@ -996,12 +996,15 @@ std::string CPlayer::getContextMusic(std::string new_music) {
   // Priorize context-specific music.
   if (new_music != "")
     music = new_music;
-  if (m_contextStack.getContext("fight"))
+  if (m_contextStack.getContext("fight") 
+      && m_contextStack.getContext("fight")->GetFromMedia("music") != "")
     music = m_contextStack.getContext("fight")->GetFromMedia("music");
-  else if (m_contextStack.getContext("dialog"))
+  else if (m_contextStack.getContext("dialog")
+      && m_contextStack.getContext("dialog")->GetFromMedia("music") != "")
     music = m_contextStack.getContext("dialog")->GetFromMedia("music");
-  else if (m_room->music() != "")
-    music = m_room->music();
+  else if (m_contextStack.getContext("room")
+      && m_contextStack.getContext("room")->GetFromMedia("music") != "")
+    music = m_contextStack.getContext("room")->GetFromMedia("music");
 
   // If not, priorize player-specific.
   if (music == "")
