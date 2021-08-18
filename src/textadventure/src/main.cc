@@ -15,8 +15,8 @@
 CGame *game;
 #ifdef _COMPILE_FOR_SERVER_
 httplib::SSLServer srv(
-    "/etc/letsencrypt/live/kava-i.de/cert.pem",
-    "/etc/letsencrypt/live/kava-i.de/privkey.pem"
+    "/etc/letsencrypt/live/kava-i.de-0001/cert.pem",
+    "/etc/letsencrypt/live/kava-i.de-0001/privkey.pem"
 ); 
 #else
 httplib::Server srv;

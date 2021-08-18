@@ -14,8 +14,8 @@ int main() {
   //Create server frame depending on server (with ssl) or local (no ssl).
 #ifdef _COMPILE_FOR_SERVER_
   ServerFrame srv_frame(
-      "/etc/letsencrypt/live/kava-i.de/cert.pem",
-      "/etc/letsencrypt/live/kava-i.de/privkey.pem");
+      "/etc/letsencrypt/live/kava-i.de-0001/cert.pem",
+      "/etc/letsencrypt/live/kava-i.de-0001/privkey.pem");
 #else
   ServerFrame srv_frame;
 #endif
