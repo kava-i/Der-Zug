@@ -19,7 +19,11 @@ Media::Media(std::string base_path_, std::string path, std::string type, std::st
 ErrorCodes Media::DelElem(std::string path, std::string name) {
   std::cout << "Media::DelElem(" << path << ")" << std::endl;
   try {
-    fs::remove(path);
+    path = path + "/" + name + extension_;
+    if (!fs::remove(path)) {
+      std::cout << "Media::DelElem: path \"" << path << "\"not found." << std::endl;
+      return ErrorCodes::PATH_NOT_FOUND;
+    }
   }
   catch (std::exception &e) {
     std::cout << "Failed removing element." << std::endl;

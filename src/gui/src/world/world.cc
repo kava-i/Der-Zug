@@ -90,8 +90,9 @@ ErrorCodes World::AddElem(std::string path, std::string id, nlohmann::json infos
 ErrorCodes World::DelElem(std::string path, std::string id, bool force) {
   std::cout << "World::DelElem(" << path << ")" << std::endl;
   std::shared_lock sl(shared_mtx_paths_);
-  if (paths_.count(path) == 0)
+  if (paths_.count(path) == 0) {
     return ErrorCodes::PATH_NOT_FOUND;
+  }
 
   // Delete element. If not successfull or force-write (thus no need to do further checking), return error-code.
   ErrorCodes error_code = paths_.at(path)->DelElem(path, id);
@@ -100,6 +101,13 @@ ErrorCodes World::DelElem(std::string path, std::string id, bool force) {
   // If successfull and force disabled, make revert, or make changes permanent.
   if (error_code == ErrorCodes::SUCCESS && !force)
     error_code = RevertIfGameNotRunning(path, id, "delete");
+  
+  // If path not found, try again with calling element directly (skip
+  // sub-category).
+  if (error_code == ErrorCodes::PATH_NOT_FOUND) {
+    if (paths_.contains(path + "/" + id))
+      error_code = paths_.at(path + "/" + id)->DelElem(path, id);
+  }
 
   // Refresh world and return error-code.
   RefreshWorld(); 
