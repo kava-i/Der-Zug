@@ -645,17 +645,18 @@ void ServerFrame::GetLog(const Request& req, Response& resp) {
   size_t pos = req.body.find("/files/");
   std::string user = req.body.substr(1, req.body.find("/", 1));
   std::string world = req.body.substr(pos+7, req.body.find("/", pos+7)-(pos+7));
-  std::string path = "../../data/users/" + user + "logs/";
   std::string type = req.matches[1];
-  path += world + "_" + type + ".txt";
+  std::string path = "../../data/users/" + user + "logs/" + world + "_" + type;
 
+  // Check if path exists.
   if (func::demo_exists(path) == false)
     resp.status = 401;
-
-  else {
-    resp.status = 200;
-    resp.set_content(func::GetPage(path), "text/txt");
-  }
+ 
+  // Convert to html
+  std::string command = "cat " + path + ".txt | aha > " + path + ".html";
+  system(command.c_str());
+  resp.set_content(func::GetPage(path + ".html"), "text/txt");
+  resp.status = 200;
 }
 
 void ServerFrame::StartGame(const Request& req, Response& resp) {
