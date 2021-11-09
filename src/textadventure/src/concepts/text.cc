@@ -117,6 +117,7 @@ std::string COutput::print(CPlayer* p, bool events) {
     std::cout << "TEXT: updated music: " << music << std::endl;
   std::string output = ((music != "") ? music : "") + ((image != "") ? image : "")
     + m_sText + "$" + sUpdated;
+  // std::string output = m_sText + "$" + sUpdated;
 
   //Return text 
   if(m_sSpeaker == "indent")

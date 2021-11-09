@@ -215,14 +215,6 @@ std::map<std::string, std::string> CPlayer::GetCurrentStatus() {
 
 // *** SETTER *** // 
 
-void CPlayer::set_cur_music(std::string music) {
-  cur_music_ = music;
-}
-
-void CPlayer::set_cur_image(std::string image) {
-  cur_image_ = image;
-}
-
 void CPlayer::setFirstLogin(bool val) { 
   m_firstLogin = val; 
 }
@@ -353,6 +345,10 @@ void CPlayer::updateRoomContext() {
 
   //Create new room context
   Context* context = new Context((std::string)"room");
+
+  // Set room-media 
+  context->SetMedia("music", m_room->music());
+  context->SetMedia("image", m_room->image());
 
   //Transfer Time events if context exists
   if(m_contextStack.getContext("room") != NULL)
@@ -497,7 +493,7 @@ void CPlayer::changeRoom(string sIdentifier) {
   }
 
   //Get selected room, checking exits in current room.
-  auto lamda1= [](CExit* exit) { return exit->getPrep() + " " + exit->name(); };
+  auto lamda1= [](CExit* exit) { return (!exit->hidden()) ? exit->prep() + " " + exit->name() : ""; };
   string room = func::getObjectId(getRoom()->getExtits(), sIdentifier, lamda1);
 
   if(room != "") {
@@ -993,10 +989,10 @@ void CPlayer::printError(std::string sError) {
 std::string CPlayer::getContextMusic(std::string new_music) {
   std::string music = "";
 
-  // Priorize context-specific music.
+  // Priorize context-specific music: game-music > player-music > fight > dialog > room
   if (new_music != "")
     music = new_music;
-  if (m_contextStack.getContext("fight") 
+  else if (m_contextStack.getContext("fight") 
       && m_contextStack.getContext("fight")->GetFromMedia("music") != "")
     music = m_contextStack.getContext("fight")->GetFromMedia("music");
   else if (m_contextStack.getContext("dialog")
@@ -1031,10 +1027,12 @@ std::string CPlayer::getContextImage(std::string new_image) {
     image = new_image;
   if (m_contextStack.getContext("fight"))
     image = m_contextStack.getContext("fight")->GetFromMedia("image");
-  else if (m_contextStack.getContext("dialog"))
+  else if (m_contextStack.getContext("dialog")
+      && m_contextStack.getContext("dialog")->GetFromMedia("image") != "")
     image = m_contextStack.getContext("dialog")->GetFromMedia("image");
-  else if (m_room->music() != "")
-    image = m_room->image();
+  else if (m_contextStack.getContext("room")
+      && m_contextStack.getContext("room")->GetFromMedia("image") != "")
+    image = m_contextStack.getContext("room")->GetFromMedia("image");
 
   // If not, priorize player-specific.
   if (image == "")
@@ -1055,17 +1053,11 @@ std::string CPlayer::getContextImage(std::string new_image) {
 
 void CPlayer::updateMedia() {
   std::string music = getContextMusic("");
-  if (music != "" && music != cur_music_) {
-    std::cout << "Updated music to: " << music << std::endl; 
-    cur_music_ = music;
+  if (music != "")
     m_sPrint += music;
-  }
   std::string image = getContextImage("");
-  if (image != "" && image != cur_image_) {
-    std::cout << "Updated image to: " << image << std::endl; 
-    cur_image_ = image;
+  if (image != "")
     m_sPrint += image;
-  }
 }
 
 // *** Eventmanager functions *** //

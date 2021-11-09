@@ -1,7 +1,9 @@
 #include "world.h"
 #include <exception>
+#include <iostream>
 #include <stdexcept>
 #include <string>
+#include <objects/player.h>
 
 #define cRED "\033[1;31m"
 #define cCLEAR "\033[0m"
@@ -31,12 +33,23 @@ CWorld::CWorld(CPlayer* p, std::string path) {
 
   if (m_config.contains("music")) {
     for (const auto& [key, value] : m_config["music"].items()) {
-      media_["music/"+key] = value;
+      // For background, overwite general setting with player specifc setting.
+      if (key == "background" && p && p->music() != "") {
+        media_["music/"+key] = value;
+        p->set_music(""); // afterwards empty music.
+      }
+      else
+        media_["music/"+key] = value;
     }
   }
   if (m_config.contains("image")) {
     for (const auto& [key, value] : m_config["image"].items()) {
-      media_["image/"+key] = value;
+      if (key == "background" && p && p->music() != "") {
+        media_["image/"+key] = value;
+        p->set_image(""); // afterwards empty music.
+      }
+      else 
+        media_["image/"+key] = value;
     }
   }
   
@@ -209,8 +222,13 @@ void CWorld::worldFactory(CPlayer* p) {
 }
 
 void CWorld::roomFactory(CPlayer* player) {
-  for(auto& p : fs::directory_iterator(m_path_to_world + "rooms"))
-    roomFactory(p.path(), player);
+  for(auto& p : fs::directory_iterator(m_path_to_world + "rooms")) {
+    try {
+      roomFactory(p.path(), player);
+    } catch (std::exception& e) {
+      throw cRED "Failed adding rooms at " + p.path().string() + ": " + e.what() + cCLEAR;
+    }
+  }
 }
 
 void CWorld::roomFactory(string sPath, CPlayer* p) {

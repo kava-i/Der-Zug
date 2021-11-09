@@ -10,18 +10,24 @@
 class CExit : public CObject
 { 
 private:
-    std::string m_sTarget; 
-    std::string m_sPrep;
+  std::string target_; 
+  std::string prep_;
+  bool hidden_;
 
 public:
-    CExit(std::string sTrarget, nlohmann::json jAtts, CPlayer* p) : CObject{jAtts, p}
-    {
-        m_sTarget = sTrarget;
-        m_sPrep = jAtts.value("prep", "");
-    }
+  CExit(std::string trarget, nlohmann::json json_atts, CPlayer* p) : CObject{json_atts, p} {
+    target_ = trarget;
+    prep_ = json_atts.value("prep", "");
+    hidden_ = json_atts.value("hidden", 0);
+  }
 
-    std::string getTarget();
-    std::string getPrep();
+  // getter
+  std::string target();
+  std::string prep();
+  bool hidden();
+
+  // setter
+  void set_hidden(bool hidden);
 };
 
 #endif 

@@ -1,5 +1,6 @@
 #include "sub_category.h"
 #include "nlohmann/json.hpp"
+#include "page/media.h"
 #include "util/error_codes.h"
 #include "util/func.h"
 #include <exception>

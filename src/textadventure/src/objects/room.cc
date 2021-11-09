@@ -12,14 +12,14 @@ CRoom::CRoom(string sArea, nlohmann::json jAtts, std::map<string, CPerson*>
   if(jAtts.count("exits") > 0)
     mapExits = jAtts["exits"].get<std::map<std::string, nlohmann::json>>();
   for(const auto &it : mapExits) {
-    //Create id (target room)
+    // Create id (target room)
     std::string id = it.first;
     // Only if the absolute path is not given, add the current area to the 
     // refered room-id.
     if (id.find(".") == std::string::npos)
-        id.insert(0, sArea+".");
+      id.insert(0, sArea+".");
 
-    //Create exit.
+    // Create exit.
     m_exits[id] = new CExit(id, it.second, p);
   }
 
@@ -102,18 +102,18 @@ string CRoom::showAll(CGramma* gramma) {
 }
 
 string CRoom::showExits(CGramma* gramma) {
-  auto lambda = [](CExit* exit) {return exit->getPrep() + " " + exit->name();};
+  auto lambda = [](CExit* exit) {return (!exit->hidden()) ? exit->prep() + " " + exit->name() : "";};
 
   // Get pre and post strings from show map.
   std::string pre = "Hier geht es";    
   std::string post = "Nirgendwo hin.";
   if(m_showMap.count("exits") > 0) {
     if(m_showMap["exits"].size() >= 2) {
-        pre = m_showMap["exits"][0];
-        post = m_showMap["exits"][1];
+      pre = m_showMap["exits"][0];
+      post = m_showMap["exits"][1];
     }
     else
-        std::cout << "Wrong size!\n";
+      std::cout << "Wrong size!\n";
   }
   return gramma->build(func::to_vector(m_exits, lambda), pre, post);
 }

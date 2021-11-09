@@ -140,12 +140,6 @@ public:
 
     // *** SETTER *** //
     
-    /// Set current music 
-    void set_cur_music(std::string music);
-
-    /// Set current background image 
-    void set_cur_image(std::string image);
-
     ///Set first login.
     void setFirstLogin(bool val); 
 

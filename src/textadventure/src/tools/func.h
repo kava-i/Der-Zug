@@ -172,8 +172,11 @@ namespace func
     std::vector<std::string> to_vector(std::map<std::string, T1> map, 
         T2 lambda = [](T1 t) -> std::string { return t; }) {
       std::vector<std::string> vec;
-      for(const auto& it : map)
-        vec.push_back(lambda(it.second));
+      for(const auto& it : map) {
+        std::string txt = lambda(it.second);
+        if (txt != "")
+          vec.push_back(txt);
+      }
       return vec;
     }
     

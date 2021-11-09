@@ -98,7 +98,7 @@ string CGame::checkLogin(string in_id, string password, bool login, std::string&
       string tmp = m_players[in_id]->doLogin(in_id, password);
       if(tmp != "") {
         id = tmp;
-        return "Loggen in as " + id + "\n\n";
+        return "Logged in as " + id + "\n\n";
       }
     }
   } 

@@ -44,22 +44,22 @@ public:
 
     ///Return id of object
     std::string id() {
-        return id_;
+      return id_;
     }
 
     ///Return name of object.
     std::string name() {
-        return name_;
+      return name_;
     }
 
     ///Return description by calling print-function from text class.
     std::string text() {
-        return text_->print();
+      return text_->print();
     }
 
     ///Return list of handler
     std::vector<nlohmann::json> handler() {
-        return handler_;
+      return handler_;
     }
 
     std::string image() {

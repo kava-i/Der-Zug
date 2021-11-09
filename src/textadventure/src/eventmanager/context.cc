@@ -657,32 +657,30 @@ void Context::h_addExit(std::string& sIdentifier, CPlayer* p) {
   std::cout << sIdentifier << std::endl;
   std::string room = func::split(sIdentifier, "|")[0];
   std::string linked_room = func::split(sIdentifier, "|")[1];
-  nlohmann::json exit = nlohmann::json::parse(func::split(sIdentifier, "|")[2]);
-  std::cout << room << ", " << linked_room << ", " << exit << std::endl;
-  p->getWorld()->getRoom(room)->getExtits()[linked_room] = new CExit(linked_room, exit, p);
+  std::cout << room << ", " << linked_room << ", " << std::endl;
+  if (p->getWorld()->getRoom(room) && p->getWorld()->getRoom(room)->getExtits().count(linked_room) > 0)
+    p->getWorld()->getRoom(room)->getExtits().at(linked_room)->set_hidden(false);
   m_curPermeable=false;
 }
 
-void Context::h_setAttribute(std::string& sIdentifier, CPlayer* p)
-{
-    //Get vector with [0]=attribute to modify, [1]=operand, [2]=value
-    std::vector<std::string> atts = func::split(sIdentifier, "|");
+void Context::h_setAttribute(std::string& sIdentifier, CPlayer* p) {
+  //Get vector with [0]=attribute to modify, [1]=operand, [2]=value
+  std::vector<std::string> atts = func::split(sIdentifier, "|");
 
-    //Check if sIdentifier contains the fitting values
-    if(atts.size() != 3 || std::isdigit(atts[2][0]) == false || p->getStat(atts[0]) == 999) 
-        std::cout << "Something went worng! Player Attribute could not be changed.\n";
+  //Check if sIdentifier contains the fitting values
+  if(atts.size() != 3 || std::isdigit(atts[2][0]) == false || p->getStat(atts[0]) == 999) 
+    std::cout << "Something went worng! Player Attribute could not be changed.\n";
 
-    //Modify attribute according to operand.
-    else if(atts[1] == "=")
-        p->setStat(atts[0], stoi(atts[2]));
-    else if(atts[1] == "+")
-        p->setStat(atts[0], p->getStat(atts[0]) + stoi(atts[2]));
-    else if(atts[1] == "-")
-        p->setStat(atts[0], p->getStat(atts[0]) - stoi(atts[2]));
-    else
-        std::cout << "Wrong operand for setting attribute." << "\n";
-
-    m_curPermeable=false;
+  //Modify attribute according to operand.
+  else if(atts[1] == "=")
+    p->setStat(atts[0], stoi(atts[2]));
+  else if(atts[1] == "+")
+    p->setStat(atts[0], p->getStat(atts[0]) + stoi(atts[2]));
+  else if(atts[1] == "-")
+    p->setStat(atts[0], p->getStat(atts[0]) - stoi(atts[2]));
+  else
+    std::cout << "Wrong operand for setting attribute." << "\n";
+  m_curPermeable=false;
 }
 
 void Context::h_setNewAttribute(std::string& sIdentifier, CPlayer* p) {
@@ -690,9 +688,9 @@ void Context::h_setNewAttribute(std::string& sIdentifier, CPlayer* p) {
   
   //Check if sIdentifier contains the fitting values
   if(atts.size() != 2 || std::isdigit(atts[1][0]) == false)
-      std::cout << "Something went worng! Player Attribute could not be changed.\n";
+    std::cout << "Something went worng! Player Attribute could not be changed.\n";
   else
-      p->getStats()[atts[0]] = stoi(atts[1]);
+    p->getStats()[atts[0]] = stoi(atts[1]);
   m_curPermeable=false;
 }
 
@@ -868,27 +866,24 @@ void Context::h_startDialogDirect(std::string &sIdentifier, CPlayer *p) {
 
   // Check if given character exists. If he does, call dialog.
   if (p->getWorld()->getCharacter(character) != nullptr) {
-    p->startDialog(sIdentifier, p->getWorld()->getCharacter(character)->getDialog());
+    p->startDialog(character, p->getWorld()->getCharacter(character)->getDialog());
   }
 }
 
 void Context::h_changeSound(std::string &sIdentifier, CPlayer *p) {
   std::cout << "h_changeSound: " << sIdentifier << std::endl;
   // Change overall music, if no seperator.
-  if (sIdentifier.find("|") == std::string::npos)
-    p->set_cur_music(sIdentifier);
-  // Otherwise update the music of one context.
-  else {
-    std::string context = func::split(sIdentifier, "|")[0];
-    std::string music = func::split(sIdentifier, "|")[1];
-    if (p->getContext(context)) 
-      p->getContext(context)->SetMedia("music", music);
-  }
+  p->set_music(sIdentifier);
+  p->updateMedia();
+  m_curPermeable = false;
 }
 
 void Context::h_changeImage(std::string &sIdentifier, CPlayer *p) {
   std::cout << "h_changeImage: " << sIdentifier << std::endl;
-  p->set_cur_image(sIdentifier);
+  // Change overall music, if no seperator.
+  p->set_image(sIdentifier);
+  p->updateMedia();
+  m_curPermeable = false;
 }
 
 void Context::h_take(std::string& sIdentifier, CPlayer* p) {
@@ -977,7 +972,7 @@ void Context::h_test(std::string& sIdentifier, CPlayer* p) {
 
 void Context::h_moveToHospital(std::string& sIdentifier, CPlayer* p) {
   //Get selected room
-  auto lambda = [](CExit* exit) { return exit->getPrep() + "_" + exit->name();};
+  auto lambda = [](CExit* exit) { return exit->prep() + "_" + exit->name();};
   if (p->getRoom()->id().find("zug.compartment") == std::string::npos 
       || func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lambda) != "zug.trainCorridor")
     return;
@@ -991,7 +986,7 @@ void Context::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
 {
     std::cout << "h_exitTrainstation, " << sIdentifier << std::endl;
 
-    auto lambda= [](CExit* exit) { return exit->getPrep() + " " + exit->name(); };
+    auto lambda= [](CExit* exit) { return exit->prep() + " " + exit->name(); };
     if(p->getRoom()->id() != "trainstation.eingangshalle" || func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lambda) != "trainstation.ausgang")
         return;
 
