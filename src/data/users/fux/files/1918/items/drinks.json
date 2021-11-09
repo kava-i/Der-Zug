@@ -1,1 +1,42 @@
-{"booze":{"category":"consume","description":[{"speaker":"story","text":"A half empty bottle of scotch."}],"effekt":4,"id":"booze","name":"Booze","type":"drug","useDescription":[{"image":"bg3","post_otEvents":["addExit test.raum2|test.raum3|{"],"pre_pEvents":["changeImage bg3"],"speaker":"story","text":"You drink the hole bottle and suddenly feel... absolutely amazing. You're on top of the world. Now you go girl!"}],"value":20},"example":{"description":[{"speaker":"","text":""}],"id":"example","name":"Example"}}
+{
+    "booze": {
+        "category": "consume",
+        "description": [
+            {
+                "pre_pEvents": [
+                    "addExist "
+                ],
+                "speaker": "story",
+                "text": "A half empty bottle of scotch."
+            }
+        ],
+        "effekt": 4,
+        "id": "booze",
+        "name": "Booze",
+        "type": "drug",
+        "useDescription": [
+            {
+                "post_otEvents": [
+                ],
+                "pre_otEvents": [
+                    "changeSound prophecies",
+                    "changeImage bg3",
+                    "addExit test.raum2|test.raum3"
+                ],
+                "speaker": "story",
+                "text": "You drink the hole bottle and suddenly feel... absolutely amazing. You're on top of the world. Now you go girl!"
+            }
+        ],
+        "value": 20
+    },
+    "example": {
+        "description": [
+            {
+                "speaker": "",
+                "text": ""
+            }
+        ],
+        "id": "example",
+        "name": "Example"
+    }
+}
