@@ -37,6 +37,14 @@
           <input id="name"placeholder="name" value="{{ default(val.name, "") }}">
           <input id="prep" placeholder="preposition" class="short"
               value="{{default(val.prep,"")}}">
+          <input id="hidden" placeholder="hidden" class="short" custom="bool"
+          {% if default(val.hidden, 0) == 0) %} 
+            value="no" 
+          {% else %} 
+            value="yes" 
+          {% endif %}
+              title="If true room does not exists until activated with 'addExist' event"
+          >
           <span class="mod_elem" onclick="del_elem('exits',{{loop.index}})">-</span>
           <span class="mod_elem" onclick="add_elem('exits',{{loop.index}})">+</span>
         </li>

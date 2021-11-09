@@ -186,9 +186,9 @@ function GetAsType(elem) {
     }
     else if (elem.getAttribute("custom") == "json")
       return JSON.parse(elem.value);
-    else if (elem.getAttribute("custom") == "bool" && elem.value == "yes") 
+    else if (elem.getAttribute("custom") == "bool" && (elem.value == "yes" || elem.value == "true")) 
       return 1;
-    else if (elem.getAttribute("custom") == "bool" && elem.value == "no") 
+    else if (elem.getAttribute("custom") == "bool" && (elem.value == "no" || elem.value == "false")) 
       return 0;
     else
       throw("Problem parsing: ", elem.id, elem.getAttribute("custom"), elem.value);

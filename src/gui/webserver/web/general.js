@@ -22,12 +22,15 @@ window.onclick = function(event)  {
   let modal1 = document.getElementById("modal_add_elem");
   let modal2 = document.getElementById("modal_del_elem");
   let modal3 = document.getElementById("modal_log");
+  let modal4 = document.getElementById("modal_write");
   if (event.target == modal1) 
     modal1.style.display = "none";
   if (event.target == modal2)
     modal2.style.display = "none";
   if (event.target == modal3)
     modal3.style.display = "none";
+  if (event.target == modal4)
+    modal4.style.display = "none";
   else
     return;
   window.location=window.location;
