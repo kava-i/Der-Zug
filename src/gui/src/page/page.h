@@ -71,7 +71,7 @@ class Page {
      * Restore backup object: restore deleted/ modified directory, file, object.
      * Each derived class has it's own way of storing deleted data.
      */
-     virtual ErrorCodes RestoreBackupObj() { return ErrorCodes::FAILED; }
+     virtual ErrorCodes RestoreBackupObj(std::string id) { return ErrorCodes::FAILED; }
 
     /**
      * Creates data for page: json-data & path to matching templae.

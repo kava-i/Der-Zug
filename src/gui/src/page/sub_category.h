@@ -51,7 +51,7 @@ class SubCategory : public Category {
      * Restore deleted object.
      * Before deleting object, the object will be stored, and can be recreated.
      */
-    ErrorCodes RestoreBackupObj(); 
+    ErrorCodes RestoreBackupObj(std::string); 
 
   private:
     // private members:

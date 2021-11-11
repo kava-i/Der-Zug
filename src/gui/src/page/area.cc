@@ -98,11 +98,13 @@ ErrorCodes Area::DelElem(std::string path, std::string name) {
   return ErrorCodes::SUCCESS; 
 }
 
-ErrorCodes Area::RestoreBackupObj() {
+ErrorCodes Area::RestoreBackupObj(std::string id) {
   std::cout << "Area::UndoDelElem()" << std::endl;
-  if (backup_obj_.empty() || !(backup_obj_.count("id") > 0))
+  if (backup_obj_.empty()) {
+    std::cout << "Area::UndoDelElem: failed: no backup object." << std::endl;
     return ErrorCodes::FAILED;
-  objects_[backup_obj_["id"].get<std::string>()] = backup_obj_;
+  }
+  objects_[id] = backup_obj_;
   func::WriteJsonToDisc(path_ + ".json", objects_);
   return ErrorCodes::SUCCESS;
 }

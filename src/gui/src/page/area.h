@@ -61,7 +61,7 @@ class Area : public Page {
      * Restore backup object: restore deleted/ modified directory, file, object.
      * Each derived class has it's own way of storing deleted data.
      */
-    ErrorCodes RestoreBackupObj();
+    ErrorCodes RestoreBackupObj(std::string id);
 
     /**
      * Calls base-class function for area and CreateObjectPageData for opject.

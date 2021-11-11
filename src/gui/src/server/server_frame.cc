@@ -473,10 +473,8 @@ void ServerFrame::WriteObject(const Request& req, Response& resp) {
   // If values is array (for config-objects), us first key, and reduce json to value.
   else {
     for (const auto& it : json_req["json"].items()) {
-      if (it.value().is_array()) {
-        id = it.key();
-        json_req["json"] = it.value();
-      }
+      id = it.key();
+      json_req["json"] = it.value();
       id = path.substr(path.rfind("/")+1);
       break;
     }

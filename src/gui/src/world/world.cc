@@ -262,7 +262,7 @@ ErrorCodes World::RevertIfGameNotRunning(std::string path, std::string id, std::
     }
     else {
       std::cout << "Game not running, restoring element." << std::endl;
-      paths_.at(path)->RestoreBackupObj();
+      paths_.at(path)->RestoreBackupObj(id);
       std::cout << "Element restored." << std::endl;
     }
     error_code = ErrorCodes::GAME_NOT_RUNNING;

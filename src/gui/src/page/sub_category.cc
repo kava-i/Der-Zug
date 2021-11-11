@@ -43,7 +43,7 @@ ErrorCodes SubCategory::DelElem(std::string path, std::string name) {
   return ErrorCodes::SUCCESS; 
 }
 
-ErrorCodes SubCategory::RestoreBackupObj() {
+ErrorCodes SubCategory::RestoreBackupObj(std::string) {
   std::cout << "Area::UndoDelElem()" << std::endl;
   func::WriteJsonToDisc(path_to_last_deteled_area_, last_deleted_area_);
   return ErrorCodes::SUCCESS;
