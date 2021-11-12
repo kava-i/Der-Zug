@@ -1,6 +1,9 @@
 #include "room.h" 
 #include "person.h"
 
+#define cRED "\033[1;31m"
+#define cCLEAR "\033[0m"
+
 //Constructor
 CRoom::CRoom(string sArea, nlohmann::json jAtts, std::map<string, CPerson*> 
     characters, std::map<string, CItem*> items, std::map<string, CDetail*> 
@@ -76,9 +79,20 @@ std::vector<nlohmann::json> CRoom::getHandler() {
 
 // *** SETTER *** //
 void CRoom::setPlayers(objectmap& onlinePlayers) { m_players = onlinePlayers; }
+
 void CRoom::setShowMap(nlohmann::json j) {
-  for(auto it = j.begin(); it!=j.end(); it++)
-    m_showMap[it.key()] = it.value().get<std::vector<string>>();
+  for(auto it = j.begin(); it!=j.end(); it++) {
+    std::map<string, string> show_mapping = it.value().get<std::map<string, string>>();
+    for (const auto& jt : show_mapping)
+      if ((jt.first == "pre" && jt.second != "") || (jt.first == "post" && jt.second != "")
+          || (jt.first == "also" && jt.second != "") )
+        m_showMap[it.key()][jt.first] = jt.second;
+    // Check that two keys where added.
+    if (m_showMap[it.key()].size() < 2) {
+      std::cout << cRED << "invalid show map @key=" << it.key() << cCLEAR << std::endl;
+      exit(1);
+    }
+  }
 }
 
 
@@ -105,16 +119,8 @@ string CRoom::showExits(CGramma* gramma) {
   auto lambda = [](CExit* exit) {return (!exit->hidden()) ? exit->prep() + " " + exit->name() : "";};
 
   // Get pre and post strings from show map.
-  std::string pre = "Hier geht es";    
-  std::string post = "Nirgendwo hin.";
-  if(m_showMap.count("exits") > 0) {
-    if(m_showMap["exits"].size() >= 2) {
-      pre = m_showMap["exits"][0];
-      post = m_showMap["exits"][1];
-    }
-    else
-      std::cout << "Wrong size!\n";
-  }
+  std::string pre = (m_showMap.count("exits") > 0) ? m_showMap["exits"]["pre"] : "Hier geht es";    
+  std::string post = (m_showMap.count("exits") > 0) ? m_showMap["exits"]["post"] : "Nirgendwo hin.";
   return gramma->build(func::to_vector(m_exits, lambda), pre, post);
 }
 
@@ -125,21 +131,9 @@ string CRoom::showCharacters(CGramma* gramma) {
   std::string output = "";
 
   // Get pre and post strings from show map.
-  std::string pre = "Hier sind";    
-  std::string post = "niemand.";
-  std::string also = "Aber außerdem noch";
-  if(m_showMap.count("chars") > 0) {
-    std::cout << "Getting values from show-map" << std::endl;
-    if(m_showMap["chars"].size() == 2) {
-      pre = m_showMap["chars"][0];
-      post = m_showMap["chars"][1];
-    }
-    else
-      std::cout << "Wrong size!\n";
-
-    if (m_showMap["chars"].size() == 3)
-      also = m_showMap["chars"][2];
-  }
+  std::string pre = (m_showMap.count("chars") > 0) ? m_showMap["chars"]["pre"] : "Hier sind";    
+  std::string post = (m_showMap.count("chars") > 0) ? m_showMap["chars"]["post"] : "niemand.";
+  std::string also = (m_showMap.count("chars") > 0) ? m_showMap["chars"]["also"] : "Aber außerdem noch";
   output += gramma->build(func::to_vector(m_characters, lambda), pre, post);
   std::cout << "Got text from gramma: " << output << std::endl;
   if(m_players.size() > 0)

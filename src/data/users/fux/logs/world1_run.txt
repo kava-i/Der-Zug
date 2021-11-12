@@ -37,6 +37,11 @@ Parsing Items
 Create room: "hospital.foyer"
 Room: "hospital.stairs"
 Parsing characters
+zombie: got dialogs: 
+- 1
+- 2
+- 3
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -49,6 +54,10 @@ Parsing details
 Create room: "trainstation.ausgang"
 Room: "trainstation.eingangshalle"
 Parsing characters
+passanten_gruppe: got dialogs: 
+- 1
+- 2
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -69,6 +78,10 @@ Parsing details
 Create room: "trainstation.fernzüge"
 Room: "trainstation.frauenToilette"
 Parsing characters
+besoffene_frau: got dialogs: 
+- 1
+- faint
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -111,19 +124,33 @@ Parsing details
 Create room: "trainstation.gleis4"
 Room: "trainstation.gleis5"
 Parsing characters
+passanten_gruppe: got dialogs: 
+- 1
+- 2
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.gleis5"
 Room: "trainstation.maennerToilette"
 Parsing characters
+ticketVerkäufer: got dialogs: 
+- 1
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.maennerToilette"
 Room: "trainstation.nebenhalle"
 Parsing characters
+passanten_gruppe: got dialogs: 
+- 1
+- 2
+Using dialog: 1
 Parsing Items
+konstantin_thron: got dialogs: 
+- 1
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -136,13 +163,26 @@ Create room: "trainstation.toiletten"
 Created all rooms 
 Room: "zug.compartment-a"
 Parsing characters
+parsen: got dialogs: 
+- 1
+Using dialog: 1
+Parsing Items
+zombie: got dialogs: 
+- 1
+- 2
+- 3
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "zug.compartment-a"
 Room: "zug.compartment-b"
 Parsing characters
+pink_woman: got dialogs: 
+Using dialog: 1
 Parsing Items
+blue_woman: got dialogs: 
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -159,6 +199,9 @@ Parsing details
 Create room: "zug.compartment-d"
 Room: "zug.trainCorridor"
 Parsing characters
+pissing_man: got dialogs: 
+- 1
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -166,7 +209,7 @@ Create room: "zug.trainCorridor"
 Created all rooms 
 worldFactory: done.
 Loading config. 
-Config: {"attributes":["smoker","drinker"],"commands":[{"id":"show","regex":"zeige (.*)","take":1},{"id":"look","regex":"schaue (.*)","take":1},{"id":"search","regex":"(durchsuche|untersuche) (.*)","take":2},{"id":"go","regex":"gehe (.*)","take":1},{"id":"talk","regex":"spreche (.*) an","take":1},{"id":"pick","regex":"hebe (.*) auf","take":1},{"id":"consume","regex":"(trinke|rauche|esse) (.*)","take":2},{"id":"equipe","regex":"rüste (.*) aus","take":1},{"id":"dequipe","regex":"rüste (.*) ab","take":1},{"id":"read","regex":"lese (.*)","take":1},{"id":"examine","regex":"(betrachte|beobachte) (.*)","take":2},{"id":"next","regex":"weiter","take":1},{"id":"previous","regex":"zurück","take":1},{"id":"mark","regex":"lesezeichen","take":1},{"id":"underline","regex":"unterstreiche (.*)","take":1}],"image":{"background":"background"},"mapAttributes":{},"minds":[{"color":"blue","id":"sinnliche gewissheit","level":10,"relevance":0.1},{"color":"blue","id":"wahrnehmung","level":0,"relevance":0.2},{"color":"green","id":"vernunft","level":0,"relevance":0.3},{"color":"red","id":"sittlichkeit","level":0,"relevance":0.4},{"color":"red","id":"moralität","level":0,"relevance":0.5},{"color":"red","id":"entfremdung","level":0,"relevance":0.6}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"SINNLICHE GEWISSHEIT","error":"","story":"ERZÄHLER","tech":""},"show":{"chars":["Hier sind","niemand"],"exits":["Hier sehe ich einen Weg","nichts"]}}
+Config: {"attributes":["smoker","drinker"],"commands":[{"id":"show","regex":"zeige (.*)","take":1},{"id":"look","regex":"schaue (.*)","take":1},{"id":"search","regex":"(durchsuche|untersuche) (.*)","take":2},{"id":"go","regex":"gehe (.*)","take":1},{"id":"talk","regex":"spreche (.*) an","take":1},{"id":"pick","regex":"hebe (.*) auf","take":1},{"id":"consume","regex":"(trinke|rauche|esse) (.*)","take":2},{"id":"equipe","regex":"rüste (.*) aus","take":1},{"id":"dequipe","regex":"rüste (.*) ab","take":1},{"id":"read","regex":"lese (.*)","take":1},{"id":"examine","regex":"(betrachte|beobachte) (.*)","take":2},{"id":"next","regex":"weiter","take":1},{"id":"previous","regex":"zurück","take":1},{"id":"mark","regex":"lesezeichen","take":1},{"id":"underline","regex":"unterstreiche (.*)","take":1}],"image":{"background":"background"},"mapAttributes":{},"minds":[{"color":"blue","id":"sinnliche gewissheit","level":10,"relevance":0.1},{"color":"blue","id":"wahrnehmung","level":0,"relevance":0.2},{"color":"green","id":"vernunft","level":0,"relevance":0.3},{"color":"red","id":"sittlichkeit","level":0,"relevance":0.4},{"color":"red","id":"moralität","level":0,"relevance":0.5},{"color":"red","id":"entfremdung","level":0,"relevance":0.6}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"SINNLICHE GEWISSHEIT","error":"","story":"ERZÄHLER","tech":""},"show":{"chars":{"post":"niemand","pre":"Hier sind"},"exits":{"post":"nichts","pre":"Hier sehe ich einen Weg"}}}
 Config loaded. 
 Media set. 
 Done parsing world.
@@ -209,6 +252,11 @@ Parsing Items
 Create room: "hospital.foyer"
 Room: "hospital.stairs"
 Parsing characters
+zombie: got dialogs: 
+- 1
+- 2
+- 3
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -221,6 +269,10 @@ Parsing details
 Create room: "trainstation.ausgang"
 Room: "trainstation.eingangshalle"
 Parsing characters
+passanten_gruppe: got dialogs: 
+- 1
+- 2
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -241,6 +293,10 @@ Parsing details
 Create room: "trainstation.fernzüge"
 Room: "trainstation.frauenToilette"
 Parsing characters
+besoffene_frau: got dialogs: 
+- 1
+- faint
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -283,19 +339,33 @@ Parsing details
 Create room: "trainstation.gleis4"
 Room: "trainstation.gleis5"
 Parsing characters
+passanten_gruppe: got dialogs: 
+- 1
+- 2
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.gleis5"
 Room: "trainstation.maennerToilette"
 Parsing characters
+ticketVerkäufer: got dialogs: 
+- 1
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.maennerToilette"
 Room: "trainstation.nebenhalle"
 Parsing characters
+passanten_gruppe: got dialogs: 
+- 1
+- 2
+Using dialog: 1
 Parsing Items
+konstantin_thron: got dialogs: 
+- 1
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -308,13 +378,26 @@ Create room: "trainstation.toiletten"
 Created all rooms 
 Room: "zug.compartment-a"
 Parsing characters
+parsen: got dialogs: 
+- 1
+Using dialog: 1
+Parsing Items
+zombie: got dialogs: 
+- 1
+- 2
+- 3
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "zug.compartment-a"
 Room: "zug.compartment-b"
 Parsing characters
+pink_woman: got dialogs: 
+Using dialog: 1
 Parsing Items
+blue_woman: got dialogs: 
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -331,6 +414,9 @@ Parsing details
 Create room: "zug.compartment-d"
 Room: "zug.trainCorridor"
 Parsing characters
+pissing_man: got dialogs: 
+- 1
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -338,7 +424,7 @@ Create room: "zug.trainCorridor"
 Created all rooms 
 worldFactory: done.
 Loading config. 
-Config: {"attributes":["smoker","drinker"],"commands":[{"id":"show","regex":"zeige (.*)","take":1},{"id":"look","regex":"schaue (.*)","take":1},{"id":"search","regex":"(durchsuche|untersuche) (.*)","take":2},{"id":"go","regex":"gehe (.*)","take":1},{"id":"talk","regex":"spreche (.*) an","take":1},{"id":"pick","regex":"hebe (.*) auf","take":1},{"id":"consume","regex":"(trinke|rauche|esse) (.*)","take":2},{"id":"equipe","regex":"rüste (.*) aus","take":1},{"id":"dequipe","regex":"rüste (.*) ab","take":1},{"id":"read","regex":"lese (.*)","take":1},{"id":"examine","regex":"(betrachte|beobachte) (.*)","take":2},{"id":"next","regex":"weiter","take":1},{"id":"previous","regex":"zurück","take":1},{"id":"mark","regex":"lesezeichen","take":1},{"id":"underline","regex":"unterstreiche (.*)","take":1}],"image":{"background":"background"},"mapAttributes":{},"minds":[{"color":"blue","id":"sinnliche gewissheit","level":10,"relevance":0.1},{"color":"blue","id":"wahrnehmung","level":0,"relevance":0.2},{"color":"green","id":"vernunft","level":0,"relevance":0.3},{"color":"red","id":"sittlichkeit","level":0,"relevance":0.4},{"color":"red","id":"moralität","level":0,"relevance":0.5},{"color":"red","id":"entfremdung","level":0,"relevance":0.6}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"SINNLICHE GEWISSHEIT","error":"","story":"ERZÄHLER","tech":""},"show":{"chars":["Hier sind","niemand"],"exits":["Hier sehe ich einen Weg","nichts"]}}
+Config: {"attributes":["smoker","drinker"],"commands":[{"id":"show","regex":"zeige (.*)","take":1},{"id":"look","regex":"schaue (.*)","take":1},{"id":"search","regex":"(durchsuche|untersuche) (.*)","take":2},{"id":"go","regex":"gehe (.*)","take":1},{"id":"talk","regex":"spreche (.*) an","take":1},{"id":"pick","regex":"hebe (.*) auf","take":1},{"id":"consume","regex":"(trinke|rauche|esse) (.*)","take":2},{"id":"equipe","regex":"rüste (.*) aus","take":1},{"id":"dequipe","regex":"rüste (.*) ab","take":1},{"id":"read","regex":"lese (.*)","take":1},{"id":"examine","regex":"(betrachte|beobachte) (.*)","take":2},{"id":"next","regex":"weiter","take":1},{"id":"previous","regex":"zurück","take":1},{"id":"mark","regex":"lesezeichen","take":1},{"id":"underline","regex":"unterstreiche (.*)","take":1}],"image":{"background":"background"},"mapAttributes":{},"minds":[{"color":"blue","id":"sinnliche gewissheit","level":10,"relevance":0.1},{"color":"blue","id":"wahrnehmung","level":0,"relevance":0.2},{"color":"green","id":"vernunft","level":0,"relevance":0.3},{"color":"red","id":"sittlichkeit","level":0,"relevance":0.4},{"color":"red","id":"moralität","level":0,"relevance":0.5},{"color":"red","id":"entfremdung","level":0,"relevance":0.6}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"SINNLICHE GEWISSHEIT","error":"","story":"ERZÄHLER","tech":""},"show":{"chars":{"post":"niemand","pre":"Hier sind"},"exits":{"post":"nichts","pre":"Hier sehe ich einen Weg"}}}
 Config loaded. 
 Media set. 
 initializing context stack.
@@ -381,6 +467,11 @@ Parsing Items
 Create room: "hospital.foyer"
 Room: "hospital.stairs"
 Parsing characters
+zombie: got dialogs: 
+- 1
+- 2
+- 3
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -393,6 +484,10 @@ Parsing details
 Create room: "trainstation.ausgang"
 Room: "trainstation.eingangshalle"
 Parsing characters
+passanten_gruppe: got dialogs: 
+- 1
+- 2
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -413,6 +508,10 @@ Parsing details
 Create room: "trainstation.fernzüge"
 Room: "trainstation.frauenToilette"
 Parsing characters
+besoffene_frau: got dialogs: 
+- 1
+- faint
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -455,19 +554,33 @@ Parsing details
 Create room: "trainstation.gleis4"
 Room: "trainstation.gleis5"
 Parsing characters
+passanten_gruppe: got dialogs: 
+- 1
+- 2
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.gleis5"
 Room: "trainstation.maennerToilette"
 Parsing characters
+ticketVerkäufer: got dialogs: 
+- 1
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.maennerToilette"
 Room: "trainstation.nebenhalle"
 Parsing characters
+passanten_gruppe: got dialogs: 
+- 1
+- 2
+Using dialog: 1
 Parsing Items
+konstantin_thron: got dialogs: 
+- 1
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -480,13 +593,26 @@ Create room: "trainstation.toiletten"
 Created all rooms 
 Room: "zug.compartment-a"
 Parsing characters
+parsen: got dialogs: 
+- 1
+Using dialog: 1
+Parsing Items
+zombie: got dialogs: 
+- 1
+- 2
+- 3
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "zug.compartment-a"
 Room: "zug.compartment-b"
 Parsing characters
+pink_woman: got dialogs: 
+Using dialog: 1
 Parsing Items
+blue_woman: got dialogs: 
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -503,6 +629,9 @@ Parsing details
 Create room: "zug.compartment-d"
 Room: "zug.trainCorridor"
 Parsing characters
+pissing_man: got dialogs: 
+- 1
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -510,7 +639,7 @@ Create room: "zug.trainCorridor"
 Created all rooms 
 worldFactory: done.
 Loading config. 
-Config: {"attributes":["smoker","drinker"],"commands":[{"id":"show","regex":"zeige (.*)","take":1},{"id":"look","regex":"schaue (.*)","take":1},{"id":"search","regex":"(durchsuche|untersuche) (.*)","take":2},{"id":"go","regex":"gehe (.*)","take":1},{"id":"talk","regex":"spreche (.*) an","take":1},{"id":"pick","regex":"hebe (.*) auf","take":1},{"id":"consume","regex":"(trinke|rauche|esse) (.*)","take":2},{"id":"equipe","regex":"rüste (.*) aus","take":1},{"id":"dequipe","regex":"rüste (.*) ab","take":1},{"id":"read","regex":"lese (.*)","take":1},{"id":"examine","regex":"(betrachte|beobachte) (.*)","take":2},{"id":"next","regex":"weiter","take":1},{"id":"previous","regex":"zurück","take":1},{"id":"mark","regex":"lesezeichen","take":1},{"id":"underline","regex":"unterstreiche (.*)","take":1}],"image":{"background":"background"},"mapAttributes":{},"minds":[{"color":"blue","id":"sinnliche gewissheit","level":10,"relevance":0.1},{"color":"blue","id":"wahrnehmung","level":0,"relevance":0.2},{"color":"green","id":"vernunft","level":0,"relevance":0.3},{"color":"red","id":"sittlichkeit","level":0,"relevance":0.4},{"color":"red","id":"moralität","level":0,"relevance":0.5},{"color":"red","id":"entfremdung","level":0,"relevance":0.6}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"SINNLICHE GEWISSHEIT","error":"","story":"ERZÄHLER","tech":""},"show":{"chars":["Hier sind","niemand"],"exits":["Hier sehe ich einen Weg","nichts"]}}
+Config: {"attributes":["smoker","drinker"],"commands":[{"id":"show","regex":"zeige (.*)","take":1},{"id":"look","regex":"schaue (.*)","take":1},{"id":"search","regex":"(durchsuche|untersuche) (.*)","take":2},{"id":"go","regex":"gehe (.*)","take":1},{"id":"talk","regex":"spreche (.*) an","take":1},{"id":"pick","regex":"hebe (.*) auf","take":1},{"id":"consume","regex":"(trinke|rauche|esse) (.*)","take":2},{"id":"equipe","regex":"rüste (.*) aus","take":1},{"id":"dequipe","regex":"rüste (.*) ab","take":1},{"id":"read","regex":"lese (.*)","take":1},{"id":"examine","regex":"(betrachte|beobachte) (.*)","take":2},{"id":"next","regex":"weiter","take":1},{"id":"previous","regex":"zurück","take":1},{"id":"mark","regex":"lesezeichen","take":1},{"id":"underline","regex":"unterstreiche (.*)","take":1}],"image":{"background":"background"},"mapAttributes":{},"minds":[{"color":"blue","id":"sinnliche gewissheit","level":10,"relevance":0.1},{"color":"blue","id":"wahrnehmung","level":0,"relevance":0.2},{"color":"green","id":"vernunft","level":0,"relevance":0.3},{"color":"red","id":"sittlichkeit","level":0,"relevance":0.4},{"color":"red","id":"moralität","level":0,"relevance":0.5},{"color":"red","id":"entfremdung","level":0,"relevance":0.6}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"SINNLICHE GEWISSHEIT","error":"","story":"ERZÄHLER","tech":""},"show":{"chars":{"post":"niemand","pre":"Hier sind"},"exits":{"post":"nichts","pre":"Hier sehe ich einen Weg"}}}
 Config loaded. 
 Media set. 
 initializing context stack.
@@ -553,6 +682,11 @@ Parsing Items
 Create room: "hospital.foyer"
 Room: "hospital.stairs"
 Parsing characters
+zombie: got dialogs: 
+- 1
+- 2
+- 3
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -565,6 +699,10 @@ Parsing details
 Create room: "trainstation.ausgang"
 Room: "trainstation.eingangshalle"
 Parsing characters
+passanten_gruppe: got dialogs: 
+- 1
+- 2
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -585,6 +723,10 @@ Parsing details
 Create room: "trainstation.fernzüge"
 Room: "trainstation.frauenToilette"
 Parsing characters
+besoffene_frau: got dialogs: 
+- 1
+- faint
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -627,19 +769,33 @@ Parsing details
 Create room: "trainstation.gleis4"
 Room: "trainstation.gleis5"
 Parsing characters
+passanten_gruppe: got dialogs: 
+- 1
+- 2
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.gleis5"
 Room: "trainstation.maennerToilette"
 Parsing characters
+ticketVerkäufer: got dialogs: 
+- 1
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.maennerToilette"
 Room: "trainstation.nebenhalle"
 Parsing characters
+passanten_gruppe: got dialogs: 
+- 1
+- 2
+Using dialog: 1
 Parsing Items
+konstantin_thron: got dialogs: 
+- 1
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -652,13 +808,26 @@ Create room: "trainstation.toiletten"
 Created all rooms 
 Room: "zug.compartment-a"
 Parsing characters
+parsen: got dialogs: 
+- 1
+Using dialog: 1
+Parsing Items
+zombie: got dialogs: 
+- 1
+- 2
+- 3
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "zug.compartment-a"
 Room: "zug.compartment-b"
 Parsing characters
+pink_woman: got dialogs: 
+Using dialog: 1
 Parsing Items
+blue_woman: got dialogs: 
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -675,6 +844,9 @@ Parsing details
 Create room: "zug.compartment-d"
 Room: "zug.trainCorridor"
 Parsing characters
+pissing_man: got dialogs: 
+- 1
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -682,7 +854,7 @@ Create room: "zug.trainCorridor"
 Created all rooms 
 worldFactory: done.
 Loading config. 
-Config: {"attributes":["smoker","drinker"],"commands":[{"id":"show","regex":"zeige (.*)","take":1},{"id":"look","regex":"schaue (.*)","take":1},{"id":"search","regex":"(durchsuche|untersuche) (.*)","take":2},{"id":"go","regex":"gehe (.*)","take":1},{"id":"talk","regex":"spreche (.*) an","take":1},{"id":"pick","regex":"hebe (.*) auf","take":1},{"id":"consume","regex":"(trinke|rauche|esse) (.*)","take":2},{"id":"equipe","regex":"rüste (.*) aus","take":1},{"id":"dequipe","regex":"rüste (.*) ab","take":1},{"id":"read","regex":"lese (.*)","take":1},{"id":"examine","regex":"(betrachte|beobachte) (.*)","take":2},{"id":"next","regex":"weiter","take":1},{"id":"previous","regex":"zurück","take":1},{"id":"mark","regex":"lesezeichen","take":1},{"id":"underline","regex":"unterstreiche (.*)","take":1}],"image":{"background":"background"},"mapAttributes":{},"minds":[{"color":"blue","id":"sinnliche gewissheit","level":10,"relevance":0.1},{"color":"blue","id":"wahrnehmung","level":0,"relevance":0.2},{"color":"green","id":"vernunft","level":0,"relevance":0.3},{"color":"red","id":"sittlichkeit","level":0,"relevance":0.4},{"color":"red","id":"moralität","level":0,"relevance":0.5},{"color":"red","id":"entfremdung","level":0,"relevance":0.6}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"SINNLICHE GEWISSHEIT","error":"","story":"ERZÄHLER","tech":""},"show":{"chars":["Hier sind","niemand"],"exits":["Hier sehe ich einen Weg","nichts"]}}
+Config: {"attributes":["smoker","drinker"],"commands":[{"id":"show","regex":"zeige (.*)","take":1},{"id":"look","regex":"schaue (.*)","take":1},{"id":"search","regex":"(durchsuche|untersuche) (.*)","take":2},{"id":"go","regex":"gehe (.*)","take":1},{"id":"talk","regex":"spreche (.*) an","take":1},{"id":"pick","regex":"hebe (.*) auf","take":1},{"id":"consume","regex":"(trinke|rauche|esse) (.*)","take":2},{"id":"equipe","regex":"rüste (.*) aus","take":1},{"id":"dequipe","regex":"rüste (.*) ab","take":1},{"id":"read","regex":"lese (.*)","take":1},{"id":"examine","regex":"(betrachte|beobachte) (.*)","take":2},{"id":"next","regex":"weiter","take":1},{"id":"previous","regex":"zurück","take":1},{"id":"mark","regex":"lesezeichen","take":1},{"id":"underline","regex":"unterstreiche (.*)","take":1}],"image":{"background":"background"},"mapAttributes":{},"minds":[{"color":"blue","id":"sinnliche gewissheit","level":10,"relevance":0.1},{"color":"blue","id":"wahrnehmung","level":0,"relevance":0.2},{"color":"green","id":"vernunft","level":0,"relevance":0.3},{"color":"red","id":"sittlichkeit","level":0,"relevance":0.4},{"color":"red","id":"moralität","level":0,"relevance":0.5},{"color":"red","id":"entfremdung","level":0,"relevance":0.6}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"SINNLICHE GEWISSHEIT","error":"","story":"ERZÄHLER","tech":""},"show":{"chars":{"post":"niemand","pre":"Hier sind"},"exits":{"post":"nichts","pre":"Hier sehe ich einen Weg"}}}
 Config loaded. 
 Media set. 
 initializing context stack.
@@ -725,6 +897,11 @@ Parsing Items
 Create room: "hospital.foyer"
 Room: "hospital.stairs"
 Parsing characters
+zombie: got dialogs: 
+- 1
+- 2
+- 3
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -737,6 +914,10 @@ Parsing details
 Create room: "trainstation.ausgang"
 Room: "trainstation.eingangshalle"
 Parsing characters
+passanten_gruppe: got dialogs: 
+- 1
+- 2
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -757,6 +938,10 @@ Parsing details
 Create room: "trainstation.fernzüge"
 Room: "trainstation.frauenToilette"
 Parsing characters
+besoffene_frau: got dialogs: 
+- 1
+- faint
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -799,19 +984,33 @@ Parsing details
 Create room: "trainstation.gleis4"
 Room: "trainstation.gleis5"
 Parsing characters
+passanten_gruppe: got dialogs: 
+- 1
+- 2
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.gleis5"
 Room: "trainstation.maennerToilette"
 Parsing characters
+ticketVerkäufer: got dialogs: 
+- 1
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.maennerToilette"
 Room: "trainstation.nebenhalle"
 Parsing characters
+passanten_gruppe: got dialogs: 
+- 1
+- 2
+Using dialog: 1
 Parsing Items
+konstantin_thron: got dialogs: 
+- 1
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -824,13 +1023,26 @@ Create room: "trainstation.toiletten"
 Created all rooms 
 Room: "zug.compartment-a"
 Parsing characters
+parsen: got dialogs: 
+- 1
+Using dialog: 1
+Parsing Items
+zombie: got dialogs: 
+- 1
+- 2
+- 3
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "zug.compartment-a"
 Room: "zug.compartment-b"
 Parsing characters
+pink_woman: got dialogs: 
+Using dialog: 1
 Parsing Items
+blue_woman: got dialogs: 
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -847,6 +1059,9 @@ Parsing details
 Create room: "zug.compartment-d"
 Room: "zug.trainCorridor"
 Parsing characters
+pissing_man: got dialogs: 
+- 1
+Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -854,7 +1069,7 @@ Create room: "zug.trainCorridor"
 Created all rooms 
 worldFactory: done.
 Loading config. 
-Config: {"attributes":["smoker","drinker"],"commands":[{"id":"show","regex":"zeige (.*)","take":1},{"id":"look","regex":"schaue (.*)","take":1},{"id":"search","regex":"(durchsuche|untersuche) (.*)","take":2},{"id":"go","regex":"gehe (.*)","take":1},{"id":"talk","regex":"spreche (.*) an","take":1},{"id":"pick","regex":"hebe (.*) auf","take":1},{"id":"consume","regex":"(trinke|rauche|esse) (.*)","take":2},{"id":"equipe","regex":"rüste (.*) aus","take":1},{"id":"dequipe","regex":"rüste (.*) ab","take":1},{"id":"read","regex":"lese (.*)","take":1},{"id":"examine","regex":"(betrachte|beobachte) (.*)","take":2},{"id":"next","regex":"weiter","take":1},{"id":"previous","regex":"zurück","take":1},{"id":"mark","regex":"lesezeichen","take":1},{"id":"underline","regex":"unterstreiche (.*)","take":1}],"image":{"background":"background"},"mapAttributes":{},"minds":[{"color":"blue","id":"sinnliche gewissheit","level":10,"relevance":0.1},{"color":"blue","id":"wahrnehmung","level":0,"relevance":0.2},{"color":"green","id":"vernunft","level":0,"relevance":0.3},{"color":"red","id":"sittlichkeit","level":0,"relevance":0.4},{"color":"red","id":"moralität","level":0,"relevance":0.5},{"color":"red","id":"entfremdung","level":0,"relevance":0.6}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"SINNLICHE GEWISSHEIT","error":"","story":"ERZÄHLER","tech":""},"show":{"chars":["Hier sind","niemand"],"exits":["Hier sehe ich einen Weg","nichts"]}}
+Config: {"attributes":["smoker","drinker"],"commands":[{"id":"show","regex":"zeige (.*)","take":1},{"id":"look","regex":"schaue (.*)","take":1},{"id":"search","regex":"(durchsuche|untersuche) (.*)","take":2},{"id":"go","regex":"gehe (.*)","take":1},{"id":"talk","regex":"spreche (.*) an","take":1},{"id":"pick","regex":"hebe (.*) auf","take":1},{"id":"consume","regex":"(trinke|rauche|esse) (.*)","take":2},{"id":"equipe","regex":"rüste (.*) aus","take":1},{"id":"dequipe","regex":"rüste (.*) ab","take":1},{"id":"read","regex":"lese (.*)","take":1},{"id":"examine","regex":"(betrachte|beobachte) (.*)","take":2},{"id":"next","regex":"weiter","take":1},{"id":"previous","regex":"zurück","take":1},{"id":"mark","regex":"lesezeichen","take":1},{"id":"underline","regex":"unterstreiche (.*)","take":1}],"image":{"background":"background"},"mapAttributes":{},"minds":[{"color":"blue","id":"sinnliche gewissheit","level":10,"relevance":0.1},{"color":"blue","id":"wahrnehmung","level":0,"relevance":0.2},{"color":"green","id":"vernunft","level":0,"relevance":0.3},{"color":"red","id":"sittlichkeit","level":0,"relevance":0.4},{"color":"red","id":"moralität","level":0,"relevance":0.5},{"color":"red","id":"entfremdung","level":0,"relevance":0.6}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"SINNLICHE GEWISSHEIT","error":"","story":"ERZÄHLER","tech":""},"show":{"chars":{"post":"niemand","pre":"Hier sind"},"exits":{"post":"nichts","pre":"Hier sehe ich einen Weg"}}}
 Config loaded. 
 Media set. 
 initializing context stack.
@@ -864,23 +1079,106 @@ MUSIC: GOT MUSIC: vibes
 vibes
 IMAGE: background
 GOT MUSIC: vibes
-[2021-05-31 01:37:14] [connect] WebSocket Connection [::ffff:127.0.0.1]:48492 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0" / 101
-Starting....
 Audio could not be found: ../../data/users/fux/files/world1/sounds/vibes.mp3
-GOT MUSIC: vibes
-[2021-05-31 01:42:59] [control] Control frame received with opcode 8
-[2021-05-31 01:42:59] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
-[2021-05-31 01:42:59] [frame_header] Header Bytes: 
+[2021-11-12 22:54:21] [connect] WebSocket Connection [::ffff:127.0.0.1]:38816 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0" / 101
+Starting....
+Choosing login/ registerSet sign_in_up_ to l
+[2021-11-12 22:54:22] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
+[2021-11-12 22:54:22] [frame_header] Header Bytes: 
+[0] (2) 81 06 
+
+On to getting credentials
+[2021-11-12 22:54:25] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 19 payload bytes
+[2021-11-12 22:54:25] [frame_header] Header Bytes: 
+[0] (2) 81 08 
+[1] (2) 81 0B 
+
+On to getting credentials
+checkLogin
+[1;31mEvents: show room, from: startGame[0m
+Updated music to: vibes
+Updated image to: background
+[1;31mshow, room[0m
+[1;34mfirst[0m throwing: show|room
+[1;31mEvents: addQuest leave, from: post-events[0m
+[1;31maddQuest, leave[0m
+[1;34mfirst[0m throwing: addQuest|leave
+[1;34mzug_nach_moskau[0m throwing: addQuest|leave
+[1;34mtutorial[0m throwing: addQuest|leave
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(addQuest)[0m
+[1;34mleave[0m throwing: addQuest|leave
+[1;34mkuligundes_apfel[0m throwing: addQuest|leave
+[1;34mkomische_gruppe[0m throwing: addQuest|leave
+[1;34mgeld_fuer_ticket[0m throwing: addQuest|leave
+[1;34mbesoffene_frau[0m throwing: addQuest|leave
+[1;34mworld[0m throwing: addQuest|leave
+[1;32m ... [1;34mworld: [1;32mevent triggered: h_addQuest(addQuest)[0m
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|room
+[1;34mtutorial[0m throwing: show|room
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|room
+[1;34mkuligundes_apfel[0m throwing: show|room
+[1;34mkomische_gruppe[0m throwing: show|room
+[1;34mgeld_fuer_ticket[0m throwing: show|room
+[1;34mbesoffene_frau[0m throwing: show|room
+[1;34mworld[0m throwing: show|room
+[1;34mroom[0m throwing: show|room
+[1;34mstandard[0m throwing: show|room
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Got output: vibes background <div class='spoken'>SINNLICHE GEWISSHEIT - 	Du sitzt in einem leeren Abteil. Nur ein einzelner Begleiter sitzt dir schräg gegenüber: Parsen</div> <div class='spoken2'>  </div>Neue Quest: <b>Verlasse deinen Raum</b>: <i>Verlasse deinen Raum und finde nach draußen (oder nach innen)</i>
+
+
+[2021-11-12 22:54:26] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 346 payload bytes
+[2021-11-12 22:54:26] [frame_header] Header Bytes: 
+[0] (2) 81 0A 
+[1] (2) 81 15 
+[2] (4) 81 7E 01 3B 
+
+Befor play: input: spreche zombie an calling with id: sophia
+[1;31mEvents: spreche zombie an, from: CGame::play[0m
+[1;31mtalk, zombie[0m
+[1;34mfirst[0m throwing: talk|zombie
+[1;34mzug_nach_moskau[0m throwing: talk|zombie
+[1;34mtutorial[0m throwing: talk|zombie
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(talk)[0m
+[1;34mleave[0m throwing: talk|zombie
+[1;34mkuligundes_apfel[0m throwing: talk|zombie
+[1;34mkomische_gruppe[0m throwing: talk|zombie
+[1;32m ... [1;34mkomische_gruppe: [1;32mevent triggered: reden(talk)[0m
+[1;34mgeld_fuer_ticket[0m throwing: talk|zombie
+[1;34mbesoffene_frau[0m throwing: talk|zombie
+[1;34mworld[0m throwing: talk|zombie
+[1;34mroom[0m throwing: talk|zombie
+[1;34mstandard[0m throwing: talk|zombie
+About to set attribute that does not exist: state
+About to set attribute that does not exist: mapOptions
+[1;31mEvents: endDialog, from: CPlayer::startDialog[0m
+[1;31mendDialog, endDialog[0m
+[1;34mfirst[0m throwing: endDialog|endDialog
+[1;34mzug_nach_moskau[0m throwing: endDialog|endDialog
+[1;34mtutorial[0m throwing: endDialog|endDialog
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(endDialog)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(endDialog)[0m
+[1;34mleave[0m throwing: endDialog|endDialog
+[1;34mkuligundes_apfel[0m throwing: endDialog|endDialog
+[1;34mkomische_gruppe[0m throwing: endDialog|endDialog
+[1;34mgeld_fuer_ticket[0m throwing: endDialog|endDialog
+[1;34mbesoffene_frau[0m throwing: endDialog|endDialog
+[1;34mworld[0m throwing: endDialog|endDialog
+[1;32m ... [1;34mworld: [1;32mevent triggered: h_endDialog(endDialog)[0m
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_startDialog(talk)[0m
+Send the output to client: <div class='spoken'>DRAMA - 	Arrrrrrhh maaaaaooooaa!</div>Dialog ended.
+
+
+[2021-11-12 22:54:30] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 74 payload bytes
+[2021-11-12 22:54:30] [frame_header] Header Bytes: 
+[0] (2) 81 4A 
+
+[2021-11-12 22:54:32] [control] Control frame received with opcode 8
+[2021-11-12 22:54:32] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2021-11-12 22:54:32] [frame_header] Header Bytes: 
 [0] (2) 88 02 
 
-[2021-05-31 01:42:59] [disconnect] Disconnect close local:[1001] remote:[1001]
-GOT MUSIC: vibes
-[2021-05-31 01:42:59] [connect] WebSocket Connection [::ffff:127.0.0.1]:48552 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:88.0) Gecko/20100101 Firefox/88.0" / 101
-Starting....
-Audio could not be found: ../../data/users/fux/files/world1/sounds/vibes.mp3
-[2021-05-31 02:02:58] [control] Control frame received with opcode 8
-[2021-05-31 02:02:58] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
-[2021-05-31 02:02:58] [frame_header] Header Bytes: 
-[0] (2) 88 02 
-
-[2021-05-31 02:02:58] [disconnect] Disconnect close local:[1001] remote:[1001]
+[2021-11-12 22:54:32] [disconnect] Disconnect close local:[1001] remote:[1001]

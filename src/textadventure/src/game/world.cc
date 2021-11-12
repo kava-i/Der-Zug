@@ -1,4 +1,5 @@
 #include "world.h"
+#include <cstddef>
 #include <exception>
 #include <iostream>
 #include <stdexcept>
@@ -448,23 +449,24 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room,
 
     // ** Create dialog ** //
     
-    // Load all dialogs 
+    // Load all dialogs of either character, of if defaultDialog is specified of
+    // this defaultDialog-type
     std::map<std::string, CDialog*> dialogs;
+    std::string dialog_name = jBasic.value("defaultDialog", character.first);
+    size_t counter = 0;
     for (auto it : m_dialogs) {
-      if (it.first.find(character.first) != std::string::npos)
-        dialogs[it.first.substr(character.first.length()+1)] = it.second;
+      if (it.first.find(dialog_name) != std::string::npos) {
+        dialogs[it.first.substr(dialog_name.length()+1)] = it.second;
+        counter++;
+      }
     }
-
-    // Select main dialog
-    CDialog* newDialog = new CDialog;
-    if (dialogs.count("1") > 0)                  //Load standard dialog [id]_1
-      newDialog = dialogs["1"];
-    else if (jBasic.count("dialog") > 0)         //Load special dialog 
-      newDialog = getDialog(jBasic["dialog"]); 
-    else if (jBasic.count("defaultDialog") > 0)  //Load a random default dialogue
-      newDialog = getRandomDialog(jBasic["defaultDialog"]);
-    else
-      newDialog = getDialog("defaultDialog"); //Load the standard default-dialogue
+    // Pick either a random (default-dialog), or the first (character-dialog).
+    std::string dialog_num = (jBasic.contains("defaultDialog")) ? std::to_string(rand() % counter) : "1"; 
+    std::cout << character.first << ": got dialogs: " << std::endl;
+    for (const auto& it : dialogs)
+      std::cout << "- " << it.first << std::endl;
+    std::cout << "Using dialog: " << dialog_num << std::endl;
+    CDialog* newDialog = (dialogs.count(dialog_num) > 0) ? dialogs[dialog_num] : getDialog("defaultDialog");
 
     // Create items and attacks
     map<std::string, CItem*> items = parseRoomItems(jBasic, p);

@@ -136,6 +136,9 @@ function CreateMap(elem) {
         json.push(GetAsType(value_fields[j]));
       map[GetAsType(GetValueFields(elems[i])[0])] = json;
     }
+    else if (elems[i].getAttribute("custom") == "key_value") {
+      map[GetValueFields(elems[i])[0].getAttribute("id")] = GetAsType(GetValueFields(elems[i])[0]);
+    }
     else
       console.log("Unkown attribute in 'CreateMap': ", elems[i].getAttribute("custom"));
   }

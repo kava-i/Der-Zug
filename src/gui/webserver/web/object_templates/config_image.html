@@ -1,14 +1,22 @@
 {% include "temp_header" %}
 {{ log("rendered header") }}
 
-    <li>
-        <label>background</label>
-        <input id="background" value={{ default(content.background, "") }}>
-    </li>
-    <li>
-        <label>Fight</label>
-        <input id="fight" value={{ default(content.fight, "") }}>
-    </li>
+  <li custom="map">
+     <label title="Add default game background-images for certain contexts">
+      Images:
+     </label>
+
+    <ul id="images">
+      <li custom="key_value">
+          <label>background</label>
+          <input id="background" value={{ default(content.background, "") }}>
+      </li>
+      <li custom="key_value">
+          <label>Fight</label>
+          <input id="fight" value={{ default(content.fight, "") }}>
+      </li>
+   </ul>
+ </li>
 
    {{ log("rendered image-config") }}
 

@@ -122,16 +122,16 @@
   <li>
     <label title="only needed when no description is given. Loads a random
       description from selected default descriptions" style="margin-right:3em;"
-      >Default Descriptions:</label>
+      >Default Description:</label>
     <input id="defaultDescription" placeholder="default description" 
       value="{{ default(defaultDescription, "") }}"></li>
   <li>
     <label title="only needed when no dialog is created. Loads a random
       dialog from selected default dialogs" style="margin-right:3em;"
-      >Default Dialogs:</label>
-    <input id="defaultDialogs" placeholder="default dialogs" 
-      value="{{ default(defaultDialogs, "") }}"></li>
+      >Default Dialog:</label>
+    <input id="defaultDialog" placeholder="default dialog" 
+      value="{{ default(defaultDialog, "") }}"></li>
 
-  {{log("rendered defaultDialogs + descriptions") }}  
+  {{log("rendered defaultDialog + descriptions") }}  
 
 {% include "temp_footer" %}

@@ -1156,12 +1156,11 @@ void Context::h_buy(std::string& sIdentifier, CPlayer* p) {
   print(p);
 }
 
-void Context::h_exit(std::string&, CPlayer* p)
-{
-    CPerson* partner = p->getWorld()->getCharacter(getAttribute<std::string>("partner"));
-    p->getContexts().erase("trade");
-    p->getContexts().erase("dialog");
-    p->startDialog(partner->id());
+void Context::h_exit(std::string&, CPlayer* p) {
+  CPerson* partner = p->getWorld()->getCharacter(getAttribute<std::string>("partner"));
+  p->getContexts().erase("trade");
+  p->getContexts().erase("dialog");
+  p->startDialog(partner->id());
 }
 
 // ***** ***** CHAT CONTEXT ***** ***** //

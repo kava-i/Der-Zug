@@ -9,33 +9,33 @@
 * param[in] items list of items 
 * param[in] attacks list of attacks
 */
-CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttacks, CText* text, CPlayer* p, std::map<std::string, CDialog*> dialogs, map_type items) : CObject(jAttributes, p)
-{
-    //Set stats.
-    m_stats["highness"]	= 0;
-    m_stats["hp"]	    = jAttributes.value("hp", 40);
-    m_stats["max_hp"]   = m_stats["hp"];
-    m_stats["gold"]	    = jAttributes.value("gold", 5);
-    m_stats["strength"] = jAttributes.value("strength", 8);
-    m_stats["skill"]    = jAttributes.value("skill", 8);
-    m_stats["ep"]	    = jAttributes.value("ep", 0);
+CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttacks, CText* text, 
+    CPlayer* p, std::map<std::string, CDialog*> dialogs, map_type items) : CObject(jAttributes, p) {
+  //Set stats.
+  m_stats["highness"]	= 0;
+  m_stats["hp"]	    = jAttributes.value("hp", 40);
+  m_stats["max_hp"]   = m_stats["hp"];
+  m_stats["gold"]	    = jAttributes.value("gold", 5);
+  m_stats["strength"] = jAttributes.value("strength", 8);
+  m_stats["skill"]    = jAttributes.value("skill", 8);
+  m_stats["ep"]	    = jAttributes.value("ep", 0);
 
-    m_faint = (bool)jAttributes.value("faint", 0);
-    
-    m_roomDescription = new CText(jAttributes.value("roomDescription", nlohmann::json::parse("{}")), p);
-    m_deadDescription = jAttributes.value("deadDescription", nlohmann::json::parse("{}"));
+  m_faint = (bool)jAttributes.value("faint", 0);
+  
+  m_roomDescription = new CText(jAttributes.value("roomDescription", nlohmann::json::parse("{}")), p);
+  m_deadDescription = jAttributes.value("deadDescription", nlohmann::json::parse("{}"));
 
-    if(text!=nullptr)
-        text_ = text;
+  if (text!=nullptr)
+    text_ = text;
 
-    //Set dialogue and attacks
-    m_attacks = newAttacks;
-    m_dialog = dialogue;
-    m_dialogs = dialogs;
+  //Set dialogue and attacks
+  m_attacks = newAttacks;
+  m_dialog = dialogue;
+  m_dialogs = dialogs;
 
-    //Add items to inventory one by one
-    for(auto &item : items)
-        m_inventory.addItem(item.second);
+  //Add items to inventory one by one
+  for (auto &item : items)
+    m_inventory.addItem(item.second);
 }
 
 // *** GETTER *** //

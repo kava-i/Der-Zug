@@ -106,6 +106,7 @@ else
 
 let clicked = false;
 let aud = new Audio('sounds/{{ default(music, "piano") }}.mp3');
+
 aud.addEventListener('ended', function() {
     this.currentTime = 0;
     this.play();
@@ -117,12 +118,14 @@ function playMusik() {
     aud.play();
     document.getElementById("symbol").className = "fa fa-volume-up";
     clicked = true;
+    document.getElementById("input").focus();
   }
 
   else {
     aud.pause();
     document.getElementById("symbol").className = "fa fa-volume-off";
     clicked = false;
+    document.getElementById("input").focus();
   }
 }
 
@@ -185,19 +188,45 @@ function isspanret(isspan,colname) {
     return "<span class='"+colname+"'>";
 }
 
-function parse_file(strin,x) {
-  name = '';
-  for (let i = x+1; i < strin.length; i++) {
-    if (strin[i] == '\x07') {
-	    aud.pause();
-	    aud = new Audio("sounds/" + name + ".mp3");
+async function changeAudio(new_audio) {
+  /*
+  aud.pause();
+  aud = new Audio(new_audio);
+  aud.addEventListener('ended', function() {
+    this.currentTime = 0;
+    this.play();
+  }, false);
+  if (clicked) 
+    aud.play();
+  */
+
+  var fadePoint = aud.currentTime+1;
+
+  var fade = setInterval(function() {
+    if (aud.currentTime >= fadePoint && aud.volume > 0.0) {
+      aud.volume -= 0.1;
+      console.log("Volume: ", aud.volume);
+    }
+    if (aud.volume <= 0.1) {
+      aud.pause();
+      aud = new Audio(new_audio);
       aud.addEventListener('ended', function() {
         this.currentTime = 0;
         this.play();
       }, false);
-
-	    if (clicked) 
+      aud.volume = 1;
+      if (clicked) 
         aud.play();
+      clearInterval(fade);
+    }
+  }, 100);
+}
+
+function parse_file(strin,x) {
+  name = '';
+  for (let i = x+1; i < strin.length; i++) {
+    if (strin[i] == '\x07') {
+      changeAudio("sounds/" + name + ".mp3");
 	    return i+1;
 	  }
     if (strin[i] == '\x0B') {
@@ -211,6 +240,8 @@ function parse_file(strin,x) {
 
 function printString(theString)
 {
+    if (theString.indexOf("Logged in as") != -1)
+      document.getElementById("btn_play_music").click();
     let out = "";
     let isspanopen = false;
     for(let i = 0; i < theString.length; i++)
@@ -301,7 +332,7 @@ function closeFullscreen(elem) {
 </head>
 
 <body onload="bdyonload();return true;">
-        <button onclick="playMusik();return true;"><i id="symbol" class= "fa fa-volume-off" style="font-size:18px"></i></button>
+        <button id="btn_play_music" onclick="playMusik();return true;"><i id="symbol" class= "fa fa-volume-off" style="font-size:18px"></i></button>
         <p id="output" class="output"></p>
         <div class="input">
                 <hr>
