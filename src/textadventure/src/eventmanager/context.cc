@@ -998,6 +998,7 @@ void Context::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
 void Context::h_thieve(std::string& sIdentifier, CPlayer* p) {
   if (m_jAttributes["infos"].count("h_thieve") > 0) {
     std::string str = m_jAttributes["infos"]["h_thieve"];
+    std::cout << "h_thieve str: " << str << std::endl;
     p->startDialog(str, p->getWorld()->getCharacter(str)->getDialog("thieve"));
   }
 
@@ -1007,7 +1008,6 @@ void Context::h_thieve(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_attack(std::string& sIdentifier, CPlayer* p) {
-
   if (m_jAttributes["infos"].count("h_attack") == 0)
     return; 
 

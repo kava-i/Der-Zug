@@ -104,13 +104,21 @@
     <ul id="handlers">
       {% for handler in default(handlers, [{}]) %}
         <li custom="object">
-          <input id="id" placeholder="function" value="{{default(handler.id, "")}}">
-          <input id="string" placeholder="cmd (string)" value="{{default(handler.string, "")}}">
-          <input id="regex" placeholder="cmd (regex)" value="{{default(handler.regex, "")}}">
-          <input id="priority" custom="int" placeholder="priority" style="width: 4em;" 
-              value="{{default(handler.priority, 0)}}">
+          <input class="long_inp" id="id" placeholder="function" 
+                             value="{{default(handler.id,"")}}">
           <span class="mod_elem" onclick="del_elem('handlers',{{loop.index}})">-</span>
           <span class="mod_elem" onclick="add_elem('handlers',{{loop.index}})">+</span>
+          <br>
+          <input class="long_inp" id="infos" placeholder="pass arguments (json)"
+                                  custom="json" value={{default(handler.infos,{})}}>
+          <br>
+          <input id="string" placeholder="cmd (string)"
+                             value="{{default(handler.string, "")}}">
+          <input id="regex" placeholder="cmd (regex)" 
+                             value="{{default(handler.regex, "")}}">
+          <input custom="int" id="priority" placeholder="priority" class="short" 
+              value="{{default(handler.priority, 0)}}">
+          <br>
         </li>
       {% endfor %}
     </ul>

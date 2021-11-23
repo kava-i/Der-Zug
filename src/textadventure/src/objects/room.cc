@@ -69,7 +69,7 @@ std::vector<nlohmann::json> CRoom::getHandler() {
   for(auto it : m_characters) {
     std::vector<nlohmann::json> c_handler = it.second->handler();
     for(auto &jt : c_handler) {
-      if(jt.count("infos") > 0)
+      if (!jt.contains("infos") || (jt.contains("infos") && jt["infos"].size() ==0))
         jt["infos"] = it.first;
     }
     handler.insert(handler.end(), c_handler.begin(), c_handler.end());
