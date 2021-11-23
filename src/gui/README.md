@@ -35,6 +35,15 @@ For more details, see [Description](#description)
 
 Description showm when triggering `examine [name]` when character is dead.
 
+#### Default Description
+To use default descriptions, create a category in `texts` name f.e. `default_people` 
+(you can use any name).  In this category, you may create any number of texts/ descriptions 
+and you may use any name for these texts.
+
+Then you can set `Default Description` to `default_people`. When loading the
+word this character will be asign a random text/ description from the category
+`default_people` in `texts`.
+
 #### Items
 List of items. First element is the id of an item, used as "template", the
 second is a json, in whcih every attribute of [item](#item) can be overwritten.

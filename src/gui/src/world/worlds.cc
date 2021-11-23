@@ -14,9 +14,8 @@
 
 namespace fs = std::filesystem;
 
-const std::vector<std::string> Worlds::categories_ = {"attacks", "config", 
-    "defaultDialogs", "dialogs", "players", "rooms", "characters", 
-    "defaultDescriptions", "details", "items", "quests", "texts", "images"};
+const std::vector<std::string> Worlds::categories_ = {"attacks", "config", "dialogs", 
+  "players", "rooms", "characters", "details", "items", "quests", "texts", "images"};
 
 Worlds::Worlds(std::string base_path, int start_port) {
   base_path_ = base_path;
