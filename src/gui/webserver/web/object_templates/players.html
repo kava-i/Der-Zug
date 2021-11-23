@@ -25,13 +25,12 @@
   </li>
 
   <!-- Attacks (default value for non-set-values) -->
-  <li custom="map">
+  <li custom="list">
     <label>Attacks:</label>
     <ul id="attacks">
-      {% for key, value in default(attacks, {"":""}) %}
-        <li custom="pair">
+      {% for key in default(attacks, [""]) %}
+        <li>
           <input placeholder="id" value="{{default(key, "")}}">
-          <input placeholder="name" value="{{default(value, "")}}">
           <span class="mod_elem" onclick="del_elem('attacks',{{loop.index}})">-</span>
           <span class="mod_elem" onclick="add_elem('attacks',{{loop.index}})">+</span>
         </li>

@@ -74,7 +74,8 @@ void CGame::playerFactory(bool update) {
 
 void CGame::playerFactory(nlohmann::json j_player) {
   //Create attacks
-  map<string, CAttack*> attacks = m_world->parsePersonAttacks(j_player);
+  map<string, CAttack*> attacks = m_world->parsePersonAttacks(j_player.value("attacks", 
+        std::vector<std::string>()));
   if (m_world->getRooms().count(j_player["room"]) > 0) {
     m_players[j_player["id"]] = new CPlayer(j_player, 
       m_world->getRooms()[j_player["room"]], attacks, m_gramma, 

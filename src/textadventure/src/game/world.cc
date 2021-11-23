@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <string>
 #include <objects/player.h>
+#include <vector>
 
 #define cRED "\033[1;31m"
 #define cCLEAR "\033[0m"
@@ -455,15 +456,11 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room,
     }
     // Pick either a random (default-dialog), or the first (character-dialog).
     std::string dialog_num = (jBasic.contains("defaultDialog")) ? std::to_string(rand() % counter) : "1"; 
-    std::cout << character.first << ": got dialogs: " << std::endl;
-    for (const auto& it : dialogs)
-      std::cout << "- " << it.first << std::endl;
-    std::cout << "Using dialog: " << dialog_num << std::endl;
     CDialog* newDialog = (dialogs.count(dialog_num) > 0) ? dialogs[dialog_num] : getDialog("defaultDialog");
 
     // Create items and attacks
     map<std::string, CItem*> items = parseRoomItems(jBasic, p);
-    map<string, CAttack*> attacks = parsePersonAttacks(jBasic);
+    map<string, CAttack*> attacks = parsePersonAttacks(jBasic.value("attacks", std::vector<std::string>()));
     
     // Create text
     CText* text = nullptr;
@@ -476,9 +473,9 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room,
 
     //Add [amount] characters with "id = id + num" if amount is set.
     for(size_t i=2; i<=character.second.value("amount", 0u); i++) {
-        jBasic["id"]  =  func::incIDNumber(func::convertToObjectmap(mapCharacters, lambda), sID);
-        m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, text, p, dialogs, items);
-        mapCharacters[jBasic["id"]] = m_characters[jBasic["id"]];
+      jBasic["id"]  =  func::incIDNumber(func::convertToObjectmap(mapCharacters, lambda), sID);
+      m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, text, p, dialogs, items);
+      mapCharacters[jBasic["id"]] = m_characters[jBasic["id"]];
     }
   }
   return mapCharacters;
@@ -503,15 +500,10 @@ void CWorld::attackFactory(std::string sPath) {
     );
 }
 
-map<string, CAttack*> CWorld::parsePersonAttacks(nlohmann::json j_person) {
+map<string, CAttack*> CWorld::parsePersonAttacks(std::vector<std::string> attack_ids) {
   map<string, CAttack*> mapAttacks;
-  if (j_person.count("attacks") == 0)
-    return mapAttacks;
-
-  objectmap person_attacks = j_person["attacks"].get<objectmap>();
-  for (auto attack : person_attacks) 
-    mapAttacks[attack.first] = m_attacks[attack.first];
-
+  for (const auto& attack_id : attack_ids) 
+    mapAttacks[attack_id] = m_attacks[attack_id];
   return mapAttacks;
 }
 

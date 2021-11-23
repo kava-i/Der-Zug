@@ -4,10 +4,10 @@
     "id": "parsen",
     "hp": 50,
     "strength": 14,
-    "attacks": {
-      "kick": "Kick",
-      "punsch": "Punsch"
-    }
+    "attacks": [ 
+      "kick",
+      "punsch"
+    ] 
   },
   "pink_woman": {
     "name": "Old woman in pink",

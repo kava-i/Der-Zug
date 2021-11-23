@@ -121,7 +121,7 @@ public:
     //Attacks
     void attackFactory();
     void attackFactory(std::string sPath);
-    map<string, CAttack*> parsePersonAttacks(nlohmann::json j_person);
+    map<string, CAttack*> parsePersonAttacks(std::vector<std::string> attack_ids);
     
     //Quests
     void questFactory();
