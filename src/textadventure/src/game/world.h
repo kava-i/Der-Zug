@@ -42,10 +42,9 @@ private:
     map<string, nlohmann::json> m_items;
     map<string, nlohmann::json> m_details;
     map<string, nlohmann::json> m_jCharacters;
-    map<string, nlohmann::json> m_jTexts;
+    map<string, std::pair<std::string, nlohmann::json>> m_jTexts;
 
     map<string, vector<CText*>> m_defaultDescriptions;
-    map<string, vector<CDialog*>> m_defaultDialogs;
 
     nlohmann::json m_config;
     std::map<std::string, std::string> media_;
@@ -79,7 +78,7 @@ public:
     CPerson* getCharacter(std::string sID);
 
     ///Return dictionary if all texts.
-    map<string, nlohmann::json>& getTexts();
+    map<string, nlohmann::json> getTexts(std::string area="");
 
     ///Return dictionary of all attacks in the game.
     map<string, CAttack*>& getAttacks();
@@ -99,17 +98,8 @@ public:
     ///Return a dialog from world
     CDialog* getDialog(std::string sID);
 
-    ///Return dictionary of all defaultDescriptions in the game.
-    map<string, std::vector<CText*>>& getRandomDescriptions();
-    
     ///Return a description from world
-    CText* getRandomDescription(std::string sID);
-
-    ///Return dictionary of all default dialogs in the game.
-    map<string, std::vector<CDialog*>>& getRandomDialogs();
-
-    ///Return a random dialog from default dialogs
-    CDialog* getRandomDialog(std::string sID);
+    CText* getRandomDescription(std::string sID, CPlayer* p);
 
     /**
     * Return a item. Look for given item in dictionary of items (jsons) and create item from json.
@@ -150,13 +140,6 @@ public:
     //Dialogs
     void dialogFactory(CPlayer* p);
     CDialog* dialogFactory(nlohmann::json j_states, std::string sFileName, CPlayer* p);
-
-    //Default descriptions
-    void defaultDescriptionFactory(CPlayer* p);
-    void defaultDescriptionFactory(std::string sFileName, CPlayer* p);
-
-    //Default dialogs
-    void defaultDialogFactory(CPlayer* p);
 
     //Details
     void detailFactory();

@@ -1,1 +1,1 @@
-{"zombie":{"attacks":{"bite":"Bite"},"defaultDescription":"zombies","defaultDialog":"default_zombies","faint":1,"hp":10,"id":"zombie","name":"Zombie","strength":12},"zombieboy":{"ep":5,"hp":20,"id":"zombieboy","name":"A boy"}}
+{"zombie":{"attacks":{"bite":"Bite"},"defaultDescription":"random_zombies","defaultDialog":"default_zombies","faint":1,"hp":10,"id":"zombie","name":"Zombie","strength":12},"zombieboy":{"ep":5,"hp":20,"id":"zombieboy","name":"A boy"}}

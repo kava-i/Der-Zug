@@ -1007,15 +1007,18 @@ void Context::h_thieve(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_attack(std::string& sIdentifier, CPlayer* p) {
-  std::cout << "h_attack: " << sIdentifier << std::endl;
 
   if (m_jAttributes["infos"].count("h_attack") == 0)
     return; 
 
-  std::string character = m_jAttributes["infos"]["h_attack"];
-  std::cout << "Infos: " << character << std::endl;
-  p->setFight(new CFight(p, p->getWorld()->getCharacter(character)));
-  m_curPermeable = false;
+  std::string character_id = m_jAttributes["infos"]["h_attack"];
+  std::cout << "Infos: " << character_id << std::endl;
+  auto character = p->getWorld()->getCharacter(character_id);
+  // Only start fight. if character is still alive.
+  if (character->getStat("hp") > 0) {
+    p->setFight(new CFight(p, character));
+    m_curPermeable = false;
+  }
 }
 
 
