@@ -38,7 +38,11 @@
           <label style="width:auto;">Pre permanent Events:</label>
           <ul id="pre_pEvents">
           {% for event in default(desc.pre_pEvents, [""]) %}
-            <li><input placeholder="event" value="{{event}}"></li>
+            <li>
+              <input placeholder="event" value="{{event}}">
+              <span class="mod_elem" onclick="del_elem('',{{loop.index}},this)">-</span>
+              <span class="mod_elem" onclick="add_elem('',{{loop.index}},this)">+</span>
+            </li>
           {% endfor %}
           </ul>
         </li>
@@ -46,7 +50,11 @@
           <label style="width:auto;">Pre one-time Events:</label>
           <ul id="pre_otEvents">
           {% for event in default(desc.pre_otEvents, [""]) %}
-            <li><input placeholder="event" value="{{event}}"></li>
+            <li>
+              <input placeholder="event" value="{{event}}">
+              <span class="mod_elem" onclick="del_elem('',{{loop.index}},this)">-</span>
+              <span class="mod_elem" onclick="add_elem('',{{loop.index}},this)">+</span>
+            </li>
           {% endfor %}
           </ul>
         </li>
@@ -54,7 +62,11 @@
           <label style="width:auto;">Post permanent Events:</label>
           <ul id="post_pEvents">
           {% for event in default(desc.post_pEvents, [""])%}
-            <li><input placeholder="event" value="{{event}}"></li>
+            <li>
+              <input placeholder="event" value="{{event}}">
+              <span class="mod_elem" onclick="del_elem('',{{loop.index}},this)">-</span>
+              <span class="mod_elem" onclick="add_elem('',{{loop.index}},this)">+</span>
+            </li>
           {% endfor %}
           </ul>
         </li>
@@ -62,7 +74,11 @@
           <label style="width:auto;">Post one-time Events:</label>
           <ul id="post_otEvents">
           {% for event in default(desc.post_otEvents, [""]) %}
-            <li><input placeholder="event" value="{{event}}"></li>
+            <li>
+              <input placeholder="event" value="{{event}}">
+              <span class="mod_elem" onclick="del_elem('',{{loop.index}},this)">-</span>
+              <span class="mod_elem" onclick="add_elem('',{{loop.index}},this)">+</span>
+            </li>
           {% endfor %}
           </ul>
         </li>

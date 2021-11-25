@@ -291,9 +291,12 @@ function WriteElem(direct=false, force=false) {
 // ***** ***** DELETE/ ADD/ EXPAND/ ELEMENTS ***** ***** //
 
 //Deletes a given element.
-function del_elem(element, index) {
+function del_elem(element, index, obj) {
   var ul = document.getElementById(element);
+  if (obj !== undefined)
+    ul = obj.parentElement.parentElement;
   var li_old = ul.children[index];
+
 
   //If element is only element in list, empty values, instead of deleteing.
   if (index == 0 && ul.children.length==1)
@@ -308,9 +311,11 @@ function del_elem(element, index) {
 }
 
 //Adds a new element to any sort of lists
-function add_elem(element, index) {
+function add_elem(element, index, obj) {
   //Get old element and copy to new element
   var ul = document.getElementById(element);
+  if (obj !== undefined)
+    ul = obj.parentElement.parentElement;
   var li_old = ul.children[ul.children.length-1];
   var li_new = li_old.cloneNode(true); 
 
