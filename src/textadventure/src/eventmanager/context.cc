@@ -147,6 +147,7 @@ void Context::initializeHanlders() {
   m_handlers["h_changeDialog"] = &Context::h_changeDialog;
   m_handlers["h_changeRoom"] = &Context::h_changeRoom;
   m_handlers["h_startDialogDirect"] = &Context::h_startDialogDirect;
+  m_handlers["h_startDialogDirectB"] = &Context::h_startDialogDirectB;
   m_handlers["h_changeSound"] = &Context::h_changeSound;
   m_handlers["h_changeImage"] = &Context::h_changeImage;
 
@@ -261,6 +262,7 @@ void Context::initializeTemplates() {
                         {"changeDialog", {"h_changeDialog"}},
                         {"changeRoom", {"h_changeRoom"}},
                         {"startDialogDirekt", {"h_startDialogDirekt"}},
+                        {"startDialogB", {"h_startDialogDirektB"}},
                         {"changeImage", {"h_changeImage"}},
                         {"changeSound", {"h_changeSound"}} }}
                     };
@@ -869,6 +871,15 @@ void Context::h_startDialogDirect(std::string &sIdentifier, CPlayer *p) {
     p->startDialog(character, p->getWorld()->getCharacter(character)->getDialog());
   }
 }
+
+void Context::h_startDialogDirectB(std::string &sIdentifier, CPlayer *p) {
+  std::cout << "h_startDialogDirektB: " << sIdentifier << std::endl;
+  // Check if given character exists. If he does, call dialog.
+  if (p->getWorld()->getCharacter(sIdentifier) != nullptr) {
+    p->startDialog(sIdentifier, p->getWorld()->getCharacter(sIdentifier)->getDialog());
+  }
+}
+
 
 void Context::h_changeSound(std::string &sIdentifier, CPlayer *p) {
   std::cout << "h_changeSound: " << sIdentifier << std::endl;

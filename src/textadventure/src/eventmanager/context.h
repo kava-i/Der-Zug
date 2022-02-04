@@ -148,6 +148,7 @@ public:
     void h_attack(std::string&, CPlayer*);
     void h_changeRoom(std::string&, CPlayer*);
     void h_startDialogDirect(std::string&, CPlayer*);
+    void h_startDialogDirectB(std::string&, CPlayer*);
     void h_changeSound(std::string&, CPlayer*);
     void h_changeImage(std::string&, CPlayer*);
 
