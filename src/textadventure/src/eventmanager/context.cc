@@ -262,7 +262,7 @@ void Context::initializeTemplates() {
                         {"changeDialog", {"h_changeDialog"}},
                         {"changeRoom", {"h_changeRoom"}},
                         {"startDialogDirekt", {"h_startDialogDirekt"}},
-                        {"startDialogB", {"h_startDialogDirektB"}},
+                        {"startDialogB", {"h_startDialogDirectB"}},
                         {"changeImage", {"h_changeImage"}},
                         {"changeSound", {"h_changeSound"}} }}
                     };
