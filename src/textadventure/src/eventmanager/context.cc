@@ -878,6 +878,7 @@ void Context::h_startDialogDirectB(std::string &sIdentifier, CPlayer *p) {
   if (p->getWorld()->getCharacter(sIdentifier) != nullptr) {
     p->startDialog(sIdentifier, p->getWorld()->getCharacter(sIdentifier)->getDialog());
   }
+  m_curPermeable = false;
 }
 
 
