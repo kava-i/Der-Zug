@@ -111,6 +111,8 @@
     <ul id="handlers">
       {% for handler in default(handlers, [{}]) %}
         <li custom="object">
+          <input class="long_inp" id="key" placeholder="identifier (key)" 
+                             value="{{default(handler.key,"")}}">
           <input class="long_inp" id="id" placeholder="function" 
                              value="{{default(handler.id,"")}}">
           <span class="mod_elem" onclick="del_elem('handlers',{{loop.index}})">-</span>
