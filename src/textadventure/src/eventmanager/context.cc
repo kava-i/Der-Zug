@@ -5,6 +5,7 @@
 #include "game/game.h"
 #include "tools/func.h"
 #include "tools/webcmd.h"
+#include <iostream>
 #include <string>
 #define cRED "\033[1;31m"
 #define cGreen "\033[1;32m"
@@ -151,6 +152,11 @@ void Context::initializeHanlders() {
   m_handlers["h_changeSound"] = &Context::h_changeSound;
   m_handlers["h_changeImage"] = &Context::h_changeImage;
 
+  m_handlers["h_addCharToRoom"] = &Context::h_addCharToRoom;
+  m_handlers["h_removeCharFromRoom"] = &Context::h_removeCharFromRoom;
+
+  m_handlers["h_removeHandlerFromRoom"] = &Context::h_removeHandlerFromRoom;
+
   // ***** STANDARD CONTEXT ***** //
   m_handlers["h_showExits"] = &Context::h_showExits;
   m_handlers["h_show"] = &Context::h_show;
@@ -264,7 +270,10 @@ void Context::initializeTemplates() {
                         {"startDialogDirekt", {"h_startDialogDirekt"}},
                         {"startDialogB", {"h_startDialogDirectB"}},
                         {"changeImage", {"h_changeImage"}},
-                        {"changeSound", {"h_changeSound"}} }}
+                        {"changeSound", {"h_changeSound"}},
+                        {"addCharToRoom", {"h_addCharToRoom"}},
+                        {"removeCharFromRoom", {"h_removeCharFromRoom"}},
+                        {"removeHandlerFromRoom", {"h_removeHandlerFromRoom"}} }}
                     };
 
     m_templates["standard"] = {
@@ -896,6 +905,52 @@ void Context::h_changeImage(std::string &sIdentifier, CPlayer *p) {
   p->set_image(sIdentifier);
   p->updateMedia();
   m_curPermeable = false;
+}
+
+void Context::h_addCharToRoom(std::string &sIdentifier, CPlayer *p) {
+  if (sIdentifier.find("|") == std::string::npos) {
+    std::cout << cRED << "h_addCharToRoom: Character or room missing. seperate with \"|\" " 
+      << " string given: " << sIdentifier << cCLEAR << std::endl;
+    return;
+  }
+  std::string char_id = func::split(sIdentifier, "|")[0];
+  std::string room_id = func::split(sIdentifier, "|")[1];
+  p->getWorld()->getRoom(room_id)->getCharacters()[char_id] = p->getWorld()->getCharacter(char_id);
+  m_curPermeable = false;
+}
+
+void Context::h_removeCharFromRoom(std::string &sIdentifier, CPlayer *p) {
+  try {
+    std::string char_id = sIdentifier;
+    std::string room_id = sIdentifier.substr(0, sIdentifier.rfind("."));
+    p->getWorld()->getRoom(room_id)->getCharacters().erase(char_id);
+    m_curPermeable = false;
+  }
+  catch (std::exception& e) {
+    std::cout << cRED << "h_removeCharFromRoom (" << sIdentifier << ") failed: "
+      << e.what() << cCLEAR << std::endl;
+  }
+}
+
+void Context::h_removeHandlerFromRoom(std::string &sIdentifier, CPlayer *p) {
+  if (sIdentifier.find("|") == std::string::npos) {
+    std::cout << cRED << "h_removeHandlerFromRoom: room or handler missing. seperate with \"|\" " 
+      << " string given: " << sIdentifier << cCLEAR << std::endl;
+    return;
+  }
+  try {
+  std::string room_id = func::split(sIdentifier, "|")[0];
+  std::string handler_id = func::split(sIdentifier, "|")[1];
+  if (p->getRoom()->id() == room_id)
+    p->getRoom()->RemoveHandler(handler_id);
+  p->getWorld()->getRoom(room_id)->RemoveHandler(handler_id);
+  p->updateRoomContext();
+  m_curPermeable = false; 
+  }
+  catch (std::exception& e) {
+    std::cout << cRED << "h_removeHandlerFromRoom(" << sIdentifier << ") failed: " 
+      << e.what() << cCLEAR << std::endl;
+  }
 }
 
 void Context::h_take(std::string& sIdentifier, CPlayer* p) {

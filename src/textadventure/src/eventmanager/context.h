@@ -151,6 +151,9 @@ public:
     void h_startDialogDirectB(std::string&, CPlayer*);
     void h_changeSound(std::string&, CPlayer*);
     void h_changeImage(std::string&, CPlayer*);
+    void h_addCharToRoom(std::string&, CPlayer*);
+    void h_removeCharFromRoom(std::string&, CPlayer*);
+    void h_removeHandlerFromRoom(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
     void h_ignore(std::string&, CPlayer*);

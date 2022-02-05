@@ -1,5 +1,7 @@
 #include "room.h" 
+#include "nlohmann/json_fwd.hpp"
 #include "person.h"
+#include <vector>
 
 #define cRED "\033[1;31m"
 #define cCLEAR "\033[0m"
@@ -65,7 +67,10 @@ std::map<string, CDetail*>& CRoom::getDetails() {
 
 std::vector<nlohmann::json> CRoom::getHandler() {
   std::vector<nlohmann::json> handler;
-  handler.insert(handler.begin(), handler_.begin(), handler_.end());
+  // Add room handler
+  std::vector<nlohmann::json> room_handler = this->handler();
+  handler.insert(handler.begin(), room_handler.begin(), room_handler.end());
+  // Add character handler
   for(auto it : m_characters) {
     std::vector<nlohmann::json> c_handler = it.second->handler();
     for(auto &jt : c_handler) {
