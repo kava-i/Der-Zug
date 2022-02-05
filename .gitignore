@@ -10,3 +10,4 @@ src/gui/compile_commands.json
 *EIG.txt
 *dictionary.txt
 *vgcore*
+src/data/users/*/logs/*
