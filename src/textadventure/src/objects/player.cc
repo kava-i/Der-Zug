@@ -174,14 +174,14 @@ std::map<std::string, CPlayer*>& CPlayer::getMapOFOnlinePlayers() {
 }
 
 std::map<std::string, std::string> CPlayer::GetCurrentStatus() {
-  //Setup basic elements
+  // Setup basic elements
   std::map<std::string, std::string> status = {{"room", (std::string)m_room
     ->id()}, {"inventory", (std::string)m_inventory.getItemList()}};
 
-  //Add extra substitutes
+  // Add extra substitutes
   status.insert(subsitutes_.begin(), subsitutes_.end());
 
-  //Get highest mind
+  // Get highest mind
   int max = 0;
   std::string max_mind = "";
   std::string max_minds = "";
@@ -197,19 +197,20 @@ std::map<std::string, std::string> CPlayer::GetCurrentStatus() {
   status["max_mind"] = max_mind;
   status["max_minds"] = max_minds;
 
-
-  //Add attributes
+  // Add attributes
   auto lambda1 = [](int x) { return std::to_string(x); };
   std::map<std::string, std::string> attributes = 
       func::convertToObjectmap(m_stats, lambda1);
   status.insert(attributes.begin(), attributes.end());
 
-  //Add minds
+  // Add minds
   auto lambda2 = [](SMind mind) { return std::to_string(mind.level); };
-  std::map<std::string, std::string> minds = 
-      func::convertToObjectmap(m_minds, lambda2);
+  std::map<std::string, std::string> minds = func::convertToObjectmap(m_minds, lambda2);
   status.insert(minds.begin(), minds.end());
 
+  auto lambda3 = [](bool visited) { return std::to_string(visited); };
+  std::map<std::string, std::string> visited_rooms = func::convertToObjectmap(m_vistited, lambda3);
+  status.insert(visited_rooms.begin(), visited_rooms.end());
   return status;
 }
 
@@ -533,8 +534,6 @@ void CPlayer::changeRoom(CRoom* new_room) {
   appendPrint(m_room->showDescription(m_world->getCharacters()));
   m_vistited[m_room->id()] = true;
   updateRoomContext();
-
-  std::cout << "done.\n";
 }
 
 /**
