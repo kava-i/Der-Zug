@@ -1,4 +1,13 @@
 Creating game.
+Created texts with area id: random_zombies
+Created texts with area id: lustiges
+Created texts with area id: trainstation
+Created texts with area id: random_people
+QuestFactory
+"leave"
+QuestFactory
+"finde_apfel"
+"bringe_apfel"
 QuestFactory
 "besiege_besoffene_frau"
 "geldauftreiben"
@@ -17,35 +26,36 @@ QuestFactory
 "ticketverkaeufer"
 "ticketkauf"
 "zum_gleis"
-QuestFactory
-"leave"
-QuestFactory
-"finde_apfel"
-"bringe_apfel"
-Room: "hospital.corridor"
+Room: "zug.compartment-a"
 Parsing characters
 Parsing Items
-Parsing details 
-Create room: "hospital.corridor"
-Room: "hospital.foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital.foyer.kleine_kiste"
-parseRandomItemsToDetail
-Parsing Items
-Create room: "hospital.foyer"
-Room: "hospital.stairs"
-Parsing characters
-zombie: got dialogs: 
-- 1
-- 2
-- 3
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital.stairs"
+Create room: "zug.compartment-a"
+Room: "zug.compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-b"
+Room: "zug.compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-c"
+Room: "zug.compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-d"
+Room: "zug.trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.trainCorridor"
 Created all rooms 
 Room: "trainstation.ausgang"
 Parsing characters
@@ -54,10 +64,7 @@ Parsing details
 Create room: "trainstation.ausgang"
 Room: "trainstation.eingangshalle"
 Parsing characters
-passanten_gruppe: got dialogs: 
-- 1
-- 2
-Using dialog: 1
+Parsing Items
 Parsing Items
 Parsing Items
 Parsing details 
@@ -78,10 +85,6 @@ Parsing details
 Create room: "trainstation.fernzüge"
 Room: "trainstation.frauenToilette"
 Parsing characters
-besoffene_frau: got dialogs: 
-- 1
-- faint
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -124,33 +127,19 @@ Parsing details
 Create room: "trainstation.gleis4"
 Room: "trainstation.gleis5"
 Parsing characters
-passanten_gruppe: got dialogs: 
-- 1
-- 2
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.gleis5"
 Room: "trainstation.maennerToilette"
 Parsing characters
-ticketVerkäufer: got dialogs: 
-- 1
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.maennerToilette"
 Room: "trainstation.nebenhalle"
 Parsing characters
-passanten_gruppe: got dialogs: 
-- 1
-- 2
-Using dialog: 1
 Parsing Items
-konstantin_thron: got dialogs: 
-- 1
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -161,51 +150,25 @@ Parsing Items
 Parsing details 
 Create room: "trainstation.toiletten"
 Created all rooms 
-Room: "zug.compartment-a"
-Parsing characters
-parsen: got dialogs: 
-- 1
-Using dialog: 1
-Parsing Items
-zombie: got dialogs: 
-- 1
-- 2
-- 3
-Using dialog: 1
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-a"
-Room: "zug.compartment-b"
-Parsing characters
-pink_woman: got dialogs: 
-Using dialog: 1
-Parsing Items
-blue_woman: got dialogs: 
-Using dialog: 1
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-b"
-Room: "zug.compartment-c"
+Room: "hospital.corridor"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "zug.compartment-c"
-Room: "zug.compartment-d"
+Create room: "hospital.corridor"
+Room: "hospital.foyer"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "zug.compartment-d"
-Room: "zug.trainCorridor"
+"hospital.foyer.kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital.foyer"
+Room: "hospital.stairs"
 Parsing characters
-pissing_man: got dialogs: 
-- 1
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug.trainCorridor"
+Create room: "hospital.stairs"
 Created all rooms 
 worldFactory: done.
 Loading config. 
@@ -214,6 +177,15 @@ Config loaded.
 Media set. 
 Done parsing world.
 Parsing players...
+Created texts with area id: random_zombies
+Created texts with area id: lustiges
+Created texts with area id: trainstation
+Created texts with area id: random_people
+QuestFactory
+"leave"
+QuestFactory
+"finde_apfel"
+"bringe_apfel"
 QuestFactory
 "besiege_besoffene_frau"
 "geldauftreiben"
@@ -232,35 +204,36 @@ QuestFactory
 "ticketverkaeufer"
 "ticketkauf"
 "zum_gleis"
-QuestFactory
-"leave"
-QuestFactory
-"finde_apfel"
-"bringe_apfel"
-Room: "hospital.corridor"
+Room: "zug.compartment-a"
 Parsing characters
 Parsing Items
-Parsing details 
-Create room: "hospital.corridor"
-Room: "hospital.foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital.foyer.kleine_kiste"
-parseRandomItemsToDetail
-Parsing Items
-Create room: "hospital.foyer"
-Room: "hospital.stairs"
-Parsing characters
-zombie: got dialogs: 
-- 1
-- 2
-- 3
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital.stairs"
+Create room: "zug.compartment-a"
+Room: "zug.compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-b"
+Room: "zug.compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-c"
+Room: "zug.compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-d"
+Room: "zug.trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.trainCorridor"
 Created all rooms 
 Room: "trainstation.ausgang"
 Parsing characters
@@ -269,10 +242,7 @@ Parsing details
 Create room: "trainstation.ausgang"
 Room: "trainstation.eingangshalle"
 Parsing characters
-passanten_gruppe: got dialogs: 
-- 1
-- 2
-Using dialog: 1
+Parsing Items
 Parsing Items
 Parsing Items
 Parsing details 
@@ -293,10 +263,6 @@ Parsing details
 Create room: "trainstation.fernzüge"
 Room: "trainstation.frauenToilette"
 Parsing characters
-besoffene_frau: got dialogs: 
-- 1
-- faint
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -339,33 +305,19 @@ Parsing details
 Create room: "trainstation.gleis4"
 Room: "trainstation.gleis5"
 Parsing characters
-passanten_gruppe: got dialogs: 
-- 1
-- 2
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.gleis5"
 Room: "trainstation.maennerToilette"
 Parsing characters
-ticketVerkäufer: got dialogs: 
-- 1
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.maennerToilette"
 Room: "trainstation.nebenhalle"
 Parsing characters
-passanten_gruppe: got dialogs: 
-- 1
-- 2
-Using dialog: 1
 Parsing Items
-konstantin_thron: got dialogs: 
-- 1
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -376,51 +328,25 @@ Parsing Items
 Parsing details 
 Create room: "trainstation.toiletten"
 Created all rooms 
-Room: "zug.compartment-a"
-Parsing characters
-parsen: got dialogs: 
-- 1
-Using dialog: 1
-Parsing Items
-zombie: got dialogs: 
-- 1
-- 2
-- 3
-Using dialog: 1
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-a"
-Room: "zug.compartment-b"
-Parsing characters
-pink_woman: got dialogs: 
-Using dialog: 1
-Parsing Items
-blue_woman: got dialogs: 
-Using dialog: 1
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-b"
-Room: "zug.compartment-c"
+Room: "hospital.corridor"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "zug.compartment-c"
-Room: "zug.compartment-d"
+Create room: "hospital.corridor"
+Room: "hospital.foyer"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "zug.compartment-d"
-Room: "zug.trainCorridor"
+"hospital.foyer.kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital.foyer"
+Room: "hospital.stairs"
 Parsing characters
-pissing_man: got dialogs: 
-- 1
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug.trainCorridor"
+Create room: "hospital.stairs"
 Created all rooms 
 worldFactory: done.
 Loading config. 
@@ -429,6 +355,15 @@ Config loaded.
 Media set. 
 initializing context stack.
 Done.
+Created texts with area id: random_zombies
+Created texts with area id: lustiges
+Created texts with area id: trainstation
+Created texts with area id: random_people
+QuestFactory
+"leave"
+QuestFactory
+"finde_apfel"
+"bringe_apfel"
 QuestFactory
 "besiege_besoffene_frau"
 "geldauftreiben"
@@ -447,35 +382,36 @@ QuestFactory
 "ticketverkaeufer"
 "ticketkauf"
 "zum_gleis"
-QuestFactory
-"leave"
-QuestFactory
-"finde_apfel"
-"bringe_apfel"
-Room: "hospital.corridor"
+Room: "zug.compartment-a"
 Parsing characters
 Parsing Items
-Parsing details 
-Create room: "hospital.corridor"
-Room: "hospital.foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital.foyer.kleine_kiste"
-parseRandomItemsToDetail
-Parsing Items
-Create room: "hospital.foyer"
-Room: "hospital.stairs"
-Parsing characters
-zombie: got dialogs: 
-- 1
-- 2
-- 3
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital.stairs"
+Create room: "zug.compartment-a"
+Room: "zug.compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-b"
+Room: "zug.compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-c"
+Room: "zug.compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-d"
+Room: "zug.trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.trainCorridor"
 Created all rooms 
 Room: "trainstation.ausgang"
 Parsing characters
@@ -484,10 +420,7 @@ Parsing details
 Create room: "trainstation.ausgang"
 Room: "trainstation.eingangshalle"
 Parsing characters
-passanten_gruppe: got dialogs: 
-- 1
-- 2
-Using dialog: 1
+Parsing Items
 Parsing Items
 Parsing Items
 Parsing details 
@@ -508,10 +441,6 @@ Parsing details
 Create room: "trainstation.fernzüge"
 Room: "trainstation.frauenToilette"
 Parsing characters
-besoffene_frau: got dialogs: 
-- 1
-- faint
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -554,33 +483,19 @@ Parsing details
 Create room: "trainstation.gleis4"
 Room: "trainstation.gleis5"
 Parsing characters
-passanten_gruppe: got dialogs: 
-- 1
-- 2
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.gleis5"
 Room: "trainstation.maennerToilette"
 Parsing characters
-ticketVerkäufer: got dialogs: 
-- 1
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.maennerToilette"
 Room: "trainstation.nebenhalle"
 Parsing characters
-passanten_gruppe: got dialogs: 
-- 1
-- 2
-Using dialog: 1
 Parsing Items
-konstantin_thron: got dialogs: 
-- 1
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -591,51 +506,25 @@ Parsing Items
 Parsing details 
 Create room: "trainstation.toiletten"
 Created all rooms 
-Room: "zug.compartment-a"
-Parsing characters
-parsen: got dialogs: 
-- 1
-Using dialog: 1
-Parsing Items
-zombie: got dialogs: 
-- 1
-- 2
-- 3
-Using dialog: 1
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-a"
-Room: "zug.compartment-b"
-Parsing characters
-pink_woman: got dialogs: 
-Using dialog: 1
-Parsing Items
-blue_woman: got dialogs: 
-Using dialog: 1
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-b"
-Room: "zug.compartment-c"
+Room: "hospital.corridor"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "zug.compartment-c"
-Room: "zug.compartment-d"
+Create room: "hospital.corridor"
+Room: "hospital.foyer"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "zug.compartment-d"
-Room: "zug.trainCorridor"
+"hospital.foyer.kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital.foyer"
+Room: "hospital.stairs"
 Parsing characters
-pissing_man: got dialogs: 
-- 1
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug.trainCorridor"
+Create room: "hospital.stairs"
 Created all rooms 
 worldFactory: done.
 Loading config. 
@@ -644,6 +533,15 @@ Config loaded.
 Media set. 
 initializing context stack.
 Done.
+Created texts with area id: random_zombies
+Created texts with area id: lustiges
+Created texts with area id: trainstation
+Created texts with area id: random_people
+QuestFactory
+"leave"
+QuestFactory
+"finde_apfel"
+"bringe_apfel"
 QuestFactory
 "besiege_besoffene_frau"
 "geldauftreiben"
@@ -662,35 +560,36 @@ QuestFactory
 "ticketverkaeufer"
 "ticketkauf"
 "zum_gleis"
-QuestFactory
-"leave"
-QuestFactory
-"finde_apfel"
-"bringe_apfel"
-Room: "hospital.corridor"
+Room: "zug.compartment-a"
 Parsing characters
 Parsing Items
-Parsing details 
-Create room: "hospital.corridor"
-Room: "hospital.foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital.foyer.kleine_kiste"
-parseRandomItemsToDetail
-Parsing Items
-Create room: "hospital.foyer"
-Room: "hospital.stairs"
-Parsing characters
-zombie: got dialogs: 
-- 1
-- 2
-- 3
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital.stairs"
+Create room: "zug.compartment-a"
+Room: "zug.compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-b"
+Room: "zug.compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-c"
+Room: "zug.compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-d"
+Room: "zug.trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.trainCorridor"
 Created all rooms 
 Room: "trainstation.ausgang"
 Parsing characters
@@ -699,10 +598,7 @@ Parsing details
 Create room: "trainstation.ausgang"
 Room: "trainstation.eingangshalle"
 Parsing characters
-passanten_gruppe: got dialogs: 
-- 1
-- 2
-Using dialog: 1
+Parsing Items
 Parsing Items
 Parsing Items
 Parsing details 
@@ -723,10 +619,6 @@ Parsing details
 Create room: "trainstation.fernzüge"
 Room: "trainstation.frauenToilette"
 Parsing characters
-besoffene_frau: got dialogs: 
-- 1
-- faint
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -769,33 +661,19 @@ Parsing details
 Create room: "trainstation.gleis4"
 Room: "trainstation.gleis5"
 Parsing characters
-passanten_gruppe: got dialogs: 
-- 1
-- 2
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.gleis5"
 Room: "trainstation.maennerToilette"
 Parsing characters
-ticketVerkäufer: got dialogs: 
-- 1
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.maennerToilette"
 Room: "trainstation.nebenhalle"
 Parsing characters
-passanten_gruppe: got dialogs: 
-- 1
-- 2
-Using dialog: 1
 Parsing Items
-konstantin_thron: got dialogs: 
-- 1
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -806,51 +684,25 @@ Parsing Items
 Parsing details 
 Create room: "trainstation.toiletten"
 Created all rooms 
-Room: "zug.compartment-a"
-Parsing characters
-parsen: got dialogs: 
-- 1
-Using dialog: 1
-Parsing Items
-zombie: got dialogs: 
-- 1
-- 2
-- 3
-Using dialog: 1
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-a"
-Room: "zug.compartment-b"
-Parsing characters
-pink_woman: got dialogs: 
-Using dialog: 1
-Parsing Items
-blue_woman: got dialogs: 
-Using dialog: 1
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-b"
-Room: "zug.compartment-c"
+Room: "hospital.corridor"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "zug.compartment-c"
-Room: "zug.compartment-d"
+Create room: "hospital.corridor"
+Room: "hospital.foyer"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "zug.compartment-d"
-Room: "zug.trainCorridor"
+"hospital.foyer.kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital.foyer"
+Room: "hospital.stairs"
 Parsing characters
-pissing_man: got dialogs: 
-- 1
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug.trainCorridor"
+Create room: "hospital.stairs"
 Created all rooms 
 worldFactory: done.
 Loading config. 
@@ -859,6 +711,15 @@ Config loaded.
 Media set. 
 initializing context stack.
 Done.
+Created texts with area id: random_zombies
+Created texts with area id: lustiges
+Created texts with area id: trainstation
+Created texts with area id: random_people
+QuestFactory
+"leave"
+QuestFactory
+"finde_apfel"
+"bringe_apfel"
 QuestFactory
 "besiege_besoffene_frau"
 "geldauftreiben"
@@ -877,35 +738,36 @@ QuestFactory
 "ticketverkaeufer"
 "ticketkauf"
 "zum_gleis"
-QuestFactory
-"leave"
-QuestFactory
-"finde_apfel"
-"bringe_apfel"
-Room: "hospital.corridor"
+Room: "zug.compartment-a"
 Parsing characters
 Parsing Items
-Parsing details 
-Create room: "hospital.corridor"
-Room: "hospital.foyer"
-Parsing characters
-Parsing Items
-Parsing details 
-"hospital.foyer.kleine_kiste"
-parseRandomItemsToDetail
-Parsing Items
-Create room: "hospital.foyer"
-Room: "hospital.stairs"
-Parsing characters
-zombie: got dialogs: 
-- 1
-- 2
-- 3
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "hospital.stairs"
+Create room: "zug.compartment-a"
+Room: "zug.compartment-b"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-b"
+Room: "zug.compartment-c"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-c"
+Room: "zug.compartment-d"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "zug.compartment-d"
+Room: "zug.trainCorridor"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "zug.trainCorridor"
 Created all rooms 
 Room: "trainstation.ausgang"
 Parsing characters
@@ -914,10 +776,7 @@ Parsing details
 Create room: "trainstation.ausgang"
 Room: "trainstation.eingangshalle"
 Parsing characters
-passanten_gruppe: got dialogs: 
-- 1
-- 2
-Using dialog: 1
+Parsing Items
 Parsing Items
 Parsing Items
 Parsing details 
@@ -938,10 +797,6 @@ Parsing details
 Create room: "trainstation.fernzüge"
 Room: "trainstation.frauenToilette"
 Parsing characters
-besoffene_frau: got dialogs: 
-- 1
-- faint
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -984,33 +839,19 @@ Parsing details
 Create room: "trainstation.gleis4"
 Room: "trainstation.gleis5"
 Parsing characters
-passanten_gruppe: got dialogs: 
-- 1
-- 2
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.gleis5"
 Room: "trainstation.maennerToilette"
 Parsing characters
-ticketVerkäufer: got dialogs: 
-- 1
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
 Create room: "trainstation.maennerToilette"
 Room: "trainstation.nebenhalle"
 Parsing characters
-passanten_gruppe: got dialogs: 
-- 1
-- 2
-Using dialog: 1
 Parsing Items
-konstantin_thron: got dialogs: 
-- 1
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
@@ -1021,51 +862,25 @@ Parsing Items
 Parsing details 
 Create room: "trainstation.toiletten"
 Created all rooms 
-Room: "zug.compartment-a"
-Parsing characters
-parsen: got dialogs: 
-- 1
-Using dialog: 1
-Parsing Items
-zombie: got dialogs: 
-- 1
-- 2
-- 3
-Using dialog: 1
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-a"
-Room: "zug.compartment-b"
-Parsing characters
-pink_woman: got dialogs: 
-Using dialog: 1
-Parsing Items
-blue_woman: got dialogs: 
-Using dialog: 1
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "zug.compartment-b"
-Room: "zug.compartment-c"
+Room: "hospital.corridor"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "zug.compartment-c"
-Room: "zug.compartment-d"
+Create room: "hospital.corridor"
+Room: "hospital.foyer"
 Parsing characters
 Parsing Items
 Parsing details 
-Create room: "zug.compartment-d"
-Room: "zug.trainCorridor"
+"hospital.foyer.kleine_kiste"
+parseRandomItemsToDetail
+Parsing Items
+Create room: "hospital.foyer"
+Room: "hospital.stairs"
 Parsing characters
-pissing_man: got dialogs: 
-- 1
-Using dialog: 1
 Parsing Items
 Parsing Items
 Parsing details 
-Create room: "zug.trainCorridor"
+Create room: "hospital.stairs"
 Created all rooms 
 worldFactory: done.
 Loading config. 
@@ -1078,19 +893,21 @@ Finished parsing!
 MUSIC: GOT MUSIC: vibes
 vibes
 IMAGE: background
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
 GOT MUSIC: vibes
-Audio could not be found: ../../data/users/fux/files/world1/sounds/vibes.mp3
-[2021-11-12 22:54:21] [connect] WebSocket Connection [::ffff:127.0.0.1]:38816 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0" / 101
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-04 22:09:36] [connect] WebSocket Connection [::ffff:95.90.244.47]:46767 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0" / 101
 Starting....
+Audio could not be found: ../../data/users/fux/files/world1/sounds/vibes.mp3
 Choosing login/ registerSet sign_in_up_ to l
-[2021-11-12 22:54:22] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
-[2021-11-12 22:54:22] [frame_header] Header Bytes: 
+[2022-02-04 22:09:38] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
+[2022-02-04 22:09:38] [frame_header] Header Bytes: 
 [0] (2) 81 06 
 
 On to getting credentials
-[2021-11-12 22:54:25] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 19 payload bytes
-[2021-11-12 22:54:25] [frame_header] Header Bytes: 
-[0] (2) 81 08 
+[2022-02-04 22:09:41] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 17 payload bytes
+[2022-02-04 22:09:41] [frame_header] Header Bytes: 
+[0] (2) 81 06 
 [1] (2) 81 0B 
 
 On to getting credentials
@@ -1100,19 +917,10 @@ Updated music to: vibes
 Updated image to: background
 [1;31mshow, room[0m
 [1;34mfirst[0m throwing: show|room
-[1;31mEvents: addQuest leave, from: post-events[0m
-[1;31maddQuest, leave[0m
-[1;34mfirst[0m throwing: addQuest|leave
-[1;34mzug_nach_moskau[0m throwing: addQuest|leave
-[1;34mtutorial[0m throwing: addQuest|leave
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(addQuest)[0m
-[1;34mleave[0m throwing: addQuest|leave
-[1;34mkuligundes_apfel[0m throwing: addQuest|leave
-[1;34mkomische_gruppe[0m throwing: addQuest|leave
-[1;34mgeld_fuer_ticket[0m throwing: addQuest|leave
-[1;34mbesoffene_frau[0m throwing: addQuest|leave
-[1;34mworld[0m throwing: addQuest|leave
-[1;32m ... [1;34mworld: [1;32mevent triggered: h_addQuest(addQuest)[0m
+[1;31mEvents: printText start, from: pre-events[0m
+[1;31mprintText, start[0m
+[1;31mEvents: printText start2, from: post-events[0m
+[1;31mprintText, start2[0m
 [1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
 [1;34mzug_nach_moskau[0m throwing: show|room
 [1;34mtutorial[0m throwing: show|room
@@ -1127,58 +935,185 @@ Updated image to: background
 [1;34mroom[0m throwing: show|room
 [1;34mstandard[0m throwing: show|room
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Got output: vibes background <div class='spoken'>SINNLICHE GEWISSHEIT - 	Du sitzt in einem leeren Abteil. Nur ein einzelner Begleiter sitzt dir schräg gegenüber: Parsen</div> <div class='spoken2'>  </div>Neue Quest: <b>Verlasse deinen Raum</b>: <i>Verlasse deinen Raum und finde nach draußen (oder nach innen)</i>
-
+Got output: Neue Quest: <b>Das Hier und das Jetzt</b>: <i>Kennenlernen, heißt verstehen. doch zunächst: wo bin ich, was ist hier?</i>
+vibes background <div class='spoken'>ERZÄHLER - 	Willkommen Neuling. Willkommen zu "DER ZUG". Du weiß vermutlich nicht, wer du bist und wo du hin willst und musst und kannst. Du weißt noch nicht, was <i>hier</i> ist, was <i>jetzt</i> ist.$</div><div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier ist ein großes Gebäude. Ich stehe in dem großen Gebäude. Viele Gestalten sind hier auch.$</div> <div class='spoken2'> Eine komische Gruppe an Passanten, die wild in der Gegen umherzeigen. </div><div class='spoken'>ERZÄHLER - 	Um dich zurecht zu finden, die dir noch offene Fragen langsam <i>für dich</i> zu beantworten, nutze zunächst den Befehl <b>"zeige Details"</b> um dich der Welt um dir herum zu vergegenwärtigen.</div>
 
-[2021-11-12 22:54:26] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 346 payload bytes
-[2021-11-12 22:54:26] [frame_header] Header Bytes: 
+[2022-02-04 22:09:43] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 895 payload bytes
+[2022-02-04 22:09:43] [frame_header] Header Bytes: 
 [0] (2) 81 0A 
-[1] (2) 81 15 
-[2] (4) 81 7E 01 3B 
+[1] (2) 81 13 
+[2] (4) 81 7E 03 62 
 
-Befor play: input: spreche zombie an calling with id: sophia
-[1;31mEvents: spreche zombie an, from: CGame::play[0m
-[1;31mtalk, zombie[0m
-[1;34mfirst[0m throwing: talk|zombie
-[1;34mzug_nach_moskau[0m throwing: talk|zombie
-[1;34mtutorial[0m throwing: talk|zombie
+Befor play: input: go to nebenhalle calling with id: alex
+[1;31mEvents: go to nebenhalle, from: CGame::play[0m
+[1;31mgo, nebenhalle[0m
+[1;34mfirst[0m throwing: go|nebenhalle
+[1;34mzug_nach_moskau[0m throwing: go|nebenhalle
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mtutorial[0m throwing: go|nebenhalle
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|nebenhalle
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkuligundes_apfel[0m throwing: go|nebenhalle
+[1;34mkomische_gruppe[0m throwing: go|nebenhalle
+[1;34mgeld_fuer_ticket[0m throwing: go|nebenhalle
+[1;34mbesoffene_frau[0m throwing: go|nebenhalle
+[1;34mworld[0m throwing: go|nebenhalle
+[1;34mroom[0m throwing: go|nebenhalle
+h_exitTrainstation, nebenhalle
+[1;32m ... [1;34mroom: [1;32mevent triggered: h_exitTrainstation(go)[0m
+[1;34mstandard[0m throwing: go|nebenhalle
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier ist es etwas ruhiger und leerer. Aber die Personen hier kommen dir unheimlicher und auch sonderbarer vor. Ah und hier sind auch die Toiletten.</div> <div class='spoken2'>Ein Mann steht an eine Wand gelehnt, ließt Zeitung und raucht Pfeife. Eine komische Gruppe an Passanten, die wild in der Gegen umherzeigen. Eine komische Gruppe an Passanten, die wild in der Gegen umherzeigen. Eine komische Gruppe an Passanten, die wild in der Gegen umherzeigen. </div>
+
+[2022-02-04 22:09:48] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 510 payload bytes
+[2022-02-04 22:09:48] [frame_header] Header Bytes: 
+[0] (4) 81 7E 01 FE 
+
+Befor play: input: go to toiletten calling with id: alex
+[1;31mEvents: go to toiletten, from: CGame::play[0m
+[1;31mgo, toiletten[0m
+[1;34mfirst[0m throwing: go|toiletten
+[1;34mzug_nach_moskau[0m throwing: go|toiletten
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mtutorial[0m throwing: go|toiletten
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|toiletten
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkuligundes_apfel[0m throwing: go|toiletten
+[1;34mkomische_gruppe[0m throwing: go|toiletten
+[1;34mgeld_fuer_ticket[0m throwing: go|toiletten
+[1;34mbesoffene_frau[0m throwing: go|toiletten
+[1;34mworld[0m throwing: go|toiletten
+[1;34mroom[0m throwing: go|toiletten
+[1;34mstandard[0m throwing: go|toiletten
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Versifte Toiletten, aber endlich Ruhe, hier scheint niemand zu sein. Zwei Türen führen zu den Männer- bzw. Frauentoiletten. Im Westen geht es zurück ins Nebengebäude.</div> <div class='spoken2'></div>
+
+[2022-02-04 22:09:51] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 253 payload bytes
+[2022-02-04 22:09:51] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 FD 
+
+Befor play: input: show exits calling with id: alex
+[1;31mEvents: show exits, from: CGame::play[0m
+[1;31mshow, exits[0m
+[1;34mfirst[0m throwing: show|exits
+Calling:  show exits!
+[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
+[1;34mzug_nach_moskau[0m throwing: show|exits
+[1;34mtutorial[0m throwing: show|exits
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(show)[0m
+[1;34mleave[0m throwing: show|exits
+[1;34mkuligundes_apfel[0m throwing: show|exits
+[1;34mkomische_gruppe[0m throwing: show|exits
+[1;34mgeld_fuer_ticket[0m throwing: show|exits
+[1;34mbesoffene_frau[0m throwing: show|exits
+[1;34mworld[0m throwing: show|exits
+[1;34mroom[0m throwing: show|exits
+[1;34mstandard[0m throwing: show|exits
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
+Send the output to client: <div class='spoken'>SINNLICHE GEWISSHEIT - 	Hier sehe ich einen Weg <b>zur Frauen-Toilette</b>, <b>zur Männer-Toilette</b> und <b>zur Nebenhalle</b>. 
+</div>
+
+[2022-02-04 22:09:54] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 162 payload bytes
+[2022-02-04 22:09:54] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 A2 
+
+Befor play: input: gehe zur frauen calling with id: alex
+[1;31mEvents: gehe zur frauen, from: CGame::play[0m
+[1;31mgo, zur frauen[0m
+[1;34mfirst[0m throwing: go|zur frauen
+[1;34mzug_nach_moskau[0m throwing: go|zur frauen
+[1;32m ... [1;34mzug_nach_moskau: [1;32mevent triggered: h_react(go)[0m
+[1;34mtutorial[0m throwing: go|zur frauen
+[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(go)[0m
+[1;34mleave[0m throwing: go|zur frauen
+[1;32m ... [1;34mleave: [1;32mevent triggered: h_moveToHospital(go)[0m
+[1;34mkuligundes_apfel[0m throwing: go|zur frauen
+[1;34mkomische_gruppe[0m throwing: go|zur frauen
+[1;34mgeld_fuer_ticket[0m throwing: go|zur frauen
+[1;34mbesoffene_frau[0m throwing: go|zur frauen
+[1;34mworld[0m throwing: go|zur frauen
+[1;34mroom[0m throwing: go|zur frauen
+[1;34mstandard[0m throwing: go|zur frauen
+[1;31mEvents: talk besoffene frau, from: post-events[0m
+[1;31mtalk, besoffene frau[0m
+[1;34mfirst[0m throwing: talk|besoffene frau
+[1;34mzug_nach_moskau[0m throwing: talk|besoffene frau
+[1;34mtutorial[0m throwing: talk|besoffene frau
 [1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(talk)[0m
-[1;34mleave[0m throwing: talk|zombie
-[1;34mkuligundes_apfel[0m throwing: talk|zombie
-[1;34mkomische_gruppe[0m throwing: talk|zombie
+[1;34mleave[0m throwing: talk|besoffene frau
+[1;34mkuligundes_apfel[0m throwing: talk|besoffene frau
+[1;34mkomische_gruppe[0m throwing: talk|besoffene frau
 [1;32m ... [1;34mkomische_gruppe: [1;32mevent triggered: reden(talk)[0m
-[1;34mgeld_fuer_ticket[0m throwing: talk|zombie
-[1;34mbesoffene_frau[0m throwing: talk|zombie
-[1;34mworld[0m throwing: talk|zombie
-[1;34mroom[0m throwing: talk|zombie
-[1;34mstandard[0m throwing: talk|zombie
+[1;34mgeld_fuer_ticket[0m throwing: talk|besoffene frau
+[1;34mbesoffene_frau[0m throwing: talk|besoffene frau
+[1;34mworld[0m throwing: talk|besoffene frau
+[1;34mroom[0m throwing: talk|besoffene frau
+[1;34mstandard[0m throwing: talk|besoffene frau
 About to set attribute that does not exist: state
 About to set attribute that does not exist: mapOptions
-[1;31mEvents: endDialog, from: CPlayer::startDialog[0m
-[1;31mendDialog, endDialog[0m
-[1;34mfirst[0m throwing: endDialog|endDialog
-[1;34mzug_nach_moskau[0m throwing: endDialog|endDialog
-[1;34mtutorial[0m throwing: endDialog|endDialog
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(endDialog)[0m
-[1;32m ... [1;34mtutorial: [1;32mevent triggered: h_react(endDialog)[0m
-[1;34mleave[0m throwing: endDialog|endDialog
-[1;34mkuligundes_apfel[0m throwing: endDialog|endDialog
-[1;34mkomische_gruppe[0m throwing: endDialog|endDialog
-[1;34mgeld_fuer_ticket[0m throwing: endDialog|endDialog
-[1;34mbesoffene_frau[0m throwing: endDialog|endDialog
-[1;34mworld[0m throwing: endDialog|endDialog
-[1;32m ... [1;34mworld: [1;32mevent triggered: h_endDialog(endDialog)[0m
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_startDialog(talk)[0m
-Send the output to client: <div class='spoken'>DRAMA - 	Arrrrrrhh maaaaaooooaa!</div>Dialog ended.
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>PERZEPTION - 	Die Frauentoilette:  es stinkt nach Alkohol, Kippen und Sex. Der Boden ist voller Alkohol und Glasscherben.$</div> <div class='spoken2'>Eine anscheinend bewusstlose Frau liegt in einer Alkoholpfütze, eine noch glühene, halb abgebrannte Zigarette befindet sich zwischen ihren Fingern. </div><div class='spoken'>BETRUNKENE - 	Was willst du von mir kleiner?</div>1: Nicht, ich wollte gerade gehen
+2: Ich wollte, gucken, ob bei Ihnen alles in Ordnung ist.
 
 
-[2021-11-12 22:54:30] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 74 payload bytes
-[2021-11-12 22:54:30] [frame_header] Header Bytes: 
-[0] (2) 81 4A 
+[2022-02-04 22:09:57] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 491 payload bytes
+[2022-02-04 22:09:57] [frame_header] Header Bytes: 
+[0] (4) 81 7E 01 EB 
 
-[2021-11-12 22:54:32] [control] Control frame received with opcode 8
-[2021-11-12 22:54:32] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
-[2021-11-12 22:54:32] [frame_header] Header Bytes: 
+[2022-02-04 23:40:26] [control] Control frame received with opcode 8
+[2022-02-04 23:40:26] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2022-02-04 23:40:26] [frame_header] Header Bytes: 
 [0] (2) 88 02 
 
-[2021-11-12 22:54:32] [disconnect] Disconnect close local:[1001] remote:[1001]
+[2022-02-04 23:40:31] [disconnect] Disconnect close local:[1001] remote:[1001]
+GOT MUSIC: vibes
+GOT MUSIC: vibes
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 07:02:13] [fail] WebSocket Connection [::ffff:31.44.185.119]:64215 - "" - 0 websocketpp.transport.asio.socket:8 TLS handshake failed
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 14:45:54] [fail] WebSocket Connection [::ffff:89.248.174.193]:60142 - "" - 0 websocketpp.transport.asio.socket:8 TLS handshake failed
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 14:50:37] [fail] WebSocket Connection [::ffff:89.248.174.193]:51606 - "" - 0 websocketpp.transport.asio.socket:8 TLS handshake failed
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:00:00] [fail] WebSocket Connection [::ffff:31.44.185.119]:64215 - "" - 0 websocketpp.transport.asio.socket:8 TLS handshake failed
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:34] [fail] WebSocket Connection [::ffff:154.88.26.229]:57468 - "" - 0 websocketpp.transport:7 End of File
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:40] [fail] WebSocket Connection [::ffff:154.88.26.229]:57816 - "" - 0 websocketpp.transport.asio.socket:5 TLS handshake timed out
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:40] [fail] WebSocket Connection [::ffff:154.88.26.229]:59106 - "" - 0 websocketpp.transport.asio.socket:8 TLS handshake failed
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:41] [fail] WebSocket Connection [::ffff:154.88.26.229]:59166 - "" - 400 websocketpp:31 HTTP parse error
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:42] [fail] WebSocket Connection [::ffff:154.88.26.229]:59412 v0 "Go-http-client/1.1" /favicon.ico 426 websocketpp:28 Upgrade required
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:42] [fail] WebSocket Connection [::ffff:154.88.26.229]:59632 v0 "Go-http-client/1.1" /robots.txt 426 websocketpp:28 Upgrade required
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:43] [fail] WebSocket Connection [::ffff:154.88.26.229]:59904 v0 "Go-http-client/1.1" /sitemap.xml 426 websocketpp:28 Upgrade required
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:44] [fail] WebSocket Connection Unknown - "" - 0 websocketpp.transport.asio.socket:8 TLS handshake failed
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:45] [fail] WebSocket Connection Unknown - "" - 0 websocketpp.transport.asio.socket:8 TLS handshake failed
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:45] [fail] WebSocket Connection Unknown - "" - 0 websocketpp.transport.asio.socket:8 TLS handshake failed
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:45] [fail] WebSocket Connection Unknown - "" - 0 websocketpp.transport.asio.socket:8 TLS handshake failed
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:46] [fail] WebSocket Connection Unknown - "" - 0 websocketpp.transport.asio.socket:8 TLS handshake failed
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:46] [fail] WebSocket Connection Unknown - "" - 0 websocketpp.transport.asio.socket:8 TLS handshake failed
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:47] [fail] WebSocket Connection Unknown - "" - 0 websocketpp.transport.asio.socket:8 TLS handshake failed
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:47] [fail] WebSocket Connection Unknown - "" - 0 websocketpp.transport.asio.socket:8 TLS handshake failed
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:47] [fail] WebSocket Connection [::ffff:154.88.26.229]:33420 - "" - 0 websocketpp.transport.asio.socket:8 TLS handshake failed
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-05 21:42:48] [fail] WebSocket Connection [::ffff:154.88.26.229]:33498 - "" - 0 websocketpp.transport.asio.socket:8 TLS handshake failed

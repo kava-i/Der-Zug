@@ -1,11 +1,5 @@
 Creating game.
-Room: "nonexist.nonexists"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "nonexist.nonexists"
-Created all rooms 
+Created texts with area id: test
 Room: "test.raum1"
 Parsing characters
 Parsing Items
@@ -25,27 +19,41 @@ Parsing details
 "test.raum3.mirror"
 parseRandomItemsToDetail
 Parsing Items
+Added handler: "mirror_handler": {"id":"h_startDialogDirect","infos":{"character":"nonexist.nonexists.mirror","identifier":"mirror"},"key":"mirror_handler","priority":0,"string":"examine"}
 Create room: "test.raum3"
 Room: "test.test_room"
 Parsing characters
 Parsing Items
 Parsing details 
 Create room: "test.test_room"
+Room: "test.tunnel_1"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test.tunnel_1"
+Room: "test.tunnel_2"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "test.tunnel_2"
+Created all rooms 
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
 Created all rooms 
 worldFactory: done.
 Loading config. 
-Config: {"attributes":["smoker","drinker"],"commands":[{"id":"consume","regex":"(drink) (.*)","take":2}],"image":{"background":"background_2","fight":"bg3"},"mapAttributes":{"smoker":{"0":"non-smoker","1":"smoker"}},"minds":[{"color":"blue","id":"loreteller","level":3,"relevance":0.1},{"color":"red","id":"lucy","level":3,"relevance":0.1},{"color":"yellow","id":"mirror","level":3,"relevance":0.1},{"color":"green","id":"greg","level":3,"relevance":0.1}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"","error":"","player":"JACK","story":"LORETELLER","tech":""},"show":{"chars":{"post":"no people at all.","pre":"Here are"},"exits":{"post":"nowhere","pre":"You can go"}}}
+Config: {"attributes":["smoker","drinker"],"commands":[{"id":"consume","regex":"(drink) (.*)","take":2}],"image":{"background":"background_2","fight":"bg3"},"mapAttributes":{"smoker":{"0":"non-smoker","1":"smoker"}},"minds":[{"color":"blue","id":"loreteller","level":3,"relevance":0.1},{"color":"red","id":"lucy","level":3,"relevance":0.1},{"color":"yellow","id":"mirror","level":3,"relevance":0.1},{"color":"green","id":"greg","level":3,"relevance":0.1},{"color":"orange","id":"conspiricy","level":3,"relevance":0.1},{"color":"red","id":"reason","level":3,"relevance":0.1},{"color":"green","id":"paranoia","level":3,"relevance":0.1}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"","error":"","player":"JACK","story":"LORETELLER","tech":""},"show":{"chars":{"post":"no people at all.","pre":"Here are"},"exits":{"post":"nowhere","pre":"You can go"}}}
 Config loaded. 
 Media set. 
 Done parsing world.
 Parsing players...
-Room: "nonexist.nonexists"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "nonexist.nonexists"
-Created all rooms 
+Created texts with area id: test
 Room: "test.raum1"
 Parsing characters
 Parsing Items
@@ -65,27 +73,41 @@ Parsing details
 "test.raum3.mirror"
 parseRandomItemsToDetail
 Parsing Items
+Added handler: "mirror_handler": {"id":"h_startDialogDirect","infos":{"character":"nonexist.nonexists.mirror","identifier":"mirror"},"key":"mirror_handler","priority":0,"string":"examine"}
 Create room: "test.raum3"
 Room: "test.test_room"
 Parsing characters
 Parsing Items
 Parsing details 
 Create room: "test.test_room"
+Room: "test.tunnel_1"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test.tunnel_1"
+Room: "test.tunnel_2"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "test.tunnel_2"
+Created all rooms 
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
 Created all rooms 
 worldFactory: done.
 Loading config. 
-Config: {"attributes":["smoker","drinker"],"commands":[{"id":"consume","regex":"(drink) (.*)","take":2}],"image":{"background":"background_2","fight":"bg3"},"mapAttributes":{"smoker":{"0":"non-smoker","1":"smoker"}},"minds":[{"color":"blue","id":"loreteller","level":3,"relevance":0.1},{"color":"red","id":"lucy","level":3,"relevance":0.1},{"color":"yellow","id":"mirror","level":3,"relevance":0.1},{"color":"green","id":"greg","level":3,"relevance":0.1}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"","error":"","player":"JACK","story":"LORETELLER","tech":""},"show":{"chars":{"post":"no people at all.","pre":"Here are"},"exits":{"post":"nowhere","pre":"You can go"}}}
+Config: {"attributes":["smoker","drinker"],"commands":[{"id":"consume","regex":"(drink) (.*)","take":2}],"image":{"background":"background_2","fight":"bg3"},"mapAttributes":{"smoker":{"0":"non-smoker","1":"smoker"}},"minds":[{"color":"blue","id":"loreteller","level":3,"relevance":0.1},{"color":"red","id":"lucy","level":3,"relevance":0.1},{"color":"yellow","id":"mirror","level":3,"relevance":0.1},{"color":"green","id":"greg","level":3,"relevance":0.1},{"color":"orange","id":"conspiricy","level":3,"relevance":0.1},{"color":"red","id":"reason","level":3,"relevance":0.1},{"color":"green","id":"paranoia","level":3,"relevance":0.1}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"","error":"","player":"JACK","story":"LORETELLER","tech":""},"show":{"chars":{"post":"no people at all.","pre":"Here are"},"exits":{"post":"nowhere","pre":"You can go"}}}
 Config loaded. 
 Media set. 
 initializing context stack.
 Done.
-Room: "nonexist.nonexists"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "nonexist.nonexists"
-Created all rooms 
+Created texts with area id: test
 Room: "test.raum1"
 Parsing characters
 Parsing Items
@@ -105,27 +127,41 @@ Parsing details
 "test.raum3.mirror"
 parseRandomItemsToDetail
 Parsing Items
+Added handler: "mirror_handler": {"id":"h_startDialogDirect","infos":{"character":"nonexist.nonexists.mirror","identifier":"mirror"},"key":"mirror_handler","priority":0,"string":"examine"}
 Create room: "test.raum3"
 Room: "test.test_room"
 Parsing characters
 Parsing Items
 Parsing details 
 Create room: "test.test_room"
+Room: "test.tunnel_1"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test.tunnel_1"
+Room: "test.tunnel_2"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "test.tunnel_2"
+Created all rooms 
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
 Created all rooms 
 worldFactory: done.
 Loading config. 
-Config: {"attributes":["smoker","drinker"],"commands":[{"id":"consume","regex":"(drink) (.*)","take":2}],"image":{"background":"background_2","fight":"bg3"},"mapAttributes":{"smoker":{"0":"non-smoker","1":"smoker"}},"minds":[{"color":"blue","id":"loreteller","level":3,"relevance":0.1},{"color":"red","id":"lucy","level":3,"relevance":0.1},{"color":"yellow","id":"mirror","level":3,"relevance":0.1},{"color":"green","id":"greg","level":3,"relevance":0.1}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"","error":"","player":"JACK","story":"LORETELLER","tech":""},"show":{"chars":{"post":"no people at all.","pre":"Here are"},"exits":{"post":"nowhere","pre":"You can go"}}}
+Config: {"attributes":["smoker","drinker"],"commands":[{"id":"consume","regex":"(drink) (.*)","take":2}],"image":{"background":"background_2","fight":"bg3"},"mapAttributes":{"smoker":{"0":"non-smoker","1":"smoker"}},"minds":[{"color":"blue","id":"loreteller","level":3,"relevance":0.1},{"color":"red","id":"lucy","level":3,"relevance":0.1},{"color":"yellow","id":"mirror","level":3,"relevance":0.1},{"color":"green","id":"greg","level":3,"relevance":0.1},{"color":"orange","id":"conspiricy","level":3,"relevance":0.1},{"color":"red","id":"reason","level":3,"relevance":0.1},{"color":"green","id":"paranoia","level":3,"relevance":0.1}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"","error":"","player":"JACK","story":"LORETELLER","tech":""},"show":{"chars":{"post":"no people at all.","pre":"Here are"},"exits":{"post":"nowhere","pre":"You can go"}}}
 Config loaded. 
 Media set. 
 initializing context stack.
 Done.
-Room: "nonexist.nonexists"
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: "nonexist.nonexists"
-Created all rooms 
+Created texts with area id: test
 Room: "test.raum1"
 Parsing characters
 Parsing Items
@@ -145,16 +181,36 @@ Parsing details
 "test.raum3.mirror"
 parseRandomItemsToDetail
 Parsing Items
+Added handler: "mirror_handler": {"id":"h_startDialogDirect","infos":{"character":"nonexist.nonexists.mirror","identifier":"mirror"},"key":"mirror_handler","priority":0,"string":"examine"}
 Create room: "test.raum3"
 Room: "test.test_room"
 Parsing characters
 Parsing Items
 Parsing details 
 Create room: "test.test_room"
+Room: "test.tunnel_1"
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: "test.tunnel_1"
+Room: "test.tunnel_2"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "test.tunnel_2"
+Created all rooms 
+Room: "nonexist.nonexists"
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: "nonexist.nonexists"
 Created all rooms 
 worldFactory: done.
 Loading config. 
-Config: {"attributes":["smoker","drinker"],"commands":[{"id":"consume","regex":"(drink) (.*)","take":2}],"image":{"background":"background_2","fight":"bg3"},"mapAttributes":{"smoker":{"0":"non-smoker","1":"smoker"}},"minds":[{"color":"blue","id":"loreteller","level":3,"relevance":0.1},{"color":"red","id":"lucy","level":3,"relevance":0.1},{"color":"yellow","id":"mirror","level":3,"relevance":0.1},{"color":"green","id":"greg","level":3,"relevance":0.1}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"","error":"","player":"JACK","story":"LORETELLER","tech":""},"show":{"chars":{"post":"no people at all.","pre":"Here are"},"exits":{"post":"nowhere","pre":"You can go"}}}
+Config: {"attributes":["smoker","drinker"],"commands":[{"id":"consume","regex":"(drink) (.*)","take":2}],"image":{"background":"background_2","fight":"bg3"},"mapAttributes":{"smoker":{"0":"non-smoker","1":"smoker"}},"minds":[{"color":"blue","id":"loreteller","level":3,"relevance":0.1},{"color":"red","id":"lucy","level":3,"relevance":0.1},{"color":"yellow","id":"mirror","level":3,"relevance":0.1},{"color":"green","id":"greg","level":3,"relevance":0.1},{"color":"orange","id":"conspiricy","level":3,"relevance":0.1},{"color":"red","id":"reason","level":3,"relevance":0.1},{"color":"green","id":"paranoia","level":3,"relevance":0.1}],"music":{"background":"vibes","fight":"fight"},"printing":{"desc":"","error":"","player":"JACK","story":"LORETELLER","tech":""},"show":{"chars":{"post":"no people at all.","pre":"Here are"},"exits":{"post":"nowhere","pre":"You can go"}}}
 Config loaded. 
 Media set. 
 initializing context stack.
@@ -163,18 +219,20 @@ Finished parsing!
 MUSIC: GOT MUSIC: vibes
 vibes
 IMAGE: background_2
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
 GOT MUSIC: vibes
-[2021-11-11 01:57:19] [connect] WebSocket Connection [::ffff:127.0.0.1]:59504 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0" / 101
-Starting....
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
 Audio loaded, size: 2391966
+[2022-02-09 01:17:56] [connect] WebSocket Connection [::ffff:95.90.244.74]:42527 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0" / 101
+Starting....
 Choosing login/ registerSet sign_in_up_ to l
-[2021-11-11 01:57:20] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
-[2021-11-11 01:57:20] [frame_header] Header Bytes: 
+[2022-02-09 01:17:58] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
+[2022-02-09 01:17:58] [frame_header] Header Bytes: 
 [0] (2) 81 06 
 
 On to getting credentials
-[2021-11-11 01:57:22] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 17 payload bytes
-[2021-11-11 01:57:22] [frame_header] Header Bytes: 
+[2022-02-09 01:18:00] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 17 payload bytes
+[2022-02-09 01:18:00] [frame_header] Header Bytes: 
 [0] (2) 81 06 
 [1] (2) 81 0B 
 
@@ -187,97 +245,39 @@ Updated image to: background_2
 [1;34mfirst[0m throwing: show|room
 [1;31mEvents: printText start, from: pre-events[0m
 [1;31mprintText, start[0m
-Updated music to: prophecies
-TEXT: updated music: prophecies 
-Updated music to: vibes
-TEXT: updated music: vibes 
 [1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
 [1;34mworld[0m throwing: show|room
 [1;34mroom[0m throwing: show|room
 [1;34mstandard[0m throwing: show|room
 [1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Got output: vibes background_2 <div class='spoken'>LORETELLER - 	Hello Jack? I think you forgot where you were for a minute, you're in <i>Whitetaker Castle</i> at a diner. Downstairs is boisterous, you needed some rest and distance from it all. Now you're here.$</div><div class='spoken2'>	prophecies Now, let us just take a short second, so that I can show you some music, that you may want to pay attention to should you hear it ever again...$</div><div class='spoken2'>	vibes Jack, I apologize for taking so much of your time. Now dive into this world and enjoy, but also: be careful! $</div><div class='spoken'>LORETELLER - 	You're standing in an empty room. At least it <i>seems</i> to be empty, although actually there are some paintings, hanging on and some tables standing against the walls. The tables however or empty. maybe this give you the impression of emptiness.  </div> <div class='spoken2'></div>
+Got output: vibes background_2 <div class='spoken'>LORETELLER - 	Hello Jack? I think you forgot where you were for a minute, you're in <i>Whitetaker Castle</i> at a diner. Downstairs is boisterous, you needed some rest and distance from it all. Now you're here.$</div><div class='spoken2'>	Now, let us just take a short second, so that I can show you some music, that you may want to pay attention to should you hear it ever again...$</div><div class='spoken2'>	Jack, I apologize for taking so much of your time. Now dive into this world and enjoy, but also: be careful! $</div><div class='spoken'>LORETELLER - 	You're standing in an empty room. At least it <i>seems</i> to be empty, although actually there are some paintings, hanging on and some tables standing against the walls. The tables however are empty. maybe this give you the impression of emptiness.  </div> <div class='spoken2'></div>
 
-[2021-11-11 01:57:23] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 947 payload bytes
-[2021-11-11 01:57:23] [frame_header] Header Bytes: 
+[2022-02-09 01:18:02] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 927 payload bytes
+[2022-02-09 01:18:02] [frame_header] Header Bytes: 
 [0] (2) 81 0A 
 [1] (2) 81 13 
-[2] (4) 81 7E 03 96 
+[2] (4) 81 7E 03 82 
 
-Audio loaded, size: 2391966
-Befor play: input: show people calling with id: jack
-[1;31mEvents: show people, from: CGame::play[0m
-[1;31mshow, people[0m
-[1;34mfirst[0m throwing: show|people
-showCharacters
-Got text from gramma: Here are no people at all.
-Returning...
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mworld[0m throwing: show|people
-[1;34mroom[0m throwing: show|people
-[1;34mstandard[0m throwing: show|people
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: Here are no people at all.
+Befor play: input: go to second calling with id: jack
+[1;31mEvents: go to second, from: CGame::play[0m
+[1;31mgo, second[0m
+[1;34mfirst[0m throwing: go|second
+[1;34mworld[0m throwing: go|second
+[1;34mroom[0m throwing: go|second
+[1;34mstandard[0m throwing: go|second
+[1;31mEvents: printText always, from: post-events[0m
+[1;31mprintText, always[0m
+done.
+[1;32m ... [1;34mstandard: [1;32mevent triggered: h_goTo(go)[0m
+Send the output to client: <div class='spoken'>LORETELLER - 	Another empty room. Only that it's not quite empty. It seems to be something like a reading room with a lot of books standing in piles against the walls. Maybe this time it's the books giving you the feeling of emptiness...$</div> <div class='spoken2'>A Tall slightly ugly man in long old army coat is standing right next to the door. He's looking a bit shady. He seems to be sweating under his coat.  A woman is sitting in an arm chair, smoking and drinking scotch. </div><div class='spoken2'>	Books always make you feel empty.$</div><div class='spoken2'>	always.$</div><div class='spoken2'>	ALWAYS!</div>
 
+[2022-02-09 01:18:08] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 647 payload bytes
+[2022-02-09 01:18:08] [frame_header] Header Bytes: 
+[0] (4) 81 7E 02 87 
 
-
-[2021-11-11 01:57:29] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 29 payload bytes
-[2021-11-11 01:57:29] [frame_header] Header Bytes: 
-[0] (2) 81 1D 
-
-Audio loaded, size: 10845042
-Befor play: input: show exits calling with id: jack
-[1;31mEvents: show exits, from: CGame::play[0m
-[1;31mshow, exits[0m
-[1;34mfirst[0m throwing: show|exits
-Calling:  show exits!
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mworld[0m throwing: show|exits
-[1;34mroom[0m throwing: show|exits
-[1;34mstandard[0m throwing: show|exits
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Send the output to client: You can go <b>to second room</b>. 
-
-
-
-[2021-11-11 01:57:38] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 37 payload bytes
-[2021-11-11 01:57:38] [frame_header] Header Bytes: 
-[0] (2) 81 25 
-
-[2021-11-11 01:57:47] [control] Control frame received with opcode 8
-[2021-11-11 01:57:47] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
-[2021-11-11 01:57:47] [frame_header] Header Bytes: 
+[2022-02-09 01:27:34] [control] Control frame received with opcode 8
+[2022-02-09 01:27:34] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2022-02-09 01:27:34] [frame_header] Header Bytes: 
 [0] (2) 88 02 
 
-[2021-11-11 01:57:47] [disconnect] Disconnect close local:[1001] remote:[1001]
-[2021-11-11 01:57:51] [connect] WebSocket Connection [::ffff:127.0.0.1]:59506 v13 "Mozilla/5.0 (X11; Linux x86_64; rv:94.0) Gecko/20100101 Firefox/94.0" / 101
-Starting....
-Choosing login/ registerSet sign_in_up_ to l
-[2021-11-11 01:57:52] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
-[2021-11-11 01:57:52] [frame_header] Header Bytes: 
-[0] (2) 81 06 
-
-On to getting credentials
-On to getting credentials
-checkLogin
-[1;31mEvents: show room, from: startGame[0m
-Updated music to: vibes
-Updated image to: background_2
-[1;31mshow, room[0m
-[1;34mfirst[0m throwing: show|room
-[1;32m ... [1;34mfirst: [1;32mevent triggered: h_show(show)[0m
-[1;34mworld[0m throwing: show|room
-[1;34mroom[0m throwing: show|room
-[1;34mstandard[0m throwing: show|room
-[1;32m ... [1;34mstandard: [1;32mevent triggered: h_ignore(show)[0m
-Got output: vibes background_2 <div class='spoken'>TUTORIAL MASTER - 	You're in the first test-room with nothing in it whatsoever!</div> <div class='spoken2'></div>
-
-Befor play: input: [end_game] calling with id: _admin
-Sending to all online players
-Sending to host.
-Game is getting closed...
-Befor play: input: [end_game] calling with id: _admin
-Sending to all online players
-Sending to host.
-Game is getting closed...
-Webgame started on port 9004
+[2022-02-09 01:27:39] [disconnect] Disconnect close local:[1001] remote:[1001]

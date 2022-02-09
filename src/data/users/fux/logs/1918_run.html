@@ -3,19 +3,13 @@
 <!-- This file was created with the aha Ansi HTML Adapter. https://github.com/theZiz/aha -->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="application/xml+xhtml; charset=UTF-8"/>
+<meta http-equiv="Content-Type" content="application/xml+xhtml; charset=UTF-8" />
 <title>stdin</title>
 </head>
 <body>
 <pre>
 Creating game.
-Room: &quot;nonexist.nonexists&quot;
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: &quot;nonexist.nonexists&quot;
-Created all rooms 
+Created texts with area id: test
 Room: &quot;test.raum1&quot;
 Parsing characters
 Parsing Items
@@ -35,27 +29,41 @@ Parsing details
 &quot;test.raum3.mirror&quot;
 parseRandomItemsToDetail
 Parsing Items
+Added handler: &quot;mirror_handler&quot;: {&quot;id&quot;:&quot;h_startDialogDirect&quot;,&quot;infos&quot;:{&quot;character&quot;:&quot;nonexist.nonexists.mirror&quot;,&quot;identifier&quot;:&quot;mirror&quot;},&quot;key&quot;:&quot;mirror_handler&quot;,&quot;priority&quot;:0,&quot;string&quot;:&quot;examine&quot;}
 Create room: &quot;test.raum3&quot;
 Room: &quot;test.test_room&quot;
 Parsing characters
 Parsing Items
 Parsing details 
 Create room: &quot;test.test_room&quot;
+Room: &quot;test.tunnel_1&quot;
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: &quot;test.tunnel_1&quot;
+Room: &quot;test.tunnel_2&quot;
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: &quot;test.tunnel_2&quot;
+Created all rooms 
+Room: &quot;nonexist.nonexists&quot;
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: &quot;nonexist.nonexists&quot;
 Created all rooms 
 worldFactory: done.
 Loading config. 
-Config: {&quot;attributes&quot;:[&quot;smoker&quot;],&quot;commands&quot;:[{&quot;id&quot;:&quot;consume&quot;,&quot;regex&quot;:&quot;(drink) (.*)&quot;,&quot;take&quot;:2}],&quot;image&quot;:{&quot;background&quot;:&quot;background_2&quot;},&quot;mapAttributes&quot;:{&quot;smoker&quot;:{&quot;0&quot;:&quot;non-smoker&quot;,&quot;1&quot;:&quot;smoker&quot;}},&quot;minds&quot;:[{&quot;color&quot;:&quot;blue&quot;,&quot;id&quot;:&quot;loreteller&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;red&quot;,&quot;id&quot;:&quot;lucy&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;yellow&quot;,&quot;id&quot;:&quot;mirror&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;green&quot;,&quot;id&quot;:&quot;greg&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1}],&quot;music&quot;:{&quot;background&quot;:&quot;vibes&quot;,&quot;fight&quot;:&quot;fight&quot;},&quot;printing&quot;:{&quot;desc&quot;:&quot;&quot;,&quot;error&quot;:&quot;&quot;,&quot;player&quot;:&quot;JACK&quot;,&quot;story&quot;:&quot;LORETELLER&quot;,&quot;tech&quot;:&quot;&quot;},&quot;show&quot;:{&quot;chars&quot;:{&quot;pre&quot;:&quot;Here are&quot;},&quot;exits&quot;:{&quot;post&quot;:&quot;nowhere&quot;,&quot;pre&quot;:&quot;You can go&quot;}}}
+Config: {&quot;attributes&quot;:[&quot;smoker&quot;,&quot;drinker&quot;],&quot;commands&quot;:[{&quot;id&quot;:&quot;consume&quot;,&quot;regex&quot;:&quot;(drink) (.*)&quot;,&quot;take&quot;:2}],&quot;image&quot;:{&quot;background&quot;:&quot;background_2&quot;,&quot;fight&quot;:&quot;bg3&quot;},&quot;mapAttributes&quot;:{&quot;smoker&quot;:{&quot;0&quot;:&quot;non-smoker&quot;,&quot;1&quot;:&quot;smoker&quot;}},&quot;minds&quot;:[{&quot;color&quot;:&quot;blue&quot;,&quot;id&quot;:&quot;loreteller&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;red&quot;,&quot;id&quot;:&quot;lucy&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;yellow&quot;,&quot;id&quot;:&quot;mirror&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;green&quot;,&quot;id&quot;:&quot;greg&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;orange&quot;,&quot;id&quot;:&quot;conspiricy&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;red&quot;,&quot;id&quot;:&quot;reason&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;green&quot;,&quot;id&quot;:&quot;paranoia&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1}],&quot;music&quot;:{&quot;background&quot;:&quot;vibes&quot;,&quot;fight&quot;:&quot;fight&quot;},&quot;printing&quot;:{&quot;desc&quot;:&quot;&quot;,&quot;error&quot;:&quot;&quot;,&quot;player&quot;:&quot;JACK&quot;,&quot;story&quot;:&quot;LORETELLER&quot;,&quot;tech&quot;:&quot;&quot;},&quot;show&quot;:{&quot;chars&quot;:{&quot;post&quot;:&quot;no people at all.&quot;,&quot;pre&quot;:&quot;Here are&quot;},&quot;exits&quot;:{&quot;post&quot;:&quot;nowhere&quot;,&quot;pre&quot;:&quot;You can go&quot;}}}
 Config loaded. 
 Media set. 
 Done parsing world.
 Parsing players...
-Room: &quot;nonexist.nonexists&quot;
-Parsing characters
-Parsing Items
-Parsing Items
-Parsing details 
-Create room: &quot;nonexist.nonexists&quot;
-Created all rooms 
+Created texts with area id: test
 Room: &quot;test.raum1&quot;
 Parsing characters
 Parsing Items
@@ -75,21 +83,514 @@ Parsing details
 &quot;test.raum3.mirror&quot;
 parseRandomItemsToDetail
 Parsing Items
+Added handler: &quot;mirror_handler&quot;: {&quot;id&quot;:&quot;h_startDialogDirect&quot;,&quot;infos&quot;:{&quot;character&quot;:&quot;nonexist.nonexists.mirror&quot;,&quot;identifier&quot;:&quot;mirror&quot;},&quot;key&quot;:&quot;mirror_handler&quot;,&quot;priority&quot;:0,&quot;string&quot;:&quot;examine&quot;}
 Create room: &quot;test.raum3&quot;
 Room: &quot;test.test_room&quot;
 Parsing characters
 Parsing Items
 Parsing details 
 Create room: &quot;test.test_room&quot;
+Room: &quot;test.tunnel_1&quot;
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: &quot;test.tunnel_1&quot;
+Room: &quot;test.tunnel_2&quot;
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: &quot;test.tunnel_2&quot;
+Created all rooms 
+Room: &quot;nonexist.nonexists&quot;
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: &quot;nonexist.nonexists&quot;
 Created all rooms 
 worldFactory: done.
 Loading config. 
-Config: {&quot;attributes&quot;:[&quot;smoker&quot;],&quot;commands&quot;:[{&quot;id&quot;:&quot;consume&quot;,&quot;regex&quot;:&quot;(drink) (.*)&quot;,&quot;take&quot;:2}],&quot;image&quot;:{&quot;background&quot;:&quot;background_2&quot;},&quot;mapAttributes&quot;:{&quot;smoker&quot;:{&quot;0&quot;:&quot;non-smoker&quot;,&quot;1&quot;:&quot;smoker&quot;}},&quot;minds&quot;:[{&quot;color&quot;:&quot;blue&quot;,&quot;id&quot;:&quot;loreteller&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;red&quot;,&quot;id&quot;:&quot;lucy&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;yellow&quot;,&quot;id&quot;:&quot;mirror&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;green&quot;,&quot;id&quot;:&quot;greg&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1}],&quot;music&quot;:{&quot;background&quot;:&quot;vibes&quot;,&quot;fight&quot;:&quot;fight&quot;},&quot;printing&quot;:{&quot;desc&quot;:&quot;&quot;,&quot;error&quot;:&quot;&quot;,&quot;player&quot;:&quot;JACK&quot;,&quot;story&quot;:&quot;LORETELLER&quot;,&quot;tech&quot;:&quot;&quot;},&quot;show&quot;:{&quot;chars&quot;:{&quot;pre&quot;:&quot;Here are&quot;},&quot;exits&quot;:{&quot;post&quot;:&quot;nowhere&quot;,&quot;pre&quot;:&quot;You can go&quot;}}}
+Config: {&quot;attributes&quot;:[&quot;smoker&quot;,&quot;drinker&quot;],&quot;commands&quot;:[{&quot;id&quot;:&quot;consume&quot;,&quot;regex&quot;:&quot;(drink) (.*)&quot;,&quot;take&quot;:2}],&quot;image&quot;:{&quot;background&quot;:&quot;background_2&quot;,&quot;fight&quot;:&quot;bg3&quot;},&quot;mapAttributes&quot;:{&quot;smoker&quot;:{&quot;0&quot;:&quot;non-smoker&quot;,&quot;1&quot;:&quot;smoker&quot;}},&quot;minds&quot;:[{&quot;color&quot;:&quot;blue&quot;,&quot;id&quot;:&quot;loreteller&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;red&quot;,&quot;id&quot;:&quot;lucy&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;yellow&quot;,&quot;id&quot;:&quot;mirror&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;green&quot;,&quot;id&quot;:&quot;greg&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;orange&quot;,&quot;id&quot;:&quot;conspiricy&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;red&quot;,&quot;id&quot;:&quot;reason&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;green&quot;,&quot;id&quot;:&quot;paranoia&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1}],&quot;music&quot;:{&quot;background&quot;:&quot;vibes&quot;,&quot;fight&quot;:&quot;fight&quot;},&quot;printing&quot;:{&quot;desc&quot;:&quot;&quot;,&quot;error&quot;:&quot;&quot;,&quot;player&quot;:&quot;JACK&quot;,&quot;story&quot;:&quot;LORETELLER&quot;,&quot;tech&quot;:&quot;&quot;},&quot;show&quot;:{&quot;chars&quot;:{&quot;post&quot;:&quot;no people at all.&quot;,&quot;pre&quot;:&quot;Here are&quot;},&quot;exits&quot;:{&quot;post&quot;:&quot;nowhere&quot;,&quot;pre&quot;:&quot;You can go&quot;}}}
 Config loaded. 
 Media set. 
 initializing context stack.
 Done.
-<span style="font-weight:bold;color:red;">invalid show map @key=chars</span>
+Created texts with area id: test
+Room: &quot;test.raum1&quot;
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: &quot;test.raum1&quot;
+Room: &quot;test.raum2&quot;
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: &quot;test.raum2&quot;
+Room: &quot;test.raum3&quot;
+Parsing characters
+Parsing Items
+Parsing details 
+&quot;test.raum3.mirror&quot;
+parseRandomItemsToDetail
+Parsing Items
+Added handler: &quot;mirror_handler&quot;: {&quot;id&quot;:&quot;h_startDialogDirect&quot;,&quot;infos&quot;:{&quot;character&quot;:&quot;nonexist.nonexists.mirror&quot;,&quot;identifier&quot;:&quot;mirror&quot;},&quot;key&quot;:&quot;mirror_handler&quot;,&quot;priority&quot;:0,&quot;string&quot;:&quot;examine&quot;}
+Create room: &quot;test.raum3&quot;
+Room: &quot;test.test_room&quot;
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: &quot;test.test_room&quot;
+Room: &quot;test.tunnel_1&quot;
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: &quot;test.tunnel_1&quot;
+Room: &quot;test.tunnel_2&quot;
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: &quot;test.tunnel_2&quot;
+Created all rooms 
+Room: &quot;nonexist.nonexists&quot;
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: &quot;nonexist.nonexists&quot;
+Created all rooms 
+worldFactory: done.
+Loading config. 
+Config: {&quot;attributes&quot;:[&quot;smoker&quot;,&quot;drinker&quot;],&quot;commands&quot;:[{&quot;id&quot;:&quot;consume&quot;,&quot;regex&quot;:&quot;(drink) (.*)&quot;,&quot;take&quot;:2}],&quot;image&quot;:{&quot;background&quot;:&quot;background_2&quot;,&quot;fight&quot;:&quot;bg3&quot;},&quot;mapAttributes&quot;:{&quot;smoker&quot;:{&quot;0&quot;:&quot;non-smoker&quot;,&quot;1&quot;:&quot;smoker&quot;}},&quot;minds&quot;:[{&quot;color&quot;:&quot;blue&quot;,&quot;id&quot;:&quot;loreteller&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;red&quot;,&quot;id&quot;:&quot;lucy&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;yellow&quot;,&quot;id&quot;:&quot;mirror&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;green&quot;,&quot;id&quot;:&quot;greg&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;orange&quot;,&quot;id&quot;:&quot;conspiricy&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;red&quot;,&quot;id&quot;:&quot;reason&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;green&quot;,&quot;id&quot;:&quot;paranoia&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1}],&quot;music&quot;:{&quot;background&quot;:&quot;vibes&quot;,&quot;fight&quot;:&quot;fight&quot;},&quot;printing&quot;:{&quot;desc&quot;:&quot;&quot;,&quot;error&quot;:&quot;&quot;,&quot;player&quot;:&quot;JACK&quot;,&quot;story&quot;:&quot;LORETELLER&quot;,&quot;tech&quot;:&quot;&quot;},&quot;show&quot;:{&quot;chars&quot;:{&quot;post&quot;:&quot;no people at all.&quot;,&quot;pre&quot;:&quot;Here are&quot;},&quot;exits&quot;:{&quot;post&quot;:&quot;nowhere&quot;,&quot;pre&quot;:&quot;You can go&quot;}}}
+Config loaded. 
+Media set. 
+initializing context stack.
+Done.
+Created texts with area id: test
+Room: &quot;test.raum1&quot;
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: &quot;test.raum1&quot;
+Room: &quot;test.raum2&quot;
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: &quot;test.raum2&quot;
+Room: &quot;test.raum3&quot;
+Parsing characters
+Parsing Items
+Parsing details 
+&quot;test.raum3.mirror&quot;
+parseRandomItemsToDetail
+Parsing Items
+Added handler: &quot;mirror_handler&quot;: {&quot;id&quot;:&quot;h_startDialogDirect&quot;,&quot;infos&quot;:{&quot;character&quot;:&quot;nonexist.nonexists.mirror&quot;,&quot;identifier&quot;:&quot;mirror&quot;},&quot;key&quot;:&quot;mirror_handler&quot;,&quot;priority&quot;:0,&quot;string&quot;:&quot;examine&quot;}
+Create room: &quot;test.raum3&quot;
+Room: &quot;test.test_room&quot;
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: &quot;test.test_room&quot;
+Room: &quot;test.tunnel_1&quot;
+Parsing characters
+Parsing Items
+Parsing details 
+Create room: &quot;test.tunnel_1&quot;
+Room: &quot;test.tunnel_2&quot;
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: &quot;test.tunnel_2&quot;
+Created all rooms 
+Room: &quot;nonexist.nonexists&quot;
+Parsing characters
+Parsing Items
+Parsing Items
+Parsing Items
+Parsing details 
+Create room: &quot;nonexist.nonexists&quot;
+Created all rooms 
+worldFactory: done.
+Loading config. 
+Config: {&quot;attributes&quot;:[&quot;smoker&quot;,&quot;drinker&quot;],&quot;commands&quot;:[{&quot;id&quot;:&quot;consume&quot;,&quot;regex&quot;:&quot;(drink) (.*)&quot;,&quot;take&quot;:2}],&quot;image&quot;:{&quot;background&quot;:&quot;background_2&quot;,&quot;fight&quot;:&quot;bg3&quot;},&quot;mapAttributes&quot;:{&quot;smoker&quot;:{&quot;0&quot;:&quot;non-smoker&quot;,&quot;1&quot;:&quot;smoker&quot;}},&quot;minds&quot;:[{&quot;color&quot;:&quot;blue&quot;,&quot;id&quot;:&quot;loreteller&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;red&quot;,&quot;id&quot;:&quot;lucy&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;yellow&quot;,&quot;id&quot;:&quot;mirror&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;green&quot;,&quot;id&quot;:&quot;greg&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;orange&quot;,&quot;id&quot;:&quot;conspiricy&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;red&quot;,&quot;id&quot;:&quot;reason&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1},{&quot;color&quot;:&quot;green&quot;,&quot;id&quot;:&quot;paranoia&quot;,&quot;level&quot;:3,&quot;relevance&quot;:0.1}],&quot;music&quot;:{&quot;background&quot;:&quot;vibes&quot;,&quot;fight&quot;:&quot;fight&quot;},&quot;printing&quot;:{&quot;desc&quot;:&quot;&quot;,&quot;error&quot;:&quot;&quot;,&quot;player&quot;:&quot;JACK&quot;,&quot;story&quot;:&quot;LORETELLER&quot;,&quot;tech&quot;:&quot;&quot;},&quot;show&quot;:{&quot;chars&quot;:{&quot;post&quot;:&quot;no people at all.&quot;,&quot;pre&quot;:&quot;Here are&quot;},&quot;exits&quot;:{&quot;post&quot;:&quot;nowhere&quot;,&quot;pre&quot;:&quot;You can go&quot;}}}
+Config loaded. 
+Media set. 
+initializing context stack.
+Done.
+Finished parsing!
+MUSIC: GOT MUSIC: vibes
+vibes
+IMAGE: background_2
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+GOT MUSIC: vibes
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-06 00:54:52] [connect] WebSocket Connection [::ffff:95.90.244.47]:45274 v13 &quot;Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0&quot; / 101
+Starting....
+Audio loaded, size: 2391966
+Choosing login/ registerSet sign_in_up_ to l
+[2022-02-06 00:54:54] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
+[2022-02-06 00:54:54] [frame_header] Header Bytes: 
+[0] (2) 81 06 
+
+On to getting credentials
+[2022-02-06 00:54:56] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 17 payload bytes
+[2022-02-06 00:54:56] [frame_header] Header Bytes: 
+[0] (2) 81 06 
+[1] (2) 81 0B 
+
+On to getting credentials
+checkLogin
+<span style="color:red;font-weight:bold;">Events: show room, from: startGame</span>
+Updated music to: vibes
+Updated image to: background_2
+<span style="color:red;font-weight:bold;">show, room</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: show|room
+<span style="color:red;font-weight:bold;">Events: printText start, from: pre-events</span>
+<span style="color:red;font-weight:bold;">printText, start</span>
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">first: </span><span style="color:green;font-weight:bold;">event triggered: h_show(show)</span>
+<span style="color:blue;font-weight:bold;">world</span> throwing: show|room
+<span style="color:blue;font-weight:bold;">room</span> throwing: show|room
+<span style="color:blue;font-weight:bold;">standard</span> throwing: show|room
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">standard: </span><span style="color:green;font-weight:bold;">event triggered: h_ignore(show)</span>
+Got output: vibes background_2 &lt;div class='spoken'&gt;LORETELLER - 	Hello Jack? I think you forgot where you were for a minute, you're in &lt;i&gt;Whitetaker Castle&lt;/i&gt; at a diner. Downstairs is boisterous, you needed some rest and distance from it all. Now you're here.$&lt;/div&gt;&lt;div class='spoken2'&gt;	Now, let us just take a short second, so that I can show you some music, that you may want to pay attention to should you hear it ever again...$&lt;/div&gt;&lt;div class='spoken2'&gt;	Jack, I apologize for taking so much of your time. Now dive into this world and enjoy, but also: be careful! $&lt;/div&gt;&lt;div class='spoken'&gt;LORETELLER - 	You're standing in an empty room. At least it &lt;i&gt;seems&lt;/i&gt; to be empty, although actually there are some paintings, hanging on and some tables standing against the walls. The tables however are empty. maybe this give you the impression of emptiness.  &lt;/div&gt; &lt;div class='spoken2'&gt;&lt;/div&gt;
+
+[2022-02-06 00:54:57] [frame_header] Dispatching write containing 3 message(s) containing 8 header bytes and 927 payload bytes
+[2022-02-06 00:54:57] [frame_header] Header Bytes: 
+[0] (2) 81 0A 
+[1] (2) 81 13 
+[2] (4) 81 7E 03 82 
+
+Befor play: input: pick up booze calling with id: jack
+<span style="color:red;font-weight:bold;">Events: pick up booze, from: CGame::play</span>
+<span style="color:red;font-weight:bold;">pick, booze</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: pick|booze
+<span style="color:blue;font-weight:bold;">world</span> throwing: pick|booze
+<span style="color:blue;font-weight:bold;">room</span> throwing: pick|booze
+<span style="color:blue;font-weight:bold;">standard</span> throwing: pick|booze
+Getting item.
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">standard: </span><span style="color:green;font-weight:bold;">event triggered: h_take(pick)</span>
+Send the output to client: &lt;b&gt; Booze&lt;/b&gt; zu JACK's Inventar hinzugefügt.
+
+
+
+[2022-02-06 00:56:00] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 49 payload bytes
+[2022-02-06 00:56:00] [frame_header] Header Bytes: 
+[0] (2) 81 31 
+
+Befor play: input: drink booze calling with id: jack
+<span style="color:red;font-weight:bold;">Events: drink booze, from: CGame::play</span>
+<span style="color:red;font-weight:bold;">consume, booze</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: consume|booze
+<span style="color:blue;font-weight:bold;">world</span> throwing: consume|booze
+<span style="color:blue;font-weight:bold;">room</span> throwing: consume|booze
+<span style="color:blue;font-weight:bold;">standard</span> throwing: consume|booze
+<span style="color:red;font-weight:bold;">Events: changeSound prophecies;changeImage bg3;addExit test.raum2|test.raum3, from: pre-events</span>
+<span style="color:red;font-weight:bold;">changeSound, prophecies</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: changeSound|prophecies
+<span style="color:blue;font-weight:bold;">world</span> throwing: changeSound|prophecies
+h_changeSound: prophecies
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">world: </span><span style="color:green;font-weight:bold;">event triggered: h_changeSound(changeSound)</span>
+<span style="color:red;font-weight:bold;">changeImage, bg3</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: changeImage|bg3
+<span style="color:blue;font-weight:bold;">world</span> throwing: changeImage|bg3
+h_changeImage: bg3
+Updated image to: bg3
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">world: </span><span style="color:green;font-weight:bold;">event triggered: h_changeImage(changeImage)</span>
+<span style="color:red;font-weight:bold;">addExit, test.raum2|test.raum3</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: addExit|test.raum2|test.raum3
+<span style="color:blue;font-weight:bold;">world</span> throwing: addExit|test.raum2|test.raum3
+test.raum2|test.raum3
+test.raum2, test.raum3, 
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">world: </span><span style="color:green;font-weight:bold;">event triggered: h_addExit(addExit)</span>
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">standard: </span><span style="color:green;font-weight:bold;">event triggered: h_consume(consume)</span>
+Send the output to client: bg3 &lt;div class='spoken'&gt;LORETELLER - 	uoY drink the hoel bottle and eudysndl feel... absolutely zaamgni. You're on top of the world. Now you og girl! &lt;/div&gt;
+
+[2022-02-06 00:56:02] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 162 payload bytes
+[2022-02-06 00:56:02] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 A2 
+
+Befor play: input: go to second calling with id: jack
+<span style="color:red;font-weight:bold;">Events: go to second, from: CGame::play</span>
+<span style="color:red;font-weight:bold;">go, second</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: go|second
+<span style="color:blue;font-weight:bold;">world</span> throwing: go|second
+<span style="color:blue;font-weight:bold;">room</span> throwing: go|second
+<span style="color:blue;font-weight:bold;">standard</span> throwing: go|second
+<span style="color:red;font-weight:bold;">Events: printText always, from: post-events</span>
+Updated music to: prophecies
+<span style="color:red;font-weight:bold;">printText, always</span>
+done.
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">standard: </span><span style="color:green;font-weight:bold;">event triggered: h_goTo(go)</span>
+Send the output to client: &lt;div class='spoken'&gt;LORETELLER - 	entrhAo empty room. Only that it's ont quite empty. tI seems to be something like a reading room tihw a lot fo books standing in piles against eht walls. Maybe shit time it's hte books giving oyu the feeling of emptiness...$ &lt;/div&gt; &lt;div class='spoken2'&gt;Tall slithly ugly man in long old army coat is standing right next to the door. He's looking a bit shady. He seems to be sweating under his coat.  A woman is sitting an an arm chair, smoking and drinking scotch. &lt;/div&gt;prophecies &lt;div class='spoken2'&gt;	Books always make you feel empty.$&lt;/div&gt;&lt;div class='spoken2'&gt;	always.$&lt;/div&gt;&lt;div class='spoken2'&gt;	ALWAYS!&lt;/div&gt;
+
+[2022-02-06 00:56:13] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 658 payload bytes
+[2022-02-06 00:56:13] [frame_header] Header Bytes: 
+[0] (4) 81 7E 02 92 
+
+Audio loaded, size: 10845042
+Befor play: input: show people calling with id: jack
+<span style="color:red;font-weight:bold;">Events: show people, from: CGame::play</span>
+<span style="color:red;font-weight:bold;">show, people</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: show|people
+showCharacters
+Got text from gramma: Here are &lt;b&gt;Tall guy in a black army coat&lt;/b&gt; und &lt;b&gt;Smocking woman drinking scotch&lt;/b&gt;. 
+Returning...
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">first: </span><span style="color:green;font-weight:bold;">event triggered: h_show(show)</span>
+<span style="color:blue;font-weight:bold;">world</span> throwing: show|people
+<span style="color:blue;font-weight:bold;">room</span> throwing: show|people
+<span style="color:blue;font-weight:bold;">standard</span> throwing: show|people
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">standard: </span><span style="color:green;font-weight:bold;">event triggered: h_ignore(show)</span>
+Send the output to client: reeH are &lt;b&gt;Tall yug in a clbak army coat&lt;/b&gt; nud &lt;b&gt;Smocking woman nridking scotch&lt;/b&gt;. 
+ 
+
+
+[2022-02-06 00:56:21] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 93 payload bytes
+[2022-02-06 00:56:21] [frame_header] Header Bytes: 
+[0] (2) 81 5D 
+
+Befor play: input: go to third calling with id: jack
+<span style="color:red;font-weight:bold;">Events: go to third, from: CGame::play</span>
+<span style="color:red;font-weight:bold;">go, third</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: go|third
+<span style="color:blue;font-weight:bold;">world</span> throwing: go|third
+<span style="color:blue;font-weight:bold;">room</span> throwing: go|third
+<span style="color:blue;font-weight:bold;">standard</span> throwing: go|third
+Added handler: {&quot;id&quot;:&quot;h_startDialogDirect&quot;,&quot;infos&quot;:{&quot;character&quot;:&quot;nonexist.nonexists.mirror&quot;,&quot;identifier&quot;:&quot;mirror&quot;},&quot;key&quot;:&quot;mirror_handler&quot;,&quot;priority&quot;:0,&quot;string&quot;:&quot;examine&quot;}
+done.
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">standard: </span><span style="color:green;font-weight:bold;">event triggered: h_goTo(go)</span>
+Send the output to client: &lt;div class='spoken'&gt;LORETELLER - 	oYu enter the toilttee. &lt;/div&gt; &lt;div class='spoken2'&gt;&lt;/div&gt;
+
+[2022-02-06 00:56:24] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 96 payload bytes
+[2022-02-06 00:56:24] [frame_header] Header Bytes: 
+[0] (2) 81 60 
+
+Befor play: input: examine mirror calling with id: jack
+Added handler: {&quot;id&quot;:&quot;h_startDialogDirect&quot;,&quot;infos&quot;:{&quot;character&quot;:&quot;nonexist.nonexists.mirror&quot;,&quot;identifier&quot;:&quot;mirror&quot;},&quot;key&quot;:&quot;mirror_handler&quot;,&quot;priority&quot;:0,&quot;string&quot;:&quot;examine&quot;}
+<span style="color:red;font-weight:bold;">Events: examine mirror, from: CGame::play</span>
+<span style="color:red;font-weight:bold;">examine, mirror</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: examine|mirror
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">first: </span><span style="color:green;font-weight:bold;">event triggered: h_examine(examine)</span>
+<span style="color:blue;font-weight:bold;">world</span> throwing: examine|mirror
+<span style="color:blue;font-weight:bold;">room</span> throwing: examine|mirror
+h_startDialogDirekt: mirror
+About to set attribute that does not exist: state
+About to set attribute that does not exist: mapOptions
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">room: </span><span style="color:green;font-weight:bold;">event triggered: h_startDialogDirect(examine)</span>
+<span style="color:blue;font-weight:bold;">standard</span> throwing: examine|mirror
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">standard: </span><span style="color:green;font-weight:bold;">event triggered: h_ignore(examine)</span>
+Send the output to client: &lt;div class='spoken'&gt;LORETELLER - 	ehT mirror is lgaginr at you. gakinT a a clsoer look, it's not the mirror, si't your own erfonclite. YOU are tnarsitg at YOURSELF!$ &lt;/div&gt;&lt;div class='spoken'&gt;MIRROR - 	tah looks like you again, Jack, dnsieat of just iodng your quest, oyu've decided on kuicq fun. &lt;/div&gt;1: what am i doing here, this is neither time nor place to fool around, i have to sober up again...
+2: what do i care i am here for the fun!
+
+
+[2022-02-06 00:56:28] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 450 payload bytes
+[2022-02-06 00:56:28] [frame_header] Header Bytes: 
+[0] (4) 81 7E 01 C2 
+
+Befor play: input: 2 calling with id: jack
+Added handler: {&quot;id&quot;:&quot;h_startDialogDirect&quot;,&quot;infos&quot;:{&quot;character&quot;:&quot;nonexist.nonexists.mirror&quot;,&quot;identifier&quot;:&quot;mirror&quot;},&quot;key&quot;:&quot;mirror_handler&quot;,&quot;priority&quot;:0,&quot;string&quot;:&quot;examine&quot;}
+<span style="color:red;font-weight:bold;">Events: 2, from: CGame::play</span>
+<span style="color:red;font-weight:bold;">2, 2</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: 2|2
+<span style="color:blue;font-weight:bold;">world</span> throwing: 2|2
+<span style="color:blue;font-weight:bold;">dialog</span> throwing: 2|2
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">dialog: </span><span style="color:green;font-weight:bold;">event triggered: h_call(2)</span>
+Send the output to client: &lt;div class='spoken'&gt;JACK - 	hWat do i raec i am here for the fun!$ &lt;/div&gt;&lt;div class='spoken'&gt;MIRROR - 	rAe you even dlo enough to krind scotch? &lt;/div&gt;1: You are me you know how old i am!
+
+
+[2022-02-06 00:56:30] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 191 payload bytes
+[2022-02-06 00:56:30] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 BF 
+
+Befor play: input:  calling with id: jack
+Added handler: {&quot;id&quot;:&quot;h_startDialogDirect&quot;,&quot;infos&quot;:{&quot;character&quot;:&quot;nonexist.nonexists.mirror&quot;,&quot;identifier&quot;:&quot;mirror&quot;},&quot;key&quot;:&quot;mirror_handler&quot;,&quot;priority&quot;:0,&quot;string&quot;:&quot;examine&quot;}
+<span style="color:red;font-weight:bold;">Events: , from: CGame::play</span>
+Send the output to client: 
+
+[2022-02-06 00:56:31] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 1 payload bytes
+[2022-02-06 00:56:31] [frame_header] Header Bytes: 
+[0] (2) 81 01 
+
+Befor play: input: 1 calling with id: jack
+Added handler: {&quot;id&quot;:&quot;h_startDialogDirect&quot;,&quot;infos&quot;:{&quot;character&quot;:&quot;nonexist.nonexists.mirror&quot;,&quot;identifier&quot;:&quot;mirror&quot;},&quot;key&quot;:&quot;mirror_handler&quot;,&quot;priority&quot;:0,&quot;string&quot;:&quot;examine&quot;}
+<span style="color:red;font-weight:bold;">Events: 1, from: CGame::play</span>
+<span style="color:red;font-weight:bold;">1, 1</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: 1|1
+<span style="color:blue;font-weight:bold;">world</span> throwing: 1|1
+<span style="color:blue;font-weight:bold;">dialog</span> throwing: 1|1
+Added handler: {&quot;id&quot;:&quot;h_startDialogDirect&quot;,&quot;infos&quot;:{&quot;character&quot;:&quot;nonexist.nonexists.mirror&quot;,&quot;identifier&quot;:&quot;mirror&quot;},&quot;key&quot;:&quot;mirror_handler&quot;,&quot;priority&quot;:0,&quot;string&quot;:&quot;examine&quot;}
+<span style="color:red;font-weight:bold;">Events: removeHandlerFromRoom test.raum3|mirror_handler, from: post-events</span>
+<span style="color:red;font-weight:bold;">removeHandlerFromRoom, test.raum3|mirror_handler</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: removeHandlerFromRoom|test.raum3|mirror_handler
+<span style="color:blue;font-weight:bold;">world</span> throwing: removeHandlerFromRoom|test.raum3|mirror_handler
+Object::RemoveHandler: mirror_handler
+Object::RemoveHandler: removed 
+Object::RemoveHandler: mirror_handler
+Object::RemoveHandler: removed 
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">world: </span><span style="color:green;font-weight:bold;">event triggered: h_removeHandlerFromRoom(removeHandlerFromRoom)</span>
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">dialog: </span><span style="color:green;font-weight:bold;">event triggered: h_call(1)</span>
+Send the output to client: &lt;div class='spoken'&gt;JACK - 	uoY are me you know how dlo i am!$ &lt;/div&gt;&lt;div class='spoken'&gt;MIRROR - 	ehnT you should ta least be dlo enough to kate responsibility for rouy actions! &lt;/div&gt;1: nobody tells me what to do, not even myself!
+
+
+[2022-02-06 00:56:32] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 237 payload bytes
+[2022-02-06 00:56:32] [frame_header] Header Bytes: 
+[0] (4) 81 7E 00 ED 
+
+Befor play: input: 1 calling with id: jack
+<span style="color:red;font-weight:bold;">Events: 1, from: CGame::play</span>
+<span style="color:red;font-weight:bold;">1, 1</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: 1|1
+<span style="color:blue;font-weight:bold;">world</span> throwing: 1|1
+<span style="color:blue;font-weight:bold;">dialog</span> throwing: 1|1
+<span style="color:red;font-weight:bold;">Events: addExit test.raum3|test.tunnel_1, from: pre-events</span>
+<span style="color:red;font-weight:bold;">addExit, test.raum3|test.tunnel_1</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: addExit|test.raum3|test.tunnel_1
+<span style="color:blue;font-weight:bold;">world</span> throwing: addExit|test.raum3|test.tunnel_1
+test.raum3|test.tunnel_1
+test.raum3, test.tunnel_1, 
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">world: </span><span style="color:green;font-weight:bold;">event triggered: h_addExit(addExit)</span>
+<span style="color:red;font-weight:bold;">Events: endDialog, from: h_call</span>
+<span style="color:red;font-weight:bold;">endDialog, endDialog</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: endDialog|endDialog
+<span style="color:blue;font-weight:bold;">world</span> throwing: endDialog|endDialog
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">world: </span><span style="color:green;font-weight:bold;">event triggered: h_endDialog(endDialog)</span>
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">dialog: </span><span style="color:green;font-weight:bold;">event triggered: h_call(1)</span>
+Send the output to client: &lt;div class='spoken'&gt;JACK - 	boNdoy tells me htaw to do, ont even myself!$ &lt;/div&gt;&lt;div class='spoken'&gt;LORETELLER - 	uoY hit your tefreclion in the eafc with the ilbdn power of a drunken man.$ &lt;/div&gt;&lt;div class='spoken2'&gt;	Shortly after the broken pieces hit the ground with a clatter, you see that something was hidden inside the mirror&lt;/div&gt;Dialog ended.
+
+
+[2022-02-06 00:56:33] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 358 payload bytes
+[2022-02-06 00:56:33] [frame_header] Header Bytes: 
+[0] (4) 81 7E 01 66 
+
+Befor play: input: show exits calling with id: jack
+<span style="color:red;font-weight:bold;">Events: show exits, from: CGame::play</span>
+<span style="color:red;font-weight:bold;">show, exits</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: show|exits
+Calling:  show exits!
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">first: </span><span style="color:green;font-weight:bold;">event triggered: h_show(show)</span>
+<span style="color:blue;font-weight:bold;">world</span> throwing: show|exits
+<span style="color:blue;font-weight:bold;">room</span> throwing: show|exits
+<span style="color:blue;font-weight:bold;">standard</span> throwing: show|exits
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">standard: </span><span style="color:green;font-weight:bold;">event triggered: h_ignore(show)</span>
+Send the output to client: uoY can go &lt;b&gt;ot second room&lt;/b&gt; und &lt;b&gt;in hole ebhnid the mirror &lt;/b&gt;. 
+ 
+
+
+[2022-02-06 00:56:38] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 76 payload bytes
+[2022-02-06 00:56:38] [frame_header] Header Bytes: 
+[0] (2) 81 4C 
+
+Befor play: input: go in hole calling with id: jack
+<span style="color:red;font-weight:bold;">Events: go in hole, from: CGame::play</span>
+<span style="color:red;font-weight:bold;">go, in hole</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: go|in hole
+<span style="color:blue;font-weight:bold;">world</span> throwing: go|in hole
+<span style="color:blue;font-weight:bold;">room</span> throwing: go|in hole
+<span style="color:blue;font-weight:bold;">standard</span> throwing: go|in hole
+done.
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">standard: </span><span style="color:green;font-weight:bold;">event triggered: h_goTo(go)</span>
+Send the output to client: &lt;div class='spoken'&gt;LORETELLER - 	oYu are standing in a fairly kadr tunnel. The sllaw seem to be of bear kocr. This time it is not ynlo a &lt;i&gt;feeling&lt;/i&gt; fo emptiness. $ &lt;/div&gt;&lt;div class='spoken2'&gt;	It as actual cold, dull emptiness and pure devastating darkness&lt;/div&gt; &lt;div class='spoken2'&gt;&lt;/div&gt;
+
+[2022-02-06 00:56:40] [frame_header] Dispatching write containing 1 message(s) containing 4 header bytes and 299 payload bytes
+[2022-02-06 00:56:40] [frame_header] Header Bytes: 
+[0] (4) 81 7E 01 2B 
+
+Befor play: input: go down  calling with id: jack
+<span style="color:red;font-weight:bold;">Events: go down , from: CGame::play</span>
+<span style="color:red;font-weight:bold;">go, down </span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: go|down 
+<span style="color:blue;font-weight:bold;">world</span> throwing: go|down 
+<span style="color:blue;font-weight:bold;">room</span> throwing: go|down 
+<span style="color:blue;font-weight:bold;">standard</span> throwing: go|down 
+<span style="color:red;font-weight:bold;">Events: startDialogB test.tunnel_2.guru, from: post-events</span>
+<span style="color:red;font-weight:bold;">startDialogB, test.tunnel_2.guru</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: startDialogB|test.tunnel_2.guru
+<span style="color:blue;font-weight:bold;">world</span> throwing: startDialogB|test.tunnel_2.guru
+h_startDialogDirektB: test.tunnel_2.guru
+About to set attribute that does not exist: state
+About to set attribute that does not exist: mapOptions
+Befor play: input:  calling with id: jack
+<span style="color:red;font-weight:bold;">Events: , from: CGame::play</span>
+Send the output to client: 
+
+[2022-02-06 00:57:00] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 1 payload bytes
+[2022-02-06 00:57:00] [frame_header] Header Bytes: 
+[0] (2) 81 01 
+
+Befor play: input: show people calling with id: jack
+<span style="color:red;font-weight:bold;">Events: show people, from: CGame::play</span>
+<span style="color:red;font-weight:bold;">show, people</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: show|people
+showCharacters
+Got text from gramma: Here are &lt;b&gt;Guru&lt;/b&gt;. 
+Returning...
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">first: </span><span style="color:green;font-weight:bold;">event triggered: h_show(show)</span>
+<span style="color:blue;font-weight:bold;">world</span> throwing: show|people
+<span style="color:blue;font-weight:bold;">dialog</span> throwing: show|people
+Send the output to client: reeH are &lt;b&gt;Guru&lt;/b&gt;. 
+ 
+aDs kann ich iebm besten Willen hinct sagen! show 
+
+
+[2022-02-06 00:57:03] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 77 payload bytes
+[2022-02-06 00:57:03] [frame_header] Header Bytes: 
+[0] (2) 81 4D 
+
+[2022-02-06 00:57:21] [control] Control frame received with opcode 8
+[2022-02-06 00:57:21] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 2 payload bytes
+[2022-02-06 00:57:21] [frame_header] Header Bytes: 
+[0] (2) 88 02 
+
+[2022-02-06 00:57:26] [disconnect] Disconnect close local:[1001] remote:[1001]
+About to use key at: /etc/letsencrypt/live/kava-i.de/fullchain.pem
+[2022-02-06 00:57:27] [connect] WebSocket Connection [::ffff:95.90.244.47]:45322 v13 &quot;Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101 Firefox/96.0&quot; / 101
+Starting....
+Choosing login/ registerSet sign_in_up_ to l
+[2022-02-06 00:57:28] [frame_header] Dispatching write containing 1 message(s) containing 2 header bytes and 6 payload bytes
+[2022-02-06 00:57:28] [frame_header] Header Bytes: 
+[0] (2) 81 06 
+
+On to getting credentials
+[2022-02-06 00:57:28] [frame_header] Dispatching write containing 2 message(s) containing 4 header bytes and 19 payload bytes
+[2022-02-06 00:57:28] [frame_header] Header Bytes: 
+[0] (2) 81 08 
+[1] (2) 81 0B 
+
+On to getting credentials
+checkLogin
+<span style="color:red;font-weight:bold;">Events: show room, from: startGame</span>
+Updated music to: vibes
+Updated image to: background_2
+<span style="color:red;font-weight:bold;">show, room</span>
+<span style="color:blue;font-weight:bold;">first</span> throwing: show|room
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">first: </span><span style="color:green;font-weight:bold;">event triggered: h_show(show)</span>
+<span style="color:blue;font-weight:bold;">world</span> throwing: show|room
+<span style="color:blue;font-weight:bold;">room</span> throwing: show|room
+<span style="color:blue;font-weight:bold;">standard</span> throwing: show|room
+<span style="color:green;font-weight:bold;"> ... </span><span style="color:blue;font-weight:bold;">standard: </span><span style="color:green;font-weight:bold;">event triggered: h_ignore(show)</span>
+Got output: vibes background_2 &lt;div class='spoken'&gt;TUTORIAL MASTER - 	You're in the first test-room with nothing in it whatsoever!&lt;/div&gt; &lt;div class='spoken2'&gt;&lt;/div&gt;
+
+Befor play: input: [end_game] calling with id: _admin
+Sending to all online players
+Sending to host.
+Game is getting closed...
+[2022-02-06 00:57:28] [frame_header] Dispatching write containing 4 message(s) containing 10 header bytes and 208 payload bytes
+[2022-02-06 00:57:28] [frame_header] Header Bytes: 
+[0] (2) 81 0A 
+[1] (2) 81 15 
+[2] (4) 81 7E 00 9E 
+[3] (2) 81 13 
+
+Befor play: input: [end_game] calling with id: _admin
+Sending to all online players
+Sending to host.
 </pre>
 </body>
 </html>
