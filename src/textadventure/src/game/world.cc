@@ -309,7 +309,7 @@ map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p
   return map_details;
 }
 
-CDetail* CWorld::getDetail(std::string id, std::string room_id, CPlayer* p) {
+CDetail* CWorld::GetDetail(std::string id, std::string room_id, CPlayer* p) {
   // Check that room and detail exists.
   auto room = getRoom(room_id);
   if (m_details.count(id) > 0 && room != nullptr) {
@@ -406,7 +406,6 @@ map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, CPlayer* p) {
       mapItems[jBasic["id"]] = new CItem(jBasic, p);
     }
   }
-
   return mapItems;
 } 
 

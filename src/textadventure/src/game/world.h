@@ -101,7 +101,7 @@ public:
     ///Return a description from world
     CText* getRandomDescription(std::string sID, CPlayer* p);
 
-    CDetail* getDetail(std::string id, std::string room_id, CPlayer* p);
+    CDetail* GetDetail(std::string id, std::string room_id, CPlayer* p);
 
     /**
     * Return a item. Look for given item in dictionary of items (jsons) and create item from json.

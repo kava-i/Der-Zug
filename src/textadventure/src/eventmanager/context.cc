@@ -5,6 +5,7 @@
 #include "game/game.h"
 #include "tools/func.h"
 #include "tools/webcmd.h"
+#include <cstddef>
 #include <iostream>
 #include <string>
 #define cRED "\033[1;31m"
@@ -130,7 +131,7 @@ void Context::initializeHanlders() {
   m_handlers["h_deleteCharacter"] = &Context::h_deleteCharacter;
   m_handlers["h_addItem"] = &Context::h_addItem;
   m_handlers["h_removeItem"] = &Context::h_removeItem;
-  m_handlers["h_recieveMoney"] = &Context::h_recieveMoney;
+  m_handlers["h_recieveMoney"] = &Context::h_recieveMoney; 
   m_handlers["h_eraseMoney"] = &Context::h_eraseMoney;
   m_handlers["h_newFight"] = &Context::h_newFight;
   m_handlers["h_endFight"] = &Context::h_endFight;
@@ -141,7 +142,6 @@ void Context::initializeHanlders() {
   m_handlers["h_showItemInfo"] = &Context::h_showItemInfo;
   m_handlers["h_changeName"] = &Context::h_changeName;
   m_handlers["h_addExit"] = &Context::h_addExit;
-  m_handlers["h_setAttribute"] = &Context::h_setAttribute;
   m_handlers["h_setNewAttribute"] = &Context::h_setNewAttribute;
   m_handlers["h_addTimeEvent"] = &Context::h_addTimeEvent;
   m_handlers["h_setNewQuest"] = &Context::h_setNewQuest;
@@ -158,6 +158,9 @@ void Context::initializeHanlders() {
   m_handlers["h_addDetailToRoom"] = &Context::h_addDetailToRoom;
   m_handlers["h_removeDetailFromRoom"] = &Context::h_removeDetailFromRoom;
   m_handlers["h_removeHandlerFromRoom"] = &Context::h_removeHandlerFromRoom;
+
+  m_handlers["h_setAttribute"] = &Context::h_setAttribute; // same as inc/ dec attribute but silent, 
+
 
   // ***** STANDARD CONTEXT ***** //
   m_handlers["h_showExits"] = &Context::h_showExits;
@@ -589,26 +592,25 @@ void Context::h_removeItem(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_recieveMoney(std::string& sIdentifier, CPlayer* p) {
-    p->setStat("gold", p->getStat("gold") + stoi(sIdentifier));
-    p->appendPrint(Webcmd::set_color(Webcmd::color::GREEN) + "+" + sIdentifier + " Schiling" + Webcmd::set_color(Webcmd::color::WHITE) + "\n");
-
-   m_curPermeable = false; 
+  p->setStat("gold", p->getStat("gold") + stoi(sIdentifier));
+  p->appendPrint(Webcmd::set_color(Webcmd::color::GREEN) + "+" + sIdentifier + " Schiling" + Webcmd::set_color(Webcmd::color::WHITE) + "\n");
+  m_curPermeable = false; 
 }
 
 void Context::h_eraseMoney(std::string& sIdentifier, CPlayer* p) {
-    p->setStat("gold", p->getStat("gold") - stoi(sIdentifier));
-    p->appendPrint(Webcmd::set_color(Webcmd::color::RED) + "-" + sIdentifier + " Schiling" + Webcmd::set_color(Webcmd::color::WHITE) + "\n");
-
-   m_curPermeable = false; 
+  p->setStat("gold", p->getStat("gold") - stoi(sIdentifier));
+  p->appendPrint(Webcmd::set_color(Webcmd::color::RED) + "-" + sIdentifier + " Schiling" + Webcmd::set_color(Webcmd::color::WHITE) + "\n");
+  m_curPermeable = false; 
 }
+
 void Context::h_endFight(std::string& sIdentifier, CPlayer* p) {
-    p->endFight();
-    m_curPermeable=false;
+  p->endFight();
+  m_curPermeable=false;
 }
 
 void Context::h_endDialog(std::string& sIdentifier, CPlayer* p) {
-    p->getContexts().erase("dialog");
-    m_curPermeable=false;
+  p->getContexts().erase("dialog");
+  m_curPermeable=false;
 }
 
 void Context::h_newFight(std::string& sIdentifier, CPlayer* p) {
@@ -680,18 +682,40 @@ void Context::h_setAttribute(std::string& sIdentifier, CPlayer* p) {
   std::vector<std::string> atts = func::split(sIdentifier, "|");
 
   //Check if sIdentifier contains the fitting values
-  if(atts.size() != 3 || std::isdigit(atts[2][0]) == false || p->getStat(atts[0]) == 999) 
+  if(atts.size() < 3 || std::isdigit(atts[2][0]) == false || p->getStat(atts[0]) == 999) {
     std::cout << "Something went worng! Player Attribute could not be changed.\n";
+    return;
+  }
+
+  std::string attribute = atts[0];
+  int value = stoi(atts[2]);
+  std::string msg = "";
 
   //Modify attribute according to operand.
-  else if(atts[1] == "=")
-    p->setStat(atts[0], stoi(atts[2]));
-  else if(atts[1] == "+")
-    p->setStat(atts[0], p->getStat(atts[0]) + stoi(atts[2]));
-  else if(atts[1] == "-")
-    p->setStat(atts[0], p->getStat(atts[0]) - stoi(atts[2]));
+  if(atts[1] == "=") {
+    p->setStat(attribute, value);
+    msg = " set to ";
+  }
+  else if(atts[1] == "+") {
+    p->setStat(attribute, p->getStat(atts[0]) + value);
+    msg = " increased by ";
+  }
+  else if(atts[1] == "-") {
+    p->setStat(attribute, p->getStat(atts[0]) - value);
+    msg = " decreased by ";
+  }
   else
     std::cout << "Wrong operand for setting attribute." << "\n";
+
+  Webcmd::color color = Webcmd::color::WHITE;
+  if (atts.size() > 3 && atts[3] == "green")
+    color = Webcmd::color::GREEN;
+  else if (atts.size() > 3 && atts[3] == "red")
+    color = Webcmd::color::RED;
+  if (atts.size() > 3)
+    p->appendPrint(Webcmd::set_color(color) + attribute + msg 
+        + std::to_string(value )+ Webcmd::set_color(Webcmd::color::WHITE) + "\n");
+
   m_curPermeable=false;
 }
 
@@ -941,7 +965,7 @@ void Context::h_addDetailToRoom(std::string &sIdentifier, CPlayer *p) {
   }
   std::string detail_id = func::split(sIdentifier, "|")[0];
   std::string room_id = func::split(sIdentifier, "|")[1];
-  p->getWorld()->getRoom(room_id)->getDetails()[detail_id] = p->getWorld()->getDetail(detail_id, room_id, p);
+  p->getWorld()->getRoom(room_id)->getDetails()[detail_id] = p->getWorld()->GetDetail(detail_id, room_id, p);
   m_curPermeable = false;
 }
 
