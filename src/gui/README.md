@@ -100,3 +100,14 @@ convention.
 
 
 ### Events <a name="events"></a>
+If not further specialized: 
+- `room_id=area.room_id`
+- `char_id=room_id.char_id`
+- `detail_id=room_id.detail_id`
+
+- `addCharToRoom <char_id|room_id>` 
+- `removeCharFromRoom <char_id>` (room-id is implizitly taken from char-id)
+- `addDetailToRoom <detail_id|room_id>`
+- `addDetailToRoom <detail_id|room_id> (here detail_id is the *simple* id, without
+  room id)
+- `removeHandlerFromRoom <room_id|handler_id>` (handler_id is simple)

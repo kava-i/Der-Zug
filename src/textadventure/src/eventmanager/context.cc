@@ -152,9 +152,11 @@ void Context::initializeHanlders() {
   m_handlers["h_changeSound"] = &Context::h_changeSound;
   m_handlers["h_changeImage"] = &Context::h_changeImage;
 
+  // Room modifiers
   m_handlers["h_addCharToRoom"] = &Context::h_addCharToRoom;
   m_handlers["h_removeCharFromRoom"] = &Context::h_removeCharFromRoom;
-
+  m_handlers["h_addDetailToRoom"] = &Context::h_addDetailToRoom;
+  m_handlers["h_removeDetailFromRoom"] = &Context::h_removeDetailFromRoom;
   m_handlers["h_removeHandlerFromRoom"] = &Context::h_removeHandlerFromRoom;
 
   // ***** STANDARD CONTEXT ***** //
@@ -273,6 +275,8 @@ void Context::initializeTemplates() {
                         {"changeSound", {"h_changeSound"}},
                         {"addCharToRoom", {"h_addCharToRoom"}},
                         {"removeCharFromRoom", {"h_removeCharFromRoom"}},
+                        {"addDetailToRoom", {"h_addDetailToRoom"}},
+                        {"removeDetailFromRoom", {"h_removeDetailFromRoom"}},
                         {"removeHandlerFromRoom", {"h_removeHandlerFromRoom"}} }}
                     };
 
@@ -630,35 +634,32 @@ void Context::h_addQuest(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_showPersonInfo(std::string& sIdentifier, CPlayer* p) {
-    auto lambda = [](CPerson* person) { return person->name();};
-    std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda);
-
-    if(character != "")
-        p->appendPrint(p->getWorld()->getCharacter(character)->getAllInformation());
-    else
-        p->appendPrint("character not found.\n");
-    m_curPermeable=false;
+  auto lambda = [](CPerson* person) { return person->name();};
+  std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda);
+  if (character != "")
+    p->appendPrint(p->getWorld()->getCharacter(character)->getAllInformation());
+  else
+    p->appendPrint("character not found.\n");
+  m_curPermeable=false;
 }
-void Context::h_showItemInfo(std::string& sIdentifier, CPlayer* p) 
-{
-    auto lambda = [](CItem* item) { return item->name(); };
-    std::string item = func::getObjectId(p->getRoom()->getItems(), sIdentifier, lambda);
 
-    if(item != "")
-        p->appendPrint(p->getRoom()->getItems()[item]->getAllInfos());
-    else
-        p->appendPrint("Item not found.\n");
-    m_curPermeable=false;
+void Context::h_showItemInfo(std::string& sIdentifier, CPlayer* p) {
+  auto lambda = [](CItem* item) { return item->name(); };
+  std::string item = func::getObjectId(p->getRoom()->getItems(), sIdentifier, lambda);
+  if (item != "")
+    p->appendPrint(p->getRoom()->getItems()[item]->getAllInfos());
+  else
+    p->appendPrint("Item not found.\n");
+  m_curPermeable=false;
 }
+
 void Context::h_changeName(std::string& sIdentifier, CPlayer* p) {
-
   std::vector<std::string> v_atts = func::split(sIdentifier, "|");
-  if(v_atts[0] == "character") {
-    if(p->getWorld()->getCharacter(v_atts[1]) != NULL) 
-        p->getWorld()->getCharacter(v_atts[1])->set_name(v_atts[2]);
+  if (v_atts[0] == "character") {
+    if (p->getWorld()->getCharacter(v_atts[1]) != NULL) 
+      p->getWorld()->getCharacter(v_atts[1])->set_name(v_atts[2]);
     else {
-      std::cout << cRED << "Character not found: " << v_atts[1] 
-        << cCLEAR << std::endl;
+      std::cout << cRED << "Character not found: " << v_atts[1] << cCLEAR << std::endl;
     }
   }
   m_curPermeable=false;
@@ -931,6 +932,32 @@ void Context::h_removeCharFromRoom(std::string &sIdentifier, CPlayer *p) {
       << e.what() << cCLEAR << std::endl;
   }
 }
+
+void Context::h_addDetailToRoom(std::string &sIdentifier, CPlayer *p) {
+  if (sIdentifier.find("|") == std::string::npos) {
+    std::cout << cRED << "h_addCharToRoom: Character or room missing. seperate with \"|\" " 
+      << " string given: " << sIdentifier << cCLEAR << std::endl;
+    return;
+  }
+  std::string detail_id = func::split(sIdentifier, "|")[0];
+  std::string room_id = func::split(sIdentifier, "|")[1];
+  p->getWorld()->getRoom(room_id)->getDetails()[detail_id] = p->getWorld()->getDetail(detail_id, room_id, p);
+  m_curPermeable = false;
+}
+
+void Context::h_removeDetailFromRoom(std::string &sIdentifier, CPlayer *p) {
+  try {
+    std::string detail_id = sIdentifier;
+    std::string room_id = sIdentifier.substr(0, sIdentifier.rfind("."));
+    p->getWorld()->getRoom(room_id)->getDetails().erase(detail_id);
+    m_curPermeable = false;
+  }
+  catch (std::exception& e) {
+    std::cout << cRED << "h_removeDetailFromRoom (" << sIdentifier << ") failed: "
+      << e.what() << cCLEAR << std::endl;
+  }
+}
+
 
 void Context::h_removeHandlerFromRoom(std::string &sIdentifier, CPlayer *p) {
   if (sIdentifier.find("|") == std::string::npos) {

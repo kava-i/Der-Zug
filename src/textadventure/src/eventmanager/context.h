@@ -153,6 +153,8 @@ public:
     void h_changeImage(std::string&, CPlayer*);
     void h_addCharToRoom(std::string&, CPlayer*);
     void h_removeCharFromRoom(std::string&, CPlayer*);
+    void h_addDetailToRoom(std::string&, CPlayer*);
+    void h_removeDetailFromRoom(std::string&, CPlayer*);
     void h_removeHandlerFromRoom(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //

@@ -1,5 +1,6 @@
 #include "world.h"
 #include "nlohmann/json_fwd.hpp"
+#include "objects/detail.h"
 #include <cstddef>
 #include <exception>
 #include <filesystem>
@@ -266,54 +267,67 @@ void CWorld::detailFactory(std::string sPath) {
     m_details[j_detail["id"]] = j_detail;
 }
 
-map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, 
-    CPlayer* p) {
+map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p) {
   std::cout << "Parsing details \n";
-  map<string, CDetail*> mapDetails;
-  if(j_room.count("details") == 0)
-    return mapDetails;
+  map<string, CDetail*> map_details;
+  if (j_room.count("details") == 0)
+    return map_details;
 
-  for(auto it : j_room["details"].get<std::vector<nlohmann::json>>()) {
+  for (auto it : j_room["details"].get<std::vector<nlohmann::json>>()) {
     //Convert json array to pair and create id by adding the room id.
     auto detail = it.get<std::pair<std::string, nlohmann::json>>();
-    std::string sID = j_room["id"].get<std::string>() + "." + detail.first; 
+    std::string id = j_room["id"].get<std::string>() + "." + detail.first; 
 
     //Get basic json for construction
-    nlohmann::json jBasic;
+    nlohmann::json template_detail_json;
     if(m_details.count(detail.first) > 0)
-      jBasic = m_details[detail.first];
+      template_detail_json = m_details[detail.first];
     else
-      jBasic = {};
+      template_detail_json = {};
 
     //Update basic with specific json
-    func::updateJson(jBasic, detail.second);
+    func::updateJson(template_detail_json, detail.second);
 
     //Update id
     auto lambda = [](CDetail* detail) { return detail->name(); };
-    jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapDetails,lambda), sID);
+    template_detail_json["id"] = func::incIDNumber(func::convertToObjectmap(map_details,lambda), id);
 
     //Create items
-    std::cout << jBasic["id"] << std::endl;
-    parseRandomItemsToDetail(jBasic);
-    map<string, CItem*> mapItems = parseRoomItems(jBasic, p);
+    std::cout << template_detail_json["id"] << std::endl;
+    parseRandomItemsToDetail(template_detail_json);
+    map<string, CItem*> mapItems = parseRoomItems(template_detail_json, p);
 
     //Create detail
-    mapDetails[jBasic["id"]] = new CDetail(jBasic, p, mapItems);
+    map_details[template_detail_json["id"]] = new CDetail(template_detail_json, p, mapItems);
 
     //Add [amount] details with "id = id + num" if amount is set.
-    for(size_t i=2; i<=detail.second.value("amount", 0u); i++) {
-      jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapDetails, 
-            lambda), sID);
-      mapDetails[jBasic["id"]] = new CDetail(jBasic, p, mapItems);
+    for (size_t i=2; i<=detail.second.value("amount", 0u); i++) {
+      template_detail_json["id"] = func::incIDNumber(func::convertToObjectmap(map_details, lambda), id);
+      map_details[template_detail_json["id"]] = new CDetail(template_detail_json, p, mapItems);
     }
   }
+  return map_details;
+}
 
-  return mapDetails;
+CDetail* CWorld::getDetail(std::string id, std::string room_id, CPlayer* p) {
+  // Check that room and detail exists.
+  auto room = getRoom(room_id);
+  if (m_details.count(id) > 0 && room != nullptr) {
+    nlohmann::json template_detail_json = m_details.at(id);
+    //Update id
+    auto lambda = [](CDetail* detail) { return detail->name(); };
+    template_detail_json["id"] = func::incIDNumber(func::convertToObjectmap(room->getDetails(), lambda), id);
+    parseRandomItemsToDetail(template_detail_json);
+    map<string, CItem*> mapItems = parseRoomItems(template_detail_json, p);
+    return new CDetail(template_detail_json, p, mapItems);
+  }
+  return nullptr;
 }
 
 void CWorld::parseRandomItemsToDetail(nlohmann::json& j_detail) {
   std::cout << "parseRandomItemsToDetail" << std::endl;
-  if(j_detail.count("defaultItems") > 0) {
+  // Only add random items if defaultItems is set.
+  if (j_detail.count("defaultItems") > 0) {
     nlohmann::json j = j_detail["defaultItems"];
     int value = j["value"];
     int counter = 0;
@@ -329,9 +343,11 @@ void CWorld::parseRandomItemsToDetail(nlohmann::json& j_detail) {
       std::advance(it, num);
       nlohmann::json jItem = it->second;
       if(j.count("categories") > 0 && j["categories"].size() > 0 
-          && func::inArray(j["categories"], jItem["category"]) == false) continue;
+          && func::inArray(j["categories"], jItem["category"]) == false) 
+        continue;
       if(j.count("types") > 0 && j["types"].size() > 0 
-          && func::inArray(j["types"], jItem["type"]) == false) continue;
+          && func::inArray(j["types"], jItem["type"]) == false) 
+        continue;
       value -= jItem.value("value", 2); 
       nlohmann::json newItem = {it->first, nlohmann::json::object()};
       j_detail["items"].push_back(newItem);
