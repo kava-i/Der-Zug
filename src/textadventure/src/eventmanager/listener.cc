@@ -1,73 +1,53 @@
 #include "listener.h"
+#include <string>
 
-// ***** CONSTRUCTOR ***** //
-CListener::CListener(std::string id, std::string sEventType) {
-  m_id = id;
-  m_stringEventType = sEventType;
-  m_check_function = &CListener::stringCompare;
+// constructors
+CListener::CListener(std::string id, std::string event_type) {
+  id_ = id;
+  event_type_str_ = event_type;
+  m_check_function = &CListener::StringCompare;
 }
     
-CListener::CListener(std::string id, std::regex eventType, int pos) {
-  m_id = id;
-  m_regexEventType = eventType;
+CListener::CListener(std::string id, std::regex event_type, int pos) {
+  id_ = id;
+  event_type_regex_ = event_type;
   m_pos = pos;
-  m_check_function = &CListener::regexCompare;
+  m_check_function = &CListener::RegexCompare;
 }
 
-CListener::CListener(std::string id, std::vector<std::string> eventType) {
-  m_id = id;
-  m_arrayEventType = eventType;
-  m_check_function = &CListener::inVector;
+CListener::CListener(std::string id, std::vector<std::string> event_type) {
+  id_ = id;
+  event_type_array_ = event_type;
+  m_check_function = &CListener::InVector;
 }
 
-CListener::CListener(std::string id, std::map<std::string, std::string> 
-    eventType) {
-  m_id = id;
-  m_mapEventType = eventType;
-  m_check_function = &CListener::inMap;
+CListener::CListener(std::string id, std::map<std::string, std::string> event_type) {
+  id_ = id;
+  event_type_map_ = event_type;
+  m_check_function = &CListener::InMap;
 }
 
-// *** GETTER *** //
+// getter
 
-/**
-* Return id, which also indicates, which function listener calls.
-* @return id
-*/
-std::string CListener::getID() {
-  return m_id;
+std::string CListener::id() {
+  return id_;
 }
 
 
-// ***** FUNCTIONS ***** // 
-/**
+// functions
 
-* Function called from Context::throw_event, which will call the specific compare
-* function of this listener.
-* @param[in] sEventType (event-type thrown)
-* @return whether this listener pick up thrown on event.
-*/
-bool CListener::checkMatch(event& e) {
+bool CListener::check_match(event& e) {
   return (this->*m_check_function)(e);
 }
 
-/**
-* Normal compare function. Case-sensitive and no partial matching!
-* param[in] sEventType (event-type thrown)
-* @return whether this listener picks up on thrown event.
-*/
-bool CListener::stringCompare(event& e) {
-  return e.first == m_stringEventType;
+bool CListener::StringCompare(event& e) {
+  return e.first == event_type_str_;
 }
 
-/**
-* Compares string with a regex, allowing case insensitive and partial matching.
-* @param[in] sEventType (event-type thrown)
-* @return whether this listener picks up on thrown event.
-*/
-bool CListener::regexCompare(event& e) {
+bool CListener::RegexCompare(event& e) {
   std::string str = e.first + " " + e.second;
   std::smatch m;
-  if (std::regex_match(str, m, m_regexEventType)) {
+  if (std::regex_match(str, m, event_type_regex_)) {
     if(e.first != e.second)
       e.second = m[m_pos];
     return true;
@@ -75,24 +55,16 @@ bool CListener::regexCompare(event& e) {
   return false;
 }
 
-/**
-* Checks whether thrown event exists in vector.
-* @param[in] sEventType (event-type thrown)
-* @return whether this listener picks up on thrown event.
-*/
-bool CListener::inVector(event& e) {
-  if(std::isdigit(e.first[0]) && stoul(e.first, nullptr, 0) 
-      <= m_arrayEventType.size() && stoul(e.first, nullptr, 0) > 0)
-    return true;
-  return func::inArray(m_arrayEventType, e.first);
+bool CListener::InVector(event& e) {
+  try {
+    unsigned int index = std::stoi(e.first);
+    if (index > 0 && index < event_type_array_.size())
+      return true;
+  } catch (...) {}
+
+  return func::inArray(event_type_array_, e.first);
 }
 
-/**
-* Check, whether a) searched string exists as a key, b) searched string compares fuzzy with
-* any value and c) compares with the position of an element.
-* @param[in] sEventType (event-type thrown)
-* @return whether this listener picks up on thrown event.
-*/
-bool CListener::inMap(event& e) {
-  return func::getObjectId(m_mapEventType, e.first) != "";
+bool CListener::InMap(event& e) {
+  return func::getObjectId(event_type_map_, e.first) != "";
 }

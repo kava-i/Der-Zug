@@ -10,16 +10,16 @@ CFight::CFight(CPerson* player, CPerson* opponent)
 
 CPerson* CFight::getOpponent() { return m_opponent; }
 
-void CFight::initializeFight()
+void CFight::InitializeFight()
 {
     m_player->appendPrint(m_sDescription + createFightingAgainst());
 }
 
-string CFight::fightRound(string sPlayerChoice)
+string CFight::FightRound(string sPlayerChoice)
 {
     string sOutput;
     //Execute players turn
-    sOutput += turn(m_player->getAttack(sPlayerChoice), m_player, m_opponent) + "$\n";
+    sOutput += Turn(m_player->getAttack(sPlayerChoice), m_player, m_opponent) + "$\n";
 
     //Check wether opponent is dead
     if(m_opponent->getStat("hp") <= 0) {
@@ -36,7 +36,7 @@ string CFight::fightRound(string sPlayerChoice)
 
     //Execute opponents turn
     string sAttack = pickOpponentAttack();
-    sOutput += turn(sAttack, m_opponent, m_player) + "$\n";
+    sOutput += Turn(sAttack, m_opponent, m_player) + "$\n";
 
     //Check wether player is dead
     if(m_player->getStat("hp") <= 0) {
@@ -52,7 +52,7 @@ string CFight::fightRound(string sPlayerChoice)
     return "";
 }
 
-string CFight::turn(string selectedAttack, CPerson* attacker, CPerson* defender)
+string CFight::Turn(string selectedAttack, CPerson* attacker, CPerson* defender)
 {
     //Get selected attack 
     CAttack* attack = attacker->getAttacks()[selectedAttack];
@@ -73,7 +73,7 @@ string CFight::turn(string selectedAttack, CPerson* attacker, CPerson* defender)
 }
 
 
-string CFight::printStats(CPerson* person,bool printDesc)
+string CFight::PrintStats(CPerson* person,bool printDesc)
 {
     int hp = person->getStat("hp");
     int max_hp = person->getStat("max_hp");
@@ -97,7 +97,7 @@ string CFight::createFightingAgainst()
     std::string sOutput;
     sOutput += "\n<div style=\"display: flex;justify-content: center;\">";
 
-    std::string kk = printStats(m_player,false);
+    std::string kk = PrintStats(m_player,false);
     sOutput+=kk;
     sOutput += "<span style='padding-right: 3rem;'>";
     for(int i = 0; i <  std::count(kk.begin(), kk.end(), '\n');i++)
@@ -106,7 +106,7 @@ string CFight::createFightingAgainst()
     }
     sOutput += "</span>";
     
-    sOutput += printStats(m_opponent);
+    sOutput += PrintStats(m_opponent);
 
     sOutput += "</div>";
     

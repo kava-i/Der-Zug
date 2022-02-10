@@ -364,23 +364,19 @@ void Context::add_listener(nlohmann::json j) {
     add_listener(j["id"], (std::string)j["string"], j.value("priority", 0));
 }
 
-void Context::add_listener(std::string sID, std::string sEventType, 
-    int priority) {
+void Context::add_listener(std::string sID, std::string sEventType, int priority) {
   m_eventmanager.insert(new CListener(sID, sEventType), priority, sID);
 }
 
-void Context::add_listener(std::string sID, std::regex eventType, int pos, 
-    int priority) {
+void Context::add_listener(std::string sID, std::regex eventType, int pos, int priority) {
   m_eventmanager.insert(new CListener(sID, eventType, pos), priority, sID);
 }
 
-void Context::add_listener(std::string sID, std::vector<std::string> eventType, 
-    int priority) {
+void Context::add_listener(std::string sID, std::vector<std::string> eventType, int priority) {
   m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
 }
 
-void Context::add_listener(std::string sID, std::map<std::string, std::string> 
-    eventType, int priority) {
+void Context::add_listener(std::string sID, std::map<std::string, std::string> eventType, int priority) {
   m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
 }
 
@@ -407,15 +403,15 @@ bool Context::throw_event(event e, CPlayer* p) {
   std::deque<CListener*> sortedEventmanager = m_eventmanager.getSortedCtxList();
   for (size_t i=0; i<sortedEventmanager.size() && m_block == false; i++) {
     event cur_event = e;
-    if (sortedEventmanager[i]->checkMatch(cur_event) == true) {
-      if (m_handlers.count(sortedEventmanager[i]->getID()) > 0) {
-        (this->*m_handlers[sortedEventmanager[i]->getID()])(cur_event.second, p);
+    if (sortedEventmanager[i]->check_match(cur_event) == true) {
+      if (m_handlers.count(sortedEventmanager[i]->id()) > 0) {
+        (this->*m_handlers[sortedEventmanager[i]->id()])(cur_event.second, p);
         std::cout << cGreen << " ... " << cBlue << m_sName << ": " << cGreen 
-          << "event triggered: " << sortedEventmanager[i]->getID()
+          << "event triggered: " << sortedEventmanager[i]->id()
           << "(" << cur_event.first << ")" << cCLEAR << std::endl;
       }
       else {
-        p->printError("ERROR, given handler not found: " + sortedEventmanager[i]->getID() + "\n");
+        p->printError("ERROR, given handler not found: " + sortedEventmanager[i]->id() + "\n");
       }
       called = true;
     }
@@ -1152,22 +1148,21 @@ void Context::h_try(std::string& sIdentifier, CPlayer* p) {
 
 
 // ***** ***** FIGHT CONTEXT ***** ***** //
-void Context::initializeFightListeners(std::map<std::string, std::string> 
-    mapAttacks) {
+void Context::initializeFightListeners(std::map<std::string, std::string> mapAttacks) {
   add_listener("h_fight", mapAttacks);
 }
 
 void Context::h_fight(std::string& sIdentifier, CPlayer* p) {
-  std::string newCommand = p->getFight()->fightRound((sIdentifier));
+  std::string newCommand = p->getFight()->FightRound((sIdentifier));
   if(newCommand != "")    
     p->throw_events(newCommand, "h_fight");
 }
 
 void Context::h_fight_show(std::string& sIdentifier, CPlayer* p) {
   if(sIdentifier == "stats")
-    p->appendPrint(p->getFight()->printStats(p));
+    p->appendPrint(p->getFight()->PrintStats(p));
   else if(sIdentifier == "opponent stats")
-    p->appendPrint(p->getFight()->printStats(p->getFight()->getOpponent()));
+    p->appendPrint(p->getFight()->PrintStats(p->getFight()->getOpponent()));
   else
     p->appendPrint("Falsche Eingabe! Versuche es mit \"show stats\" oder \"show"
         " opponent stats\"\n");
@@ -1504,7 +1499,7 @@ void Context::h_updateStats(std::string& sIdentifier, CPlayer* p) {
   int num = getAttribute<int>("numPoints")-1;
   p->getContexts().erase("updateStats");
   if(num>0)
-    p->updateStats(num);
+    p->UpdateStats(num);
 }
 
 

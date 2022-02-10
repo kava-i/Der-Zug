@@ -56,8 +56,7 @@ private:
     int m_level;  ///< Current level
     std::map<std::string, SMind> m_minds; ///< Characters in unconsciousness 
                                           ///< (auto skilled)
-    std::vector<std::string> m_abbilities;  ///< Skillable abilities, like 
-                                            ///< strength etc.
+    std::vector<std::string> m_abbilities;  ///< Skillable abilities, like strength etc.
     std::map<std::string, CItem*> m_equipment;  ///< Equipped weapons, clothing etc.
     //m_inventory, m_attacks (from CPerson)
 
@@ -342,7 +341,7 @@ public:
     * Let player know how many learning points player can assign and add choice context.
     * @param numPoints experience points player can assign.
     */
-    void updateStats(int numPoints); 
+    void UpdateStats(int numPoints); 
 
     /**
     * Print minds of player by using table function.

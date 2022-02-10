@@ -111,3 +111,5 @@ If not further specialized:
 - `addDetailToRoom <detail_id|room_id> (here detail_id is the *simple* id, without
   room id)
 - `removeHandlerFromRoom <room_id|handler_id>` (handler_id is simple)
+- `setAttribute <attribute|operand(-/+/=)|value|optional:color>` If color is
+  set, prints a message.

@@ -383,7 +383,7 @@ void CPlayer::setFight(CFight* newFight) {
     context->initializeFightListeners(getAttacks2());
     m_contextStack.insert(context, 1, "fight");
 
-    m_curFight->initializeFight();
+    m_curFight->InitializeFight();
 }
 
 /**
@@ -783,7 +783,7 @@ void CPlayer::addEP(int ep) {
   if (counter > 0) {
     Context* context = m_contextStack.getContext("updateStats");
     if (context == NULL)
-      updateStats(counter);
+      UpdateStats(counter);
     else {
       context->setAttribute<int>("numPoints", context->getAttribute<int>
           ("numPoints")+counter);
@@ -802,35 +802,31 @@ void CPlayer::addEP(int ep) {
 * Let player know how many learning points player can assign and add choice context.
 * @param numPoints experience points player can assign.
 */
-void CPlayer::updateStats(int numPoints)
-{
-    m_sPrint+= "Du hast " + std::to_string(numPoints) + " Punkte zu vergeben.\n";
+void CPlayer::UpdateStats(int numPoints) {
+  // Create context.
+  std::string info_msg = "Wähle eine Zahl oder den Namen des Attributes aus.\n";
+  Context* context = new Context((nlohmann::json){{"name", "updateStats"}, {"permeable", false}, 
+      {"numPoints", numPoints}, {"error", info_msg}});
+  context->add_listener("h_updateStats", m_abbilities);
+  m_contextStack.insert(context, 1, "updateStats");
 
-    //Print attributes and level of each attribute and add choice-context.
-    std::string sError = "Wähle eine Zahl oder den Namen des Attributes aus.\n";
-    Context* context = new Context((nlohmann::json){{"name", "updateStats"}, {"permeable", false},{"numPoints", numPoints}, {"error", sError}});
-
-    for(size_t i=0; i<m_abbilities.size(); i++)
-        m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" + std::to_string(getStat(m_abbilities[i])) + ")\n";
-
-    
-    context->add_listener("h_updateStats", m_abbilities);
-
-    m_sPrint += sError;
-    m_contextStack.insert(context, 1, "updateStats");
+  //Print attributes and level of each attribute and add choice-context.
+  m_sPrint += "Du hast " + std::to_string(numPoints) + " Punkte zu vergeben.\n";
+  for(size_t i=0; i<m_abbilities.size(); i++) {
+      m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" 
+        + std::to_string(getStat(m_abbilities[i])) + ")\n";
+  }
+  m_sPrint += info_msg;
 }
 
 /**
 * Print minds of player by using table function.
 */
-void CPlayer::showMinds()
-{
-    m_sPrint += " --- " + name_ + " --- \n"
-            += "Level: " + std::to_string(m_level) + "\n"
-            += "Ep: " + std::to_string(m_ep) + "/20.\n";
-
-    auto lamda = [](SMind mind) { return std::to_string(mind.level);};
-    m_sPrint += func::table(m_minds, lamda);
+void CPlayer::showMinds() {
+  m_sPrint += " --- " + name_ + " --- \n" += "Level: " + std::to_string(m_level) + "\n"
+          += "Ep: " + std::to_string(m_ep) + "/20.\n";
+  auto lamda = [](SMind mind) { return std::to_string(mind.level);};
+  m_sPrint += func::table(m_minds, lamda);
 }
 
 /**
