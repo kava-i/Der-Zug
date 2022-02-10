@@ -159,7 +159,8 @@ void Context::initializeHanlders() {
   m_handlers["h_removeDetailFromRoom"] = &Context::h_removeDetailFromRoom;
   m_handlers["h_removeHandlerFromRoom"] = &Context::h_removeHandlerFromRoom;
 
-  m_handlers["h_setAttribute"] = &Context::h_setAttribute; // same as inc/ dec attribute but silent, 
+  m_handlers["h_setAttribute"] = &Context::h_setAttribute; 
+  m_handlers["h_setMind"] = &Context::h_setMind; 
 
 
   // ***** STANDARD CONTEXT ***** //
@@ -267,6 +268,7 @@ void Context::initializeTemplates() {
                         {"changeName",{"h_changeName"}},
                         {"addExit",{"h_addExit"}},
                         {"setAttribute", {"h_setAttribute"}},
+                        {"setMind", {"h_setMin"}},
                         {"setNewAttribute", {"h_setNewAttribute"}}, 
                         {"addTimeEvent", {"h_addTimeEvent"}},
                         {"setNewQuest", {"h_setNewQuest"}},
@@ -714,6 +716,52 @@ void Context::h_setAttribute(std::string& sIdentifier, CPlayer* p) {
 
   m_curPermeable=false;
 }
+
+void Context::h_setMind(std::string& sIdentifier, CPlayer* p) {
+  //Get vector with [0]=attribute to modify, [1]=operand, [2]=value
+  std::vector<std::string> atts = func::split(sIdentifier, "|");
+
+  //Check if sIdentifier contains the fitting values
+  if(atts.size() < 3 || std::isdigit(atts[2][0]) == false || p->getStat(atts[0]) == 999) {
+    std::cout << "Something went worng! Player mind could not be changed." << std::endl;
+    return;
+  }
+
+  std::string mind = atts[0];
+  int value = stoi(atts[2]);
+  std::string msg = "";
+  if (p->getMinds().count(mind) == 0) {
+    std::cout << "Player mind could not be changed: mind does not exit." << std::endl;
+    return;
+  }
+
+  //Modify attribute according to operand.
+  if(atts[1] == "=") {
+    p->getMinds().at(mind).level = value;
+    msg = " set to ";
+  }
+  else if(atts[1] == "+") {
+    p->getMinds().at(mind).level += value;
+    msg = " increased by ";
+  }
+  else if(atts[1] == "-") {
+    p->getMinds().at(mind).level -= value;
+    msg = " decreased by ";
+  }
+  else
+    std::cout << "Wrong operand for setting mind." << "\n";
+
+  Webcmd::color color = Webcmd::color::WHITE;
+  if (atts.size() > 3 && atts[3] == "green")
+    color = Webcmd::color::GREEN;
+  else if (atts.size() > 3 && atts[3] == "red")
+    color = Webcmd::color::RED;
+  if (atts.size() > 3)
+    p->appendPrint(Webcmd::set_color(color) + mind + msg 
+        + std::to_string(value )+ Webcmd::set_color(Webcmd::color::WHITE) + "\n");
+  m_curPermeable=false;
+}
+
 
 void Context::h_setNewAttribute(std::string& sIdentifier, CPlayer* p) {
   std::vector<std::string> atts = func::split(sIdentifier, "|");

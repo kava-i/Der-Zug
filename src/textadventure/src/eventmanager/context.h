@@ -140,6 +140,7 @@ public:
     void h_changeName(std::string&, CPlayer*);
     void h_addExit(std::string&, CPlayer*);
     void h_setAttribute(std::string&, CPlayer*);
+    void h_setMind(std::string&, CPlayer*);
     void h_setNewAttribute(std::string&, CPlayer*);
     void h_addTimeEvent(std::string&, CPlayer*);
     void h_setNewQuest(std::string&, CPlayer*);
