@@ -13,13 +13,18 @@ body {
 .center_in_box {
     margin: auto;
     margin-top: 8em;
-    width: 50%;
+    width: 70%;
     min-width: 45em;
     border: 3px solid black;
     padding: 70px;
     text-align: center;
     background-color: rgba(0, 0, 0, 0.5);
     color: #90a4ae;
+}
+.object{
+  margin-left: auto; 
+  margin-right: auto;
+  width: 100%;
 }
 .center_in_box h1{
     color: #E5E7E9;
@@ -208,8 +213,8 @@ body {
     margin-right: auto;
 }    
 .controlers td{    
-    text-align: left;
-    padding: 0.6em; 
+  text-align: left;
+  padding: 0.6em; 
 }    
 
 .medium{    

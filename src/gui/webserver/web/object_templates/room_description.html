@@ -37,7 +37,7 @@
           <ul id="pre_pEvents">
           {% for event in default(desc.pre_pEvents, [""]) %}
             <li>
-              <input placeholder="event" value="{{event}}">
+              <input class="long_inp" placeholder="event" value="{{event}}">
               <span class="mod_elem" onclick="del_elem('',{{loop.index}},this)">-</span>
               <span class="mod_elem" onclick="add_elem('',{{loop.index}},this)">+</span>
             </li>
@@ -49,7 +49,7 @@
           <ul id="pre_otEvents">
           {% for event in default(desc.pre_otEvents, [""]) %}
             <li>
-              <input placeholder="event" value="{{event}}">
+              <input class="long_inp" placeholder="event" value="{{event}}">
               <span class="mod_elem" onclick="del_elem('',{{loop.index}},this)">-</span>
               <span class="mod_elem" onclick="add_elem('',{{loop.index}},this)">+</span>
 
@@ -62,7 +62,7 @@
           <ul id="post_pEvents">
           {% for event in default(desc.post_pEvents, [""])%}
             <li>
-              <input placeholder="event" value="{{event}}">
+              <input class="long_inp" placeholder="event" value="{{event}}">
               <span class="mod_elem" onclick="del_elem('',{{loop.index}},this)">-</span>
               <span class="mod_elem" onclick="add_elem('',{{loop.index}},this)">+</span>
             </li>
@@ -74,7 +74,7 @@
           <ul id="post_otEvents">
           {% for event in default(desc.post_otEvents, [""]) %}
             <li>
-              <input placeholder="event" value="{{event}}">
+              <input class="long_inp" placeholder="event" value="{{event}}">
               <span class="mod_elem" onclick="del_elem('',{{loop.index}},this)">-</span>
               <span class="mod_elem" onclick="add_elem('',{{loop.index}},this)">+</span>
             </li>

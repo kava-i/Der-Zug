@@ -30,6 +30,9 @@
   font-size: 0.7em;
 }
 
+.small {
+  font-size: 0.7em;
+}
 .m_input {
   margin-right: 0.9em;
 }
@@ -49,7 +52,6 @@
 }
 
 .expand {
-  text-align: center;
 }
 .expand span {
   padding: 0.6em;

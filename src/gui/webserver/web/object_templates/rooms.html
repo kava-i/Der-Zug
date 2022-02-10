@@ -108,25 +108,48 @@
   <!-- Handlers (default value for non-set-values) -->
   <li custom="list">
     <label>Handlers:</label>
-    <ul id="handlers">
-      {% for handler in default(handlers, [{}]) %}
+    <ul id="listeners">
+      {% for listener in default(listeners, [{}]) %}
         <li custom="object">
-          <input class="long_inp" id="key" placeholder="identifier (key)" 
-                             value="{{default(handler.key,"")}}">
-          <input class="long_inp" id="id" placeholder="function" 
-                             value="{{default(handler.id,"")}}">
-          <span class="mod_elem" onclick="del_elem('handlers',{{loop.index}})">-</span>
-          <span class="mod_elem" onclick="add_elem('handlers',{{loop.index}})">+</span>
+          <label class="small" title="unique identifier (used for deleteting listener)">ID:</label>
+          <input id="id" placeholder="id" value="{{default(listener.id,"")}}" >
           <br>
-          <input class="long_inp" id="infos" placeholder="pass arguments (json)"
-                                  custom="json" value={{default(handler.infos,{})}}>
+          <label class="small" title="handler called when listener is triggered">Handler::</label>
+          <input id="handler" placeholder="handler" value="{{default(listener.handler,"")}}">
           <br>
-          <input id="string" placeholder="cmd (string)"
-                             value="{{default(handler.string, "")}}">
-          <input id="regex" placeholder="cmd (regex)" 
-                             value="{{default(handler.regex, "")}}">
-          <input custom="int" id="priority" placeholder="priority" class="short" 
-              value="{{default(handler.priority, 0)}}">
+          <label class="small" title="Attributes needed to to trigger event (seperated with '|').
+              See doku for which attributes or needed for specific events."
+            >Attributes: </label>
+          <input 
+            class="long_inp" id="event_attributes" placeholder="event attributes" 
+            value="{{default(listener.event_attributes,"")}}"
+          >
+          <br>
+          <label class="small" title="Command on which to listen">Command</label>
+          <input id="cmd" placeholder="command" value="{{default(listener.cmd, "")}}">
+          <label class="small" title="Target of event f.e. for input 'pick up
+                fruits', <pick> is the command and <fruits> is the target." 
+            >Target</label>
+          <input id="target" placeholder="target" value="{{default(listener.target,"")}}">
+          <br>
+          <label class="small" title="Specify regex match">Regex match position</label>
+          <input 
+              class="short" id="pos" placeholder="pos" 
+              custom="int" value="{{default(listener.pos, 0)}}"
+          >
+          <label class="small" title="Specify priority">Priority</label>
+          <input 
+              class="short" id="priority" placeholder="priority" 
+              custom="int" value="{{default(listener.priority, 0)}}"
+          >
+          <label class="small" title="interpret command as regex expression.">Regex?</label>
+          <input 
+              class="short" id="regex" placeholder="regex?" 
+              custom="int" value="{{default(listener.regex, 0)}}"
+          >
+          <span class="mod_elem" onclick="del_elem('listeners',{{loop.index}})">-</span>
+          <span class="mod_elem" onclick="add_elem('listeners',{{loop.index}})">+</span>
+          <br>
           <br>
         </li>
       {% endfor %}
