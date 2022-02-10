@@ -1,5 +1,7 @@
 #include "context.h"
 #include "actions/dialog.h"
+#include "concepts/quest.h"
+#include "eventmanager/listener.h"
 #include "nlohmann/json.hpp"
 #include "objects/player.h"
 #include "game/game.h"
@@ -16,49 +18,43 @@
 
 // ***** ***** CONSTRUCTORS ***** ***** //
 
-std::map<std::string, void (Context::*)(std::string&, CPlayer* p)> Context::m_handlers = {};
+std::map<std::string, void (Context::*)(std::string&, CPlayer* p)> Context::listeners_ = {};
 std::map<std::string, nlohmann::json> Context::m_templates = {};
 
-Context::Context(nlohmann::json jAttributes) {
-  m_jAttributes = jAttributes;
-  m_sName = jAttributes.value("name", "context");
-  m_permeable = jAttributes.value("permeable", false);
+Context::Context(nlohmann::json json) {
+  m_jAttributes = json;
+  m_sName = json.value("name", "context");
+  m_permeable = json.value("permeable", false);
   m_curPermeable = m_permeable;
   m_block = false;
-  m_sHelp = jAttributes.value("help", "");
-  m_sError = jAttributes.value("error", "");
+  m_sHelp = json.value("help", "");
+  m_sError = json.value("error", "");
 
-  if(jAttributes.count("handlers") > 0) {
-    for(const auto &it : jAttributes["handlers"].get<std::map<string, 
-        vector<string>>>()) {
-      for(size_t i=0; i<it.second.size(); i++)
-        add_listener(it.second[i], it.first, 0-i);
-    }
+  // listeners
+  for (const auto &it : json.value("listeners", std::map<string, vector<string>>())) {
+    std::string event_type = it.first;
+    for(size_t i=0; i<it.second.size(); i++)
+      AddSimpleListener(it.second[i], event_type, 0-i);
   }
-  add_listener("h_help", "help");
-
+  AddSimpleListener("h_help", "help", 0);
   m_error = &Context::error;
 }
  
-Context::Context(std::string sTemplate) : Context(getTemplate(sTemplate))
-{
-}
+Context::Context(std::string sTemplate) : Context(getTemplate(sTemplate)) {}
 
-Context::Context(std::string sTemplate, nlohmann::json jAttributes) : 
-    Context(getTemplate(sTemplate)) {
-  m_jAttributes = jAttributes;
-  m_sName = jAttributes.value("name", m_sName);
-  m_permeable = jAttributes.value("permeable", m_permeable);
+Context::Context(std::string sTemplate, nlohmann::json json) : Context(getTemplate(sTemplate)) {
+  m_jAttributes = json;
+  m_sName = json.value("name", m_sName);
+  m_permeable = json.value("permeable", m_permeable);
   m_curPermeable = m_permeable;
-  m_sHelp = jAttributes.value("help", m_sHelp);
-  m_sError = jAttributes.value("error", m_sError);
+  m_sHelp = json.value("help", m_sHelp);
+  m_sError = json.value("error", m_sError);
 
-  if(jAttributes.count("handlers") > 0) {
-    for(const auto &it : jAttributes["handlers"].get<std::map<string, 
-        vector<string>>>()) {
-      for(size_t i=0; i<it.second.size(); i++)
-        add_listener(it.second[i], it.first, 0-i);
-    }
+  // listeners
+  for (const auto &it : json.value("listeners", std::map<string, vector<string>>())) {
+    std::string event_type = it.first;
+    for(size_t i=0; i<it.second.size(); i++)
+      AddSimpleListener(it.second[i], event_type, 0-i);
   }
   m_error = &Context::error;
 }
@@ -74,8 +70,7 @@ bool Context::getPermeable() {
 
 nlohmann::json Context::getTemplate(std::string sTemplate) {
   if(m_templates.count(sTemplate) == 0) {
-    std::cout << "Template requested that does not exist: " << sTemplate 
-      << std::endl;
+    std::cout << "Template requested that does not exist: " << sTemplate << std::endl;
     return nlohmann::json::object();
   }
   return m_templates[sTemplate];
@@ -116,124 +111,124 @@ void Context::SetMedia(std::string type, std::string filename) {
 // ***** ***** INITIALIZERS ***** ***** //
 void Context::initializeHanlders() {
   // ***** GENERAL STUFF ***** //
-  m_handlers["h_help"] = &Context::h_help;
+  listeners_["h_help"] = &Context::h_help;
 
   // ***** GAME CONTEXT ***** //
-  m_handlers["h_reloadGame"] = &Context::h_reloadGame;
-  m_handlers["h_reloadPlayer"] = &Context::h_reloadPlayer;
-  m_handlers["h_reloadWorlds"] = &Context::h_reloadWorlds;
-  m_handlers["h_reloadWorld"] = &Context::h_reloadWorld;
-  m_handlers["h_updateListeners"] = &Context::h_updatePlayers;
+  listeners_["h_reloadGame"] = &Context::h_reloadGame;
+  listeners_["h_reloadPlayer"] = &Context::h_reloadPlayer;
+  listeners_["h_reloadWorlds"] = &Context::h_reloadWorlds;
+  listeners_["h_reloadWorld"] = &Context::h_reloadWorld;
+  listeners_["h_updateListeners"] = &Context::h_updatePlayers;
 
   // ***** WORLD CONTEXT ***** //
-  m_handlers["h_finishCharacter"] = &Context::h_finishCharacter;
-  m_handlers["h_killCharacter"] = &Context::h_killCharacter;
-  m_handlers["h_deleteCharacter"] = &Context::h_deleteCharacter;
-  m_handlers["h_addItem"] = &Context::h_addItem;
-  m_handlers["h_removeItem"] = &Context::h_removeItem;
-  m_handlers["h_recieveMoney"] = &Context::h_recieveMoney; 
-  m_handlers["h_eraseMoney"] = &Context::h_eraseMoney;
-  m_handlers["h_newFight"] = &Context::h_newFight;
-  m_handlers["h_endFight"] = &Context::h_endFight;
-  m_handlers["h_endDialog"] = &Context::h_endDialog;
-  m_handlers["h_gameover"] = &Context::h_gameover;
-  m_handlers["h_addQuest"] = &Context::h_addQuest;
-  m_handlers["h_showPersonInfo"] = &Context::h_showPersonInfo;
-  m_handlers["h_showItemInfo"] = &Context::h_showItemInfo;
-  m_handlers["h_changeName"] = &Context::h_changeName;
-  m_handlers["h_addExit"] = &Context::h_addExit;
-  m_handlers["h_setNewAttribute"] = &Context::h_setNewAttribute;
-  m_handlers["h_addTimeEvent"] = &Context::h_addTimeEvent;
-  m_handlers["h_setNewQuest"] = &Context::h_setNewQuest;
-  m_handlers["h_changeDialog"] = &Context::h_changeDialog;
-  m_handlers["h_changeRoom"] = &Context::h_changeRoom;
-  m_handlers["h_startDialogDirect"] = &Context::h_startDialogDirect;
-  m_handlers["h_startDialogDirectB"] = &Context::h_startDialogDirectB;
-  m_handlers["h_changeSound"] = &Context::h_changeSound;
-  m_handlers["h_changeImage"] = &Context::h_changeImage;
+  listeners_["h_finishCharacter"] = &Context::h_finishCharacter;
+  listeners_["h_killCharacter"] = &Context::h_killCharacter;
+  listeners_["h_deleteCharacter"] = &Context::h_deleteCharacter;
+  listeners_["h_addItem"] = &Context::h_addItem;
+  listeners_["h_removeItem"] = &Context::h_removeItem;
+  listeners_["h_recieveMoney"] = &Context::h_recieveMoney; 
+  listeners_["h_eraseMoney"] = &Context::h_eraseMoney;
+  listeners_["h_newFight"] = &Context::h_newFight;
+  listeners_["h_endFight"] = &Context::h_endFight;
+  listeners_["h_endDialog"] = &Context::h_endDialog;
+  listeners_["h_gameover"] = &Context::h_gameover;
+  listeners_["h_addQuest"] = &Context::h_addQuest;
+  listeners_["h_showPersonInfo"] = &Context::h_showPersonInfo;
+  listeners_["h_showItemInfo"] = &Context::h_showItemInfo;
+  listeners_["h_changeName"] = &Context::h_changeName;
+  listeners_["h_addExit"] = &Context::h_addExit;
+  listeners_["h_setNewAttribute"] = &Context::h_setNewAttribute;
+  listeners_["h_addTimeEvent"] = &Context::h_addTimeEvent;
+  listeners_["h_setNewQuest"] = &Context::h_setNewQuest;
+  listeners_["h_changeDialog"] = &Context::h_changeDialog;
+  listeners_["h_changeRoom"] = &Context::h_changeRoom;
+  listeners_["h_startDialogDirect"] = &Context::h_startDialogDirectB;
+  listeners_["h_startDialogDirectB"] = &Context::h_startDialogDirectB;
+  listeners_["h_changeSound"] = &Context::h_changeSound;
+  listeners_["h_changeImage"] = &Context::h_changeImage;
 
   // Room modifiers
-  m_handlers["h_addCharToRoom"] = &Context::h_addCharToRoom;
-  m_handlers["h_removeCharFromRoom"] = &Context::h_removeCharFromRoom;
-  m_handlers["h_addDetailToRoom"] = &Context::h_addDetailToRoom;
-  m_handlers["h_removeDetailFromRoom"] = &Context::h_removeDetailFromRoom;
-  m_handlers["h_removeHandlerFromRoom"] = &Context::h_removeHandlerFromRoom;
+  listeners_["h_addCharToRoom"] = &Context::h_addCharToRoom;
+  listeners_["h_removeCharFromRoom"] = &Context::h_removeCharFromRoom;
+  listeners_["h_addDetailToRoom"] = &Context::h_addDetailToRoom;
+  listeners_["h_removeDetailFromRoom"] = &Context::h_removeDetailFromRoom;
+  listeners_["h_removeHandler"] = &Context::h_removeHandler;
 
-  m_handlers["h_setAttribute"] = &Context::h_setAttribute; 
-  m_handlers["h_setMind"] = &Context::h_setMind; 
+  listeners_["h_setAttribute"] = &Context::h_setAttribute; 
+  listeners_["h_setMind"] = &Context::h_setMind; 
 
 
   // ***** STANDARD CONTEXT ***** //
-  m_handlers["h_showExits"] = &Context::h_showExits;
-  m_handlers["h_show"] = &Context::h_show;
-  m_handlers["h_look"] = &Context::h_look;
-  m_handlers["h_search"] = &Context::h_search;
-  m_handlers["h_take"] = &Context::h_take;
-  m_handlers["h_goTo"] = &Context::h_goTo;
-  m_handlers["h_consume"] = &Context::h_consume;
-  m_handlers["h_read"] = &Context::h_read;
-  m_handlers["h_equipe"]  = &Context::h_equipe;
-  m_handlers["h_dequipe"] = &Context::h_dequipe;
-  m_handlers["h_examine"] = &Context::h_examine;
-  m_handlers["h_startDialog"] = &Context::h_startDialog;
-  m_handlers["h_ignore"] = &Context::h_ignore;
-  m_handlers["h_try"] = &Context::h_try;
+  listeners_["h_showExits"] = &Context::h_showExits;
+  listeners_["h_show"] = &Context::h_show;
+  listeners_["h_look"] = &Context::h_look;
+  listeners_["h_search"] = &Context::h_search;
+  listeners_["h_take"] = &Context::h_take;
+  listeners_["h_goTo"] = &Context::h_goTo;
+  listeners_["h_consume"] = &Context::h_consume;
+  listeners_["h_read"] = &Context::h_read;
+  listeners_["h_equipe"]  = &Context::h_equipe;
+  listeners_["h_dequipe"] = &Context::h_dequipe;
+  listeners_["h_examine"] = &Context::h_examine;
+  listeners_["h_startDialog"] = &Context::h_startDialog;
+  listeners_["h_ignore"] = &Context::h_ignore;
+  listeners_["h_try"] = &Context::h_try;
 
   //m_handlers["h_firstZombieAttack"] = &Context::h_firstZombieAttack;
-  m_handlers["h_moveToHospital"] = &Context::h_moveToHospital;
-  m_handlers["h_exitTrainstation"] = &Context::h_exitTrainstation;
-  m_handlers["h_thieve"] = &Context::h_thieve;
-  m_handlers["h_attack"] = &Context::h_attack;
+  listeners_["h_moveToHospital"] = &Context::h_moveToHospital;
+  listeners_["h_exitTrainstation"] = &Context::h_exitTrainstation;
+  listeners_["h_thieve"] = &Context::h_thieve;
+  listeners_["h_attack"] = &Context::h_attack;
 
-  m_handlers["h_test"] = &Context::h_test;
+  listeners_["h_test"] = &Context::h_test;
 
   // *** FIGHT CONTEXT *** //
-  m_handlers["h_fight"] = &Context::h_fight;
-  m_handlers["h_fight_show"] = &Context::h_fight_show;
+  listeners_["h_fight"] = &Context::h_fight;
+  listeners_["h_fight_show"] = &Context::h_fight_show;
 
   // *** DIALOG CONTEXT *** //
-  m_handlers["h_call"] = &Context::h_call;
+  listeners_["h_call"] = &Context::h_call;
 
   // *** TRADECONTEXT *** //
-  m_handlers["h_sell"] = &Context::h_sell;
-  m_handlers["h_buy"] = &Context::h_buy;
-  m_handlers["h_exit"] = &Context::h_exit;
+  listeners_["h_sell"] = &Context::h_sell;
+  listeners_["h_buy"] = &Context::h_buy;
+  listeners_["h_exit"] = &Context::h_exit;
 
   // *** CHATCONTEXT *** //
-  m_handlers["h_send"] = &Context::h_send;
-  m_handlers["h_end"] = &Context::h_end;
+  listeners_["h_send"] = &Context::h_send;
+  listeners_["h_end"] = &Context::h_end;
 
   // *** READCONTEXT *** //
-  m_handlers["h_stop"] = &Context::h_stop;
-  m_handlers["h_next"] = &Context::h_next;
-  m_handlers["h_prev"] = &Context::h_prev;
-  m_handlers["h_mark"] = &Context::h_mark;
-  m_handlers["h_underline"] = &Context::h_underline;
+  listeners_["h_stop"] = &Context::h_stop;
+  listeners_["h_next"] = &Context::h_next;
+  listeners_["h_prev"] = &Context::h_prev;
+  listeners_["h_mark"] = &Context::h_mark;
+  listeners_["h_underline"] = &Context::h_underline;
 
-  m_handlers["h_next"] = &Context::h_next;
+  listeners_["h_next"] = &Context::h_next;
 
 
   // *** QUESTS *** //
-  m_handlers["h_react"] = &Context::h_react;
-  m_handlers["reden"] = &Context::h_reden;
-  m_handlers["geldauftreiben"] = &Context::h_geldauftreiben;
+  listeners_["h_react"] = &Context::h_react;
+  listeners_["reden"] = &Context::h_reden;
+  listeners_["geldauftreiben"] = &Context::h_geldauftreiben;
 
   // *** PROGRAMMER *** //
 
   // *** OTHER CONTEXT *** //
-  m_handlers["h_select"] = &Context::h_select;
-  m_handlers["h_choose_equipe"] = &Context::h_choose_equipe;
-  m_handlers["h_updateStats"] = &Context::h_updateStats;
+  listeners_["h_select"] = &Context::h_select;
+  listeners_["h_choose_equipe"] = &Context::h_choose_equipe;
+  listeners_["h_updateStats"] = &Context::h_updateStats;
 
   // --- *** TIMEEVENTS *** --- //
-  m_handlers["t_highness"] = &Context::t_highness;
-  m_handlers["t_throwEvent"] = &Context::t_throwEvent;
+  listeners_["t_highness"] = &Context::t_highness;
+  listeners_["t_throwEvent"] = &Context::t_throwEvent;
 }
 
 void Context::initializeTemplates() {
     m_templates["game"] = {
                     {"name", "game"}, {"permeable", true}, 
-                    {"handlers", {
+                    {"listeners", {
                         {"reload_game",{"h_reloadGame"}},
                         {"reload_player",{"h_reloadPlayer"}},
                         {"reload_world", {"h_reloadWorld"}},
@@ -243,14 +238,14 @@ void Context::initializeTemplates() {
 
     m_templates["first"] = {
                     {"name", "first"}, {"permeable", true},
-                    {"handlers", {
+                    {"listeners", {
                         {"show",{"h_show"}}, 
                         {"examine",{"h_examine"}} }}
                     };
 
     m_templates["world"] = {
                     {"name", "world"}, {"permeable", true},
-                    {"handlers", {
+                    {"listeners", {
                         {"finishCharacter", {"h_finishCharacter"}},
                         {"killCharacter", {"h_killCharacter"}},
                         {"deleteCharacter", {"h_deleteCharacter"}},
@@ -268,7 +263,7 @@ void Context::initializeTemplates() {
                         {"changeName",{"h_changeName"}},
                         {"addExit",{"h_addExit"}},
                         {"setAttribute", {"h_setAttribute"}},
-                        {"setMind", {"h_setMin"}},
+                        {"setMind", {"h_setMind"}},
                         {"setNewAttribute", {"h_setNewAttribute"}}, 
                         {"addTimeEvent", {"h_addTimeEvent"}},
                         {"setNewQuest", {"h_setNewQuest"}},
@@ -282,13 +277,13 @@ void Context::initializeTemplates() {
                         {"removeCharFromRoom", {"h_removeCharFromRoom"}},
                         {"addDetailToRoom", {"h_addDetailToRoom"}},
                         {"removeDetailFromRoom", {"h_removeDetailFromRoom"}},
-                        {"removeHandlerFromRoom", {"h_removeHandlerFromRoom"}} }}
+                        {"removeHandler", {"h_removeHandler"}} }}
                     };
 
     m_templates["standard"] = {
                     {"name", "standard"}, {"permeable",false}, 
                     {"help","standard.txt"},   
-                    {"handlers",{
+                    {"listeners",{
                         {"go", {"h_goTo"}},
                         {"look",{"h_look"}}, 
                         {"search",{"h_search"}}, 
@@ -305,7 +300,7 @@ void Context::initializeTemplates() {
 
     m_templates["fight"] = {
                     {"name","fight"}, {"permeable",false}, {"help","fight.txt"}, 
-                    {"handlers",{
+                    {"listeners",{
                         {"show",{"h_fight_show"}}}}
                     };
 
@@ -314,20 +309,20 @@ void Context::initializeTemplates() {
 
     m_templates["trade"] = {
                     {"name","trade"}, {"permeable",false}, {"help","trade.txt"}, 
-                    {"handlers",{
+                    {"listeners",{
                         {"kaufe", {"h_buy"}},
                         {"verkaufe",{"h_sell"}},
                         {"zurück",{"h_exit"}}}}
                     };
     m_templates["chat"] = {
                     {"name", "chat"}, {"permeable", false}, {"help","chat.txt"},
-                    {"handlers",{
+                    {"listeners",{
                         {"[end]",{"h_end"}}}}
                     };
 
     m_templates["read"] = {
                     {"name","read"}, {"permeable",false}, {"help","read.txt"},
-                    {"handlers",{
+                    {"listeners",{
                         {"next", {"h_next"}},
                         {"previous", {"h_prev"}},
                         {"mark", {"h_mark"}},
@@ -348,7 +343,7 @@ void Context::add_timeEvent(std::string id, std::string scope,
 }
 
 bool Context::timeevent_exists(std::string type) {
-  if(m_timeevents.getContext(type) != NULL)
+  if (m_timeevents.getContext(type) != NULL)
     return true;    
   return false;
 }
@@ -359,44 +354,38 @@ void Context::deleteTimeEvent(std::string name) {
 
 // *** add and delete listeners *** //
 
-void Context::add_listener(nlohmann::json j) {
-  if(j.count("regex") > 0)
-    add_listener(j["id"], (std::regex)j["regex"], j.value("take", 1), j.value("priority", 0)); 
-  else if(j.count("string") > 0)
-    add_listener(j["id"], (std::string)j["string"], j.value("priority", 0));
+void Context::AddSimpleListener(std::string handler, std::string event_type, int priority) {
+  // Cannot be deleted, thus, no id, location, location_id and self_delete=false
+  // Als permeable always set to -1 -> dont overwrite context/ handler-permeability
+  AddListener(new CListener("", handler, "", "", "", "", -1, false, priority, event_type));
 }
 
-void Context::add_listener(std::string sID, std::string sEventType, int priority) {
-  m_eventmanager.insert(new CListener(sID, sEventType), priority, sID);
+void Context::AddSimpleListener(std::string handler, std::regex event_type, int pos, int priority) {
+  // Cannot be deleted, thus, no id, location, location_id and self_delete=false
+  // Als permeable always set to -1 -> dont overwrite context/ handler-permeability
+  AddListener(new CListener("", handler, "", "", "", "", -1, false, priority, event_type, pos));
 }
 
-void Context::add_listener(std::string sID, std::regex eventType, int pos, int priority) {
-  m_eventmanager.insert(new CListener(sID, eventType, pos), priority, sID);
+void Context::AddSimpleListener(std::string handler, std::vector<std::string> event_type, int priority) {
+  // Cannot be deleted, thus, no id, location, location_id and self_delete=false
+  // Als permeable always set to -1 -> dont overwrite context/ handler-permeability
+  AddListener(new CListener("", handler, "", "", "", "", -1, false, priority, event_type));
 }
 
-void Context::add_listener(std::string sID, std::vector<std::string> eventType, int priority) {
-  m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
+void Context::AddSimpleListener(std::string handler, std::map<std::string, std::string> event_type, 
+    int priority) {
+  // Cannot be deleted, thus, no id, location, location_id and self_delete=false
+  // Als permeable always set to -1 -> dont overwrite context/ handler-permeability
+  AddListener(new CListener("", handler, "", "", "", "", -1, false, priority, event_type));
 }
 
-void Context::add_listener(std::string sID, std::map<std::string, std::string> eventType, int priority) {
-  m_eventmanager.insert(new CListener(sID, eventType), priority, sID);
+void Context::AddListener(CListener* listener) {
+  m_eventmanager.insert(listener, listener->priority(), listener->handler());
 }
-
-void Context::initializeHandlers(std::vector<nlohmann::json> 
-    listeners) {
-  for (auto it : listeners) {
-    if (it.count("regex") > 0)
-      add_listener(it["id"], (std::regex)it["regex"], it.value("take", 1), it.value("priority", 0)); 
-    else if (it.count("string") > 0)
-      add_listener(it["id"], (std::string)it["string"], it.value("priority", 0));
-  }
-}
-
 
 // *** Throw events *** //
 bool Context::throw_event(event e, CPlayer* p) {
-  std::cout << cBlue << m_sName << cCLEAR << " throwing: "
-    << e.first << "|" << e.second << std::endl;
+  std::cout << cBlue << m_sName << cCLEAR << " throwing: " << e.first << "|" << e.second << std::endl;
   m_curPermeable = m_permeable;
   m_block = false;
   bool called = false;
@@ -406,14 +395,23 @@ bool Context::throw_event(event e, CPlayer* p) {
   for (size_t i=0; i<sortedEventmanager.size() && m_block == false; i++) {
     event cur_event = e;
     if (sortedEventmanager[i]->check_match(cur_event) == true) {
-      if (m_handlers.count(sortedEventmanager[i]->id()) > 0) {
-        (this->*m_handlers[sortedEventmanager[i]->id()])(cur_event.second, p);
+      if (listeners_.count(sortedEventmanager[i]->handler()) > 0) {
+        // Call event
         std::cout << cGreen << " ... " << cBlue << m_sName << ": " << cGreen 
-          << "event triggered: " << sortedEventmanager[i]->id()
+          << "event triggered: " << sortedEventmanager[i]->handler()
           << "(" << cur_event.first << ")" << cCLEAR << std::endl;
+        (this->*listeners_[sortedEventmanager[i]->handler()])(cur_event.second, p);
+        std::cout << cGreen << "Event cal done." << cCLEAR << std::endl;
+        // If permeable differs from -1, set permeability of context to given permeability.
+        if (sortedEventmanager[i]->permeable() != -1)
+          m_curPermeable = sortedEventmanager[i]->permeable();
+        // If self-delete is set, remove listener (only works for object-listeners)
+        if (sortedEventmanager[i]->self_delete() == true)
+          p->RemoveListenerFromLocation(sortedEventmanager[i]->location(), 
+              sortedEventmanager[i]->location_id(), sortedEventmanager[i]->id());
       }
       else {
-        p->printError("ERROR, given handler not found: " + sortedEventmanager[i]->id() + "\n");
+        p->printError("ERROR, given handler not found: " + sortedEventmanager[i]->handler() + "\n");
       }
       called = true;
     }
@@ -439,7 +437,7 @@ void Context::throw_timeEvents(CPlayer* p) {
     std::chrono::duration<double> diff = end - sortedEvents[i]->getStart();
     if (diff.count() >= sortedEvents[i]->getDuration()) {
       std::string str = sortedEvents[i]->getInfo();
-      (this->*m_handlers[sortedEvents[i]->getID()])(str, p);
+      (this->*listeners_[sortedEvents[i]->getID()])(str, p);
       std::cout << "BACKPASS: " << str << std::endl;
       if (str == "delete")
         m_timeevents.eraseHighest(sortedEvents[i]->getID());
@@ -581,9 +579,10 @@ void Context::h_deleteCharacter(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_addItem(std::string& sIdentifier, CPlayer* p) {
-    p->addItem(p->getWorld()->getItem(sIdentifier, p));
-    m_curPermeable=false;
+  p->addItem(p->getWorld()->getItem(sIdentifier, p));
+  m_curPermeable=false;
 }
+
 void Context::h_removeItem(std::string& sIdentifier, CPlayer* p) {
   p->getInventory().removeItemByID(sIdentifier);
   m_curPermeable=false;
@@ -718,11 +717,12 @@ void Context::h_setAttribute(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_setMind(std::string& sIdentifier, CPlayer* p) {
+  std::cout << "Calling h_setMind with sIdentifier: " << sIdentifier << std::endl;
   //Get vector with [0]=attribute to modify, [1]=operand, [2]=value
   std::vector<std::string> atts = func::split(sIdentifier, "|");
 
   //Check if sIdentifier contains the fitting values
-  if(atts.size() < 3 || std::isdigit(atts[2][0]) == false || p->getStat(atts[0]) == 999) {
+  if(atts.size() < 3 || std::isdigit(atts[2][0]) == false || p->getMinds().count(atts[0]) == 0) {
     std::cout << "Something went worng! Player mind could not be changed." << std::endl;
     return;
   }
@@ -730,11 +730,7 @@ void Context::h_setMind(std::string& sIdentifier, CPlayer* p) {
   std::string mind = atts[0];
   int value = stoi(atts[2]);
   std::string msg = "";
-  if (p->getMinds().count(mind) == 0) {
-    std::cout << "Player mind could not be changed: mind does not exit." << std::endl;
-    return;
-  }
-
+  
   //Modify attribute according to operand.
   if(atts[1] == "=") {
     p->getMinds().at(mind).level = value;
@@ -759,7 +755,7 @@ void Context::h_setMind(std::string& sIdentifier, CPlayer* p) {
   if (atts.size() > 3)
     p->appendPrint(Webcmd::set_color(color) + mind + msg 
         + std::to_string(value )+ Webcmd::set_color(Webcmd::color::WHITE) + "\n");
-  m_curPermeable=false;
+  m_curPermeable = false;
 }
 
 
@@ -1026,26 +1022,16 @@ void Context::h_removeDetailFromRoom(std::string &sIdentifier, CPlayer *p) {
   }
 }
 
-
-void Context::h_removeHandlerFromRoom(std::string &sIdentifier, CPlayer *p) {
-  if (sIdentifier.find("|") == std::string::npos) {
-    std::cout << cRED << "h_removeHandlerFromRoom: room or handler missing. seperate with \"|\" " 
-      << " string given: " << sIdentifier << cCLEAR << std::endl;
+void Context::h_removeHandler(std::string &sIdentifier, CPlayer *p) {
+  // Get attributes and check size.
+  auto attributes = func::split(sIdentifier, "|");
+  if (attributes.size() < 3) {
+    std::cout << cRED << "h_removeHandler: location, location-id or listener-id are missing: " 
+      << sIdentifier << cCLEAR << std::endl;
     return;
   }
-  try {
-  std::string room_id = func::split(sIdentifier, "|")[0];
-  std::string handler_id = func::split(sIdentifier, "|")[1];
-  if (p->getRoom()->id() == room_id)
-    p->getRoom()->RemoveHandler(handler_id);
-  p->getWorld()->getRoom(room_id)->RemoveHandler(handler_id);
-  p->updateRoomContext();
-  m_curPermeable = false; 
-  }
-  catch (std::exception& e) {
-    std::cout << cRED << "h_removeHandlerFromRoom(" << sIdentifier << ") failed: " 
-      << e.what() << cCLEAR << std::endl;
-  }
+  // Remove handler from location.
+  p->RemoveListenerFromLocation(attributes[0], attributes[1], attributes[2]);
 }
 
 void Context::h_take(std::string& sIdentifier, CPlayer* p) {
@@ -1197,7 +1183,7 @@ void Context::h_try(std::string& sIdentifier, CPlayer* p) {
 
 // ***** ***** FIGHT CONTEXT ***** ***** //
 void Context::initializeFightListeners(std::map<std::string, std::string> mapAttacks) {
-  add_listener("h_fight", mapAttacks);
+  AddSimpleListener("h_fight", mapAttacks, 0);
 }
 
 void Context::h_fight(std::string& sIdentifier, CPlayer* p) {
@@ -1223,7 +1209,7 @@ void Context::initializeDialogListeners(std::string new_state, CPlayer* p) {
   //Set (new) state, clear listeners and add help-listener
   setAttribute<std::string>("state", new_state); 
   m_eventmanager.clear();
-  add_listener("h_help", "help");
+  AddSimpleListener("h_help", "help", 0);
 
   //Add listener for each dialog option.
   std::vector<size_t> activeOptions = p->getDialog()->getState(new_state)
@@ -1232,7 +1218,7 @@ void Context::initializeDialogListeners(std::string new_state, CPlayer* p) {
   size_t counter = 1;
   for(auto opt : activeOptions) {
     mapOtptions[counter] = opt;
-    add_listener("h_call", std::to_string(counter));
+    AddSimpleListener("h_call", std::to_string(counter), 0);
     counter++;
   }
   setAttribute<std::map<size_t, size_t>>("mapOptions", mapOtptions);

@@ -1,4 +1,5 @@
 #include "room.h" 
+#include "eventmanager/listener.h"
 #include "nlohmann/json_fwd.hpp"
 #include "person.h"
 #include <vector>
@@ -9,7 +10,7 @@
 //Constructor
 CRoom::CRoom(string sArea, nlohmann::json jAtts, std::map<string, CPerson*> 
     characters, std::map<string, CItem*> items, std::map<string, CDetail*> 
-    details, CPlayer* p) : CObject{jAtts, p} {
+    details, CPlayer* p) : CObject(jAtts, p, "room") {
   m_sArea = sArea;
   m_sEntry = jAtts.value("entry", "");
 
@@ -65,21 +66,15 @@ std::map<string, CDetail*>& CRoom::getDetails() {
   return m_details; 
 }
 
-std::vector<nlohmann::json> CRoom::getHandler() {
-  std::vector<nlohmann::json> handler;
-  // Add room handler
-  std::vector<nlohmann::json> room_handler = this->handler();
-  handler.insert(handler.begin(), room_handler.begin(), room_handler.end());
-  // Add character handler
+std::vector<CListener*> CRoom::getHandler() {
+  // Add room listeners
+  auto listeners = this->listeners();
+  // Add character listeners
   for(auto it : m_characters) {
-    std::vector<nlohmann::json> c_handler = it.second->handler();
-    for(auto &jt : c_handler) {
-      if (!jt.contains("infos") || (jt.contains("infos") && jt["infos"].size() ==0))
-        jt["infos"] = it.first;
-    }
-    handler.insert(handler.end(), c_handler.begin(), c_handler.end());
+    auto char_listeners = it.second->listeners();
+    listeners.insert(listeners.end(), char_listeners.begin(), char_listeners.end());
   }
-  return handler;
+  return listeners;
 } 
 
 // *** SETTER *** //

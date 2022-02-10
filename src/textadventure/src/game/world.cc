@@ -1,4 +1,5 @@
 #include "world.h"
+#include "eventmanager/listener.h"
 #include "nlohmann/json_fwd.hpp"
 #include "objects/detail.h"
 #include <cstddef>
@@ -586,13 +587,14 @@ void CWorld::questFactory(std::string sPath) {
     }
 
     //Get listeners for this quest.
-    std::vector<nlohmann::json> listeners;
-    if (j_quest.count("listener") > 0 && j_quest["listener"].size() > 0)
-      listeners = j_quest["listener"].get<std::vector<nlohmann::json>>();
-
+    std::vector<CListener*> listeners;
+    for (const auto& it : j_quest.value("listeners", std::vector<nlohmann::json>())) {
+      auto new_listener = CListener::FromJson(it, "quest", newQuest->getID());
+      listeners.push_back(new_listener);
+    }
     //Update quest info
     newQuest->setSteps(mapSteps);
-    newQuest->setHandler(listeners);
+    newQuest->setListeners(listeners);
     m_quests[j_quest["id"]] = newQuest;
   }
 }

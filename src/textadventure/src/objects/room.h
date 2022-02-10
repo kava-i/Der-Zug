@@ -15,6 +15,7 @@
 #include "tools/fuzzy.h"
 
 using std::string;
+class CListener;
 
 class CRoom : public CObject
 { 
@@ -44,7 +45,7 @@ public:
     objectmap getExtits2();
     std::map<string, CItem*>& getItems();
     std::map<string, CDetail*>& getDetails();
-    std::vector<nlohmann::json> getHandler();
+    std::vector<CListener*> getHandler();
 
     // *** setter *** //
     void setPlayers(objectmap& m_players);

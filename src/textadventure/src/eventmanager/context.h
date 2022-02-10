@@ -41,7 +41,7 @@ protected:
 
     void(Context::*m_error)(CPlayer*);
 
-    static std::map<std::string, void(Context::*)(std::string&,CPlayer*)> m_handlers;
+    static std::map<std::string, void(Context::*)(std::string&,CPlayer*)> listeners_;
     static std::map<std::string, nlohmann::json> m_templates;
 
 public:
@@ -61,11 +61,10 @@ public:
     CContextStack<CTimeEvent> getTimeEvents() { return m_timeevents; }
 
     template<typename T> 
-    T getAttribute(std::string sAttribute)
-    {
-        if(m_jAttributes.count(sAttribute) == 0)
-            std::cout << "Attributes requested that does not exist: " << sAttribute << std::endl;
-        return m_jAttributes.value(sAttribute, T());
+    T getAttribute(std::string sAttribute) {
+      if (m_jAttributes.count(sAttribute) == 0)
+          std::cout << "Attributes requested that does not exist: " << sAttribute << std::endl;
+      return m_jAttributes.value(sAttribute, T());
     }
 
     // *** SETTER *** //
@@ -96,13 +95,11 @@ public:
     void deleteTimeEvent(std::string);
 
     // *** Add and delete listeners *** //
-    void add_listener(nlohmann::json);
-    void add_listener(std::string sID, std::string sEventType, int priority=0);
-    void add_listener(std::string sID, std::regex eventType, int pos, int priority=0);
-    void add_listener(std::string sID, std::vector<std::string> eventType, int priority=0);
-    void add_listener(std::string sID, std::map<std::string, std::string> eventType, int priority=0);
-
-    void initializeHandlers(std::vector<nlohmann::json> handlers);
+    void AddSimpleListener(std::string handler, std::string event_type, int priority);
+    void AddSimpleListener(std::string handler, std::regex event_type, int pos, int priority);
+    void AddSimpleListener(std::string handler, std::vector<std::string> event_type, int priority);
+    void AddSimpleListener(std::string handler, std::map<std::string, std::string> event_type, int priority);
+    void AddListener(CListener* listener);
 
     // *** Throw events *** //
     bool throw_event(event newEvent, CPlayer* p);
@@ -156,7 +153,7 @@ public:
     void h_removeCharFromRoom(std::string&, CPlayer*);
     void h_addDetailToRoom(std::string&, CPlayer*);
     void h_removeDetailFromRoom(std::string&, CPlayer*);
-    void h_removeHandlerFromRoom(std::string&, CPlayer*);
+    void h_removeHandler(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //
     void h_ignore(std::string&, CPlayer*);

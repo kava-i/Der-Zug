@@ -16,9 +16,8 @@
 
 using std::string;
 
-class CPerson : public CObject
-{
-protected:
+class CPerson : public CObject {
+  protected:
 
     ///Additional descriptions
     CText* m_roomDescription;           //< Player in room, sometimes as mind.
@@ -44,7 +43,7 @@ protected:
     ///Map dialogs
     std::map<std::string, CDialog*> m_dialogs;
 
-public:
+  public:
 
     /**
     * Constructor for Person, i.e. "character". Calls constructor from base class CObject.
@@ -54,7 +53,8 @@ public:
     * param[in] attacks list of attacks
     */
     typedef std::map<std::string, CItem*> map_type;
-    CPerson(nlohmann::json jAttributes, CDialog* dialog, attacks newAttacks, CText* text, CPlayer* p,std::map<std::string, CDialog*> dialogs, map_type=map_type());
+    CPerson(nlohmann::json jAttributes, CDialog* dialog, attacks newAttacks, CText* text, CPlayer* p,
+        std::map<std::string, CDialog*> dialogs, map_type=map_type());
 
     // *** GETTER *** // 
 

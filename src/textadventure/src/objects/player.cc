@@ -75,27 +75,29 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks,
   m_vistited[m_room->id()] = true;
 
   std::cout << "initializing context stack.\n";
-  // Initialize context stack
+  // Initialize context stack with all quests which are active from the beginning.
   for (auto it : m_world->getQuests()) {
-    if (it.second->getOnlineFromBeginning() == true) {
-      Context* context = new Context(
-          (nlohmann::json){{"name", it.first}, {"permeable",true}, 
-          {"questID",it.first}});
-      context->initializeHandlers(it.second->getHandler());
-      m_contextStack.insert(context, 3, it.first);
-    }
+    if (it.second->getOnlineFromBeginning() == false) 
+      continue;
+    // Create context for this quest.
+    Context* context = new Context({{"name", it.first}, {"permeable",true}, {"questID", it.first}});
+    // Add all quest listeners
+    for (auto& listener : it.second->listeners())
+      context->AddListener(listener);
+    // Add quest-context to context-stack.
+    m_contextStack.insert(context, 3, it.first);
   }
   std::cout << "Done.\n";
 
-  //Add eventhandler to eventmanager
+  // Add eventhandlers to eventmanager.
   m_contextStack.insert(new Context((std::string)"first"), 9, "first");
   m_contextStack.insert(new Context((std::string)"world"), 2, "world");
   m_contextStack.insert(new Context((std::string)"standard"), 0, "standard");
   updateRoomContext();
 
-  //Add quests
-  if(jAtts.count("quests") > 0) {
-    for(const auto& it : jAtts["quests"])
+  // Add quests
+  if (jAtts.count("quests") > 0) {
+    for (const auto& it : jAtts["quests"])
       setNewQuest(it);
   }
 }
@@ -344,29 +346,36 @@ void CPlayer::setWebconsole(Webconsole* webconsole) {
 void CPlayer::updateRoomContext() {
   m_room->setShowMap(m_world->getConfig()["show"]);
 
-  //Create new room context
+  // Create new room context
   Context* context = new Context((std::string)"room");
-
   // Set room-media 
   context->SetMedia("music", m_room->music());
   context->SetMedia("image", m_room->image());
-
-  //Transfer Time events if context exists
-  if(m_contextStack.getContext("room") != NULL)
-    context->setTimeEvents(m_contextStack.getContext("room")->getTimeEvents());
-
-  //Delete old room-context
-  m_contextStack.erase("room");
-
-  //Update handler
-  for(auto it : m_room->getHandler()) {
-    context->add_listener(it);
-    if(it.count("infos") > 0)
-      context->getAttributes()["infos"][(std::string)it["id"]] = it["infos"];
-  }
   
-  //Insert new room-context into context-stack
+  // Transfer Time events if context exists
+  if (m_contextStack.getContext("room") != NULL)
+    context->setTimeEvents(m_contextStack.getContext("room")->getTimeEvents());
+  // Delete old room-context
+  // Update listeners
+  for (auto it : m_room->getHandler())
+    context->AddListener(it);
+  
+  // Delete old and insert new room-context into context-stack
+  m_contextStack.erase("room");
   m_contextStack.insert(context, 0, "room");
+}
+
+void CPlayer::RemoveListenerFromLocation(std::string location, std::string location_id, std::string id) {
+  if (location == "room") {
+    if (m_room->id() == location_id) 
+      m_room->RemoveHandler(id);
+    m_world->getRoom(location_id)->RemoveHandler(id);
+    updateRoomContext();
+  }
+  else if (location == "char") {
+    m_world->getCharacter(location_id)->RemoveHandler(id);
+    updateRoomContext();
+  }
 }
 
 // *** Fight *** //
@@ -448,7 +457,7 @@ void CPlayer::startChat(CPlayer* player) {
 */
 void CPlayer::addChatContext(std::string sPartner) {
   Context* context = new Context("chat", {{"partner", sPartner}});
-  context->add_listener("h_send", (std::regex)"(.*)", 1);
+  context->AddSimpleListener("h_send", (std::regex)"(.*)", 1, 0);
   m_contextStack.insert(context, 1, "chat");
 }
 
@@ -668,32 +677,30 @@ void CPlayer::printEquiped() {
 * @param sType type of item indicating category.
 */
 void CPlayer::equipeItem(CItem* item, string sType) {
-  //If nothing is equipped in this category -> equip.
-  if(m_equipment[sType] == NULL) {
+  // If nothing is equipped in this category -> equip.
+  if (m_equipment[sType] == NULL) {
     appendDescPrint("Du hast " + item->name() + " als " + sType + " ausgerüstet.\n");
     string sAttack = item->getAttack();
 
     //Check for new attack
-    if(sAttack != "") {
+    if (sAttack != "") {
       m_attacks[sAttack] = m_world->getAttack(sAttack);
       appendDescPrint("Neue Attacke: \"" + m_attacks[sAttack]->getName() + "\".\n");
     }
     m_equipment[sType] = item;
   }
 
-  //If this item is already equipped -> print error message.
-  else if(m_equipment[sType]->id() == item->id())
+  // If this item is already equipped -> print error message.
+  else if (m_equipment[sType]->id() == item->id())
     appendErrorPrint(sType + " bereits ausgerüstet.\n");
 
-  //If another item is equipped in this category -> add choice-context
+  // If another item is equipped in this category -> add choice-context
   else {
     appendErrorPrint("Bereits ein " + sType + " ausgerüstet. Austauschen? (ja/nein)\n");
-
-    //Create Choice-Context
-    m_contextStack.insert(new Context((nlohmann::json){{"name", "equipe"}, 
-          {"permeable", false},{"error", "Wähle ja oder nein\n"},{"itemID", 
-          item->id()},{"handlers",{{"ja",{ "h_choose_equipe"}},{"nein",
-          {"h_choose_equipe"}}}}}), 1, "equipe");
+    // Create Choice-Context
+    m_contextStack.insert(new Context((nlohmann::json){{"name", "equipe"}, {"permeable", false},
+          {"error", "Wähle ja oder nein\n"}, {"itemID", item->id()},
+          {"listeners", {{"ja", {"h_choose_equipe"}}, {"nein", {"h_choose_equipe"}}}}}), 1, "equipe");
   }
 }
 
@@ -738,19 +745,19 @@ void CPlayer::showQuests(bool solved) {
 * Add new quest by setting quest active.
 * @param sQuestID id to given quest.
 */
-void CPlayer::setNewQuest(std::string sQuestID) {
+void CPlayer::setNewQuest(std::string quest_id) {
   int ep=0;
-  CQuest* quest = m_world->getQuest(sQuestID);
+  CQuest* quest = m_world->getQuest(quest_id);
   appendSuccPrint(quest->setActive(ep, this));
+  // Create new quest-context with all quest-listeners.
   if(quest->getOnlineFromBeginning() == false) {
-    Context* context = new Context((nlohmann::json){{"name", sQuestID}, 
-        {"permeable",true}, {"questID",sQuestID}});
-    context->initializeHandlers(quest->getHandler());
-    m_contextStack.insert(context, 3, sQuestID);
+    Context* context = new Context({{"name", quest_id}, {"permeable",true}, {"questID", quest_id}});
+    for (auto& listener : quest->listeners()) 
+      context->AddListener(listener);
+    m_contextStack.insert(context, 3, quest_id);
   }
-  
   if(quest->getSolved() == true)
-    m_contextStack.erase(sQuestID);
+    m_contextStack.erase(quest_id);
   addEP(ep);
 }
 
@@ -759,10 +766,10 @@ void CPlayer::setNewQuest(std::string sQuestID) {
 * @param sQuestID identifier to quest.
 * @param sStepID identifier to quest-step.
 */
-void CPlayer::questSolved(std::string sQuestID, std::string sStepID) {
-  int ep=0;
-  m_world->getQuest(sQuestID)->getSteps()[sStepID]->solved(ep, this);
-  if(m_world->getQuest(sQuestID)->getSolved() == true)
+void CPlayer::questSolved(std::string sQuestID, std::string step_id) {
+  int ep = 0;
+  m_world->getQuest(sQuestID)->getSteps()[step_id]->solved(ep, this);
+  if (m_world->getQuest(sQuestID)->getSolved() == true)
       m_contextStack.erase(sQuestID);
   addEP(ep);
 }
@@ -807,14 +814,14 @@ void CPlayer::UpdateStats(int numPoints) {
   std::string info_msg = "Wähle eine Zahl oder den Namen des Attributes aus.\n";
   Context* context = new Context((nlohmann::json){{"name", "updateStats"}, {"permeable", false}, 
       {"numPoints", numPoints}, {"error", info_msg}});
-  context->add_listener("h_updateStats", m_abbilities);
+  context->AddSimpleListener("h_updateStats", m_abbilities, 0);
   m_contextStack.insert(context, 1, "updateStats");
 
   //Print attributes and level of each attribute and add choice-context.
   m_sPrint += "Du hast " + std::to_string(numPoints) + " Punkte zu vergeben.\n";
-  for(size_t i=0; i<m_abbilities.size(); i++) {
-      m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" 
-        + std::to_string(getStat(m_abbilities[i])) + ")\n";
+  for (size_t i=0; i<m_abbilities.size(); i++) {
+    m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" 
+      + std::to_string(getStat(m_abbilities[i])) + ")\n";
   }
   m_sPrint += info_msg;
 }

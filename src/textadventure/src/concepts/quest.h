@@ -10,6 +10,7 @@
 
 class CQuestStep;
 class CPlayer;
+class CListener;
 
 class CQuest {
 private:
@@ -22,7 +23,7 @@ private:
     bool m_onlineFromBeginning;
     std::vector<std::string> m_first_active_steps;
     std::map<std::string, CQuestStep*> m_questSteps;
-    std::vector<nlohmann::json> m_handler;
+    std::vector<CListener*> lisneters_;
 
 public:
     CQuest(nlohmann::json jAttributes);
@@ -33,11 +34,11 @@ public:
     bool getActive();
     bool getOnlineFromBeginning();
     std::map<std::string, CQuestStep*> getSteps();
-    std::vector<nlohmann::json> getHandler();
+    std::vector<CListener*> listeners();
 
     //Setter
     void setSteps(std::map<std::string, CQuestStep*> steps);
-    void setHandler(std::vector<nlohmann::json> handlers);
+    void setListeners(std::vector<CListener*> handlers);
 
     std::string setActive(int& ep, CPlayer* p);
 

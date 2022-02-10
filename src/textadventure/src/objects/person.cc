@@ -10,7 +10,8 @@
 * param[in] attacks list of attacks
 */
 CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttacks, CText* text, 
-    CPlayer* p, std::map<std::string, CDialog*> dialogs, map_type items) : CObject(jAttributes, p) {
+    CPlayer* p, std::map<std::string, CDialog*> dialogs, map_type items) 
+    : CObject(jAttributes, p, "person") {
   //Set stats.
   m_stats["highness"]	= 0;
   m_stats["hp"]	    = jAttributes.value("hp", 40);
@@ -51,10 +52,10 @@ std::map<std::string, int>& CPerson::getStats() {
 * @return return given stat.
 */
 int CPerson::getStat(std::string id) { 
-    if(m_stats.count(id) > 0)
-        return m_stats[id]; 
-    std::cout << "Attribute accessed which does not exits.\n";
-    return 999;
+  if(m_stats.count(id) > 0)
+      return m_stats[id]; 
+  std::cout << "Attribute accessed which does not exits.\n";
+  return 999;
 }
 
 ///return whether character can faint or dies immediately 

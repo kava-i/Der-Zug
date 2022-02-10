@@ -1,4 +1,5 @@
 #include "quest.h"
+#include "eventmanager/listener.h"
 #include "objects/player.h"
 
 CQuest::CQuest(nlohmann::json jAttributes) {
@@ -9,8 +10,7 @@ CQuest::CQuest(nlohmann::json jAttributes) {
   m_solved=false;
   m_active=false;
   m_onlineFromBeginning = jAttributes.value("online", "true") == "true";
-  m_first_active_steps = jAttributes.value("active_from_beginning", 
-    std::vector<std::string>());
+  m_first_active_steps = jAttributes.value("active_from_beginning", std::vector<std::string>());
 }
 
 // *** GETTER *** //
@@ -31,8 +31,8 @@ std::map<std::string, CQuestStep*> CQuest::getSteps() {
   return m_questSteps;
 }
 
-std::vector<nlohmann::json> CQuest::getHandler() {
-  return m_handler;
+std::vector<CListener*> CQuest::listeners() {
+  return lisneters_;
 }
 
 
@@ -41,8 +41,8 @@ void CQuest::setSteps(std::map<std::string, CQuestStep*> steps) {
   m_questSteps = steps;
 }
 
-void CQuest::setHandler(std::vector<nlohmann::json> handlers) {
-  m_handler = handlers;
+void CQuest::setListeners(std::vector<CListener*> listeners) {
+  lisneters_ = listeners;
 }
 
 

@@ -191,6 +191,8 @@ public:
     */
     void updateRoomContext();
     
+    void RemoveListenerFromLocation(std::string location, std::string location_id, std::string id);
+
 
     // ** Fight ** //
 
