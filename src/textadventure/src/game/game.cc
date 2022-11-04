@@ -30,11 +30,12 @@ std::string CGame::get_background_image() const {
   return m_world->media("image/background");
 }
 
-CGame::CGame(std::string path) {
-  std::cout << "Creating game." << std::endl;
+std::string CGame::path() const {
+  return path_;
+}
 
-  //Set path 
-  path_ = path;
+CGame::CGame(std::string path) : path_(path){
+  std::cout << "Creating game." << std::endl;
 
   //Initialize contexts
   Context::initializeHanlders();

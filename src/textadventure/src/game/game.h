@@ -38,7 +38,7 @@ private:
     map<string, nlohmann::json> m_playerJsons;
     CPlayer* m_curPlayer;
     CGramma* m_gramma;
-    std::string path_;
+    const std::string path_;
 
     Context* m_context;
 
@@ -53,6 +53,7 @@ public:
     map<string, nlohmann::json> getPlayerJsons();
     std::string get_music() const;
     std::string get_background_image() const;
+    std::string path() const;
 
     // *** FACTORYS *** // 
     void playerFactory(bool update=false);

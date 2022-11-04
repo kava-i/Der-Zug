@@ -1,18 +1,14 @@
+#include <JanGeschenk/Webgame.hpp>
 #include <iostream>
 #include <fstream>
+#include <memory>
 
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #include <httplib.h>
 #include <inja/inja.hpp>
 #include <nlohmann/json.hpp>
+#include <webgame/webgame.h>
 
-#include "JanGeschenk/Webconsole.hpp"
-#include "JanGeschenk/Webgame.hpp"
-#include "game/game.h"
-#include "eventmanager/sorted_context.h"
-#include "tools/webcmd.h"
-
-CGame *game;
 #ifdef _COMPILE_FOR_SERVER_
 httplib::SSLServer srv(
     "/etc/letsencrypt/live/kava-i.de-0001/cert.pem",
@@ -21,119 +17,6 @@ httplib::SSLServer srv(
 #else
 httplib::Server srv;
 #endif
-
-class WebserverGame {
-  private:
-    std::string name_;
-    std::string password_;
-    std::string id_;
-    std::string sign_in_up_;
-    Webconsole* cout_;
-
-  public:
-    WebserverGame(Webconsole *cout) {
-      std::cout << "Starting....\n";
-      name_ = "";
-      password_ = "";
-      id_ = "";
-      sign_in_up_ = "";
-      cout_ = cout;
-    }
-
-    const std::string &GetName() {
-      return name_;
-    }
-
-    const std::string &GetID() {
-      return id_;
-    }
-
-    void send(std::string msg) {
-      cout_->write(msg);
-      cout_->flush();
-    }
-
-    void Login(std::string in) {
-      std::cout << "On to getting credentials" << std::endl;
-      if(name_=="") {
-        name_ = in ;
-        send(" " + in + "\n");
-        cout_->write(Webcmd::set_color(Webcmd::color::ORANGE), "Password: ");
-        cout_->flush();
-        return;
-      }
-
-      if(password_ == "") {
-        password_ = in;
-        std::string str(in.length(), '*');
-        send(" " + str + "\n");
-        std::string out = game->checkLogin(name_, password_, sign_in_up_ == "l", id_);
-        send(out);
-        if (id_ == "") {
-          password_ = "";
-          name_ = "";
-        }
-        else {
-          std::string output = game->startGame(in, id_, cout_);
-          std::cout << "Got output: " << output << std::endl;
-          send(output);
-        }
-      }
-    }
-
-    void SignInUp(std::string in) {
-      if (sign_in_up_ == "") {
-        std::cout << "Choosing login/ register";
-        if (in == "l" || in == "r" || in == "login" || in == "register") {
-          sign_in_up_ = in.substr(0,1);
-          cout_->write(Webcmd::set_color(Webcmd::color::ORANGE), "\nid: ");
-          cout_->flush();
-          std::cout << "Set sign_in_up_ to " << in.substr(0,1) << std::endl;
-        }
-        else  {
-          std::cout << "Wrong input" << std::endl;
-          cout_->write(Webcmd::set_color(Webcmd::color::RED), 
-              "Invalid option please try again!", color::white, "\n\nlogin/register (l/r): ");
-          cout_->flush();
-        }
-      }
-      else
-        Login(in);
-    }
-
-    void onmessage(std::string input, std::map<decltype(websocketpp::lib::
-          weak_ptr<void>().lock().get()), WebserverGame*> *ptr, bool& global_shutdown) {
-
-      //Check for login/register-phase
-      if (sign_in_up_ == "" || name_ == "" || password_ == "") {
-        SignInUp(input);
-        return;
-      }
-      func::convertToLower(input);
-
-      //Create list of all online players
-      std::list<std::string> lk;
-      for(const auto &it : *ptr)
-        lk.push_back(it.second->GetID());
-
-      //Call main play-loop
-      std::cout << "Befor play: input: " << input << " calling with id: " 
-        << id_ << std::endl;
-      std::string sOutput = game->play(input, id_, lk);
-
-      //Check if game is ended -> close game
-      if (sOutput == "[### end_game ###]") {
-        sOutput = "Game closed by host";
-        global_shutdown = true;
-        srv.stop();
-        std::cout << "Game is getting closed..." << std::endl;
-      }
-      else {
-        send(sOutput);
-        std::cout << "Send the output to client: " << sOutput <<std::endl;
-      }
-    }
-};
 
 /**
  * Function load a (txt-)file from disc.
@@ -186,8 +69,8 @@ std::string GetImage(std::string path, std::string image) {
 * @return Return image as string.
 */
 std::string GetSound(std::string path, std::string sound) {
- path = path + sound + ".mp3";
- std::ifstream f(path, std::ios::in|std::ios::binary|std::ios::ate);    
+ path = path + sound + ".mp3"; std::ifstream f(path,
+     std::ios::in|std::ios::binary|std::ios::ate);    
  if (!f.is_open()) {
    std::cout << "Audio could not be found: " << path << std::endl;    
    return "";
@@ -205,49 +88,93 @@ std::string GetSound(std::string path, std::string sound) {
  return s;
 }
 
+
 /**
  * main loop
  */
 int main(int x, char **argc) {
-  CGame currentGame(argc[1]);
-  std::cout << "MUSIC: " << currentGame.get_music() << std::endl;
-  std::cout << "IMAGE: " << currentGame.get_background_image() << std::endl;
-  game = &currentGame;
-  Webgame<WebserverGame> gl;
-  int port = 9002;
-  if (x>2)
-    port = std::stoi(argc[2]);
+  int port = 4489;
+  if (x > 0)
+    port = std::stoi(argc[1]);
+  std::map<std::string, std::shared_ptr<Webgame<WebserverGame, CGame>>> webgames;
 
   //Open httpserver to serve main-page
   std::thread t1([&]() {
+      
+    // Serve media: images
+    srv.Get("/(.*)/(.*).jpg", [&](const httplib::Request& req, httplib::Response& resp)  {
+        // If game not found return 404
+        if (webgames.count(req.matches[1]) == 0) {
+          resp.status = 404;
+          return;
+        }
+        // Otherwise load audio at game-path.
+        std::string path = webgames.at(req.matches[1])->game_->path();
+        resp.set_content(GetImage(path, req.matches[2]), "image/jpg"); 
+    });
+    // Serve media: audio
+    srv.Get("/(.*)/(.*).mp3", [&](const httplib::Request& req, httplib::Response& resp)  {
+        // If game not found return 404
+        if (webgames.count(req.matches[1]) == 0) {
+          resp.status = 404;
+          return;
+        }
+        // Otherwise load audio at game-path.
+        std::string path = webgames.at(req.matches[1])->game_->path();
+        resp.set_content(GetSound(path, req.matches[2]), "audio/mp3"); 
+    });
 
     //Function to serve main app
-    srv.Get("/", [&](const httplib::Request& req, httplib::Response& resp)  {
+    srv.Get("/(.*)", [&](const httplib::Request& req, httplib::Response& resp)  {
+      // Get game
+      if (webgames.count(req.matches[1]) == 0) {
+        resp.status = 404;
+        return;
+      }
+      auto cg = webgames.at(req.matches[1])->game_;
       inja::Environment env;
       inja::Template temp = env.parse_template("index.html");
       resp.set_content(env.render(temp, 
           nlohmann::json({
             {"port",port+1},
-            {"music", currentGame.get_music()},
-            {"image", currentGame.get_background_image()}
+            {"music", cg->get_music()},
+            {"image", cg->get_background_image()}
           })), 
           "text/html"); 
       });
-    //Function to serve images
-    srv.Get("/(.*).jpg", [&](const httplib::Request& req, httplib::Response& resp)  {
-        resp.set_content(GetImage(argc[1], req.matches[1]), "image/jpg"); });
-    //Function to serve images
-    srv.Get("/(.*).mp3", [&](const httplib::Request& req, httplib::Response& resp)  {
-        resp.set_content(GetSound(argc[1], req.matches[1]), "audio/mp3"); });
+    
+    // Create new game 
+    srv.Post("/api/create/", [&](const httplib::Request& req, httplib::Response& resp) {
+        nlohmann::json json = nlohmann::json::parse(req.body); 
+        std::string path = json["path"].get<std::string>();
+        std::string name = json["name"].get<std::string>();
+        int port = json["port"].get<int>();
+        // Game already running
+        if (webgames.count(name) > 0) {
+          resp.status = 409;
+        }
+        else {
+          // Create new webgame with game based on given path:
+          webgames[name] = std::make_shared<Webgame<WebserverGame, CGame>>(std::make_shared<CGame>(path));
+          // set port and run: 
+          std::thread ng([&]() { webgames[name]->run(port); });
+          ng.detach();
+          resp.status = 200;
+        }
+    });
+    // Close running game
+    srv.Post("/api/close/(.*)", [&](const httplib::Request& req, httplib::Response& resp) {
+        if (webgames.count(req.matches[1]) == 0) {
+          resp.status = 404;
+          return;
+        }
+        webgames.at(req.matches[1])->stop();
+    });
 
     //Start main loop.
     srv.listen("0.0.0.0", port);
     return 0;
   });
 
-  std::thread t2([&]() {
-      gl.run(port+1);
-  });
   t1.join(); 
-  t2.join(); 
 }

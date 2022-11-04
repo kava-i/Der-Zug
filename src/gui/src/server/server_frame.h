@@ -26,7 +26,7 @@ class ServerFrame {
      * @param path_to_cert in case of running on server: path to ssl certificate.
      * @param path_to_key in case of running on server: path to ssl key.
      */
-    ServerFrame(std::string path_to_cert = "", std::string path_to_key = "");
+    ServerFrame(int textad_port, std::string path_to_cert = "", std::string path_to_key = "");
 
     // *** getter *** //
     UserManager& user_manager() {
@@ -189,6 +189,7 @@ class ServerFrame {
   private: 
 
     //Member
+    const int textad_port_;
     UserManager user_manager_;  ///< currently class, later database with all users
 #ifdef _COMPILE_FOR_SERVER_
     httplib::SSLServer server_; //ssl server.

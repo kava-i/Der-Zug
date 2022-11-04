@@ -20,8 +20,8 @@ using namespace httplib;
 
 
 //Constructor
-ServerFrame::ServerFrame(std::string path_to_cert, std::string path_to_key) 
-  : user_manager_("../../data/users")
+ServerFrame::ServerFrame(int textad_port, std::string path_to_cert, std::string path_to_key) 
+  : textad_port_(textad_port), user_manager_("../../data/users")
 #ifdef _COMPILE_FOR_SERVER_
     , server_(path_to_cert.c_str(), path_to_key.c_str())
 #endif
@@ -674,14 +674,12 @@ void ServerFrame::StartGame(const Request& req, Response& resp) {
     return;
   }
 
-  // Build command and start game
-  std::string command = "../../textadventure/build/bin/txtadventure "
-    + path_to_game + " " + std::to_string(world->port())
-    + " > ../../data/users/" + world->creator() + "/logs/" + world->name() + "_run.txt &";
-  sl.unlock();
-
-  std::cout << system(command.c_str()) << std::endl;
-  resp.status = 200;
+  httplib::Client cl("localhost", textad_port_);
+  cl.set_connection_timeout(2);
+  nlohmann::json request = {{"name", world->name()}, {"path", path_to_game}, {"port", world->port()}};
+  auto response = cl.Post("/api/user_registration", {}, request.dump(), 
+      "application/x-www-form-urlencoded");
+  resp.status = response->status;
 }
 
 std::string ServerFrame::CheckLogin(const Request& req, Response& resp) const { 
