@@ -10,7 +10,7 @@
 #include <iostream>
 #include <thread>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <httplib.h>
 
 #include "server_frame.h"

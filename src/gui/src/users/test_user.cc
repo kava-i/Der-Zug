@@ -4,15 +4,13 @@
 
 #include <iostream>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include "user.h"
 #include "user_manager.h"
 #include "users/inja.hpp"
 #include "util//error_codes.h"
 #include "util/func.h"
-
-namespace fs = std::filesystem;
 
 TEST_CASE ("Loading pages from user works", "[user_pages]") {
   

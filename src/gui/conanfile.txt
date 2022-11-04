@@ -1,9 +1,9 @@
 [requires] 
-cpp-httplib/0.7.0
-nlohmann_json/3.9.1
-inja/3.1.0
-openssl/1.1.1g
-catch2/2.13.0
+cpp-httplib/0.11.2
+nlohmann_json/3.11.2
+inja/3.3.0
+openssl/3.0.7
+catch2/3.1.0
 
 [generators]
 cmake

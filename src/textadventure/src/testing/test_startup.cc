@@ -3,14 +3,14 @@
  */
 #include <iostream>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include "game/game.h"
 #include "test_params.h"
 
 TEST_CASE("Testadventure is starting", "[startup]") {
   
-  TestParameters* params = params->getInstance();
+  TestParameters* params = TestParameters::getInstance();
 
   //Create game and all worlds.
   CGame game(params->txtad_path());

@@ -1,5 +1,6 @@
 #define CATCH_CONFIG_RUNNER
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_session.hpp>
 
 #include "test_params.h"
 
@@ -13,7 +14,7 @@ int main (int argc, char* argv[]) {
   std::string player = "";
 
   //Build new parser on top of Catch's
-  using namespace Catch::clara;
+  using namespace Catch::Clara;
   auto cli = session.cli()  
     | Opt(path, "path")
       ["-g"]["--path"]
@@ -31,7 +32,7 @@ int main (int argc, char* argv[]) {
     return return_code;
 
   //Set testing parameters
-  TestParameters* params = params->getInstance();
+  TestParameters* params = TestParameters::getInstance();
   if (path != "") 
     params->set_txtad_path(path);
   if (player != "") 

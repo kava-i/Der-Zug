@@ -45,6 +45,7 @@ set(SRC_FILES_TESTING
   src/page/area.cc
   src/util/func.cc
   src/util/test_func.cc
+  src/test_main.cc
 )
 
 # Specify location for executables 
