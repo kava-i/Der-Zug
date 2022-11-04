@@ -175,10 +175,10 @@ string CRoom::look(string sDetail, CGramma* gramma) {
 }
 
 CItem* CRoom::getItem(std::string sPlayerChoice) {
-  for(auto it : m_items) {
-    if(it.second->getHidden() == true) 
+  for (auto it : m_items) {
+    if (it.second->getHidden() == true) 
       continue;
-    if(fuzzy::fuzzy_cmp(it.second->name(), sPlayerChoice) <= 0.2)
+    if (fuzzy::fuzzy_cmp(it.second->name(), sPlayerChoice) <= 0.2)
       return it.second;
   }
   return NULL;

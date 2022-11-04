@@ -5,6 +5,7 @@
 #include <vector>
 #include <regex>
 #include <map>
+#include <set>
 #include <string>
 
 #include "tools/func.h"
@@ -68,6 +69,8 @@ class CListener
     std::map<std::string, std::string> event_type_map_;  ///< Check if type exists in map.
 
     bool(CListener::*m_check_function)(event&);    ///< Custom compare function.
+
+    static const std::set<std::string> fuzzy_event_types;
 
     // methods
     

@@ -104,8 +104,7 @@ namespace func
 
     
     /**
-    *                   ***     getObjectId         ***
-    * Check whether a given word matches any object of a map by value. If The value is a custom
+    * Checks whether a given word matches any object of a map by value. If The value is a custom
     * object, use a lambda, to access the variable you want to check with. Comparison is done with
     * fuzzy search. Best match  or empty string is returned.
     * @param[in] mapObjects map of objects to be printed.
@@ -113,40 +112,38 @@ namespace func
     * @return Return id of found object or empty string.
     */
     template<typename T1, typename T2=std::function<std::string(T1)>> 
-    std::string getObjectId( std::map<std::string, T1> mapObjects, std::string sName, 
-                               T2 getName = [](T1 t) -> std::string { return t; } )
-    {
-        //Check if name is an id and thus can be directly accessed and returned.
-        if(mapObjects.count(sName) > 0)
-            return sName;
+    std::string getObjectId(std::map<std::string, T1> mapObjects, std::string sName, 
+        T2 getName = [](T1 t) -> std::string { return t; } ) {
+      // Check if name is an id and thus can be directly accessed and returned.
+      if (mapObjects.count(sName) > 0)
+        return sName;
+      if (sName == "")
+        return "";
 
-        if(sName == "")
-            return "";
+      // Iterate over map and use fuzzy comparison to find matching name. Add all matches
+      // to array of matches including the exact score.
+      std::vector<std::pair<std::string, double>> matches;
+      for (auto[i, it] = std::tuple{1, mapObjects.begin()}; it!=mapObjects.end(); i++, it++) {
+        if (std::isdigit(sName[0]) && (i==stoi(sName)))
+          return it->first;
+        double match = fuzzy::fuzzy_cmp(getName(it->second), sName);
+        if (match <= 0.2) 
+          matches.push_back(std::make_pair(it->first, match));
+      }
 
-        //Iterate over map and use fuzzy comparison to find matching name. Add all matches
-        // to array of matches including the exact score.
-        std::vector<std::pair<std::string, double>> matches;
-        for(auto[i, it] = std::tuple{1, mapObjects.begin()}; it!=mapObjects.end(); i++, it++) {
-            if(std::isdigit(sName[0]) && (i==stoi(sName)))
-                return it->first;
-            double match = fuzzy::fuzzy_cmp(getName(it->second), sName);
-            if(match <= 0.2) 
-                matches.push_back(std::make_pair(it->first, match));
+      // If no matches where found, return empty string.
+      if (matches.size() == 0)
+        return "";
+
+      // Find best match.
+      size_t pos=0;
+      for (auto[i, max] = std::tuple{size_t{0}, 0.3}; i<matches.size(); i++) {
+        if (matches[i].second < max) {
+          pos=i;
+          max=matches[i].second;
         }
-
-        //If no matches where found, return empty string.
-        if(matches.size() == 0)
-            return "";
-
-        //Find best match.
-        size_t pos=0;
-        for(auto[i, max] = std::tuple{size_t{0}, 0.3}; i<matches.size(); i++) {
-            if(matches[i].second < max) {
-                pos=i;
-                max=matches[i].second;
-            }
-        }
-        return matches[pos].first;
+      }
+      return matches[pos].first;
     }
 
     /**

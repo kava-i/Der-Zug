@@ -190,19 +190,7 @@ function isspanret(isspan,colname) {
 }
 
 async function changeAudio(new_audio) {
-  /*
-  aud.pause();
-  aud = new Audio(new_audio);
-  aud.addEventListener('ended', function() {
-    this.currentTime = 0;
-    this.play();
-  }, false);
-  if (clicked) 
-    aud.play();
-  */
-
   var fadePoint = aud.currentTime+1;
-
   var fade = setInterval(function() {
     if (aud.currentTime >= fadePoint && aud.volume > 0.0) {
       aud.volume -= 0.1;

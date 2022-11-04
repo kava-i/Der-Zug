@@ -89,6 +89,8 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks,
   }
   std::cout << "Done.\n";
 
+  cur_music_ = m_world->media("music/background");
+
   // Add eventhandlers to eventmanager.
   m_contextStack.insert(new Context((std::string)"first"), 9, "first");
   m_contextStack.insert(new Context((std::string)"world"), 2, "world");
@@ -366,9 +368,8 @@ void CPlayer::updateRoomContext() {
 }
 
 void CPlayer::RemoveListenerFromLocation(std::string location, std::string location_id, std::string id) {
+  std::cout << "RemoveListenerFromLocation: " << location << ", " << location_id << ", " << id << std::endl;
   if (location == "room") {
-    if (m_room->id() == location_id) 
-      m_room->RemoveHandler(id);
     m_world->getRoom(location_id)->RemoveHandler(id);
     updateRoomContext();
   }
@@ -497,7 +498,7 @@ void CPlayer::addReadContext(std::string sID) {
 */
 void CPlayer::changeRoom(string sIdentifier) {
   //Check if player wants to go back.
-  if(sIdentifier == "back" || sIdentifier == "zurück") {
+  if (sIdentifier == "back" || sIdentifier == "zurück") {
     changeRoom(m_lastRoom);
     return;
   }
@@ -506,7 +507,7 @@ void CPlayer::changeRoom(string sIdentifier) {
   auto lamda1= [](CExit* exit) { return (!exit->hidden()) ? exit->prep() + " " + exit->name() : ""; };
   string room = func::getObjectId(getRoom()->getExtits(), sIdentifier, lamda1);
 
-  if(room != "") {
+  if (room != "") {
     changeRoom(getWorld()->getRooms()[room]);
     return;
   }
@@ -709,15 +710,14 @@ void CPlayer::equipeItem(CItem* item, string sType) {
 * @param sType item type (weapon, clothing etc.)
 */
 void CPlayer::dequipeItem(string sType) {
-  if(m_equipment.count(sType) == 0)
+  if (m_equipment.count(sType) == 0)
     appendErrorPrint("Nothing to dequipe.\n");
-  else if(m_equipment[sType] == NULL)
+  else if (m_equipment[sType] == NULL)
     appendErrorPrint("Nothing to dequipe.\n");
   else {
     appendDescPrint(sType + " " + m_equipment[sType]->name() + " abgelegt.\n");
-
     //Erase attack
-    if(m_equipment[sType]->getAttack() != "")
+    if (m_equipment[sType]->getAttack() != "")
       m_attacks.erase(m_equipment[sType]->getAttack());
     m_equipment[sType] = NULL;
   }
@@ -1023,7 +1023,6 @@ std::string CPlayer::getContextMusic(std::string new_music) {
 
 std::string CPlayer::getContextImage(std::string new_image) {
   std::string image = "";
-  //
   // Priorize context-specific image.
   if (new_image != "")
     image = new_image;

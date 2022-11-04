@@ -206,11 +206,10 @@ void CWorld::worldFactory(CPlayer* p) {
 
   // Verify existing exists 
   for (auto it : m_rooms) {
-    for (auto exit : it.second->getExtits()) {
-      if (m_rooms.count(exit.first) == 0) {
-        std::cout << cRED "Exit without matching room: " + exit.first + " in " 
-          + it.first << cCLEAR << std::endl;
-        throw cRED "Exit without matching room: " + exit.first + " in " + it.first + cCLEAR;
+    for (auto it : it.second->getExtits()) {
+      if (m_rooms.count(it.first) == 0) {
+        std::cout << cRED "Exit without matching room: " + it.first + " in " + it.first << cCLEAR << std::endl;
+        exit(0);
       }
     }
   }
@@ -223,7 +222,8 @@ void CWorld::roomFactory(CPlayer* player) {
     try {
       roomFactory(p.path(), player);
     } catch (std::exception& e) {
-      throw cRED "Failed adding rooms at " + p.path().string() + ": " + e.what() + cCLEAR;
+      std::cout << cRED << "Faileded adding rooms at " + p.path().string() + ": " + e.what() + cCLEAR;
+      exit(0);
     }
   }
 }
@@ -246,6 +246,7 @@ void CWorld::roomFactory(string sPath, CPlayer* p) {
     std::map<std::string, CPerson*> mapChars = parseRoomChars(j_room, p);
     map<string, CItem*> mapItems = parseRoomItems(j_room, p);
     map<string, CDetail*> mapDetails = parseRoomDetails(j_room, p);
+    std::cout << "Done creating details" << std::endl;
     m_rooms[j_room["id"]] = new CRoom(sArea, j_room, mapChars, mapItems, mapDetails, p);
     std::cout << "Create room: " << j_room["id"] << std::endl;
   }
@@ -374,12 +375,12 @@ void CWorld::itemFactory(std::string sPath) {
 
 
 map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, CPlayer* p) {
-  std::cout << "Parsing Items\n";
+  std::cout << "Parsing Items" << std::endl;
   map<string, CItem*> mapItems;
   if (j_room.count("items") == 0)
     return mapItems;
 
-  for(auto it : j_room["items"].get<std::vector<nlohmann::json>>()) {
+  for(auto it : j_room.value("items", std::vector<nlohmann::json>())) {
     // Convert json array to pair and create id
     auto item = it.get<std::pair<std::string, nlohmann::json>>();
     std::string sID = j_room["id"].get<std::string>() + "." + item.first; 
@@ -407,6 +408,7 @@ map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, CPlayer* p) {
       mapItems[jBasic["id"]] = new CItem(jBasic, p);
     }
   }
+  std::cout << "done" << std::endl;
   return mapItems;
 } 
 
@@ -589,8 +591,10 @@ void CWorld::questFactory(std::string sPath) {
     //Get listeners for this quest.
     std::vector<CListener*> listeners;
     for (const auto& it : j_quest.value("listeners", std::vector<nlohmann::json>())) {
-      auto new_listener = CListener::FromJson(it, "quest", newQuest->getID());
-      listeners.push_back(new_listener);
+      if (it.contains("id")) {
+        auto new_listener = CListener::FromJson(it, "quest", newQuest->getID());
+        listeners.push_back(new_listener);
+      }
     }
     //Update quest info
     newQuest->setSteps(mapSteps);

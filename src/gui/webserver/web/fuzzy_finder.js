@@ -10,6 +10,12 @@ var child_elements_ = (document.getElementsByClassName("side_box").length < 2);
 let inps = [];
 let cur_input_field_ = "";
 
+let handlers_ = ["h_addItem", "h_removeItem", "h_addQuest", "h_newFight", "h_recieveMoney", "h_eraseMoney",
+  "h_gameover", "h_changeName", "h_addQuest", "h_addExit", "h_setNewAttribute", "h_addTimeEvent",
+  "h_setNewQuest", "h_changeDialog", "h_startDialogDirect", "h_changeSound", "h_changeImage",
+  "h_addCharToRoom", "h_removeCharFromRoom", "h_addDetailToRoom", "h_removeHandler", "h_setAttribute",
+  "h_setMind"]
+
 window.onload = function() {
   if (sessionStorage.getItem("notification") && sessionStorage.getItem("notification") != "") {
     notify(sessionStorage.getItem("notification"));
@@ -202,7 +208,8 @@ function SelectDeleteElement(event) {
 }
 
 function SelectChildElement() {
-  if (child_elements_) window.location = cur_object_ + "/" + on_page_objects_[element_counter];
+  if (element_counter < on_page_objects_.length)
+    window.location = cur_object_ + "/" + on_page_objects_[element_counter];
 }
 
 function SelectParentElement() {
@@ -272,7 +279,7 @@ function Typeahead(input_field) {
   // - "room": when adding new-player and selecting start-room, 
   // "linked_room id": when adding an exit to a room.
   if (input_field.id == "room" || input_field.placeholder == "linked_room id") {
-    inps_ = GetAllX("room");
+    inps_ = GetAllX("rooms");
     mode_ = "typeahead";
     console.log("typeahead modus selected.");
     cur_input_field_ = input_field;
@@ -280,6 +287,43 @@ function Typeahead(input_field) {
     document.getElementById("fuzzy_finder_mode").style.color = "blue";
     return true;
   }
+  else if (input_field.id == "char" || input_field.placeholder == "character id") {
+    inps_ = GetAllX("characters");
+    mode_ = "typeahead";
+    console.log("typeahead modus selected.");
+    cur_input_field_ = input_field;
+    document.getElementById("fuzzy_finder_mode").innerHTML = "characters: ";
+    document.getElementById("fuzzy_finder_mode").style.color = "blue";
+    return true;
+  }
+  else if (input_field.id == "detail" || input_field.placeholder == "detail id") {
+    inps_ = GetAllX("details");
+    mode_ = "typeahead";
+    console.log("typeahead modus selected.");
+    cur_input_field_ = input_field;
+    document.getElementById("fuzzy_finder_mode").innerHTML = "details: ";
+    document.getElementById("fuzzy_finder_mode").style.color = "blue";
+    return true;
+  }
+  else if (input_field.id == "items" || input_field.placeholder == "item id") {
+    inps_ = GetAllX("items");
+    mode_ = "typeahead";
+    console.log("typeahead modus selected.");
+    cur_input_field_ = input_field;
+    document.getElementById("fuzzy_finder_mode").innerHTML = "items: ";
+    document.getElementById("fuzzy_finder_mode").style.color = "blue";
+    return true;
+  }
+  else if (input_field.id == "handler") {
+    inps_ = handlers_;
+    mode_ = "typeahead";
+    console.log("typeahead modus selected.");
+    cur_input_field_ = input_field;
+    document.getElementById("fuzzy_finder_mode").innerHTML = "handlers: ";
+    document.getElementById("fuzzy_finder_mode").style.color = "blue";
+    return true;
+  }
+
   else
     return false;
 }
@@ -315,17 +359,25 @@ function mod(n, m) {
 function GetAllX(category) {
   results = []
   paths_.forEach(path => {
+    // Check if element belongs to category.
     let pos = path.indexOf(category)
-    if (pos != -1) {
-      url_path = window.location.pathname;
-      cur_path_without_cur_elem = url_path.substr(0, url_path.lastIndexOf("/"));
+    url_path = window.location.pathname;
+    if (pos != -1 && path.split("/").length-1 == 6) {
       let cur_path = ""
-      if (path.indexOf(cur_path_without_cur_elem) != -1)
+      if (category == "items" || GetSubCategory(path) == GetSubCategory(url_path))
         cur_path = path.substr(path.lastIndexOf("/")+1);
       else
-        cur_path = path.substr(pos + category.length+2);
+        cur_path = path.substr(pos + category.length+1);
       results.push(cur_path.replaceAll("/", "."));
     }
   });
   return results;
+}
+
+function GetSubCategory(path) {
+  // Cut last path element
+  path = path.substr(0, path.lastIndexOf("/"));
+  // Cut upto last element 
+  path = path.substr(path.lastIndexOf("/"))
+  return path
 }

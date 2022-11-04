@@ -61,10 +61,12 @@ public:
     CContextStack<CTimeEvent> getTimeEvents() { return m_timeevents; }
 
     template<typename T> 
-    T getAttribute(std::string sAttribute) {
-      if (m_jAttributes.count(sAttribute) == 0)
-          std::cout << "Attributes requested that does not exist: " << sAttribute << std::endl;
-      return m_jAttributes.value(sAttribute, T());
+    T getAttribute(std::string attr) {
+      if (m_jAttributes.count(attr) == 0) {
+        std::cout << "Attributes requested that does not exist: " << attr << std::endl;
+        return T();
+      }
+      return m_jAttributes[attr];
     }
 
     // *** SETTER *** //

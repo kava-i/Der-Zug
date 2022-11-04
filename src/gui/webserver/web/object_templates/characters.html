@@ -97,7 +97,7 @@
   
   {{log("rendered attacks") }}  
 
-  <!-- Handlers (default value for non-set-values) -->
+  <!-- Listeners (default value for non-set-values) -->
   <li custom="list">
     <label>Handlers:</label>
     <ul id="listeners">
@@ -124,15 +124,26 @@
             >Target</label>
           <input id="target" placeholder="target" value="{{default(listener.target,"")}}">
           <br>
-          <label class="small" title="Specify regex match">Regex match position</label>
-          <input 
-              class="short" id="pos" placeholder="pos" 
-              custom="int" value="{{default(listener.pos, 0)}}"
-          >
           <label class="small" title="Specify priority">Priority</label>
           <input 
               class="short" id="priority" placeholder="priority" 
               custom="int" value="{{default(listener.priority, 0)}}"
+          >
+          <label class="small" title="Overwrite context/handler permeability.">Permeable</label>
+          <input 
+              class="short" id="permeable" placeholder="permeable" 
+              custom="int" value="{{default(listener.permeable, -1)}}"
+          >
+          <label class="small" title="Delete listener after trigger.">Auto Delete</label>
+          <input 
+              class="short" id="delete" placeholder="delete" 
+              custom="int" value="{{default(listener.delete, 0)}}"
+          >
+          <br>
+          <label class="small" title="Specify regex match">Regex match position</label>
+          <input 
+              class="short" id="pos" placeholder="pos" 
+              custom="int" value="{{default(listener.pos, 0)}}"
           >
           <label class="small" title="interpret command as regex expression.">Regex?</label>
           <input 
@@ -147,7 +158,8 @@
       {% endfor %}
     </ul>
   </li>
-  {{log("rendered handler") }}  
+
+  {{log("rendered listeners") }}  
 
   <!-- Default dialogs/ descriptions -->
   <li>

@@ -143,7 +143,6 @@ void Context::initializeHanlders() {
   listeners_["h_changeDialog"] = &Context::h_changeDialog;
   listeners_["h_changeRoom"] = &Context::h_changeRoom;
   listeners_["h_startDialogDirect"] = &Context::h_startDialogDirectB;
-  listeners_["h_startDialogDirectB"] = &Context::h_startDialogDirectB;
   listeners_["h_changeSound"] = &Context::h_changeSound;
   listeners_["h_changeImage"] = &Context::h_changeImage;
 
@@ -270,7 +269,6 @@ void Context::initializeTemplates() {
                         {"changeDialog", {"h_changeDialog"}},
                         {"changeRoom", {"h_changeRoom"}},
                         {"startDialogDirekt", {"h_startDialogDirekt"}},
-                        {"startDialogB", {"h_startDialogDirectB"}},
                         {"changeImage", {"h_changeImage"}},
                         {"changeSound", {"h_changeSound"}},
                         {"addCharToRoom", {"h_addCharToRoom"}},
@@ -286,7 +284,7 @@ void Context::initializeTemplates() {
                     {"listeners",{
                         {"go", {"h_goTo"}},
                         {"look",{"h_look"}}, 
-                        {"search",{"h_search"}}, 
+                        {"search",{"h_search"}}, // just as look but tries without specifying location
                         {"talk",{"h_startDialog"}}, 
                         {"pick",{"h_take"}}, 
                         {"consume",{"h_consume"}}, 
@@ -401,10 +399,12 @@ bool Context::throw_event(event e, CPlayer* p) {
           << "event triggered: " << sortedEventmanager[i]->handler()
           << "(" << cur_event.first << ")" << cCLEAR << std::endl;
         (this->*listeners_[sortedEventmanager[i]->handler()])(cur_event.second, p);
-        std::cout << cGreen << "Event cal done." << cCLEAR << std::endl;
+        std::cout << cGreen << "Event call done." << cCLEAR << std::endl;
         // If permeable differs from -1, set permeability of context to given permeability.
-        if (sortedEventmanager[i]->permeable() != -1)
+        if (sortedEventmanager[i]->permeable() != -1) {
           m_curPermeable = sortedEventmanager[i]->permeable();
+          std::cout << "permeable set to " << m_curPermeable << std::endl;
+        }
         // If self-delete is set, remove listener (only works for object-listeners)
         if (sortedEventmanager[i]->self_delete() == true)
           p->RemoveListenerFromLocation(sortedEventmanager[i]->location(), 
@@ -611,15 +611,14 @@ void Context::h_endDialog(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_newFight(std::string& sIdentifier, CPlayer* p) {
+  std::cout << "h_newFight: " << sIdentifier << std::endl;
+  auto lambda = [](CPerson* person){return person->name(); };
+  std::string str =func::getObjectId(p->getRoom()->getCharacters(),sIdentifier,lambda);
+ 
+  if (p->getWorld()->getCharacter(str) != nullptr)
+    p->setFight(new CFight(p, p->getWorld()->getCharacter(str)));
 
-    std::cout << "h_newFight: " << sIdentifier << std::endl;
-    auto lambda = [](CPerson* person){return person->name(); };
-    std::string str =func::getObjectId(p->getRoom()->getCharacters(),sIdentifier,lambda);
-   
-    if(p->getWorld()->getCharacter(str) != nullptr)
-        p->setFight(new CFight(p, p->getWorld()->getCharacter(str)));
-
-    m_curPermeable=false;
+  m_curPermeable=false;
 }
 
 void Context::h_gameover(std::string& sIdentifier, CPlayer* p) {
@@ -860,9 +859,9 @@ void Context::h_show(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_look(std::string& sIdentifier, CPlayer* p) {
-  //Extract details (sWhat) and where to look (sWhere) from identifier
+  // Extract details (sWhat) and where to look (sWhere) from identifier
   size_t pos = sIdentifier.find(" ");
-  if(pos == std::string::npos) {
+  if (pos == std::string::npos) {
     p->appendErrorPrint("Ich weiß nicht, was du durchsuchen willst.\n");
     return;
   }
@@ -872,8 +871,8 @@ void Context::h_look(std::string& sIdentifier, CPlayer* p) {
   auto lambda = [](CDetail* detail) { return detail->name();};
   std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), sWhat, lambda);
 
-  //Check whether input is correct/ detail could be found.
-  if(sDetail == "") {
+  // Check whether input is correct/ detail could be found.
+  if (sDetail == "") {
     p->appendErrorPrint("Ich weiß nicht, was du durchsuchen willst.\n");
     return;
   }
@@ -890,18 +889,15 @@ void Context::h_look(std::string& sIdentifier, CPlayer* p) {
 
 void Context::h_search(std::string& sIdentifier, CPlayer* p) {
   auto lambda = [](CDetail* detail) { return detail->name();};
-  std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), 
-      sIdentifier, lambda);
+  std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), sIdentifier, lambda);
 
-  //Check whether input is correct/ detail could be found.
-  if(sDetail == "") {
+  // Check whether input is correct/ detail could be found.
+  if (sDetail == "") {
     p->appendErrorPrint("Ich weiß nicht, was du durchsuchen willst.\n");
     return;
   }
-  
+  // Check whether location is neccessary
   CDetail* detail  = p->getRoom()->getDetails()[sDetail];
-
-  //Check whether location is neccessary
   if(detail->getLook() == "")
     p->appendDescPrint(p->getRoom()->look(sDetail, p->getGramma()));
   else
@@ -1032,6 +1028,7 @@ void Context::h_removeHandler(std::string &sIdentifier, CPlayer *p) {
   }
   // Remove handler from location.
   p->RemoveListenerFromLocation(attributes[0], attributes[1], attributes[2]);
+  m_curPermeable = false;
 }
 
 void Context::h_take(std::string& sIdentifier, CPlayer* p) {
@@ -1059,56 +1056,59 @@ void Context::h_consume(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_read(std::string& sIdentifier, CPlayer* p) {
-  if(p->getInventory().getItem(sIdentifier) != NULL) {
-    if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
-        p->appendTechPrint("Dieser Gegenstand kann nicht gelesen werden.\n");
+  if (p->getInventory().getItem(sIdentifier) != NULL) {
+    if (p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
+      p->appendTechPrint("Dieser Gegenstand kann nicht gelesen werden.\n");
   }
   else {
-      p->appendErrorPrint("Gegenstand nicht in deinem Inventar! "
-          "(benutze \"zeige Inventar\" um alle deine Gegenstande zu sehen.)\n");
+    p->appendErrorPrint("Gegenstand nicht in deinem Inventar! "
+        "(benutze \"zeige Inventar\" um alle deine Gegenstande zu sehen.)\n");
   }
 }
 
 void Context::h_equipe(std::string& sIdentifier, CPlayer* p) {
-  if(p->getInventory().getItem(sIdentifier) != NULL) {
-      if(p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
-          p->appendErrorPrint("Dieser Gegenstand kann nicht ausgerüstet werden.\n");
+  if (p->getInventory().getItem(sIdentifier) != NULL) {
+    if (p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
+      p->appendErrorPrint("Dieser Gegenstand kann nicht ausgerüstet werden.\n");
   }
   else {
-      p->appendErrorPrint("Gegenstand nicht in deinem Inventar! "
-          "(benutze \"zeige Inventar\" um deine Items zu sehen.)\n");
+    p->appendErrorPrint("Gegenstand nicht in deinem Inventar! "
+        "(benutze \"zeige Inventar\" um deine Items zu sehen.)\n");
   }
 }
 
 void Context::h_dequipe(std::string& sIdentifier, CPlayer* p) {
-    p->dequipeItem(sIdentifier);
+  p->dequipeItem(sIdentifier);
 }
 
 void Context::h_examine(std::string &sIdentifier, CPlayer*p) {
-  //Check for room 
-  if(sIdentifier == "room" || sIdentifier == "raum") {
+  // Check for room 
+  if (sIdentifier == "room" || sIdentifier == "raum") {
     p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
     return;
   }
 
-  //Check for detail
+  // Check for detail
   auto lambda1 = [](CDetail* detail) { return detail->name(); };
   std::string sObject = func::getObjectId(p->getRoom()->getDetails(), sIdentifier, lambda1);
-  if(sObject != "")
+  if (sObject != "")
     p->appendPrint(p->getRoom()->getDetails()[sObject]->text());
 
   auto lambda2 = [](CItem* item) { return item->name(); };
   sObject = func::getObjectId(p->getRoom()->getItems(), sIdentifier, lambda2);
-  //Check for item
-  if(sObject != "")
+  // Check for item
+  if (sObject != "")
     p->appendPrint(p->getRoom()->getItems()[sObject]->text());
 
-  //Check for person
+  // Check for person
   auto lambda3 = [](CPerson* person) { return person->name();};
   sObject = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda3);
-  //Check for item
-  if(sObject != "")
+  if (sObject != "")
     p->appendPrint(p->getWorld()->getCharacter(sObject)->text());
+
+  // Check for inventory
+  if (p->getInventory().getItem(sIdentifier) != NULL)
+    p->appendPrint(p->getInventory().getItem(sIdentifier)->text());
 }
 
 void Context::h_test(std::string& sIdentifier, CPlayer* p) {

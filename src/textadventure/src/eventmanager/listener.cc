@@ -1,11 +1,18 @@
 #include "listener.h"
 #include "nlohmann/json_fwd.hpp"
+#include "tools/fuzzy.h"
+#include <set>
+#include <stdexcept>
 #include <string>
 
 #define cRED "\033[1;31m"
 #define cCLEAR "\033[0m"
 
+const std::set<std::string> CListener::fuzzy_event_types = {"pick", "go", "look", "search",
+  "talk", "consume", "read", "equipe", "examine"};
+
 // constructors
+
 
 CListener::CListener(std::string id, std::string listener, std::string location, std::string location_id,
     std::string target_identifier, std::string new_identifier, int permeable, bool self_delete,
@@ -54,23 +61,27 @@ CListener::CListener(std::string id, std::string listener, std::string location,
 }
 
 CListener* CListener::FromJson(nlohmann::json it, std::string location, std::string location_id) {
+  std::cout << "Creating Listener" << std::endl;
+  CListener* listener;
   try {
     // Regex listener
     if (it.contains("regex") && it["regex"] == true) {
-      return new CListener(it["id"], it["handler"], location, location_id, 
+      listener = new CListener(it["id"], it["handler"], location, location_id, 
           it.value("target", ""), it.value("event_attributes", ""), it.value("permeable", -1), 
-          it.value("delete", false), it.value("priority", 0), (std::regex)it["cmd"], it["pos"]);
+          it.value("delete", 0), it.value("priority", 0), (std::regex)it["cmd"], it["pos"]);
     }
     // String listener
     else {
-      return new CListener(it["id"], it["handler"], location, location_id, 
+      listener = new CListener(it["id"], it["handler"], location, location_id, 
           it.value("target", ""), it.value("event_attributes", ""), it.value("permeable", -1), 
-          it.value("delete", false), it.value("priority", 0), (std::string)it["cmd"]);
+          it.value("delete", 0), it.value("priority", 0), (std::string)it["cmd"]);
     }
   }
   catch (std::exception& e) {
-    throw("Failined creating listener: " + it.dump() + ": " + e.what());
+    std::cout << "Failed to create handler" << it.dump() << std::endl;
+    throw std::runtime_error("Failined creating listener: " + it.dump() + ": " + e.what());
   }
+  return listener;
 }
 
 // getter
@@ -103,12 +114,18 @@ bool CListener::check_match(event& e) {
 }
 
 bool CListener::StringCompare(event& e) {
+  // Check event type, if not equal, retuirn false.
   if (e.first != event_type_str_)
     return false;
-  if (target_identifier_ != "" && e.second == target_identifier_)
-    e.second = new_identifier_;
-  else if (target_identifier_ != "" && e.second != target_identifier_)
-    return false;
+  // If target is specified, also checkCheck event target.
+  if (target_identifier_ != "") {
+    // If match, update identifier.
+    if ((fuzzy_event_types.count(e.first) > 0 && fuzzy::fuzzy_cmp(e.second, target_identifier_) <= 0.2)
+        ||  e.second == target_identifier_)
+      e.second = new_identifier_;
+    else 
+      return false;
+  }
   return true;
 }
 

@@ -127,20 +127,17 @@ else
 
 let clicked = false;
 let aud = new Audio("sounds/{{ default(music, 'piano') }}.mp3");
-function playMusik() 
-{
-    if(clicked == false) {
-        aud.play();
-        document.getElementById("symbol").className = "fa fa-volume-up";
-        clicked = true;
-    }
-
-    else
-    {
-        aud.pause();
-        document.getElementById("symbol").className = "fa fa-volume-off";
-        clicked = false;
-    }
+  function playMusik() {
+  if(clicked == false) {
+    aud.play();
+    document.getElementById("symbol").className = "fa fa-volume-up";
+    clicked = true;
+  }
+  else {
+    aud.pause();
+    document.getElementById("symbol").className = "fa fa-volume-off";
+    clicked = false;
+  }
 }
 
 
