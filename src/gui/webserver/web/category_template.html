@@ -65,7 +65,7 @@
   <div style="float: right;">
     <button id="try_game_btn" class="pure-button" style="width:2rem;height:2rem;"
       title="Try game (closes game if open): Shortcut: 0" 
-      onclick="try_game({{__port}});">
+      onclick="try_game('{{__creator}}', '{{__world_name}}', {{__textad_port}});">
       <i class="fas fa-gamepad"></i>
     </button>
   </div>
@@ -89,11 +89,19 @@
 
   <div id="tab_elemens" style="display: block;">
     <div class="controlers">
-      {% if __port != 0 and __is_main %}
-        <button class="pure-button" style="margin-bottom:0.5em;"
-                                  onclick="run({{__port}});">Run</button>
-        <button class="pure-button" style="margin-bottom:0.5em;"
-                                  onclick="end({{__port}});">Close</button><br>
+      {% if __is_main %}
+        <button 
+          class="pure-button" style="margin-bottom:0.5em;"
+          onclick="run('{{__creator}}', '{{__world_name}}', {{__textad_port}});"
+        >
+          Run
+        </button>
+        <button 
+          class="pure-button" style="margin-bottom:0.5em;"
+          onclick="end('{{__creator}}', '{{__world_name}}', {{__textad_port}});"
+        >
+          Close
+        </button><br>
       {% endif %}
 
         <table id="controller">

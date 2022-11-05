@@ -81,10 +81,11 @@ class World {
     /**
      * Calls GetPage value of referenced page and add short paths to data-json.
      * @param[in] path to category/area/object.
+     * @param[in] textad_port port to textadventure
      * @param[in] only_json if true, then returns only the objects json.
      * @return json with page-data, path to template and short-paths.
      */
-    nlohmann::json GetPage(std::string path, bool only_json=false) const;
+    nlohmann::json GetPage(std::string path, int textad_port, bool only_json=false) const;
 
     /**
      * Provides a graph representation if availibe and an empty json otherwise.

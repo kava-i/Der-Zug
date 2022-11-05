@@ -52,9 +52,7 @@ std::string User::password() const {
   std::shared_lock sl(shared_mtx_password_);
   return password_;
 }
-std::map<std::string, int>& User::worlds() {
-  return worlds_;
-}
+
 const std::string User::username() const {
   return username_;
 }
@@ -77,17 +75,16 @@ void User::AddLocation(std::string user, std::string world) {
 
 // ** Serve and generate pages ** //
 
-std::string User::GetOverview(nlohmann::json shared_worlds, 
-    nlohmann::json all_worlds) {
+std::string User::GetOverview(nlohmann::json shared_worlds, nlohmann::json all_worlds, 
+    int textad_port) {
   //Create initial json with username.
-  nlohmann::json worlds = nlohmann::json({{"username", username_}});
+  nlohmann::json worlds = nlohmann::json({{"username", username_}, {"textad_port", textad_port}});
 
   //Add all dictionaries of this user to json.
   worlds["worlds"] = nlohmann::json::array();
   for (auto& p : fs::directory_iterator(path_ + "/" + username_ + "/files")) {
     if (p.path().stem() != "user") {
-      worlds["worlds"].push_back(nlohmann::json({{"name",p.path().stem()},
-          {"port",worlds_[p.path().stem()]}}));
+      worlds["worlds"].push_back({{"creator", username_}, {"name", p.path().stem()}});
     }
   }
   worlds["shared_worlds"] = shared_worlds;

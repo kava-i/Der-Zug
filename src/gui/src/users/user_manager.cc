@@ -14,7 +14,6 @@ namespace fs = std::filesystem;
 
 UserManager::UserManager(std::string main_path) : path_(main_path) {
   ports_ = 9001;
-
   worlds_ = new Worlds(path_, 9001);
 
   //Iterate over users and create user.
@@ -27,7 +26,6 @@ UserManager::UserManager(std::string main_path) : path_(main_path) {
     try {
       users_[user["username"]] = new User(user["username"], user["password"], 
         path_, user["locations"]);
-      InitWorlds(users_[user["username"]]);
     } catch(std::exception& e) {
       std::cout << "Creating user at path: " << p.path() << " failed!\n";
     }
@@ -194,7 +192,6 @@ std::string UserManager::GenerateCookie(std::string username) {
   std::string sessid = "";
 	for (int i = 0; i< 32; ++i)
 		sessid += alphanum[buffer[i] % (sizeof(alphanum)-1)];
-   
   std::unique_lock ul(shared_mutex_cookies_);
   cookies_[sessid] = username; 
   return sessid;
@@ -214,14 +211,6 @@ std::string UserManager::GetUserFromCookie(const char* ptr) const {
   return cookies_.at(cookie);
 }
 
-void UserManager::InitWorlds(User* user) {
-  for (auto& p : fs::directory_iterator(path_ + "/" 
-        + user->username() + "/files/")) {
-    user->worlds()[p.path().stem()] = ports_;
-    ports_+=2;
-  }
-}
-
 int UserManager::GetNextPort() {
   ports_+=2;
   return ports_;
@@ -229,10 +218,8 @@ int UserManager::GetNextPort() {
 
 nlohmann::json UserManager::GetAllWorlds(std::string username) const {
   nlohmann::json all_worlds = nlohmann::json::array();
-  for (auto it : users_) {
-    if (it.first == username) continue;
-    for (auto jt : it.second->worlds())
-      all_worlds.push_back({{"user", it.first},{"name", jt.first},{"port", jt.second}});
+  for (auto it : worlds_->worlds()) {
+     all_worlds.push_back({{"creator", it.second->creator()}, {"name", it.second->name()}});
   }
   return all_worlds;
 }
@@ -245,20 +232,8 @@ nlohmann::json UserManager::GetSharedWorlds(std::string username) const {
     if (location.find("backups") != std::string::npos) continue;
     std::string user = location.substr(0, location.find("/"));
     std::string world = location.substr(location.rfind("/")+1);
-    if (GetUser(user) != nullptr) {
-      shared_worlds.push_back(nlohmann::json({{"user", user}, {"name", world}, 
-          {"port", GetUser(user)->worlds()["world"]}}));
-    }
+    if (GetUser(user) != nullptr)
+      shared_worlds.push_back({{"creator", user}, {"name", world}});
   }
   return shared_worlds;
-}
-
-int UserManager::GetPortOfWorld(std::string user, std::string world) const {
-  try {
-    return users_.at(user)->worlds()[world];
-  }
-  catch(std::exception& e) {
-    std::cout << "World \"" << world << "\" from " << user << " not found.\n";
-    return 0;
-  }
 }

@@ -40,6 +40,10 @@ Worlds::~Worlds() {
     delete it.second;
 }
 
+const std::map<std::string, World*>& Worlds::worlds() {
+  return worlds_;
+}
+
 ErrorCodes Worlds::CreateNewWorld(std::string path, std::string name) {
   std::cout << "Worlds::AddWorld(" << path << ")" << std::endl;
   if (GetWorldFromUrl(path) != nullptr) 
@@ -114,12 +118,12 @@ ErrorCodes Worlds::UpdateElements(std::string path, std::string name, std::strin
    return ErrorCodes::NOT_ALLOWED;
 }
 
-std::string Worlds::GetPage(std::string path) {
+std::string Worlds::GetPage(std::string path, int textad_port) {
   std::cout << "Worlds::GetPage(" << path << ")" << std::endl;
   World* world = GetWorldFromUrl(path);
   if (world == nullptr) 
     return "No world found.";
-  nlohmann::json json = world->GetPage(base_path_ + path);
+  nlohmann::json json = world->GetPage(base_path_ + path, textad_port);
   if (json.count("error") > 0) 
     return json["error"];
   return ParseTemplate(json);
@@ -209,5 +213,13 @@ World* Worlds::GetWorldFromUrl(std::string path) {
       { return full_path.find(it.first) != std::string::npos; } );
   if (it != worlds_.end())
     return it->second;
+  return nullptr;
+}
+
+World* Worlds::GetWorld(std::string creator, std::string world_name) {
+  for (const auto& it : worlds_) {
+    if (it.second->creator() == creator && it.second->name() == world_name)
+      return it.second;
+  }
   return nullptr;
 }

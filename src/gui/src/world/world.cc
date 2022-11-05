@@ -115,7 +115,7 @@ ErrorCodes World::DelElem(std::string path, std::string id, bool force) {
 }
 
 
-nlohmann::json World::GetPage(std::string path, bool only_json) const {
+nlohmann::json World::GetPage(std::string path, int textad_port, bool only_json) const {
   std::cout << "World::GetPage(" << path << ")" << std::endl;
   std::shared_lock sl(shared_mtx_paths_);
   if (paths_.count(path) == 0)
@@ -129,7 +129,9 @@ nlohmann::json World::GetPage(std::string path, bool only_json) const {
   }
   json["header"]["__short_paths"] = short_paths_;
   json["header"]["__is_main"] = (path == path_);
-  json["header"]["__port"] = port_;
+  json["header"]["__creator"] = creator_;
+  json["header"]["__world_name"] = name_;
+  json["header"]["__textad_port"] = textad_port;
   return json;
 }
 
@@ -192,7 +194,6 @@ void World::InitializeCategory(std::string path) {
     else if (!func::LoadJsonFromDisc(p.path(), objects))
       std::cout << "failed to load json." << std::endl;
     else if (objects.is_array() == false) {
-      std::cout << "added area" << std::endl;
       paths_[path_without_extension] = new Area(base_path_, path_without_extension, objects);
       // objects: objects in json of objects.
       for (auto it=objects.begin(); it!=objects.end(); it++)

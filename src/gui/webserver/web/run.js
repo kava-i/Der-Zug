@@ -37,88 +37,65 @@ function get_log(x) {
   }
 }
 
-async function try_game(port) {
+async function try_game(creator, world_name, textad_port) {
   notify("Closing running game...");
-  end(port, true);
+  end(creator, world_name, textad_port, true);
   await new Promise(r => setTimeout(r, 1800));
   notify("Starting game...");
-  run(port);
+  run(creator, world_name, textad_port);
 }
 
-async function run(port) {
-  //Check if game is already running.
-  var host = location.host.substr(0, location.host.indexOf(":"));
-  var socket = null
-  if (host == "localhost" || host == "127.0.0.1")
-    socket = new WebSocket("ws://" + host + ":" + parseInt(port+1));
-  else
-    socket = new WebSocket("wss://" + host + ":" + parseInt(port+1));
-  await new Promise(r => setTimeout(r, 1000));
-  console.log("Connection:", socket.readyState); 
-  if (socket.readyState === 0 || socket.readyState === 1) {
-    notify("Game already running.");
-    return;
+async function run(creator, world_name, textad_port) {
+  // Check if game is already running.
+  const data = new Object({"creator": creator, "world_name": world_name});
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/api/running");
+  xhttp.send(JSON.stringify(data));
+  xhttp.onload = function(event){
+    // Game already running 
+    if (this.status == 200) {
+      notify("Game already running.");
+      return;
+    }
   }
 
-  //Send request
+  // If not already running, send request to start game.
   var xhttp = new XMLHttpRequest();
-  xhttp.open("POST", "/api/start_game");
-  xhttp.send(GetWorldFromPath());
+  xhttp.open("POST", "/api/start");
+  xhttp.send(JSON.stringify(data));
 
   //Redirect to game
   xhttp.onload = function(event){
-    //Fame already running 
     if (this.status != 200)
-      notify("Unkown problem starting game.");
-
-    //Start game if not already running.
+      notify("Unkown problem starting game: " + this.status);
+    // If Successfully started, redirect to game-page.
     else {
-      var cur_loc = window.location.href;
-      cur_loc = cur_loc.substr(0, cur_loc.indexOf(":", 7));
-      window.open(cur_loc + ":" + port + "/");
+      var hostname = window.location.hostname;
+      window.open("http://" + hostname+ ":" + textad_port + "/" + creator + "/" + world_name);
     }
   }
 }
 
-async function end(port, silent=false) {
-  //Check if game is already running.
-  var socket = null
-  var host = location.host.substr(0, location.host.indexOf(":"));
-  if (host == "localhost" || host == "127.0.0.1")
-    socket = new WebSocket("ws://" + host + ":" + parseInt(port+1));
-  else
-    socket = new WebSocket("wss://" + host + ":" + parseInt(port+1));
-  await new Promise(r => setTimeout(r, 1000));
-  console.log("Connection:", socket.readyState); 
-  if (socket.readyState === 2 || socket.readyState === 3) {
-    document.getElementById("check_msg").innerHTML = "Game was not running.";
-  }
-  else {
-    //End game.
-    socket.send("l");
-    socket.send("_admin");
-    socket.send("password");
-    socket.send("[end_game]");
-    socket.send("[end_game]");
-    await new Promise(r => setTimeout(r, 700));
-    console.log("Connection:", socket.readyState); 
-    if (socket.readyState === 2 || socket.readyState === 3)
-      document.getElementById("check_msg").innerHTML = "Game closed succesfully!";
-    else
-      document.getElementById("check_msg").innerHTML = "Failed closing game!";
+async function end(creator, world_name, silent=false) {
+  // Check if game is already running.
+  const data = new Object({"creator": creator, "world_name": world_name});
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/api/close");
+  xhttp.send(JSON.stringify(data));
+  xhttp.onload = function(event){
+    // Game already running 
+    if (this.status == 200) {
+      notify("Game closed.");
+      return;
+    }
+    else if (this.status == 404) {
+      notify("Game already closed.");
+      return;
+    }
+    else {
+      notify("Something went wring: status-code=" + this.status);
+    }
   }
   if (!silent)
     document.getElementById("modal_log").style.display = "block";
-}
-
-function GetWorldFromPath() {
-  let path = window.location.pathname;
-  console.log("path: ", path);
-  let parts = path.split("/");
-  console.log("world: ", parts);
-  parts = parts.slice(0,4)
-  console.log("world: ", parts);
-  path = parts.join('/');
-  console.log("world: ", path);
-  return path;
 }

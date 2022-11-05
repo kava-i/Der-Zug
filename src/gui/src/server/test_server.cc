@@ -32,7 +32,7 @@ TEST_CASE("Server is working as expected", "[server]") {
   del_test_user("test");
   del_test_user("test2");
  
-  ServerFrame server;
+  ServerFrame server(4489);
 
   std::thread t1([&server]() {
     server.Start(4444);

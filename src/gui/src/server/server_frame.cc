@@ -69,7 +69,7 @@ void ServerFrame::Start(int port) {
 
   // *** Actions *** //
 
-  //usermanagerment 
+  // usermanagerment 
   server_.Post("/api/user_login", [&](const Request& req, Response& resp) {
       DoLogin(req, resp); });
   server_.Post("/api/user_registration", [&](const Request& req, Response& resp) {
@@ -111,8 +111,12 @@ void ServerFrame::Start(int port) {
       CheckRunning(req, resp); });
   server_.Post("/api/get_(.*)_log", [&](const Request& req, Response& resp) {
       GetLog(req, resp); });
-  server_.Post("/api/start_game", [&](const Request& req, Response& resp) {
+  server_.Post("/api/start", [&](const Request& req, Response& resp) {
       StartGame(req, resp); });
+  server_.Post("/api/close", [&](const Request& req, Response& resp) {
+      CloseGame(req, resp); });
+  server_.Post("/api/running", [&](const Request& req, Response& resp) {
+      IsGameRunning(req, resp); });
 
     //html
   server_.Get("/", [&](const Request& req, Response& resp) {
@@ -272,11 +276,11 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
         sl.lock();
         nlohmann::json shared_worlds = user_manager_.GetSharedWorlds(username);
         nlohmann::json all_worlds = user_manager_.GetAllWorlds(username);
-        page = user->GetOverview(shared_worlds, all_worlds);
+        page = user->GetOverview(shared_worlds, all_worlds, textad_port_);
       }
       else {
         sl.lock();
-        page = user_manager_.worlds()->GetPage(req.matches[0]);
+        page = user_manager_.worlds()->GetPage(req.matches[0], textad_port_);
       } 
     } catch (std::exception& e) {
       std::cout << "ServeFile: " << e.what() << std::endl;
@@ -660,25 +664,69 @@ void ServerFrame::GetLog(const Request& req, Response& resp) {
 void ServerFrame::StartGame(const Request& req, Response& resp) {
   // Try to get username from cookie
   std::string username = CheckLogin(req, resp);
+  std::cout << "StartGame: " << req.body << std::endl;
   if (username == "") return;
-
+  auto data = ValidateJson(req, resp, {"creator", "world_name"});
+  if (data.size() == 0)
+    return;
+  //
   // Extract data from path and build path to textadventure.
-  std::string url_path = req.body;
-  std::string path_to_game = "../../data/users" + url_path + "/";
+  std::string creator = data["creator"];
+  std::string world_name = data["world_name"];
+  std::string path_to_game = "../data/users/" + creator + "/files/" + world_name + "/";
     
   // Get world (keep mutex locked to assure, that pointer is not changed. 
+  std::cout << "StartGame: Getting world." << std::endl;
   std::shared_lock sl(shared_mtx_user_manager_);
-  World* world = user_manager_.worlds()->GetWorldFromUrl(url_path);
-  if (world == nullptr || !func::demo_exists(path_to_game)) {
+  World* world = user_manager_.worlds()->GetWorld(creator, world_name);
+  if (world == nullptr || !func::demo_exists("../" + path_to_game)) {
     resp.status = 401;
     return;
   }
 
+  std::cout << "StartGame: creating world." << std::endl;
   httplib::Client cl("localhost", textad_port_);
   cl.set_connection_timeout(2);
-  nlohmann::json request = {{"name", world->name()}, {"path", path_to_game}, {"port", world->port()}};
-  auto response = cl.Post("/api/user_registration", {}, request.dump(), 
-      "application/x-www-form-urlencoded");
+  nlohmann::json request = {{"creator", creator}, {"name", world_name}, 
+    {"path", path_to_game}, {"port", world->port()}};
+  auto response = cl.Post("/api/create/", {}, request.dump(), "application/x-www-form-urlencoded");
+
+  resp.status = response->status;
+}
+
+void ServerFrame::CloseGame(const Request& req, Response& resp) {
+  // Try to get username from cookie
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
+  auto data = ValidateJson(req, resp, {"creator", "world_name"});
+  if (data.size() == 0) {
+    return;
+  }
+  
+  // Extract data from path and build path to textadventure.
+  std::string creator = data["creator"];
+  std::string world_name = data["world_name"];
+  httplib::Client cl("localhost", textad_port_);
+  cl.set_connection_timeout(2);
+  auto response = cl.Get("/api/close/" + creator + "/" + world_name);
+  resp.status = response->status;
+}
+
+
+void ServerFrame::IsGameRunning(const Request& req, Response& resp) {
+  // Try to get username from cookie
+  std::string username = CheckLogin(req, resp);
+  if (username == "") return;
+  auto data = ValidateJson(req, resp, {"creator", "world_name"});
+  if (data.size() == 0)
+    return;
+  
+  // Extract data from path and build path to textadventure.
+  std::string creator = data["creator"];
+  std::string world_name = data["world_name"];
+  httplib::Client cl("localhost", textad_port_);
+  cl.set_connection_timeout(2);
+  auto response = cl.Get("/api/running/" + creator + "/" + world_name);
   resp.status = response->status;
 }
 
@@ -701,9 +749,10 @@ std::string ServerFrame::CheckLogin(const Request& req, Response& resp) const {
 nlohmann::json ServerFrame::ValidateJson(const Request& req, Response& resp, 
       std::vector<std::string> keys) const {
   nlohmann::json json = func::ValidateJson(req.body, keys);
+  std::cout << "ValidateJson: got: " << json.dump() << std::endl;
   if (json.empty()) {
     resp.set_content("invalid json.", "text/txt");
-    resp.status = 401;
+    resp.status = 400;
     return nlohmann::json();
   }
   return json;

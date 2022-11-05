@@ -119,8 +119,6 @@ class UserManager {
      */
     nlohmann::json GetSharedWorlds(std::string username) const;
 
-    int GetPortOfWorld(std::string user, std::string world) const;
-
   private:
     std::map<std::string, User*> users_;  ///< Map of all users.
     mutable std::shared_mutex shared_mutex_users_;
@@ -156,13 +154,6 @@ class UserManager {
      * @return whether strength is sufficient.
      */
     bool CheckPasswordStrength(std::string password) const;
-
-    /**
-     * Initializes worlds by adding to map of worlds and setting port.
-     * @param[in, out] user
-     */
-    void InitWorlds(User* user);
-
 };
 
 #endif

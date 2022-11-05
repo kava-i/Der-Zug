@@ -148,18 +148,32 @@ class ServerFrame {
     void CheckRunning(const httplib::Request& req, httplib::Response& resp);
     
     /**
-     * @brief Checks whether game is still running.
+     * @brief Gets log for given game.
      * @param[in] req (reference to request)
      * @param[in, out] resp (reference to response)
      */
     void GetLog(const httplib::Request& req, httplib::Response& resp);
 
     /**
-     * @brief Checks whether game is still running.
+     * @brief Starts given game.
      * @param[in] req (reference to request)
      * @param[in, out] resp (reference to response)
      */
     void StartGame(const httplib::Request& req, httplib::Response& resp);
+
+    /**
+     * @brief Closes given game.
+     * @param[in] req (reference to request)
+     * @param[in, out] resp (reference to response)
+     */
+    void CloseGame(const httplib::Request& req, httplib::Response& resp);
+
+    /**
+     * @brief Checks whether game is still running.
+     * @param[in] req (reference to request)
+     * @param[in, out] resp (reference to response)
+     */
+    void IsGameRunning(const httplib::Request& req, httplib::Response& resp);
 
     /**
      * @brief Get object json

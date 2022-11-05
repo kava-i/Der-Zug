@@ -73,7 +73,10 @@
               </td>
               <td>
                 <i class="txt_button" title="Go to textadventure" 
-                   onclick="play_game({{world.port}})">PLAY</i>
+                  onclick="play_game('{{world.creator}}', '{{world.name}}', {{textad_port}})"
+                >
+                  PLAY
+                </i>
               </td>
             </tr>
           {% endfor %}
@@ -91,11 +94,14 @@
             <tr>
               <td>
                 <a class="medium"
-                   href="/{{world.user}}/files/{{world.name}}">{{world.user}}/{{world.name}}</a>
+                   href="/{{world.creator}}/files/{{world.name}}">{{world.creator}}/{{world.name}}</a>
               </td>
               <td>
                 <i class="txt_button" title="Go to textadventure" 
-                   onclick="play_game({{world.port}})">PLAY</i>
+                  onclick="play_game('{{world.creator}}', {{textad_port}})"
+                >
+                  PLAY
+                </i>
               </td>
             </tr>
           {% endfor %}
@@ -111,15 +117,18 @@
             <tr>
               <td>
                 <a class="medium"
-                   href="/{{world.user}}/files/{{world.name}}">{{world.user}}/{{world.name}}</a>
+                   href="/{{world.creator}}/files/{{world.name}}">{{world.creator}}/{{world.name}}</a>
               </td>
               <td>
                 <i class="txt_button" title="Go to textadventure" 
-                   onclick="play_game({{world.port}})">PLAY</i>
+                  onclick="play_game('{{world.creator}}', '{{world.name}}', {{textad_port}})"
+                >
+                  PLAY
+                </i>
               </td>
               <td>
                 <i class="txt_button" title="Request access." 
-                      onclick="request_access('{{world.user}}','{{world.name}}')">Request</i>
+                      onclick="request_access('{{world.creator}}','{{world.name}}')">Request</i>
               </td>
             </tr>
           {% endfor %}

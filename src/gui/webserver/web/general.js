@@ -92,8 +92,8 @@ function AddElem(elem, force=false) {
   json_request.infos = {};
   var inputs = document.getElementById("modal_add_elem").getElementsByTagName("input");
   for (let i=1; i<inputs.length; i++) {
-    console.log(inputs.length, i);
-    json_request["infos"][inputs[i].id] = inputs[i].value;
+    const val = inputs[i].value.replaceAll("/", "_").replaceAll(" ", "-");
+    json_request["infos"][inputs[i].id] = val;
   }
 
   var xhttp = new XMLHttpRequest();
@@ -152,28 +152,6 @@ function AddMedia(media_type, force=false) {
     else
       notify("Media file could not be uploaded.");
   }
-
-  /*
-  fetch("/api/upload/" + media_type, {
-    method: "POST", 
-    body: formData
-    // headers: {
-    //   'Content-Type': 'multipart/form-data'
-    // }
-  })
-  .then(result => {
-    //sessionStorage.setItem("notification", "Media file upload.");
-    if (result.status == 200)
-      notify("Media file upload.");
-    else
-      notify("Media file could not be uploaded.");
-    // window.location = window.location;
-  })
-  .catch(error => {
-    notify("Sending data failed!");
-    document.getElementById("btn_add_elem").style.display = "none";
-  });
-  */
 }
 
 /**
@@ -218,17 +196,31 @@ function DelElem(force=false) {
   }
 }
 
-function play_game(port) {
-  var cur_loc = window.location.href;
-  cur_loc = cur_loc.substr(0, cur_loc.indexOf(":", 7));
-
-  window.open(cur_loc + ":" + parseInt(port) + "/");
+function play_game(creator, world_name, textad_port) {
+  // Check if game is running.
+  const data = new Object({"creator": creator, "world_name": world_name});
+  var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/api/running");
+  xhttp.send(JSON.stringify(data));
+  xhttp.onload = function(event){
+    // Game already running 
+    if (this.status != 200) {
+      notify("Game not running.");
+      return;
+    }
+    else {
+      // Redirect to game
+      const hostname = window.location.hostname;
+      window.open("http://" + hostname + ":" + textad_port + "/" + creator + "/" + world_name);
+    }
+  }
 }
 
 function request_access(user, world) {
   var json_request = new Object();
   json_request["user"] = user;
   json_request["world"] = world;
+  k
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", "/api/create_request");
   xhttp.send(JSON.stringify(json_request));
@@ -397,14 +389,14 @@ function SetNotes() {
 
 notification_running_ = false;
 async function notify(text, color) {
-  while(notification_running_ == true)
-    await new Promise(r => setTimeout(r, 100));
+  while(notification_running_ === true)
+    await new Promise(r => setTimeout(r, 200));
   notification_running_ = true;
     
   let notification = document.getElementById("notification");
   notification.innerHTML = text;
   unfade(notification);
-  await new Promise(r => setTimeout(r, 1000));
+  await new Promise(r => setTimeout(r, 1500));
   fade(notification);
   notification_running_ = false;
 }

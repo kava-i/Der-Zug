@@ -39,6 +39,9 @@ class Worlds {
      */
     ~Worlds();
 
+    // getter 
+    const std::map<std::string, World*>& worlds();
+
     // public methods:
     
     /** 
@@ -72,9 +75,10 @@ class Worlds {
      * Serves page of requested category/ object.
      * Acctually get json-data and path to tempate, then calls ParseTemplate().
      * @param[in] path (url)
+     * @param[in] textad_port (port to textadventure http-server)
      * @return rendered page.
      */
-    std::string GetPage(std::string path);
+    std::string GetPage(std::string path, int textad_port);
 
     /**
      * Serves only json of requested object.
@@ -108,6 +112,8 @@ class Worlds {
      * @return world, or nullptr if not found.
      */
     World* GetWorldFromUrl(std::string path);
+
+    World* GetWorld(std::string creator, std::string world_name);
 
   private:
     // member variables:

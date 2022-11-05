@@ -1,7 +1,11 @@
 #include <JanGeschenk/Webgame.hpp>
+#include <exception>
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include <mutex>
+#include <shared_mutex>
+#include <string>
 
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #include <httplib.h>
@@ -88,89 +92,129 @@ std::string GetSound(std::string path, std::string sound) {
  return s;
 }
 
+std::string GetWorldId(std::string creator, std::string name) {
+  return creator + "/" + name;
+}
+
 
 /**
  * main loop
  */
 int main(int x, char **argc) {
   int port = 4489;
-  if (x > 0)
+  if (x > 1)
     port = std::stoi(argc[1]);
   std::map<std::string, std::shared_ptr<Webgame<WebserverGame, CGame>>> webgames;
+  std::shared_mutex mutex_webgames;
+  std::cout << "Starting txtad server on port: " << port << std::endl;
 
   //Open httpserver to serve main-page
   std::thread t1([&]() {
-      
     // Serve media: images
-    srv.Get("/(.*)/(.*).jpg", [&](const httplib::Request& req, httplib::Response& resp)  {
+    srv.Get("/(.*)/(.*)/(.*).jpg", [&](const httplib::Request& req, httplib::Response& resp)  {
+        std::cout << "get background: " << std::endl;
+        std::shared_lock sl_mtx(mutex_webgames);
+        std::string game_id = GetWorldId(req.matches[1], req.matches[2]);
+        std::cout << "get background: " << game_id << std::endl;
         // If game not found return 404
-        if (webgames.count(req.matches[1]) == 0) {
+        if (webgames.count(game_id) == 0) {
           resp.status = 404;
           return;
         }
         // Otherwise load audio at game-path.
-        std::string path = webgames.at(req.matches[1])->game_->path();
-        resp.set_content(GetImage(path, req.matches[2]), "image/jpg"); 
+        std::string path = webgames.at(game_id)->game_->path();
+        resp.set_content(GetImage(path, req.matches[3]), "image/jpg"); 
     });
     // Serve media: audio
-    srv.Get("/(.*)/(.*).mp3", [&](const httplib::Request& req, httplib::Response& resp)  {
+    srv.Get("/(.*)/(.*)/(.*).mp3", [&](const httplib::Request& req, httplib::Response& resp)  {
+        std::cout << "get music: " << std::endl;
+        std::shared_lock sl_mtx(mutex_webgames);
+        std::string game_id = GetWorldId(req.matches[1], req.matches[2]);
+        std::cout << "get music: " << game_id << std::endl;
         // If game not found return 404
-        if (webgames.count(req.matches[1]) == 0) {
+        if (webgames.count(game_id) == 0) {
           resp.status = 404;
           return;
         }
         // Otherwise load audio at game-path.
-        std::string path = webgames.at(req.matches[1])->game_->path();
-        resp.set_content(GetSound(path, req.matches[2]), "audio/mp3"); 
+        std::string path = webgames.at(game_id)->game_->path();
+        resp.set_content(GetSound(path, req.matches[3]), "audio/mp3"); 
     });
 
-    //Function to serve main app
-    srv.Get("/(.*)", [&](const httplib::Request& req, httplib::Response& resp)  {
-      // Get game
-      if (webgames.count(req.matches[1]) == 0) {
-        resp.status = 404;
-        return;
-      }
-      auto cg = webgames.at(req.matches[1])->game_;
-      inja::Environment env;
-      inja::Template temp = env.parse_template("index.html");
-      resp.set_content(env.render(temp, 
-          nlohmann::json({
-            {"port",port+1},
-            {"music", cg->get_music()},
-            {"image", cg->get_background_image()}
-          })), 
-          "text/html"); 
-      });
-    
+   
     // Create new game 
     srv.Post("/api/create/", [&](const httplib::Request& req, httplib::Response& resp) {
+        std::shared_lock ul_mtx(mutex_webgames);
         nlohmann::json json = nlohmann::json::parse(req.body); 
         std::string path = json["path"].get<std::string>();
         std::string name = json["name"].get<std::string>();
+        std::string creator = json["creator"].get<std::string>();
         int port = json["port"].get<int>();
+        std::string game_id = GetWorldId(creator, name);
+        std::cout << "create: " << game_id << std::endl;
         // Game already running
-        if (webgames.count(name) > 0) {
+        if (webgames.count(game_id) > 0) {
           resp.status = 409;
         }
         else {
-          // Create new webgame with game based on given path:
-          webgames[name] = std::make_shared<Webgame<WebserverGame, CGame>>(std::make_shared<CGame>(path));
-          // set port and run: 
-          std::thread ng([&]() { webgames[name]->run(port); });
-          ng.detach();
-          resp.status = 200;
+          try {
+            // Create new webgame with game based on given path:
+            webgames[game_id] = std::make_shared<Webgame<WebserverGame, CGame>>(
+                std::make_shared<CGame>(path), port);
+            // set port and run: 
+            std::thread ng([&]() { webgames[game_id]->run(); });
+            ng.detach();
+            resp.status = 200;
+            std::cout << "create: " << game_id << " success on port " << port << std::endl;
+          } catch (std::exception& e) {
+            std::cout << "create: " << game_id << " failed: " << e.what() << std::endl;
+          }
         }
     });
+    
     // Close running game
-    srv.Post("/api/close/(.*)", [&](const httplib::Request& req, httplib::Response& resp) {
-        if (webgames.count(req.matches[1]) == 0) {
+    srv.Get("/api/close/(.*)/(.*)", [&](const httplib::Request& req, httplib::Response& resp) {
+        std::shared_lock ul_mtx(mutex_webgames);
+        std::string game_id = GetWorldId(req.matches[1], req.matches[2]);
+        std::cout << "[close] game_id: " << game_id << std::endl;
+        if (webgames.count(game_id) == 0) {
           resp.status = 404;
           return;
         }
-        webgames.at(req.matches[1])->stop();
+        // Stop and remove game:
+        webgames.at(game_id)->stop();
+        webgames.erase(game_id);
     });
-
+    
+    // Check running game
+    srv.Get("/api/running/(.*)/(.*)", [&](const httplib::Request& req, httplib::Response& resp) {
+        std::shared_lock sl_mtx(mutex_webgames);
+        std::string game_id = GetWorldId(req.matches[1], req.matches[2]);
+        std::cout << "[running] game_id: " << game_id << std::endl;
+        if (webgames.count(game_id) == 0) {
+          resp.status = 404;
+          return;
+        }
+        resp.status = 200;
+    });
+    
+    // Function to serve main app
+    srv.Get("/(.*)/(.*)", [&](const httplib::Request& req, httplib::Response& resp)  {
+      std::shared_lock sl_mtx(mutex_webgames);
+      std::string game_id = GetWorldId(req.matches[1], req.matches[2]);
+      std::cout << "[main] game_id: " << game_id << std::endl;
+      // Get game
+      if (webgames.count(game_id) == 0) {
+        resp.status = 404;
+        return;
+      }
+      auto cg = webgames.at(game_id)->game_;
+      auto port = webgames.at(game_id)->port_;
+      inja::Environment env;
+      inja::Template temp = env.parse_template("index.html");
+      resp.set_content(env.render(temp, { {"port",port}, {"music", cg->get_music()}, 
+            {"image", cg->get_background_image()} }), "text/html"); });
+ 
     //Start main loop.
     srv.listen("0.0.0.0", port);
     return 0;

@@ -68,9 +68,10 @@ class User {
      * Gets all worlds and parses them into the overview page.
      * @param[in] shared_worlds (json with all shared_worlds and ports)
      * @param[in] all_worlds (json with all worlds and ports)
+     * @param[in] textad_port (port of textadventure server)
      * @return overview-page.
      */
-    std::string GetOverview(nlohmann::json shared_worlds, nlohmann::json all_worlds);
+    std::string GetOverview(nlohmann::json shared_worlds, nlohmann::json all_worlds, int textad_port);
 
     /**
      * Get Overview of a backups. 
@@ -154,7 +155,6 @@ class User {
     const std::string path_;
     std::vector<std::string> locations_;
     mutable std::shared_mutex shared_mtx_locations_;
-    std::map<std::string, int> worlds_;
     mutable std::shared_mutex shared_mtx_worlds_;
     std::vector<nlohmann::json> requests_;
     mutable std::shared_mutex shared_mtx_requests_;
