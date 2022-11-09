@@ -11,3 +11,6 @@ src/gui/compile_commands.json
 *dictionary.txt
 *vgcore*
 src/data/users/*/logs/*
+src/data/users/**
+!src/data/users/fux/files/world1/*
+!src/data/users/fux/files/1918/*
