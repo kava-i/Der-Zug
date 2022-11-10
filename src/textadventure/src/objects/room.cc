@@ -2,10 +2,13 @@
 #include "eventmanager/listener.h"
 #include "nlohmann/json_fwd.hpp"
 #include "person.h"
+#include <memory>
 #include <vector>
 
 #define cRED "\033[1;31m"
 #define cCLEAR "\033[0m"
+
+std::shared_ptr<CGramma> CRoom::gramma_ = nullptr;
 
 //Constructor
 CRoom::CRoom(string sArea, nlohmann::json jAtts, std::map<string, CPerson*> 
@@ -95,6 +98,10 @@ void CRoom::setShowMap(nlohmann::json j) {
   }
 }
 
+void CRoom::set_gramma(std::shared_ptr<CGramma> gramma) {
+  gramma_ = gramma;
+}
+
 
 // *** VARIOUS FUNCTIONS *** //
 
@@ -110,21 +117,21 @@ string CRoom::showDescription(std::map<std::string, CPerson*> mapCharacters) {
   return text_->print() + " " + sDesc;
 }
 
-string CRoom::showAll(CGramma* gramma) {
-  return showExits(gramma) + " " + showCharacters(gramma) + " " 
-          + showItems(gramma) + " " + showDetails(gramma) + "\n";
+string CRoom::showAll() {
+  return showExits() + " " + showCharacters() + " " 
+          + showItems() + " " + showDetails() + "\n";
 }
 
-string CRoom::showExits(CGramma* gramma) {
+string CRoom::showExits() {
   auto lambda = [](CExit* exit) {return (!exit->hidden()) ? exit->prep() + " " + exit->name() : "";};
 
   // Get pre and post strings from show map.
   std::string pre = (m_showMap.count("exits") > 0) ? m_showMap["exits"]["pre"] : "Hier geht es";    
   std::string post = (m_showMap.count("exits") > 0) ? m_showMap["exits"]["post"] : "Nirgendwo hin.";
-  return gramma->build(func::to_vector(m_exits, lambda), pre, post);
+  return gramma_->build(func::to_vector(m_exits, lambda), pre, post);
 }
 
-string CRoom::showCharacters(CGramma* gramma) {
+string CRoom::showCharacters() {
 
   std::cout << "showCharacters" << std::endl;
   auto lambda = [](CPerson* person) {return person->name();};
@@ -134,37 +141,37 @@ string CRoom::showCharacters(CGramma* gramma) {
   std::string pre = (m_showMap.count("chars") > 0) ? m_showMap["chars"]["pre"] : "Hier sind";    
   std::string post = (m_showMap.count("chars") > 0) ? m_showMap["chars"]["post"] : "niemand.";
   std::string also = (m_showMap.count("chars") > 0) ? m_showMap["chars"]["also"] : "Aber außerdem noch";
-  output += gramma->build(func::to_vector(m_characters, lambda), pre, post);
+  output += gramma_->build(func::to_vector(m_characters, lambda), pre, post);
   std::cout << "Got text from gramma: " << output << std::endl;
   if(m_players.size() > 0)
-    output += gramma->build(func::to_vector(m_players), " " + also + " ", "");
+    output += gramma_->build(func::to_vector(m_players), " " + also + " ", "");
   std::cout << "Returning..." << std::endl;
   return output;
 }       
 
-string CRoom::showItems(CGramma* gramma) {
+string CRoom::showItems() {
   string sOutput = "";
 
   //TODO (fux): condition to not print when hidden might be missing.
   auto printing = [](CItem* item) { return item->name(); };
 
-  return gramma->build(func::to_vector(m_items, printing), "Hier sind", 
+  return gramma_->build(func::to_vector(m_items, printing), "Hier sind", 
       "nichts zu finden.");
 } 
 
-string CRoom::showDetails(CGramma* gramma) {
+string CRoom::showDetails() {
   std::string details = "";
   auto lambda = [](CDetail* detail) { return detail->name(); };
-  return gramma->build(func::to_vector(m_details, lambda), "Hier sind ", 
+  return gramma_->build(func::to_vector(m_details, lambda), "Hier sind ", 
       "nichts weiteres zu sehen.");
 }
 
-string CRoom::look(string sDetail, CGramma* gramma) {
+string CRoom::look(string sDetail) {
   CDetail* detail = m_details[sDetail];
   auto lambda = [](CItem* item) { return item->name(); };
   std::string sOutput = "";
 
-  sOutput = gramma->build(func::to_vector(detail->getItems(), lambda), 
+  sOutput = gramma_->build(func::to_vector(detail->getItems(), lambda), 
       "Hier sind", "leider nichts.");
 
   //Change from hidden to visible and "empty" detail

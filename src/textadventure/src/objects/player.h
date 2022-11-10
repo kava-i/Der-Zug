@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <map>
+#include <memory>
 #include <queue>
 #include <stdlib.h>
 #include <chrono> 
@@ -46,7 +47,7 @@ private:
     // *** Attributes concerning game world *** //
     CWorld* m_world;  ///< Pointer to players world (all rooms, chars, etc.)
     CParser* m_parser;
-    CGramma* m_gramma;  ///< Pointer to the gramma-class
+    static std::shared_ptr<CGramma> _gramma;  ///< Pointer to the gramma-class
 
     CRoom* m_room;  ///< Pointer to current room
     CRoom* m_lastRoom;  ///< Pointer to last room visited
@@ -86,8 +87,7 @@ public:
     * @param room current room of payer
     * @param newAttacks attacks of player
     */
-    CPlayer(nlohmann::json jAttributes, CRoom* room, attacks newAttacks, 
-        CGramma* gramma, std::string path);
+    CPlayer(nlohmann::json jAttributes, CRoom* room, attacks newAttacks, std::string path);
 
     ~CPlayer();
 
@@ -101,9 +101,6 @@ public:
     ///Return pointer to players world (all rooms, chars, etc.)
     CWorld* getWorld();
 
-    ///Return pointer to gramma-class
-    CGramma* getGramma();
- 
     ///Return current room.
     CRoom* getRoom();
 
@@ -147,6 +144,8 @@ public:
 
     ///Set extra substitues
     void set_subsitues(std::map<std::string, std::string> subsitutes);
+
+    static void set_gramma(std::shared_ptr<CGramma> gramma);
 
     //No-event type commands
     void printText(std::string text);

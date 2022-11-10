@@ -17,7 +17,6 @@
 #include "objects/attack.h"
 #include "actions/fight.h"
 #include "actions/dialog.h"
-#include "tools/gramma.h"
 #include "tools/fuzzy.h"
 #include "tools/func.h"
 #include "tools/webcmd.h"
@@ -37,7 +36,6 @@ private:
     map<string, CPlayer*> m_players;
     map<string, nlohmann::json> m_playerJsons;
     CPlayer* m_curPlayer;
-    CGramma* m_gramma;
     const std::string path_;
 
     Context* m_context;
@@ -68,11 +66,6 @@ public:
     bool reloadPlayer(string sPlayerID);
     bool reloadWorld();
     bool reloadWorld(string sPlayerID);
-
-    /*
-    //Convert yaml to json
-    void toJson(string filename);
-    */
 };
     
 

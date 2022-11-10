@@ -1,3 +1,6 @@
+#include "objects/room.h"
+#include "tools/gramma.h"
+#include <memory>
 #define CATCH_CONFIG_RUNNER
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_session.hpp>
@@ -37,6 +40,10 @@ int main (int argc, char* argv[]) {
     params->set_txtad_path(path);
   if (player != "") 
     params->set_txtad_player(player);
+
+  // set statics 
+  CGramma gramma({});
+  CRoom::set_gramma(std::make_shared<CGramma>(gramma));
 
   return session.run();
 }

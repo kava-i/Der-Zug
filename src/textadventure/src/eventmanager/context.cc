@@ -818,26 +818,26 @@ void Context::h_changeRoom(std::string& sIdentifier, CPlayer* p) {
 void Context::h_ignore(std::string&, CPlayer*) {}
 
 void Context::h_showExits(std::string& sIdentifier, CPlayer* p) {
-  p->appendDescPrint(p->getRoom()->showExits(p->getGramma())+"\n");
+  p->appendDescPrint(p->getRoom()->showExits()+"\n");
 }
 
 
 void Context::h_show(std::string& sIdentifier, CPlayer* p) {
   if(sIdentifier == "exits" || sIdentifier == "ausgänge") {
     std::cout << "Calling: " << " show exits!" << std::endl;
-    p->appendDescPrint(p->getRoom()->showExits(p->getGramma())+"\n");
+    p->appendDescPrint(p->getRoom()->showExits()+"\n");
   }
   else if(sIdentifier == "visited" || sIdentifier == "besuchte räume")
     p->showVisited();
   else if(sIdentifier == "people" || sIdentifier == "personen") {
-    p->appendDescPrint(p->getRoom()->showCharacters(p->getGramma()) + "\n"); 
+    p->appendDescPrint(p->getRoom()->showCharacters() + "\n"); 
   }
   else if(sIdentifier == "room")
     p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
   else if(sIdentifier == "items" || sIdentifier == "gegenstände")
-    p->appendDescPrint(p->getRoom()->showItems(p->getGramma()) + "\n");
+    p->appendDescPrint(p->getRoom()->showItems() + "\n");
   else if(sIdentifier == "details" || sIdentifier == "mobiliar")
-    p->appendDescPrint(p->getRoom()->showDetails(p->getGramma()) + "\n");
+    p->appendDescPrint(p->getRoom()->showDetails() + "\n");
   else if(sIdentifier == "inventory" || sIdentifier == "inventar")
     p->appendPrint(p->getInventory().printInventory());
   else if(sIdentifier == "equiped" || sIdentifier == "ausrüstung")
@@ -853,7 +853,7 @@ void Context::h_show(std::string& sIdentifier, CPlayer* p) {
   else if(sIdentifier == "attacks" || sIdentifier == "attacken")
     p->appendPrint(p->printAttacks());
   else if(sIdentifier == "all" || sIdentifier == "alles")
-    p->appendDescPrint(p->getRoom()->showAll(p->getGramma()));
+    p->appendDescPrint(p->getRoom()->showAll());
   else
     p->appendErrorPrint("Unbekannte \"zeige-function\"\n"); 
 }
@@ -880,7 +880,7 @@ void Context::h_look(std::string& sIdentifier, CPlayer* p) {
   //Check whether sWhere matched with detail
   CDetail* detail  = p->getRoom()->getDetails()[sDetail];
   if(detail->getLook() == sWhere)
-    p->appendDescPrint(p->getRoom()->look(sDetail, p->getGramma()));
+    p->appendDescPrint(p->getRoom()->look(sDetail));
   else {
     p->appendErrorPrint("Ich kann nicht " + sWhere + " " + detail->name() 
         + " schauen.\nSoll ich in, auf oder unter " + detail->name() + " schauen?\n");
@@ -899,7 +899,7 @@ void Context::h_search(std::string& sIdentifier, CPlayer* p) {
   // Check whether location is neccessary
   CDetail* detail  = p->getRoom()->getDetails()[sDetail];
   if(detail->getLook() == "")
-    p->appendDescPrint(p->getRoom()->look(sDetail, p->getGramma()));
+    p->appendDescPrint(p->getRoom()->look(sDetail));
   else
     p->appendDescPrint("Ich weiß nicht, wo ich suchen soll. Sag: \"schaue "
         "[in/ unter/ ...] [gegenstand]\"\n");

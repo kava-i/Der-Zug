@@ -46,8 +46,6 @@ CGame::CGame(std::string path) : path_(path){
   //Create world
   m_world = new CWorld(NULL, path);
   std::cout << "Done parsing world." << std::endl;
-  //m_gramma = new CGramma({"dictionary.txt", "EIG.txt"});
-  m_gramma = new CGramma({});
 
   //Create players
   playerFactory();
@@ -78,9 +76,8 @@ void CGame::playerFactory(nlohmann::json j_player) {
   map<string, CAttack*> attacks = m_world->parsePersonAttacks(j_player.value("attacks", 
         std::vector<std::string>()));
   if (m_world->getRooms().count(j_player["room"]) > 0) {
-    m_players[j_player["id"]] = new CPlayer(j_player, 
-    m_world->getRooms()[j_player["room"]], attacks, m_gramma, 
-    m_world->getPathToWorld());
+    m_players[j_player["id"]] = new CPlayer(j_player, m_world->getRooms()[j_player["room"]], 
+        attacks, m_world->getPathToWorld());
   }
   else 
     std::cout << "Room: " << j_player["room"] << " not found!" << std::endl;

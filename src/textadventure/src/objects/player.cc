@@ -1,7 +1,9 @@
 #include "player.h" 
 #include "tools/webcmd.h"
+#include "tools/gramma.h"
 #include "tools/webcmd.h"
 #include <cctype>
+#include <memory>
 #include <string>
 
 #define BLACK Webcmd::set_color(Webcmd::color::BLACK)
@@ -14,15 +16,16 @@
 #define cRED "\033[1;31m"
 #define cCLEAR "\033[0m"
 
+std::shared_ptr<CGramma> CPlayer::_gramma = nullptr;
+
 /**
 * Full constructor for player
 * @param jAtts json with all attributes
 * @param room current room of payer
 * @param newAttacks attacks of player
 */
-CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, 
-    CGramma* gramma, std::string path) : CPerson(jAtts, nullptr, lAttacks, nullptr, this, 
-      std::map<std::string, CDialog*>()) {
+CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, std::string path) 
+    : CPerson(jAtts, nullptr, lAttacks, nullptr, this, std::map<std::string, CDialog*>()) {
   //Set login data and player information
   func::convertToUpper(name_);
   m_sPassword = jAtts["password"];
@@ -32,7 +35,6 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks,
   //Initiazize world
   m_world = new CWorld(this, path);
   m_parser = new CParser(m_world->getConfig());
-  m_gramma = gramma;
   
   //Character and Level
   m_level = 0;
@@ -123,10 +125,6 @@ string CPlayer::getPrint()  {
 
 CWorld* CPlayer::getWorld() { 
   return m_world; 
-}
-
-CGramma* CPlayer::getGramma() {
-  return m_gramma;
 }
 
 CRoom* CPlayer::getRoom() { 
@@ -230,6 +228,10 @@ void CPlayer::setPrint(string newPrint) {
 
 void CPlayer::set_subsitues(std::map<std::string, std::string> subsitutes) {
   subsitutes_ = subsitutes;
+}
+
+void CPlayer::set_gramma(std::shared_ptr<CGramma> gramma) {
+  _gramma = gramma;
 }
 
 void CPlayer::printText(std::string text) {
@@ -555,7 +557,7 @@ void CPlayer::showVisited() {
     if(it.second == true)
       mapRooms[it.first] = m_world->getRoom(it.first)->name();
   }
-  appendDescPrint(m_gramma->build(func::to_vector(mapRooms), "Du warst schon in",
+  appendDescPrint(_gramma->build(func::to_vector(mapRooms), "Du warst schon in",
         "keinem anderen Raum.") + "\nGebe \"gehe [name des Raumes]\" ein, um "
         "direkt dort hinzugelangen.\n");
 }
@@ -630,7 +632,7 @@ void CPlayer::addAll() {
     }
     ++it;
   }
-  appendDescPrint(m_gramma->build(items_names, "Du findest", "keine Gegenstände."));
+  appendDescPrint(_gramma->build(items_names, "Du findest", "keine Gegenstände."));
 }
 
 /**

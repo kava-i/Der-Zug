@@ -2,6 +2,7 @@
 #define CROOM_H
 
 #include <iostream>
+#include <memory>
 #include <string>
 #include <map>
 #include "object.h"
@@ -33,6 +34,8 @@ private:
     std::map<string, CItem*> m_items;
     std::map<string, CDetail*> m_details;
 
+    static std::shared_ptr<CGramma> gramma_;
+
 public:
     CRoom(string sArea, nlohmann::json jAtts, std::map<string, CPerson*> characters, 
         std::map<string, CItem*> items, std::map<string, CDetail*> details, CPlayer* p);
@@ -51,14 +54,16 @@ public:
     void setPlayers(objectmap& m_players);
     void setShowMap(nlohmann::json j);
 
+    static void set_gramma(std::shared_ptr<CGramma> gramma);
+
     // *** various functions *** //
     string showDescription(std::map<std::string, CPerson*> mapCharacters);
-    string showAll(CGramma* gramma);
-    string showExits(CGramma* gramma);
-    string showCharacters(CGramma* gramma);
-    string showItems(CGramma* gramma);
-    string showDetails(CGramma*);
-    string look(std::string sDetail, CGramma* gramma);
+    string showAll();
+    string showExits();
+    string showCharacters();
+    string showItems();
+    string showDetails();
+    string look(std::string sDetail);
     CItem* getItem(string sPlayerChoice);
 };
     

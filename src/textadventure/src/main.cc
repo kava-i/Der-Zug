@@ -1,3 +1,8 @@
+#include "objects/player.h"
+#include "objects/room.h"
+#include "spdlog/common.h"
+#include "spdlog/sinks/basic_file_sink.h"
+#include "tools/gramma.h"
 #include <JanGeschenk/Webgame.hpp>
 #include <exception>
 #include <iostream>
@@ -11,7 +16,12 @@
 #include <httplib.h>
 #include <inja/inja.hpp>
 #include <nlohmann/json.hpp>
+#include <spdlog/spdlog.h>
+#include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/sinks/daily_file_sink.h"
 #include <webgame/webgame.h>
+
+# define LOGGER "general"
 
 #ifdef _COMPILE_FOR_SERVER_
 httplib::SSLServer srv(
@@ -31,7 +41,7 @@ std::string GetPage(std::string path) {
   //Read loginpage and send
   std::ifstream read(path);
   if (!read) {
-    std::cout << "Wrong file passed: " << path << std::endl;
+    spdlog::get(LOGGER)->error("Wrong file passed: {}", path);
     return "";
   }
   std::string page( (std::istreambuf_iterator<char>(read) ),
@@ -51,7 +61,7 @@ std::string GetImage(std::string path, std::string image) {
   path = path + "images/" + image + ".jpg";
   std::ifstream f(path, std::ios::in|std::ios::binary|std::ios::ate);    
   if (!f.is_open()) {
-    std::cout << "Image could not be found: " << path << std::endl;    
+    spdlog::get(LOGGER)->error("Image could not be found: {}", path);
     return "";
   }
   FILE* file_stream = fopen(path.c_str(), "rb");    
@@ -73,23 +83,23 @@ std::string GetImage(std::string path, std::string image) {
 * @return Return image as string.
 */
 std::string GetSound(std::string path, std::string sound) {
- path = path + sound + ".mp3"; std::ifstream f(path,
+  path = path + sound + ".mp3"; std::ifstream f(path,
      std::ios::in|std::ios::binary|std::ios::ate);    
- if (!f.is_open()) {
-   std::cout << "Audio could not be found: " << path << std::endl;    
-   return "";
- }
- FILE* file_stream = fopen(path.c_str(), "rb");    
- std::vector<char> buffer;    
- fseek(file_stream, 0, SEEK_END);    
- long length = ftell(file_stream);    
- rewind(file_stream);    
- buffer.resize(length);    
- length = fread(&buffer[0], 1, length, file_stream);    
-     
- std::string s(buffer.begin(), buffer.end());    
- std::cout << "Audio loaded, size: " << s.size() << std::endl;
- return s;
+  if (!f.is_open()) {
+    spdlog::get(LOGGER)->error("Audio could not be found: {}", path);
+    return "";
+  }
+  FILE* file_stream = fopen(path.c_str(), "rb");    
+  std::vector<char> buffer;    
+  fseek(file_stream, 0, SEEK_END);    
+  long length = ftell(file_stream);    
+  rewind(file_stream);    
+  buffer.resize(length);    
+  length = fread(&buffer[0], 1, length, file_stream);    
+      
+  std::string s(buffer.begin(), buffer.end());    
+  spdlog::get(LOGGER)->debug("Audio loaded, size: {}", s.size());
+  return s;
 }
 
 std::string GetWorldId(std::string creator, std::string name) {
@@ -101,21 +111,51 @@ std::string GetWorldId(std::string creator, std::string name) {
  * main loop
  */
 int main(int x, char **argc) {
+  std::string log_level = "info";
   int port = 4489;
   if (x > 1)
-    port = std::stoi(argc[1]);
+    log_level = argc[1];
+  if (x > 2)
+    port = std::stoi(argc[2]);
+  std::cout << "Using log_level: " << log_level << " and port " << port << std::endl;
   std::map<std::string, std::shared_ptr<Webgame<WebserverGame, CGame>>> webgames;
   std::shared_mutex mutex_webgames;
-  std::cout << "Starting txtad server on port: " << port << std::endl;
+
+  // setup logger 
+  std::vector<spdlog::sink_ptr> sinks;
+  sinks.push_back(std::make_shared<spdlog::sinks::stderr_color_sink_st>());
+  sinks.push_back(std::make_shared<spdlog::sinks::daily_file_format_sink_st>("logs/logfile.txt", 23, 59));
+  auto logger = std::make_shared<spdlog::logger>(LOGGER, begin(sinks), end(sinks));
+  spdlog::register_logger(logger);
+  spdlog::flush_on(spdlog::level::warn);
+  spdlog::flush_every(std::chrono::seconds(10));
+  if (log_level == "error")
+    spdlog::set_level(spdlog::level::err);
+  else if (log_level == "warn")
+    spdlog::set_level(spdlog::level::warn);
+  else if (log_level == "info") {
+    spdlog::set_level(spdlog::level::info);
+  }
+  else if (log_level == "debug") {
+    spdlog::set_level(spdlog::level::debug);
+    spdlog::flush_on(spdlog::level::debug);
+  }
+
+  // load gramma 
+  CGramma gramma = CGramma({"dictionary.txt", "EIG.txt"});
+  CPlayer::set_gramma(std::make_shared<CGramma>(gramma));
+  CRoom::set_gramma(std::make_shared<CGramma>(gramma));
+
+  spdlog::get(LOGGER)->info("Starting txtad server on port: {}", port);
 
   //Open httpserver to serve main-page
   std::thread t1([&]() {
     // Serve media: images
     srv.Get("/(.*)/(.*)/(.*).jpg", [&](const httplib::Request& req, httplib::Response& resp)  {
-        std::cout << "get background: " << std::endl;
+        spdlog::get(LOGGER)->debug("[get-background]");
         std::shared_lock sl_mtx(mutex_webgames);
         std::string game_id = GetWorldId(req.matches[1], req.matches[2]);
-        std::cout << "get background: " << game_id << std::endl;
+        spdlog::get(LOGGER)->debug("[get-background] game-id: {}", game_id);
         // If game not found return 404
         if (webgames.count(game_id) == 0) {
           resp.status = 404;
@@ -127,10 +167,10 @@ int main(int x, char **argc) {
     });
     // Serve media: audio
     srv.Get("/(.*)/(.*)/(.*).mp3", [&](const httplib::Request& req, httplib::Response& resp)  {
-        std::cout << "get music: " << std::endl;
+        spdlog::get(LOGGER)->info("[get-audio]");
         std::shared_lock sl_mtx(mutex_webgames);
         std::string game_id = GetWorldId(req.matches[1], req.matches[2]);
-        std::cout << "get music: " << game_id << std::endl;
+        spdlog::get(LOGGER)->debug("[get-audio] game-id: {}", game_id);
         // If game not found return 404
         if (webgames.count(game_id) == 0) {
           resp.status = 404;
@@ -144,6 +184,7 @@ int main(int x, char **argc) {
    
     // Create new game 
     srv.Post("/api/create/", [&](const httplib::Request& req, httplib::Response& resp) {
+        spdlog::get(LOGGER)->debug("[create]");
         std::shared_lock ul_mtx(mutex_webgames);
         nlohmann::json json = nlohmann::json::parse(req.body); 
         std::string path = json["path"].get<std::string>();
@@ -151,7 +192,7 @@ int main(int x, char **argc) {
         std::string creator = json["creator"].get<std::string>();
         int port = json["port"].get<int>();
         std::string game_id = GetWorldId(creator, name);
-        std::cout << "create: " << game_id << std::endl;
+        spdlog::get(LOGGER)->debug("[create] game-id: {}", game_id);
         // Game already running
         if (webgames.count(game_id) > 0) {
           resp.status = 409;
@@ -165,34 +206,37 @@ int main(int x, char **argc) {
             std::thread ng([&]() { webgames[game_id]->run(); });
             ng.detach();
             resp.status = 200;
-            std::cout << "create: " << game_id << " success on port " << port << std::endl;
+            spdlog::get(LOGGER)->debug("[create] created game {} on port {}", game_id, port);
           } catch (std::exception& e) {
-            std::cout << "create: " << game_id << " failed: " << e.what() << std::endl;
+            spdlog::get(LOGGER)->debug("[create] failed for game {}: ", game_id, e.what());
           }
         }
     });
     
     // Close running game
     srv.Get("/api/close/(.*)/(.*)", [&](const httplib::Request& req, httplib::Response& resp) {
+        spdlog::get(LOGGER)->debug("[close]");
         std::shared_lock ul_mtx(mutex_webgames);
         std::string game_id = GetWorldId(req.matches[1], req.matches[2]);
-        std::cout << "[close] game_id: " << game_id << std::endl;
+        spdlog::get(LOGGER)->debug("[close] game-id: {}", game_id);
         if (webgames.count(game_id) == 0) {
-          resp.status = 404;
+          resp.status = 204;
           return;
         }
         // Stop and remove game:
         webgames.at(game_id)->stop();
         webgames.erase(game_id);
+        resp.status = 200;
     });
     
     // Check running game
     srv.Get("/api/running/(.*)/(.*)", [&](const httplib::Request& req, httplib::Response& resp) {
+        spdlog::get(LOGGER)->debug("[running]");
         std::shared_lock sl_mtx(mutex_webgames);
         std::string game_id = GetWorldId(req.matches[1], req.matches[2]);
-        std::cout << "[running] game_id: " << game_id << std::endl;
+        spdlog::get(LOGGER)->debug("[running] game-id: {}", game_id);
         if (webgames.count(game_id) == 0) {
-          resp.status = 404;
+          resp.status = 204;
           return;
         }
         resp.status = 200;
@@ -200,20 +244,22 @@ int main(int x, char **argc) {
     
     // Function to serve main app
     srv.Get("/(.*)/(.*)", [&](const httplib::Request& req, httplib::Response& resp)  {
-      std::shared_lock sl_mtx(mutex_webgames);
-      std::string game_id = GetWorldId(req.matches[1], req.matches[2]);
-      std::cout << "[main] game_id: " << game_id << std::endl;
-      // Get game
-      if (webgames.count(game_id) == 0) {
-        resp.status = 404;
-        return;
-      }
-      auto cg = webgames.at(game_id)->game_;
-      auto port = webgames.at(game_id)->port_;
-      inja::Environment env;
-      inja::Template temp = env.parse_template("index.html");
-      resp.set_content(env.render(temp, { {"port",port}, {"music", cg->get_music()}, 
-            {"image", cg->get_background_image()} }), "text/html"); });
+        spdlog::get(LOGGER)->debug("[main]");
+        std::shared_lock sl_mtx(mutex_webgames);
+        std::string game_id = GetWorldId(req.matches[1], req.matches[2]);
+        spdlog::get(LOGGER)->debug("[main] game-id: {}", game_id);
+        // Get game
+        if (webgames.count(game_id) == 0) {
+          resp.status = 404;
+          return;
+        }
+        auto cg = webgames.at(game_id)->game_;
+        auto port = webgames.at(game_id)->port_;
+        inja::Environment env;
+        inja::Template temp = env.parse_template("index.html");
+        resp.set_content(env.render(temp, { {"port", port}, {"music", cg->get_music()}, 
+              {"image", cg->get_background_image()} }), "text/html"); 
+    });
  
     //Start main loop.
     srv.listen("0.0.0.0", port);
