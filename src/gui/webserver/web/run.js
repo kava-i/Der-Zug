@@ -88,7 +88,7 @@ async function end(creator, world_name, silent=false) {
       notify("Game closed.");
       return;
     }
-    else if (this.status == 404) {
+    else if (this.status == 204) {
       notify("Game already closed.");
       return;
     }

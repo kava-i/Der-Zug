@@ -44,13 +44,20 @@ const std::map<std::string, World*>& Worlds::worlds() {
   return worlds_;
 }
 
-ErrorCodes Worlds::CreateNewWorld(std::string path, std::string name) {
+ErrorCodes Worlds::CreateNewWorld(std::string path, std::string name, nlohmann::json infos) {
   std::cout << "Worlds::AddWorld(" << path << ")" << std::endl;
   if (GetWorldFromUrl(path) != nullptr) 
     return ErrorCodes::ALREADY_EXISTS;
   
   std::string full_path = base_path_ + path;
   try {
+    // get languge
+    std::string lang = infos.value("language", "en");
+    std::cout << "got language: " << lang << std::endl;
+    if (lang != "de" && lang != "en")
+      lang = "en";
+    std::cout << "using language: " << lang << std::endl;
+
     //Create directory for world
     fs::create_directories(full_path);
 
@@ -60,7 +67,7 @@ ErrorCodes Worlds::CreateNewWorld(std::string path, std::string name) {
     fs::create_directory(full_path + "/data"); // data is a folder necessary but no category.
 
     //Copy default config, room and player-file.
-    fs::copy("../../data/default_jsons/config.json", full_path + "/config/"); 
+    fs::copy("../../data/default_jsons/" + lang + "_config.json", full_path + "/config/config.json"); 
     fs::copy("../../data/default_jsons/test.json", full_path + "/rooms/"); 
     fs::copy("../../data/default_jsons/players.json", full_path + "/players/"); 
     fs::copy("../../data/default_jsons/background.jpg", full_path + "/images/"); 

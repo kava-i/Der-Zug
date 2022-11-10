@@ -59,6 +59,8 @@ function OpenAddElemModal() {
   //Check if player, then add field to enter name of start-room.
   if (window.location.pathname.indexOf("players/players") != -1)
     document.getElementById("room").style.display = "inline-block";
+  if (window.location.pathname.indexOf("overview") != -1)
+    document.getElementById("language").style.display = "inline-block";
 
   document.getElementById("name").addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
@@ -90,10 +92,17 @@ function AddElem(elem, force=false) {
   json_request.force = force;
   json_request.path = window.location.pathname;
   json_request.infos = {};
+  // Add values from all inputs
   var inputs = document.getElementById("modal_add_elem").getElementsByTagName("input");
   for (let i=1; i<inputs.length; i++) {
     const val = inputs[i].value.replaceAll("/", "_").replaceAll(" ", "-");
     json_request["infos"][inputs[i].id] = val;
+  }
+  // Add values from all selects
+  var selects = document.getElementById("modal_add_elem").getElementsByTagName("select");
+  for (let i=0; i<selects.length; i++) {
+    const val = selects[i].value.replaceAll("/", "_").replaceAll(" ", "-");
+    json_request["infos"][selects[i].id] = val;
   }
 
   var xhttp = new XMLHttpRequest();

@@ -406,7 +406,7 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
   }
   // Create new world
   else if (req.matches.size() > 1 && req.matches[1] == "world")
-    error_code = user_manager_.worlds()->CreateNewWorld("/"+username+"/files/"+name, name);
+    error_code = user_manager_.worlds()->CreateNewWorld("/"+username+"/files/"+name, name, infos);
   // Create new object or (sub-)category.
   else
     error_code = user_manager_.worlds()->UpdateElements(path, name, "add", force, infos);

@@ -48,9 +48,10 @@ class Worlds {
      * Create new world.
      * @param[in] path ([username]/files/[world_name])
      * @param[in] name of new world to create.
+     * @param[in] infos additional infos like language.
      * @return ErrorCode indicating success/ error.
      */
-    ErrorCodes CreateNewWorld(std::string path, std::string name);
+    ErrorCodes CreateNewWorld(std::string path, std::string name, nlohmann::json infos);
 
     /**
      * Delete an existing world.
