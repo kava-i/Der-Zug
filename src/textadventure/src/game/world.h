@@ -51,7 +51,6 @@ private:
     std::string m_path_to_world;
 public:
 
-    CWorld(std::string path);
     CWorld(CPlayer*, std::string path);
     
     // *** GETTER *** //
@@ -61,6 +60,8 @@ public:
 
     ///Return json for configuration
     nlohmann::json& getConfig();
+
+    std::string GetSTDText(std::string txt);
 
     ///Return standard-media (images, audio-files etc.)
     std::string media(std::string type) const;
@@ -115,6 +116,18 @@ public:
     // *** FACTORYS *** // 
     typedef map<string, string> objectmap;
     void worldFactory(CPlayer* p);
+
+    // config 
+    /**
+     * Reads config and checks that all neccesary fields are included.
+     * @param[in] path
+     */
+    void configFactory(const std::string path);
+
+    /** 
+     * Extracs and then sets media data (image, sound) from config.
+     */
+    void configExtractor(CPlayer* p);
 
     //Room
     void roomFactory(CPlayer* p);

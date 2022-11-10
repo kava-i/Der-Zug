@@ -691,7 +691,10 @@ void ServerFrame::StartGame(const Request& req, Response& resp) {
     {"path", path_to_game}, {"port", world->port()}};
   auto response = cl.Post("/api/create/", {}, request.dump(), "application/x-www-form-urlencoded");
 
-  resp.status = response->status;
+  if (response) 
+    resp.status = response->status;
+  else 
+    resp.status = 500;
 }
 
 void ServerFrame::CloseGame(const Request& req, Response& resp) {

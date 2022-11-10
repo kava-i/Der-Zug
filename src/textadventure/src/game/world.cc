@@ -2,6 +2,7 @@
 #include "eventmanager/listener.h"
 #include "nlohmann/json_fwd.hpp"
 #include "objects/detail.h"
+#include "tools/func.h"
 #include <cstddef>
 #include <exception>
 #include <filesystem>
@@ -11,56 +12,20 @@
 #include <string>
 #include <objects/player.h>
 #include <vector>
+#include "tools/exceptions.h"
 
 #define cRED "\033[1;31m"
 #define cCLEAR "\033[0m"
 
 namespace fs = std::filesystem;
 
-CWorld::CWorld(std::string path) {
-  m_path_to_world = path;
-  std::ifstream readConfig(m_path_to_world + "config/config.json");
-  readConfig >> m_config;
-  readConfig.close();
-}
-
 CWorld::CWorld(CPlayer* p, std::string path) {
   m_path_to_world = path;
+  // Load config
+  configFactory("config/config.json");
   worldFactory(p);
-
-  std::cout << "Loading config. " << std::endl;
-
-  std::ifstream readConfig(m_path_to_world + "config/config.json");
-  readConfig >> m_config;
-  readConfig.close();
-
-  std::cout << "Config: " << m_config << std::endl;
-
-  std::cout << "Config loaded. " << std::endl;
-
-  if (m_config.contains("music")) {
-    for (const auto& [key, value] : m_config["music"].items()) {
-      // For background, overwite general setting with player specifc setting.
-      if (key == "background" && p && p->music() != "") {
-        media_["music/"+key] = value;
-        p->set_music(""); // afterwards empty music.
-      }
-      else
-        media_["music/"+key] = value;
-    }
-  }
-  if (m_config.contains("image")) {
-    for (const auto& [key, value] : m_config["image"].items()) {
-      if (key == "background" && p && p->music() != "") {
-        media_["image/"+key] = value;
-        p->set_image(""); // afterwards empty music.
-      }
-      else 
-        media_["image/"+key] = value;
-    }
-  }
-  
-  std::cout << "Media set. " << std::endl;
+  // Extract f.e. media files from config
+  configExtractor(p);
 }
 
 // *** GETTER *** // 
@@ -71,6 +36,15 @@ std::string CWorld::getPathToWorld() {
 
 nlohmann::json& CWorld::getConfig() {
   return m_config;
+}
+
+std::string CWorld::GetSTDText(std::string key) {
+  // If text not given in config, print `key` only.
+  if (!m_config["translations"].contains(key)) {
+    std::cout << cRED << "missing translation for: " << key << cCLEAR << std::endl;
+    return key;
+  }
+  return m_config["translations"][key];
 }
 
 std::string CWorld::media(std::string type) const {
@@ -206,25 +180,60 @@ void CWorld::worldFactory(CPlayer* p) {
 
   // Verify existing exists 
   for (auto it : m_rooms) {
-    for (auto it : it.second->getExtits()) {
-      if (m_rooms.count(it.first) == 0) {
-        std::cout << cRED "Exit without matching room: " + it.first + " in " + it.first << cCLEAR << std::endl;
-        exit(0);
-      }
+    for (auto jt : it.second->getExtits()) {
+      if (m_rooms.count(it.first) == 0)
+        throw WorldFactoryException("Exits without matching room: " + it.first + " in " + it.first);
     }
   }
 
   std::cout << "worldFactory: done." << std::endl;
 }
 
+void CWorld::configFactory(const std::string path) {
+  std::cout << "Loading config. " << std::endl;
+  m_config = func::LoadJsonFromDisc(m_path_to_world + path);
+  if (m_config.size() == 0)
+    throw WorldFactoryException("Missing config at " + path);
+
+  // Check that all show-attributes are set.
+  if (!m_config.contains("show"))
+    throw WorldFactoryException("Missing 'show' entry in config!");
+  else {
+    for (const std::string it : {"chars", "exits", "items", "details", "add_all_items"}) {
+      if (!m_config["show"].contains(it) || m_config["show"][it].size() < 2)
+        throw WorldFactoryException("Missing '" + it + "' entry in 'show' entry of config!");
+    }
+  }
+}
+
+void CWorld::configExtractor(CPlayer *p) {
+  if (m_config.contains("music")) {
+    for (const auto& [key, value] : m_config["music"].items()) {
+      // For background, overwite general setting with player specifc setting.
+      if (key == "background" && p && p->music() != "") {
+        media_["music/"+key] = value;
+        p->set_music(""); // afterwards empty music.
+      }
+      else
+        media_["music/"+key] = value;
+    }
+  }
+  if (m_config.contains("image")) {
+    for (const auto& [key, value] : m_config["image"].items()) {
+      if (key == "background" && p && p->music() != "") {
+        media_["image/"+key] = value;
+        p->set_image(""); // afterwards empty music.
+      }
+      else 
+        media_["image/"+key] = value;
+    }
+  }
+  std::cout << "Media set. " << std::endl;
+}
+
 void CWorld::roomFactory(CPlayer* player) {
   for(auto& p : fs::directory_iterator(m_path_to_world + "rooms")) {
-    try {
-      roomFactory(p.path(), player);
-    } catch (std::exception& e) {
-      std::cout << cRED << "Faileded adding rooms at " + p.path().string() + ": " + e.what() + cCLEAR;
-      exit(0);
-    }
+    roomFactory(p.path(), player);
   }
 }
 
@@ -336,9 +345,7 @@ void CWorld::parseRandomItemsToDetail(nlohmann::json& j_detail) {
     while(value > 0) {
       counter++;
       if (counter == 10000) {
-        std::cout << "Wrong values set for type/ categories: no items found." << std::endl;
-        throw("Wrong entries for defaultItems");
-        break;
+        throw WorldFactoryException("Wrong values set for type/ categories: no items found.");
       }
       auto it = m_items.begin();
       size_t num = rand() % m_items.size();
@@ -451,8 +458,7 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room,
     func::updateJson(jBasic, character.second);     
 
     if (jBasic.count("name") == 0) {
-      std::cout << cRED "Character created without name: " << sID << cCLEAR << std::endl; 
-      throw cRED "Character created without name: " + sID + cCLEAR;
+      throw WorldFactoryException("Character created without name: " + sID);
     }
 
     // Update id

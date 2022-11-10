@@ -24,7 +24,7 @@ private:
     string m_sEntry;
     string m_sArea;
 
-    std::map<string, std::map<string, string>> m_showMap;
+    std::map<string, std::map<string, string>> _show;
     
     typedef std::map<string, std::string> objectmap;
     objectmap m_players;

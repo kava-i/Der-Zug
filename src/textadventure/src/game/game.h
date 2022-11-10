@@ -54,6 +54,7 @@ public:
     std::string path() const;
 
     // *** FACTORYS *** // 
+    bool SetupGame();
     void playerFactory(bool update=false);
     void playerFactory(nlohmann::json j_player);
 

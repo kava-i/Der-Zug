@@ -1,0 +1,22 @@
+{% include "temp_header" %}
+{{ log("rendered header") }}
+
+  <li custom="map">
+     <label title="You may change the standard translations.">
+       Translations
+     </label>
+
+    <ul id="translations">
+      {% for key, value in content %}
+        <li custom="key_value">
+            <label>{{key}}</label>
+            <input id="{{key}}" class="long_inp" value="{{ value }}">
+        </li>
+      {% endfor %}
+    </ul>
+  </li>
+
+   {{ log("rendered attributes") }}
+
+{% include "temp_footer" %}
+

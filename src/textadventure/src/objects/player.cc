@@ -404,7 +404,7 @@ void CPlayer::setFight(CFight* newFight) {
 void CPlayer::endFight() {
     delete m_curFight;
     m_contextStack.erase("fight");
-    appendPrint("Fight ended.\n");
+    appendPrint(m_world->GetSTDText("fight_ended"));
 }
 
 // *** Dialog *** //
@@ -439,11 +439,11 @@ void CPlayer::startDialog(string sCharacter, CDialog* dialog) {
 * context-stack and throw event 'Hey + player-name'.
 */
 void CPlayer::startChat(CPlayer* player) {
-  appendStoryPrint("Du gehst auf " + player->name() + 
-      " zu und räusperst dich...\n");
+  appendStoryPrint(m_world->GetSTDText("approaching_a") + player->name() 
+      + m_world->GetSTDText("approaching_b"));
 
   if(player->getContexts().nonPermeableContextInList() == true)
-    appendStoryPrint(player->name() + " ist zur Zeit beschäftigt.\n");
+    appendStoryPrint(player->name() + m_world->GetSTDText("approaching_busy"));
   else { 
     //Add Chat context for both players
     addChatContext(player->id());
@@ -530,7 +530,7 @@ void CPlayer::changeRoom(string sIdentifier) {
   
   //Print error message.
   else
-    appendErrorPrint("Room not found.\n");
+    appendErrorPrint(m_world->GetSTDText("room_not_found"));
 }
 
 /**
@@ -552,14 +552,18 @@ void CPlayer::changeRoom(CRoom* new_room) {
 * Print all already visited rooms.
 */
 void CPlayer::showVisited() {
-  std::map<std::string, std::string> mapRooms;
+  std::map<std::string, std::string> visited_rooms;
   for(auto const& it : m_vistited) {
     if(it.second == true)
-      mapRooms[it.first] = m_world->getRoom(it.first)->name();
+      visited_rooms[it.first] = m_world->getRoom(it.first)->name();
   }
-  appendDescPrint(_gramma->build(func::to_vector(mapRooms), "Du warst schon in",
-        "keinem anderen Raum.") + "\nGebe \"gehe [name des Raumes]\" ein, um "
-        "direkt dort hinzugelangen.\n");
+  if (visited_rooms.size() > 0) {
+    appendDescPrint(_gramma->build(func::to_vector(visited_rooms), 
+      m_world->GetSTDText("visited_rooms"), "") + m_world->GetSTDText("visited_rooms_info"));
+  }
+  else {
+    appendDescPrint(m_world->GetSTDText("no_visited_rooms"));
+  }
 }
 
 
@@ -632,7 +636,9 @@ void CPlayer::addAll() {
     }
     ++it;
   }
-  appendDescPrint(_gramma->build(items_names, "Du findest", "keine Gegenstände."));
+  std::string start = m_world->getConfig()["show"]["add_all_items"]["start"];
+  std::string error = m_world->getConfig()["show"]["add_all_items"]["error"];
+  appendDescPrint(_gramma->build(items_names, start, error));
 }
 
 /**
@@ -641,7 +647,7 @@ void CPlayer::addAll() {
 */
 void CPlayer::addItem(CItem* item) {
   m_inventory.addItem(item);
-  appendDescPrint("<b> "+item->name() + "</b> zu {name}'s Inventar hinzugefügt.\n");
+  appendDescPrint("<b> "+item->name() + "</b>" + m_world->GetSTDText("add_item"));
   m_room->getItems().erase(item->id());
 }
 
@@ -650,7 +656,7 @@ void CPlayer::addItem(CItem* item) {
 * @param partner Player's trading partner add to context-information.
 */
 void CPlayer::startTrade(std::string partner) {
-  appendDescPrint("Started to trade with " + partner + ".\n");
+  appendDescPrint(m_world->GetSTDText("started_trade") + partner + "\n");
 
   //Create trade-context and add to context-stack
   Context* context = new Context((std::string)"trade", {{"partner", partner}});
@@ -662,15 +668,16 @@ void CPlayer::startTrade(std::string partner) {
 * Add all equipped items to player's output.
 */
 void CPlayer::printEquiped() {
-    auto getElem = [](CItem* item){ 
-      std::string str; 
-      if(item) 
-        str = item->name(); 
-      else 
-        str="nichts ausgerüstet.";
-      return str;
-    };
-    appendPrint(func::table(m_equipment, getElem, "width:20%"));
+  std::string nothing_equiped = m_world->GetSTDText("nothing_equipped");
+  auto getElem = [nothing_equiped](CItem* item){ 
+    std::string str; 
+    if(item) 
+      str = item->name(); 
+    else 
+      str = nothing_equiped;
+    return str;
+  };
+  appendPrint(func::table(m_equipment, getElem, "width:20%"));
 }
 
 /**
@@ -682,28 +689,33 @@ void CPlayer::printEquiped() {
 void CPlayer::equipeItem(CItem* item, string sType) {
   // If nothing is equipped in this category -> equip.
   if (m_equipment[sType] == NULL) {
-    appendDescPrint("Du hast " + item->name() + " als " + sType + " ausgerüstet.\n");
+    appendDescPrint(m_world->GetSTDText("equipped_a") + item->name() 
+        + m_world->GetSTDText("equipped_b") + sType + m_world->GetSTDText("equipped_c"));
     string sAttack = item->getAttack();
 
-    //Check for new attack
+    // Check for new attack
     if (sAttack != "") {
       m_attacks[sAttack] = m_world->getAttack(sAttack);
-      appendDescPrint("Neue Attacke: \"" + m_attacks[sAttack]->getName() + "\".\n");
+      appendDescPrint(m_world->GetSTDText("new_attack") + m_attacks[sAttack]->getName() + "\n");
     }
     m_equipment[sType] = item;
   }
 
   // If this item is already equipped -> print error message.
   else if (m_equipment[sType]->id() == item->id())
-    appendErrorPrint(sType + " bereits ausgerüstet.\n");
+    appendErrorPrint(sType + m_world->GetSTDText("already_equipped"));
 
   // If another item is equipped in this category -> add choice-context
   else {
-    appendErrorPrint("Bereits ein " + sType + " ausgerüstet. Austauschen? (ja/nein)\n");
+    appendErrorPrint(m_world->GetSTDText("already_equipped_change_a" )+ sType 
+        + m_world->GetSTDText("already_equipped_change_b"));
     // Create Choice-Context
     m_contextStack.insert(new Context((nlohmann::json){{"name", "equipe"}, {"permeable", false},
           {"error", "Wähle ja oder nein\n"}, {"itemID", item->id()},
-          {"listeners", {{"ja", {"h_choose_equipe"}}, {"nein", {"h_choose_equipe"}}}}}), 1, "equipe");
+          {"listeners", {
+            {"ja", {"h_choose_equipe"}}, {"nein", {"h_choose_equipe"}},
+            {"yes", {"h_choose_equipe"}}, {"no", {"h_choose_equipe"}}
+          }}}), 1, "equipe");
   }
 }
 
@@ -713,11 +725,11 @@ void CPlayer::equipeItem(CItem* item, string sType) {
 */
 void CPlayer::dequipeItem(string sType) {
   if (m_equipment.count(sType) == 0)
-    appendErrorPrint("Nothing to dequipe.\n");
+    appendErrorPrint(m_world->GetSTDText("no_dequipe") + "\n");
   else if (m_equipment[sType] == NULL)
-    appendErrorPrint("Nothing to dequipe.\n");
+    appendErrorPrint(m_world->GetSTDText("no_dequipe") + "\n");
   else {
-    appendDescPrint(sType + " " + m_equipment[sType]->name() + " abgelegt.\n");
+    appendDescPrint(sType + " " + m_equipment[sType]->name() + m_world->GetSTDText("dequiped"));
     //Erase attack
     if (m_equipment[sType]->getAttack() != "")
       m_attacks.erase(m_equipment[sType]->getAttack());
@@ -802,7 +814,7 @@ void CPlayer::addEP(int ep) {
           m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" 
             + std::to_string(getStat(m_abbilities[i])) + ")\n";
       }
-      m_sPrint += "Wähle eine Zahl geben den Namen des Attributes aus.\n";
+      m_sPrint += m_world->GetSTDText("update_stats");
     }
   }
 }
@@ -813,14 +825,15 @@ void CPlayer::addEP(int ep) {
 */
 void CPlayer::UpdateStats(int numPoints) {
   // Create context.
-  std::string info_msg = "Wähle eine Zahl oder den Namen des Attributes aus.\n";
+  std::string info_msg = m_world->GetSTDText("update_stats");
   Context* context = new Context((nlohmann::json){{"name", "updateStats"}, {"permeable", false}, 
       {"numPoints", numPoints}, {"error", info_msg}});
   context->AddSimpleListener("h_updateStats", m_abbilities, 0);
   m_contextStack.insert(context, 1, "updateStats");
 
   //Print attributes and level of each attribute and add choice-context.
-  m_sPrint += "Du hast " + std::to_string(numPoints) + " Punkte zu vergeben.\n";
+  m_sPrint += m_world->GetSTDText("points_left_a") + std::to_string(numPoints) 
+    + m_world->GetSTDText("points_left_b");
   for (size_t i=0; i<m_abbilities.size(); i++) {
     m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" 
       + std::to_string(getStat(m_abbilities[i])) + ")\n";
@@ -987,7 +1000,7 @@ CPlayer* CPlayer::getPlayer(string sIdentifier)
 
 void CPlayer::printError(std::string sError) {
   std::cout << "\033[1;31m"+sError+"\033[0m"<< std::endl;
-  appendTechPrint("Sorry, but something went wrong. Maybe try something else.\n");
+  appendTechPrint(m_world->GetSTDText("tech_error"));
 }
 
 std::string CPlayer::getContextMusic(std::string new_music) {

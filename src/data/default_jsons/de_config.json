@@ -1,6 +1,54 @@
 {
   "printing":{},
-  "show":{},
+  "show":{
+    "chars": {
+      "error": "niemand",
+      "start": "Hier sind",
+      "additional": "Aber außerdem noch"
+    },
+    "exits": {
+      "error": "nirgendwo hin.",
+      "start": "Hier geht es"
+    },
+    "items": {
+      "error": "nichts zu finden.",
+      "start": "Hier sind"
+    }, 
+    "details": {
+      "error": "nichts weiteres zu sehen.",
+      "start": "Hier sind"
+    },
+    "add_all_items": {
+      "error": "keine Gegenstände",
+      "start": "Du findest"
+    }
+  },
+  "translations": {
+    "fight_ended": "Kampf beendet.\n",
+    "approaching_a": "Du gehst auf ",
+    "approaching_b": " zu und räusperst dich...\n",
+    "approaching_busy": " ist zur Zeit beschäftigt.\n",
+    "room_not_found": "Raum nicht gefunden.\n",
+    "visited_rooms": "Du warst schon in",
+    "visited_rooms_info": "Gebe 'gehe [name-des-raums]' ein, um direkt dort hinzu gelangen.",
+    "no_visited_rooms": "Du warst in noch keinem anderen Raum.\n",
+    "add_item": " zu {name}s Inventar hinzugefügt.\n",
+    "started_trade": "Du handelst mit: ",
+    "nothing_equipped": "Du hast nichts ausgerüstet.",
+    "equipped_a": "Du hast ",
+    "equipped_b": " als ",
+    "equipped_c": " ausgerüstet.\n",
+    "already_equipped": " bereits ausgerüstet.\n",
+    "already_equipped_change_a": "Bereits ein ",
+    "already_equipped_change_b": " ausgerüstet. Austauschen? (ja/nein)\n",
+    "new_attack": "Du hast eine neue Attacke durch deine Ausrüstung erhalten: ",
+    "no_dequipe": "Nichts zum ablegen.\n",
+    "dequiped": "abgelegt.\n",
+    "tech_error": "Sorry, irgendwas ist schiefgegangen. Vielleicht funktioniert es später wieder.\n",
+    "update_stats": "Wähle Zahl oder den Namen des Attributes aus.\n",
+    "points_left_a": "Du hast ",
+    "points_left_b": " Punkte zu vergeben.\n"
+  },
   "minds":[],
   "commands":[
         {

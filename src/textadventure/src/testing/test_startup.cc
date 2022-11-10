@@ -14,6 +14,7 @@ TEST_CASE("Testadventure is starting", "[startup]") {
 
   //Create game and all worlds.
   CGame game(params->txtad_path());
+  game.SetupGame();
 
   //Check that starting the game returns output.
   REQUIRE(game.startGame("", params->txtad_player(), nullptr) != "");

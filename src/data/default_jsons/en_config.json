@@ -1,6 +1,54 @@
 {
   "printing":{},
-  "show":{},
+  "show":{
+    "chars": {
+      "error": "no people at all.",
+      "start": "Here are",
+      "additional": "But also"
+    },
+    "exits": {
+      "error": "nowhere.",
+      "start": "You can go"
+    },
+    "items": {
+      "error": "no items lying around",
+      "start": "Here are"
+    }, 
+    "details": {
+      "error": "no other details to see.",
+      "start": "Here are"
+    },
+    "add_all_items": {
+      "error": "no items",
+      "start": "You find"
+    }
+  },
+  "translations": {
+    "fight_ended": "Fight ended.\n",
+    "approaching_a": "You approach ",
+    "approaching_b": " and clear your throat...\n",
+    "approaching_busy": " is busy.\n",
+    "room_not_found": "Room not found.\n",
+    "visited_rooms": "You've already been to:",
+    "visited_rooms_info": "\nEnter \"go to [name-of-room]\", to go there directly.",
+    "no_visited_rooms": "You've never visited another room.\n",
+    "add_item": " added to {name}'s inventory.\n",
+    "started_trade": "You started to trade with: ",
+    "nothing_equipped": "Nothing equipped.",
+    "equipped_a": "You have equipped ",
+    "equipped_b": " as a ",
+    "equipped_c": ".\n",
+    "already_equipped": " already equipped.",
+    "already_equipped_change_a": "You already have a ",
+    "already_equipped_change_b": " equipped. Exchange? (yes/no)\n",
+    "new_attack": "You have learned a new attack from you newly equipped property: ",
+    "no_dequipe": "Nothing to disarray.\n",
+    "dequipped": "disarrayed.\n",
+    "tech_error": "Sorry, but something went wrong. Maybe try something else.\n",
+    "update_stats": "Select number of name of attribute.\n",
+    "points_left_a": "You have ",
+    "points_left_b": " points left to distribute.\n"
+  },
   "minds":[],
   "commands":[],
   "attributes":[],

@@ -73,6 +73,11 @@ namespace func
     */
     std::string extractLeadingChars(const std::string& str);
 
+    /**
+     * Loads json from disc.
+     */
+    nlohmann::json LoadJsonFromDisc(const std::string path);
+
 
     /**
     *                   *** returnSwapedString  ***
@@ -100,6 +105,7 @@ namespace func
     * @return id + greates postfix+1.
     */
     std::string incIDNumber(std::map<std::string, std::string> mapObjects, std::string sID);
+
     
 
     

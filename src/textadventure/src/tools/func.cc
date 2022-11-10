@@ -1,4 +1,5 @@
 #include "func.h"
+#include <fstream>
 
 /**
 * @param[in] str string to be splitet
@@ -169,6 +170,27 @@ std::string func::extractLeadingChars(const std::string& str)
     }
     return sOpt; 
 } 
+
+nlohmann::json func::LoadJsonFromDisc(const std::string path) {
+  nlohmann::json json;
+  std::ifstream read(path.c_str());
+  if (!read) {
+    std::cout << "LoadJsonFromDisc: Could not open file at " << path << std::endl;
+    return json;
+  }
+  try {
+    read >> json;
+  } 
+  catch (std::exception& e) {
+    std::cout << "LoadJsonFromDisc: Could not read json.";
+    read.close();
+    return json;
+  }
+  // Success 
+  read.close();
+  return json;
+
+}
 
 /**
 * Append to is highest postfix+1. Iterate over map and get highest postfix of similar ids.

@@ -10,6 +10,15 @@
 
 std::shared_ptr<CGramma> CRoom::gramma_ = nullptr;
 
+#define EXITS "exits"
+#define CHARS "chars"
+#define ITEMS "items"
+#define DETAILS "details"
+
+#define T_S "start" ///< before text f.e. Here are ...
+#define T_E "error"  ///< in case list is empty: ending. f.e. ...no things to be found.
+#define T_ADD "additional"  ///< Additional parts f.e. ... and also ...
+
 //Constructor
 CRoom::CRoom(string sArea, nlohmann::json jAtts, std::map<string, CPerson*> 
     characters, std::map<string, CItem*> items, std::map<string, CDetail*> 
@@ -83,18 +92,10 @@ std::vector<CListener*> CRoom::getHandler() {
 // *** SETTER *** //
 void CRoom::setPlayers(objectmap& onlinePlayers) { m_players = onlinePlayers; }
 
-void CRoom::setShowMap(nlohmann::json j) {
-  for(auto it = j.begin(); it!=j.end(); it++) {
-    std::map<string, string> show_mapping = it.value().get<std::map<string, string>>();
-    for (const auto& jt : show_mapping)
-      if ((jt.first == "pre" && jt.second != "") || (jt.first == "post" && jt.second != "")
-          || (jt.first == "also" && jt.second != "") )
-        m_showMap[it.key()][jt.first] = jt.second;
-    // Check that two keys where added.
-    if (m_showMap[it.key()].size() < 2) {
-      std::cout << cRED << "invalid show map @key=" << it.key() << cCLEAR << std::endl;
-      exit(1);
-    }
+void CRoom::setShowMap(nlohmann::json show_config) {
+  for (const auto& [type, entries] : show_config.get<std::map<std::string, nlohmann::json>>()) {
+    for (const auto& [key, txt] : entries.get<std::map<std::string, std::string>>())
+      _show[type][key] = txt;
   }
 }
 
@@ -118,34 +119,24 @@ string CRoom::showDescription(std::map<std::string, CPerson*> mapCharacters) {
 }
 
 string CRoom::showAll() {
-  return showExits() + " " + showCharacters() + " " 
-          + showItems() + " " + showDetails() + "\n";
+  return showExits() + " " + showCharacters() + " " + showItems() + " " + showDetails() + "\n";
 }
 
 string CRoom::showExits() {
   auto lambda = [](CExit* exit) {return (!exit->hidden()) ? exit->prep() + " " + exit->name() : "";};
 
   // Get pre and post strings from show map.
-  std::string pre = (m_showMap.count("exits") > 0) ? m_showMap["exits"]["pre"] : "Hier geht es";    
-  std::string post = (m_showMap.count("exits") > 0) ? m_showMap["exits"]["post"] : "Nirgendwo hin.";
-  return gramma_->build(func::to_vector(m_exits, lambda), pre, post);
+  return gramma_->build(func::to_vector(m_exits, lambda), _show[EXITS][T_S], _show[EXITS][T_E]);
 }
 
 string CRoom::showCharacters() {
-
-  std::cout << "showCharacters" << std::endl;
   auto lambda = [](CPerson* person) {return person->name();};
   std::string output = "";
 
   // Get pre and post strings from show map.
-  std::string pre = (m_showMap.count("chars") > 0) ? m_showMap["chars"]["pre"] : "Hier sind";    
-  std::string post = (m_showMap.count("chars") > 0) ? m_showMap["chars"]["post"] : "niemand.";
-  std::string also = (m_showMap.count("chars") > 0) ? m_showMap["chars"]["also"] : "Aber außerdem noch";
-  output += gramma_->build(func::to_vector(m_characters, lambda), pre, post);
-  std::cout << "Got text from gramma: " << output << std::endl;
+  output += gramma_->build(func::to_vector(m_characters, lambda), _show[CHARS][T_S], _show[CHARS][T_E]);
   if(m_players.size() > 0)
-    output += gramma_->build(func::to_vector(m_players), " " + also + " ", "");
-  std::cout << "Returning..." << std::endl;
+    output += gramma_->build(func::to_vector(m_players), " " + _show[CHARS][T_ADD] + " ", "");
   return output;
 }       
 
@@ -155,15 +146,13 @@ string CRoom::showItems() {
   //TODO (fux): condition to not print when hidden might be missing.
   auto printing = [](CItem* item) { return item->name(); };
 
-  return gramma_->build(func::to_vector(m_items, printing), "Hier sind", 
-      "nichts zu finden.");
+  return gramma_->build(func::to_vector(m_items, printing), _show[ITEMS][T_S], _show[ITEMS][T_E]);
 } 
 
 string CRoom::showDetails() {
   std::string details = "";
   auto lambda = [](CDetail* detail) { return detail->name(); };
-  return gramma_->build(func::to_vector(m_details, lambda), "Hier sind ", 
-      "nichts weiteres zu sehen.");
+  return gramma_->build(func::to_vector(m_details, lambda), _show[DETAILS][T_S], _show[DETAILS][T_E]);
 }
 
 string CRoom::look(string sDetail) {
@@ -171,8 +160,8 @@ string CRoom::look(string sDetail) {
   auto lambda = [](CItem* item) { return item->name(); };
   std::string sOutput = "";
 
-  sOutput = gramma_->build(func::to_vector(detail->getItems(), lambda), 
-      "Hier sind", "leider nichts.");
+  sOutput = gramma_->build(func::to_vector(detail->getItems(), lambda), _show[ITEMS][T_S], 
+      _show[ITEMS][T_E]);
 
   //Change from hidden to visible and "empty" detail
   m_items.insert(detail->getItems().begin(), detail->getItems().end());
@@ -190,4 +179,3 @@ CItem* CRoom::getItem(std::string sPlayerChoice) {
   }
   return NULL;
 }
-

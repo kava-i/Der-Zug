@@ -200,15 +200,28 @@ int main(int x, char **argc) {
         else {
           try {
             // Create new webgame with game based on given path:
-            webgames[game_id] = std::make_shared<Webgame<WebserverGame, CGame>>(
-                std::make_shared<CGame>(path), port);
-            // set port and run: 
-            std::thread ng([&]() { webgames[game_id]->run(); });
-            ng.detach();
-            resp.status = 200;
-            spdlog::get(LOGGER)->debug("[create] created game {} on port {}", game_id, port);
+            std::shared_ptr<CGame> game = std::make_shared<CGame>(path);
+            if (game->SetupGame()) {
+              std::shared_ptr<Webgame<WebserverGame, CGame>> web_game =
+                std::make_shared<Webgame<WebserverGame, CGame>>(game, port);
+              webgames[game_id] = web_game;
+              // set port and run: 
+              std::thread ng([web_game]() { 
+                  spdlog::get(LOGGER)->info("[run] game valid? {}", (web_game != nullptr));
+                  if (web_game)
+                    web_game->run(); 
+              });
+              ng.detach();
+              resp.status = 200;
+              spdlog::get(LOGGER)->debug("[create] created game {} on port {}", game_id, port);
+            }
+            else {
+              resp.status = 400;
+              spdlog::get(LOGGER)->error("[create] failed creating game {} invalid world!", game_id);
+
+            }
           } catch (std::exception& e) {
-            spdlog::get(LOGGER)->debug("[create] failed for game {}: ", game_id, e.what());
+            spdlog::get(LOGGER)->error("[create] failed for game {}: ", game_id, e.what());
           }
         }
     });

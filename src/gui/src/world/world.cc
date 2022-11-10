@@ -229,8 +229,10 @@ bool World::IsGameRunning() const {
   
   //Get players from players.json
   nlohmann::json players;
-  if (func::LoadJsonFromDisc(path_ + "/players/players.json", players) == false) 
+  if (func::LoadJsonFromDisc(path_ + "/players/players.json", players) == false) {
+    std::cout << "Failed to load player json: " << path_ << "/players/players.json" << std::endl;
     return false;
+  }
 
   //Run game with every existing player.
   bool success = true;

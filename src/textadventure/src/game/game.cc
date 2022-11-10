@@ -1,6 +1,8 @@
 #include "game.h" 
 #include "eventmanager/context.h"
 #include "game/world.h"
+#include "objects/object.h"
+#include "tools/func.h"
 #include "tools/webcmd.h"
 #include <chrono>
 #include <exception>
@@ -42,24 +44,31 @@ CGame::CGame(std::string path) : path_(path){
   Context::initializeTemplates();
   m_context = new Context((std::string)"game");
   m_context->setGame(this);
+}
 
-  //Create world
-  m_world = new CWorld(NULL, path);
-  std::cout << "Done parsing world." << std::endl;
+bool CGame::SetupGame() {
+  try {
+    std::cout << "Setting up game..." << std::endl;
+    //Create world
+    m_world = new CWorld(NULL, path_);
+    std::cout << "Done parsing world." << std::endl;
 
-  //Create players
-  playerFactory();
-  std::cout << "Finished parsing!" << std::endl;
+    //Create players
+    playerFactory();
+    std::cout << "Finished parsing!" << std::endl;
+    return true;
+  }
+  catch (std::exception& e) {
+    std::cout << cRED << "Error creating game: " << e.what() << cCLEAR << std::endl;
+    return false;
+  }
 }
     
 void CGame::playerFactory(bool update) {
   std::cout << "Parsing players..." << std::endl;
 
   //Read json creating all rooms
-  std::ifstream read(m_world->getPathToWorld() + "players/players.json");
-  nlohmann::json j_players;
-  read >> j_players;
-  read.close();
+  nlohmann::json j_players = func::LoadJsonFromDisc(m_world->getPathToWorld() + "players/players.json");
 
   for(auto j_player : j_players) {
     //Add json to list of player jsons
