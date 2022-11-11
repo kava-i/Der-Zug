@@ -39,6 +39,7 @@ class CListener
     int priority();
     std::string location();
     std::string location_id();
+    std::string new_identifier();
 
     /**
     * Function called from Context::throw_event, which will call the specific compare

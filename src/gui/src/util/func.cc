@@ -41,6 +41,7 @@ std::vector<std::string> Split(std::string str, std::string delimiter) {
 }
 
 std::string GetPage(std::string path) {
+  std::cout << "GetPage: " << path << std::endl;
   //Read loginpage and send
   std::ifstream read(path);
   if (!read) {

@@ -143,5 +143,8 @@
   "image": {
       "background": "",
       "fight": ""
-  }
+  },
+  "categories": ["equipe", "read", "consume", "others"],
+  "kinds": ["weapon", "armor", "drug"],
+  "types": []
 }

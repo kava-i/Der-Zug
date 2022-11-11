@@ -693,6 +693,11 @@ void CPlayer::equipeItem(CItem* item, string sType) {
         + m_world->GetSTDText("equipped_b") + sType + m_world->GetSTDText("equipped_c"));
     string sAttack = item->getAttack();
 
+    // Update stats
+    if (item->stats_change().size() > 0) {
+      addPostEvent("setAttribute " + item->stats_change());
+    }
+
     // Check for new attack
     if (sAttack != "") {
       m_attacks[sAttack] = m_world->getAttack(sAttack);
@@ -724,8 +729,17 @@ void CPlayer::equipeItem(CItem* item, string sType) {
 * @param sType item type (weapon, clothing etc.)
 */
 void CPlayer::dequipeItem(string sType) {
-  if (m_equipment.count(sType) == 0)
+  std::cout << "dequipping item: " << sType << std::endl;
+  for (const auto& it : m_equipment) {
+    std::cout << "- " << it.first << std::endl;
+  }
+  std::string type_from_item = (m_inventory.getItem(sType)) ? m_inventory.getItem(sType)->kind() : "";
+  if (m_equipment.count(type_from_item) > 0) {
+    sType = type_from_item;
+  }
+  if (m_equipment.count(sType) == 0) {
     appendErrorPrint(m_world->GetSTDText("no_dequipe") + "\n");
+  }
   else if (m_equipment[sType] == NULL)
     appendErrorPrint(m_world->GetSTDText("no_dequipe") + "\n");
   else {
@@ -733,6 +747,15 @@ void CPlayer::dequipeItem(string sType) {
     //Erase attack
     if (m_equipment[sType]->getAttack() != "")
       m_attacks.erase(m_equipment[sType]->getAttack());
+    // Remove stats perks
+    std::string str = m_equipment[sType]->stats_change();
+    if (str.size() > 0) {
+      auto pos = str.find("+");
+      if (pos != std::string::npos) 
+        str[pos] = '-';
+      addPostEvent("setAttribute " + str);
+    }
+
     m_equipment[sType] = NULL;
   }
 }

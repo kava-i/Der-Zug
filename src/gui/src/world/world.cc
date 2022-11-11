@@ -127,11 +127,17 @@ nlohmann::json World::GetPage(std::string path, int textad_port, bool only_json)
     object.erase("__parents");
     return object;
   }
+
+  nlohmann::json config;
+  func::LoadJsonFromDisc(path_ + "/config/config.json", config);
   json["header"]["__short_paths"] = short_paths_;
   json["header"]["__is_main"] = (path == path_);
   json["header"]["__creator"] = creator_;
   json["header"]["__world_name"] = name_;
   json["header"]["__textad_port"] = textad_port;
+  json["header"]["__categories"] = config["categories"];
+  json["header"]["__kinds"] = config["kinds"];
+  json["header"]["__types"] = config["types"];
   return json;
 }
 

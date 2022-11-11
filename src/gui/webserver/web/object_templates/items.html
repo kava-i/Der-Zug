@@ -22,7 +22,9 @@
   {{ log("rendered use description") }}
 
   <li><label>Category:</label><input id="category" value="{{ default(category,"")}}"></li>
+  <li><label>Kind:</label><input id="kind" value="{{ default(kind,"") }}"></li>
   <li><label>Type:</label><input id="type" value="{{ default(type,"") }}"></li>
+  <li><label>Attributes Effekt:</label><input id="stats_effect" value="{{ default(stats_effect,"") }}"></li>
   <li><label>Effekt:</label><input id="effekt" custom="int" value="{{ default(effekt,"")}}"></li>
   <li><label>Value:</label><input id="value" custom="int" value="{{ default(value,"")}}"></li>
 

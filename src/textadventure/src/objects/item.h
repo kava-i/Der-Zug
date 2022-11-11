@@ -16,9 +16,11 @@ class CItem : public CObject {
     nlohmann::json m_jAttributes;
     CText* m_useDescription;             ///< Description when item is used.
     std::string m_sCategory;        
-    std::string m_sType;
+    std::string kind_;
+    std::string type_;
     std::string m_sFunction;
     std::string m_sAttack;
+    std::string stats_change_;
     size_t m_effekt;
     int m_value;
     bool m_hidden;
@@ -40,9 +42,11 @@ class CItem : public CObject {
     // *** GETTER *** // 
     nlohmann::json getAttributes();
     std::string getCategory();
-    std::string getType();
+    std::string kind();
+    std::string type();
     std::string getAttack();
     std::string getFunction();
+    std::string stats_change();
     size_t getEffekt();
     int getValue();
     bool getHidden();
@@ -53,7 +57,7 @@ class CItem : public CObject {
     
     // *** SETTER *** //
     void setCategory(std::string sCategory);
-    void setType(std::string sType);
+    void setKind(std::string kind);
     void setFunction(std::string sFunction);
     void setAttack(std::string sAttack);
     void setEffekt(size_t effekt);

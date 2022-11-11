@@ -479,8 +479,11 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room,
       }
     }
     // Pick either a random (default-dialog), or the first (character-dialog).
+    std::cout << "Loading character dialog" << std::endl;
     std::string dialog_num = (jBasic.contains("defaultDialog")) ? std::to_string(rand() % counter) : "1"; 
+    std::cout << "Got dialog num: " << std::endl;
     CDialog* newDialog = (dialogs.count(dialog_num) > 0) ? dialogs[dialog_num] : getDialog("defaultDialog");
+    std::cout << "Loaded dialog: " << std::endl;
 
     // Create items and attacks
     map<std::string, CItem*> items = parseRoomItems(jBasic, p);

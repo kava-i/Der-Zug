@@ -7,12 +7,15 @@
 
 #include <iostream>
 #include <map>
+#include <memory>
 #include <mutex>
 #include <shared_mutex>
 #include <string>
 
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #include <httplib.h>
+
+#include "maddy/parser.h"
 
 #include "nlohmann/json.hpp"
 #include "users/user_manager.h"
@@ -211,6 +214,8 @@ class ServerFrame {
     httplib::Server server_;  //Server
 #endif
     mutable std::shared_mutex shared_mtx_user_manager_;
+
+    std::shared_ptr<maddy::Parser> parser_;
 
     /**
      * Checks whether user is logged in.

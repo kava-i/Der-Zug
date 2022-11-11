@@ -379,6 +379,7 @@ void Context::AddSimpleListener(std::string handler, std::map<std::string, std::
 
 void Context::AddListener(CListener* listener) {
   m_eventmanager.insert(listener, listener->priority(), listener->handler());
+  m_jAttributes["infos"][listener->id()] = listener->new_identifier();
 }
 
 // *** Throw events *** //
@@ -675,6 +676,7 @@ void Context::h_addExit(std::string& sIdentifier, CPlayer* p) {
 
 void Context::h_setAttribute(std::string& sIdentifier, CPlayer* p) {
   //Get vector with [0]=attribute to modify, [1]=operand, [2]=value
+  std::cout << "h_setAttribute: " << sIdentifier << std::endl;
   std::vector<std::string> atts = func::split(sIdentifier, "|");
 
   //Check if sIdentifier contains the fitting values
@@ -846,7 +848,7 @@ void Context::h_show(std::string& sIdentifier, CPlayer* p) {
     p->showQuests(false);
   else if(sIdentifier == "solved quests" || sIdentifier == "gelöste quests")
     p->showQuests(true);
-  else if(sIdentifier == "stats")
+  else if(sIdentifier == "stats" || sIdentifier == "attribute")
     p->showStats();
   else if(sIdentifier == "mind")
     p->showMinds();
@@ -855,7 +857,7 @@ void Context::h_show(std::string& sIdentifier, CPlayer* p) {
   else if(sIdentifier == "all" || sIdentifier == "alles")
     p->appendDescPrint(p->getRoom()->showAll());
   else
-    p->appendErrorPrint("Unbekannte \"zeige-function\"\n"); 
+    p->appendErrorPrint("Unbekannte \"Zeige-Funktion\"\n"); 
 }
 
 void Context::h_look(std::string& sIdentifier, CPlayer* p) {
@@ -1156,8 +1158,11 @@ void Context::h_thieve(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_attack(std::string& sIdentifier, CPlayer* p) {
-  if (m_jAttributes["infos"].count("h_attack") == 0)
+  std::cout << "h_attack" << sIdentifier << std::endl;
+  if (m_jAttributes["infos"].count("h_attack") == 0) {
+    std::cout << "Infos not found: " << m_jAttributes.dump() << std::endl;
     return; 
+  }
 
   std::string character_id = m_jAttributes["infos"]["h_attack"];
   std::cout << "Infos: " << character_id << std::endl;
@@ -1269,8 +1274,8 @@ void Context::h_sell(std::string& sIdentifier, CPlayer* p) {
     p->appendErrorPrint("Dieser Gegenstand befindet sich nicht in deinem "
         "Inventar, du kannst ihn logischerwiese dehalb nicht verkaufen!\n");
   }
-  else if(p->getEquipment().count(curItem->getType()) > 0 
-      && p->getEquipment()[curItem->getType()]->id() == curItem->id()) {
+  else if(p->getEquipment().count(curItem->kind()) > 0 
+      && p->getEquipment()[curItem->kind()]->id() == curItem->id()) {
     p->appendErrorPrint("Du kannst ausgerüstete Gegenstände nicht "
         "verkaufen.\n");
   }

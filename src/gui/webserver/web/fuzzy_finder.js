@@ -1,4 +1,5 @@
 var paths_ = [];
+let categories_ = []
 var parent_object_ = "";
 var on_page_objects_ = [];
 var cur_object_ = window.location.pathname;
@@ -16,6 +17,7 @@ let handlers_ = ["h_addItem", "h_removeItem", "h_addQuest", "h_newFight", "h_rec
   "h_addCharToRoom", "h_removeCharFromRoom", "h_addDetailToRoom", "h_removeHandler", "h_setAttribute",
   "h_setMind"]
 
+
 window.onload = function() {
   if (sessionStorage.getItem("notification") && sessionStorage.getItem("notification") != "") {
     notify(sessionStorage.getItem("notification"));
@@ -25,6 +27,13 @@ window.onload = function() {
   document.getElementById("fuzzy_finder_div").style.display="none";
   document.getElementById("fuzzy_finder_inp").value = "";
   document.getElementById("fuzzy_finder_elems").innerHTML = "";
+  categories_ = document.getElementById("fuzzy_finder_div").getAttribute("__categories");
+  categories_ = JSON.parse(categories_);
+  kinds_ = document.getElementById("fuzzy_finder_div").getAttribute("__kinds");
+  kinds_ = JSON.parse(kinds_);
+  types_ = document.getElementById("fuzzy_finder_div").getAttribute("__types");
+  types_ = JSON.parse(types_);
+
   paths_ = document.getElementById("fuzzy_finder_div").getAttribute("pages");
   paths_ = JSON.parse(paths_);
   inps_ = paths_;
@@ -316,6 +325,33 @@ function Typeahead(input_field) {
   }
   else if (input_field.id == "handler") {
     inps_ = handlers_;
+    mode_ = "typeahead";
+    console.log("typeahead modus selected.");
+    cur_input_field_ = input_field;
+    document.getElementById("fuzzy_finder_mode").innerHTML = "handlers: ";
+    document.getElementById("fuzzy_finder_mode").style.color = "blue";
+    return true;
+  }
+  else if (input_field.id == "category") {
+    inps_ = categories_;
+    mode_ = "typeahead";
+    console.log("typeahead modus selected.");
+    cur_input_field_ = input_field;
+    document.getElementById("fuzzy_finder_mode").innerHTML = "handlers: ";
+    document.getElementById("fuzzy_finder_mode").style.color = "blue";
+    return true;
+  }
+  else if (input_field.id == "kind") {
+    inps_ = kinds_;
+    mode_ = "typeahead";
+    console.log("typeahead modus selected.");
+    cur_input_field_ = input_field;
+    document.getElementById("fuzzy_finder_mode").innerHTML = "handlers: ";
+    document.getElementById("fuzzy_finder_mode").style.color = "blue";
+    return true;
+  }
+  else if (input_field.id == "type") {
+    inps_ = types_;
     mode_ = "typeahead";
     console.log("typeahead modus selected.");
     cur_input_field_ = input_field;

@@ -12,8 +12,10 @@
 
 #include <exception>
 #include <iostream>
+#include <memory>
 #include <ostream>
 #include <regex>
+#include <sstream>
 #include <string>
 
 using namespace httplib;
@@ -25,7 +27,9 @@ ServerFrame::ServerFrame(int textad_port, std::string path_to_cert, std::string 
 #ifdef _COMPILE_FOR_SERVER_
     , server_(path_to_cert.c_str(), path_to_key.c_str())
 #endif
-{}
+{
+  parser_ = std::make_shared<maddy::Parser>();
+}
 
 void ServerFrame::Start(int port) {
   std::cout << "Starting on Port: " << port << std::endl;
@@ -118,9 +122,28 @@ void ServerFrame::Start(int port) {
   server_.Post("/api/running", [&](const Request& req, Response& resp) {
       IsGameRunning(req, resp); });
 
-    //html
+  //html
   server_.Get("/", [&](const Request& req, Response& resp) {
       resp.set_content(func::GetPage("web/main.html"), "text/html"); });
+  server_.Get("/(.*).md", [&](const Request& req, Response& resp) {
+      std::cout << "Serving info page..." << std::endl;
+      // Load markdown and convert to html
+      std::string markdown = func::GetPage("web/" + (std::string)req.matches[1] + ".md");
+      std::stringstream mdstream(markdown);
+      std::string html = parser_->Parse(mdstream);
+      std::cout << "Got html" << std::endl;
+      // Parse template to include markdown-html
+      try {
+        inja::Environment env;
+        inja::Template temp = env.parse_template("web/info_template.html");
+        std::string page = env.render(temp, {{"markdown", html}});
+        std::cout << "parsed template..." << std::endl;
+        // Set content
+        resp.set_content(page, "text/html"); 
+      } catch (std::exception& e) {
+        std::cout << "Problem parsing object html: " << e.what() << "\n\n";
+      }
+  });
   server_.Get("/login", [&](const Request& req, Response& resp) {
       resp.set_content(func::GetPage("web/login.html"), "text/html"); });
   server_.Get("/registration", [](const Request& req, Response& resp)
@@ -189,16 +212,22 @@ void ServerFrame::LoginPage(const Request& req, Response& resp) const {
 }
 
 void ServerFrame::DoLogin(const Request& req, Response& resp) {
+  std::cout << "ServerFrame: DoLogin" << std::endl;
   nlohmann::json input = ValidateJson(req, resp, {"username", "password"});
-  if (input.empty()) return;
+  if (input.empty()) {
+    std::cout << "ServerFrame: DoLogin: failed (empty request or missing fields)!" << std::endl;
+    return;
+  }
 
   //Call DoLogin, returns "&msg: ..." in case of failure
   std::unique_lock ul(shared_mtx_user_manager_);
   std::string error = user_manager_.DoLogin(input["username"], input["password"]);
   ul.unlock();
   
-  if (error != "") 
+  if (error != "") {
+    std::cout << "ServerFrame: DoLogin: failed (Incorrect login data)!" << std::endl;
     resp.status = 401;
+  }
   else {
     //std::string cookie = "SESSID=" + GenerateCookie(username) + "; Path=/; SECURE";
     ul.lock();
@@ -206,6 +235,7 @@ void ServerFrame::DoLogin(const Request& req, Response& resp) {
       + "; Path=/";
     ul.unlock();
     resp.set_header("Set-Cookie", cookie.c_str());
+    std::cout << "ServerFrame: DoLogin: success" << std::endl;
   }
 }
 
@@ -254,20 +284,23 @@ void ServerFrame::DelUser(const Request& req, Response& resp) {
   ul.unlock();
   resp.status=200;
 }
-void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup) 
-    const {
+void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup) const {
+  std::cout << "ServeFile" << std::endl;
   //Try to get username from cookie
   std::string username = CheckLogin(req, resp);
-  if (username == "") return;
+  if (username == "") {
+    std::cout << "ServeFile: Login Failed." << std::endl;
+    return;
+  }
 
   std::shared_lock sl(shared_mtx_user_manager_);
   User* user = user_manager_.GetUser(username);
   sl.unlock();
 
-  if (user->CheckAccessToLocations(req.matches[0]) == false &&
-      req.matches.size() > 1) {
+  if (user->CheckAccessToLocations(req.matches[0]) == false && req.matches.size() > 1) {
     resp.status = 302;
     resp.set_header("Location", "/overview");
+    std::cout << "No access!" << std::endl;
   }
   else {
     std::string page = "";
@@ -277,10 +310,12 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup)
         nlohmann::json shared_worlds = user_manager_.GetSharedWorlds(username);
         nlohmann::json all_worlds = user_manager_.GetAllWorlds(username);
         page = user->GetOverview(shared_worlds, all_worlds, textad_port_);
+        std::cout << "ServeFile: sending overview..." << std::endl;
       }
       else {
         sl.lock();
         page = user_manager_.worlds()->GetPage(req.matches[0], textad_port_);
+        std::cout << "ServeFile: sending world-page..." << std::endl;
       } 
     } catch (std::exception& e) {
       std::cout << "ServeFile: " << e.what() << std::endl;
@@ -752,7 +787,6 @@ std::string ServerFrame::CheckLogin(const Request& req, Response& resp) const {
 nlohmann::json ServerFrame::ValidateJson(const Request& req, Response& resp, 
       std::vector<std::string> keys) const {
   nlohmann::json json = func::ValidateJson(req.body, keys);
-  std::cout << "ValidateJson: got: " << json.dump() << std::endl;
   if (json.empty()) {
     resp.set_content("invalid json.", "text/txt");
     resp.status = 400;

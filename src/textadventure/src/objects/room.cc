@@ -84,6 +84,7 @@ std::vector<CListener*> CRoom::getHandler() {
   // Add character listeners
   for(auto it : m_characters) {
     auto char_listeners = it.second->listeners();
+    std::cout << "Added " << char_listeners.size() << " listeners from " << it.first << std::endl;
     listeners.insert(listeners.end(), char_listeners.begin(), char_listeners.end());
   }
   return listeners;

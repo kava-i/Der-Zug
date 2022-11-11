@@ -106,6 +106,9 @@ std::string CListener::location() {
 std::string CListener::location_id() {
   return location_id_;
 }
+std::string CListener::new_identifier() {
+  return new_identifier_;
+}
 
 // functions
 

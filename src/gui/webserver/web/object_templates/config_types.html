@@ -1,0 +1,30 @@
+{% include "temp_header" %}
+{{ log("rendered header") }}
+
+    <li custom="list">
+     <label title="You may add new types here.">
+    Types (for items and attacks):
+     </label>
+     <ul id="types">
+       {% if length(content) == 0 %}
+          <li>
+             <input id="id" placeholder="new type" value="">
+             <span class="mod_elem" onclick="del_elem('types',1)">-</span>
+             <span class="mod_elem" onclick="add_elem('types',1)">+</span>
+          </li>
+
+       {% else %}
+         {% for attr in default(content, []) %}
+           <li>
+             <input id="id" placeholder="original" value="{{ attr }}">
+             <span class="mod_elem" onclick="del_elem('types',{{loop.index}})">-</span>
+             <span class="mod_elem" onclick="add_elem('types',{{loop.index}})">+</span>
+           </li>
+         {% endfor %}
+       {% endif %}
+     </ul>
+   </li>
+
+   {{ log("rendered categories") }}
+
+{% include "temp_footer" %}

@@ -4,6 +4,7 @@ nlohmann_json/3.11.2
 inja/3.3.0
 openssl/3.0.7
 catch2/3.1.0
+maddy/1.1.2
 
 [generators]
 cmake

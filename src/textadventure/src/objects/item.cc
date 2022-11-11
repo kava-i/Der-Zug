@@ -13,12 +13,13 @@ CItem::CItem(nlohmann::json basic_json, CPlayer* p) : CObject(basic_json, p, "it
   else
     m_useDescription = nullptr;
 
-  std::string sType = basic_json.value("type", "");
   m_sCategory = basic_json.value("category", "others");
-  m_sType = basic_json.value("type", "");
+  kind_ = basic_json.value("kind", "");
+  type_ = basic_json.value("type", "");
 
   m_sAttack = basic_json.value("attack", "");
   m_sFunction = basic_json.value("function", m_sCategory);
+  stats_change_ = basic_json.value("stats_effect", "");
   m_effekt = basic_json.value("effekt", 0);
   m_value = basic_json.value("value", 1);
   m_hidden = basic_json.value("hidden", false);
@@ -35,8 +36,11 @@ nlohmann::json CItem::getAttributes() {
 std::string CItem::getCategory() {
   return m_sCategory;
 }
-std::string CItem::getType() {
-  return m_sType;
+std::string CItem::kind() {
+  return kind_;
+}
+std::string CItem::type() {
+  return type_;
 }
 std::string CItem::getAttack() {
   return m_sAttack;
@@ -44,6 +48,9 @@ std::string CItem::getAttack() {
 std::string CItem::getFunction() { 
   return m_sFunction;
 } 
+std::string CItem::stats_change() {
+  return stats_change_;
+}
 size_t CItem::getEffekt() { 
   return m_effekt;
 }
@@ -64,8 +71,8 @@ CText* CItem::getPages() {
 void CItem::setCategory(std::string sCategory) {
   m_sCategory = sCategory;
 }
-void CItem::setType(std::string sType) {
-  m_sType = sType;
+void CItem::setKind(std::string kind) {
+  kind_ = kind;
 }
 void CItem::setFunction(std::string sFunction) {
   m_sFunction = sFunction;
@@ -100,9 +107,10 @@ void CItem::initializeFunctions() {
 
 // ***** VARIOUS FUNCTIONS ***** //
 std::string CItem::getAllInfos() {
-  return "id: " + id_ + ", name: " + name_ + ", catagory: " + m_sCategory + ", type: " + m_sType 
-    + ", function: " + m_sFunction + ", attack: " + m_sAttack + ", effekt: " + std::to_string(m_effekt) 
-    + ", value: " + std::to_string(m_value) + ", hidden: " + std::to_string(m_hidden) + "\n"; 
+  return "id: " + id_ + ", name: " + name_ + ", catagory: " + m_sCategory + ", kind: " + kind_ 
+    + ", type: " + type_ + ", function: " + m_sFunction + ", attack: " + m_sAttack 
+    + ", effekt: " + std::to_string(m_effekt) + ", value: " + std::to_string(m_value) 
+    + ", hidden: " + std::to_string(m_hidden) + "\n"; 
 }
 
 // ***** FUNCTION-CALLER ***** // 
@@ -118,7 +126,7 @@ bool CItem::callFunction(CPlayer* p) {
 
 // ***** CONSUME FUNCTIONS ***** //
 void CItem::consume(CPlayer* p) {
-  if (m_sType == "drug") {
+  if (kind_ == "drug") {
     p->setStat("highness", p->getStat("highness") + getEffekt());
     if (!p->getContext("standard")->timeevent_exists("t_highness"))
         p->getContext("standard")->add_timeEvent("t_highness", "standard", "", 2.0);
@@ -134,7 +142,7 @@ void CItem::consume(CPlayer* p) {
 
 // ***** EQUIPE-FUNCTIONS ***** //
 void CItem::equipe(CPlayer* p) {
-  p->equipeItem(this, m_sType);
+  p->equipeItem(this, kind_);
 }
 
 // ***** READ-FUNCTIONS ***** //
