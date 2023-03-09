@@ -13,28 +13,65 @@ body {
     color: white;
 }
 
+.container {
+  position: relative;
+}
+
+.setting-btn {
+  position: absolute;
+  width: 50%;
+  height: 50px;
+  z-index: 1;
+  {% if appearance.text-box.width > 90 %}
+    left: calc(100% - 5rem);
+  {% endif %}
+
+}
+
+.content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
 .input,.input:focus {
-    position: fixed;
-    left: 0;
-    color: green;
-    top: calc(100% - 2.5rem);
-    height: 3rem;
-    overflow: hidden;
-    background: black;
+  position: fixed;
+  {% if appearance.input-bar-settings.attached %}
+    left: {{appearance.text-box.left}}%;
+    width: calc({{appearance.text-box.width}}% + 2 * {{appearance.text-box.padding}});
+    top: calc({{appearance.text-box.top}}% + {{appearance.text-box.height}}% + 1 * {{appearance.text-box.padding}});
+  {% else %}
+    left: {{appearance.input-bar.left}}%;
+    width: {{appearance.input-bar.width}}%;
+    top: calc(100% - 3rem - {{appearance.input-bar.bottom}}rem);
+  {% endif %}
+  color: green;
+  height: {%- if appearance.input-bar-settings.topline -%}3rem{%- else -%}2.2rem{%- endif -%};
+  overflow: hidden;
+  background: black;
+}
+
+#input {
+  border: None;
+  color: #ff9800;
+  background: black;
+  width: calc(100% - 2rem);
+}
+input:focus{
+  outline: none;
 }
 
 .output {
+    margin: 0;
+    padding: {{appearance.text-box.padding}};
     position: fixed;
-    width: 50%;
-    left: 10%;
-    top: 0;
-    margin-top: 0;
-    height: calc(100% - 3rem);
-    padding: 0.5rem;
-    padding-bottom: 0;
+    left: {{appearance.text-box.left}}%;
+    top: {{appearance.text-box.top}}%;
+    height: {{appearance.text-box.height}}%;
     overflow-y: auto;
     background-color: rgba(0,0,0,0.95);
-    width: 80%;
+    width: {{appearance.text-box.width}}%;
     font-size: small;
     color: #f8f9f9;
 }
@@ -50,8 +87,8 @@ body {
 }
 
 hr {
-    width: 100vw;
-    color: #ba68c8;
+  width: 100vw;
+  color: #ba68c8;
 }
 
 .black{
@@ -88,12 +125,7 @@ hr {
 .orange {
     color: #ff9800;
 }
-#input {
-    border: None;
-    color: #ff9800;
-    background: black;
-    width: 80vw;
-}
+
 
 </style>
 <script>
@@ -294,8 +326,28 @@ function printString(theString)
         out+="</span>";
     }
 	let outpt = document.getElementById("output");
+  // TypeWriter(outpt, out, 0)
   outpt.innerHTML += out;
 	outpt.scrollTop = outpt.scrollHeight;
+}
+
+function TypeWriter(output, text, i) {
+  if (i < text.length) {
+    var ch = text.charAt(i);
+    if (ch === "<") {
+      var endTagIndex = text.indexOf(">", i);
+      if (endTagIndex > -1) {
+        ch = text.slice(i, endTagIndex+1);
+        i = endTagIndex;
+      }
+    }
+    output.innerText += text[i];
+    i++
+    setTimeout(function() { TypeWriter(output, text, i); }, 20);
+  }
+  else {
+    output.innerHTML == text;
+  }
 }
 
 function openFullscreen(elem) {
@@ -345,15 +397,23 @@ function closeFullscreen(elem) {
 </head>
 
 <body onload="bdyonload();return true;">
-  <button id="btn_play_music" onclick="playMusik();return true;">
-    <i id="audio_toggle" class="large material-icons" style="font-size:18px">volume_off</i>
-  </button>
-  <button id="btn_toggle_fullscreen" onclick="openFullscreen(document.documentElement);return true;">
-    <i id="fullscreen_toggle" class="large material-icons" style="font-size:18px">fullscreen</i>
-  </button>
-  <p id="output" class="output"></p>
-  <div class="input">
-          <hr>
-          <span>$ <input type="text" id="input" style="display:inline-block" placeholder='type command here...'/></span>
+  <div class="container">
+    <div class="setting-btn">
+      <button id="btn_play_music" onclick="playMusik();return true;">
+        <i id="audio_toggle" class="large material-icons" style="font-size:18px">volume_off</i>
+      </button>
+      <button id="btn_toggle_fullscreen" onclick="openFullscreen(document.documentElement);return true;">
+        <i id="fullscreen_toggle" class="large material-icons" style="font-size:18px">fullscreen</i>
+      </button>
+    </div>
+    <div class="content">
+      <p id="output" class="output"></p>
+      <div class="input">
+        {%- if appearance.input-bar-settings.topline -%}<hr>{%- endif -%}
+        <span style="margin-left: 0.5rem;">{{appearance.input-bar-settings.symbol}}
+          <input type="text" id="input" style="display:inline-block" placeholder='type command here...'/>
+        </span>
+      </div>
+    </div>
   </div>
 </body>

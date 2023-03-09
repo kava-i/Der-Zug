@@ -268,11 +268,14 @@ int main(int x, char **argc) {
         }
         auto cg = webgames.at(game_id)->game_;
         auto port = webgames.at(game_id)->port_;
+        nlohmann::json data = { {"port", port}, {"music", cg->get_music()}, {"image", cg->get_background_image()}, 
+          {"world", req.matches[2]} };
+        data["appearance"] = cg->get_appearance_config();
+        std::cout << "APPEARANCE: " << cg->get_appearance_config() << std::endl;
         inja::Environment env;
         inja::Template temp = env.parse_template("index.html");
         spdlog::get(LOGGER)->debug("[main] image: {}", cg->get_background_image());
-        resp.set_content(env.render(temp, { {"port", port}, {"music", cg->get_music()}, 
-              {"image", cg->get_background_image()}, {"world", req.matches[2]} }), "text/html"); 
+        resp.set_content(env.render(temp, data), "text/html"); 
     });
  
     //Start main loop.

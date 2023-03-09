@@ -32,6 +32,10 @@ std::string CGame::get_background_image() const {
   return m_world->media("image/background");
 }
 
+nlohmann::json CGame::get_appearance_config() const {
+  return m_world->getConfig()["appearance"];
+}
+
 std::string CGame::path() const {
   return path_;
 }

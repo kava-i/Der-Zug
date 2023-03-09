@@ -51,6 +51,7 @@ public:
     map<string, nlohmann::json> getPlayerJsons();
     std::string get_music() const;
     std::string get_background_image() const;
+    nlohmann::json get_appearance_config() const;
     std::string path() const;
 
     // *** FACTORYS *** // 
