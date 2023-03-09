@@ -2,12 +2,13 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <style>
 body {
     background: black;
-    background-image: url("new_wall.jpg");
+    background-image: url('{{world}}/background.jpg');
     background-size: cover;
+    height: 100vh;
     background-repeat: no-repeat;
     color: white;
 }
@@ -24,6 +25,7 @@ body {
 
 .output {
     position: fixed;
+    width: 50%;
     left: 10%;
     top: 0;
     margin-top: 0;
@@ -36,29 +38,6 @@ body {
     font-size: small;
     color: #f8f9f9;
 }
-
-/*
-.output div{
-    overflow: hidden;
-    border-right: .15em solid orange;
-    white-space: nowrap;
-    margin: 0 auto;
-    letter-spacing: .15em;
-    animation:
-        typing 3.5s steps(40, end),
-        blink-caret .75s step-end infinite;
-}
-
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
-}
-
-@keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: orange; }
-} 
-*/
 
 .spoken {
     padding-left: 2.5em;
@@ -125,106 +104,152 @@ if (host == "localhost" || host == "127.0.0.1")
 else
   socket = new WebSocket("wss://" + host + ":{{port}}");
 
+
 let clicked = false;
-let aud = new Audio("sounds/{{port}}/{{ default(music, 'piano') }}.mp3");
-  function playMusik() {
-  if(clicked == false) {
+let aud = new Audio('{{world}}/{{ default(music, "piano") }}.mp3');
+
+aud.addEventListener('ended', function() {
+    this.currentTime = 0;
+    this.play();
+  }, false);
+
+
+function playMusik() {
+  if (clicked == false) {
     aud.play();
-    document.getElementById("symbol").className = "fa fa-volume-up";
+    document.getElementById("audio_toggle").innerHTML = "volume_up";
     clicked = true;
+    document.getElementById("input").focus();
   }
+
   else {
     aud.pause();
-    document.getElementById("symbol").className = "fa fa-volume-off";
+    document.getElementById("audio_toggle").innerHTML = "volume_off";
     clicked = false;
+    document.getElementById("input").focus();
   }
 }
 
+function onFullScreenChange() {
+  var fullscreenElement =
+    document.fullscreenElement ||
+    document.mozFullScreenElement ||
+    document.webkitFullscreenElement;
+  if (fullscreenElement === undefined || fullscreenElement === null) {
+    closeFullscreen(document.documentElement);
+  }
+}
 
 let gPipelinedOutput = null;
 let gPipelineNextEnter = false;
 let listOfCommands = [];
 let currentIter = -1;
-function bdyonload()
-{
+function bdyonload() {
+  document.addEventListener('fullscreenchange', onFullScreenChange, false);
+  document.addEventListener('webkitfullscreenchange', onFullScreenChange, false);
+  document.addEventListener('mozfullscreenchange', onFullScreenChange, false);
+
+
   printString("login/register (l/r):");
-
-    document.getElementById("input").addEventListener("keydown",function(event)
-    {
-      if(event.key === "Enter")
-      {
-        if(gPipelineNextEnter)
-        {
-            gPipelineNextEnter = false;
-            if(gPipelinedOutput!=null)
-            {
-              output.innerHTML = output.innerHTML.substr(0, 
-                output.innerHTML.lastIndexOf("Press Enter to continue"));
-              console.log(gPipelinedOutput);
-              printString(gPipelinedOutput);
-            }
-        }
-        else
-        {
-            let p_input = document.getElementById("input").value;
-            document.getElementById("input").value ="";
-            if(p_input=="")
-                printString('\x06'+". . ."+'\n');
-            listOfCommands.push(p_input);
-            socket.send(p_input);
-            let val = document.getElementById("output");
-            val.scrollTop = val.scrollHeight;
-            currentIter = -1;
+  document.getElementById("input").addEventListener("keydown",function(event) {
+    if (event.key === "Enter") {
+      if (gPipelineNextEnter) {
+        gPipelineNextEnter = false;
+        if (gPipelinedOutput!=null) {
+            output.innerHTML = output.innerHTML.substr(0, output.innerHTML.lastIndexOf(
+                  "Press Enter to continue"));
+            console.log(gPipelinedOutput);
+            printString(gPipelinedOutput);
         }
       }
-      if(listOfCommands.length==0)
-          return;
-      if(event.keyCode === 38)
-      {
-          currentIter--;
-          if(currentIter<0)
-          currentIter = listOfCommands.length-1;
-          document.getElementById("input").value = listOfCommands[currentIter];
+      else {
+        let st = document.getElementById("input").value;
+        let k = st.toLowerCase();
+        document.getElementById("input").value ="";
+        if(k=="")
+            printString('\x06'+". . ."+'\n');
+        //else
+        //    printString('\x06'+k+'\n');
+        listOfCommands.push(k);
+        socket.send(k);
+        let val = document.getElementById("output");
+        val.scrollTop = val.scrollHeight;
+        currentIter = -1;
       }
-      else if(event.keyCode === 40)
-      {
-          currentIter++;
-          if(currentIter == listOfCommands.length)
-          currentIter = 0;
-          document.getElementById("input").value = listOfCommands[currentIter];
-      }
-    });
-    document.getElementById("input").focus();
-    
-    socket.onmessage = function(event){console.log("Received: "+event.data);printString(event.data);};
+    }
+    if(listOfCommands.length==0)
+      return;
+    if(event.keyCode === 38) {
+      currentIter--;
+      if (currentIter<0)
+        currentIter = listOfCommands.length-1;
+      document.getElementById("input").value = listOfCommands[currentIter];
+    }
+    else if(event.keyCode === 40) {
+      currentIter++;
+      if(currentIter == listOfCommands.length)
+      currentIter = 0;
+      document.getElementById("input").value = listOfCommands[currentIter];
+    }
+  });
+  document.getElementById("input").focus();
+  socket.onmessage = function(event){console.log("Received: "+event.data);printString(event.data);};
 }
 
-function isspanret(isspan,colname)
-{
-    if(isspan)
-        return "</span><span class='"+colname+"'>";
-    else
-        return "<span class='"+colname+"'>";
+function isspanret(isspan,colname) {
+  if (isspan)
+    return "</span><span class='"+colname+"'>";
+  else
+    return "<span class='"+colname+"'>";
 }
 
-function parse_file(strin,x)
-{
-    name = '';
-    for(let i = x+1; i < strin.length; i++)
-	if(strin[i] == '\x07')
-	{
-	    console.log("Playing soundfile: " + name);
-	    aud.pause();
-	    aud = new Audio(name);
-	    if(clicked) aud.play();
+async function changeAudio(new_audio) {
+  var fadePoint = aud.currentTime+1;
+  var fade = setInterval(function() {
+    if (aud.currentTime >= fadePoint && aud.volume > 0.0) {
+      aud.volume -= 0.1;
+      console.log("Volume: ", aud.volume);
+    }
+    if (aud.volume <= 0.1) {
+      aud.pause();
+      aud = new Audio(new_audio);
+      aud.addEventListener('ended', function() {
+        this.currentTime = 0;
+        this.play();
+      }, false);
+      aud.volume = 1;
+      if (clicked) 
+        aud.play();
+      clearInterval(fade);
+    }
+  }, 100);
+}
+
+function parse_file(strin,x) {
+  name = '';
+  for (let i = x+1; i < strin.length; i++) {
+    if (strin[i] == '\x07') {
+      changeAudio("{{world}}/" + name + ".mp3");
 	    return i+1;
-	}
-	else
+	  }
+    if (strin[i] == '\x0B') {
+      document.body.style.backgroundImage = "url('{{world}}/" + name + ".jpg')";
+	    return i+1;
+	  }
+	  else
 	    name+=strin[i]
+  }
 }
 
 function printString(theString)
 {
+    if (theString.indexOf("Logged in as") != -1) {
+      document.getElementById("btn_play_music").click();
+      openFullscreen(document.documentElement);
+	    document.getElementById("output").innerHTML = "";
+	    outpt.scrollTop = outpt.scrollHeight;
+      return;
+    }
     let out = "";
     let isspanopen = false;
     for(let i = 0; i < theString.length; i++)
@@ -249,7 +274,7 @@ function printString(theString)
             out+=isspanret(isspanopen,"orange");
         else if(theString[i] == '\x09')
             out+=isspanret(isspanopen, "whitedark");
-        else if(theString[i] == '\x07')
+        else if(theString[i] == '\x07' || theString[i] == '\x0B')
             i=parse_file(theString,i);
         else if(theString[i] == '$')
         {
@@ -263,14 +288,13 @@ function printString(theString)
             out+=theString[i];
         if(theString[i] >= '\x01' && theString[i] <= '\x05')
             isspanopen = true;
-
     }
     if(isspanopen)
     {
         out+="</span>";
     }
 	let outpt = document.getElementById("output");
-    outpt.innerHTML += out;
+  outpt.innerHTML += out;
 	outpt.scrollTop = outpt.scrollHeight;
 }
 
@@ -284,6 +308,9 @@ function openFullscreen(elem) {
   } else if (elem.msRequestFullscreen) { /* IE/Edge */
     elem.msRequestFullscreen();
   }
+  document.getElementById("btn_toggle_fullscreen").style.display = "none";
+  document.getElementById("btn_play_music").style.display = "none";
+  document.getElementById("input").focus();
 }
 
 function hasFullscreen(elem) {
@@ -311,19 +338,22 @@ function closeFullscreen(elem) {
   } else if (document.msExitFullscreen) { /* IE/Edge */
     document.msExitFullscreen();
   }
+  document.getElementById("btn_toggle_fullscreen").style.display = "inline-block";
+  document.getElementById("btn_play_music").style.display = "inline-block";
 }
 </script>
 </head>
 
 <body onload="bdyonload();return true;">
-  <button onclick="playMusik();return true;">
-    <i id="symbol" class= "fa fa-volume-off" style="font-size:18px"></i>
+  <button id="btn_play_music" onclick="playMusik();return true;">
+    <i id="audio_toggle" class="large material-icons" style="font-size:18px">volume_off</i>
   </button>
-    <p id="output" class="output"></p>
-    <div class="input">
-        <hr>
-        <span>
-          <input type="text" id="input" style="display:inline-block" placeholder='type command here...'/>
-        </span>
-    </div>
+  <button id="btn_toggle_fullscreen" onclick="openFullscreen(document.documentElement);return true;">
+    <i id="fullscreen_toggle" class="large material-icons" style="font-size:18px">fullscreen</i>
+  </button>
+  <p id="output" class="output"></p>
+  <div class="input">
+          <hr>
+          <span>$ <input type="text" id="input" style="display:inline-block" placeholder='type command here...'/></span>
+  </div>
 </body>

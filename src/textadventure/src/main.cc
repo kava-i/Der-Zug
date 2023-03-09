@@ -83,7 +83,7 @@ std::string GetImage(std::string path, std::string image) {
 * @return Return image as string.
 */
 std::string GetSound(std::string path, std::string sound) {
-  path = path + sound + ".mp3"; std::ifstream f(path,
+  path = path + "sounds/" + sound + ".mp3"; std::ifstream f(path,
      std::ios::in|std::ios::binary|std::ios::ate);    
   if (!f.is_open()) {
     spdlog::get(LOGGER)->error("Audio could not be found: {}", path);
@@ -270,8 +270,9 @@ int main(int x, char **argc) {
         auto port = webgames.at(game_id)->port_;
         inja::Environment env;
         inja::Template temp = env.parse_template("index.html");
+        spdlog::get(LOGGER)->debug("[main] image: {}", cg->get_background_image());
         resp.set_content(env.render(temp, { {"port", port}, {"music", cg->get_music()}, 
-              {"image", cg->get_background_image()} }), "text/html"); 
+              {"image", cg->get_background_image()}, {"world", req.matches[2]} }), "text/html"); 
     });
  
     //Start main loop.
