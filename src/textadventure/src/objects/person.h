@@ -131,7 +131,7 @@ class CPerson : public CObject {
     // *** Functions needed in CPlayer *** //
     virtual void throw_events(std::string) { std::cout << "FATAL!!!\n"; }
     virtual void setStatus(string)   { std::cout << "FATAL!!!\n"; }
-    virtual void appendPrint(string) { std::cout << "FATAL!!!\n"; }
+    virtual void appendPrint(string, bool dont_throw_post=false) { std::cout << "FATAL!!!\n"; }
     virtual void appendSuccPrint(string) { std::cout << "FATAL!!!\n"; }
     virtual void addEP(int ep)       { std::cout << "FATAL!!!\n"; }
 };

@@ -43,6 +43,7 @@ bool LogicParser::Success(std::string input) {
 }
 
 bool LogicParser::Calc(std::string str1, std::string opt, std::string str2) { 
+	std::cout << "LogicParser::Calc: " << str1 << ", " << opt << ", " << str2  << std::endl;
   //Check if or ("|") is included in second string.
   if (str2.find("|") != std::string::npos) {
     return Calc(str1, opt, str2.substr(0, str2.find("|"))) ||
@@ -61,19 +62,23 @@ bool LogicParser::Calc(std::string str1, std::string opt, std::string str2) {
     str1.erase(0,1);
   }
 
-  //Substitut first or second literal
-  if (str1.front() == '"')
+  // Substitut first or second literal
+  if (str1.front() == '\'')
     str1.erase(0,1);
   else if (substitue_.count(str1) > 0)
     str1 = substitue_[str1];
-  if (str2.front() == '"')
+  if (str2.front() == '\'') {
     str2.erase(0,1);
-  else if (substitue_.count(str2) > 0) 
+		str2.pop_back();
+	}
+  else if (substitue_.count(str2) > 0) {
     str2 = substitue_[str2];
+	}
 
   //Calculate value.
   bool result = true;
-  if (opt == "=") result =str1 == str2;
+  if (opt == "=") 
+		result = str1 == str2;
   else if (opt == "~") 
     result = fuzzy::fuzzy_cmp(str2, str1) <= 0.2;
   else if (opt == ">") 

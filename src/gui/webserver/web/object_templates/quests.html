@@ -16,24 +16,9 @@
   {{ log("rendered basic attributes") }}
 
   <!-- Listeners -->
-  <li custom="list">
-    <label>Listeners:</label>
-    <ul id="listener">
-      {% for elem in default(listener, [{}]) %}
-        <li custom="object">
-          <input id="id" placeholder="function" value="{{default(elem.id, "")}}">
-          <input id="string" placeholder="cmd (string)" value="{{default(elem.string, "")}}">
-          <input id="regex" placeholder="cmd (regex)" value="{{default(elem.regex, "")}}">
-          <input custom="int" id="priority" placeholder="priority" style="width: 4em;" 
-              value="{{default(elem.priority, 0)}}">
-          <span class="mod_elem" onclick="del_elem('listener',{{loop.index}})">-</span>
-          <span class="mod_elem" onclick="add_elem('listener',{{loop.index}})">+</span>
-        </li>
-      {% endfor %}
-    </ul>
-  </li>
+  {% include "web/element_templates/listeners" %}
 
-  {{ log("rendered listener") }}
+  {{ log("rendered listeners") }}
 
   <!-- (default value for non-set-values) -->
   <li custom="list">
@@ -43,8 +28,9 @@
         <li custom="object">
           <label style="width:auto">Id:</label>
           <input style="width:10em" id="id" placeholder="id" value="{{default(step.id, "")}}">
+          <br>
           <label style="width:auto">Name:</label>
-          <input style="width:10em" id="name" placeholder="name" 
+          <input class="long_inp" id="name" placeholder="name" 
             value="{{default(step.name, "")}}">
           <br>
           <label style="width:10em">Description</label>

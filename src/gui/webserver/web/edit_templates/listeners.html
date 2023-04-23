@@ -1,0 +1,164 @@
+
+<h2>Listener {{default(id,"")}}</h2>
+<table class="center">
+  <tr>
+    <td>
+      <label class="small" title="unique identifier (used for deleteting listener)">ID:</label>
+    </td>
+    <td>
+      <input id="id" placeholder="id" value="{{default(id,"")}}">
+    </td>
+  <tr>
+
+  <tr>
+    <td>
+      <label class="small" title="Command on which to listen">Command</label>
+    </td>
+    <td>
+      <select id="cmd" autocomplete="off" required >
+				<option {% if default(cmd, "") == "" %} selected {% endif %}></option>
+				{% for availibe_command in __availibe_commands %}
+					<option {% if availibe_command==default(cmd, "") %} selected {% endif %}>
+						{{availibe_command}}
+					</option>
+				{% endfor %} 
+			</select>
+    </td>
+  <tr>
+
+  <tr>
+    <td>
+      <label 
+        class="small" 
+        title="Target of event f.e. for input 'pick up fruits', 
+          <pick> is the command and <fruits> is the target." 
+      >
+        Target
+      </label>
+    </td>
+    <td>
+      <input id="target" placeholder="target" value="{{default(target,"")}}">
+    </td>
+  <tr>
+
+  <tr>
+    <td>
+    <label class="small" title="handler called when listener is triggered">Handler:</label>
+    </td>
+    <td>
+      <select 
+				 id="handler" 
+				 placeholder="handler" 
+				 autocomplete="off" 
+				 required 
+				 onchange='SetHandlerArgs(this.value)'
+			>
+        <option {% if default(cmd, "") == "" %} selected {% endif %}></option>
+        {% for availibe_handler in __availibe_handlers %}
+          <option {% if availibe_handler==default(handler, "") %} selected {% endif %}>
+            {{availibe_handler}}
+          </option>
+        {% endfor %}
+      </select>
+    </td>
+  <tr>
+
+  <tr>
+    <td>
+      <label 
+        class="small" 
+        title="Attributes needed to to trigger event (seperated with '|'). 
+          See doku for which attributes or needed for specific events." 
+      >
+        Attributes:
+      </label>
+    </td>
+    <td>
+      <input 
+        id="event_attributes" 
+        placeholder="event attributes" 
+        value="{{default(event_attributes,"")}}"
+      >
+			<button id="event_attributes_button" style="display: none;">Set Attributes</button>
+    </td>
+  <tr>
+
+  <tr>
+    <td>
+      <label class="small" title="Specify priority">Priority</label>
+    </td>
+    <td>
+      <input 
+        type="number"
+        class="short" 
+        id="priority" 
+        placeholder="priority" 
+        custom="int" 
+        value="{{default(priority, 0)}}"
+      >
+    </td>
+  <tr>
+
+  <tr>
+    <td>
+      <label class="small" title="Overwrite context/handler permeability.">Permeable</label>
+    </td>
+    <td>
+      <input 
+        type="number"
+        class="short" 
+        id="permeable" 
+        placeholder="permeable" 
+        custom="int" 
+        value="{{default(permeable, -1)}}"
+      >
+
+    </td>
+  <tr>
+
+  <tr>
+    <td>
+      <label class="small" title="Specify regex match">Regex match position</label>
+    </td>
+    <td>
+      <input 
+        type="number"
+        class="short" 
+        id="pos" 
+        placeholder="pos" 
+        custom="int" 
+        value="{{default(pos, 0)}}"
+      />
+    </td>
+  <tr>
+
+  <tr>
+    <td>
+      <label class="small" title="interpret command as regex expression.">Regex?</label>
+    </td>
+    <td>
+      <input 
+        type="checkbox"
+        id="regex" 
+        custom="bool" 
+        {% if default(regex, false) %} checked {% endif %}
+      />
+    </td>
+  <tr>
+
+  <tr>
+    <td>
+      <label class="small" title="Delete listener after trigger.">Auto Delete</label>
+    </td>
+    <td>
+      <input 
+        type="checkbox"
+        id="delete" 
+        custom="bool" 
+        {% if default(delete, false) %} checked {% endif %}
+      />
+    </td>
+  <tr>
+
+
+</table>

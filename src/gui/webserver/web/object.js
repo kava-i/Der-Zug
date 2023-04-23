@@ -4,6 +4,8 @@
 
 global_error = false;
 
+const ALLOW_EMPTY_LISTS = ["listeners"];
+
 // ***** ***** GENERATE JSONS ***** ***** //
 
 //Generate json of an object.
@@ -26,17 +28,14 @@ function GenerateJson(element) {
     //Dictionary of objects (f.e. exits, attacks, ...).
     else if (object_list[i].getAttribute("custom") == "map") 
       AddJsons(json, CreateMap(object_list[i]));
-    else
-      console.log("Unkown attribute in 'GenerateJson': ", object_list[i].getAttribute("custom"));
+    else {
+      console.log( "Unkown attribute in 'GenerateJson': ", object_list[i].id, object_list[i].getAttribute("custom"));
+    }
   }
   return json;
 }
 
 function IsEmpty(elem) {
-  if (elem.hasAttribute("custom"))
-    console.log("VALUE: ", elem.value, ", CUSTOM: ", elem.getAttribute("custom"))
-  else
-    console.log("VALUE: ", elem.value);
   if (elem.value == "") 
     return true;
   if (elem.hasAttribute("custom") && elem.getAttribute("custom") == "json"
@@ -44,7 +43,7 @@ function IsEmpty(elem) {
     return true;
   if (elem.hasAttribute("custom") && elem.getAttribute("custom") == "int" && elem.value == 0)
     return true;
-  return false;
+	return false;
 }
 
 //Parse a list of inputs to a json list.
@@ -57,7 +56,6 @@ function CreateList(elem) {
 
   //Iterate over all elements and create specific json to add to list
   for (var i=0; i<elems.length; i++) {
-
     //Skip empty fields.
     var empty_fields = 0;
     for (var j=0; j<GetValueFields(elems[i]).length; j++) {
@@ -68,8 +66,10 @@ function CreateList(elem) {
       else 
         console.log("not empty!")
     }
-    if (empty_fields == GetValueFields(elems[i]).length) 
+    if (empty_fields == GetValueFields(elems[i]).length) {
+      console.log("All empty: ", elems[i]);
       continue;
+    }
 
     //Simple string
     if (elems[i].hasAttribute("custom") == false) {
@@ -86,6 +86,9 @@ function CreateList(elem) {
     //Parse an object in a list (f.e. handlers, ...).
     else if (elems[i].getAttribute("custom") == "object") 
       list.push(CreateObject(elems[i]));
+    else if (elems[i].getAttribute("custom") == "get:object") {
+      list.push(JSON.parse(elems[i].getElementsByTagName("input")[0].value));
+    }
     //Parse an object whcih input fields are inside another ul (f.e. descriptions).
     else if (elems[i].getAttribute("custom") == "list_object") {
       var id = elems[i].getElementsByTagName("ul")[0].id;
@@ -99,8 +102,9 @@ function CreateList(elem) {
 
   //Create json "{ id:[...] }" and return 
   var json = new Object();
-  if (list.length > 0)
+  if (list.length > 0 || ALLOW_EMPTY_LISTS.indexOf(ul.id) >= 0) {
     json[ul.id] = list;
+  }
   return json;
 }
 
@@ -155,7 +159,8 @@ function CreateObject(elem) {
   var inputs = GetValueFields(elem);
   for (var i=0; i<inputs.length; i++) {
     var val = inputs[i].value;
-    if (val == "" || (inputs[i].getAttribute("custom")=="json" && val=="{}"))
+		console.log("has_required: ", inputs[i], inputs[i].hasAttribute("required"));
+    if ((val == "" || (inputs[i].getAttribute("custom")=="json" && val=="{}")) && !inputs[i].hasAttribute("required"))
       continue;
     json[inputs[i].id] = GetAsType(inputs[i]);
   }
@@ -166,7 +171,13 @@ function CreateObject(elem) {
 function GetAsType(elem) {
   try {
     elem.style.border="none";
-    if (elem.hasAttribute("custom") == false)
+		if (IsEmpty(elem) && elem.hasAttribute("required")) {
+    	throw(elem.value + " is empty but required.");
+		}
+    if (elem.type === "checkbox") {
+      return (elem.checked) ? 1 : 0;
+    }
+    else if (elem.hasAttribute("custom") == false)
       return elem.value;
     else if (elem.getAttribute("custom") == "int") {
       var is_number = /^-?\d+$/.test(elem.value);
@@ -208,6 +219,7 @@ function GetValueFields(elem) {
   var inputs = [];
   inputs.push(...elem.getElementsByTagName("input"));
   inputs.push(...elem.getElementsByTagName("textarea"));
+  inputs.push(...elem.getElementsByTagName("select"));
   return inputs;
 }
 
@@ -308,6 +320,7 @@ function del_elem(element, index, obj) {
       ChangeIndex(ul.children[i], i);
   }
 }
+
 
 //Adds a new element to any sort of lists
 function add_elem(element, index, obj) {
@@ -437,4 +450,213 @@ function MyCreateElement(type, attrs={}) {
   for (var key in attrs)
     elem.setAttribute(key, attrs[key]);
   return elem;
+}
+
+// **** new editing **** // 
+
+function DeleteItem(type, cur) { 
+  const ul = cur.parentNode;  
+  // If last element, replace with default.
+  if (ul.children.length === 1) {
+    AddItem(type, cur);
+  }
+  // Remove item
+  ul.removeChild(cur);
+}
+
+function AddItem(type, cur) { 
+  // Get default and change display to block
+  const default_item = document.getElementById(type + "_default");
+  const new_item = default_item.cloneNode(true)
+  new_item.style.display = "block";
+  // Insert new item
+  cur.parentNode.insertBefore(new_item, cur.nextSibling);
+}
+
+function EditItem(type, parent_elem) {
+  // Get json and edit-dialog-element
+  const json = parent_elem.getElementsByTagName("input")[0].value;
+  let dialog = document.getElementById("edit_dialog"); 
+  // set type and index in dialog for later saving
+  dialog["parent_elem"] = parent_elem;
+  // Open modal
+  dialog.showModal();
+	console.log("Sending json: ", json);
+
+  // Send request for content:
+  fetch("/api/edit-template/"+type, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: json
+  })
+  .then((response) => response.text())
+  .then((text) => { 
+    document.getElementById("edit_content").innerHTML = text;
+		// Init handlers and/ or event_attributes: 
+		[...dialog.querySelectorAll("select")].forEach(inp => {
+			if (inp.id == "handler") 
+				SetHandlerArgs(inp.value);
+		})
+  });
+}
+
+function SaveItem() {
+  // get dialog and type and index from dialog:
+  let dialog = document.getElementById("edit_dialog"); 
+  const parent_elem = dialog["parent_elem"];
+  console.log("Got parent_elem: ", parent_elem);
+  // Generate json-object
+	global_error = false;
+  document.getElementById("display_json").innerHTML = "";
+  const json = CreateObject(dialog);
+  if (global_error == true) {
+    alert("You have an error in your document.");
+		return;
+  }
+
+  console.log("Got object: ", json);
+  // Check default and generate abstract representation: 
+  // Set json-object
+  parent_elem.getElementsByTagName("input")[0].value = JSON.stringify(json);
+  parent_elem.getElementsByTagName("a")[0].title = JSON.stringify(json);
+  // Set abstract representation
+  if (parent_elem.parentNode.id == "listeners")
+    parent_elem.getElementsByTagName("a")[0].innerHTML= 
+      `${json['id']}: ${json['cmd']} ${get(json, 'target', '')}` 
+      + ` → ${json['handler']}(${get(json, 'event_attributes', '')})`;
+  dialog.close();
+}
+
+function SetHandlerArgs(value) {
+	const dialog = document.getElementById("edit_dialog");
+	const availible = JSON.parse(document.getElementById("fuzzy_finder_div").getAttribute("__handler_args"));
+	const form = document.getElementById("handler_args_content");
+	form.innerHTML = "";
+	const cur_attributes = dialog.querySelector("#event_attributes").value.split("|");
+	let arguments_field = dialog.querySelector("#event_attributes");
+	// If arguments are specified:
+	if (value in availible) {
+		arguments_field.setAttribute("required", "required");
+		arguments_field.setAttribute("readonly", "readonly");
+		arguments_field.setAttribute("onclick", "OpenHandlerArgsDialog()");
+		let i = 0;
+		availible[value].forEach(item => {
+			const el = document.createElement("input");
+			// el.className = "integr_elements";
+			el.placeholder = item;
+			el.id = item;
+			el.name = item;
+			el.localize = false;
+			// el.setAttribute("localize", "localize");
+			if (item == "int") {
+				el.type = "number";
+			}
+			if (cur_attributes.length > i) {
+				el.value = cur_attributes[i];
+				i++;
+			}
+			form.appendChild(el);
+		});
+	}
+	// Otherwise make input field to normal input field again.
+	else {
+		arguments_field.removeAttribute("required");
+		arguments_field.removeAttribute("readonly");
+		arguments_field.removeAttribute("onclick");
+	}
+}
+
+function SetEventDialog(cur_cmd, cur_attributes=[]) {
+	const availible = JSON.parse(document.getElementById("fuzzy_finder_div").getAttribute("__event_args"));
+	const form = document.getElementById("event_content");
+	form.innerHTML = "";
+	document.getElementById("cmd").value = cur_cmd;
+	// If arguments are specified, add inputs matching the specified inputs
+	if (cur_cmd in availible) {
+		console.log(cur_cmd, " is in ", availible);
+		let i = 0;
+		availible[cur_cmd].forEach(item => {
+			const el = document.createElement("input");
+			// el.className = "integr_elements";
+			el.placeholder = item;
+			el.id = item;
+			el.name = item;
+			el.localize = false;
+			if (item == "int") {
+				el.type = "number";
+			}
+			if (cur_attributes.length > i) {
+				el.value = cur_attributes[i];
+				i++;
+			}
+			form.appendChild(el);
+		});
+	}
+	// Otherwise add one single input
+	else {
+		console.log(cur_cmd, " is not in ", availible);
+		const el = document.createElement("input");
+		// el.className = "integr_elements";
+		el.placeholder = "event attributes sperated by |";
+		el.id = "event_attributes";
+		el.name = "event_attributes";
+		el.value = cur_attributes.join("|");
+		form.appendChild(el);
+	}
+}
+
+function SaveHandlerArgs() {
+	console.log("SaveHandlerArgs");
+	const dialog = document.getElementById("edit_dialog");
+	const form = document.getElementById('handler_args_content')
+	const formData = new FormData(form)
+	let event_attributes = "";
+	for (const [key, value] of formData)
+		event_attributes += value + "|";
+	dialog.querySelector("#event_attributes").value = event_attributes.slice(0, -1); // 
+	CloseDialog("handler_args_dialog");
+}
+
+function SaveEvent() {
+	console.log("SaveEventArgs");
+
+	// Get command
+	const cmd = document.getElementById("cmd").value;
+	// Get event arguments
+	const form = document.getElementById('event_content')
+	const formData = new FormData(form)
+	let event_str = cmd + " ";
+	for (const [key, value] of formData)
+		event_str += value + "|";
+
+	const dialog = document.getElementById("event_dialog");
+	console.log(dialog, dialog.edit_elem);
+	let elem = dialog.edit_elem;
+	elem.value = event_str.slice(0, -1); // 
+	CloseDialog("event_dialog");
+}
+
+function get(object, prop, defaultValue) {
+  if (object.hasOwnProperty(prop)) {
+    return object[prop];
+  } else {
+    return defaultValue;
+  }
+}
+
+function OpenHandlerArgsDialog() {
+  document.getElementById("handler_args_dialog").showModal();
+}
+
+function OpenEventDialog(event_str, elem) {
+	const cur_cmd = event_str.split(" ")[0];
+	const cur_attributes = (event_str.split(" ").length > 1) ? event_str.split(" ")[1].split("|") : [];
+	SetEventDialog(cur_cmd, cur_attributes);
+	const dialog = document.getElementById("event_dialog");
+	dialog.edit_elem = elem;
+	dialog.showModal();
+}
+
+function CloseDialog(name) {
+  document.getElementById(name).close();
 }

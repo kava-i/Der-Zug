@@ -174,8 +174,15 @@ std::string Worlds::ParseTemplate(nlohmann::json json) {
   env.add_void_callback("log", 1, [](inja::Arguments args) {
 	  std::cout << "logging: " << args.at(0)->get<std::string>() << std::endl;
   });
-
-  //Parse standard templates for descriptions and header and footer included in every object.
+	
+  // Parse standard templates for elements of pages
+	std::cout << "Loading element-templates" << std::endl;
+  inja::Template listener = env.parse_template("web/element_templates/listeners.html");
+  env.include_template("web/element_templates/listeners", listener);
+  inja::Template events = env.parse_template("web/element_templates/events.html");
+  env.include_template("web/element_templates/events", events);
+	std::cout << "done loading element-templates" << std::endl;
+  // Parse standard templates for objects
   inja::Template desc= env.parse_template("web/object_templates/description.html");
   env.include_template("web/object_templates/temp_description", desc);
   inja::Template text = env.parse_template("web/object_templates/text.html");
@@ -188,6 +195,7 @@ std::string Worlds::ParseTemplate(nlohmann::json json) {
   env.include_template("web/object_templates/temp_use_description", use_desc);
   inja::Template pages = env.parse_template("web/object_templates/pages.html");
   env.include_template("web/object_templates/temp_pages", pages);
+  // Parse other standard templates
   inja::Template header = env.parse_template("web/object_templates/header.html");
   env.include_template("web/object_templates/temp_header", header);
   inja::Template footer = env.parse_template("web/object_templates/footer.html");

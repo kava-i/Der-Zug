@@ -98,66 +98,7 @@
   {{log("rendered attacks") }}  
 
   <!-- Listeners (default value for non-set-values) -->
-  <li custom="list">
-    <label>Handlers:</label>
-    <ul id="listeners">
-      {% for listener in default(listeners, [{}]) %}
-        <li custom="object">
-          <label class="small" title="unique identifier (used for deleteting listener)">ID:</label>
-          <input id="id" placeholder="id" value="{{default(listener.id,"")}}" >
-          <br>
-          <label class="small" title="handler called when listener is triggered">Handler::</label>
-          <input id="handler" placeholder="handler" value="{{default(listener.handler,"")}}">
-          <br>
-          <label class="small" title="Attributes needed to to trigger event (seperated with '|').
-              See doku for which attributes or needed for specific events."
-            >Attributes: </label>
-          <input 
-            class="long_inp" id="event_attributes" placeholder="event attributes" 
-            value="{{default(listener.event_attributes,"")}}"
-          >
-          <br>
-          <label class="small" title="Command on which to listen">Command</label>
-          <input id="cmd" placeholder="command" value="{{default(listener.cmd, "")}}">
-          <label class="small" title="Target of event f.e. for input 'pick up
-                fruits', <pick> is the command and <fruits> is the target." 
-            >Target</label>
-          <input id="target" placeholder="target" value="{{default(listener.target,"")}}">
-          <br>
-          <label class="small" title="Specify priority">Priority</label>
-          <input 
-              class="short" id="priority" placeholder="priority" 
-              custom="int" value="{{default(listener.priority, 0)}}"
-          >
-          <label class="small" title="Overwrite context/handler permeability.">Permeable</label>
-          <input 
-              class="short" id="permeable" placeholder="permeable" 
-              custom="int" value="{{default(listener.permeable, -1)}}"
-          >
-          <label class="small" title="Delete listener after trigger.">Auto Delete</label>
-          <input 
-              class="short" id="delete" placeholder="delete" 
-              custom="int" value="{{default(listener.delete, 0)}}"
-          >
-          <br>
-          <label class="small" title="Specify regex match">Regex match position</label>
-          <input 
-              class="short" id="pos" placeholder="pos" 
-              custom="int" value="{{default(listener.pos, 0)}}"
-          >
-          <label class="small" title="interpret command as regex expression.">Regex?</label>
-          <input 
-              class="short" id="regex" placeholder="regex?" 
-              custom="int" value="{{default(listener.regex, 0)}}"
-          >
-          <span class="mod_elem" onclick="del_elem('listeners',{{loop.index}})">-</span>
-          <span class="mod_elem" onclick="add_elem('listeners',{{loop.index}})">+</span>
-          <br>
-          <br>
-        </li>
-      {% endfor %}
-    </ul>
-  </li>
+  {% include "web/element_templates/listeners" %}
 
   {{log("rendered listeners") }}  
 

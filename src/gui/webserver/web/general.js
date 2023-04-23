@@ -75,12 +75,16 @@ function OpenAddElemModal() {
  * Modal asks user, whether he/she really wants to delete controller.
  */
 function OpenDelElemModal(type, name) {
-  document.getElementById("modal_del_elem").style.display = "block";
-  document.getElementById("check_msg").innerHTML = "Are you 100% sure "
-    + "you want to delete <i>" + name + "</i>?";
-  document.getElementById("check_msg").elem_name=name;
-  document.getElementById("check_msg").elem_type=type;
-  document.getElementById("btn_del_elem").focus();
+	try {
+		document.getElementById("modal_del_elem").style.display = "block";
+		document.getElementById("check_msg").innerHTML = "Are you 100% sure "
+			+ "you want to delete <i>" + name + "</i>?";
+		document.getElementById("check_msg").elem_name=name;
+		document.getElementById("check_msg").elem_type=type;
+		document.getElementById("btn_del_elem").focus();
+	} catch(e) {
+		console.log("OpenDelElemModal failed: ", e);
+	}
 }
 
 /**

@@ -188,9 +188,11 @@ void CQuestStep::setActive(bool active, CPlayer* p) {
   if(m_solved==true) {
 
     //Add events and print success-message
-    if(m_preEvents != "") p->addPostEvent(m_preEvents);
+    if(m_preEvents != "") 
+			p->addPostEvent(m_preEvents);
     p->appendSuccPrint(m_sName + " Erfolgreich\n");
-    if(m_events != "") p->addPostEvent(m_events);
+    if(m_events != "") 
+			p->addPostEvent(m_events);
     p->appendPrint(UpdateAttributes(p));
 
     //Check if player command shall not be executed.

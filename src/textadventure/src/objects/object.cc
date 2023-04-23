@@ -7,10 +7,8 @@ CObject::CObject(nlohmann::json jAttributes, CPlayer* p, std::string location) {
   text_ = new CText(jAttributes.value("description", nlohmann::json::parse("{}") ), p);
   // Create listeners.
   for (const auto& it : jAttributes.value("listeners", std::vector<nlohmann::json>())) {
-    if (it.contains("id")) {
-      auto new_listener = CListener::FromJson(it, location, id_);
-      listeners_[new_listener->id()] = new_listener;
-    }
+		auto new_listener = CListener::FromJson(it, location, id_);
+		listeners_[new_listener->id()] = new_listener;
   }
   image_ = jAttributes.value("image", "");
   music_ = jAttributes.value("music", "");

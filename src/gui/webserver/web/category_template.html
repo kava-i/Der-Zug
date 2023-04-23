@@ -37,7 +37,7 @@
     </ol>
 </nav>
 
-<div id="fuzzy_finder_div" class="fuzzy_finder" pages={{__short_paths}} page_objects={{nodes}}>
+<dialog id="fuzzy_finder_div" class="fuzzy_finder" pages={{__short_paths}} page_objects={{nodes}}>
   <div class="fuzzy_finder_center">
     <label id="fuzzy_finder_mode" style="color:#1fe921;">files: </label><input id="fuzzy_finder_inp">
     <ol id="fuzzy_finder_elems" class="fuzzy_finder_elems">
@@ -54,7 +54,7 @@
   >
       fuzzy_finder
   </p>
-</div>
+</dialog>
 
 <div id="notification" class="notification"></div>
 
@@ -105,7 +105,7 @@
         </button>
         <button 
           class="pure-button" style="margin-bottom:0.5em;"
-          onclick="end('{{__creator}}', '{{__world_name}}', {{__textad_port}});"
+          onclick="end('{{__creator}}', '{{__world_name}}');"
         >
           Close
         </button><br>
@@ -205,6 +205,7 @@
                                  onclick="get_log('run')">Show Log</button></div>
       <br>
     </div>
+  </div>
 </div>
 
 </body>

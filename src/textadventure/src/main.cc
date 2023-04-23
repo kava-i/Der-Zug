@@ -111,6 +111,13 @@ std::string GetWorldId(std::string creator, std::string name) {
  * main loop
  */
 int main(int x, char **argc) {
+  //Initialize contexts
+  Context::initializeHanlders();
+  Context::initializeTemplates();
+  //Initialize objects
+  CDState::initializeFunctions();
+  CItem::initializeFunctions();
+ 
   std::string log_level = "info";
   int port = 4489;
   if (x > 1)

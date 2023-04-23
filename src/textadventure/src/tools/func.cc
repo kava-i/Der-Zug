@@ -189,7 +189,12 @@ nlohmann::json func::LoadJsonFromDisc(const std::string path) {
   // Success 
   read.close();
   return json;
+}
 
+void func::WriteJsonToDics(const std::string& path, const nlohmann::json& json) {
+  std::ofstream write(path.c_str());
+  write << json; 
+  write.close();
 }
 
 /**

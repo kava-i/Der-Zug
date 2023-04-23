@@ -34,54 +34,22 @@
           <input id="image" placeholder="image" value={{default(desc.image,"")}}>
         </li>
 
-        <li id="optional" style="display: none;" custom="list">
-          <label style="width:auto;">Pre permanent Events:</label>
-          <ul id="pre_pEvents">
-          {% for event in default(desc.pre_pEvents, [""]) %}
-            <li>
-              <input placeholder="event" value="{{event}}">
-              <span class="mod_elem" onclick="del_elem('',{{loop.index}},this)">-</span>
-              <span class="mod_elem" onclick="add_elem('',{{loop.index}},this)">+</span>
-            </li>
-          {% endfor %}
-          </ul>
-        </li>
-        <li id="optional" style="display: none;" custom="list">
-          <label style="width:auto;">Pre one-time Events:</label>
-          <ul id="pre_otEvents">
-          {% for event in default(desc.pre_otEvents, [""]) %}
-            <li>
-              <input class="long_inp" placeholder="event" value="{{event}}">
-              <span class="mod_elem" onclick="del_elem('',{{loop.index}},this)">-</span>
-              <span class="mod_elem" onclick="add_elem('',{{loop.index}},this)">+</span>
-            </li>
-          {% endfor %}
-          </ul>
-        </li>
-        <li id="optional" style="display: none;" custom="list">
-          <label style="width:auto;">Post permanent Events:</label>
-          <ul id="post_pEvents">
-          {% for event in default(desc.post_pEvents, [""])%}
-            <li>
-              <input class="long_inp" placeholder="event" value="{{event}}">
-               <span class="mod_elem" onclick="del_elem('',{{loop.index}},this)">-</span>
-               <span class="mod_elem" onclick="add_elem('',{{loop.index}},this)">+</span>
-           </li>
-          {% endfor %}
-          </ul>
-        </li>
-        <li id="optional" style="display: none;" custom="list">
-          <label style="width:auto;">Post one-time Events:</label>
-          <ul id="post_otEvents">
-          {% for event in default(desc.post_otEvents, [""]) %}
-            <li>
-              <input class="long_inp" placeholder="event" value="{{event}}">
-              <span class="mod_elem" onclick="del_elem('',{{loop.index}},this)">-</span>
-              <span class="mod_elem" onclick="add_elem('',{{loop.index}},this)">+</span>
-            </li>
-          {% endfor %}
-          </ul>
-        </li>
+					{% set _id = "pre_pEvents" %}
+					{% set _events = default(desc.pre_pEvents, [""]) %}
+  				{% include "web/element_templates/events" %}
+
+					{% set _id = "pre_otEvents" %}
+					{% set _events = default(desc.pre_otEvents, [""]) %}
+  				{% include "web/element_templates/events" %}
+
+					{% set _id = "post_pEvents" %}
+					{% set _events = default(desc.post_pEvents, [""]) %}
+  				{% include "web/element_templates/events" %}
+
+					{% set _id = "post_otEvents" %}
+					{% set _events = default(desc.post_otEvents, [""]) %}
+  				{% include "web/element_templates/events" %}
+
       </ul>
       <div id="deadDescription_div_text_expand_{{loop.index}}" class="expand">
         <span title="Delete this element." 

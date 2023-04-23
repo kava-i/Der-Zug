@@ -1,0 +1,53 @@
+<li custom="list">
+  <label>Handlers:</label>
+  <ul id="listeners">
+  {{ log("checking if listeners exists") }}
+    {% if exists("listeners") and length(listeners) > 0 %} 
+      {{ log("listeners exists") }}
+      {% for listener in listeners %}
+        <li custom="get:object">
+          <a class="abstract" onclick="EditItem('listeners', this.parentNode)" title='{{listener}}'>
+            {{default(listener.id, "")}}: 
+            {{listener.cmd}} {{default(listener.target, "")}} →
+            {{listener.handler}}({{default(listener.event_attributes, "")}})
+          </a>
+          <span 
+            class="mod_elem" 
+            onclick="EditItem('listeners', this.parentNode)"
+          ><i>edit</i></span>
+          <span 
+            class="mod_elem" onclick="DeleteItem('listeners', this.parentNode)" title="delete element"
+          >-</span>
+          <span 
+            class="mod_elem" 
+            onclick="AddItem('listeners', this.parentNode)" 
+            title="add element"
+          >+</span>
+          <input style="display: none;" custom="json" value='{{listener}}'/>
+        </li>
+      {% endfor %}
+    {% else %}
+      <li custom="get:object">
+        <a class="abstract" onclick="EditItem('listeners', this.parentNode)" title='{}'>
+          ???
+        </a>
+        <span class="mod_elem" onclick="EditItem('listeners', this.parentNode)"><i>edit</i></span>
+        <span class="mod_elem" onclick="DeleteItem('listeners', this.parentNode)" title="delete element">-</span>
+        <span class="mod_elem" onclick="AddItem('listeners', this.parentNode)" title="add element">+</span>
+        <input style="display: none;" custom="json" value="{}" />
+      </li>
+    {% endif %} 
+  </ul>
+</li>
+
+{{ log("creating default listener") }}
+<li custom="get:object" id="listeners_default" style="display: none;">
+  <a class="abstract" onclick="EditItem('listeners', this.parentNode)" title='{}'>
+    ???
+  </a>
+  <span class="mod_elem" onclick="EditItem('listeners', this.parentNode)"><i>edit</i></span>
+  <span class="mod_elem" onclick="DeleteItem('listeners', this.parentNode)" title="delete element">-</span>
+  <span class="mod_elem" onclick="AddItem('listeners', this.parentNode)" title="add element">+</span>
+  <input style="display: none;" custom="json" value="{}" />
+</li>
+{{ log("done creating default listener") }}

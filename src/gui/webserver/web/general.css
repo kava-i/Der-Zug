@@ -336,14 +336,10 @@ body {
 
 /** fuzzy_finder **/ 
 .fuzzy_finder {
-  position:fixed;
-  display: none;
-  z-index: 2; 
-  height:3em;
+  background-color: rgba(0, 0, 0, 0.1);
+  border: none;
   text-align:left;
-  margin-top: 30em;
-  margin-left:30%;
-  margin-right:30%;
+  height:400px; 
   width:40%;
 }
 

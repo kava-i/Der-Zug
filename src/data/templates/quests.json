@@ -3,7 +3,16 @@
         "name": "Der Apfel von Kuligunde ",
         "id": "kuligundes_apfel",
         "description": "Finde den Apfel von Kuligunde und bringe ihn ihr",
-        "ep": 1000,
+        "ep": 100,
+        "listeners": [
+            {
+                "cmd": "go",
+                "handler": "h_react",
+                "id": "id_h_react",
+                "priority": 0,
+                "regex": 0
+            }
+        ],
         "steps": [
             {
                 "name": "Die Suche nach dem Apfel",

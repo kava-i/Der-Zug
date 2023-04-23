@@ -13,6 +13,20 @@ body {
     color: white;
 }
 
+@keyframes typewriter_1 {
+  from {
+    width: 0;
+  }
+  from {
+    width: 100%;
+  }
+}
+
+.first_line {
+  border-right: 2px solid rgba(17, 17, 17, 09);
+  animation: typewriter_1 6s;
+}
+
 .container {
   position: relative;
 }
@@ -182,7 +196,7 @@ function bdyonload() {
   document.addEventListener('mozfullscreenchange', onFullScreenChange, false);
 
 
-  printString("login/register (l/r):");
+  printString("login/register (l/r):\n");
   document.getElementById("input").addEventListener("keydown",function(event) {
     if (event.key === "Enter") {
       if (gPipelineNextEnter) {
@@ -225,7 +239,10 @@ function bdyonload() {
     }
   });
   document.getElementById("input").focus();
-  socket.onmessage = function(event){console.log("Received: "+event.data);printString(event.data);};
+  socket.onmessage = function(event) {
+    //console.log("Received: "+event.data);
+    printString(event.data);
+  };
 }
 
 function isspanret(isspan,colname) {
@@ -273,7 +290,7 @@ function parse_file(strin,x) {
   }
 }
 
-function printString(theString)
+async function printString(theString)
 {
     if (theString.indexOf("Logged in as") != -1) {
       document.getElementById("btn_play_music").click();
@@ -286,67 +303,106 @@ function printString(theString)
     let isspanopen = false;
     for(let i = 0; i < theString.length; i++)
     {
-        if(theString[i] == '\n')
-            out+="<br class='line'>";
-        else if(theString[i] == '\x00')
-            out+=isspanret(isspanopen,"black");
-        else if(theString[i] == '\x01')
-            out+=isspanret(isspanopen,"white");
-        else if(theString[i] == '\x02')
-            out+=isspanret(isspanopen,"red");
-        else if(theString[i] == '\x03')
-            out+=isspanret(isspanopen,"green");
-        else if(theString[i] == '\x04')
-            out+=isspanret(isspanopen,"yellow");
-        else if(theString[i] == '\x05')
-            out+=isspanret(isspanopen,"blue");
-        else if(theString[i] == '\x08')
-            out+=isspanret(isspanopen, "dark");
-        else if(theString[i] == '\x06')
-            out+=isspanret(isspanopen,"orange");
-        else if(theString[i] == '\x09')
-            out+=isspanret(isspanopen, "whitedark");
-        else if(theString[i] == '\x07' || theString[i] == '\x0B')
-            i=parse_file(theString,i);
-        else if(theString[i] == '$')
-        {
-            out+="<br class='line'><span style='color:#f8f9f9'>Press Enter to continue...<span><br class='line'>";
-            gPipelinedOutput = theString.substr(i+2);
-            console.log(gPipelinedOutput);
-            gPipelineNextEnter = true;
-            break;
-        }
-        else
-            out+=theString[i];
-        if(theString[i] >= '\x01' && theString[i] <= '\x05')
-            isspanopen = true;
-    }
-    if(isspanopen)
-    {
-        out+="</span>";
-    }
+      if(theString[i] == '\n')
+        out+="<br class='line'>";
+      else if(theString[i] == '\x00')
+        out+=isspanret(isspanopen,"black");
+      else if(theString[i] == '\x01')
+        out+=isspanret(isspanopen,"white");
+      else if(theString[i] == '\x02')
+        out+=isspanret(isspanopen,"red");
+      else if(theString[i] == '\x03')
+        out+=isspanret(isspanopen,"green");
+      else if(theString[i] == '\x04')
+       out+=isspanret(isspanopen,"yellow");
+      else if(theString[i] == '\x05')
+        out+=isspanret(isspanopen,"blue");
+      else if(theString[i] == '\x08')
+        out+=isspanret(isspanopen, "dark");
+      else if(theString[i] == '\x06')
+        out+=isspanret(isspanopen,"orange");
+      else if(theString[i] == '\x09')
+        out+=isspanret(isspanopen, "whitedark");
+      else if(theString[i] == '\x07' || theString[i] == '\x0B')
+        i=parse_file(theString,i);
+      else if(theString[i] == '$') {
+        out+="<br class='line'><span style='color:#f8f9f9'>Press Enter to continue...<span><br class='line'>";
+        gPipelinedOutput = theString.substr(i+2);
+        console.log(gPipelinedOutput);
+        gPipelineNextEnter = true;
+        break;
+      }
+      else
+        out+=theString[i];
+      if(theString[i] >= '\x01' && theString[i] <= '\x05')
+        isspanopen = true;
+  }
+  if(isspanopen) {
+    out+="</span>";
+  }
 	let outpt = document.getElementById("output");
-  // TypeWriter(outpt, out, 0)
-  outpt.innerHTML += out;
-	outpt.scrollTop = outpt.scrollHeight;
+  {% if appearance.input-bar-settings.typewriter %}
+		let lb = outpt.children.length;
+		outpt.innerHTML += out;
+		// Get text as DOM-element and Text and remove text from DOM
+		let la = outpt.children.length;
+		let d = [];
+		for (let i=lb; i<la; i++)
+			d = TypeWriterWrapper(outpt.children[i], d);
+		// Print the texts with the typrewriter to the matching DOM elements
+		for (let i=d.length-1; i>=0; i--) {
+			TypeWriter(d[i]["e"], d[i]["txt"], 0);
+			await new Promise(r => setTimeout(r, d[i]["txt"].length*30));
+		}
+  {% else %}
+		outpt.innerHTML += out;
+		outpt.scrollTop = outpt.scrollHeight;
+	{% endif %}
 }
 
-function TypeWriter(output, text, i) {
-  if (i < text.length) {
-    var ch = text.charAt(i);
-    if (ch === "<") {
-      var endTagIndex = text.indexOf(">", i);
-      if (endTagIndex > -1) {
-        ch = text.slice(i, endTagIndex+1);
-        i = endTagIndex;
-      }
+function Text(childNodes) {
+  let text = '';
+  for (let i = 0; i < childNodes.length; i++) {
+    if (childNodes[i].nodeType === Node.TEXT_NODE) {
+      text += childNodes[i].textContent;
     }
-    output.innerText += text[i];
-    i++
-    setTimeout(function() { TypeWriter(output, text, i); }, 20);
   }
-  else {
-    output.innerHTML == text;
+  return text;
+}
+
+function DelText(childNodes) {
+  let text = '';
+  for (let i = 0; i < childNodes.length; i++) {
+    if (childNodes[i].nodeType === Node.TEXT_NODE) {
+      childNodes[i].textContent = "";
+    }
+  }
+  return text;
+}
+
+function TypeWriterWrapper(elem, d) {
+  if (elem.tagName === "br" || elem.tagName === "BR")
+    return d;
+  if (elem.children.length > 0)
+    d = TypeWriterWrapper(elem.children[elem.children.length-1], d);
+  d.push({"e": elem, "txt": Text(elem.childNodes)});
+  DelText(elem.childNodes);
+  return d;
+}
+
+function TypeWriter(elem, text, i) {
+  if (i == 0) {
+    let nelem = document.createElement("SPAN");
+    elem.insertBefore(nelem, elem.firstChild);
+    elem = nelem;
+  }
+  if (i < text.length) {
+    if (i === text.length-1 && text[i] === " ") {
+      console.log("Printing final whitespace!");
+    }
+    elem.appendChild(document.createTextNode(text[i]));
+    i++
+    setTimeout(function() { TypeWriter(elem, text, i); }, 30);
   }
 }
 

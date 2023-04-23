@@ -11,20 +11,17 @@ var child_elements_ = (document.getElementsByClassName("side_box").length < 2);
 let inps = [];
 let cur_input_field_ = "";
 
-let handlers_ = ["h_addItem", "h_removeItem", "h_addQuest", "h_newFight", "h_recieveMoney", "h_eraseMoney",
-  "h_gameover", "h_changeName", "h_addQuest", "h_addExit", "h_setNewAttribute", "h_addTimeEvent",
-  "h_setNewQuest", "h_changeDialog", "h_startDialogDirect", "h_changeSound", "h_changeImage",
-  "h_addCharToRoom", "h_removeCharFromRoom", "h_addDetailToRoom", "h_removeHandler", "h_setAttribute",
-  "h_setMind"]
-
-
 window.onload = function() {
   if (sessionStorage.getItem("notification") && sessionStorage.getItem("notification") != "") {
     notify(sessionStorage.getItem("notification"));
     sessionStorage.setItem("notification", "");
   }
 
-  document.getElementById("fuzzy_finder_div").style.display="none";
+	try {
+  	document.getElementById("fuzzy_finder_div").close();
+	} catch(e) {
+		console.log("Failed closing fuzzy finder: ", e);
+	}
   document.getElementById("fuzzy_finder_inp").value = "";
   document.getElementById("fuzzy_finder_elems").innerHTML = "";
   categories_ = document.getElementById("fuzzy_finder_div").getAttribute("__categories");
@@ -118,6 +115,7 @@ document.addEventListener('keydown', function(event) {
 
   // Check if input is ment for an input field which isn't fuzzy finder.
   else if (NonFuzzyFinderInput(event)) {
+		console.log("NonFuzzyFinderInput!");
     return;
   }
   else if (event.keyCode === key_codes["0"]) {
@@ -132,6 +130,10 @@ document.addEventListener('keydown', function(event) {
   else if (event.keyCode === key_codes["3"]) {
     ToggleMarkdown();
   }
+  // Add letter to entry 
+  else if ((event.keyCode >= key_codes["a"] && event.keyCode <= key_codes["z"]) 
+    || event.keyCode == key_codes["/"])
+    SelectAddLetter(event)
   else if (event.keyCode == key_codes["right"]) {
     SelectChildElement(); 
   }
@@ -149,8 +151,10 @@ document.addEventListener('keydown', function(event) {
   else if (fuzzy_finder_inp.value == "" && event.keyCode == key_codes["+"])
     SelectAddElem(event);
   //Return -> Go to match
-  else if (event.keyCode == key_codes["enter"] && pages.length > 0)
+	else if (event.keyCode == key_codes["enter"] && pages.length > 0) {
     SelectElement(event);
+		console.log("Selected element");
+	}
   // Select matches down.
   else if (event.keyCode == key_codes["down"]) {
     if (fuzzy_finder_active)
@@ -165,13 +169,10 @@ document.addEventListener('keydown', function(event) {
     else
       element_counter = mod(element_counter-1, on_page_objects_.length); 
   }
-  // Add letter to entry 
-  else if ((event.keyCode >= key_codes["a"] && event.keyCode <= key_codes["z"]) 
-    || event.keyCode == key_codes["/"])
-    SelectAddLetter(event)
 
   if (fuzzy_finder_inp.value == "")
     document.getElementById("fuzzy_finder_elems").innerHTML = "";
+	console.log("Done EH");
   HighlightElem();
 }, true);
 
@@ -193,9 +194,13 @@ function SelectDeleteModus(event) {
 function SelectElement(event) {
   console.log("SelectElement");
   if (fuzzy_finder_active) {
-    if (mode_ == "normal")
+		console.log("SelectElement. mode: ", mode_);
+		if (mode_ == "normal") {
+			console.log("SelectElement. reloading...");
       window.location = pages[finder_counter].innerHTML;
+		}
     else if (mode_ == "typeahead") {
+      event.preventDefault();
       console.log("Writing ", pages[finder_counter].innerHTML, " to ", cur_input_field_);
       cur_input_field_.value = pages[finder_counter].innerHTML;
       SelectCloseFinder();
@@ -230,7 +235,7 @@ function SelectParentElement() {
 }
 
 function SelectCloseFinder() {
-  document.getElementById("fuzzy_finder_div").style.display="none";
+  document.getElementById("fuzzy_finder_div").close();
   document.getElementById("fuzzy_finder_inp").value = "";
   document.getElementById("fuzzy_finder_elems").innerHTML = "";
   document.getElementById("fuzzy_finder_mode").innerHTML = "files: ";
@@ -242,6 +247,7 @@ function SelectCloseFinder() {
 }
 
 function SelectCloseModals() {
+	console.log("SelectCloseModals");
   //Close every modal.
   modals = document.getElementsByClassName("modal");
   targeted = false;
@@ -259,7 +265,7 @@ function SelectAddLetter(event) {
   fuzzy_finder_active = true;
   checkMatch();
   if (event.target != fuzzy_finder_inp)
-    document.getElementById("fuzzy_finder_div").style.display="block";
+    document.getElementById("fuzzy_finder_div").showModal();
   fuzzy_finder_inp.focus();
 }
 
@@ -274,7 +280,8 @@ function NonFuzzyFinderInput(event, all) {
   for (var index = 0; index < input_fields.length; ++index) {
     if (event.target == input_fields[index] && event.target != fuzzy_finder_inp) {
       // If typeahead, then mode will be changed, otherwiese stop using fuzzy_finder
-      if (Typeahead(input_fields[index]))
+			const is_typeahead_field = Typeahead(input_fields[index]);
+      if (is_typeahead_field)
         return false;
       else
         return true;
@@ -287,8 +294,9 @@ function Typeahead(input_field) {
   // Room type-ahead 
   // - "room": when adding new-player and selecting start-room, 
   // "linked_room id": when adding an exit to a room.
+	localize = (input_field.localize !== undefined) ? input_field.localize : true;
   if (input_field.id == "room" || input_field.placeholder == "linked_room id") {
-    inps_ = GetAllX("rooms");
+    inps_ = GetAllX("rooms", localize);
     mode_ = "typeahead";
     console.log("typeahead modus selected.");
     cur_input_field_ = input_field;
@@ -297,7 +305,7 @@ function Typeahead(input_field) {
     return true;
   }
   else if (input_field.id == "char" || input_field.placeholder == "character id") {
-    inps_ = GetAllX("characters");
+    inps_ = GetAllX("characters", localize);
     mode_ = "typeahead";
     console.log("typeahead modus selected.");
     cur_input_field_ = input_field;
@@ -306,7 +314,7 @@ function Typeahead(input_field) {
     return true;
   }
   else if (input_field.id == "detail" || input_field.placeholder == "detail id") {
-    inps_ = GetAllX("details");
+    inps_ = GetAllX("details", localize);
     mode_ = "typeahead";
     console.log("typeahead modus selected.");
     cur_input_field_ = input_field;
@@ -315,20 +323,11 @@ function Typeahead(input_field) {
     return true;
   }
   else if (input_field.id == "items" || input_field.placeholder == "item id") {
-    inps_ = GetAllX("items");
+    inps_ = GetAllX("items", localize);
     mode_ = "typeahead";
     console.log("typeahead modus selected.");
     cur_input_field_ = input_field;
     document.getElementById("fuzzy_finder_mode").innerHTML = "items: ";
-    document.getElementById("fuzzy_finder_mode").style.color = "blue";
-    return true;
-  }
-  else if (input_field.id == "handler") {
-    inps_ = handlers_;
-    mode_ = "typeahead";
-    console.log("typeahead modus selected.");
-    cur_input_field_ = input_field;
-    document.getElementById("fuzzy_finder_mode").innerHTML = "handlers: ";
     document.getElementById("fuzzy_finder_mode").style.color = "blue";
     return true;
   }
@@ -392,7 +391,8 @@ function mod(n, m) {
   return ((n % m) + m) % m;
 }
 
-function GetAllX(category) {
+function GetAllX(category, localize) {
+	console.log("GetAllX:", category, localize, localize==false);
   results = []
   paths_.forEach(path => {
     // Check if element belongs to category.
@@ -400,8 +400,14 @@ function GetAllX(category) {
     url_path = window.location.pathname;
     if (pos != -1 && path.split("/").length-1 == 6) {
       let cur_path = ""
-      if (category == "items" || GetSubCategory(path) == GetSubCategory(url_path))
+			if (!localize) {
+        cur_path = path.substr(pos + category.length+1);
+				console.log("non-localized variant: ", path, cur_path);
+			}
+			else if (category == "items" || GetSubCategory(path) == GetSubCategory(url_path)) {
         cur_path = path.substr(path.lastIndexOf("/")+1);
+				console.log("localized variant: ", path, cur_path);
+			}
       else
         cur_path = path.substr(pos + category.length+1);
       results.push(cur_path.replaceAll("/", "."));

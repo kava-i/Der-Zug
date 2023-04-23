@@ -138,6 +138,17 @@ nlohmann::json World::GetPage(std::string path, int textad_port, bool only_json)
   json["header"]["__categories"] = config["categories"];
   json["header"]["__kinds"] = config["kinds"];
   json["header"]["__types"] = config["types"];
+
+  nlohmann::json availibe_fields;
+  func::LoadJsonFromDisc("handlers.json", availibe_fields);
+  json["header"]["__availibe_handlers"] = availibe_fields;
+  func::LoadJsonFromDisc("commands.json", availibe_fields);
+  json["header"]["__availibe_commands"] = availibe_fields;
+  func::LoadJsonFromDisc("handler_arguments.json", availibe_fields);
+  json["header"]["__handler_arguments"] = availibe_fields.dump();
+  func::LoadJsonFromDisc("event_arguments.json", availibe_fields);
+  json["header"]["__event_arguments"] = availibe_fields.dump();
+
   return json;
 }
 

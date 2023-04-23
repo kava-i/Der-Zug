@@ -1,5 +1,49 @@
       
     </ul>
+  
+    <dialog id="edit_dialog" class="edit_dialog"> 
+      <div id="edit_content" class="edit_content"></div>
+      <br><br>
+      <button class="pure-button" onclick="SaveItem()">Save</button>
+      <button class="pure-button" onclick="CloseDialog('edit_dialog');">Omit</button><br>
+      <br><br>
+    </dialog>
+
+    <dialog id="handler_args_dialog" class="event_dialog"> 
+      <div class="edit_content">
+				<h4>Arguments</h4>
+				<br>
+      	<form id="handler_args_content" disabled="disabled">
+				</form>
+			</div>
+      <br><br>
+      <button class="pure-button" onclick="SaveHandlerArgs()">Save</button>
+      <button class="pure-button" onclick="CloseDialog('handler_args_dialog');">Omit</button><br>
+      <br><br>
+    </dialog>
+
+    <dialog id="event_dialog" class="event_dialog"> 
+      <div class="edit_content">
+				<h4>Arguments</h4>
+				<br>
+				<select id="cmd" autocomplete="off" onchange="SetEventDialog(this.value);">
+					<option {% if default(cmd, "") == "" %} selected {% endif %}></option>
+					{% for availibe_command in __availibe_commands %}
+						<option {% if availibe_command==default(cmd, "") %} selected {% endif %}>
+							{{availibe_command}}
+						</option>
+					{% endfor %} 
+				</select>
+      	<form id="event_content" disabled="disabled">
+				</form>
+			</div>
+      <br><br>
+      <button class="pure-button" onclick="SaveEvent()">Save</button>
+      <button class="pure-button" onclick="CloseDialog('event_dialog');">Omit</button><br>
+      <br><br>
+    </dialog>
+
+
     <button id="write" class="pure-button" 
         onclick="OpenWriteModal('{{default(name, id)}}')">Write</button>
     </div>

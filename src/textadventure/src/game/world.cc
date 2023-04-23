@@ -148,12 +148,6 @@ CItem* CWorld::getItem(string sID, CPlayer* p) {
 void CWorld::worldFactory(CPlayer* p) {
   srand(time(NULL));
 
-  //Initialize functions
-  CDState::initializeFunctions();
-  CItem::initializeFunctions();
-  Context::initializeHanlders();
-  Context::initializeTemplates();
-  
   //Load texts
   textFactory();
 
@@ -600,10 +594,8 @@ void CWorld::questFactory(std::string sPath) {
     //Get listeners for this quest.
     std::vector<CListener*> listeners;
     for (const auto& it : j_quest.value("listeners", std::vector<nlohmann::json>())) {
-      if (it.contains("id")) {
-        auto new_listener = CListener::FromJson(it, "quest", newQuest->getID());
-        listeners.push_back(new_listener);
-      }
+			auto new_listener = CListener::FromJson(it, "quest", newQuest->getID());
+			listeners.push_back(new_listener);
     }
     //Update quest info
     newQuest->setSteps(mapSteps);

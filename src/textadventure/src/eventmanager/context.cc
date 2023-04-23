@@ -3,6 +3,7 @@
 #include "concepts/quest.h"
 #include "eventmanager/listener.h"
 #include "nlohmann/json.hpp"
+#include "nlohmann/json_fwd.hpp"
 #include "objects/player.h"
 #include "game/game.h"
 #include "tools/func.h"
@@ -10,6 +11,7 @@
 #include <cstddef>
 #include <iostream>
 #include <string>
+#include <vector>
 #define cRED "\033[1;31m"
 #define cGreen "\033[1;32m"
 #define cBlue "\033[1;34m"
@@ -141,6 +143,7 @@ void Context::initializeHanlders() {
   listeners_["h_addTimeEvent"] = &Context::h_addTimeEvent;
   listeners_["h_setNewQuest"] = &Context::h_setNewQuest;
   listeners_["h_changeDialog"] = &Context::h_changeDialog;
+  listeners_["h_changeRoomSilent"] = &Context::h_changeRoomSilent;
   listeners_["h_changeRoom"] = &Context::h_changeRoom;
   listeners_["h_startDialogDirect"] = &Context::h_startDialogDirectB;
   listeners_["h_changeSound"] = &Context::h_changeSound;
@@ -212,6 +215,13 @@ void Context::initializeHanlders() {
   listeners_["reden"] = &Context::h_reden;
   listeners_["geldauftreiben"] = &Context::h_geldauftreiben;
 
+  nlohmann::json availible_handlers = nlohmann::json::array();
+  for (const auto& it : listeners_) 
+    availible_handlers.push_back(it.first);
+  std::cout << "Writing availible_handlers handlers to disc..." << std::endl;
+  func::WriteJsonToDics("../gui/webserver/handlers.json", availible_handlers); 
+
+
   // *** PROGRAMMER *** //
 
   // *** OTHER CONTEXT *** //
@@ -267,8 +277,9 @@ void Context::initializeTemplates() {
                         {"addTimeEvent", {"h_addTimeEvent"}},
                         {"setNewQuest", {"h_setNewQuest"}},
                         {"changeDialog", {"h_changeDialog"}},
+                        {"changeRoomSilent", {"h_changeRoomSilent"}},
                         {"changeRoom", {"h_changeRoom"}},
-                        {"startDialogDirekt", {"h_startDialogDirekt"}},
+                        {"startDialogDirekt", {"h_startDialogDirect"}},
                         {"changeImage", {"h_changeImage"}},
                         {"changeSound", {"h_changeSound"}},
                         {"addCharToRoom", {"h_addCharToRoom"}},
@@ -293,6 +304,7 @@ void Context::initializeTemplates() {
                         {"dequipe",{"h_dequipe"}}, 
                         {"show",{"h_ignore"}}, 
                         {"examine",{"h_ignore"}},
+                        {"changed_room",{"h_ignore"}},
                         {"try", {"h_try"}}}},
                     };
 
@@ -310,6 +322,7 @@ void Context::initializeTemplates() {
                     {"listeners",{
                         {"kaufe", {"h_buy"}},
                         {"verkaufe",{"h_sell"}},
+                        {"back",{"h_exit"}},
                         {"zurück",{"h_exit"}}}}
                     };
     m_templates["chat"] = {
@@ -329,6 +342,15 @@ void Context::initializeTemplates() {
                     };
 
     m_templates["room"] = {{"name", "room"}, {"permeable", true,}, {"infos", {}}};
+
+		std::vector<std::string> availible_commands = {"changed_room"};
+    for (const auto& temp : m_templates) {
+      if (temp.second.contains("listeners")) {
+        for (const auto& listener : temp.second["listeners"].get<std::map<std::string, nlohmann::json>>())
+            availible_commands.push_back(listener.first);
+      }
+    }
+    func::WriteJsonToDics("../gui/webserver/commands.json", availible_commands);
 }
 
 // ***** ***** FUNCTIONS ***** ****** // 
@@ -398,7 +420,7 @@ bool Context::throw_event(event e, CPlayer* p) {
         // Call event
         std::cout << cGreen << " ... " << cBlue << m_sName << ": " << cGreen 
           << "event triggered: " << sortedEventmanager[i]->handler()
-          << "(" << cur_event.first << ")" << cCLEAR << std::endl;
+          << "(" << cur_event.second << ")" << cCLEAR << std::endl;
         (this->*listeners_[sortedEventmanager[i]->handler()])(cur_event.second, p);
         std::cout << cGreen << "Event call done." << cCLEAR << std::endl;
         // If permeable differs from -1, set permeability of context to given permeability.
@@ -494,7 +516,7 @@ void Context::h_reloadPlayer(std::string& sPlayer, CPlayer*p)
     m_curPermeable = false;
 }
 
-void Context::h_reloadWorlds(std::string& sPlayer, CPlayer*p)
+void Context::h_reloadWorlds(std::string&, CPlayer*p)
 {
     p->appendPrint("reloading all worlds... \n");
     if(m_game->reloadWorld() == true)
@@ -601,12 +623,12 @@ void Context::h_eraseMoney(std::string& sIdentifier, CPlayer* p) {
   m_curPermeable = false; 
 }
 
-void Context::h_endFight(std::string& sIdentifier, CPlayer* p) {
+void Context::h_endFight(std::string&, CPlayer* p) {
   p->endFight();
   m_curPermeable=false;
 }
 
-void Context::h_endDialog(std::string& sIdentifier, CPlayer* p) {
+void Context::h_endDialog(std::string&, CPlayer* p) {
   p->getContexts().erase("dialog");
   m_curPermeable=false;
 }
@@ -622,7 +644,7 @@ void Context::h_newFight(std::string& sIdentifier, CPlayer* p) {
   m_curPermeable=false;
 }
 
-void Context::h_gameover(std::string& sIdentifier, CPlayer* p) {
+void Context::h_gameover(std::string&, CPlayer* p) {
     p->setStat("hp", 0);
     p->appendStoryPrint("\nDu bist gestorben... \n\n $\n");
 }
@@ -668,7 +690,6 @@ void Context::h_addExit(std::string& sIdentifier, CPlayer* p) {
   std::cout << sIdentifier << std::endl;
   std::string room = func::split(sIdentifier, "|")[0];
   std::string linked_room = func::split(sIdentifier, "|")[1];
-  std::cout << room << ", " << linked_room << ", " << std::endl;
   if (p->getWorld()->getRoom(room) && p->getWorld()->getRoom(room)->getExtits().count(linked_room) > 0)
     p->getWorld()->getRoom(room)->getExtits().at(linked_room)->set_hidden(false);
   m_curPermeable=false;
@@ -714,7 +735,7 @@ void Context::h_setAttribute(std::string& sIdentifier, CPlayer* p) {
     p->appendPrint(Webcmd::set_color(color) + attribute + msg 
         + std::to_string(value )+ Webcmd::set_color(Webcmd::color::WHITE) + "\n");
 
-  m_curPermeable=false;
+  m_curPermeable = true;
 }
 
 void Context::h_setMind(std::string& sIdentifier, CPlayer* p) {
@@ -794,9 +815,9 @@ void Context::h_setNewQuest(std::string& sIdentifier, CPlayer* p) {
 
 void Context::h_changeDialog(std::string& sIdentifier, CPlayer* p) {
   std::vector<std::string> atts = func::split(sIdentifier, "|");
-  if(atts.size() != 2) {
-      std::cout << "Something went worng! Dialog could not be changed.\n";
-      return;
+  if (atts.size() != 2) {
+		std::cout << "Something went worng! Dialog could not be changed.\n";
+		return;
   }
 
   auto lambda = [](CPerson* person) { return person->name(); };
@@ -808,10 +829,17 @@ void Context::h_changeDialog(std::string& sIdentifier, CPlayer* p) {
 }
 
 
-void Context::h_changeRoom(std::string& sIdentifier, CPlayer* p) {
+void Context::h_changeRoomSilent(std::string& sIdentifier, CPlayer* p) {
   CRoom* room = p->getWorld()->getRoom(sIdentifier);
   if(room != nullptr)
       p->setRoom(p->getWorld()->getRoom(sIdentifier));
+  m_curPermeable = false;
+}
+
+void Context::h_changeRoom(std::string& sIdentifier, CPlayer* p) {
+  CRoom* room = p->getWorld()->getRoom(sIdentifier);
+  if(room != nullptr)
+      p->changeRoom(p->getWorld()->getRoom(sIdentifier));
   m_curPermeable = false;
 }
 
@@ -928,7 +956,7 @@ void Context::h_startDialog(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_startDialogDirect(std::string &sIdentifier, CPlayer *p) {
-  std::cout << "h_startDialogDirekt: " << sIdentifier << std::endl;
+  std::cout << "h_startDialogDirect: " << sIdentifier << std::endl;
 
   std::string aim_identified = m_jAttributes["infos"]["h_startDialogDirect"]["identifier"];
   std::string character = m_jAttributes["infos"]["h_startDialogDirect"]["character"];
@@ -1413,10 +1441,15 @@ void Context::h_react(std::string& sIdentifier, CPlayer* p) {
   CQuest* quest = p->getWorld()->getQuest(getAttribute<std::string>("questID"));
 
   for (auto it : quest->getSteps()) {
+    std::cout << "h_react Checking: " << it.second->logic() << ": " << m_curEvent.first << "|" << sIdentifier << std::endl;
     p->set_subsitues({{"cmd", m_curEvent.first}, {"input", sIdentifier}});
     LogicParser logic(p->GetCurrentStatus());
-    if (it.second->getSolved() == false && logic.Success(it.second->logic()) 
-        == true) {
+		bool success = logic.Success(it.second->logic());
+		std::cout << "h_react room matches input: " << (it.second->logic().find(sIdentifier) != std::string::npos) 
+				<< std::endl;
+		std::cout << "h_react Checking: " << success << std::endl;
+    if (it.second->getSolved() == false && success == true) { 
+			std::cout << "h_react Marking quest solved." << std::endl;
       p->questSolved(quest->getID(), it.first);
     }
   }

@@ -224,6 +224,8 @@ class ServerFrame {
      */
     std::string CheckLogin(const httplib::Request& req, httplib::Response& resp) const;
 
+    void GetEditTemplate(const httplib::Request& req, httplib::Response& resp, std::string edit_template) const;
+
     /**
      * Checks whether given keys are in json.
      * Sets http response to parse-error if keys are not in request-json.

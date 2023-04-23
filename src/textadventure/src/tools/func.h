@@ -12,6 +12,7 @@
 #include <nlohmann/json.hpp>
 
 #include "fuzzy.h"
+#include "nlohmann/json_fwd.hpp"
 #include "webcmd.h"
 
 namespace func 
@@ -78,6 +79,8 @@ namespace func
      */
     nlohmann::json LoadJsonFromDisc(const std::string path);
 
+    void WriteJsonToDics(const std::string& path, const nlohmann::json& json);
+
 
     /**
     *                   *** returnSwapedString  ***
@@ -88,6 +91,7 @@ namespace func
     * @param num number indicating how many characters will be swapped in how many words.
     */
     std::string returnSwapedString(std::string str, int num);
+
 
     /**
     * replace all entries in first json, which also occure in second json with

@@ -43,9 +43,6 @@ std::string CGame::path() const {
 CGame::CGame(std::string path) : path_(path){
   std::cout << "Creating game." << std::endl;
 
-  //Initialize contexts
-  Context::initializeHanlders();
-  Context::initializeTemplates();
   m_context = new Context((std::string)"game");
   m_context->setGame(this);
 }

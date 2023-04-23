@@ -102,6 +102,8 @@ void ServerFrame::Start(int port) {
       WriteMedia(req, resp, "image"); });
   server_.Post("/api/upload/sounds",  [&](const Request& req, Response& resp) {
       WriteMedia(req, resp, "audio"); });
+  server_.Post("/api/edit-template/(.*)",  [&](const Request& req, Response& resp) {
+      GetEditTemplate(req, resp, req.matches[1]); });
 
 
   //Access-rights
@@ -235,7 +237,7 @@ void ServerFrame::DoLogin(const Request& req, Response& resp) {
       + "; Path=/";
     ul.unlock();
     resp.set_header("Set-Cookie", cookie.c_str());
-    std::cout << "ServerFrame: DoLogin: success" << std::endl;
+    std::cout << "ServerFrame: DoLogin: success: " << cookie.c_str() << std::endl;
   }
 }
 
@@ -644,6 +646,37 @@ void ServerFrame::GrantAccessTo(const Request& req, Response& resp) {
   resp.set_content(std::to_string(error_code), "text/txt");
 }
 
+void ServerFrame::GetEditTemplate(const Request& req, Response& resp, std::string edit_template) const {
+  nlohmann::json input = ValidateJson(req, resp, {});
+  // Get availibe_fields (handlers, commands) and add to content json
+  nlohmann::json availibe_fields;
+  func::LoadJsonFromDisc("handlers.json", availibe_fields);
+  input["__availibe_handlers"] = availibe_fields;
+  func::LoadJsonFromDisc("commands.json", availibe_fields);
+  input["__availibe_commands"] = availibe_fields;
+  func::LoadJsonFromDisc("handler_arguments.json", availibe_fields);
+  input["__handler_arguments"] = availibe_fields.dump();
+
+  std::cout << "ServerFrame::GetEditTemplate: " << input << std::endl;
+  inja::Environment env;
+  std::string path = "web/edit_templates/" + edit_template + ".html";
+  std::cout << "ServerFrame::GetEditTemplate: laoding template at: " << path << std::endl;
+  try {
+    inja::Template temp = env.parse_template(path);
+    env.add_void_callback("log", 1, [](inja::Arguments args) {
+      std::cout << "logging: " << args.at(0)->get<std::string>() << std::endl;
+    });
+    std::string page_content = env.render(temp, input);
+    resp.set_content(page_content, "text/txt");
+		resp.status = 200;
+  }
+  catch(std::exception& e) {
+    resp.set_content("Error parsing this page. We're sorry :(", "text/txt");
+    std::cout << "ServerFrame::GetEditTemplate: an error ocured: " << e.what() << std::endl;
+		resp.status = 500;
+  }
+}
+
 void ServerFrame::CreateRequest(const Request& req, Response& resp) {
   // Try to get username from cookie.
   std::string username = CheckLogin(req, resp);
@@ -690,6 +723,7 @@ void ServerFrame::GetLog(const Request& req, Response& resp) {
     resp.status = 401;
  
   // Convert to html
+	std::cout << "Converting log to html: " << path << ".txt" << std::endl;
   std::string command = "cat " + path + ".txt | aha > " + path + ".html";
   system(command.c_str());
   resp.set_content(func::GetPage(path + ".html"), "text/txt");

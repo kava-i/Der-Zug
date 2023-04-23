@@ -109,14 +109,15 @@ void CRoom::set_gramma(std::shared_ptr<CGramma> gramma) {
 
 string CRoom::showDescription(std::map<std::string, CPerson*> mapCharacters) {
   string sDesc = "";
-  for(auto it : m_characters)
+  for (auto it : m_characters)
     sDesc += mapCharacters[it.first]->getRoomDescription() + " ";
 
-  if(text_->print().find("</div") != std::string::npos)
+	std::string text_str = text_->print();
+  if (text_str.find("</div") != std::string::npos)
     sDesc = "<div class='spoken2'>"+sDesc+"</div>";
   else
     sDesc += "\n";
-  return text_->print() + " " + sDesc;
+  return text_str + " " + sDesc;
 }
 
 string CRoom::showAll() {

@@ -1,0 +1,47 @@
+{% include "temp_header" %}
+{{ log("rendered header") }}
+
+  <li custom="map">
+     <label title="When showing all chars, exits etc. a string is added before
+       (pre) and after (post) the list of elements, these can be set here.">
+      Appearance
+     </label>
+     <ul id="appearance">
+       {% if length(content) == 0 %}
+           <li custom="pair">
+             <label title="type might be 'chars' or 'exits'" >Type:</label>
+             <input placeholder="type" value=""")}}">
+             <br>
+             <label title="Json dictionary, with attribte 'pre', 'post' and 'also' (optional)">
+               Mapping:
+             </label>
+             <input class="long_inp" custom="json" placeholder="mapping" value=''>
+             <br>
+             <span class="mod_elem" onclick="del_elem('appearance', 1)">-</span>
+             <span class="mod_elem" onclick="add_elem('appearance', 1)">+</span>
+           </li>
+
+       {% else %}
+
+         {% for key, value in default(content, {"":""}) %}
+           <li custom="pair">
+             <label title="type might be 'chars' or 'exits'" >Type:</label>
+             <input placeholder="type" value="{{default(key, "")}}">
+             <br>
+             <label title="Json dictionary, with attribte 'pre', 'post' and 'also' (optional)">
+               Mapping:
+             </label>
+             <input class="long_inp" custom="json" placeholder="mapping" value='{{default(value, "")}}'>
+             <br>
+             <span class="mod_elem" onclick="del_elem('appearance', {{loop.index}})">-</span>
+             <span class="mod_elem" onclick="add_elem('appearance', {{loop.index}})">+</span>
+           </li>
+         {% endfor %}
+
+       {% endif %}
+     </ul>
+   </li>
+
+   {{ log("rendered show") }}
+
+{% include "temp_footer" %}

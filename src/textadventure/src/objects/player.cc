@@ -84,8 +84,11 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, std::strin
     // Create context for this quest.
     Context* context = new Context({{"name", it.first}, {"permeable",true}, {"questID", it.first}});
     // Add all quest listeners
-    for (auto& listener : it.second->listeners())
+    std::cout << "Adding listener for quest: " << it.second->getID() << ": " << it.second->listeners().size() << std::endl;
+    for (auto& listener : it.second->listeners()) {
+      std::cout << "Adding listener: " << listener->id() << "|" << listener->handler() << std::endl;
       context->AddListener(listener);
+    }
     // Add quest-context to context-stack.
     m_contextStack.insert(context, 3, it.first);
   }
@@ -244,12 +247,13 @@ void CPlayer::printText(std::string text) {
     std::cout << cRED << "Text not found!" << cCLEAR << std::endl;
 }
 
-void CPlayer::appendPrint(std::string sPrint) {
+void CPlayer::appendPrint(std::string sPrint, bool dont_throw_post) {
   throw_staged_events(m_staged_pre_events, "pre");
   if(m_staged_pre_events != "")
     m_sPrint += "\n";
   m_sPrint += sPrint;
-  throw_staged_events(m_staged_post_events, "post"); 
+	if (!dont_throw_post)
+  	throw_staged_events(m_staged_post_events, "post"); 
 }
 
 void CPlayer::appendStoryPrint(string sPrint) { 
@@ -361,8 +365,10 @@ void CPlayer::updateRoomContext() {
     context->setTimeEvents(m_contextStack.getContext("room")->getTimeEvents());
   // Delete old room-context
   // Update listeners
-  for (auto it : m_room->getHandler())
+  for (auto it : m_room->getHandler()) {
+		std::cout << "Adding listener from room: " << it->id() << std::endl;
     context->AddListener(it);
+	}
   
   // Delete old and insert new room-context into context-stack
   m_contextStack.erase("room");
@@ -538,14 +544,22 @@ void CPlayer::changeRoom(string sIdentifier) {
 * @param newRoom new room the player changes to
 */
 void CPlayer::changeRoom(CRoom* new_room) {
+	std::cout << "Changing room to " << new_room->id() << std::endl;
   m_lastRoom = m_room; 
   m_room = new_room;
   std::string entry = new_room->getEntry();
   if(entry != "")
     appendDescPrint(entry);
-  appendPrint(m_room->showDescription(m_world->getCharacters()));
+  appendPrint(m_room->showDescription(m_world->getCharacters()), true);
   m_vistited[m_room->id()] = true;
   updateRoomContext();
+	std::cout << "Room updated, throwing post events" << std::endl;
+	if (m_staged_post_events == "")	
+		m_staged_post_events = "changed_room " + new_room->id();
+	else 
+		m_staged_post_events = "changed_room " + new_room->id() + ";";
+	throw_staged_events(m_staged_post_events, "post");
+	std::cout << "Changing room done" << std::endl;
 }
 
 /**
@@ -786,11 +800,14 @@ void CPlayer::setNewQuest(std::string quest_id) {
   int ep=0;
   CQuest* quest = m_world->getQuest(quest_id);
   appendSuccPrint(quest->setActive(ep, this));
+  std::cout << "setNewQuest: " << quest->getID() << ", active: " << quest->getOnlineFromBeginning() << std::endl;
   // Create new quest-context with all quest-listeners.
   if(quest->getOnlineFromBeginning() == false) {
     Context* context = new Context({{"name", quest_id}, {"permeable",true}, {"questID", quest_id}});
-    for (auto& listener : quest->listeners()) 
+    for (auto& listener : quest->listeners()) {
+      std::cout << "Adding listener: " << listener->id() << "|" << listener->handler() << std::endl;
       context->AddListener(listener);
+    }
     m_contextStack.insert(context, 3, quest_id);
   }
   if(quest->getSolved() == true)

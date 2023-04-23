@@ -16,8 +16,50 @@
   border: none;
   border-radius: 5px;
   text-align:center;
-  font-size: 0.7em;
+  font-size: 12px;
 }
+.object select {
+  background-color: rgba(0, 0, 0, 0.55);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  text-align:center;
+  font-size: 12px;
+}
+
+.center {
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.center label {
+  font-size: 16px;
+  color: rgba(0, 0, 0, 0.95);
+}
+.center input, select {
+  font-size: 12px;
+  padding: 0.2rem;
+}
+
+.edit_content {
+  padding: 2rem;
+  color: #90a4ae;
+}
+
+.edit_dialog {
+  background-image: url("background.jpg");
+  height:600px; 
+  width: 65%;
+	box-shadow: 10px 5px 5px black;
+}
+
+.event_dialog {
+  background-image: url("background.jpg");
+  height:300px; 
+  width: 45%;
+	box-shadow: 8px 3px 3px black;
+}
+
 
 .object textarea{
   background-color: rgba(0, 0, 0, 0.55);
@@ -65,5 +107,9 @@
   padding: 0.5em;
 }
 .mod_elem:hover {
+  cursor: pointer;
+}
+
+.abstract:hover {
   cursor: pointer;
 }

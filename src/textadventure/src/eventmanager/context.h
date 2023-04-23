@@ -146,6 +146,7 @@ public:
     void h_changeDialog(std::string&, CPlayer*);
     void h_thieve(std::string&, CPlayer*);
     void h_attack(std::string&, CPlayer*);
+    void h_changeRoomSilent(std::string&, CPlayer*);
     void h_changeRoom(std::string&, CPlayer*);
     void h_startDialogDirect(std::string&, CPlayer*);
     void h_startDialogDirectB(std::string&, CPlayer*);

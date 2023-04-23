@@ -64,22 +64,25 @@ CListener* CListener::FromJson(nlohmann::json it, std::string location, std::str
   std::cout << "Creating Listener" << std::endl;
   CListener* listener;
   try {
+		// use <location_id>_<handler> as default id.
+		std::string id = (it.contains("id") && it["id"] != "") 
+			? it["id"].get<std::string>() : location_id + "_" + it["handler"].get<std::string>();
     // Regex listener
     if (it.contains("regex") && it["regex"] == true) {
-      listener = new CListener(it["id"], it["handler"], location, location_id, 
+      listener = new CListener(id, it["handler"], location, location_id, 
           it.value("target", ""), it.value("event_attributes", ""), it.value("permeable", -1), 
           it.value("delete", 0), it.value("priority", 0), (std::regex)it["cmd"], it["pos"]);
     }
     // String listener
     else {
-      listener = new CListener(it["id"], it["handler"], location, location_id, 
+      listener = new CListener(id, it["handler"], location, location_id, 
           it.value("target", ""), it.value("event_attributes", ""), it.value("permeable", -1), 
           it.value("delete", 0), it.value("priority", 0), (std::string)it["cmd"]);
     }
   }
   catch (std::exception& e) {
     std::cout << "Failed to create handler" << it.dump() << std::endl;
-    throw std::runtime_error("Failined creating listener: " + it.dump() + ": " + e.what());
+    throw std::runtime_error("Failined creating listener at " + location_id + ": " + it.dump() + ": " + e.what());
   }
   return listener;
 }
@@ -113,7 +116,11 @@ std::string CListener::new_identifier() {
 // functions
 
 bool CListener::check_match(event& e) {
-  return (this->*m_check_function)(e);
+  bool match = (this->*m_check_function)(e);
+	if (new_identifier_ != "") {
+		e.second = new_identifier_;
+	}
+	return match;
 }
 
 bool CListener::StringCompare(event& e) {
@@ -122,11 +129,13 @@ bool CListener::StringCompare(event& e) {
     return false;
   // If target is specified, also checkCheck event target.
   if (target_identifier_ != "") {
+		std::cout << "StringCompare: " << e.first << "|" << e.second << " ~ " << target_identifier_ << std::endl;
+		std::cout << "StringCompare: " << (fuzzy_event_types.count(e.first) > 0 && 
+				fuzzy::fuzzy_cmp(e.second, target_identifier_) > 0.2) << std::endl;
+		std::cout << "StringCompare: " << (e.second != target_identifier_) << std::endl;
     // If match, update identifier.
-    if ((fuzzy_event_types.count(e.first) > 0 && fuzzy::fuzzy_cmp(e.second, target_identifier_) <= 0.2)
-        ||  e.second == target_identifier_)
-      e.second = new_identifier_;
-    else 
+    if ((fuzzy_event_types.count(e.first) > 0 || fuzzy::fuzzy_cmp(e.second, target_identifier_) > 0.2)
+        && e.second != target_identifier_)
       return false;
   }
   return true;

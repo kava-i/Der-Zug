@@ -1,0 +1,29 @@
+<li id="optional" style="display: none;" custom="list">
+
+	{% if _id == "pre_pEvents" %}
+		<label style="width:auto;">Pre permanent Events:</label>
+	{% else if _id == "pre_otEvents" %}
+		<label style="width:auto;">Pre one-time Events:</label>
+	{% else if _id == "post_pEvents" %}
+		<label style="width:auto;">Post permanent Events:</label>
+	{% else if _id == "post_otEvents" %}
+		<label style="width:auto;">Post one-time Events:</label>
+	{% endif %}
+
+	<ul id="{{_id}}">
+		{% for event in default(_events, [""]) %}
+			<li>
+				<input 
+					class="long_inp" 
+					placeholder="event" 
+					value="{{event}}" 
+					readonly
+					onclick="OpenEventDialog(this.value, this);"
+				>
+				<span class="mod_elem" onclick="del_elem('',{{loop.index}},this)">-</span>
+				<span class="mod_elem" onclick="add_elem('',{{loop.index}},this)">+</span>
+			</li>
+		{% endfor %}
+	</ul>
+
+</li>

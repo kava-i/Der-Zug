@@ -151,7 +151,7 @@ public:
     void printText(std::string text);
 
     ///Append to current player output.
-    void appendPrint(string newPrint);
+    void appendPrint(string newPrint, bool dont_throw_post=false);
     void appendStoryPrint(std::string sPrint);
     void appendDescPrint(std::string sPrint);
     void appendErrorPrint(std::string sPrint);
