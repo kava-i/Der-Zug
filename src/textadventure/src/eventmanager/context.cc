@@ -1565,7 +1565,7 @@ void Context::h_updateStats(std::string& sIdentifier, CPlayer* p) {
       ability = p->getAbbilities()[i];
   }
 
-  //Update ability.
+  // Update ability.
   p->setStat(ability, p->getStat(ability)+1);
   p->appendSuccPrint(ability + " updated by 1\n");
   int num = getAttribute<int>("numPoints")-1;

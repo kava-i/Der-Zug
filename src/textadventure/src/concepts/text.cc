@@ -168,13 +168,13 @@ void COutput::updateAttrbutes(CPlayer* p, std::string& sUpdated) {
   for(auto it=m_jUpdates.begin(); it!= m_jUpdates.end(); it++) {
     int val=it.value();
 
-    //Check updates for minds
+    // Check updates for minds
     if(p->getMinds().count(it.key()) > 0) {
       p->getMind(it.key()).level += val;
       sUpdated += p->getMind(it.key()).color + it.key()+ " erhöhrt!" + WHITE + "\n";
     }
 
-    //Check updates for abilities
+    // Check updates for abilities
     else if(p->attributeExists(it.key()) == true) {
       p->setStat(it.key(), p->getStat(it.key())+val);
       sUpdated += GREEN + it.key() + " erhöht!" + WHITE + "\n";
