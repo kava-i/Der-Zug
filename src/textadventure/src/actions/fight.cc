@@ -28,7 +28,8 @@ string CFight::FightRound(string sPlayerChoice)
         int ep = m_opponent->getStat("ep");
         if(ep != 0) {
             m_player->appendSuccPrint("+ " + std::to_string(ep) + " EP\n");
-            m_player->addEP(ep);
+						// TODO (fux) use the new update-field instead old: addEP(ep);
+						// Maybe even move to Context::h_finishCharacter
         }
         return "endFight;finishCharacter " + m_opponent->id();
     }

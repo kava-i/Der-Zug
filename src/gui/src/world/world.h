@@ -107,6 +107,9 @@ class World {
      */
     void LoadWorld();
 
+		std::map<std::string, std::string> GetAttributes() const;
+		std::vector<std::string> GetAttributeCategories() const;
+
   private:
     // member variables:
     const std::string base_path_;

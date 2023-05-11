@@ -21,12 +21,56 @@
 
   {{ log("rendered use description") }}
 
-  <li><label>Category:</label><input id="category" value="{{ default(category,"")}}"></li>
-  <li><label>Kind:</label><input id="kind" value="{{ default(kind,"") }}"></li>
-  <li><label>Type:</label><input id="type" value="{{ default(type,"") }}"></li>
-  <li><label>Attributes Effekt:</label><input id="stats_effect" value="{{ default(stats_effect,"") }}"></li>
-  <li><label>Effekt:</label><input id="effekt" custom="int" value="{{ default(effekt,"")}}"></li>
-  <li><label>Value:</label><input id="value" custom="int" value="{{ default(value,"")}}"></li>
+  <li>
+		<label>Category:</label>
+		<select id="category" autocomplete="off"> 
+			{% for category in __categories %}
+				<option {% if default(category, "") == category %}selected{% endif %}>{{category}}</option>
+			{% endfor %}
+		</select>
+	</li>
+
+  <li>
+		<label>Kind:</label>
+		<select id="kind" autocomplete="off"> 
+			{% for kind in __kinds %}
+				<option {% if default(kind, "") == kind %}selected{% endif %}>{{kind}}</option>
+			{% endfor %}
+		</select>
+	</li>
+
+  <li>
+		<label>Type:</label>
+		<select id="type" autocomplete="off"> 
+			{% for type in __types %}
+				<option {% if default(type, "") == type %}selected{% endif %}>{{type}}</option>
+			{% endfor %}
+		</select>
+	</li>
+
+
+  <li custom="map" title="Costs can be any and multiple attributes">
+		<label>Costs:</label>
+		<ul id="costs">
+			{% for key, value in default(costs, {"":0}) %} 
+			<li custom="pair">
+				<select autocomplete="off"> 
+					{% for attribute_id, attribute_name in __attributes %}
+						<option {% if key == attribute_id %}selected{% endif %}>{{attribute_name}}</option>
+					{% endfor %}
+				</select>
+				<input 
+					type="number"
+					class="short" 
+					custom="int" 
+					value="{{default(value, 0)}}"
+				>
+				<span class="mod_elem" onclick="del_elem('costs', {{loop.index}})">-</span>
+				<span class="mod_elem" onclick="add_elem('costs', {{loop.index}})">+</span>
+			</li>
+			{% endfor%} 
+		</ul>
+	</li>
 
   {{ log("rendered attributes") }}
 

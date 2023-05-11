@@ -1,5 +1,6 @@
 #include "world.h"
 #include "eventmanager/listener.h"
+#include "game/config/attributes.h"
 #include "nlohmann/json_fwd.hpp"
 #include "objects/detail.h"
 #include "tools/func.h"
@@ -23,6 +24,14 @@ CWorld::CWorld(CPlayer* p, std::string path) {
   m_path_to_world = path;
   // Load config
   configFactory("config/config.json");
+
+	try {
+		attribute_config_ = AttributeConfig(func::LoadJsonFromDisc("config/attributes.json"));
+	} catch(std::exception& e) {
+		std::string msg = "Failed parsing attribute-config: ";
+		msg + e.what();
+    throw WorldFactoryException(msg);
+	}
   worldFactory(p);
   // Extract f.e. media files from config
   configExtractor(p);
@@ -36,6 +45,10 @@ std::string CWorld::getPathToWorld() {
 
 nlohmann::json& CWorld::getConfig() {
   return m_config;
+}
+
+const AttributeConfig& CWorld::attribute_config() {
+	return attribute_config_;
 }
 
 std::string CWorld::GetSTDText(std::string key) {

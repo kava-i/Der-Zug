@@ -553,7 +553,7 @@ void Context::h_finishCharacter(std::string& sIdentifier, CPlayer* p) {
   //Get character
   CPerson* person = p->getWorld()->getCharacter(sIdentifier);
 
-  if(person->getFaint() == false) {
+  if(person->will_faint() == false) {
     std::cout << "kill character\n";
     p->throw_events("killCharacter " + sIdentifier, "h_finishCharacter");
   }
@@ -563,6 +563,7 @@ void Context::h_finishCharacter(std::string& sIdentifier, CPlayer* p) {
       person->setDialog("faint");
     else
       person->setDialog(p->getWorld()->getDialog("faintDialog"));
+		person->setFainted(true);
   } 
   m_curPermeable=false;
 }
@@ -587,7 +588,7 @@ void Context::h_killCharacter(std::string& sIdentifier, CPlayer* p) {
   else
       jDetail["description"] = person->getDeadDescription();
 
-  //Create new detail and add to room and map of details
+  // Create new detail and add to room and map of details
   CDetail* detail = new CDetail(jDetail, p, person->getInventory().mapItems());
   p->getRoom()->getDetails()[person->id()] = detail;
   h_deleteCharacter(sIdentifier, p);
@@ -645,7 +646,6 @@ void Context::h_newFight(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_gameover(std::string&, CPlayer* p) {
-    p->setStat("hp", 0);
     p->appendStoryPrint("\nDu bist gestorben... \n\n $\n");
 }
 
@@ -1196,7 +1196,7 @@ void Context::h_attack(std::string& sIdentifier, CPlayer* p) {
   std::cout << "Infos: " << character_id << std::endl;
   auto character = p->getWorld()->getCharacter(character_id);
   // Only start fight. if character is still alive.
-  if (character->getStat("hp") > 0) {
+  if (!character->fainted()) {
     p->setFight(new CFight(p, character));
     m_curPermeable = false;
   }
@@ -1557,12 +1557,12 @@ void Context::h_choose_equipe(std::string& sIdentifier, CPlayer* p) {
 void Context::h_updateStats(std::string& sIdentifier, CPlayer* p) {
   //Get ability (by number or by name/ id).
   std::string ability="";
-  for(size_t i=0; i<p->getAbbilities().size(); i++) {
-    if(fuzzy::fuzzy_cmp(func::returnToLower(p->getAbbilities()[i]), 
-          sIdentifier) <= 0.2)
-      ability = p->getAbbilities()[i];
+	const auto& skillable = p->getWorld()->attribute_config().skillable_;
+  for(size_t i=0; i<skillable.size(); i++) {
+    if(fuzzy::fuzzy_cmp(func::returnToLower(skillable[i]), sIdentifier) <= 0.2)
+      ability = skillable[i];
     if(std::isdigit(sIdentifier[0]) && i == stoul(sIdentifier, nullptr, 0)-1)
-      ability = p->getAbbilities()[i];
+      ability = skillable[i];
   }
 
   // Update ability.
@@ -1570,7 +1570,7 @@ void Context::h_updateStats(std::string& sIdentifier, CPlayer* p) {
   p->appendSuccPrint(ability + " updated by 1\n");
   int num = getAttribute<int>("numPoints")-1;
   p->getContexts().erase("updateStats");
-  if(num>0)
+  if (num>0)
     p->UpdateStats(num);
 }
 

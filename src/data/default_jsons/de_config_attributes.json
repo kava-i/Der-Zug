@@ -1,0 +1,87 @@
+{
+    "config": {
+        "skillable": [
+            "eigenschaften"
+        ],
+        "woozy_attributes": [
+            "highness",
+            "drunkness"
+        ],
+        "woozy_method": "avrg",
+        "levelbased": "no"
+    },
+    "attributes": [
+        {
+            "id": "level",
+            "name": "Level",
+            "category": "allgemein",
+            "default_value": 0
+        },
+        {
+            "id": "ep",
+            "name": "EP",
+            "category": "allgemein",
+            "default_value": 0
+        },
+        {
+            "id": "hp",
+            "name": "HP",
+            "category": "base",
+            "default_value": 100
+        },
+        {
+            "id": "fp",
+            "name": "FP",
+            "category": "base",
+            "default_value": 100
+        },
+        {
+            "id": "strength",
+            "name": "St\u00e4rke",
+            "category": "eigenschaften",
+            "default_value": 10
+        },
+        {
+            "id": "geschick",
+            "name": "Geschicklichkeit",
+            "category": "eigenschaften",
+            "default_value": 10
+        },
+        {
+            "id": "raucher",
+            "name": "Raucher*in",
+            "category": "charakter",
+            "default_value": 0
+        },
+        {
+            "id": "trunkenheit",
+            "name": "Trunkenheit",
+            "category": "status",
+            "default_value": 0
+        },
+        {
+            "id": "highness",
+            "name": "Highness",
+            "category": "status",
+            "default_value": 0
+        }
+		],
+		"mapping": {
+        "smoker": [
+					{
+							"match_type": "",
+							"value": 0,
+							"show": "Nicht-Raucher"
+					},
+					{
+							"match_type": "<",
+							"value": 5,
+							"show": "Raucher"
+					},
+					{
+							"match_type": ">",
+							"value": 5,
+							"show": "Kettenraucher"
+					}
+		}
+}

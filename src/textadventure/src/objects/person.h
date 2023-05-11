@@ -24,11 +24,12 @@ class CPerson : public CObject {
     CText* m_sShotDescription;          //< Brief description, never as mind.
     nlohmann::json m_deadDescription;   //< Description for when the character is dead.
 
-    bool m_faint;
+    bool will_faint_; ///< Indicates whether this char will faint or die
+    bool fainted_;   ///< 
     
     ///Stats, such as live points, strength, virtue etc.
     typedef map<string, int> stats;
-    stats m_stats;
+    stats attributes_;
 
     ///This Persons attacks
     typedef std::map<string, CAttack*> attacks;
@@ -66,10 +67,13 @@ class CPerson : public CObject {
     * @param[in] id specify which stat shall be returned.
     * @return return given stat.
     */
-    int getStat(std::string id);
+    int getStat(std::string id, int default_value=999);
 
-    ///return whether character can faint or dies immediately 
-    bool getFaint();
+    /// return whether character can faint or dies immediately 
+    bool will_faint();
+		
+    /// return whether character is currently fainted 
+		bool fainted();
 
     ///Return person's attacks.
     attacks& getAttacks();
@@ -96,14 +100,17 @@ class CPerson : public CObject {
 
     // *** SETTER *** //
 
-    ///Set a new stat of this person
+    /// Set a new stat of this person
     void setStat(std::string, int stat);
 
-    ///Set person's dialogue.
+    /// Set person's dialogue.
     void setDialog(CDialog* newDialog);
 
-    ///Set person's dialogue, taking a dialog from persons map of dialogues.
+    /// Set person's dialogue, taking a dialog from persons map of dialogues.
     void setDialog(std::string dialog);
+
+		/// Set whether char is currently fainted.
+		void setFainted(bool fainted);
 
 
     // *** Attacks *** // 
@@ -129,11 +136,10 @@ class CPerson : public CObject {
 
 
     // *** Functions needed in CPlayer *** //
-    virtual void throw_events(std::string) { std::cout << "FATAL!!!\n"; }
+    virtual void throw_events(std::string, std::string) { std::cout << "FATAL!!!\n"; }
     virtual void setStatus(string)   { std::cout << "FATAL!!!\n"; }
     virtual void appendPrint(string, bool dont_throw_post=false) { std::cout << "FATAL!!!\n"; }
     virtual void appendSuccPrint(string) { std::cout << "FATAL!!!\n"; }
-    virtual void addEP(int ep)       { std::cout << "FATAL!!!\n"; }
 };
 
 #endif

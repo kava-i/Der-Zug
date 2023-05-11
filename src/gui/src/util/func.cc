@@ -40,6 +40,27 @@ std::vector<std::string> Split(std::string str, std::string delimiter) {
   return v_strs;
 }
 
+// Load the markdown file as a string
+std::string LoadMarkdown(const std::string& filename) {
+    std::ifstream file(filename);
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+		std::string str = buffer.str();
+
+
+    // Escape newlines in the string
+    std::string escaped_str;
+    for (char c : str) {
+        if (c == '\n') {
+            escaped_str += "\\n";
+        } else {
+            escaped_str += c;
+        }
+    }
+
+    return escaped_str;
+}
+
 std::string GetPage(std::string path) {
   std::cout << "GetPage: " << path << std::endl;
   //Read loginpage and send

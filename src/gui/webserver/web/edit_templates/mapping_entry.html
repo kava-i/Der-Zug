@@ -1,0 +1,16 @@
+<h2>Mapping:</h2>
+
+	<select id="match_type" autocomplete="off">
+		<option value=">" {% if default(match_type, "=") == ">" %}selected{% endif %}>greater</option?>
+		<option value="<" {% if default(match_type, "=") == "<" %}selected{% endif %}>smaller</option?>
+		<option value="=" {% if default(match_type, "=") == "=" %}selected{% endif %}>equals</option?>
+	</select>
+	<input 
+		type="number"
+		class="short" 
+		id="value" 
+		placeholder="value" 
+		custom="int" 
+		value="{{default(value, 0)}}"
+	>
+	<input id="show" placeholder="text to show" value="{{default(show,"")}}">

@@ -1,9 +1,7 @@
 <li custom="list">
   <label>Handlers:</label>
   <ul id="listeners">
-  {{ log("checking if listeners exists") }}
     {% if exists("listeners") and length(listeners) > 0 %} 
-      {{ log("listeners exists") }}
       {% for listener in listeners %}
         <li custom="get:object">
           <a class="abstract" onclick="EditItem('listeners', this.parentNode)" title='{{listener}}'>
@@ -12,16 +10,13 @@
             {{listener.handler}}({{default(listener.event_attributes, "")}})
           </a>
           <span 
-            class="mod_elem" 
-            onclick="EditItem('listeners', this.parentNode)"
+            class="mod_elem" onclick="EditItem('listeners', this.parentNode)"
           ><i>edit</i></span>
           <span 
             class="mod_elem" onclick="DeleteItem('listeners', this.parentNode)" title="delete element"
           >-</span>
           <span 
-            class="mod_elem" 
-            onclick="AddItem('listeners', this.parentNode)" 
-            title="add element"
+            class="mod_elem" onclick="AddItem('listeners', this.parentNode)" title="add element"
           >+</span>
           <input style="display: none;" custom="json" value='{{listener}}'/>
         </li>

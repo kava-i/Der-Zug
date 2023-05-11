@@ -13,15 +13,17 @@ CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttac
     CPlayer* p, std::map<std::string, CDialog*> dialogs, map_type items) 
     : CObject(jAttributes, p, "person") {
   //Set stats.
-  m_stats["highness"]	= 0;
-  m_stats["hp"]	    = jAttributes.value("hp", 40);
-  m_stats["max_hp"]   = m_stats["hp"];
-  m_stats["gold"]	    = jAttributes.value("gold", 5);
-  m_stats["strength"] = jAttributes.value("strength", 8);
-  m_stats["skill"]    = jAttributes.value("skill", 8);
-  m_stats["ep"]	    = jAttributes.value("ep", 0);
+	attributes_ = jAttributes.value("attributes", std::map<std::string, int>());
+  // m_stats["highness"]	= 0;
+  // m_stats["hp"]	    = jAttributes.value("hp", 40);
+  // m_stats["max_hp"]   = m_stats["hp"];
+  // m_stats["gold"]	    = jAttributes.value("gold", 5);
+  // m_stats["strength"] = jAttributes.value("strength", 8);
+  // m_stats["skill"]    = jAttributes.value("skill", 8);
+  // m_stats["ep"]	    = jAttributes.value("ep", 0);
 
-  m_faint = (bool)jAttributes.value("faint", 0);
+  will_faint_ = (bool)jAttributes.value("faint", 0);
+	fainted_ = false;
   
   m_roomDescription = new CText(jAttributes.value("roomDescription", nlohmann::json::parse("{}")), p);
   m_deadDescription = jAttributes.value("deadDescription", nlohmann::json::parse("{}"));
@@ -43,7 +45,7 @@ CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttac
 
 ///return map of stats
 std::map<std::string, int>& CPerson::getStats() {
-    return m_stats;
+    return attributes_;
 }
 
 /**
@@ -51,18 +53,25 @@ std::map<std::string, int>& CPerson::getStats() {
 * @param[in] id specify which stat shall be returned.
 * @return return given stat.
 */
-int CPerson::getStat(std::string id) { 
-  if(m_stats.count(id) > 0)
-      return m_stats[id]; 
-  std::cout << "Attribute accessed which does not exits.\n";
-  return 999;
+int CPerson::getStat(std::string id, int default_value) { 
+	try {
+      return attributes_.at(id); 
+	}
+	catch (std::exception& e) {
+  	std::cout << "Attribute accessed which does not exits: " << id << std::endl;
+  	return default_value;
+	}
 }
 
-///return whether character can faint or dies immediately 
-bool CPerson::getFaint() {
-    return m_faint;
+/// return whether character can faint or dies immediately 
+bool CPerson::will_faint() {
+    return will_faint_;
 }
-
+///
+/// return whether character can faint or dies immediately 
+bool CPerson::fainted() {
+    return fainted_;
+}
 
 ///Return person's dialogue.
 CDialog* CPerson::getDialog() { 
@@ -113,7 +122,7 @@ nlohmann::json CPerson::getDeadDescription() {
 
 ///Set a new stat of this person
 void CPerson::setStat(std::string id, int stat) {
-    m_stats[id] = stat;
+    attributes_[id] = stat;
 }
 
 ///Set person's dialogue.
@@ -127,6 +136,10 @@ void CPerson::setDialog(std::string dialog) {
         m_dialog = m_dialogs[dialog];
     else
         std::cout << "Dialog not found: " << dialog << ".\n";
+}
+
+void CPerson::setFainted(bool fainted) {
+	fainted_ = fainted;
 }
 
 // *** ATTACKS *** //
@@ -185,7 +198,7 @@ string CPerson::getAttack(string sPlayerChoice)
 * @return whether attribute exists or not.
 */
 bool CPerson::attributeExists(std::string sAttribute) {
-    return m_stats.count(func::returnToLower(sAttribute)) > 0;
+    return attributes_.count(func::returnToLower(sAttribute)) > 0;
 }
 
 std::string CPerson::getAllInformation()

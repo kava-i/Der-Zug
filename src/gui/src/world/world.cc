@@ -11,6 +11,7 @@
 #include <iostream>
 #include <mutex>
 #include <ostream>
+#include <set>
 #include <shared_mutex>
 #include <string>
 #include <vector>
@@ -138,6 +139,8 @@ nlohmann::json World::GetPage(std::string path, int textad_port, bool only_json)
   json["header"]["__categories"] = config["categories"];
   json["header"]["__kinds"] = config["kinds"];
   json["header"]["__types"] = config["types"];
+  json["header"]["__attribute_categories"] = GetAttributeCategories();
+  json["header"]["__attributes"] = GetAttributes();
 
   nlohmann::json availibe_fields;
   func::LoadJsonFromDisc("handlers.json", availibe_fields);
@@ -294,4 +297,33 @@ void World::RefreshWorld() {
   // Recreate paths and short-paths.
   LoadWorld();
   UpdateShortPaths();
+}
+
+std::map<std::string, std::string> World::GetAttributes() const {
+	nlohmann::json config;
+  func::LoadJsonFromDisc(path_ + "/config/attributes.json", config);
+	std::map<std::string, std::string> attributes;
+	if (config.contains("attributes") && config["attributes"].size() > 0) {
+		for (const auto& attribute: config["attributes"].get<std::vector<nlohmann::json>>()) {
+			if (attribute.contains("id"))
+				attributes[attribute["id"]] = attribute.value("name", attribute["id"]);
+		}
+	}
+	std::cout << "Got " << attributes.size() << " attributes" << std::endl;
+	return attributes;
+}
+std::vector<std::string> World::GetAttributeCategories() const {
+	nlohmann::json config;
+  func::LoadJsonFromDisc(path_ + "/config/attributes.json", config);
+	std::set<std::string> categories;
+	std::vector<std::string> vec_categories;
+	if (config.contains("attributes") && config["attributes"].size() > 0) {
+		for (const auto& attribute: config["attributes"].get<std::vector<nlohmann::json>>()) {
+			if (attribute.contains("category"))
+				categories.insert(attribute["category"]);
+		}
+		vec_categories.assign(categories.begin(), categories.end());
+	}
+	std::cout << "Got " << vec_categories.size() << " attribute-categories" << std::endl;
+	return vec_categories;
 }

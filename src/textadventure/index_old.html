@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body {
+    background: black;
+    background-image: url("new_wall.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: white;
+}
+
+.input,.input:focus {
+    position: fixed;
+    left: 0;
+    color: green;
+    top: calc(100% - 2.5rem);
+    height: 3rem;
+    overflow: hidden;
+    background: black;
+}
+
+.output {
+    position: fixed;
+    left: 10%;
+    top: 0;
+    margin-top: 0;
+    height: calc(100% - 3rem);
+    padding: 0.5rem;
+    padding-bottom: 0;
+    overflow-y: auto;
+    background-color: rgba(0,0,0,0.95);
+    width: 80%;
+    font-size: small;
+    color: #f8f9f9;
+}
+
+/*
+.output div{
+    overflow: hidden;
+    border-right: .15em solid orange;
+    white-space: nowrap;
+    margin: 0 auto;
+    letter-spacing: .15em;
+    animation:
+        typing 3.5s steps(40, end),
+        blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: orange; }
+} 
+*/
+
+.spoken {
+    padding-left: 2.5em;
+    text-indent:-2.5em;
+}
+
+.spoken2 {
+    padding-left: 2.5em;
+    color: #bdc3c7;
+}
+
+hr {
+    width: 100vw;
+    color: #ba68c8;
+}
+
+.black{
+    color: black;
+}
+.red {
+    color:  #e74c3c;
+}
+
+.white {
+    color:  #f8f9f9;
+}
+
+.whitedark {
+    color: #bdc3c7;
+}
+
+.dark {
+    color: #839192;
+}
+
+.green {
+    color: #1e8449;
+}
+
+.yellow {
+    color: yellow;
+}
+
+.blue {
+    color: #2e86c1;
+}
+
+.orange {
+    color: #ff9800;
+}
+#input {
+    border: None;
+    color: #ff9800;
+    background: black;
+    width: 80vw;
+}
+
+</style>
+<script>
+var host = location.host.substr(0, location.host.indexOf(":"));
+var socket = null
+if (host == "localhost" || host == "127.0.0.1")
+  socket = new WebSocket("ws://" + host + ":{{port}}");
+else
+  socket = new WebSocket("wss://" + host + ":{{port}}");
+
+let clicked = false;
+let aud = new Audio("{{path}}/{{default(music, 'piano')}}.mp3");
+  function playMusik() {
+  if(clicked == false) {
+    aud.play();
+    document.getElementById("symbol").className = "fa fa-volume-up";
+    clicked = true;
+  }
+  else {
+    aud.pause();
+    document.getElementById("symbol").className = "fa fa-volume-off";
+    clicked = false;
+  }
+}
+
+
+let gPipelinedOutput = null;
+let gPipelineNextEnter = false;
+let listOfCommands = [];
+let currentIter = -1;
+function bdyonload()
+{
+  printString("login/register (l/r):");
+
+    document.getElementById("input").addEventListener("keydown",function(event)
+    {
+      if(event.key === "Enter")
+      {
+        if(gPipelineNextEnter)
+        {
+            gPipelineNextEnter = false;
+            if(gPipelinedOutput!=null)
+            {
+              output.innerHTML = output.innerHTML.substr(0, 
+                output.innerHTML.lastIndexOf("Press Enter to continue"));
+              console.log(gPipelinedOutput);
+              printString(gPipelinedOutput);
+            }
+        }
+        else
+        {
+            let p_input = document.getElementById("input").value;
+            document.getElementById("input").value ="";
+            if(p_input=="")
+                printString('\x06'+". . ."+'\n');
+            listOfCommands.push(p_input);
+            socket.send(p_input);
+            let val = document.getElementById("output");
+            val.scrollTop = val.scrollHeight;
+            currentIter = -1;
+        }
+      }
+      if(listOfCommands.length==0)
+          return;
+      if(event.keyCode === 38)
+      {
+          currentIter--;
+          if(currentIter<0)
+          currentIter = listOfCommands.length-1;
+          document.getElementById("input").value = listOfCommands[currentIter];
+      }
+      else if(event.keyCode === 40)
+      {
+          currentIter++;
+          if(currentIter == listOfCommands.length)
+          currentIter = 0;
+          document.getElementById("input").value = listOfCommands[currentIter];
+      }
+    });
+    document.getElementById("input").focus();
+    
+    socket.onmessage = function(event){console.log("Received: "+event.data);printString(event.data);};
+}
+
+function isspanret(isspan,colname)
+{
+    if(isspan)
+        return "</span><span class='"+colname+"'>";
+    else
+        return "<span class='"+colname+"'>";
+}
+
+function parse_file(strin,x)
+{
+    name = '';
+    for(let i = x+1; i < strin.length; i++)
+	if(strin[i] == '\x07')
+	{
+	    console.log("Playing soundfile: " + name);
+	    aud.pause();
+	    aud = new Audio(name);
+	    if(clicked) aud.play();
+	    return i+1;
+	}
+	else
+	    name+=strin[i]
+}
+
+function printString(theString)
+{
+    let out = "";
+    let isspanopen = false;
+    for(let i = 0; i < theString.length; i++)
+    {
+        if(theString[i] == '\n')
+            out+="<br class='line'>";
+        else if(theString[i] == '\x00')
+            out+=isspanret(isspanopen,"black");
+        else if(theString[i] == '\x01')
+            out+=isspanret(isspanopen,"white");
+        else if(theString[i] == '\x02')
+            out+=isspanret(isspanopen,"red");
+        else if(theString[i] == '\x03')
+            out+=isspanret(isspanopen,"green");
+        else if(theString[i] == '\x04')
+            out+=isspanret(isspanopen,"yellow");
+        else if(theString[i] == '\x05')
+            out+=isspanret(isspanopen,"blue");
+        else if(theString[i] == '\x08')
+            out+=isspanret(isspanopen, "dark");
+        else if(theString[i] == '\x06')
+            out+=isspanret(isspanopen,"orange");
+        else if(theString[i] == '\x09')
+            out+=isspanret(isspanopen, "whitedark");
+        else if(theString[i] == '\x07')
+            i=parse_file(theString,i);
+        else if(theString[i] == '$')
+        {
+            out+="<br class='line'><span style='color:#f8f9f9'>Press Enter to continue...<span><br class='line'>";
+            gPipelinedOutput = theString.substr(i+2);
+            console.log(gPipelinedOutput);
+            gPipelineNextEnter = true;
+            break;
+        }
+        else
+            out+=theString[i];
+        if(theString[i] >= '\x01' && theString[i] <= '\x05')
+            isspanopen = true;
+
+    }
+    if(isspanopen)
+    {
+        out+="</span>";
+    }
+	let outpt = document.getElementById("output");
+    outpt.innerHTML += out;
+	outpt.scrollTop = outpt.scrollHeight;
+}
+
+function openFullscreen(elem) {
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.mozRequestFullScreen) { /* Firefox */
+    elem.mozRequestFullScreen();
+  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE/Edge */
+    elem.msRequestFullscreen();
+  }
+}
+
+function hasFullscreen(elem) {
+    let hasfull = false;
+    if (elem.requestFullscreen) {
+	hasfull = true;
+  } else if (elem.mozRequestFullScreen) { /* Firefox */
+	hasfull = true;
+  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+	hasfull = true;
+  } else if (elem.msRequestFullscreen) { /* IE/Edge */
+	hasfull = true;
+  }
+    return hasfull;
+}
+
+/* Close fullscreen */
+function closeFullscreen(elem) {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.mozCancelFullScreen) { /* Firefox */
+    document.mozCancelFullScreen();
+  } else if (document.webkitExitFullscreen) { /* Chrome, Safari and Opera */
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) { /* IE/Edge */
+    document.msExitFullscreen();
+  }
+}
+</script>
+</head>
+
+<body onload="bdyonload();return true;">
+  <button onclick="playMusik();return true;">
+    <i id="symbol" class= "fa fa-volume-off" style="font-size:18px"></i>
+  </button>
+    <p id="output" class="output"></p>
+    <div class="input">
+        <hr>
+        <span>
+          <input type="text" id="input" style="display:inline-block" placeholder='type command here...'/>
+        </span>
+    </div>
+</body>

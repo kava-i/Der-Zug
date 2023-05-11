@@ -12,6 +12,7 @@
 #include <nlohmann/json.hpp>
 
 #include "eventmanager/context.h"
+#include "game/config/attributes.h"
 #include "objects/room.h"
 #include "objects/detail.h"
 #include "objects/person.h"
@@ -47,6 +48,7 @@ private:
     map<string, vector<CText*>> m_defaultDescriptions;
 
     nlohmann::json m_config;
+		AttributeConfig attribute_config_;
     std::map<std::string, std::string> media_;
     std::string m_path_to_world;
 public:
@@ -60,6 +62,9 @@ public:
 
     ///Return json for configuration
     nlohmann::json& getConfig();
+
+		///Return AttributeConfig 
+		const AttributeConfig& attribute_config();
 
     std::string GetSTDText(std::string txt);
 

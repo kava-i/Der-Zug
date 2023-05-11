@@ -130,14 +130,22 @@ function CreateMap(elem) {
     }
     //Parse a simple key, value pair, where value is a string (json, or int).
     else if (elems[i].getAttribute("custom") == "pair") {
+      var value_fields = GetValueFields(elems[i]);
+			console.log("pair: ", value_fields);
       map[GetAsType(GetValueFields(elems[i])[0])] = GetAsType(GetValueFields(elems[i])[1]);
     }
     else if (elems[i].getAttribute("custom") == "key_list") {
       var json = [];
-      var value_fields = GetValueFields(elems[i]);
-      for (var j=1; j<=elems.length; j++) 
-        json.push(GetAsType(value_fields[j]));
-      map[GetAsType(GetValueFields(elems[i])[0])] = json;
+			var id = elems[i].querySelector("#id").value;
+			[...GetValueFields(elems[i].querySelector("#list"))].forEach(inp => {
+        json.push(GetAsType(inp));
+			});
+      map[id] = json;
+      //var value_fields = GetValueFields(elems[i]);
+			//console.log("value fields: ", elems[i], value_fields);
+      //for (var j=1; j<value_fields.length; j++) 
+      //  json.push(GetAsType(value_fields[j]));
+      //map[GetAsType(GetValueFields(elems[i])[0])] = json;
     }
     else if (elems[i].getAttribute("custom") == "key_value") {
       map[GetValueFields(elems[i])[0].getAttribute("id")] = GetAsType(GetValueFields(elems[i])[0]);
@@ -220,6 +228,7 @@ function GetValueFields(elem) {
   inputs.push(...elem.getElementsByTagName("input"));
   inputs.push(...elem.getElementsByTagName("textarea"));
   inputs.push(...elem.getElementsByTagName("select"));
+	inputs.sort(function(a, b){ return ComparePosition(a, b)});
   return inputs;
 }
 
@@ -475,19 +484,23 @@ function AddItem(type, cur) {
 
 function EditItem(type, parent_elem) {
   // Get json and edit-dialog-element
-  const json = parent_elem.getElementsByTagName("input")[0].value;
+  let json = JSON.parse(parent_elem.getElementsByTagName("input")[0].value);
+	// Add world and creator
+	const path_elems = window.location.pathname.split("/");
+	json["__creator"] = path_elems[1];
+	json["__world"] = path_elems[3];
+	console.log("requesting page for data: ", json, path_elems[1], path_elems[3]);
   let dialog = document.getElementById("edit_dialog"); 
   // set type and index in dialog for later saving
   dialog["parent_elem"] = parent_elem;
   // Open modal
   dialog.showModal();
-	console.log("Sending json: ", json);
 
   // Send request for content:
   fetch("/api/edit-template/"+type, {
     method: "POST",
     headers: {"Content-Type": "application/json"},
-    body: json
+    body: JSON.stringify(json)
   })
   .then((response) => response.text())
   .then((text) => { 
@@ -520,10 +533,18 @@ function SaveItem() {
   parent_elem.getElementsByTagName("input")[0].value = JSON.stringify(json);
   parent_elem.getElementsByTagName("a")[0].title = JSON.stringify(json);
   // Set abstract representation
+	console.log("set abstract: ", parent_elem.parentNode.id, parent_elem.id);
   if (parent_elem.parentNode.id == "listeners")
     parent_elem.getElementsByTagName("a")[0].innerHTML= 
       `${json['id']}: ${json['cmd']} ${get(json, 'target', '')}` 
       + ` → ${json['handler']}(${get(json, 'event_attributes', '')})`;
+	else if (parent_elem.parentNode.id == "attributes") 
+		parent_elem.getElementsByTagName("a")[0].innerHTML = 
+			`${get(json, 'name', '')} (category: ${get(json, 'category', '')})`;
+	else if (parent_elem.id.indexOf("mapping") > 0) 
+		parent_elem.getElementsByTagName("a")[0].innerHTML = 
+			`${get(json, 'match_type', '')} ${get(json, 'value', '')} → ${get(json, 'show', '')}`;
+
   dialog.close();
 }
 
@@ -660,3 +681,11 @@ function OpenEventDialog(event_str, elem) {
 function CloseDialog(name) {
   document.getElementById(name).close();
 }
+
+function ComparePosition(elem1, elem2) {
+    var position = elem1.compareDocumentPosition(elem2);
+
+    if (position & 0x04) return false;
+    if (position & 0x02) return true;
+};
+

@@ -11,6 +11,7 @@
 #include <ctime>
 
 #include "eventmanager/parser.h"
+#include "game/config/attributes.h"
 #include "game/world.h"
 #include "person.h"
 #include "eventmanager/sorted_context.h"
@@ -53,11 +54,8 @@ private:
     CRoom* m_lastRoom;  ///< Pointer to last room visited
 
     // *** Levels & Ep, Items, Equipment etc. *** //
-    int m_ep;  ///< Current experience points
-    int m_level;  ///< Current level
     std::map<std::string, SMind> m_minds; ///< Characters in unconsciousness 
                                           ///< (auto skilled)
-    std::vector<std::string> m_abbilities;  ///< Skillable abilities, like strength etc.
     std::map<std::string, CItem*> m_equipment;  ///< Equipped weapons, clothing etc.
     //m_inventory, m_attacks (from CPerson)
 
@@ -109,9 +107,6 @@ public:
 
     ///Return a requested mind
     SMind& getMind(std::string sMind);
-
-    ///Return players abilities (strength, moral, etc.)
-    std::vector<std::string> getAbbilities();
 
     ///Return players equipment (weapons, clothing etc.)
     std::map<std::string, CItem*>& getEquipment();
@@ -330,19 +325,15 @@ public:
     */
     void questSolved(std::string sQuestID, std::string sStepID);
 
-    //Minds and level
-
-    /**
-    * Add experience points and call update-stats function if a new level is reached.
-    * @param ep experience points to be added.
-    */
-    void addEP(int ep);
+    // Minds and level
 
     /**
     * Let player know how many learning points player can assign and add choice context.
     * @param numPoints experience points player can assign.
     */
     void UpdateStats(int numPoints); 
+
+		void PrintSkillableAttributes(int available_points);
 
     /**
     * Print minds of player by using table function.
@@ -387,6 +378,8 @@ public:
     * that something went wrong and print error in console.
     */
     void printError(std::string sError);
+
+		int CalculateWoozyness(std::vector<std::string> attributes, WoozyMethods method);
 
 
     // ** Eventmanager functions ** // 

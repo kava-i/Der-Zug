@@ -1,0 +1,73 @@
+{% include "temp_header" %}
+
+  {{ log("rendered header") }}
+
+  <li 
+		custom="list"
+		title="Specify which attribute-categories can be skilled by the player (f.e. after a level up)"
+	>
+		<label>Skillable categories:</label>
+		<ul id="skillable">
+			{% for skillable_category in default(content.skillable, [""]) %} 
+				<li>
+					<select id="skillable_category" value="{{skillable_category}}" autocomplete="off">
+						{% for attribute_category in __attribute_categories %}
+							<option 
+								{% if attribute_category == skillable_category%}selected{% endif %}
+							>{{attribute_category}}</option>
+						{% endfor %}
+					</select>
+					<span class="mod_elem" onclick="del_elem('skillable',{{loop.index}})">-</span>
+					<span class="mod_elem" onclick="add_elem('skillable',{{loop.index}})">+</span>
+				</li> 
+				{% endfor %}
+		</ul>
+	</li>
+
+  {{ log("rendered skillable-categories") }}
+
+	<li 
+		custom="list"
+		title="Attibute(s) indicating woozy-functions (mainly: mess up letters)."
+	>
+		<label>Woozy (drunk) Function Attributes</label>
+		<ul id="woozy_attributes">
+			{% for attribute in default(content.woozy_attributes, [""]) %} 
+				<li>
+					<select id="woozy_attribute" autocomplete="off">
+						{% for attribute_id, attribute_name in __attributes %}
+						<option 
+							value={{attribute_id}} {% if attribute_id == attribute %}selected{% endif %}
+						>{{attribute_id}}</option>
+						{% endfor %}
+					</select>
+					<span class="mod_elem" onclick="del_elem('woozy_attributes',{{loop.index}})">-</span>
+					<span class="mod_elem" onclick="add_elem('woozy_attributes',{{loop.index}})">+</span>
+				</li> 
+				{% endfor %}
+		</ul>
+	</li>
+
+	<li title="How to combine attributes (add, multiply, ....">
+		<label>Woozy (drunk) Function Method</label>
+		<select id="woozy_method" value="{{attribute}}">
+			<option value=add>Add values</option>
+			<option value="multiply">Multiply values</option>
+			<option value="avrg">Average of values</option>
+		</select>
+	</li>
+
+  {{ log("rendered woozy-functions") }}
+
+	<li title="Specify whether or not attributes are calculated based on the current level">
+		<label>Level-Based?</label>
+		<select id="levelbased" value="{{ default(levelbased, "no")}}"> 
+			<option value="no" title="Attributes don't automatically change based on current level.">no</option> 
+			<option value="npc" title="Only NPC's attributes automatically change based on current level.">NPC</option>
+			<option value="yes" title="Attributes automatically change based on current level.">yes</option>
+		</select>
+	</li>
+  {{ log("rendered levelbased") }}
+
+{% include "temp_footer" %}
+

@@ -17,8 +17,6 @@
              </label>
              <input class="long_inp" custom="json" placeholder="mapping" value=''>
              <br>
-             <span class="mod_elem" onclick="del_elem('appearance', 1)">-</span>
-             <span class="mod_elem" onclick="add_elem('appearance', 1)">+</span>
            </li>
 
        {% else %}
@@ -33,8 +31,6 @@
              </label>
              <input class="long_inp" custom="json" placeholder="mapping" value='{{default(value, "")}}'>
              <br>
-             <span class="mod_elem" onclick="del_elem('appearance', {{loop.index}})">-</span>
-             <span class="mod_elem" onclick="add_elem('appearance', {{loop.index}})">+</span>
            </li>
          {% endfor %}
 

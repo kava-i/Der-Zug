@@ -1,0 +1,94 @@
+{
+    "attributes": [
+        {
+            "category": "general",
+            "default_value": 0,
+            "id": "level",
+            "name": "Level"
+        },
+        {
+            "category": "general",
+            "default_value": 0,
+            "id": "ep",
+            "name": "EP"
+        },
+        {
+            "category": "base",
+            "default_value": 100,
+            "id": "hp",
+            "name": "HP"
+        },
+        {
+            "category": "base",
+            "default_value": 100,
+            "id": "fp",
+            "name": "FP"
+        },
+        {
+            "category": "attributes",
+            "default_value": 10,
+            "id": "strength",
+            "name": "Strength"
+        },
+        {
+            "category": "attributes",
+            "default_value": 10,
+            "id": "skill",
+            "name": "Skill"
+        },
+        {
+            "category": "character",
+            "default_value": 0,
+            "id": "smoker",
+            "mapping": [
+                {
+                    "match_type": "",
+                    "show": "non-smoker",
+                    "value": 0
+                },
+                {
+                    "match_type": "<",
+                    "show": "smoker",
+                    "value": 5
+                },
+                {
+                    "match_type": ">",
+                    "show": "heavy smoker",
+                    "value": 5
+                }
+            ],
+            "name": "Smoker"
+        },
+        {
+            "category": "status",
+            "default_value": 0,
+            "id": "drunkness",
+            "name": "Drunkness"
+        },
+        {
+            "category": "status",
+            "default_value": 0,
+            "id": "highness",
+            "name": "Highness"
+        }
+    ],
+    "config": {
+        "hp": {
+            "attributes": [
+                "hp"
+            ],
+            "method": "---"
+        },
+        "levelbased": "no",
+        "skillable": [
+            "attributes"
+        ],
+        "woozy": {
+            "attributes": [
+                "highness",
+                "drunkness"
+            ],
+            "method": "avrg"
+        }
+    }
+}

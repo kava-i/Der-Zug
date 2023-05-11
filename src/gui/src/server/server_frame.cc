@@ -130,15 +130,12 @@ void ServerFrame::Start(int port) {
   server_.Get("/(.*).md", [&](const Request& req, Response& resp) {
       std::cout << "Serving info page..." << std::endl;
       // Load markdown and convert to html
-      std::string markdown = func::GetPage("web/" + (std::string)req.matches[1] + ".md");
-      std::stringstream mdstream(markdown);
-      std::string html = parser_->Parse(mdstream);
-      std::cout << "Got html" << std::endl;
+      std::string markdown = func::LoadMarkdown("web/" + (std::string)req.matches[1] + ".md");
       // Parse template to include markdown-html
       try {
         inja::Environment env;
         inja::Template temp = env.parse_template("web/info_template.html");
-        std::string page = env.render(temp, {{"markdown", html}});
+        std::string page = env.render(temp, {{"markdown", markdown}});
         std::cout << "parsed template..." << std::endl;
         // Set content
         resp.set_content(page, "text/html"); 
@@ -512,9 +509,11 @@ void ServerFrame::WriteObject(const Request& req, Response& resp) {
     id = json_req["json"]["id"];
   // Use last element of path as id
   // If values is array (for config-objects), us first key, and reduce json to value.
+	else if (json_req["json"].size() > 1) {
+      id = path.substr(path.rfind("/")+1);
+	}
   else {
     for (const auto& it : json_req["json"].items()) {
-      id = it.key();
       json_req["json"] = it.value();
       id = path.substr(path.rfind("/")+1);
       break;
@@ -647,7 +646,8 @@ void ServerFrame::GrantAccessTo(const Request& req, Response& resp) {
 }
 
 void ServerFrame::GetEditTemplate(const Request& req, Response& resp, std::string edit_template) const {
-  nlohmann::json input = ValidateJson(req, resp, {});
+  nlohmann::json input = ValidateJson(req, resp, {"__creator", "__world"});
+	std::cout << "ServerFrame::GetEditTemplate. Got json: " << input.dump() << std::endl;
   // Get availibe_fields (handlers, commands) and add to content json
   nlohmann::json availibe_fields;
   func::LoadJsonFromDisc("handlers.json", availibe_fields);
@@ -656,6 +656,13 @@ void ServerFrame::GetEditTemplate(const Request& req, Response& resp, std::strin
   input["__availibe_commands"] = availibe_fields;
   func::LoadJsonFromDisc("handler_arguments.json", availibe_fields);
   input["__handler_arguments"] = availibe_fields.dump();
+  World* world = user_manager_.worlds()->GetWorld(input["__creator"], input["__world"]);
+	// If world was found, add world-specific data 
+	if (world) {
+		availibe_fields = world->GetAttributeCategories();
+		input["__attribute_categories"] = availibe_fields;
+	}
+
 
   std::cout << "ServerFrame::GetEditTemplate: " << input << std::endl;
   inja::Environment env;

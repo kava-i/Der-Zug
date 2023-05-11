@@ -1,0 +1,80 @@
+{% include "temp_header" %}
+
+  {{ log("rendered header") }}
+
+	<li custom="map">
+		<label>All mapping</label>
+		<ul id="mapping">
+			{% for key, value in default(content, {"":[]}) %}
+        <li custom="key_list">
+					<select id="id" autocomplete="off">
+						{% for attribute_id, attribute_name in __attributes %}
+						<option 
+							value={{attribute_id}} {% if attribute_id == key %}selected{% endif %}
+						>{{attribute_id}}</option>
+						{% endfor %}
+					</select>
+					<ul id="list">
+						{% for match in value %}
+							<li id="li_mapping_{{loop.index}}" custom="object">
+								<a class="abstract" onclick="EditItem('mapping_entry', this.parentNode)" title='{{match}}'>
+									{{default(match.match_type, "")}} {{default(match.value, 0)}} → {{default(match.show, "")}}
+								</a>
+
+								<span 
+									class="mod_elem" onclick="EditItem('mapping_entry', this.parentNode)"
+								><i>edit</i></span>
+								<span 
+									class="mod_elem" onclick="DeleteItem('mapping_entry', this.parentNode)" title="delete element"
+								>-</span>
+								<span 
+									class="mod_elem" onclick="AddItem('mapping_entry', this.parentNode)" title="add element"
+								>+</span>
+								<input style="display: none;" custom="json" value='{{match}}'/>
+							</li>
+						{% endfor %}
+					</ul>
+					<span class="mod_elem" onclick="DeleteItem('mapping',this.parentNode)">-</span>
+					<span class="mod_elem" onclick="AddItem('mapping',this.parentNode)">+</span>
+				</li>
+			{% endfor %} 
+		</ul>
+	</li>
+
+{% include "temp_footer" %}
+
+<li custom="get:object" id="mapping_entry_default" style="display: none;">
+  <a class="abstract" onclick="EditItem('mapping_entry', this.parentNode)" title='{}'>
+    ???
+  </a>
+  <span class="mod_elem" onclick="EditItem('mapping_entry', this.parentNode)"><i>edit</i></span>
+  <span class="mod_elem" onclick="DeleteItem('mapping_entry', this.parentNode)" title="delete element">-</span>
+  <span class="mod_elem" onclick="AddItem('mapping_entry', this.parentNode)" title="add element">+</span>
+  <input style="display: none;" custom="json" value="{}" />
+</li>
+
+<li custom="key_list" id="mapping_default" style="display: none;">
+	<select id="id" autocomplete="off">
+		{% for attribute_id, attribute_name in __attributes %}
+			<option value={{attribute_id}} >{{attribute_id}}</option>
+		{% endfor %}
+	</select>
+	<ul id="list">
+		<li id="li_mapping_0" custom="object">
+			<a class="abstract" onclick="EditItem('mapping_entry', this.parentNode)" title='{}'> ??? → ??? </a>
+			<span 
+				class="mod_elem" onclick="EditItem('mapping_entry', this.parentNode)"
+			><i>edit</i></span>
+			<span 
+				class="mod_elem" onclick="DeleteItem('mapping_entry', this.parentNode)" title="delete element"
+			>-</span>
+			<span 
+				class="mod_elem" onclick="AddItem('mapping_entry', this.parentNode)" title="add element"
+			>+</span>
+			<input style="display: none;" custom="json" value='{}'/>
+		</li>
+	</ul>
+	<span class="mod_elem" onclick="DeleteItem('mapping',this.parentNode)">-</span>
+	<span class="mod_elem" onclick="AddItem('mapping',this.parentNode)">+</span>
+</li>
+

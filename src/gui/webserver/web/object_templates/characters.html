@@ -45,13 +45,31 @@
   {{log("rendered dead_description") }}  
 
   <!-- Attributes like (hp, money, experience etc. -->
-  <li><label>HP:</label>
-    <input id="hp" custom="int" value="{{ default(hp, 10) }}"></li>
-  <li><label>Strength:</label>
-    <input id="strength" custom="int" value="{{ default(strength, 10) }}"></li>
-  <li><label>EP:</label>
-    <input id="hp" custom="int" value="{{ default(ep, 10) }}"></li>
-
+	<li custom="map">
+    <label 
+			title="Attributes and status, depending on what is defined in the corresponding config section"
+		>Attributes</label>
+		<ul id="attributes">
+			{% for attribute_id, attribute_name in __attributes %} 
+				<li custom="key_value">
+					<label style="width: 8rem;" >{{attribute_name}}:</label>
+					<input 
+						id="{{attribute_id}}" class="short" type="number" 
+						{% if exists("attributes") and existsIn(attributes, attribute_id) %}
+							{% for attribute, value in attributes %}
+								{% if attribute == attribute_id %} 
+									value={{value}}
+								{% endif %} 
+							{% endfor %} 
+						{% else %}
+							value=0
+						{% endif %}
+						>
+				</li>
+			{% endfor%} 
+		</ul>
+	</li>
+  
   <!-- Others (default value for non-set-values) -->
   <li>
     <label title="Characters faints, instead to die instantly.">Faint</label>

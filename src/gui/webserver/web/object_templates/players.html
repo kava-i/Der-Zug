@@ -5,13 +5,35 @@
   <li><label>Password:</label><input id="password" value="{{ default(password,
     "") }}"></li> 
   <li><label>room:</label><input id="room" value="{{ default(room, "test") }}"></li> 
-  <li><label>hp:</label><input id="hp" custom="int" value="{{ default(hp, 0) }}"></li> 
-  <li><label>Strength:</label><input id="strength" custom="int" value="{{
-    default(strength, "0") }}"></li> 
   <li><label>Quests:</label><input id="quests" custom="json"
                                                value={{default(quests,
                                                       [])}}></li>
-
+  <!-- Attributes like (hp, money, experience etc. -->
+	<li custom="map">
+    <label 
+			title="Attributes and status, depending on what is defined in the corresponding config section"
+		>Attributes</label>
+		<ul id="attributes">
+			{% for attribute_id, attribute_name in __attributes %} 
+				<li custom="key_value">
+					<label style="width: 8rem;" >{{attribute_name}}:</label>
+					<input 
+						id="{{attribute_id}}" class="short" type="number" 
+						{% if exists("attributes") and existsIn(attributes, attribute_id) %}
+							{% for attribute, value in attributes %}
+								{% if attribute == attribute_id %} 
+									value={{value}}
+								{% endif %} 
+							{% endfor %} 
+						{% else %}
+							value=0
+						{% endif %}
+						>
+				</li>
+			{% endfor%} 
+		</ul>
+	</li>
+ 
   <!-- Music and image for this object (default value for non-set-values -->
   <li>
     <label>music:</label>

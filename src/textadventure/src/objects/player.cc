@@ -1,9 +1,11 @@
 #include "player.h" 
+#include "game/config/attributes.h"
 #include "tools/webcmd.h"
 #include "tools/gramma.h"
 #include "tools/webcmd.h"
 #include <cctype>
 #include <memory>
+#include <numeric>
 #include <string>
 
 #define BLACK Webcmd::set_color(Webcmd::color::BLACK)
@@ -30,15 +32,11 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, std::strin
   func::convertToUpper(name_);
   m_sPassword = jAtts["password"];
   m_firstLogin = true; 
-  m_abbilities = {"strength", "skill"};
 
   //Initiazize world
   m_world = new CWorld(this, path);
+
   m_parser = new CParser(m_world->getConfig());
-  
-  //Character and Level
-  m_level = 0;
-  m_ep = 0;
   
   //Extract minds from config
   std::map<std::string, std::string> colors = {{"blue", BLUE}, 
@@ -56,7 +54,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, std::strin
   if (m_world->getConfig().count("attributes")>0) {
     std::vector<std::string> attributes = m_world->getConfig()["attributes"];
     for (auto it : attributes)   
-      m_stats[it] = 0;
+      attributes_[it] = 0;
   }
 
   // States, f.e. current fight, Dialog-partner
@@ -84,11 +82,8 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, std::strin
     // Create context for this quest.
     Context* context = new Context({{"name", it.first}, {"permeable",true}, {"questID", it.first}});
     // Add all quest listeners
-    std::cout << "Adding listener for quest: " << it.second->getID() << ": " << it.second->listeners().size() << std::endl;
-    for (auto& listener : it.second->listeners()) {
-      std::cout << "Adding listener: " << listener->id() << "|" << listener->handler() << std::endl;
+    for (auto& listener : it.second->listeners())
       context->AddListener(listener);
-    }
     // Add quest-context to context-stack.
     m_contextStack.insert(context, 3, it.first);
   }
@@ -146,10 +141,6 @@ SMind& CPlayer::getMind(std::string sMind) {
   return m_minds["logik"]; 
 }
 
-std::vector<std::string> CPlayer::getAbbilities() { 
-  return m_abbilities; 
-}
-
 std::map<std::string, CItem*>& CPlayer::getEquipment() { 
   return m_equipment; 
 }
@@ -205,7 +196,7 @@ std::map<std::string, std::string> CPlayer::GetCurrentStatus() {
   // Add attributes
   auto lambda1 = [](int x) { return std::to_string(x); };
   std::map<std::string, std::string> attributes = 
-      func::convertToObjectmap(m_stats, lambda1);
+      func::convertToObjectmap(attributes_, lambda1);
   status.insert(attributes.begin(), attributes.end());
 
   // Add minds
@@ -285,10 +276,11 @@ void CPlayer::appendSpeackerPrint(std::string sSpeaker, std::string sPrint) {
 }
 
 std::string CPlayer::returnSpeakerPrint(std::string sSpeaker, std::string sPrint) {
-  sPrint = func::returnSwapedString(sPrint, getStat("highness"));
+	int woozyness = CalculateWoozyness(m_world->attribute_config().woozy_attributes_,
+			m_world->attribute_config().woozy_method_);
+  sPrint = func::returnSwapedString(sPrint, woozyness);
   if(sSpeaker != "")
-    return "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint 
-      + WHITE + "</div>";
+    return "<div class='spoken'>" + sSpeaker + " - " + WHITEDARK + sPrint + WHITE + "</div>";
   return sPrint + "\n";
 }
 
@@ -812,7 +804,7 @@ void CPlayer::setNewQuest(std::string quest_id) {
   }
   if(quest->getSolved() == true)
     m_contextStack.erase(quest_id);
-  addEP(ep);
+	// TODO (fux) use the new update-field instead old: addEP(ep);
 }
 
 /**
@@ -825,39 +817,11 @@ void CPlayer::questSolved(std::string sQuestID, std::string step_id) {
   m_world->getQuest(sQuestID)->getSteps()[step_id]->solved(ep, this);
   if (m_world->getQuest(sQuestID)->getSolved() == true)
       m_contextStack.erase(sQuestID);
-  addEP(ep);
+	// TODO (fux) use the new update-field instead old: addEP(ep);
 }
 
 
 // *** Minds and Level *** //
-
-/**
-* Add experience points and call update-stats function if a new level is reached.
-* @param ep experience points to be added.
-*/
-void CPlayer::addEP(int ep) {
-  m_ep+=ep;
-  size_t counter=0;
-  for (;m_ep>=20; m_ep-=20, counter++, m_level++)
-    appendSuccPrint("Level Up!\n");
-
-  if (counter > 0) {
-    Context* context = m_contextStack.getContext("updateStats");
-    if (context == NULL)
-      UpdateStats(counter);
-    else {
-      context->setAttribute<int>("numPoints", context->getAttribute<int>
-          ("numPoints")+counter);
-      m_sPrint += "Du hast " + std::to_string(context->getAttribute<int>
-          ("numPoints")) + " Punkte zu vergeben!\n";
-      for(size_t i=0; i<m_abbilities.size(); i++) {
-          m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" 
-            + std::to_string(getStat(m_abbilities[i])) + ")\n";
-      }
-      m_sPrint += m_world->GetSTDText("update_stats");
-    }
-  }
-}
 
 /**
 * Let player know how many learning points player can assign and add choice context.
@@ -868,26 +832,33 @@ void CPlayer::UpdateStats(int numPoints) {
   std::string info_msg = m_world->GetSTDText("update_stats");
   Context* context = new Context((nlohmann::json){{"name", "updateStats"}, {"permeable", false}, 
       {"numPoints", numPoints}, {"error", info_msg}});
-  context->AddSimpleListener("h_updateStats", m_abbilities, 0);
+  context->AddSimpleListener("h_updateStats", m_world->attribute_config().skillable_, 0);
   m_contextStack.insert(context, 1, "updateStats");
 
   //Print attributes and level of each attribute and add choice-context.
-  m_sPrint += m_world->GetSTDText("points_left_a") + std::to_string(numPoints) 
+	PrintSkillableAttributes(numPoints);
+}
+
+void CPlayer::PrintSkillableAttributes(int available_points) {
+  //Print attributes and level of each attribute and add choice-context.
+  m_sPrint += m_world->GetSTDText("points_left_a") + std::to_string(available_points) 
     + m_world->GetSTDText("points_left_b");
-  for (size_t i=0; i<m_abbilities.size(); i++) {
-    m_sPrint += std::to_string(i+1) + ". " + m_abbilities[i] + ": level(" 
-      + std::to_string(getStat(m_abbilities[i])) + ")\n";
-  }
-  m_sPrint += info_msg;
+
+	int counter = 0;
+	const auto& attributes = m_world->attribute_config().attributes_;
+	for (const auto& it : m_world->attribute_config().skillable_) {
+    m_sPrint += std::to_string(++counter) + ". " + attributes.at(it).name_ 
+			+ ": " + std::to_string(getStat(it)) + "\n";
+	}
+  m_sPrint += m_world->GetSTDText("update_stats");
 }
 
 /**
 * Print minds of player by using table function.
 */
 void CPlayer::showMinds() {
-  m_sPrint += " --- " + name_ + " --- \n" += "Level: " + std::to_string(m_level) + "\n"
-          += "Ep: " + std::to_string(m_ep) + "/20.\n";
-  auto lamda = [](SMind mind) { return std::to_string(mind.level);};
+  m_sPrint += " --- " + name_ + " --- \n";
+	auto lamda = [](SMind mind) { return std::to_string(mind.level);};
   m_sPrint += func::table(m_minds, lamda);
 }
 
@@ -901,7 +872,7 @@ void CPlayer::showStats() {
   std::map<std::string, std::map<std::string, std::string>> stats_mapping 
     = m_world->getConfig()["mapAttributes"];
   std::map<std::string, std::string> stats;
-  for (auto it : m_stats) {  
+  for (auto it : attributes_) {  
     std::string key = it.first;
     key.front() = std::toupper(key.front());
 
@@ -953,8 +924,8 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps) {
     }
 
     //Check dependency in stats
-    else if(m_stats.count(it.key()) > 0) {
-      if(operators[sOpt](m_stats[it.key()], value) == false)
+    else if(attributes_.count(it.key()) > 0) {
+      if(operators[sOpt](attributes_[it.key()], value) == false)
         return false;
     }
     else {
@@ -1043,6 +1014,14 @@ void CPlayer::printError(std::string sError) {
   appendTechPrint(m_world->GetSTDText("tech_error"));
 }
 
+int CPlayer::CalculateWoozyness(std::vector<std::string> attributes, WoozyMethods method) {
+	if (method == WoozyMethods::ADD) {
+		return std::accumulate(attributes_.begin(), attributes_.end(), 0, [&](const auto& att) { 
+				return getStats(att, 0); });
+	}
+	return 0;
+}
+
 std::string CPlayer::getContextMusic(std::string new_music) {
   std::string music = "";
 
@@ -1067,7 +1046,6 @@ std::string CPlayer::getContextMusic(std::string new_music) {
     music = m_world->media("music/background");
 
   if (music != "" && music != cur_music_) {
-    std::cout << "Updated music to: " << music << std::endl; 
     cur_music_ = music;
     return Webcmd::set_sound(music) + " ";
   }

@@ -43,6 +43,9 @@ namespace func
    */
   std::string GetPage(std::string path);
 
+
+	std::string LoadMarkdown(const std::string& filename);
+
   /**    
    * Load an image from disc and return as string.      
    * @param[in] req (request)    

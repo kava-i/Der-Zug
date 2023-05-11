@@ -1,36 +1,42 @@
 {% include "temp_header" %}
-{{ log("rendered header") }}
 
-    <li custom="list">
-     <label title="You may add custom attributes. Attributes always map 
-                   On an integer value. You may also define attribute 
-                   mapping (mapAttributes), the to map certain values to 
-                   strings. f.e. if 'smoker' is and attribute and 
-                   {'1':'smoker', '0':'non-smoker' is a mapping, then
-                   'show stats' will show 'smoker/non-smoker' instead of 
-                   '0/1'">
-    Attributes:
-     </label>
-     <ul id="attributes">
-       {% if length(content) == 0 %}
-          <li>
-             <input id="id" placeholder="new attribute" value="">
-             <span class="mod_elem" onclick="del_elem('attributes',1)">-</span>
-             <span class="mod_elem" onclick="add_elem('attributes',1)">+</span>
-          </li>
+  {{ log("rendered header") }}
 
-       {% else %}
-         {% for attr in default(content, []) %}
-           <li>
-             <input id="id" placeholder="original" value="{{ attr }}">
-             <span class="mod_elem" onclick="del_elem('attributes',{{loop.index}})">-</span>
-             <span class="mod_elem" onclick="add_elem('attributes',{{loop.index}})">+</span>
-           </li>
-         {% endfor %}
-       {% endif %}
-     </ul>
-   </li>
-
-   {{ log("rendered attributes") }}
+	<li custom="list">
+		<label>All attributes</label>
+		<ul id="attributes">
+			{% for attribute in content %}
+    		<li custom="get:object">
+          <a class="abstract" onclick="EditItem('attributes', this.parentNode)" title='{{attribute}}'>
+						{{default(attribute.name, "")}} (category: {{default(attribute.category, "")}})
+					</a>
+          <span 
+            class="mod_elem" onclick="EditItem('attributes', this.parentNode)"
+          ><i>edit</i></span>
+          <span 
+            class="mod_elem" onclick="DeleteItem('attributes', this.parentNode)" title="delete element"
+          >-</span>
+          <span 
+            class="mod_elem" onclick="AddItem('attributes', this.parentNode)" title="add element"
+          >+</span>
+          <input style="display: none;" custom="json" value='{{attribute}}'/>
+      	</li>
+			{% endfor %} 
+		</ul>
+	</li>
 
 {% include "temp_footer" %}
+
+{{ log("creating default listener") }}
+
+<li custom="get:object" id="attributes_default" style="display: none;">
+  <a class="abstract" onclick="EditItem('attributes', this.parentNode)" title='{}'>
+    ???
+  </a>
+  <span class="mod_elem" onclick="EditItem('attributes', this.parentNode)"><i>edit</i></span>
+  <span class="mod_elem" onclick="DeleteItem('attributes', this.parentNode)" title="delete element">-</span>
+  <span class="mod_elem" onclick="AddItem('attributes', this.parentNode)" title="add element">+</span>
+  <input style="display: none;" custom="json" value="{}" />
+</li>
+
+{{ log("done creating default listener") }}

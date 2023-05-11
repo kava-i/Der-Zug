@@ -68,6 +68,7 @@ ErrorCodes Worlds::CreateNewWorld(std::string path, std::string name, nlohmann::
 
     //Copy default config, room and player-file.
     fs::copy("../../data/default_jsons/" + lang + "_config.json", full_path + "/config/config.json"); 
+    fs::copy("../../data/default_jsons/" + lang + "_config_attributes.json", full_path + "/config/config_attributes.json"); 
     fs::copy("../../data/default_jsons/test.json", full_path + "/rooms/"); 
     fs::copy("../../data/default_jsons/players.json", full_path + "/players/"); 
     fs::copy("../../data/default_jsons/background.jpg", full_path + "/images/"); 
@@ -108,6 +109,7 @@ ErrorCodes Worlds::DeleteWorld(std::string path) {
 ErrorCodes Worlds::UpdateElements(std::string path, std::string name, std::string action, bool force,
     nlohmann::json obj) {
   std::cout << "Worlds::UpdateElements(" << path << ")" << std::endl;
+  std::cout << "obj: " << obj.dump() << std::endl;
 
   // Get matching world and return error when no matching world was found.
   World* world = GetWorldFromUrl(path);
@@ -208,6 +210,7 @@ std::string Worlds::ParseTemplate(nlohmann::json json) {
     if (!func::demo_exists(json["path"]))
       path = json["path2"];
     std::cout << "Loading template: " << path << std::endl;
+    std::cout << ": " << json["header"].dump() << std::endl;
     temp = env.parse_template(path);
     page = env.render(temp, json["header"]);
   } catch (std::exception& e) {

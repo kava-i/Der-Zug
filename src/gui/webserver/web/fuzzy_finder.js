@@ -331,34 +331,35 @@ function Typeahead(input_field) {
     document.getElementById("fuzzy_finder_mode").style.color = "blue";
     return true;
   }
-  else if (input_field.id == "category") {
-    inps_ = categories_;
-    mode_ = "typeahead";
-    console.log("typeahead modus selected.");
-    cur_input_field_ = input_field;
-    document.getElementById("fuzzy_finder_mode").innerHTML = "handlers: ";
-    document.getElementById("fuzzy_finder_mode").style.color = "blue";
-    return true;
-  }
-  else if (input_field.id == "kind") {
-    inps_ = kinds_;
-    mode_ = "typeahead";
-    console.log("typeahead modus selected.");
-    cur_input_field_ = input_field;
-    document.getElementById("fuzzy_finder_mode").innerHTML = "handlers: ";
-    document.getElementById("fuzzy_finder_mode").style.color = "blue";
-    return true;
-  }
-  else if (input_field.id == "type") {
-    inps_ = types_;
-    mode_ = "typeahead";
-    console.log("typeahead modus selected.");
-    cur_input_field_ = input_field;
-    document.getElementById("fuzzy_finder_mode").innerHTML = "handlers: ";
-    document.getElementById("fuzzy_finder_mode").style.color = "blue";
-    return true;
-  }
-
+	else if (window.location.pathname.indexOf("/items/") > 0) {
+		if (input_field.id == "category") {
+			inps_ = categories_;
+			mode_ = "typeahead";
+			console.log("typeahead modus selected (category).");
+			cur_input_field_ = input_field;
+			document.getElementById("fuzzy_finder_mode").innerHTML = "handlers: ";
+			document.getElementById("fuzzy_finder_mode").style.color = "blue";
+			return true;
+		}
+		else if (input_field.id == "kind") {
+			inps_ = kinds_;
+			mode_ = "typeahead";
+			console.log("typeahead modus selected.");
+			cur_input_field_ = input_field;
+			document.getElementById("fuzzy_finder_mode").innerHTML = "handlers: ";
+			document.getElementById("fuzzy_finder_mode").style.color = "blue";
+			return true;
+		}
+		else if (input_field.id == "type") {
+			inps_ = types_;
+			mode_ = "typeahead";
+			console.log("typeahead modus selected.");
+			cur_input_field_ = input_field;
+			document.getElementById("fuzzy_finder_mode").innerHTML = "handlers: ";
+			document.getElementById("fuzzy_finder_mode").style.color = "blue";
+			return true;
+		}
+	}
   else
     return false;
 }
