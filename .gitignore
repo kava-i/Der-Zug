@@ -2,6 +2,7 @@ bin/*
 *.idx
 build*
 src/textadventure/build/*
+src/textadventure/logs/*
 src/gui/build/*
 src/gui/webserver/builder_tests.o
 src/gui/webserver/game_builder.o
