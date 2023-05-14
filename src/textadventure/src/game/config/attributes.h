@@ -2,6 +2,7 @@
 
 #include "nlohmann/json_fwd.hpp"
 #include <iostream>
+#include <optional>
 #include <map>
 #include <string>
 #include <vector>
@@ -33,6 +34,8 @@ struct AttributeMapping {
 	MatchType match_type_;
 	std::string show_;
 	int value_;
+
+  std::optional<std::string> check_mapping(int value) const;
 };
 
 struct AttributeConfig {

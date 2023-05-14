@@ -129,6 +129,18 @@ namespace func
   nlohmann::json Join(nlohmann::json& elem1, nlohmann::json& elem2);
 
   std::string GetLastElemFromPath(std::string path);
+
+  /** 
+   * Moves given path "up" a given number of directoryies. 
+   * F.e. 
+   * - /home/fux, 1 -> home/fux 
+   * - /home/fux, 2 -> fux 
+   * - ../../data/users, 2 -> ../data/users
+   * @param[in] path 
+   * @param[in] num of sequenzes to remove from beginning of path
+   * @return string with sequenzes removed from path prefix
+   */
+  std::string RemoveSequenzes(const std::filesystem::path& path, int sequenzes);
 }
 
 #endif

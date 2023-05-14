@@ -20,10 +20,10 @@
 
 using namespace httplib;
 
-
-//Constructor
-ServerFrame::ServerFrame(int textad_port, std::string path_to_cert, std::string path_to_key) 
-  : textad_port_(textad_port), user_manager_("../../data/users")
+// Constructor
+ServerFrame::ServerFrame(int textad_port, std::filesystem::path base_path, 
+    std::string path_to_cert, std::string path_to_key) 
+  : textad_port_(textad_port), user_manager_(base_path), base_path_(base_path)
 #ifdef _COMPILE_FOR_SERVER_
     , server_(path_to_cert.c_str(), path_to_key.c_str())
 #endif
@@ -44,15 +44,13 @@ void ServerFrame::Start(int port) {
 
   // *** Pages *** //
 
-  server_.Get("/(.*)/files/(.*)/images/(.*).jpg", [](const Request& req, Response& resp) {
-      std::string path_to_image = "../../data/users/"; 
-      path_to_image += req.matches[0];
+  server_.Get("/(.*)/files/(.*)/images/(.*).jpg", [this](const Request& req, Response& resp) {
+      std::filesystem::path path_to_image = base_path_ / req.matches[0].str();
       resp.set_content(func::GetMedia(path_to_image), "image/png");
   });
 
-  server_.Get("/(.*)/files/(.*)/sounds/(.*).mp3", [](const Request& req, Response& resp) {
-      std::string path_to_image = "../../data/users/"; 
-      path_to_image += req.matches[0];
+  server_.Get("/(.*)/files/(.*)/sounds/(.*).mp3", [this](const Request& req, Response& resp) {
+      std::filesystem::path path_to_image = base_path_ / req.matches[0].str();
       resp.set_content(func::GetMedia(path_to_image), "audio/mp3");
   });
 
@@ -228,7 +226,6 @@ void ServerFrame::DoLogin(const Request& req, Response& resp) {
     resp.status = 401;
   }
   else {
-    //std::string cookie = "SESSID=" + GenerateCookie(username) + "; Path=/; SECURE";
     ul.lock();
     std::string cookie = "SESSID=" + user_manager_.GenerateCookie(input["username"])
       + "; Path=/";
@@ -313,7 +310,7 @@ void ServerFrame::ServeFile(const Request& req, Response& resp, bool backup) con
       }
       else {
         sl.lock();
-        page = user_manager_.worlds()->GetPage(req.matches[0], textad_port_);
+        page = user_manager_.worlds()->GetPage(req.matches[0]);
         std::cout << "ServeFile: sending world-page..." << std::endl;
       } 
     } catch (std::exception& e) {
@@ -439,8 +436,12 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
     error_code = ErrorCodes::ACCESS_DENIED;
   }
   // Create new world
-  else if (req.matches.size() > 1 && req.matches[1] == "world")
-    error_code = user_manager_.worlds()->CreateNewWorld("/"+username+"/files/"+name, name, infos);
+  else if (req.matches.size() > 1 && req.matches[1] == "world") {
+    std::string world_id = func::ConvertToId(name);
+    infos["name"] = name;
+    error_code = user_manager_.worlds()->CreateNewWorld("/"+username+"/files/"+world_id, 
+        world_id, infos);
+  }
   // Create new object or (sub-)category.
   else
     error_code = user_manager_.worlds()->UpdateElements(path, name, "add", force, infos);
@@ -505,12 +506,13 @@ void ServerFrame::WriteObject(const Request& req, Response& resp) {
     return;
   std::string id = "";
   // Use id 
-  if (json_req["json"].contains("id"))
+  if (json_req["json"].contains("id")) {
     id = json_req["json"]["id"];
+  }
   // Use last element of path as id
   // If values is array (for config-objects), us first key, and reduce json to value.
-	else if (json_req["json"].size() > 1) {
-      id = path.substr(path.rfind("/")+1);
+  else if (json_req["json"].size() > 1) {
+    id = path.substr(path.rfind("/")+1);
 	}
   else {
     for (const auto& it : json_req["json"].items()) {
@@ -553,9 +555,6 @@ void ServerFrame::WriteMedia(const Request& req, Response& resp, std::string med
   User* user = user_manager_.GetUser(username);
   sl.unlock();
 
-  std::cout << "GOT IMAGE" << std::endl;
-  std::cout << "files: " << req.files.size() << std::endl;
-
   if (req.files.size() != 2) {
     resp.status = 400;
     return;
@@ -565,7 +564,6 @@ void ServerFrame::WriteMedia(const Request& req, Response& resp, std::string med
   const auto& data = req.get_file_value("data");
   std::string json_str = data.content;
   nlohmann::json req_data = nlohmann::json::parse(json_str);
-  std::cout << "Json request: " << req_data << std::endl;
 
   if (!req_data.contains("name") || !req_data.contains("path")) { 
     std::cout << "Wrong json format." << std::endl;
@@ -581,9 +579,9 @@ void ServerFrame::WriteMedia(const Request& req, Response& resp, std::string med
 
   std::cout << "Saving media-file..." << std::endl;
 
-  std::string path_to_media_loc = "../../data/users/"; 
-  path_to_media_loc += req_data["path"].get<std::string>() + "/" + req_data["name"].get<std::string>();
-  path_to_media_loc += (media_type == "image") ? ".jpg" : ".mp3";
+  std::filesystem::path path_to_media_loc = base_path_ 
+    / req_data["path"].get<std::string>() / req_data["name"].get<std::string>();
+  path_to_media_loc.replace_extension(((media_type == "image") ? ".jpg" : ".mp3"));
   func::StoreMedia(path_to_media_loc, file.content);
   user_manager_.worlds()->GetWorldFromUrl(req_data["path"])->LoadWorld();
 
@@ -723,7 +721,7 @@ void ServerFrame::GetLog(const Request& req, Response& resp) {
   std::string user = req.body.substr(1, req.body.find("/", 1));
   std::string world = req.body.substr(pos+7, req.body.find("/", pos+7)-(pos+7));
   std::string type = req.matches[1];
-  std::string path = "../../data/users/" + user + "logs/" + world + "_" + type;
+  std::filesystem::path path = base_path_ / user / "logs" / (world + "_" + type);
 
   // Check if path exists.
   if (func::demo_exists(path) == false)
@@ -731,9 +729,9 @@ void ServerFrame::GetLog(const Request& req, Response& resp) {
  
   // Convert to html
 	std::cout << "Converting log to html: " << path << ".txt" << std::endl;
-  std::string command = "cat " + path + ".txt | aha > " + path + ".html";
+  std::string command = "cat " + path.string() + ".txt | aha > " + path.string() + ".html";
   system(command.c_str());
-  resp.set_content(func::GetPage(path + ".html"), "text/txt");
+  resp.set_content(func::GetPage(path.string() + ".html"), "text/txt");
   resp.status = 200;
 }
 
@@ -745,26 +743,29 @@ void ServerFrame::StartGame(const Request& req, Response& resp) {
   auto data = ValidateJson(req, resp, {"creator", "world_name"});
   if (data.size() == 0)
     return;
-  //
+  
   // Extract data from path and build path to textadventure.
   std::string creator = data["creator"];
   std::string world_name = data["world_name"];
-  std::string path_to_game = "../data/users/" + creator + "/files/" + world_name + "/";
+  std::filesystem::path path_to_game = base_path_ / creator / "files" / world_name;
+
+  std::cout << "Got: " << creator << ", " << " world: " << world_name << ", Path: " << path_to_game << std::endl;
     
   // Get world (keep mutex locked to assure, that pointer is not changed. 
   std::cout << "StartGame: Getting world." << std::endl;
   std::shared_lock sl(shared_mtx_user_manager_);
   World* world = user_manager_.worlds()->GetWorld(creator, world_name);
-  if (world == nullptr || !func::demo_exists("../" + path_to_game)) {
+  std::cout << "worlds exists: " << (world != nullptr) << std::endl;
+  std::cout << "path exists: " << func::demo_exists(path_to_game) << std::endl;
+  if (world == nullptr || !func::demo_exists(path_to_game)) {
     resp.status = 401;
     return;
   }
-
   std::cout << "StartGame: creating world." << std::endl;
   httplib::Client cl("localhost", textad_port_);
   cl.set_connection_timeout(2);
   nlohmann::json request = {{"creator", creator}, {"name", world_name}, 
-    {"path", path_to_game}, {"port", world->port()}};
+    {"path", func::RemoveSequenzes(path_to_game, 1)}}; // move up one dir
   auto response = cl.Post("/api/create/", {}, request.dump(), "application/x-www-form-urlencoded");
 
   if (response) 

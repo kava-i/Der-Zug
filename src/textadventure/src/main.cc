@@ -106,6 +106,17 @@ std::string GetWorldId(std::string creator, std::string name) {
   return creator + "/" + name;
 }
 
+int GetNewPort(const std::map<std::string, std::shared_ptr<Webgame<WebserverGame, CGame>>> &games) {
+  std::set<int> ports = {};
+  for (const auto& it : games) 
+    ports.insert(it.second->port_);
+  int port = 9000;
+  for (unsigned int i=0; i<9500; i++) {
+    if (ports.count(port+i) == 0)
+      return port+i;
+  }
+  return 0xFFFF;
+}
 
 /**
  * main loop
@@ -195,9 +206,16 @@ int main(int x, char **argc) {
         std::shared_lock ul_mtx(mutex_webgames);
         nlohmann::json json = nlohmann::json::parse(req.body); 
         std::string path = json["path"].get<std::string>();
+        if (path.back() != '/') 
+          path.append("/");
         std::string name = json["name"].get<std::string>();
         std::string creator = json["creator"].get<std::string>();
-        int port = json["port"].get<int>();
+        int port = GetNewPort(webgames);
+        if (port == 0xFFFF) {
+            resp.status = 401;
+            spdlog::get(LOGGER)->error("[create] failed creating game {} to many worlds!");
+            std::cout << "[create] failed creating game {} to many worlds!" << std::endl;
+        }
         std::string game_id = GetWorldId(creator, name);
         spdlog::get(LOGGER)->debug("[create] game-id: {}", game_id);
         // Game already running

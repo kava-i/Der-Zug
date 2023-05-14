@@ -72,8 +72,6 @@
   },
   "minds":[],
   "commands":[],
-  "attributes":[],
-  "mapAttributes":{},
   "new_player":{
     "name":"The Stranger",
     "password":"password",

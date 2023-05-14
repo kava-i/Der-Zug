@@ -17,17 +17,22 @@ namespace fs = std::filesystem;
 const std::vector<std::string> Worlds::categories_ = {"attacks", "config", "dialogs", 
   "players", "rooms", "characters", "details", "items", "quests", "texts", "images"};
 
-Worlds::Worlds(std::string base_path, int start_port) {
+Worlds::Worlds(std::string base_path) {
   base_path_ = base_path;
-  ports_ = start_port;
   // Iterate over all users. 
   for (auto up : fs::directory_iterator(base_path_)) {
     std::string cur_path = up.path();
     // Iterate over user-worlds and create world elements.
     for (auto wp : fs::directory_iterator(cur_path + "/files")) {
-      worlds_[wp.path()] = new World(base_path_, wp.path(), ports_); 
-      ports_ += 2; // increase port (+1: game-http-server, +1: game-websocket-server.
-     //Create all subcategories.
+      // Load infos in .data folder and create new world:
+      nlohmann::json infos;
+      func::LoadJsonFromDisc(wp.path().string() + "/.data/infos.json", infos);
+      try {
+        worlds_[wp.path()] = new World(base_path_, wp.path(), infos["id"], infos["name"]); 
+      } catch (std::exception &e) {
+        std::cout << "Failed loading world from info: " << infos.dump() << e.what() << std::endl;
+      }
+      // Create all subcategories.
       for (const auto& category : categories_)
         fs::create_directory(wp.path().string() + "/" + category);
     }
@@ -44,7 +49,7 @@ const std::map<std::string, World*>& Worlds::worlds() {
   return worlds_;
 }
 
-ErrorCodes Worlds::CreateNewWorld(std::string path, std::string name, nlohmann::json infos) {
+ErrorCodes Worlds::CreateNewWorld(std::string path, std::string world_id, nlohmann::json infos) {
   std::cout << "Worlds::AddWorld(" << path << ")" << std::endl;
   if (GetWorldFromUrl(path) != nullptr) 
     return ErrorCodes::ALREADY_EXISTS;
@@ -58,25 +63,27 @@ ErrorCodes Worlds::CreateNewWorld(std::string path, std::string name, nlohmann::
       lang = "en";
     std::cout << "using language: " << lang << std::endl;
 
-    //Create directory for world
+    // Create directory for world
     fs::create_directories(full_path);
 
-    //Create all subcategories.
+    // Create all subcategories.
     for (const auto& category : categories_)
       fs::create_directory(full_path + "/" + category);
-    fs::create_directory(full_path + "/data"); // data is a folder necessary but no category.
+    fs::create_directory(full_path + "/.data"); // data is a folder necessary but no category.
 
     //Copy default config, room and player-file.
     fs::copy("../../data/default_jsons/" + lang + "_config.json", full_path + "/config/config.json"); 
-    fs::copy("../../data/default_jsons/" + lang + "_config_attributes.json", full_path + "/config/config_attributes.json"); 
+    fs::copy("../../data/default_jsons/" + lang + "_config_attributes.json", full_path + "/config/attributes.json"); 
     fs::copy("../../data/default_jsons/test.json", full_path + "/rooms/"); 
     fs::copy("../../data/default_jsons/players.json", full_path + "/players/"); 
     fs::copy("../../data/default_jsons/background.jpg", full_path + "/images/"); 
-    
+
     // Create new world.
     std::unique_lock ul(shared_mtx_worlds_);
-    worlds_[full_path] = new World(base_path_, full_path, ports_);
-    ports_ += 2; // increate port (+1: game-http-server, +1: game-websocket-server.
+    worlds_[full_path] = new World(base_path_, full_path, world_id, infos["name"]);
+    // Add id to infos and store infos to disc: 
+    infos["id"] = world_id;
+    func::WriteJsonToDisc(full_path + "/.data/infos.json", infos);
   }
   catch (std::exception& e) {
     std::cout << "Failed creating directories of new world: " << e.what() << std::endl;
@@ -106,10 +113,9 @@ ErrorCodes Worlds::DeleteWorld(std::string path) {
   return ErrorCodes::SUCCESS;
 }
 
-ErrorCodes Worlds::UpdateElements(std::string path, std::string name, std::string action, bool force,
-    nlohmann::json obj) {
+ErrorCodes Worlds::UpdateElements(std::string path, std::string world_id, 
+    std::string action, bool force, nlohmann::json obj) {
   std::cout << "Worlds::UpdateElements(" << path << ")" << std::endl;
-  std::cout << "obj: " << obj.dump() << std::endl;
 
   // Get matching world and return error when no matching world was found.
   World* world = GetWorldFromUrl(path);
@@ -118,21 +124,21 @@ ErrorCodes Worlds::UpdateElements(std::string path, std::string name, std::strin
 
   // Call matching world-function: add, delete or modify element.
   if (action == "modify")
-    return world->ModifyObject(base_path_ + path, name, obj, force);
+    return world->ModifyObject(base_path_ + path, world_id, obj, force);
   else if (action == "add")
-    return world->AddElem(base_path_ + path, func::ConvertToId(name), obj, force);
+    return world->AddElem(base_path_ + path, func::ConvertToId(world_id), obj, force);
   else if (action == "delete")
-    return world->DelElem(base_path_ + path, func::ConvertToId(name), force);
+    return world->DelElem(base_path_ + path, func::ConvertToId(world_id), force);
   else
    return ErrorCodes::NOT_ALLOWED;
 }
 
-std::string Worlds::GetPage(std::string path, int textad_port) {
+std::string Worlds::GetPage(std::string path) {
   std::cout << "Worlds::GetPage(" << path << ")" << std::endl;
   World* world = GetWorldFromUrl(path);
   if (world == nullptr) 
     return "No world found.";
-  nlohmann::json json = world->GetPage(base_path_ + path, textad_port);
+  nlohmann::json json = world->GetPage(base_path_ + path);
   if (json.count("error") > 0) 
     return json["error"];
   return ParseTemplate(json);
@@ -206,11 +212,11 @@ std::string Worlds::ParseTemplate(nlohmann::json json) {
   // Get path and object, then crete template and render page.
   std::string page = "";
   try {
+    std::cout << "Before render" << json.dump() << std::endl;
     std::string path = json["path"];
     if (!func::demo_exists(json["path"]))
       path = json["path2"];
     std::cout << "Loading template: " << path << std::endl;
-    std::cout << ": " << json["header"].dump() << std::endl;
     temp = env.parse_template(path);
     page = env.render(temp, json["header"]);
   } catch (std::exception& e) {
@@ -224,6 +230,7 @@ std::string Worlds::ParseTemplate(nlohmann::json json) {
 World* Worlds::GetWorldFromUrl(std::string path) {
   // Builds full path, as only
   std::string full_path = base_path_ + path;
+  std::cout << "GetWorldFromUrl: " << full_path << std::endl;
   
   // worlds are only saved as "[base_path]/[user]/files/[world]" thus use of "find".
   std::unique_lock ul(shared_mtx_worlds_);
@@ -234,9 +241,9 @@ World* Worlds::GetWorldFromUrl(std::string path) {
   return nullptr;
 }
 
-World* Worlds::GetWorld(std::string creator, std::string world_name) {
+World* Worlds::GetWorld(std::string creator, std::string world_id) {
   for (const auto& it : worlds_) {
-    if (it.second->creator() == creator && it.second->name() == world_name)
+    if (it.second->creator() == creator && it.second->id() == world_id)
       return it.second;
   }
   return nullptr;

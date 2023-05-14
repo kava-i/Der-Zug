@@ -869,22 +869,29 @@ void CPlayer::showStats() {
   m_sPrint += "--- " + name_ + "---\n";
   
   // Get mapping from config.
-  std::map<std::string, std::map<std::string, std::string>> stats_mapping 
-    = m_world->getConfig()["mapAttributes"];
-  std::map<std::string, std::string> stats;
+  const auto& attribute_conf = m_world->attribute_config().attributes_;
+  const auto& mapping = m_world->attribute_config().mapping_;
+  std::map<std::string, std::map<std::string, std::string>> stats;
   for (auto it : attributes_) {  
-    std::string key = it.first;
-    key.front() = std::toupper(key.front());
+    std::string category = attribute_conf.at(it.first).category_;
+    std::string name = attribute_conf.at(it.first).name_;
 
-    if (stats_mapping.count(it.first) == 0) {
-      stats[key] = std::to_string(it.second);
+    if (mapping.count(it.first) > 0) {
+      for (const auto& map : mapping.at(it.first)) {
+        auto val = map.check_mapping(it.second);
+        if (val.has_value()) {
+          stats[category][name] = val.value();
+          break;
+        }
+      }
     }
     else {
-      stats[key] = stats_mapping[it.first][std::to_string(it.second)];
+      stats[category][name] = std::to_string(it.second);
     }
   }
-  auto lambda = [](std::string stat) { return stat; };
-  m_sPrint += func::table(stats, lambda, "width:20%");
+  auto lambda_key = [](const auto& key, const auto&) { return key; };
+  auto lambda_val = [](const auto&, const auto& val) { return val; };
+  m_sPrint += func::table(stats, lambda_key, lambda_val, "width:20%");
 }
 
 /**
@@ -1016,9 +1023,12 @@ void CPlayer::printError(std::string sError) {
 
 int CPlayer::CalculateWoozyness(std::vector<std::string> attributes, WoozyMethods method) {
 	if (method == WoozyMethods::ADD) {
-		return std::accumulate(attributes_.begin(), attributes_.end(), 0, [&](const auto& att) { 
-				return getStats(att, 0); });
-	}
+		int i = std::accumulate(attributes.begin(), attributes.end(), 0, 
+        [this](int initial, auto att) -> int { 
+				  return initial + this->getStat(att, 0);
+	      });
+    return i;
+  }
 	return 0;
 }
 

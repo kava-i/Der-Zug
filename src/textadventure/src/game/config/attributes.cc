@@ -23,12 +23,27 @@ AttributeMapping::AttributeMapping(const nlohmann::json& json) {
 		throw "match_type is neight \">\", \"<\" or \"=\"";
 }
 
+std::optional<std::string> AttributeMapping::check_mapping(int value) const {
+  std::cout << "CHECK MAPPING: " << show_ << " -> " << value << "[" << match_type_ << "]" 
+    << value_ << std::endl;
+  if (match_type_ == MatchType::EQUALS && value_ == value)
+    return show_;
+  else if (match_type_ == MatchType::LESSER && value < value_)
+    return show_;
+  else if (match_type_  == MatchType::GREATER && value > value_)
+    return show_;
+  else 
+    return {};
+}
+
 AttributeConfig::AttributeConfig(nlohmann::json json) {
 	for (const auto& it : json.at("attributes").get<std::vector<nlohmann::json>>()) {
 		attributes_[it.at("id")] = ConfigAttribute(it);
 	}
 
-	for (const auto& it : json.at("mapping").get<std::map<std::string, std::vector<nlohmann::json>>>()) {
+  std::cout << "Parsing mapping..." << std::endl;
+	for (const auto& it : 
+      json.at("mapping").get<std::map<std::string, std::vector<nlohmann::json>>>()) {
 		std::vector<AttributeMapping> mapping;
 		for (const auto& map : it.second)
 			mapping.push_back(AttributeMapping(map));
@@ -38,8 +53,8 @@ AttributeConfig::AttributeConfig(nlohmann::json json) {
 	skillable_ = json.value("skillable", std::vector<std::string>());
 	woozy_attributes_ = json.value("woozy_attributes", std::vector<std::string>());
 	std::string woozy_method = json.value("woozy_method", "add");
-	if (woozy_method == "add") 
+	if (woozy_method == "add") {
 		woozy_method_ = WoozyMethods::ADD;
-
+  }
 	level_based_ = json.value("levelbased", false);
 }

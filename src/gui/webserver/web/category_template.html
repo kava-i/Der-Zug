@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 
+{{ log("rendering header") }}
 <head>
     <meta charset="utf-8">
     <title>Game*Creator - {{name}}</title>
@@ -65,7 +66,7 @@
   <div style="float: right;">
     <button id="try_game_btn" class="pure-button" style="width:2rem;height:2rem;"
       title="Try game (closes game if open): Shortcut: 0" 
-      onclick="try_game('{{__creator}}', '{{__world_name}}', {{__textad_port}});">
+      onclick="try_game('{{__creator}}', '{{__world_name}}');">
       <i class="fas fa-gamepad"></i>
     </button>
   </div>
@@ -99,7 +100,7 @@
       {% if __is_main %}
         <button 
           class="pure-button" style="margin-bottom:0.5em;"
-          onclick="run('{{__creator}}', '{{__world_name}}', {{__textad_port}});"
+          onclick="run('{{__creator}}', '{{__world_name}}');"
         >
           Run
         </button>

@@ -29,13 +29,13 @@
 class World {
   public:
     // constructer/ destructor:
-    World() : base_path_(""), path_(""), port_(0){} 
+    World() : base_path_(""), path_(""), id_("undefined"), name_("") {} 
 
     /**
      * Constructor generating all pages.
      * @param[in] base_path to user-directory.
      */
-    World(std::string base_path, std::string path, int port);
+    World(std::string base_path, std::string path, std::string id, std::string name);
     
     /**
      * Destructor deleteing all pages.
@@ -43,7 +43,7 @@ class World {
     ~World();
 
     // getter:
-    int port() const;
+    std::string id() const;
     std::string name() const;
     std::string creator() const;
 
@@ -81,11 +81,10 @@ class World {
     /**
      * Calls GetPage value of referenced page and add short paths to data-json.
      * @param[in] path to category/area/object.
-     * @param[in] textad_port port to textadventure
      * @param[in] only_json if true, then returns only the objects json.
      * @return json with page-data, path to template and short-paths.
      */
-    nlohmann::json GetPage(std::string path, int textad_port, bool only_json=false) const;
+    nlohmann::json GetPage(std::string path, bool only_json=false) const;
 
     /**
      * Provides a graph representation if availibe and an empty json otherwise.
@@ -114,9 +113,9 @@ class World {
     // member variables:
     const std::string base_path_;
     const std::string path_;
-    std::string name_;
+    const std::string id_;
+    const std::string name_;
     std::string creator_;
-    const int port_; // port=http-server, port+1=websocketserver.
 
     mutable std::shared_mutex shared_mtx_notes_;
     std::map<std::string, std::string> notes_;

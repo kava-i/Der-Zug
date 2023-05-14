@@ -19,6 +19,11 @@ void Category::GenerateChildNodes() {
   child_nodes_.clear();
   for (auto& p : fs::directory_iterator(path_)) {
     fs::path fs_path = p.path();
+    // skip hidden files (f.e. the created data file)
+    if (fs_path.filename().string().front() == '.') {
+      std::cout << "  - omitting: " << fs_path.string() << std::endl;
+      continue;
+    }
     fs_path.replace_extension("");
     std::string path = fs_path;
     child_nodes_[path.substr(base_path_.length())] = p.path().stem();

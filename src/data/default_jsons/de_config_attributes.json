@@ -1,7 +1,7 @@
 {
     "config": {
         "skillable": [
-            "eigenschaften"
+            "Eigenschaften"
         ],
         "woozy_attributes": [
             "highness",
@@ -14,62 +14,69 @@
         {
             "id": "level",
             "name": "Level",
-            "category": "allgemein",
+            "category": "Allgemein",
             "default_value": 0
         },
         {
             "id": "ep",
             "name": "EP",
-            "category": "allgemein",
+            "category": "Allgemein",
             "default_value": 0
         },
         {
+            "id": "gold",
+            "name": "Gold",
+            "category": "Allgemein",
+            "default_value": 0
+        },
+
+        {
             "id": "hp",
             "name": "HP",
-            "category": "base",
+            "category": "Base",
             "default_value": 100
         },
         {
             "id": "fp",
             "name": "FP",
-            "category": "base",
+            "category": "Base",
             "default_value": 100
         },
         {
             "id": "strength",
             "name": "St\u00e4rke",
-            "category": "eigenschaften",
+            "category": "Eigenschaften",
             "default_value": 10
         },
         {
             "id": "geschick",
             "name": "Geschicklichkeit",
-            "category": "eigenschaften",
+            "category": "Eigenschaften",
             "default_value": 10
         },
         {
             "id": "raucher",
             "name": "Raucher*in",
-            "category": "charakter",
+            "category": "Charakter",
             "default_value": 0
         },
         {
             "id": "trunkenheit",
             "name": "Trunkenheit",
-            "category": "status",
+            "category": "Status",
             "default_value": 0
         },
         {
             "id": "highness",
             "name": "Highness",
-            "category": "status",
+            "category": "Status",
             "default_value": 0
         }
 		],
 		"mapping": {
         "smoker": [
 					{
-							"match_type": "",
+							"match_type": "=",
 							"value": 0,
 							"show": "Nicht-Raucher"
 					},
@@ -83,5 +90,6 @@
 							"value": 5,
 							"show": "Kettenraucher"
 					}
+      ]
 		}
 }

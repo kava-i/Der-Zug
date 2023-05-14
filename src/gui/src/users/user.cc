@@ -82,10 +82,9 @@ std::string User::GetOverview(nlohmann::json shared_worlds, nlohmann::json all_w
 
   //Add all dictionaries of this user to json.
   worlds["worlds"] = nlohmann::json::array();
-  for (auto& p : fs::directory_iterator(path_ + "/" + username_ + "/files")) {
-    if (p.path().stem() != "user") {
-      worlds["worlds"].push_back({{"creator", username_}, {"name", p.path().stem()}});
-    }
+  for (const auto& world : all_worlds) {
+    if (world["creator"] == username_)
+      worlds["worlds"].push_back(world);
   }
   worlds["shared_worlds"] = shared_worlds;
   worlds["all_worlds"] = all_worlds;

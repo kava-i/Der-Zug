@@ -65,15 +65,15 @@
             <tr>
               <td>
                 <a class="medium"
-                  href="/{{username}}/files/{{world.name}}">{{world.name}}</a>
+                  href="/{{username}}/files/{{world.id}}">{{world.name}}</a>
               </td>
               <td>
                 <i class="fas fa-minus button2" title="Delete this world."
-                  onclick="OpenDelElemModal('world','{{world.name}}');return true"></i>
+                  onclick="OpenDelElemModal('world','{{world.id}}');return true"></i>
               </td>
               <td>
                 <i class="txt_button" title="Go to textadventure" 
-                  onclick="play_game('{{world.creator}}', '{{world.name}}', {{textad_port}})"
+                  onclick="play_game('{{world.creator}}', '{{world.id}}')"
                 >
                   PLAY
                 </i>
@@ -94,11 +94,11 @@
             <tr>
               <td>
                 <a class="medium"
-                   href="/{{world.creator}}/files/{{world.name}}">{{world.creator}}/{{world.name}}</a>
+                   href="/{{world.creator}}/files/{{world.id}}">{{world.creator}}/{{world.name}}</a>
               </td>
               <td>
                 <i class="txt_button" title="Go to textadventure" 
-                  onclick="play_game('{{world.creator}}', {{textad_port}})"
+                  onclick="play_game('{{world.creator}}')"
                 >
                   PLAY
                 </i>
@@ -117,18 +117,18 @@
             <tr>
               <td>
                 <a class="medium"
-                   href="/{{world.creator}}/files/{{world.name}}">{{world.creator}}/{{world.name}}</a>
+                   href="/{{world.creator}}/files/{{world.id}}">{{world.creator}}/{{world.name}}</a>
               </td>
               <td>
                 <i class="txt_button" title="Go to textadventure" 
-                  onclick="play_game('{{world.creator}}', '{{world.name}}', {{textad_port}})"
+                  onclick="play_game('{{world.creator}}', '{{world.id}}')"
                 >
                   PLAY
                 </i>
               </td>
               <td>
                 <i class="txt_button" title="Request access." 
-                      onclick="request_access('{{world.creator}}','{{world.name}}')">Request</i>
+                      onclick="request_access('{{world.creator}}','{{world.id}}')">Request</i>
               </td>
             </tr>
           {% endfor %}

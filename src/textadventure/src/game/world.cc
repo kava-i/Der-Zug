@@ -24,14 +24,8 @@ CWorld::CWorld(CPlayer* p, std::string path) {
   m_path_to_world = path;
   // Load config
   configFactory("config/config.json");
+  configAttributeFactory("config/attributes.json");
 
-	try {
-		attribute_config_ = AttributeConfig(func::LoadJsonFromDisc("config/attributes.json"));
-	} catch(std::exception& e) {
-		std::string msg = "Failed parsing attribute-config: ";
-		msg + e.what();
-    throw WorldFactoryException(msg);
-	}
   worldFactory(p);
   // Extract f.e. media files from config
   configExtractor(p);
@@ -212,6 +206,19 @@ void CWorld::configFactory(const std::string path) {
     }
   }
 }
+
+void CWorld::configAttributeFactory(const std::string path) {
+	try {
+    auto config = func::LoadJsonFromDisc(m_path_to_world + path);
+    if (config == NULL || config.size() == 0)
+      throw WorldFactoryException("Missing attribute config at " + path);
+		attribute_config_ = AttributeConfig(config);
+	} catch(std::exception& e) {
+		std::string msg = "Failed parsing attribute-config: ";
+		msg + e.what();
+    throw WorldFactoryException(msg);
+	}
+} 
 
 void CWorld::configExtractor(CPlayer *p) {
   if (m_config.contains("music")) {

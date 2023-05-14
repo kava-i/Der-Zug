@@ -148,15 +148,13 @@
             "take": 1
         }
     ],
-  "attributes":[],
-  "mapAttributes":{},
   "new_player":{
     "name":"Der Fremde",
     "password":"passwort",
     "room":"test_test_room",
     "hp":10,
     "stength":10
-    },
+  },
   "music": {
       "background": "",
       "fight": ""

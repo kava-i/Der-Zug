@@ -5,6 +5,7 @@
  
 #include <cstddef>
 #include <exception>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <openssl/evp.h>
@@ -247,6 +248,16 @@ nlohmann::json Join(nlohmann::json &elem1, nlohmann::json &elem2) {
 
 std::string GetLastElemFromPath(std::string path) {
   return path.substr(path.rfind("/")+1);
+}
+
+std::string RemoveSequenzes(const std::filesystem::path& path, int sequenzes) {
+  auto it = path.begin();
+  std::advance(it, sequenzes);
+  std::filesystem::path reduced; 
+  for (; it!=path.end(); it++) {
+    reduced /= *it;
+  }
+  return reduced;
 }
 
 } //Close namespace 

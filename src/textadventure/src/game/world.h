@@ -129,6 +129,13 @@ public:
      */
     void configFactory(const std::string path);
 
+    /**
+     * Reads attribute-config 
+     * @param[in] path
+     */
+    void configAttributeFactory(const std::string path);
+
+
     /** 
      * Extracs and then sets media data (image, sound) from config.
      */

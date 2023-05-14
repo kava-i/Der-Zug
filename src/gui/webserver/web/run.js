@@ -1,4 +1,6 @@
 //Function to send request, to check whether game is still running
+const TEXT_ADVENTURE_PORT = 4489;
+
 function check_running() {
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", "/api/check_running");
@@ -37,15 +39,15 @@ function get_log(x) {
   }
 }
 
-async function try_game(creator, world_name, textad_port) {
+async function try_game(creator, world_name) {
   notify("Closing running game...");
-  end(creator, world_name, textad_port, true);
+  end(creator, world_name, true);
   await new Promise(r => setTimeout(r, 1800));
   notify("Starting game...");
-  run(creator, world_name, textad_port);
+  run(creator, world_name);
 }
 
-async function run(creator, world_name, textad_port) {
+async function run(creator, world_name) {
   // Check if game is already running.
   const data = new Object({"creator": creator, "world_name": world_name});
   var xhttp = new XMLHttpRequest();
@@ -71,7 +73,7 @@ async function run(creator, world_name, textad_port) {
     // If Successfully started, redirect to game-page.
     else {
       var hostname = window.location.hostname;
-      window.open("http://" + hostname+ ":" + textad_port + "/" + creator + "/" + world_name);
+      window.open("http://" + hostname+ ":" + TEXT_ADVENTURE_PORT + "/" + creator + "/" + world_name);
     }
   }
 }

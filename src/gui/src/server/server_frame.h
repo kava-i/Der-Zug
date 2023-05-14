@@ -29,7 +29,8 @@ class ServerFrame {
      * @param path_to_cert in case of running on server: path to ssl certificate.
      * @param path_to_key in case of running on server: path to ssl key.
      */
-    ServerFrame(int textad_port, std::string path_to_cert = "", std::string path_to_key = "");
+    ServerFrame(int textad_port, std::filesystem::path base_path, 
+        std::string path_to_cert = "", std::string path_to_key = "");
 
     // *** getter *** //
     UserManager& user_manager() {
@@ -216,6 +217,7 @@ class ServerFrame {
     mutable std::shared_mutex shared_mtx_user_manager_;
 
     std::shared_ptr<maddy::Parser> parser_;
+    const std::filesystem::path base_path_;
 
     /**
      * Checks whether user is logged in.

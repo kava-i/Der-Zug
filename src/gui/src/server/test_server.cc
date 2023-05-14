@@ -18,6 +18,7 @@
 #include "util/func.h"
 
 namespace fs=std::filesystem;
+#define DATA_PATH "../../data/users"
 
 void del_test_user(std::string username) {
   //If already exists, delete test data.
@@ -32,7 +33,7 @@ TEST_CASE("Server is working as expected", "[server]") {
   del_test_user("test");
   del_test_user("test2");
  
-  ServerFrame server(4489);
+  ServerFrame server(4489, DATA_PATH);
 
   std::thread t1([&server]() {
     server.Start(4444);

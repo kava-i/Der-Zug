@@ -13,8 +13,7 @@
 namespace fs = std::filesystem;
 
 UserManager::UserManager(std::string main_path) : path_(main_path) {
-  ports_ = 9001;
-  worlds_ = new Worlds(path_, 9001);
+  worlds_ = new Worlds(path_);
 
   //Iterate over users and create user.
   for (auto& p : fs::directory_iterator(path_)) {
@@ -46,9 +45,8 @@ User* UserManager::GetUser(std::string username) const {
 }
 
 void UserManager::AddUser(std::string username, std::string password) {
-  std::scoped_lock scoped_locks(shared_mutex_users_, shared_mutex_ports_);
+  std::shared_lock sl(shared_mutex_users_);
   users_[username] = new User(username, password, path_, categories_);
-  ports_+=2;
   users_[username]->SafeUser();
 }
 
@@ -190,8 +188,9 @@ std::string UserManager::GenerateCookie(std::string username) {
   static const char alphanum[] =
 		"0123456789""ABCDEFGHIJKLMNOPQRSTUVWXYZ""abcdefghijklmnopqrstuvwxyz""_";
   std::string sessid = "";
-	for (int i = 0; i< 32; ++i)
+	for (int i = 0; i< 32; ++i) {
 		sessid += alphanum[buffer[i] % (sizeof(alphanum)-1)];
+  }
   std::unique_lock ul(shared_mutex_cookies_);
   cookies_[sessid] = username; 
   return sessid;
@@ -211,15 +210,11 @@ std::string UserManager::GetUserFromCookie(const char* ptr) const {
   return cookies_.at(cookie);
 }
 
-int UserManager::GetNextPort() {
-  ports_+=2;
-  return ports_;
-}
-
 nlohmann::json UserManager::GetAllWorlds(std::string username) const {
   nlohmann::json all_worlds = nlohmann::json::array();
   for (auto it : worlds_->worlds()) {
-     all_worlds.push_back({{"creator", it.second->creator()}, {"name", it.second->name()}});
+     all_worlds.push_back({{"creator", it.second->creator()}, 
+         {"id", it.second->id()}, {"name", it.second->name()}});
   }
   return all_worlds;
 }
@@ -228,12 +223,15 @@ nlohmann::json UserManager::GetSharedWorlds(std::string username) const {
   nlohmann::json shared_worlds = nlohmann::json::array();
   for(auto it : GetUser(username)->locations()) {
     std::string location = it;
-    if (location.find(username) == 0) continue;
-    if (location.find("backups") != std::string::npos) continue;
+    if (location.find(username) == 0) 
+      continue;
+    if (location.find("backups") != std::string::npos) 
+      continue;
     std::string user = location.substr(0, location.find("/"));
     std::string world = location.substr(location.rfind("/")+1);
     if (GetUser(user) != nullptr)
-      shared_worlds.push_back({{"creator", user}, {"name", world}});
+      shared_worlds.push_back({{"creator", user}, {"id", world}});
+    // TODO (fux): include world name
   }
   return shared_worlds;
 }

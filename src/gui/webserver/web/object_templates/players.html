@@ -18,7 +18,7 @@
 				<li custom="key_value">
 					<label style="width: 8rem;" >{{attribute_name}}:</label>
 					<input 
-						id="{{attribute_id}}" class="short" type="number" 
+						id="{{attribute_id}}" class="short" type="number" custom="int"
 						{% if exists("attributes") and existsIn(attributes, attribute_id) %}
 							{% for attribute, value in attributes %}
 								{% if attribute == attribute_id %} 

@@ -14,13 +14,6 @@ CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttac
     : CObject(jAttributes, p, "person") {
   //Set stats.
 	attributes_ = jAttributes.value("attributes", std::map<std::string, int>());
-  // m_stats["highness"]	= 0;
-  // m_stats["hp"]	    = jAttributes.value("hp", 40);
-  // m_stats["max_hp"]   = m_stats["hp"];
-  // m_stats["gold"]	    = jAttributes.value("gold", 5);
-  // m_stats["strength"] = jAttributes.value("strength", 8);
-  // m_stats["skill"]    = jAttributes.value("skill", 8);
-  // m_stats["ep"]	    = jAttributes.value("ep", 0);
 
   will_faint_ = (bool)jAttributes.value("faint", 0);
 	fainted_ = false;
@@ -45,7 +38,7 @@ CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttac
 
 ///return map of stats
 std::map<std::string, int>& CPerson::getStats() {
-    return attributes_;
+  return attributes_;
 }
 
 /**
@@ -55,7 +48,7 @@ std::map<std::string, int>& CPerson::getStats() {
 */
 int CPerson::getStat(std::string id, int default_value) { 
 	try {
-      return attributes_.at(id); 
+    return attributes_.at(id); 
 	}
 	catch (std::exception& e) {
   	std::cout << "Attribute accessed which does not exits: " << id << std::endl;
@@ -65,56 +58,55 @@ int CPerson::getStat(std::string id, int default_value) {
 
 /// return whether character can faint or dies immediately 
 bool CPerson::will_faint() {
-    return will_faint_;
+  return will_faint_;
 }
-///
+
 /// return whether character can faint or dies immediately 
 bool CPerson::fainted() {
-    return fainted_;
+  return fainted_;
 }
 
 ///Return person's dialogue.
 CDialog* CPerson::getDialog() { 
-    return m_dialog; 
+  return m_dialog; 
 }
 
 CDialog* CPerson::getDialog(std::string dialog) {
-    if(m_dialogs.count(dialog) > 0)
-        return m_dialogs[dialog];
-    std::cout << "Dialog not found: " << dialog << ".\n";
-    return nullptr;
+  if (m_dialogs.count(dialog) > 0)
+    return m_dialogs[dialog];
+  std::cout << "Dialog not found: " << dialog << ".\n";
+  return nullptr;
 }
 
 ///Return person's attacks.
 CPerson::attacks& CPerson::getAttacks() { 
-    return m_attacks; 
+  return m_attacks; 
 }
 
 ///Return attacks as a map_type (string)
-std::map<std::string, std::string> CPerson::getAttacks2() 
-{
-    auto lambda = [](CAttack* attack) { return attack->getName(); };
-    return func::convertToObjectmap(m_attacks, lambda);
+std::map<std::string, std::string> CPerson::getAttacks2() {
+  auto lambda = [](CAttack* attack) { return attack->getName(); };
+  return func::convertToObjectmap(m_attacks, lambda);
 }
 
 ///Return person's inventory.
 CInventory& CPerson::getInventory()  {
-    return m_inventory; 
+  return m_inventory; 
 }
 
 ///Description where the player is located in the room
 std::string CPerson::getRoomDescription() {
-    return m_roomDescription->reducedPrint();
+  return m_roomDescription->reducedPrint();
 }
 
 ///Brief description of character
 std::string CPerson::getReducedDescription() {
-    return text_->reducedPrint(false);
+  return text_->reducedPrint(false);
 }
 
 ///Get description of character, when he is dead.
 nlohmann::json CPerson::getDeadDescription() {
-    return m_deadDescription;
+  return m_deadDescription;
 }
 
 
@@ -122,20 +114,20 @@ nlohmann::json CPerson::getDeadDescription() {
 
 ///Set a new stat of this person
 void CPerson::setStat(std::string id, int stat) {
-    attributes_[id] = stat;
+  attributes_[id] = stat;
 }
 
 ///Set person's dialogue.
 void CPerson::setDialog(CDialog* newDialog) { 
-    m_dialog = newDialog; 
+  m_dialog = newDialog; 
 }
 
 ///Set person's dialogue, taking a dialog from persons map of dialogues.
 void CPerson::setDialog(std::string dialog) {
-    if(m_dialogs.count(dialog) > 0)
-        m_dialog = m_dialogs[dialog];
-    else
-        std::cout << "Dialog not found: " << dialog << ".\n";
+  if (m_dialogs.count(dialog) > 0)
+    m_dialog = m_dialogs[dialog];
+  else
+    std::cout << "Dialog not found: " << dialog << ".\n";
 }
 
 void CPerson::setFainted(bool fainted) {
@@ -147,46 +139,40 @@ void CPerson::setFainted(bool fainted) {
 /**
 * Print all attacks. Attacks are printed in the form: Name \n Strengt\n Description.
 */
-string CPerson::printAttacks()
-{
-    string sOutput = "Attacks: \n";
+string CPerson::printAttacks() {
+  string sOutput = "Attacks: \n";
 
-    //Iterate over attacks and add to output.
-    for(auto[i, it] = std::tuple{1, m_attacks.begin()};it!=m_attacks.end();i++, it++) 
-    {
-        sOutput += std::to_string(i) + ". \"" + it->second->getName() + "\"\n"
-                    + "--- Strength: " + std::to_string(it->second->getPower()) + "\n"
-                    + "--- " + it->second->getDescription() + "\n";
-    }
+  //Iterate over attacks and add to output.
+  for (auto[i, it] = std::tuple{1, m_attacks.begin()};it!=m_attacks.end();i++, it++) {
+    sOutput += std::to_string(i) + ". \"" + it->second->getName() + "\"\n"
+                + "--- Strength: " + std::to_string(it->second->getPower()) + "\n"
+                + "--- " + it->second->getDescription() + "\n";
+  }
 
-    //Return output.
-    return sOutput;
+  //Return output.
+  return sOutput;
 }
 
-string CPerson::printAttacksFight()
-{
-    std::string sOutput;
-    //Iterate over attacks and add to output.
-    for(auto[i, it] = std::tuple{1, m_attacks.begin()};it!=m_attacks.end();i++, it++) 
-    {
-        sOutput += "<span style=\"color: #c39bd3\">"+ std::to_string(i)+". "+it->second->getName() + " </span>"
-		    + "[<span style=\"color: #f7dc6f;\">Power: " + std::to_string(it->second->getPower()) + "</span>]\n" + it->second->getDescription() + "\n\n";
-    }
+string CPerson::printAttacksFight() {
+  std::string sOutput;
+  //Iterate over attacks and add to output.
+  for(auto[i, it] = std::tuple{1, m_attacks.begin()};it!=m_attacks.end();i++, it++) {
+    sOutput += "<span style=\"color: #c39bd3\">"+ std::to_string(i)+". "+it->second->getName() + " </span>"
+      + "[<span style=\"color: #f7dc6f;\">Power: " + std::to_string(it->second->getPower()) 
+      + "</span>]\n" + it->second->getDescription() + "\n\n";
+  }
 
-    //Return output.
-    return sOutput;
+  //Return output.
+  return sOutput;
 }
 
-string CPerson::getAttack(string sPlayerChoice)
-{
-    auto lambda = [](CAttack* attack) { return attack->getName(); };
-    std::string sAttack = func::getObjectId(m_attacks, sPlayerChoice, lambda);
-
-    if(m_attacks.count(sAttack) > 0)
-        return sAttack;
-
-    std::cout << "Error, attack accessed, that does not exist: " << sPlayerChoice << std::endl;
-    return "";
+string CPerson::getAttack(string sPlayerChoice) {
+  auto lambda = [](CAttack* attack) { return attack->getName(); };
+  std::string sAttack = func::getObjectId(m_attacks, sPlayerChoice, lambda);
+  if (m_attacks.count(sAttack) > 0)
+    return sAttack;
+  std::cout << "Error, attack accessed, that does not exist: " << sPlayerChoice << std::endl;
+  return "";
 }
     
 
@@ -198,15 +184,14 @@ string CPerson::getAttack(string sPlayerChoice)
 * @return whether attribute exists or not.
 */
 bool CPerson::attributeExists(std::string sAttribute) {
-    return attributes_.count(func::returnToLower(sAttribute)) > 0;
+  return attributes_.count(func::returnToLower(sAttribute)) > 0;
 }
 
-std::string CPerson::getAllInformation()
-{
-    std::string sOutput = "";
-    sOutput += "id: " + id_ + ", name: " + name_ + ", ";
-    for(auto it : m_stats)
-        sOutput += it.first + ": " + std::to_string(it.second) + ", ";
-    sOutput + ", ";
-    return sOutput;
+std::string CPerson::getAllInformation() {
+  std::string sOutput = "";
+  sOutput += "id: " + id_ + ", name: " + name_ + ", ";
+  for(auto it : attributes_)
+    sOutput += it.first + ": " + std::to_string(it.second) + ", ";
+  sOutput + ", ";
+  return sOutput;
 }

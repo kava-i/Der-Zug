@@ -99,13 +99,8 @@ class UserManager {
     int GrantAccessTo(std::string user1, std::string user2, std::string world);
 
     /**
-     * Returns next port.
-     */
-    int GetNextPort();
-
-    /**
      * Get all worlds.
-     * Array of jsons returned with values: user, name (of world) and port.
+     * Array of jsons returned with values: creator and name (of world).
      * @param[in] user to create list for.
      * return json
      */
@@ -113,7 +108,7 @@ class UserManager {
 
     /**
      * Get all shared worlds of a user.
-     * Array of jsons returned with values: user, name (of world) and port.
+     * Array of jsons returned with values: user and name (of world).
      * @param[in] user to create list for.
      * return json
      */
@@ -126,8 +121,6 @@ class UserManager {
     mutable std::shared_mutex shared_mutex_cookies_;
     const std::string path_;
     const std::vector<std::string> categories_;
-    int ports_;
-    mutable std::shared_mutex shared_mutex_ports_;
 
     Worlds* worlds_;
 

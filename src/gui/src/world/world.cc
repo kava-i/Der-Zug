@@ -18,18 +18,17 @@
 
 namespace fs = std::filesystem;
 
-World::World(std::string base_path, std::string path, int port) 
-    : base_path_(base_path), path_(path), port_(port) {
+#define NOTES_PATH "/.data/notes.json"
 
+World::World(std::string base_path, std::string path, std::string id, std::string name) 
+  : base_path_(base_path), path_(path), id_(id), name_(name) {
   // Parse name and creator from path.
   std::string temp = path.substr(base_path.length()+1);
-  name_ = temp.substr(temp.rfind("/")+1);
   creator_ = temp.substr(0, temp.find("/"));
 
   // Load notes.
   nlohmann::json notes;
-  if (func::LoadJsonFromDisc(path_ + "/data/notes.json", notes)) {
-    std::cout << "GOT NOTES FROM DISC." << std::endl;
+  if (func::LoadJsonFromDisc(path_ + NOTES_PATH, notes)) {
     notes_ = notes.get<std::map<std::string, std::string>>();
   }
 
@@ -38,8 +37,8 @@ World::World(std::string base_path, std::string path, int port)
   UpdateShortPaths();
 }
 
-int World::port() const {
-  return port_;
+std::string World::id() const {
+  return id_;
 }
 
 std::string World::name() const {
@@ -116,7 +115,7 @@ ErrorCodes World::DelElem(std::string path, std::string id, bool force) {
 }
 
 
-nlohmann::json World::GetPage(std::string path, int textad_port, bool only_json) const {
+nlohmann::json World::GetPage(std::string path, bool only_json) const {
   std::cout << "World::GetPage(" << path << ")" << std::endl;
   std::shared_lock sl(shared_mtx_paths_);
   if (paths_.count(path) == 0)
@@ -131,11 +130,11 @@ nlohmann::json World::GetPage(std::string path, int textad_port, bool only_json)
 
   nlohmann::json config;
   func::LoadJsonFromDisc(path_ + "/config/config.json", config);
-  json["header"]["__short_paths"] = short_paths_;
+  nlohmann::json short_paths = short_paths_;
+  json["header"]["__short_paths"] = short_paths.dump();
   json["header"]["__is_main"] = (path == path_);
   json["header"]["__creator"] = creator_;
-  json["header"]["__world_name"] = name_;
-  json["header"]["__textad_port"] = textad_port;
+  json["header"]["__world_name"] = id_;
   json["header"]["__categories"] = config["categories"];
   json["header"]["__kinds"] = config["kinds"];
   json["header"]["__types"] = config["types"];
@@ -183,7 +182,7 @@ ErrorCodes World::SetNotes(std::string path, std::string notes) {
   std::unique_lock ul(shared_mtx_notes_);
   notes_[path] = notes;
   nlohmann::json notes_json = notes_;
-  func::WriteJsonToDisc(path_ + "/data/notes.json", notes_json);
+  func::WriteJsonToDisc(path_ + NOTES_PATH, notes_json);
   return ErrorCodes::SUCCESS;
 }
 
@@ -245,7 +244,7 @@ World::~World() {
 bool World::IsGameRunning() const {
   //Create command
   std::string command = "./../../textadventure/build/bin/testing.o "
-    "--path ../../data/users/" + creator_ + "/files/" + name_ + "/";
+    "--path ../../data/users/" + creator_ + "/files/" + id_ + "/";
   
   //Get players from players.json
   nlohmann::json players;
@@ -258,7 +257,7 @@ bool World::IsGameRunning() const {
   bool success = true;
   for (auto it=players.begin(); it!=players.end(); it++) {
     std::string test_p = command + " -p " + it.key() +
-      " > ../../data/users/" + creator_ + "/logs/" + name_ + "_write.txt";
+      " > ../../data/users/" + creator_ + "/logs/" + id_ + "_write.txt";
     if (system(test_p.c_str()) != 0) 
       success = false;
     std::cout << "Running with player \"" << it.key() << "\": " << success << std::endl;

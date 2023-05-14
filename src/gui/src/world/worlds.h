@@ -30,9 +30,8 @@ class Worlds {
     /**
      * Constructor, loading all worlds.
      * @param[in] base_path to user-directories.
-     * @param[in] start_port from which to increment and assign ports.
      */
-    Worlds(std::string base_path, int start_port);
+    Worlds(std::string base_path);
 
     /**
      * Destructor deleteing all worlds.
@@ -76,10 +75,9 @@ class Worlds {
      * Serves page of requested category/ object.
      * Acctually get json-data and path to tempate, then calls ParseTemplate().
      * @param[in] path (url)
-     * @param[in] textad_port (port to textadventure http-server)
      * @return rendered page.
      */
-    std::string GetPage(std::string path, int textad_port);
+    std::string GetPage(std::string path);
 
     /**
      * Serves only json of requested object.
