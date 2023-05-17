@@ -5,6 +5,7 @@
 #include <nlohmann/json.hpp>
 #include <vector>
 
+#include "objects/helper/update.h"
 #include "tools/func.h"
 #include "tools/webcmd.h"
 #include "objects/mind.h"
@@ -12,41 +13,39 @@
 class CPlayer;
 class COutput;
 
-class CText
-{
-private:
-    CPlayer* m_player;
-    std::vector<COutput*> m_texts;
+class CText {
+	private:
+		CPlayer* player_;
+		std::vector<COutput*> texts_;
 
-public:
-    CText(nlohmann::json jAttributes, CPlayer*);
+	public:
+		CText(nlohmann::json attributes, CPlayer*);
 
-    std::string print(bool events=true);
-    std::string reducedPrint(bool events=true);
-    std::string pagePrint(size_t page);
-    size_t getNumPages();
-    bool underline(size_t page, std::string str1, std::string str2);
+		std::string print(bool events=true);
+		std::string reducedPrint(bool events=true);
+		std::string pagePrint(size_t page);
+		size_t getNumPages();
+		bool underline(size_t page, std::string str1, std::string str2);
 };
 
-class COutput
-{
-private:
-    std::string m_sSpeaker;
-    std::string m_sText;
+class COutput {
+	private:
+    std::string speaker_;
+    std::string text_;
     std::string music_;
     std::string image_;
 
     std::string logic_;
-    nlohmann::json m_jUpdates;
-    std::vector<std::string> m_pre_permanentEvents;
-    std::vector<std::string> m_pre_oneTimeEvents;
-    std::vector<std::string> m_post_permanentEvents;
-    std::vector<std::string> m_post_oneTimeEvents;
+    Updates updates_;
+    std::vector<std::string> pre_permanent_events_;
+    std::vector<std::string> pre_one_time_events_;
+    std::vector<std::string> post_permanent_events_;
+    std::vector<std::string> post_one_time_events_;
 
     //In case of book, or read-item
-    size_t m_page;
+    size_t page_;
 
-public:
+	public:
     COutput(nlohmann::json jAttributes);
 
     // *** getter *** //
@@ -58,12 +57,9 @@ public:
     std::string reducedPrint(CPlayer* p, bool events=false);
 
     bool checkDependencies(std::string& sSuccess, CPlayer* p);
-    void updateAttrbutes(CPlayer* p, std::string& sUpdated);
-    void updateAttrbutes(CPlayer* p);
     void addEvents(CPlayer* p);
 
     bool underline(std::string str1, std::string str2);
 };
 
 #endif
-    

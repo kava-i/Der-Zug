@@ -2,10 +2,12 @@
 #include "actions/dialog.h"
 #include "concepts/quest.h"
 #include "eventmanager/listener.h"
+#include "fmt/format.h"
 #include "nlohmann/json.hpp"
 #include "nlohmann/json_fwd.hpp"
 #include "objects/player.h"
 #include "game/game.h"
+#include "tools/calc_enums.h"
 #include "tools/func.h"
 #include "tools/webcmd.h"
 #include <cstddef>
@@ -706,36 +708,30 @@ void Context::h_setAttribute(std::string& sIdentifier, CPlayer* p) {
     return;
   }
 
-  std::string attribute = atts[0];
+	if (calc::MOD_TYPE_STRING_MAPPING.count(atts[1]) == 0) {
+    std::cout << "Something went worng! Player Attribute could not be changed: " 
+			<< "unkown mod-type: " << atts[1] << ".\n";
+    return;
+	}
+
+	// Get mod_type and update attribute
+	calc::ModType mod_type = calc::MOD_TYPE_STRING_MAPPING.at(atts[1]);
   int value = stoi(atts[2]);
-  std::string msg = "";
+	int cur = p->getStat(atts[0]);
+	calc::MOD_TYPE_FUNCTION_MAPPING.at(mod_type)(cur, value);
+	p->setStat(atts[0], cur);
 
-  //Modify attribute according to operand.
-  if(atts[1] == "=") {
-    p->setStat(attribute, value);
-    msg = " set to ";
-  }
-  else if(atts[1] == "+") {
-    p->setStat(attribute, p->getStat(atts[0]) + value);
-    msg = " increased by ";
-  }
-  else if(atts[1] == "-") {
-    p->setStat(attribute, p->getStat(atts[0]) - value);
-    msg = " decreased by ";
-  }
-  else
-    std::cout << "Wrong operand for setting attribute." << "\n";
-
+	// Get msg (set to, increased, decreased) and color and print msgs
+  std::string msg = calc::MOD_TYPE_MSG_MAPPING.at(mod_type);
   Webcmd::color color = Webcmd::color::WHITE;
   if (atts.size() > 3 && atts[3] == "green")
     color = Webcmd::color::GREEN;
   else if (atts.size() > 3 && atts[3] == "red")
     color = Webcmd::color::RED;
   if (atts.size() > 3)
-    p->appendPrint(Webcmd::set_color(color) + attribute + msg 
-        + std::to_string(value )+ Webcmd::set_color(Webcmd::color::WHITE) + "\n");
-
-  m_curPermeable = true;
+    p->appendPrint(Webcmd::set_color(color) + atts[0] + msg 
+        + std::to_string(value ) + Webcmd::set_color(Webcmd::color::WHITE) + "\n");
+  m_curPermeable = false;
 }
 
 void Context::h_setMind(std::string& sIdentifier, CPlayer* p) {
@@ -1579,12 +1575,30 @@ void Context::h_updateStats(std::string& sIdentifier, CPlayer* p) {
 void Context::t_highness(std::string& str, CPlayer* p) {
   if(p->getStat("highness")==0)
     return;
-  p->appendStoryPrint("Time always comes to give you a hand; Things begin to become clearer again. Highness decreased by 1.\n");
+  p->appendStoryPrint("Time always comes to give you a hand; Things begin to become clearer again. Wozyness decreased by 1.\n");
   p->setStat("highness", p->getStat("highness")-1);
 
   p->getContext("standard")->deleteTimeEvent("t_highness");
-  if(p->getStat("highness") > 0)
+  if (p->getStat("highness") > 0)
     add_timeEvent("t_highness", "standard", "", 0.2);
+}
+
+void Context::t_setAttribute(std::string& str, CPlayer* p) {
+	// Update attribute
+	h_setAttribute(str, p);
+
+	// Get duration
+  int duration = p->getContext("standard")->getTimeEvents().getContext("t_setAttribute")->getDuration();
+  std::vector<std::string> atts = func::split(str, "|");
+	int steps = stoi(atts[4]);
+	// Delete time event and add new if steps are left
+  p->getContext("standard")->deleteTimeEvent("t_setAttribute");
+	if (steps > 0) {
+		// Reduce one step, join attributes again and add new time event.
+		atts[4] = std::to_string(steps-1);
+		std::string infos = func::join(atts, "|");
+    add_timeEvent("t_setAttribute", "standard", infos, duration);
+	}
 }
 
 void Context::t_throwEvent(std::string& sInfo, CPlayer* p) {

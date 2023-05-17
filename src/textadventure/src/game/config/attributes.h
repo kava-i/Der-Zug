@@ -6,15 +6,10 @@
 #include <map>
 #include <string>
 #include <vector>
+#include "tools/calc_enums.h"
 
 enum WoozyMethods {
 	ADD,
-};
-
-enum MatchType {
-	GREATER, 
-	LESSER,
-	EQUALS
 };
 
 struct ConfigAttribute {
@@ -31,7 +26,7 @@ struct AttributeMapping {
 	AttributeMapping() {} 
 	AttributeMapping(const nlohmann::json& json);
 
-	MatchType match_type_;
+	calc::MatchType match_type_;
 	std::string show_;
 	int value_;
 

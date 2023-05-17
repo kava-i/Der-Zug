@@ -22,6 +22,17 @@ std::vector<std::string> func::split(std::string str, std::string delimiter)
     return vStr;
 }
 
+std::string func::join(const std::vector<std::string>& vec, std::string delimiter) {
+	if (vec.size() == 0) 
+		return "";
+	return std::accumulate(
+			std::next(vec.begin()), vec.end(), vec[0], 
+			[](std::string a, std::string b) {
+					return a + "|" + b;
+			}
+	);
+}
+
 /**
 * @param[in] vec (vector to search string in )
 * @param[in] str (string to search for)

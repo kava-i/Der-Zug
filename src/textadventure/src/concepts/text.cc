@@ -9,30 +9,30 @@
 #define GREEN Webcmd::set_color(Webcmd::color::GREEN)
 
 CText::CText(nlohmann::json jAttributes, CPlayer* p) {
-  m_player = p;
+  player_ = p;
   for(auto atts : jAttributes) 
-    m_texts.push_back(new COutput(atts));
+    texts_.push_back(new COutput(atts));
 }
 
 std::string CText::print(bool events) {
     std::string sOutput = "";
-    for(size_t i=0; i<m_texts.size(); i++)
-      sOutput += m_texts[i]->print(m_player, events);
+    for(size_t i=0; i<texts_.size(); i++)
+      sOutput += texts_[i]->print(player_, events);
     return sOutput;
 }
 
 std::string CText::reducedPrint(bool events) {
   std::string sOutput = "";
-  for(size_t i=0; i<m_texts.size(); i++)
-    sOutput += m_texts[i]->reducedPrint(m_player, events);
+  for(size_t i=0; i<texts_.size(); i++)
+    sOutput += texts_[i]->reducedPrint(player_, events);
   return sOutput;
 }
 
 std::string CText::pagePrint(size_t page) {
   std::string sOutput = "";
-  for(size_t i=0; i<m_texts.size(); i++) {
-    if(m_texts[i]->getPage() == page)
-      sOutput += m_texts[i]->reducedPrint(m_player, true);
+  for(size_t i=0; i<texts_.size(); i++) {
+    if(texts_[i]->getPage() == page)
+      sOutput += texts_[i]->reducedPrint(player_, true);
   }
   return sOutput;
 }
@@ -40,8 +40,8 @@ std::string CText::pagePrint(size_t page) {
 size_t CText::getNumPages() {
   size_t page=0;
   size_t counter = 1;
-  for(size_t i=0; i<m_texts.size(); i++) {
-    if(m_texts[i]->getPage() > page)
+  for(size_t i=0; i<texts_.size(); i++) {
+    if(texts_[i]->getPage() > page)
       counter++;
   }
   return counter;
@@ -49,9 +49,9 @@ size_t CText::getNumPages() {
 
 bool CText::underline(size_t page, std::string str1, std::string str2) {
   bool check = false;
-  for(size_t i=0; i<m_texts.size(); i++) {
-    if(m_texts[i]->getPage() == page) {
-      bool c = m_texts[i]->underline(str1, str2);
+  for(size_t i=0; i<texts_.size(); i++) {
+    if(texts_[i]->getPage() == page) {
+      bool c = texts_[i]->underline(str1, str2);
       if(c==true) check=true;
     }
   }
@@ -59,172 +59,140 @@ bool CText::underline(size_t page, std::string str1, std::string str2) {
 }
     
 // ***** ***** COUTPUT ***** ***** //
-COutput::COutput(nlohmann::json jAttributes) {
-  m_sSpeaker = jAttributes.value("speaker", "");
-  m_sText = jAttributes.value("text", ""); 
+COutput::COutput(nlohmann::json jAttributes) : updates_(jAttributes.value("updates", nlohmann::json::array())) {
+  speaker_ = jAttributes.value("speaker", "");
+  text_ = jAttributes.value("text", ""); 
 
   //Add dependencies and upgrades
   logic_ = jAttributes.value("logic", "");
-  m_jUpdates = jAttributes.value("updates", nlohmann::json::object());
 
   //Add events
-  m_pre_permanentEvents = jAttributes.value("pre_pEvents", std::vector<std::string>());
-  m_pre_oneTimeEvents = jAttributes.value("pre_otEvents", std::vector<std::string>());
-  m_post_permanentEvents = jAttributes.value("post_pEvents", std::vector<std::string>());
-  m_post_oneTimeEvents = jAttributes.value("post_otEvents", std::vector<std::string>());
+  pre_permanent_events_ = jAttributes.value("pre_pEvents", std::vector<std::string>());
+  pre_one_time_events_ = jAttributes.value("pre_otEvents", std::vector<std::string>());
+  post_permanent_events_ = jAttributes.value("post_pEvents", std::vector<std::string>());
+  post_one_time_events_ = jAttributes.value("post_otEvents", std::vector<std::string>());
   music_ = jAttributes.value("music", "");
   image_ = jAttributes.value("image", "");
 
   //In case of book, or read-item
-  m_page = stoi(jAttributes.value("page", (std::string)"0")); 
+  page_ = stoi(jAttributes.value("page", (std::string)"0")); 
 }
 
 std::string COutput::getSpeaker() {
-  return m_sSpeaker;
+  return speaker_;
 }
 std::string COutput::getText() {
-  return m_sText;
+  return text_;
 }
 size_t COutput::getPage() {
-  return m_page;
+  return page_;
 }
 
 std::string COutput::print(CPlayer* p, bool events) {
-  //Update speacker
-  std::string sSpeaker = m_sSpeaker;
-  if(m_sSpeaker != "" && m_sSpeaker != "indent" && std::islower(m_sSpeaker[0]))
-    sSpeaker = p->getWorld()->getConfig()["printing"][m_sSpeaker];
+  // Update speacker
+  std::string speaker = speaker_;
+  if(speaker_ != "" && speaker_ != "indent" && std::islower(speaker_[0]))
+    speaker = p->getWorld()->getConfig()["printing"][speaker_];
 
-  //Variables
-  std::string sSuccess = "";  //Storing, when success of mind will be announced 
-  std::string sUpdated = "";  //Storing, when abilities/ minds are updated.
+  // Variables
+  std::string mind_success = "";  //Storing, when success of mind will be announced 
+  std::string updated = "";  //Storing, when abilities/ minds are updated.
 
-  //Check dependencies
-  if(checkDependencies(sSuccess, p) == false)
+  // Check dependencies
+  if (checkDependencies(mind_success, p) == false)
     return ""; 
   
-  //Update mind attributes
-  updateAttrbutes(p, sUpdated);
+  // Update mind attributes
+	p->Update(updates_, updated);
+	updates_.Clear();
 
-  //Add events to players staged events
+  // Add events to players staged events
   if(events == true)
     addEvents(p);  
 
   // Create output:
   std::string music = p->getContextMusic(music_);
   std::string image = p->getContextImage(image_);
-  if (music != "")
-    std::cout << "TEXT: updated music: " << music << std::endl;
-  std::string output = ((music != "") ? music : "") + ((image != "") ? image : "")
-    + m_sText + "$" + sUpdated;
-  // std::string output = m_sText + "$" + sUpdated;
+  std::string output = ((music != "") ? music : "") + ((image != "") ? image : "") + text_ + "$";
+	// If stats/ minds where updated: add newline before printing these.
+	if (updated.length() > 0)
+		output += "\n" + updated + "$";
 
-  //Return text 
-  if(m_sSpeaker == "indent")
+  // Return text 
+	if (speaker_ == "indent")
     return p->returnBlackPrint(output);
 
-  return p->returnSpeakerPrint(sSpeaker + sSuccess, output);
+  return p->returnSpeakerPrint(speaker + mind_success, output);
 }
 
 std::string COutput::reducedPrint(CPlayer* p, bool events) {
   //Variables
-  std::string sSuccess = "";  //Storing, when success of mind will be announced 
+  std::string mind_success = "";  //Storing, when success of mind will be announced 
 
   //Check dependencies
-  if(checkDependencies(sSuccess, p) == false)
+  if(checkDependencies(mind_success, p) == false)
     return ""; 
 
   //Update mind attributes
-  updateAttrbutes(p);
+	p->Update(updates_);
+	updates_.Clear();
 
   //Add events to players staged events
   if(events==true)
     addEvents(p);  
 
   //Return text
-  return m_sText;
+  return text_;
 }
 
-bool COutput::checkDependencies(std::string& sSuccess, CPlayer* p) {
+bool COutput::checkDependencies(std::string& mind_success, CPlayer* p) {
 
-  //Check dependencies
+  // Check dependencies
   LogicParser logic(p->GetCurrentStatus());
   if(logic.Success(logic_) == false)
     return false;
   
   /*
-  //Create success output:
-  for(auto it=m_jDeps.begin(); it!=m_jDeps.end(); it++) {
-    if(p->getMinds().count(it.key()) > 0) {
-      sSuccess = DARK + " (level " + std::to_string(p->getMind(it.key()).level) 
-        + ": Erfolg)" + WHITE;
-    }
-  }*/
+	 *  TODO (fux): re-add this part and/ or enable it via config
+	 *	//Create success output:
+	 *	for(auto it=m_jDeps.begin(); it!=m_jDeps.end(); it++) {
+	 *		if(p->getMinds().count(it.key()) > 0) {
+	 *			sSuccess = DARK + " (level " + std::to_string(p->getMind(it.key()).level) 
+	 *				+ ": Erfolg)" + WHITE;
+	 *		}
+	 *	}
+	 */
 
   return true;
-}
-
-void COutput::updateAttrbutes(CPlayer* p, std::string& sUpdated) {
-  for(auto it=m_jUpdates.begin(); it!= m_jUpdates.end(); it++) {
-    int val=it.value();
-
-    // Check updates for minds
-    if(p->getMinds().count(it.key()) > 0) {
-      p->getMind(it.key()).level += val;
-      sUpdated += p->getMind(it.key()).color + it.key()+ " erhöhrt!" + WHITE + "\n";
-    }
-
-    // Check updates for abilities
-    else if(p->attributeExists(it.key()) == true) {
-      p->setStat(it.key(), p->getStat(it.key())+val);
-      sUpdated += GREEN + it.key() + " erhöht!" + WHITE + "\n";
-    }
-  }
-  m_jUpdates.clear();
-}
-
-void COutput::updateAttrbutes(CPlayer* p) {
-  for(auto it=m_jUpdates.begin(); it!= m_jUpdates.end(); it++) {
-    int val=it.value();
-
-    //Check updates for minds
-    if(p->getMinds().count(it.key()) > 0) 
-      p->getMind(it.key()).level += val;
-
-    //Check updates for abilities
-    else if(p->attributeExists(it.key()) == true)
-      p->setStat(it.key(), p->getStat(it.key())+val);
-  }
-  m_jUpdates.clear();
 }
 
 /**
 * Add events to player staged events.
 */
 void COutput::addEvents(CPlayer* p) {
-  for(const auto &it : m_pre_permanentEvents)
+  for(const auto &it : pre_permanent_events_)
     p->addPreEvent(it);
-  for(const auto &it : m_pre_oneTimeEvents)
+  for(const auto &it : pre_one_time_events_)
     p->addPreEvent(it);
-  m_pre_oneTimeEvents.clear();
-  for(const auto &it : m_post_permanentEvents)
+  pre_one_time_events_.clear();
+  for(const auto &it : post_permanent_events_)
     p->addPostEvent(it);
-  for(const auto &it : m_post_oneTimeEvents)
+  for(const auto &it : post_one_time_events_)
     p->addPostEvent(it);
-  m_post_oneTimeEvents.clear(); 
+  post_one_time_events_.clear(); 
 }
 
 /**
 * Try to underline text.
 */
 bool COutput::underline(std::string str1, std::string str2) {
-  std::string str = m_sText;
+  std::string str = text_;
   func::convertToLower(str);
   size_t pos1 = str.find(str1);
   size_t pos2 = str.find(str2);
   if(pos1 == std::string::npos || pos2 == std::string::npos)
     return false;
-  m_sText.insert(pos1-1, "<u>");
-  m_sText.insert(pos2+3, "</u>");
+  text_.insert(pos1-1, "<u>");
+  text_.insert(pos2+3, "</u>");
   return true;
 }

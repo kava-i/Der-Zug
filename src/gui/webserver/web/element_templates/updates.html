@@ -1,0 +1,51 @@
+
+<li id="optional" style="display: none;" custom="list">
+
+	<label style="width:auto;">Updates:</label>
+	<ul id="updates">
+    {% if length(_updates) > 0 %} 
+			{% for update in _updates %}
+				<li custom="get:object">
+					<a class="abstract" onclick="EditItem('updates', this.parentNode)" title='{{update}}'>
+						{{update.id}} {{update.mod_type}} {{update.value}}
+						{% if default(update.tmp, 0) == 1 %}
+							({{update.steps}} step(s) every {{update.secs}} seconds)
+						{% endif %}
+					</a>
+					<span 
+						class="mod_elem" onclick="EditItem('updates', this.parentNode)"
+					><i>edit</i></span>
+					<span 
+						class="mod_elem" onclick="DeleteItem('updates', this.parentNode)" title="delete element"
+					>-</span>
+					<span 
+						class="mod_elem" onclick="AddItem('updates', this.parentNode)" title="add element"
+					>+</span>
+					<input style="display: none;" custom="json" value='{{update}}'/>
+				</li>
+			{% endfor %}
+		{% else %}
+      <li custom="get:object">
+        <a class="abstract" onclick="EditItem('updates', this.parentNode)" title='{}'>
+          ???
+        </a>
+        <span class="mod_elem" onclick="EditItem('updates', this.parentNode)"><i>edit</i></span>
+        <span class="mod_elem" onclick="DeleteItem('updates', this.parentNode)" title="delete element">-</span>
+        <span class="mod_elem" onclick="AddItem('updates', this.parentNode)" title="add element">+</span>
+        <input style="display: none;" custom="json" value="{}" />
+      </li>
+		{% endif %}
+	</ul>
+</li>
+
+{{ log("creating default update") }}
+<li custom="get:object" id="updates_default" style="display: none;">
+  <a class="abstract" onclick="EditItem('updates', this.parentNode)" title='{}'>
+    ???
+  </a>
+  <span class="mod_elem" onclick="EditItem('updates', this.parentNode)"><i>edit</i></span>
+  <span class="mod_elem" onclick="DeleteItem('updates', this.parentNode)" title="delete element">-</span>
+  <span class="mod_elem" onclick="AddItem('updates', this.parentNode)" title="add element">+</span>
+  <input style="display: none;" custom="json" value="{}" />
+</li>
+{{ log("done creating default update") }}

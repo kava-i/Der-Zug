@@ -32,7 +32,6 @@ window.onload = function() {
   types_ = JSON.parse(types_);
 
   paths_ = document.getElementById("fuzzy_finder_div").getAttribute("pages");
-  console.log(paths_);
   paths_ = JSON.parse(paths_);
   inps_ = paths_;
   if (document.getElementById("fuzzy_finder_div").hasAttribute("page_objects")) {

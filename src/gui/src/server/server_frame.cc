@@ -126,9 +126,9 @@ void ServerFrame::Start(int port) {
   server_.Get("/", [&](const Request& req, Response& resp) {
       resp.set_content(func::GetPage("web/main.html"), "text/html"); });
   server_.Get("/(.*).md", [&](const Request& req, Response& resp) {
-      std::cout << "Serving info page..." << std::endl;
+      std::cout << "Serving info page... " << req.matches[1] << std::endl;
       // Load markdown and convert to html
-      std::string markdown = func::LoadMarkdown("web/" + (std::string)req.matches[1] + ".md");
+      std::string markdown = func::LoadMarkdown("web/tutorials/" + (std::string)req.matches[1] + ".md");
       // Parse template to include markdown-html
       try {
         inja::Environment env;
@@ -657,8 +657,10 @@ void ServerFrame::GetEditTemplate(const Request& req, Response& resp, std::strin
   World* world = user_manager_.worlds()->GetWorld(input["__creator"], input["__world"]);
 	// If world was found, add world-specific data 
 	if (world) {
-		availibe_fields = world->GetAttributeCategories();
-		input["__attribute_categories"] = availibe_fields;
+		availibe_fields = world->GetAttributes();
+		input["_attributes"] = availibe_fields;
+		availibe_fields = world->GetModTypes();
+		input["_mod_types"] = availibe_fields;
 	}
 
 

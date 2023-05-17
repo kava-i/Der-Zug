@@ -25,6 +25,7 @@ set(SRC_FILES_TXTAD
   src/objects/person.cc 
   src/objects/player.cc 
   src/objects/room.cc
+  src/objects/helper/update.cc 
   src/actions/fight.cc 
   src/actions/dialog.cc
   src/tools/func.cc 
@@ -52,6 +53,7 @@ set(SRC_FILES_TESTING
   src/objects/person.cc 
   src/objects/player.cc 
   src/objects/room.cc
+  src/objects/helper/update.cc 
   src/actions/fight.cc 
   src/actions/dialog.cc
   src/tools/func.cc 

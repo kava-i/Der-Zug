@@ -1,5 +1,6 @@
 #include "attributes.h"
 #include "nlohmann/json.hpp"
+#include "tools/calc_enums.h"
 
 ConfigAttribute::ConfigAttribute(const nlohmann::json& json) {
 	id_ = json.at("id");
@@ -13,26 +14,19 @@ AttributeMapping::AttributeMapping(const nlohmann::json& json) {
 	value_ = json.at("value");
 
 	std::string match_type = json.at("match_type");
-	if (match_type == ">") 
-		match_type_ = MatchType::GREATER;
-	else if (match_type == "<") 
-		match_type_ = MatchType::LESSER;
-	else if (match_type == "=") 
-		match_type_ = MatchType::EQUALS;
+	if (calc::MATCH_TYPE_STRING_MAPPING.count(match_type) > 0) {
+		match_type_ = calc::MATCH_TYPE_STRING_MAPPING.at(match_type);
+	}
 	else 
-		throw "match_type is neight \">\", \"<\" or \"=\"";
+		throw "match_type is \"" + match_type + "\" is incorrect!";
 }
 
 std::optional<std::string> AttributeMapping::check_mapping(int value) const {
   std::cout << "CHECK MAPPING: " << show_ << " -> " << value << "[" << match_type_ << "]" 
-    << value_ << std::endl;
-  if (match_type_ == MatchType::EQUALS && value_ == value)
-    return show_;
-  else if (match_type_ == MatchType::LESSER && value < value_)
-    return show_;
-  else if (match_type_  == MatchType::GREATER && value > value_)
-    return show_;
-  else 
+		<< value_ << std::endl;
+	if (calc::MATCH_TYPE_FUNCTION_MAPPING.at(match_type_)(value, value_))
+		return show_;
+	else 
     return {};
 }
 

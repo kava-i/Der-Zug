@@ -25,11 +25,22 @@ namespace func
     std::vector<std::string> split(std::string str, std::string delimiter);
 
     /**
+		* Reverses `split()` and joins parts of vector to single string.
+		* - No trailing delimiter 
+		* - handles empty vector
+    * @param[in] str string to be splitet
+    * @param[in] delimitter 
+    * @return vector
+    */
+		std::string join(const std::vector<std::string>& vec, std::string delimiter);
+
+    /**
     * @param[in] vec (vector to search string in )
     * @param[in] str (string to search for)
     * @return Return whether string occurs in vector.
     */
     bool inArray(std::vector<std::string> vec, std::string str);
+
 
     /**
     * Convert a given string to only contain lower case characters.

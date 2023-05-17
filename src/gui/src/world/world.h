@@ -108,6 +108,7 @@ class World {
 
 		std::map<std::string, std::string> GetAttributes() const;
 		std::vector<std::string> GetAttributeCategories() const;
+		std::vector<std::string> GetModTypes() const;
 
   private:
     // member variables:

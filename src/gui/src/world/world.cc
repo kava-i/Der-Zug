@@ -140,6 +140,12 @@ nlohmann::json World::GetPage(std::string path, bool only_json) const {
   json["header"]["__types"] = config["types"];
   json["header"]["__attribute_categories"] = GetAttributeCategories();
   json["header"]["__attributes"] = GetAttributes();
+	
+	// Data from which to construct select-fields with javascript
+  nlohmann::json attributes = GetAttributes();
+  json["header"]["_attributes"] = GetAttributes();
+  json["header"]["_mod_types"] = GetModTypes();
+  json["header"]["_colors"] = {"", "green", "red", "white"};
 
   nlohmann::json availibe_fields;
   func::LoadJsonFromDisc("handlers.json", availibe_fields);
@@ -325,4 +331,8 @@ std::vector<std::string> World::GetAttributeCategories() const {
 	}
 	std::cout << "Got " << vec_categories.size() << " attribute-categories" << std::endl;
 	return vec_categories;
+}
+
+std::vector<std::string> World::GetModTypes() const {
+	return {"=", "+", "-", "*", "/"};
 }

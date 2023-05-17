@@ -5521,3 +5521,380 @@
 [2023-05-06 18:40:55.594] [general] [debug] [get-background]
 [2023-05-06 18:40:55.594] [general] [debug] [get-background] game-id: fux/welcome
 [2023-05-09 00:34:10.146] [general] [info] Starting txtad server on port: 4489
+[2023-05-15 16:41:35.302] [general] [info] Starting txtad server on port: 4489
+[2023-05-15 16:57:08.563] [general] [debug] [close]
+[2023-05-15 16:57:08.563] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-15 16:57:10.364] [general] [debug] [running]
+[2023-05-15 16:57:10.364] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-15 16:57:10.364] [general] [debug] [create]
+[2023-05-15 16:57:10.364] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-15 16:57:10.366] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-15 16:57:10.366] [general] [info] [run] game valid? true
+[2023-05-15 16:57:10.433] [general] [debug] [main]
+[2023-05-15 16:57:10.433] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 16:57:10.433] [general] [debug] [main] image: 
+[2023-05-15 16:57:10.599] [general] [debug] [get-background]
+[2023-05-15 16:57:10.599] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-15 16:57:10.600] [general] [info] [get-audio]
+[2023-05-15 16:57:10.600] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-15 16:57:10.600] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-15 17:41:24.156] [general] [info] Starting txtad server on port: 4489
+[2023-05-15 17:41:27.828] [general] [debug] [close]
+[2023-05-15 17:41:27.829] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-15 17:41:29.633] [general] [debug] [running]
+[2023-05-15 17:41:29.633] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-15 17:41:29.633] [general] [debug] [create]
+[2023-05-15 17:41:29.634] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-15 17:41:29.636] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-15 17:41:29.636] [general] [info] [run] game valid? true
+[2023-05-15 17:41:29.699] [general] [debug] [main]
+[2023-05-15 17:41:29.699] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 17:41:29.699] [general] [debug] [main] image: 
+[2023-05-15 17:41:29.772] [general] [debug] [get-background]
+[2023-05-15 17:41:29.773] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-15 17:41:29.773] [general] [info] [get-audio]
+[2023-05-15 17:41:29.773] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-15 17:41:29.773] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-15 17:45:07.203] [general] [info] Starting txtad server on port: 4489
+[2023-05-15 17:45:09.518] [general] [debug] [close]
+[2023-05-15 17:45:09.518] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-15 17:45:11.317] [general] [debug] [running]
+[2023-05-15 17:45:11.317] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-15 17:45:11.318] [general] [debug] [create]
+[2023-05-15 17:45:11.318] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-15 17:45:11.320] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-15 17:45:11.320] [general] [info] [run] game valid? true
+[2023-05-15 17:45:11.402] [general] [debug] [main]
+[2023-05-15 17:45:11.402] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 17:45:11.402] [general] [debug] [main] image: 
+[2023-05-15 17:45:11.492] [general] [debug] [get-background]
+[2023-05-15 17:45:11.492] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-15 17:45:11.492] [general] [info] [get-audio]
+[2023-05-15 17:45:11.492] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-15 17:45:11.492] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-15 17:48:45.600] [general] [info] Starting txtad server on port: 4489
+[2023-05-15 17:48:58.196] [general] [debug] [main]
+[2023-05-15 17:48:58.197] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 17:49:06.497] [general] [debug] [close]
+[2023-05-15 17:49:06.497] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-15 17:49:08.299] [general] [debug] [running]
+[2023-05-15 17:49:08.299] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-15 17:49:08.299] [general] [debug] [create]
+[2023-05-15 17:49:08.299] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-15 17:49:08.301] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-15 17:49:08.301] [general] [info] [run] game valid? true
+[2023-05-15 17:49:08.367] [general] [debug] [main]
+[2023-05-15 17:49:08.367] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 17:49:08.367] [general] [debug] [main] image: 
+[2023-05-15 17:49:08.441] [general] [debug] [get-background]
+[2023-05-15 17:49:08.441] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-15 17:49:08.442] [general] [info] [get-audio]
+[2023-05-15 17:49:08.442] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-15 17:49:08.442] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-15 17:49:55.797] [general] [debug] [close]
+[2023-05-15 17:49:55.797] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-15 17:49:57.599] [general] [debug] [running]
+[2023-05-15 17:49:57.599] [general] [debug] [create]
+[2023-05-15 17:49:57.599] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-15 17:49:57.599] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-15 17:49:57.600] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-15 17:49:57.600] [general] [info] [run] game valid? true
+[2023-05-15 17:49:57.657] [general] [debug] [main]
+[2023-05-15 17:49:57.658] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 17:49:57.658] [general] [debug] [main] image: 
+[2023-05-15 17:49:57.728] [general] [debug] [get-background]
+[2023-05-15 17:49:57.728] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-15 17:49:57.729] [general] [info] [get-audio]
+[2023-05-15 17:49:57.729] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-15 17:49:57.729] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-15 19:27:07.600] [general] [info] Starting txtad server on port: 4489
+[2023-05-15 19:27:08.718] [general] [debug] [close]
+[2023-05-15 19:27:08.718] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-15 19:27:10.517] [general] [debug] [running]
+[2023-05-15 19:27:10.518] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-15 19:27:10.518] [general] [debug] [create]
+[2023-05-15 19:27:10.518] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-15 19:27:10.519] [general] [error] [create] failed creating game fux/escape_the_train invalid world!
+[2023-05-15 19:29:19.964] [general] [info] Starting txtad server on port: 4489
+[2023-05-15 19:29:22.390] [general] [debug] [close]
+[2023-05-15 19:29:22.390] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-15 19:29:24.191] [general] [debug] [running]
+[2023-05-15 19:29:24.191] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-15 19:29:24.191] [general] [debug] [create]
+[2023-05-15 19:29:24.191] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-15 19:29:24.193] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-15 19:29:24.193] [general] [info] [run] game valid? true
+[2023-05-15 19:29:24.267] [general] [debug] [main]
+[2023-05-15 19:29:24.267] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 19:29:24.267] [general] [debug] [main] image: 
+[2023-05-15 19:29:24.353] [general] [debug] [get-background]
+[2023-05-15 19:29:24.353] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-15 19:29:24.380] [general] [info] [get-audio]
+[2023-05-15 19:29:24.380] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-15 19:29:24.380] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-15 19:30:54.712] [general] [debug] [close]
+[2023-05-15 19:30:54.712] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-15 19:30:56.515] [general] [debug] [running]
+[2023-05-15 19:30:56.515] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-15 19:30:56.515] [general] [debug] [create]
+[2023-05-15 19:30:56.515] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-15 19:30:56.517] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-15 19:30:56.517] [general] [info] [run] game valid? true
+[2023-05-15 19:30:56.604] [general] [debug] [main]
+[2023-05-15 19:30:56.604] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 19:30:56.605] [general] [debug] [main] image: 
+[2023-05-15 19:30:56.688] [general] [debug] [get-background]
+[2023-05-15 19:30:56.688] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-15 19:30:56.688] [general] [info] [get-audio]
+[2023-05-15 19:30:56.688] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-15 19:30:56.688] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-15 19:31:28.265] [general] [debug] [close]
+[2023-05-15 19:31:28.265] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-15 19:31:30.066] [general] [debug] [running]
+[2023-05-15 19:31:30.066] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-15 19:31:30.066] [general] [debug] [create]
+[2023-05-15 19:31:30.066] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-15 19:31:30.069] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-15 19:31:30.069] [general] [info] [run] game valid? true
+[2023-05-15 19:31:30.140] [general] [debug] [main]
+[2023-05-15 19:31:30.140] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 19:31:30.141] [general] [debug] [main] image: 
+[2023-05-15 19:31:30.237] [general] [debug] [get-background]
+[2023-05-15 19:31:30.238] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-15 19:31:30.238] [general] [info] [get-audio]
+[2023-05-15 19:31:30.238] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-15 19:31:30.238] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-15 20:50:21.480] [general] [debug] [close]
+[2023-05-15 20:50:21.480] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-15 20:50:23.283] [general] [debug] [running]
+[2023-05-15 20:50:23.283] [general] [debug] [create]
+[2023-05-15 20:50:23.283] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-15 20:50:23.283] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-15 20:50:23.286] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-15 20:50:23.286] [general] [info] [run] game valid? true
+[2023-05-15 20:50:23.357] [general] [debug] [main]
+[2023-05-15 20:50:23.357] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 20:50:23.357] [general] [debug] [main] image: 
+[2023-05-15 20:50:23.446] [general] [debug] [get-background]
+[2023-05-15 20:50:23.446] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-15 20:50:23.446] [general] [info] [get-audio]
+[2023-05-15 20:50:23.446] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-15 20:50:23.447] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-15 20:51:55.900] [general] [debug] [main]
+[2023-05-15 20:51:55.900] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 20:51:55.900] [general] [debug] [main] image: 
+[2023-05-15 20:51:56.125] [general] [debug] [get-background]
+[2023-05-15 20:51:56.125] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-15 20:51:56.126] [general] [info] [get-audio]
+[2023-05-15 20:51:56.126] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-15 20:51:56.126] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-15 20:52:11.228] [general] [debug] [close]
+[2023-05-15 20:52:11.228] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-15 20:52:13.028] [general] [debug] [running]
+[2023-05-15 20:52:13.028] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-15 20:52:13.029] [general] [debug] [create]
+[2023-05-15 20:52:13.029] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-15 20:52:13.031] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-15 20:52:13.031] [general] [info] [run] game valid? true
+[2023-05-15 20:52:13.102] [general] [debug] [main]
+[2023-05-15 20:52:13.102] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 20:52:13.102] [general] [debug] [main] image: 
+[2023-05-15 20:52:13.199] [general] [debug] [get-background]
+[2023-05-15 20:52:13.199] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-15 20:52:13.199] [general] [info] [get-audio]
+[2023-05-15 20:52:13.200] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-15 20:52:13.200] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-15 21:02:09.219] [general] [info] Starting txtad server on port: 4489
+[2023-05-15 21:02:10.258] [general] [debug] [close]
+[2023-05-15 21:02:10.258] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-15 21:02:12.060] [general] [debug] [create]
+[2023-05-15 21:02:12.060] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-15 21:02:12.060] [general] [debug] [running]
+[2023-05-15 21:02:12.060] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-15 21:02:12.061] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-15 21:02:12.061] [general] [info] [run] game valid? true
+[2023-05-15 21:02:12.121] [general] [debug] [main]
+[2023-05-15 21:02:12.121] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 21:02:12.121] [general] [debug] [main] image: 
+[2023-05-15 21:02:12.210] [general] [debug] [get-background]
+[2023-05-15 21:02:12.210] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-15 21:02:12.211] [general] [info] [get-audio]
+[2023-05-15 21:02:12.211] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-15 21:02:12.211] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-15 21:03:01.795] [general] [debug] [close]
+[2023-05-15 21:03:01.795] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-15 21:03:03.597] [general] [debug] [running]
+[2023-05-15 21:03:03.597] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-15 21:03:03.597] [general] [debug] [create]
+[2023-05-15 21:03:03.597] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-15 21:03:03.599] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-15 21:03:03.599] [general] [info] [run] game valid? true
+[2023-05-15 21:03:03.671] [general] [debug] [main]
+[2023-05-15 21:03:03.671] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 21:03:03.671] [general] [debug] [main] image: 
+[2023-05-15 21:03:03.748] [general] [debug] [get-background]
+[2023-05-15 21:03:03.748] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-15 21:03:03.748] [general] [info] [get-audio]
+[2023-05-15 21:03:03.748] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-15 21:03:03.748] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-15 21:04:30.232] [general] [info] Starting txtad server on port: 4489
+[2023-05-15 21:04:31.224] [general] [debug] [close]
+[2023-05-15 21:04:31.224] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-15 21:04:33.025] [general] [debug] [running]
+[2023-05-15 21:04:33.025] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-15 21:04:33.025] [general] [debug] [create]
+[2023-05-15 21:04:33.025] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-15 21:04:33.027] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-15 21:04:33.027] [general] [info] [run] game valid? true
+[2023-05-15 21:04:33.109] [general] [debug] [main]
+[2023-05-15 21:04:33.109] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 21:04:33.109] [general] [debug] [main] image: 
+[2023-05-15 21:04:33.206] [general] [debug] [get-background]
+[2023-05-15 21:04:33.207] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-15 21:04:33.208] [general] [info] [get-audio]
+[2023-05-15 21:04:33.208] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-15 21:04:33.208] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-15 21:09:54.842] [general] [info] Starting txtad server on port: 4489
+[2023-05-15 21:09:55.435] [general] [debug] [close]
+[2023-05-15 21:09:55.435] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-15 21:09:57.236] [general] [debug] [create]
+[2023-05-15 21:09:57.237] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-15 21:09:57.237] [general] [debug] [running]
+[2023-05-15 21:09:57.237] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-15 21:09:57.239] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-15 21:09:57.239] [general] [info] [run] game valid? true
+[2023-05-15 21:09:57.303] [general] [debug] [main]
+[2023-05-15 21:09:57.303] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 21:09:57.303] [general] [debug] [main] image: 
+[2023-05-15 21:09:57.381] [general] [debug] [get-background]
+[2023-05-15 21:09:57.381] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-15 21:09:57.381] [general] [info] [get-audio]
+[2023-05-15 21:09:57.381] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-15 21:09:57.381] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-15 23:12:24.622] [general] [debug] [close]
+[2023-05-15 23:12:24.622] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-15 23:12:26.423] [general] [debug] [create]
+[2023-05-15 23:12:26.424] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-15 23:12:26.424] [general] [debug] [running]
+[2023-05-15 23:12:26.424] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-15 23:12:26.426] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-15 23:12:26.426] [general] [info] [run] game valid? true
+[2023-05-15 23:12:26.512] [general] [debug] [main]
+[2023-05-15 23:12:26.512] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-15 23:12:26.512] [general] [debug] [main] image: 
+[2023-05-15 23:12:26.600] [general] [info] [get-audio]
+[2023-05-15 23:12:26.600] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-15 23:12:26.600] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-15 23:12:26.608] [general] [debug] [get-background]
+[2023-05-15 23:12:26.608] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-15 23:34:48.807] [general] [info] Starting txtad server on port: 4489
+[2023-05-15 23:42:57.966] [general] [info] Starting txtad server on port: 4489
+[2023-05-15 23:43:41.451] [general] [info] Starting txtad server on port: 4489
+[2023-05-16 00:16:41.632] [general] [debug] [close]
+[2023-05-16 00:16:41.632] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-16 00:16:43.437] [general] [debug] [running]
+[2023-05-16 00:16:43.437] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-16 00:16:43.437] [general] [debug] [create]
+[2023-05-16 00:16:43.437] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-16 00:16:43.440] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-16 00:16:43.440] [general] [info] [run] game valid? true
+[2023-05-16 00:16:43.556] [general] [debug] [main]
+[2023-05-16 00:16:43.556] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-16 00:16:43.556] [general] [debug] [main] image: 
+[2023-05-16 00:16:43.679] [general] [info] [get-audio]
+[2023-05-16 00:16:43.679] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-16 00:16:43.679] [general] [debug] [get-background]
+[2023-05-16 00:16:43.679] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-16 00:16:43.679] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-16 00:21:19.423] [general] [info] Starting txtad server on port: 4489
+[2023-05-16 00:21:20.400] [general] [debug] [close]
+[2023-05-16 00:21:20.400] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-16 00:21:22.202] [general] [debug] [running]
+[2023-05-16 00:21:22.202] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-16 00:21:22.202] [general] [debug] [create]
+[2023-05-16 00:21:22.202] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-16 00:21:22.204] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-16 00:21:22.204] [general] [info] [run] game valid? true
+[2023-05-16 00:21:22.288] [general] [debug] [main]
+[2023-05-16 00:21:22.288] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-16 00:21:22.288] [general] [debug] [main] image: 
+[2023-05-16 00:21:22.420] [general] [debug] [get-background]
+[2023-05-16 00:21:22.420] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-16 00:21:22.421] [general] [info] [get-audio]
+[2023-05-16 00:21:22.421] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-16 00:21:22.421] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-16 00:23:41.629] [general] [info] Starting txtad server on port: 4489
+[2023-05-16 00:23:43.299] [general] [debug] [close]
+[2023-05-16 00:23:43.299] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-16 00:23:45.100] [general] [debug] [running]
+[2023-05-16 00:23:45.100] [general] [debug] [create]
+[2023-05-16 00:23:45.100] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-16 00:23:45.100] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-16 00:23:45.103] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-16 00:23:45.103] [general] [info] [run] game valid? true
+[2023-05-16 00:23:45.180] [general] [debug] [main]
+[2023-05-16 00:23:45.180] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-16 00:23:45.180] [general] [debug] [main] image: 
+[2023-05-16 00:23:45.314] [general] [debug] [get-background]
+[2023-05-16 00:23:45.314] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-16 00:23:45.315] [general] [info] [get-audio]
+[2023-05-16 00:23:45.315] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-16 00:23:45.315] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-16 03:37:21.230] [general] [debug] [close]
+[2023-05-16 03:37:21.230] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-16 03:37:23.031] [general] [debug] [create]
+[2023-05-16 03:37:23.031] [general] [debug] [running]
+[2023-05-16 03:37:23.031] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-16 03:37:23.031] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-16 03:37:23.034] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-16 03:37:23.034] [general] [info] [run] game valid? true
+[2023-05-16 03:37:23.127] [general] [debug] [main]
+[2023-05-16 03:37:23.127] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-16 03:37:23.127] [general] [debug] [main] image: 
+[2023-05-16 03:37:23.275] [general] [debug] [get-background]
+[2023-05-16 03:37:23.275] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-16 03:37:23.276] [general] [info] [get-audio]
+[2023-05-16 03:37:23.276] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-16 03:37:23.276] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-16 04:02:54.590] [general] [info] Starting txtad server on port: 4489
+[2023-05-16 04:03:30.580] [general] [debug] [close]
+[2023-05-16 04:03:30.580] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-16 04:03:32.375] [general] [debug] [running]
+[2023-05-16 04:03:32.376] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-16 04:03:32.376] [general] [debug] [create]
+[2023-05-16 04:03:32.376] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-16 04:03:32.377] [general] [error] [create] failed creating game fux/escape_the_train invalid world!
+[2023-05-16 04:08:59.860] [general] [info] Starting txtad server on port: 4489
+[2023-05-16 04:09:06.792] [general] [debug] [close]
+[2023-05-16 04:09:06.792] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-16 04:09:08.596] [general] [debug] [running]
+[2023-05-16 04:09:08.596] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-16 04:09:08.596] [general] [debug] [create]
+[2023-05-16 04:09:08.597] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-16 04:09:08.599] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-16 04:09:08.599] [general] [info] [run] game valid? true
+[2023-05-16 04:09:08.678] [general] [debug] [main]
+[2023-05-16 04:09:08.678] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-16 04:09:08.678] [general] [debug] [main] image: 
+[2023-05-16 04:09:08.778] [general] [debug] [get-background]
+[2023-05-16 04:09:08.778] [general] [debug] [get-background] game-id: fux/escape_the_train
+[2023-05-16 04:09:08.780] [general] [info] [get-audio]
+[2023-05-16 04:09:08.780] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-16 04:09:08.780] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-16 04:15:08.938] [general] [info] Starting txtad server on port: 4489
+[2023-05-16 04:15:12.143] [general] [debug] [close]
+[2023-05-16 04:15:12.143] [general] [debug] [close] game-id: fux/escape_the_train
+[2023-05-16 04:15:13.944] [general] [debug] [running]
+[2023-05-16 04:15:13.944] [general] [debug] [running] game-id: fux/escape_the_train
+[2023-05-16 04:15:13.946] [general] [debug] [create]
+[2023-05-16 04:15:13.946] [general] [debug] [create] game-id: fux/escape_the_train
+[2023-05-16 04:15:13.949] [general] [debug] [create] created game fux/escape_the_train on port 9000
+[2023-05-16 04:15:13.949] [general] [info] [run] game valid? true
+[2023-05-16 04:15:14.028] [general] [debug] [main]
+[2023-05-16 04:15:14.028] [general] [debug] [main] game-id: fux/escape_the_train
+[2023-05-16 04:15:14.028] [general] [debug] [main] image: 
+[2023-05-16 04:15:14.172] [general] [info] [get-audio]
+[2023-05-16 04:15:14.173] [general] [debug] [get-audio] game-id: fux/escape_the_train
+[2023-05-16 04:15:14.173] [general] [error] Audio could not be found: ../data/users/fux/files/escape_the_train/sounds/.mp3
+[2023-05-16 04:15:14.173] [general] [debug] [get-background]
+[2023-05-16 04:15:14.173] [general] [debug] [get-background] game-id: fux/escape_the_train

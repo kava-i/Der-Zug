@@ -219,6 +219,7 @@ public:
 
     // ----- ***** TIME EVENTS ***** ------ //
     void t_highness(std::string&, CPlayer*);
+		void t_setAttribute(std::string& str, CPlayer* p);
     void t_throwEvent(std::string&, CPlayer*);
 };
     

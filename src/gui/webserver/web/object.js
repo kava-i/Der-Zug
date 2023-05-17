@@ -510,6 +510,10 @@ function EditItem(type, parent_elem) {
 			if (inp.id == "handler") 
 				SetHandlerArgs(inp.value);
 		})
+		if (type === "updates") {
+			const tmp = document.getElementById("tmp");
+			HideTempSettings(tmp.parentNode.parentNode.parentNode, tmp.checked);
+		}
   });
 }
 
@@ -541,6 +545,9 @@ function SaveItem() {
 	else if (parent_elem.parentNode.id == "attributes") 
 		parent_elem.getElementsByTagName("a")[0].innerHTML = 
 			`${get(json, 'name', '')} (category: ${get(json, 'category', '')})`;
+	else if (parent_elem.parentNode.id == "updates") 
+		parent_elem.getElementsByTagName("a")[0].innerHTML = 
+			`${get(json, 'id', '')} ${get(json, 'mod_type', '')} ${get(json, 'value', '')}`;
 	else if (parent_elem.id.indexOf("mapping") > 0) 
 		parent_elem.getElementsByTagName("a")[0].innerHTML = 
 			`${get(json, 'match_type', '')} ${get(json, 'value', '')} → ${get(json, 'show', '')}`;
@@ -562,20 +569,12 @@ function SetHandlerArgs(value) {
 		arguments_field.setAttribute("onclick", "OpenHandlerArgsDialog()");
 		let i = 0;
 		availible[value].forEach(item => {
-			const el = document.createElement("input");
-			// el.className = "integr_elements";
-			el.placeholder = item;
-			el.id = item;
-			el.name = item;
-			el.localize = false;
-			// el.setAttribute("localize", "localize");
-			if (item == "int") {
-				el.type = "number";
-			}
+			let availibe_value = undefined;
 			if (cur_attributes.length > i) {
-				el.value = cur_attributes[i];
+				availibe_value = cur_attributes[i];
 				i++;
 			}
+			const el = CreateMatchingInputField(item, availibe_value);
 			form.appendChild(el);
 		});
 	}
@@ -597,19 +596,12 @@ function SetEventDialog(cur_cmd, cur_attributes=[]) {
 		console.log(cur_cmd, " is in ", availible);
 		let i = 0;
 		availible[cur_cmd].forEach(item => {
-			const el = document.createElement("input");
-			// el.className = "integr_elements";
-			el.placeholder = item;
-			el.id = item;
-			el.name = item;
-			el.localize = false;
-			if (item == "int") {
-				el.type = "number";
-			}
+			let availibe_value = undefined;
 			if (cur_attributes.length > i) {
-				el.value = cur_attributes[i];
+				availibe_value = cur_attributes[i];
 				i++;
 			}
+			const el = CreateMatchingInputField(item, availibe_value);
 			form.appendChild(el);
 		});
 	}
@@ -624,6 +616,60 @@ function SetEventDialog(cur_cmd, cur_attributes=[]) {
 		el.value = cur_attributes.join("|");
 		form.appendChild(el);
 	}
+}
+
+function CreateMatchingInputField(field_type, availibe_value) {
+	const options = GetAvailibleObjects(field_type);
+	console.log("For ", field_type, " found: ", (typeof options), options);
+	if (options !== null) {
+		const el = document.createElement("select");
+		el.name = field_type;
+		el.id = field_type;
+		el.localize = false;
+
+		if (Array.isArray(options)) {
+			options.forEach(opt => {
+				var option = document.createElement("option");
+				option.value = opt; 
+				option.text = opt;
+				el.add(option); 
+			});
+		}
+		else {
+			for (const [key, value] of Object.entries(options)) {
+				var option = document.createElement("option");
+				option.value = key;
+				option.text = value;
+				el.add(option); 
+			}
+		}
+		if (availibe_value != undefined)
+			el.value = availibe_value;
+		return el;
+	}
+	else {
+		const el = document.createElement("input");
+		el.placeholder = field_type;
+		el.id = field_type;
+		el.name = field_type;
+		el.localize = false;
+		if (field_type == "int")
+			el.type = "number";
+		if (availibe_value != undefined)
+			el.value = availibe_value;
+		return el;
+	}
+}
+
+function GetAvailibleObjects(type) {
+	const availible_objects = document.getElementById("availible_objects");
+	if (availible_objects.hasAttribute(type)) {
+		let objects = availible_objects.getAttribute(type);
+		if (objects) {
+			return JSON.parse(objects);
+		}
+	}
+	return null;
 }
 
 function SaveHandlerArgs() {
@@ -651,9 +697,14 @@ function SaveEvent() {
 		event_str += value + "|";
 
 	const dialog = document.getElementById("event_dialog");
-	console.log(dialog, dialog.edit_elem);
+	event_str = event_str.slice(0, -1); // remove last |
+	// Remove potentially dangling |
+	if (event_str[event_str.length-1] === "|")
+		event_str = event_str.slice(0, -1);
+	// Store to elem.
 	let elem = dialog.edit_elem;
-	elem.value = event_str.slice(0, -1); // 
+	elem.value = event_str;
+
 	CloseDialog("event_dialog");
 }
 
@@ -688,4 +739,17 @@ function ComparePosition(elem1, elem2) {
     if (position & 0x04) return false;
     if (position & 0x02) return true;
 };
+
+function HideTempSettings(parentNode, display) {
+	console.log("display: ", display, parentNode);
+	let elems = parentNode.getElementsByTagName("*");
+
+	for (const elem of elems) {
+		if (elem.hasAttribute("temp_settings")) {
+			console.log("Found: ", elem);
+			elem.style.display = (display) ? "block" : "none";
+		}
+	};
+	console.log("temp_settings: ", elems);
+}
 

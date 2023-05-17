@@ -1,5 +1,6 @@
 #include "player.h" 
 #include "game/config/attributes.h"
+#include "tools/calc_enums.h"
 #include "tools/webcmd.h"
 #include "tools/gramma.h"
 #include "tools/webcmd.h"
@@ -871,10 +872,15 @@ void CPlayer::showStats() {
   // Get mapping from config.
   const auto& attribute_conf = m_world->attribute_config().attributes_;
   const auto& mapping = m_world->attribute_config().mapping_;
+	std::cout << "cur mapping: " << std::endl;
+	for (const auto& it : mapping) 
+		std::cout << " - " << it.first << std::endl;
+
   std::map<std::string, std::map<std::string, std::string>> stats;
   for (auto it : attributes_) {  
     std::string category = attribute_conf.at(it.first).category_;
     std::string name = attribute_conf.at(it.first).name_;
+		std::cout << " - " << it.first << ", mapping? " << (mapping.count(it.first) > 0) << std::endl;
 
     if (mapping.count(it.first) > 0) {
       for (const auto& map : mapping.at(it.first)) {
@@ -916,12 +922,14 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps) {
     std::string sOpt = func::extractLeadingChars(it.value());
     int value = func::getNumFromBack(it.value());
 
+		// TODO (fux): describe what is happening here :D
     if(sOpt == "&") {
       double level = m_minds[it.key()].level + m_minds[it.key()].relevance;
       for(const auto& mind : m_minds) {
         if(mind.first != it.key() && mind.second.level + mind.second.relevance > level)
           return false;
       }
+			return true;
     }
 
     //Check dependency in mind
@@ -944,45 +952,68 @@ bool CPlayer::checkDependencies(nlohmann::json jDeps) {
   return true;
 }
 
+void CPlayer::Update(const Updates& updates) {
+	std::string updated_print;
+	Update(updates, updated_print);
+}
+
+void CPlayer::Update(const Updates& updates, std::string& updated_print) {
+	const auto& attribute_conf = m_world->attribute_config().attributes_;
+	for (const auto& it : updates.updates()) {
+		// Update minds
+		if (m_minds.count(it.id_) > 0) {
+			it.ApplyUpdate(m_minds.at(it.id_).level);
+      updated_print += m_minds.at(it.id_).color + it.id_ + " erhöhrt!" + WHITE + "\n";
+		}
+		else if (attributes_.count(it.id_) > 0) {
+			it.ApplyUpdate(attributes_.at(it.id_));
+			std::string name = attribute_conf.at(it.id_).name_;
+      updated_print += GREEN + name + " erhöht!" + WHITE + "\n";
+		}
+		// Temporary update
+		if (it.tmp_) {
+			std::string infos = it.ToString(true);
+			double duration = static_cast<double>(it.secs_)/60;
+    	if (!getContext("standard")->timeevent_exists("t_setAttribute"))
+      	getContext("standard")->add_timeEvent("t_setAttribute", "standard", infos, duration);
+		}
+	}
+}
+
 
 // *** Others *** // 
 
 /**
  * Check if player's output contains special commands such as printing player name or else.
  */ 
-void CPlayer::checkCommands()
-{
-    while(m_sPrint.find("{") != std::string::npos)
-    {
-        size_t pos  = m_sPrint.find("{");
-        size_t pos2 = m_sPrint.find("}"); 
-        std::string cmd = m_sPrint.substr(pos+1, pos2-(pos+1));
-        std::string replace = "";
-        if(cmd.find("cname") != std::string::npos && m_curDialogPartner != nullptr)
-            replace = m_curDialogPartner->name();
-        else if(cmd.find("name") != std::string::npos)
-            replace = name();
+void CPlayer::checkCommands() {
+	while (m_sPrint.find("{") != std::string::npos) {
+		size_t pos = m_sPrint.find("{");
+		size_t pos2 = m_sPrint.find("}"); 
+		std::string cmd = m_sPrint.substr(pos+1, pos2-(pos+1));
+		std::string replace = "";
+		if (cmd.find("cname") != std::string::npos && m_curDialogPartner != nullptr)
+			replace = m_curDialogPartner->name();
+		else if (cmd.find("name") != std::string::npos)
+			replace = name();
+		m_sPrint = m_sPrint.substr(0, pos) + replace + m_sPrint.substr(pos2+1);
+	}
 
-        m_sPrint = m_sPrint.substr(0, pos) + replace + m_sPrint.substr(pos2+1);
-    }
+	for(const auto& it : m_minds) {
+		size_t pos = 0;
+		for(;;) {
+			if (m_sPrint.find(func::returnToUpper(it.first), pos) == std::string::npos)
+				break;
+			pos = m_sPrint.find(func::returnToUpper(it.first), pos);
+			m_sPrint.insert(pos, it.second.color);
+			m_sPrint.insert(pos + it.first.length()+1, WHITE);
+			pos+=it.first.length();
+		}
+	}
 
-    for(const auto& it : m_minds) 
-    {
-        size_t pos=0;
-        for(;;)
-        {
-            if(m_sPrint.find(func::returnToUpper(it.first), pos) == std::string::npos)
-                break;
-            pos=m_sPrint.find(func::returnToUpper(it.first), pos);
-            m_sPrint.insert(pos, it.second.color);
-            m_sPrint.insert(pos + it.first.length()+1, WHITE);
-            pos+=it.first.length();
-        }
-    }
-
-    size_t pos = m_sPrint.rfind("$");
-    if(pos != std::string::npos)
-        m_sPrint.erase(pos, 1);
+	size_t pos = m_sPrint.rfind("$");
+	if (pos != std::string::npos)
+			m_sPrint.erase(pos, 1);
 }
 
 /**

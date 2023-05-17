@@ -1,0 +1,128 @@
+
+<h2>Updats {{default(id,"")}}</h2>
+<table 
+	class="center"
+>
+  <tr>
+    <td>
+      <label class="small" title="Name of attribute or mind to update">Name:</label>
+    </td>
+    <td>
+      <select id="id" autocomplete="off" required >
+				<option {% if default(cmd, "") == "" %} selected {% endif %}></option>
+				{% for attribute_id, attribute_name in _attributes %}
+					<option 
+						value={{attribute_id}}
+						{% if attribute_id==default(id, "") %} selected {% endif %}>
+						{{attribute_name}}
+					</option>
+				{% endfor %} 
+			</select>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <label class="small" title="Type of modifier">Command</label>
+    </td>
+    <td>
+      <select id="mod_type" autocomplete="off" required >
+				<option {% if default(mod_type, "") == "" %} selected {% endif %}></option>
+				{% for mod in _mod_types %}
+					<option {% if mod==default(mod_type, "") %} selected {% endif %}>
+						{{mod}}
+					</option>
+				{% endfor %} 
+			</select>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <label class="small" title="value to which to set or in-/decrease attribute." >
+        value
+      </label>
+    </td>
+    <td>
+      <input 
+				type="number" 
+				custom="int" 
+				id="value" 
+				placeholder="value" 
+				value="{{default(value,"")}}"
+				required 
+			>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <label class="small" title="Specify whether this is update is only
+				temporary (cant use `=` with temporary updates">
+        Temporary:
+      </label>
+    </td>
+    <td>
+      <input 
+				id="tmp" 
+				type="checkbox" 
+				custom="bool" 
+        {% if default(tmp, 0) %} checked {% endif %}
+				onchange="HideTempSettings(this.parentNode.parentNode.parentNode, this.checked);"
+			>
+    </td>
+  </tr>
+
+	<tr temp_settings> 
+		<td>
+      <label class="small" title="After how many seconds does the event trigger" >
+        Seconds
+      </label>
+    </td>
+    <td>
+      <input 
+				id="secs" 
+				type="number" 
+				custom="int" 
+				value="{{default(secs,60)}}"
+			>
+    </td>
+	</tr>
+
+	<tr temp_settings> 
+		<td>
+      <label class="small" title="If 0 resets update on first trigger, otherwise
+				trigges [steps] times modifying attribute by [value]/[steps+1]" >
+        Steps
+      </label>
+    </td>
+    <td>
+      <input 
+				id="steps" 
+				type="number" 
+				custom="int" 
+				value="{{default(steps, 1)}}"
+			>
+    </td>
+	</tr>
+
+	<tr temp_settings> 
+		<td>
+      <label class="small" title="In fight, Specify after how many rounds the
+				attribute is resetted back to original." >
+        Rounds
+      </label>
+    </td>
+    <td>
+      <input 
+				id="rounds" 
+				type="number" 
+				custom="int" 
+				value="{{default(rounds,1)}}"
+			>
+    </td>
+	</tr>
+	<script tyoe="text/javascript"> 
+		HideTempSettings(document, {{default(temp, false)}});
+	</script>
+</table>

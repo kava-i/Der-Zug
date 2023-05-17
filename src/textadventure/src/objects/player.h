@@ -13,6 +13,7 @@
 #include "eventmanager/parser.h"
 #include "game/config/attributes.h"
 #include "game/world.h"
+#include "objects/helper/update.h"
 #include "person.h"
 #include "eventmanager/sorted_context.h"
 #include "eventmanager/context.h"
@@ -351,6 +352,9 @@ public:
     * @param jDeps json with dependencies
     */
     bool checkDependencies(nlohmann::json);
+
+		void Update(const Updates& updates);
+		void Update(const Updates& updates, std::string& updated_print);
 
 
     // ** Others ** //

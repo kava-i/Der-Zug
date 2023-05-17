@@ -12,18 +12,8 @@
         <li>
           <label>Text:</label>
           <textarea id="text">{{desc.text}}</textarea></li>
-       </li>
-        <li id="optional" class="full_length" style="display: none;">
-          <label>Logic:</label>
-          <input id="logic" placeholder="logic" value="{{default(desc.logic, "")}}">
-        </li>
-        <li id="optional" class="full_length" style="display: none;">
-          <label>Updates:</label>
-          <input id="updates" custom="json" placeholder="updates" 
-                value={{ default(desc.updates, {}) }}>
-        </li>
+       	</li>
 
-        </li>
         <li id="optional" class="full_length" style="display: none;">
           <label>Music:</label>
           <input id="music" placeholder="music" value={{default(desc.music,"")}}>
@@ -34,6 +24,14 @@
           <label>Image:</label>
           <input id="image" placeholder="image" value={{default(desc.image,"")}}>
         </li>
+
+        <li id="optional" class="full_length" style="display: none;">
+          <label>Logic:</label>
+          <input id="logic" placeholder="logic" value="{{default(desc.logic, "")}}">
+        </li>
+
+					{% set _updates = default(desc.updates, []) %}
+					{% include "web/element_templates/updates" %}
 
 					{% set _id = "pre_pEvents" %}
 					{% set _events = default(desc.pre_pEvents, [""]) %}

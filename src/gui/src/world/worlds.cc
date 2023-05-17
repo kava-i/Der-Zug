@@ -190,6 +190,10 @@ std::string Worlds::ParseTemplate(nlohmann::json json) {
   inja::Template events = env.parse_template("web/element_templates/events.html");
   env.include_template("web/element_templates/events", events);
 	std::cout << "done loading element-templates" << std::endl;
+  inja::Template updates = env.parse_template("web/element_templates/updates.html");
+  env.include_template("web/element_templates/updates", updates);
+	std::cout << "done loading update-templates" << std::endl;
+
   // Parse standard templates for objects
   inja::Template desc= env.parse_template("web/object_templates/description.html");
   env.include_template("web/object_templates/temp_description", desc);
