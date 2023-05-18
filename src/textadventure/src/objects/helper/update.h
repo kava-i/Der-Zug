@@ -21,7 +21,7 @@ struct Update {
 
 	// methods
 	void ApplyUpdate(int& value) const;
-	std::string ToString(bool calc_value_from_steps) const;
+	std::string ToString(bool calc_value_from_steps, bool reverse) const;
 };
 
 struct Updates {

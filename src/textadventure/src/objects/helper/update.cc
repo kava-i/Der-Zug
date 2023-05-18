@@ -18,7 +18,7 @@ Update::Update(const nlohmann::json& json) {
 	value_ = json.at("value");
 	tmp_ = (json.at("tmp") == 1) ? true : false;
 	secs_ = json.value("secs", 60);
-	steps_ = json.value("steps", 0);
+	steps_ = json.value("steps", 1);
 	rounds_ = json.value("rounds", 1);
 }
 
@@ -26,12 +26,11 @@ void Update::ApplyUpdate(int& value) const {
 	calc::MOD_TYPE_FUNCTION_MAPPING.at(mod_type_)(value, value_);
 }
 
-std::string Update::ToString(bool calc_value_from_steps) const {
-	int value = (calc_value_from_steps) 
-		? (steps_ == 0) ? value_ : value_/steps_
-		: value_;
-	std::string str = id_ + "|" + calc::MOD_TYPE_R_STRING_MAPPING.at(mod_type_) + std::to_string(value) 
-		+ "|white|" + std::to_string(steps_);
+std::string Update::ToString(bool calc_value_from_steps, bool reverse) const {
+	int value = (!calc_value_from_steps) ? value_ : value_/steps_;
+  calc::ModType mt = (reverse) ? calc::MOD_TYPE_R_MAPPING.at(mod_type_) : mod_type_;
+	std::string str = id_ + "|" + calc::MOD_TYPE_R_STRING_MAPPING.at(mt) + "|" 
+    + std::to_string(value) + "|white|" + std::to_string(steps_);
 	return str;
 }
 

@@ -15,7 +15,7 @@ private:
 
 public:
 	CContextStack() {
-      m_reloadQueue = false;
+    m_reloadQueue = false;
   }
 
   /**
@@ -44,41 +44,41 @@ public:
       m_reloadQueue = true;
       m_contextStack.erase(name);
       m_sortedContexts.erase(std::remove_if(m_sortedContexts.begin(),
-          m_sortedContexts.end(),[ctx](const std::pair<T*,int> &p)
-          { if(p.first==ctx) return true; else return false;}),
-          m_sortedContexts.end());
+          m_sortedContexts.end(),[ctx](const std::pair<T*,int> &p) { 
+            if (p.first == ctx) return true; 
+            else return false;
+          }), m_sortedContexts.end());
     }
     catch(...) {
       return;
     }
   }
 
-  /**
-  * erase highest priority from stack.
-  * @param[in] name
-  */
-  void eraseHighest(std::string name) {
-    if (m_contextStack.count(name) == 0)
-      return;
-
-    //Make sure still sorted and set queue to relod
+  void eraseByPointer(T* ctx) {
     m_reloadQueue = true;
-    std::sort(m_sortedContexts.begin(),m_sortedContexts.end(),
-        [](std::pair<T*,int>& a,std::pair<T*,int>& b)
-        { return a.second<b.second; });
-    std::reverse(m_sortedContexts.begin(), m_sortedContexts.end());
-
-    auto lambda = [&](std::pair<T*, int>& a) {return a.first->getID()==name;};
-
-    //Delete first occurance
+    // Comare pointers
+    auto lambda = [&](std::pair<T*, int>& a) {return a.first == ctx;};
     auto it = std::find_if(m_sortedContexts.begin(), m_sortedContexts.end(), lambda);
-    if (it != m_sortedContexts.end())
+    if (it != m_sortedContexts.end()) {
+      
+      // Store id, delete context and remove from sorted-list.
+      std::string name = ctx->getID();
+      delete it->first;
       m_sortedContexts.erase(it);
+      std::cout << "Deleted listener: " << name << std::endl;
 
-    //Delete in map if empty
-    if (std::find_if(m_sortedContexts.begin(), m_sortedContexts.end(), 
-          lambda) == m_sortedContexts.end())
-      m_contextStack.erase(name);
+      // Check if there is another context with the same name.
+      auto lambda = [&](std::pair<T*, int>& a) {return a.first->getID() == name;};
+      auto it = std::find_if(m_sortedContexts.begin(), m_sortedContexts.end(), lambda);
+
+      // If yes erase. 
+      if (it == m_sortedContexts.end())
+        m_contextStack.erase(name);
+      // Otherwise, if the current map entry is null set above entry: 
+      else if (m_contextStack.count(name) > 0 && m_contextStack[name]) {
+        m_contextStack[name] = it->first;
+      }
+    }
   }
 
   /**

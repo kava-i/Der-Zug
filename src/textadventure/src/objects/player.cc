@@ -872,15 +872,11 @@ void CPlayer::showStats() {
   // Get mapping from config.
   const auto& attribute_conf = m_world->attribute_config().attributes_;
   const auto& mapping = m_world->attribute_config().mapping_;
-	std::cout << "cur mapping: " << std::endl;
-	for (const auto& it : mapping) 
-		std::cout << " - " << it.first << std::endl;
 
   std::map<std::string, std::map<std::string, std::string>> stats;
   for (auto it : attributes_) {  
     std::string category = attribute_conf.at(it.first).category_;
     std::string name = attribute_conf.at(it.first).name_;
-		std::cout << " - " << it.first << ", mapping? " << (mapping.count(it.first) > 0) << std::endl;
 
     if (mapping.count(it.first) > 0) {
       for (const auto& map : mapping.at(it.first)) {
@@ -972,10 +968,12 @@ void CPlayer::Update(const Updates& updates, std::string& updated_print) {
 		}
 		// Temporary update
 		if (it.tmp_) {
-			std::string infos = it.ToString(true);
+			std::string infos = it.ToString(true, true);
 			double duration = static_cast<double>(it.secs_)/60;
-    	if (!getContext("standard")->timeevent_exists("t_setAttribute"))
-      	getContext("standard")->add_timeEvent("t_setAttribute", "standard", infos, duration);
+      std::cout << "Createting time listener with infos: " << infos
+        << ", and duration: " << duration << std::endl;
+      getContext("standard")->add_timeEvent("t_setAttribute", "standard", infos, duration);
+      std::cout << "created time event" << infos << std::endl;
 		}
 	}
 }
