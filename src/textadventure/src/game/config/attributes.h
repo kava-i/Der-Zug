@@ -20,6 +20,13 @@ struct ConfigAttribute {
 	std::string name_;
 	std::string category_;
 	int default_value_;
+  int lower_bound_;
+  std::vector<std::string> lower_events_;
+  int upper_bound_;
+  std::vector<std::string> upper_events_;
+
+  // methods 
+  bool CheckBounds(int cur ) const;
 };
 
 struct AttributeMapping {

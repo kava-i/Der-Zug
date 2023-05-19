@@ -9,7 +9,7 @@
     </td>
     <td>
       <select id="id" autocomplete="off" required >
-				<option {% if default(cmd, "") == "" %} selected {% endif %}></option>
+				<option {% if default(id, "") == "" %} selected {% endif %}></option>
 				{% for attribute_id, attribute_name in _attributes %}
 					<option 
 						value={{attribute_id}}
@@ -46,12 +46,34 @@
     <td>
       <input 
 				type="number" 
-				custom="int" 
+				custom="float" 
+				step=0.1
 				id="value" 
 				placeholder="value" 
 				value="{{default(value,"")}}"
 				required 
 			>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <label 
+        class="small" 
+        title="Name of an attribute used as to achieve f.e. `lp=0.5*max_lp`">Attribute (value*attribute):
+      </label>
+    </td>
+    <td>
+      <select id="attribute" autocomplete="off">
+				<option {% if default(attribute, "") == "" %} selected {% endif %}></option>
+				{% for attribute_id, attribute_name in _attributes %}
+					<option 
+						value={{attribute_id}}
+						{% if attribute_id==default(attribute, "") %} selected {% endif %}>
+						{{attribute_name}}
+					</option>
+				{% endfor %} 
+			</select>
     </td>
   </tr>
 
@@ -102,6 +124,7 @@
 				type="number" 
 				custom="int" 
 				value="{{default(steps, 1)}}"
+        min=1
 			>
     </td>
 	</tr>

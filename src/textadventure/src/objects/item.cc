@@ -1,40 +1,44 @@
 #include "item.h"
+#include "objects/helper/update.h"
 #include "objects/player.h"
+#include <math.h>
+#include <string>
+
 
 /**
 * Constructor for non-derived items simply placing the passed json as items attributes.
 * @param[in] basic attributes from base item.
 */
-CItem::CItem(nlohmann::json basic_json, CPlayer* p) : CObject(basic_json, p, "item") {
-  m_jAttributes = basic_json;
+CItem::CItem(nlohmann::json basic_json, CPlayer* p) 
+  : CObject(basic_json, p, "item"),
+  updates_(basic_json.value("updates", nlohmann::json::array())),
+  costs_(Updates(basic_json.value("costs", std::map<std::string, int>()), calc::ModType::ADD))
+{
+  json_ = basic_json;
 
   if (basic_json.count("useDescription") > 0)
-    m_useDescription = new CText(basic_json["useDescription"], p);
+    use_description_ = new CText(basic_json["useDescription"], p);
   else
-    m_useDescription = nullptr;
+    use_description_ = nullptr;
 
-  m_sCategory = basic_json.value("category", "others");
+  category_ = basic_json.value("category", "others");
   kind_ = basic_json.value("kind", "");
   type_ = basic_json.value("type", "");
 
-  m_sAttack = basic_json.value("attack", "");
-  m_sFunction = basic_json.value("function", m_sCategory);
-  stats_change_ = basic_json.value("stats_effect", "");
-  m_effekt = basic_json.value("effekt", 0);
-  m_value = basic_json.value("value", 1);
-  m_hidden = basic_json.value("hidden", false);
+  attack_ = basic_json.value("attack", "");
+  hidden_ = basic_json.value("hidden", false);
 
   //Set extra variables for books
   m_mark = 0;
-  m_pages = new CText(m_jAttributes.value("pages", nlohmann::json()), p);
+  m_pages = new CText(json_.value("pages", nlohmann::json()), p);
 }
 
 // *** GETTTER *** //
 nlohmann::json CItem::getAttributes() {
-  return m_jAttributes;
+  return json_;
 }
 std::string CItem::getCategory() {
-  return m_sCategory;
+  return category_;
 }
 std::string CItem::kind() {
   return kind_;
@@ -43,51 +47,47 @@ std::string CItem::type() {
   return type_;
 }
 std::string CItem::getAttack() {
-  return m_sAttack;
+  return attack_;
 }
-std::string CItem::getFunction() { 
-  return m_sFunction;
-} 
-std::string CItem::stats_change() {
-  return stats_change_;
-}
-size_t CItem::getEffekt() { 
-  return m_effekt;
-}
-int CItem::getValue() { 
-  return m_value;
-}
+
 bool CItem::getHidden() {
-  return m_hidden;
+  return hidden_;
 }
+
 size_t CItem::getMark() {
   return m_mark;
 }
+
 CText* CItem::getPages() {
   return m_pages;
 }
 
+const Updates& CItem::update() {
+  return updates_;
+}
+
+const Updates& CItem::costs() {
+  return costs_;
+}
+
+CText* CItem::use_description() {
+  return use_description_;
+}
+
 // *** SETTER *** //
 void CItem::setCategory(std::string sCategory) {
-  m_sCategory = sCategory;
+  category_ = sCategory;
 }
 void CItem::setKind(std::string kind) {
   kind_ = kind;
 }
-void CItem::setFunction(std::string sFunction) {
-  m_sFunction = sFunction;
-}
+
 void CItem::setAttack(std::string sAttack) {
-  m_sAttack = sAttack;
+  attack_ = sAttack;
 }
-void CItem::setEffekt(size_t effekt) {
-  m_effekt = effekt;
-}
-void CItem::setValue(int value) {
-  m_value = value;
-}
+
 void CItem::setHidden(bool hidden) {
-  m_hidden = hidden;
+  hidden_ = hidden;
 }
 void CItem::setMark(size_t mark) {
   m_mark = mark;
@@ -103,42 +103,45 @@ void CItem::initializeFunctions() {
   m_functions["read"] = &CItem::read;
   //Equipe-functions
   m_functions["equipe"] = &CItem::equipe;
+  m_functions["weapon"] = &CItem::equipe;
 }
 
 // ***** VARIOUS FUNCTIONS ***** //
 std::string CItem::getAllInfos() {
-  return "id: " + id_ + ", name: " + name_ + ", catagory: " + m_sCategory + ", kind: " + kind_ 
-    + ", type: " + type_ + ", function: " + m_sFunction + ", attack: " + m_sAttack 
-    + ", effekt: " + std::to_string(m_effekt) + ", value: " + std::to_string(m_value) 
-    + ", hidden: " + std::to_string(m_hidden) + "\n"; 
+  return "id: " + id_ + ", name: " + name_ + ", catagory: " + category_ + ", kind: " + kind_ 
+    + ", type: " + type_ + ", attack: " + attack_ + ", costs: " + Costs() + "\n"; 
+}
+
+std::string CItem::Costs() {
+  auto updates = costs_.updates();
+  if (updates.size() == 0) 
+	  return "Costs: ---";
+  auto lambda = [](const Update& c) -> std::string { 
+    return c.id_ + ": " + std::to_string(c.value_); };
+	return "Costs: " + std::accumulate(
+			std::next(updates.begin()), updates.end(), lambda(updates.front()), 
+			[lambda](std::string a, const Update& b) { return a + ", " + lambda(b); }
+	);
 }
 
 // ***** FUNCTION-CALLER ***** // 
 
-//Consume function
+// Consume function
 bool CItem::callFunction(CPlayer* p) {
-  if (m_functions.count(getFunction()) == 0) 
+  if (m_functions.count(category_) == 0) {
+    p->appendPrint(use_description_->print(true));
     return false;
+  }
   else
-    (this->*m_functions[getFunction()])(p);
+    (this->*m_functions[category_])(p);
   return true;
 }
 
 // ***** CONSUME FUNCTIONS ***** //
 void CItem::consume(CPlayer* p) {
-  if (kind_ == "drug") {
-    p->setStat("highness", p->getStat("highness") + getEffekt());
-    if (!p->getContext("standard")->timeevent_exists("t_highness"))
-        p->getContext("standard")->add_timeEvent("t_highness", "standard", "", 2.0);
-    if (m_useDescription != nullptr)
-        p->appendPrint(m_useDescription->print());
-    else
-        p->appendDescPrint("Du consumierst eine Droge: deine Highness erhöht sich um " 
-            + std::to_string(getEffekt()));
-    p->getInventory().removeItemByID(id());
-  }
+  PrintUseAndDoUpdate("consumed_item", p);
+  p->getInventory().removeItemByID(id_);
 }
-
 
 // ***** EQUIPE-FUNCTIONS ***** //
 void CItem::equipe(CPlayer* p) {
@@ -147,7 +150,25 @@ void CItem::equipe(CPlayer* p) {
 
 // ***** READ-FUNCTIONS ***** //
 void CItem::read(CPlayer* p) {
-  p->appendDescPrint("Du schlägst das Buch auf der ersten Seite auf.");
+  PrintUseAndDoUpdate("opened_book", p);
   p->appendPrint(m_pages->pagePrint(m_mark) + "\n");
   p->addReadContext(id_);
+}
+
+void CItem::PrintUseAndDoUpdate(std::string default_use, CPlayer* p) {
+  std::cout << "PrintUseAndDoUpdate" << std::endl;
+  // Apply updates and print results
+  std::string txt;
+  p->Update(updates_, txt);
+  p->appendPrint(txt);
+  std::cout << "PrintUseAndDoUpdate: printing use desc" << std::endl;
+  // Print default use string or use-description
+  if (use_description_ != nullptr)
+    p->appendDescPrint(p->getWorld()->GetSTDText(default_use));
+  else {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnonnull" 
+    p->appendPrint(use_description_->print(true));
+#pragma GCC diagnostic pop
+  }
 }

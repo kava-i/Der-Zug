@@ -1,26 +1,25 @@
 {
   "printing":{},
-    "appearance": {
-        "input-bar": {
-            "bottom": "0",
-            "left": 0,
-            "width": 100
-        },
-        "input-bar-settings": {
-            "attached": false,
-            "symbol": "$",
-            "topline": true,
-            "typewriter": false
-        },
-        "text-box": {
-            "height": 100,
-            "left": 0,
-            "padding": "1rem",
-            "top": 0,
-            "width": 100
-        }
-    },
-
+  "appearance": {
+      "input-bar": {
+          "bottom": "0",
+          "left": 0,
+          "width": 100
+      },
+      "input-bar-settings": {
+          "attached": false,
+          "symbol": "$",
+          "topline": true,
+          "typewriter": false
+      },
+      "text-box": {
+          "height": 100,
+          "left": 0,
+          "padding": "1rem",
+          "top": 0,
+          "width": 100
+      }
+  },
   "show":{
     "chars": {
       "error": "niemand",
@@ -68,7 +67,10 @@
     "tech_error": "Sorry, irgendwas ist schiefgegangen. Vielleicht funktioniert es später wieder.\n",
     "update_stats": "Wähle Zahl oder den Namen des Attributes aus.\n",
     "points_left_a": "Du hast ",
-    "points_left_b": " Punkte zu vergeben.\n"
+    "points_left_b": " Punkte zu vergeben.\n",
+    "consumed_item": "Item konsumiert.\n",
+    "opened_book": "Du öffnest das Buch auf der ersten Seite.\n",
+    "exceed_limits": "Der Kauf dieses Items würde deine Limits überschreiten.\n"
   },
   "minds":[],
   "commands":[
@@ -162,8 +164,5 @@
   "image": {
       "background": "",
       "fight": ""
-  },
-  "categories": ["equipe", "read", "consume", "others"],
-  "kinds": ["weapon", "armor", "drug"],
-  "types": []
+  }
 }

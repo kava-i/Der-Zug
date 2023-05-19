@@ -693,33 +693,32 @@ void CPlayer::printEquiped() {
 * @param item given item.
 * @param sType type of item indicating category.
 */
-void CPlayer::equipeItem(CItem* item, string sType) {
+void CPlayer::equipeItem(CItem* item, string kind_) {
   // If nothing is equipped in this category -> equip.
-  if (m_equipment[sType] == NULL) {
+  if (m_equipment[kind_] == NULL) {
     appendDescPrint(m_world->GetSTDText("equipped_a") + item->name() 
-        + m_world->GetSTDText("equipped_b") + sType + m_world->GetSTDText("equipped_c"));
-    string sAttack = item->getAttack();
-
-    // Update stats
-    if (item->stats_change().size() > 0) {
-      addPostEvent("setAttribute " + item->stats_change());
-    }
+        + m_world->GetSTDText("equipped_b") + kind_ + m_world->GetSTDText("equipped_c"));
 
     // Check for new attack
-    if (sAttack != "") {
-      m_attacks[sAttack] = m_world->getAttack(sAttack);
-      appendDescPrint(m_world->GetSTDText("new_attack") + m_attacks[sAttack]->getName() + "\n");
+    string attack = item->getAttack();
+    if (attack != "") {
+      m_attacks[attack] = m_world->getAttack(attack);
+      appendDescPrint(m_world->GetSTDText("new_attack") + m_attacks[attack]->getName() + "\n");
     }
-    m_equipment[sType] = item;
+    // Do updates
+    Update(item->update());
+
+    m_equipment[kind_] = item;
+    appendPrint(item->use_description()->print(true));
   }
 
   // If this item is already equipped -> print error message.
-  else if (m_equipment[sType]->id() == item->id())
-    appendErrorPrint(sType + m_world->GetSTDText("already_equipped"));
+  else if (m_equipment[kind_]->id() == item->id())
+    appendErrorPrint(kind_ + m_world->GetSTDText("already_equipped"));
 
   // If another item is equipped in this category -> add choice-context
   else {
-    appendErrorPrint(m_world->GetSTDText("already_equipped_change_a" )+ sType 
+    appendErrorPrint(m_world->GetSTDText("already_equipped_change_a" )+ kind_ 
         + m_world->GetSTDText("already_equipped_change_b"));
     // Create Choice-Context
     m_contextStack.insert(new Context((nlohmann::json){{"name", "equipe"}, {"permeable", false},
@@ -737,9 +736,6 @@ void CPlayer::equipeItem(CItem* item, string sType) {
 */
 void CPlayer::dequipeItem(string sType) {
   std::cout << "dequipping item: " << sType << std::endl;
-  for (const auto& it : m_equipment) {
-    std::cout << "- " << it.first << std::endl;
-  }
   std::string type_from_item = (m_inventory.getItem(sType)) ? m_inventory.getItem(sType)->kind() : "";
   if (m_equipment.count(type_from_item) > 0) {
     sType = type_from_item;
@@ -754,14 +750,9 @@ void CPlayer::dequipeItem(string sType) {
     //Erase attack
     if (m_equipment[sType]->getAttack() != "")
       m_attacks.erase(m_equipment[sType]->getAttack());
-    // Remove stats perks
-    std::string str = m_equipment[sType]->stats_change();
-    if (str.size() > 0) {
-      auto pos = str.find("+");
-      if (pos != std::string::npos) 
-        str[pos] = '-';
-      addPostEvent("setAttribute " + str);
-    }
+    // Remove update 
+    auto updates = m_equipment[sType]->update().Reverse();
+    Update(updates);
 
     m_equipment[sType] = NULL;
   }
@@ -838,6 +829,16 @@ void CPlayer::UpdateStats(int numPoints) {
 
   //Print attributes and level of each attribute and add choice-context.
 	PrintSkillableAttributes(numPoints);
+}
+
+int CPlayer::GetValueFromAttributeOrMin(std::string name) {
+  if (m_minds.count(name) > 0) {
+    return m_minds.at(name).level;
+  }
+  if (attributes_.count(name) > 0) {
+    return attributes_.at(name);
+  }
+  return 1;
 }
 
 void CPlayer::PrintSkillableAttributes(int available_points) {
@@ -956,26 +957,54 @@ void CPlayer::Update(const Updates& updates) {
 void CPlayer::Update(const Updates& updates, std::string& updated_print) {
 	const auto& attribute_conf = m_world->attribute_config().attributes_;
 	for (const auto& it : updates.updates()) {
+    // Since GetValueFromAttributeOrMin returns 1 on failure, nothing will change.
+    std::cout << "UPDATE: Calculating value from " << it.value_ << ", " 
+      << it.attribute_ << ", " << GetValueFromAttributeOrMin(it.attribute_) << std::endl;
+    double value = it.value_ * GetValueFromAttributeOrMin(it.attribute_);
+    std::cout << "UPDATE: got value: " << value << std::endl;
+    std::string msg = calc::MOD_TYPE_MSG_MAPPING.at(it.mod_type_);
 		// Update minds
 		if (m_minds.count(it.id_) > 0) {
-			it.ApplyUpdate(m_minds.at(it.id_).level);
-      updated_print += m_minds.at(it.id_).color + it.id_ + " erhöhrt!" + WHITE + "\n";
+			it.ApplyUpdate(m_minds.at(it.id_).level, value);
+      updated_print += m_minds.at(it.id_).color + it.id_ + msg + func::dtos(value) + WHITE + "\n";
 		}
 		else if (attributes_.count(it.id_) > 0) {
-			it.ApplyUpdate(attributes_.at(it.id_));
+      int val_old = attributes_.at(it.id_);
+			it.ApplyUpdate(attributes_.at(it.id_), value);
 			std::string name = attribute_conf.at(it.id_).name_;
-      updated_print += GREEN + name + " erhöht!" + WHITE + "\n";
+      std::string color = (val_old <= attributes_.at(it.id_)) ? GREEN : RED;
+      updated_print += color + name + msg + func::dtos(value) + WHITE + "\n";
 		}
 		// Temporary update
 		if (it.tmp_) {
 			std::string infos = it.ToString(true, true);
 			double duration = static_cast<double>(it.secs_)/60;
-      std::cout << "Createting time listener with infos: " << infos
-        << ", and duration: " << duration << std::endl;
       getContext("standard")->add_timeEvent("t_setAttribute", "standard", infos, duration);
-      std::cout << "created time event" << infos << std::endl;
 		}
 	}
+}
+
+bool CPlayer::CompareUpdates(const Updates& updates) {
+	const auto& attribute_conf = m_world->attribute_config().attributes_;
+	for (const auto& it : updates.updates()) {
+    // Since GetValueFromAttributeOrMin returns 1 on failure, nothing will change.
+    double value = it.value_ * GetValueFromAttributeOrMin(it.attribute_);
+		// Update minds
+    int cur = 1;
+		if (m_minds.count(it.id_) > 0) {
+      cur = m_minds.at(it.id_).level;
+			it.ApplyUpdate(cur, value);
+      if (cur <= 0)
+        return true;
+		}
+		else if (attributes_.count(it.id_) > 0) {
+      cur = attributes_.at(it.id_);
+			it.ApplyUpdate(cur, value);
+      if (!attribute_conf.at(it.id_).CheckBounds(cur))
+        return true;
+		}
+  }
+  return false;
 }
 
 

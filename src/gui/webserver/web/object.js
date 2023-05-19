@@ -43,6 +43,8 @@ function IsEmpty(elem) {
     return true;
   if (elem.hasAttribute("custom") && elem.getAttribute("custom") == "int" && elem.value == 0)
     return true;
+  if (elem.hasAttribute("custom") && elem.getAttribute("custom") == "str_int" && elem.value == "0")
+    return true;
 	return false;
 }
 
@@ -170,9 +172,31 @@ function CreateObject(elem) {
 		console.log("has_required: ", inputs[i], inputs[i].hasAttribute("required"));
     if ((val == "" || (inputs[i].getAttribute("custom")=="json" && val=="{}")) && !inputs[i].hasAttribute("required"))
       continue;
-    json[inputs[i].id] = GetAsType(inputs[i]);
+    if (inputs[i].id > "")
+      json[inputs[i].id] = GetAsType(inputs[i]);
   }
   return json;
+}
+
+function CreateLists(elem) {
+  let lists = {};
+  console.log("Create lists: ", elem);
+	[...elem.querySelectorAll("ul")].forEach(ul => {
+    console.log("- ", ul.id);
+      [...GetValueFields(ul)].forEach(input => {
+        console.log("  - ", input.value);
+        if ((input.value == "" 
+          || (input.getAttribute("custom")=="json" && input.value=="{}")) 
+              && !input.hasAttribute("required"))
+          console.log("nope: ", input);
+        else if (ul.id in lists)
+          lists[ul.id].push(GetAsType(input));
+        else 
+          lists[ul.id] = [GetAsType(input)]
+      });
+  });
+  console.log("Create lists: ", lists);
+  return lists;
 }
 
 //Get value of an input fields as a specific type (string, json, int, bool).
@@ -227,7 +251,12 @@ function GetValueFields(elem) {
   var inputs = [];
   inputs.push(...elem.getElementsByTagName("input"));
   inputs.push(...elem.getElementsByTagName("textarea"));
-  inputs.push(...elem.getElementsByTagName("select"));
+  const selects =elem.getElementsByTagName("select");
+  for (let i=0; i<selects.length; i++) {
+    if (!selects[i].hasAttribute("hidden")) 
+      inputs.push(selects[i]);
+  }
+  // inputs.push(...elem.getElementsByTagName("select"));
 	inputs.sort(function(a, b){ return ComparePosition(a, b)});
   return inputs;
 }
@@ -517,6 +546,7 @@ function EditItem(type, parent_elem) {
   });
 }
 
+
 function SaveItem() {
   // get dialog and type and index from dialog:
   let dialog = document.getElementById("edit_dialog"); 
@@ -526,6 +556,9 @@ function SaveItem() {
 	global_error = false;
   document.getElementById("display_json").innerHTML = "";
   const json = CreateObject(dialog);
+  const lists = CreateLists(dialog);
+	for (const [key, value] of Object.entries(lists))
+    json[key] = value;
   if (global_error == true) {
     alert("You have an error in your document.");
 		return;
@@ -545,9 +578,10 @@ function SaveItem() {
 	else if (parent_elem.parentNode.id == "attributes") 
 		parent_elem.getElementsByTagName("a")[0].innerHTML = 
 			`${get(json, 'name', '')} (category: ${get(json, 'category', '')})`;
-	else if (parent_elem.parentNode.id == "updates") 
+	else if (parent_elem.parentNode.id == "updates") {
 		parent_elem.getElementsByTagName("a")[0].innerHTML = 
 			`${get(json, 'id', '')} ${get(json, 'mod_type', '')} ${get(json, 'value', '')}`;
+  }
 	else if (parent_elem.id.indexOf("mapping") > 0) 
 		parent_elem.getElementsByTagName("a")[0].innerHTML = 
 			`${get(json, 'match_type', '')} ${get(json, 'value', '')} → ${get(json, 'show', '')}`;
@@ -751,5 +785,20 @@ function HideTempSettings(parentNode, display) {
 		}
 	};
 	console.log("temp_settings: ", elems);
+}
+
+function ChangeItemKindSelect(category) {
+  let selects = document.getElementsByTagName("select");
+  for (let i=0; i<selects.length; i++) {
+    console.log("checking ", selects[i], selects[i].getAttribute("from_cat"), category);
+    if (!selects[i].hasAttribute("from_cat"))
+      continue;
+    if (selects[i].getAttribute("from_cat") == category) {
+      selects[i].removeAttribute("hidden");
+    }
+    else {
+      selects[i].setAttribute("hidden", "hidden");
+    }
+  }
 }
 

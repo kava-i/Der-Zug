@@ -1311,7 +1311,7 @@ void Context::h_sell(std::string& sIdentifier, CPlayer* p) {
   }
   else {
     p->appendDescPrint("Du hast " + curItem->name() + " verkauft.\n\n");
-    p->throw_events("recieveMoney " + std::to_string(curItem->getValue()), "h_sell");
+    p->Update(curItem->costs());
     CItem* item = new CItem(curItem->getAttributes(), p);
     partner->getInventory().addItem(item);
     p->getInventory().removeItemByID(curItem->id());
@@ -1327,14 +1327,13 @@ void Context::h_buy(std::string& sIdentifier, CPlayer* p) {
     p->appendErrorPrint("Dieser Gegenstand befindet sich nicht in dem Inventar "
         "des Händlers, du kannst ihn logischerwiese dehalb nicht kaufen!\n");
   else {
-    if(p->getStat("gold") < curItem->getValue()) {
-      p->appendErrorPrint("Du hast nicht genuegend Geld um "
-          + curItem->name() + " zu kaufen");
+    if (p->CompareUpdates(curItem->costs().Reverse())) {
+      p->appendErrorPrint("Costs of item would exeed limits: " + curItem->name());
       return;
     }
 
     p->appendDescPrint("Du hast " + curItem->name() + " gekauft.\n\n");
-    p->setStat("gold", p->getStat("gold") - curItem->getValue());
+    p->Update(curItem->costs().Reverse());
     p->getInventory().addItem(new CItem(curItem->getAttributes(), p));
     partner->getInventory().removeItemByID(curItem->id());
   }

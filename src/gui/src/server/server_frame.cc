@@ -659,6 +659,8 @@ void ServerFrame::GetEditTemplate(const Request& req, Response& resp, std::strin
 	if (world) {
 		availibe_fields = world->GetAttributes();
 		input["_attributes"] = availibe_fields;
+		availibe_fields = world->GetAttributeCategories();
+		input["__attribute_categories"] = availibe_fields;
 		availibe_fields = world->GetModTypes();
 		input["_mod_types"] = availibe_fields;
 	}
@@ -666,6 +668,9 @@ void ServerFrame::GetEditTemplate(const Request& req, Response& resp, std::strin
 
   std::cout << "ServerFrame::GetEditTemplate: " << input << std::endl;
   inja::Environment env;
+  inja::Template events = env.parse_template("web/element_templates/events.html");
+  env.include_template("web/element_templates/events", events);
+
   std::string path = "web/edit_templates/" + edit_template + ".html";
   std::cout << "ServerFrame::GetEditTemplate: laoding template at: " << path << std::endl;
   try {

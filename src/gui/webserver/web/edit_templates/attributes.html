@@ -53,4 +53,70 @@
     </td>
   <tr>
 
+  <tr>
+    <td><label class="small" title="upper bound for this attribute">Upper Bound: </label></td>
+    <td>
+      <input 
+        type="number"
+        class="short" 
+        id="upper_bound" 
+        placeholder="upper bound" 
+        custom="int" 
+        value="{{default(upper_bound, 0)}}"
+      >
+    </td>
+    <td>
+      <input 
+        id="upper_bound_enable" 
+        type="checkbox" 
+        custom="bool" 
+        {% if default(upper_bound_enable, 0) %} checked {% endif %}
+      >
+    </td>
+  <tr>
+
+  <tr>
+    <td><label class="small" title="limit">Past-Upper Events: </label></td>
+    <td>
+      {% set _not_optional = true %}
+      {% set _id = "upper_events" %}
+      {% set _events = default(upper_events, [""]) %}
+      {% include "web/element_templates/events" %}
+      {% set _not_optional = false %}
+    </td>
+  </tr>
+
+  <tr>
+    <td><label class="small" title="lower bound for this attribute">Lower Bound: </label></td>
+    <td>
+      <input 
+        type="number"
+        class="short" 
+        id="lower_bound" 
+        placeholder="lower bound" 
+        custom="int" 
+        value="{{default(lower_bound, 0)}}"
+      >
+    </td>
+    <td>
+      <input 
+        id="lower_bound_enable" 
+        type="checkbox" 
+        custom="bool" 
+        {% if default(lower_bound_enable, 0) %} checked {% endif %}
+      >
+    </td>
+  <tr>
+
+  <tr>
+    <td><label class="small" title="limit">Past Lower Events: </label></td>
+    <td>
+      {% set _not_optional = true %}
+      {% set _id = "lower_events" %}
+      {% set _events = default(lower_events, [""]) %}
+      {% include "web/element_templates/events" %}
+      {% set _not_optional = false %}
+    </td>
+  </tr>
+
 </table>

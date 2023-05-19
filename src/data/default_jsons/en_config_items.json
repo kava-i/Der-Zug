@@ -1,0 +1,15 @@
+{
+  "categories": {
+    "equipe": "Equipement", 
+    "read": "Read", 
+    "consume": "Consume", 
+    "others": "Others"
+  },
+  "kinds": {
+    "equipe": [ "Head", "Left Hand", "Right Hand", "Torso"],
+    "read": ["Book", "Letter"], 
+    "consume": ["Essen", "Trinken"],
+    "others": []
+  },
+  "types": ["Good", "Bad"]
+}

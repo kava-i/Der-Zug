@@ -1,30 +1,100 @@
 {% include "temp_header" %}
 {{ log("rendered header") }}
 
-    <li custom="list">
-     <label title="You may add new kinds here.">
+    <li custom="map">
+     <label title="You may add new kinds here">
     Kinds (for items):
      </label>
-     <ul id="kinds">
-       {% if length(content) == 0 %}
-          <li>
-             <input id="id" placeholder="new type" value="">
-             <span class="mod_elem" onclick="del_elem('kinds',1)">-</span>
-             <span class="mod_elem" onclick="add_elem('kinds',1)">+</span>
-          </li>
-
-       {% else %}
-         {% for attr in default(content, []) %}
-           <li>
-             <input id="id" placeholder="original" value="{{ attr }}">
-             <span class="mod_elem" onclick="del_elem('kinds',{{loop.index}})">-</span>
-             <span class="mod_elem" onclick="add_elem('kinds',{{loop.index}})">+</span>
-           </li>
-         {% endfor %}
-       {% endif %}
-     </ul>
-   </li>
+		 <ul id="kinds">
+			{% for category, kinds in default(content, {"":[]}) %}
+        <li custom="key_list">
+					<select id="id" autocomplete="off">
+						{% for cat, _ in __categories %}
+						<option 
+							value={{cat}} {% if cat == category %}selected{% endif %}
+						>{{cat}}</option>
+						{% endfor %}
+					</select>
+          <ul id="list">
+            {% if length(kinds) > 0 %}
+              {{ log("kinds exists") }}
+              {% for kind in kinds %}
+                <li >
+                  <input id="id" placeholder="original" value="{{ kind }}"></input>
+                  <span 
+                    class="mod_elem"
+                    onclick="DeleteItem('kind_elem', this.parentNode)" 
+                    title="delete element"
+                  >-</span>
+                  <span 
+                    class="mod_elem" 
+                    onclick="AddItem('kind_elem', this.parentNode)" 
+                    title="add element"
+                  >+</span>
+                </li>
+              {% endfor %}
+            {% else %}
+              {{ log("kinds dont exists") }}
+              <li >
+                <input id="id" placeholder="original" value=""></input>
+                <span 
+                  class="mod_elem"
+                  onclick="DeleteItem('kind_elem', this.parentNode)" 
+                  title="delete element"
+                >-</span>
+                <span 
+                  class="mod_elem" 
+                  onclick="AddItem('kind_elem', this.parentNode)" 
+                  title="add element"
+                >+</span>
+              </li>
+            {% endif %}
+					</ul>
+          <span class="mod_elem" onclick="DeleteItem('kinds', this.parentNode)">-</span>
+					<span class="mod_elem" onclick="AddItem('kinds', this.parentNode)">+</span>
+				</li>
+			{% endfor %} 
+		</ul>
+	</li>
 
    {{ log("rendered kinds") }}
 
 {% include "temp_footer" %}
+
+<li id="kind_elem_default" style="display: none;">
+  <input id="id" placeholder="original" value=""></input>
+  <span 
+    class="mod_elem" onclick="DeleteItem('kind_elem', this.parentNode)" title="delete element"
+  >-</span>
+  <span 
+    class="mod_elem" onclick="add_elem('kind_elem', this.parentNode)" title="add element"
+  >+</span>
+</li>
+
+<li id="kinds_default" custom="key_list" style="display: none;">
+  <select id="id" autocomplete="off">
+    {% for cat, _ in __categories %}
+    <option 
+      value={{cat}} {% if cat == category %}selected{% endif %}
+    >{{cat}}</option>
+    {% endfor %}
+  </select>
+  <ul id="list">
+    <li >
+      <input id="id" placeholder="original" value=""></input>
+      <span 
+        class="mod_elem"
+        onclick="DeleteItem('kind_elem', this.parentNode)" 
+        title="delete element"
+      >-</span>
+      <span 
+        class="mod_elem" 
+        onclick="AddItem('kind_elem', this.parentNode)" 
+        title="add element"
+      >+</span>
+    </li>
+  </ul>
+  <span class="mod_elem" onclick="DeleteItem('kinds', this.parentNode)">-</span>
+  <span class="mod_elem" onclick="AddItem('kinds', this.parentNode)">+</span>
+</li>
+

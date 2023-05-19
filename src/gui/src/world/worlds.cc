@@ -73,7 +73,10 @@ ErrorCodes Worlds::CreateNewWorld(std::string path, std::string world_id, nlohma
 
     //Copy default config, room and player-file.
     fs::copy("../../data/default_jsons/" + lang + "_config.json", full_path + "/config/config.json"); 
-    fs::copy("../../data/default_jsons/" + lang + "_config_attributes.json", full_path + "/config/attributes.json"); 
+    fs::copy("../../data/default_jsons/" + lang + "_config_attributes.json", 
+        full_path + "/config/attributes.json"); 
+    fs::copy("../../data/default_jsons/" + lang + "_config_items.json", 
+        full_path + "/config/items.json"); 
     fs::copy("../../data/default_jsons/test.json", full_path + "/rooms/"); 
     fs::copy("../../data/default_jsons/players.json", full_path + "/players/"); 
     fs::copy("../../data/default_jsons/background.jpg", full_path + "/images/"); 
