@@ -1,6 +1,7 @@
 #include "player.h" 
 #include "game/config/attributes.h"
 #include "tools/calc_enums.h"
+#include "tools/func.h"
 #include "tools/webcmd.h"
 #include "tools/gramma.h"
 #include "tools/webcmd.h"
@@ -230,8 +231,13 @@ void CPlayer::set_gramma(std::shared_ptr<CGramma> gramma) {
 }
 
 void CPlayer::printText(std::string text) {
-  if (m_world->getTexts().count(text) > 0) {
-    nlohmann::json j_text = m_world->getTexts().at(text);
+	std::string area = "";
+	if (text.find(".") != std::string::npos) {
+		area = func::split(text, ".")[0];
+		text = func::split(text, ".")[1];
+	}
+  if (m_world->getTexts(area).count(text) > 0) {
+    nlohmann::json j_text = m_world->getTexts(area).at(text);
     CText text(j_text, this);
     m_sPrint += text.print();
   }
@@ -550,7 +556,7 @@ void CPlayer::changeRoom(CRoom* new_room) {
 	if (m_staged_post_events == "")	
 		m_staged_post_events = "changed_room " + new_room->id();
 	else 
-		m_staged_post_events = "changed_room " + new_room->id() + ";";
+		m_staged_post_events += ";changed_room " + new_room->id();
 	throw_staged_events(m_staged_post_events, "post");
 	std::cout << "Changing room done" << std::endl;
 }

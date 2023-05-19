@@ -130,6 +130,8 @@ nlohmann::json World::GetPage(std::string path, bool only_json) const {
 
   nlohmann::json config;
   func::LoadJsonFromDisc(path_ + "/config/config.json", config);
+  nlohmann::json attribute_config;
+  func::LoadJsonFromDisc(path_ + "/config/attributes.json", attribute_config);
   nlohmann::json item_config;
   func::LoadJsonFromDisc(path_ + "/config/items.json", item_config);
   nlohmann::json short_paths = short_paths_;
@@ -142,6 +144,7 @@ nlohmann::json World::GetPage(std::string path, bool only_json) const {
   json["header"]["__types"] = item_config["types"];
   json["header"]["__attribute_categories"] = GetAttributeCategories();
   json["header"]["__attributes"] = GetAttributes();
+  json["header"]["__full_attributes"] = attribute_config["attributes"];
 	
 	// Data from which to construct select-fields with javascript
   nlohmann::json attributes = GetAttributes();

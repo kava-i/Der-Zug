@@ -29,10 +29,15 @@
             "category": "Allgemein",
             "default_value": 0
         },
-
         {
             "id": "hp",
             "name": "HP",
+            "category": "Base",
+            "default_value": 100
+        },
+				{
+            "id": "max_hp",
+            "name": "Max HP",
             "category": "Base",
             "default_value": 100
         },

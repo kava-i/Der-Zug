@@ -346,7 +346,7 @@ void Context::initializeTemplates() {
 
     m_templates["room"] = {{"name", "room"}, {"permeable", true,}, {"infos", {}}};
 
-		std::vector<std::string> availible_commands = {"changed_room"};
+		std::vector<std::string> availible_commands = {"changed_room", "printText"};
     for (const auto& temp : m_templates) {
       if (temp.second.contains("listeners")) {
         for (const auto& listener : temp.second["listeners"].get<std::map<std::string, nlohmann::json>>())

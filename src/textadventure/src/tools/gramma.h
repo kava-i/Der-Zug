@@ -147,7 +147,8 @@ public:
     */
     std::string build(std::vector<std::string> words, std::string sMessage, std::string sError)
     {
-        //Check whether list is empty.
+				std::cout << "BUILD: " << words.size() << std::endl;
+        // Check whether list is empty.
         if(words.size() == 0)
             return convertMessage(sMessage) + " " + sError;
 

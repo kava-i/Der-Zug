@@ -14,19 +14,19 @@
 			title="Attributes and status, depending on what is defined in the corresponding config section"
 		>Attributes</label>
 		<ul id="attributes">
-			{% for attribute_id, attribute_name in __attributes %} 
+			{% for attr in __full_attributes %} 
 				<li custom="key_value">
-					<label style="width: 8rem;" >{{attribute_name}}:</label>
+					<label style="width: 8rem;" >{{attr.name}}:</label>
 					<input 
-						id="{{attribute_id}}" class="short" type="number" custom="int"
-						{% if exists("attributes") and existsIn(attributes, attribute_id) %}
+						id="{{attr.id}}" class="short" type="number" custom="int"
+						{% if exists("attributes") and existsIn(attributes, attr.id) %}
 							{% for attribute, value in attributes %}
-								{% if attribute == attribute_id %} 
+								{% if attribute == attr.id %} 
 									value={{value}}
 								{% endif %} 
 							{% endfor %} 
 						{% else %}
-							value=0
+							value={{attr.default_value}}
 						{% endif %}
 						>
 				</li>

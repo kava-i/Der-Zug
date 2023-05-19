@@ -152,9 +152,14 @@ string CRoom::showItems() {
 } 
 
 string CRoom::showDetails() {
-  std::string details = "";
   auto lambda = [](CDetail* detail) { return detail->name(); };
-  return gramma_->build(func::to_vector(m_details, lambda), _show[DETAILS][T_S], _show[DETAILS][T_E]);
+	std::cout << "showDetails: " << std::endl;
+	for (const auto& it : m_details) {
+		std::cout << " - " << it.first << ": " << it.second->name() << "(" << lambda(it.second) << ")" << std::endl;
+	}
+	std::string details = gramma_->build(func::to_vector(m_details, lambda), _show[DETAILS][T_S], _show[DETAILS][T_E]);
+	std::cout << "Got details: " << details << std::endl;
+	return details;
 }
 
 string CRoom::look(string sDetail) {

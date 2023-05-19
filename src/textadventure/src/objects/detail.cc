@@ -5,6 +5,9 @@ CDetail::CDetail(nlohmann::json json, CPlayer* p, std::map<std::string, CItem*> 
     : CObject(json, p, "detail") {
   m_sLook = json.value("look", "");
   m_items = items;
+	std::cout << "Added detail from json: " << json.dump() << std::endl;
+	std::cout << "id: " << id_ << std::endl;
+	std::cout << "id: " << name_ << std::endl;
 }
 
 // *** GETTER *** //

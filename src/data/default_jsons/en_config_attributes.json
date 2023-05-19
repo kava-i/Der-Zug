@@ -24,6 +24,12 @@
             "id": "hp",
             "name": "HP"
         },
+				{
+            "id": "max_hp",
+            "name": "Max HP",
+            "category": "Base",
+            "default_value": 100
+        },
         {
             "category": "Base",
             "default_value": 100,

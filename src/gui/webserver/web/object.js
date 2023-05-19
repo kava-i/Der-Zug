@@ -683,7 +683,7 @@ function CreateMatchingInputField(field_type, availibe_value) {
 	}
 	else {
 		const el = document.createElement("input");
-		el.placeholder = field_type;
+		el.placeholder = field_type + " id";
 		el.id = field_type;
 		el.name = field_type;
 		el.localize = false;
@@ -699,6 +699,7 @@ function GetAvailibleObjects(type) {
 	const availible_objects = document.getElementById("availible_objects");
 	if (availible_objects.hasAttribute(type)) {
 		let objects = availible_objects.getAttribute(type);
+		console.log("OBJECTS: ", objects);
 		if (objects) {
 			return JSON.parse(objects);
 		}

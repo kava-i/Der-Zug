@@ -62,8 +62,8 @@
   <li>
 		<label>Type:</label>
 		<select id="type" autocomplete="off"> 
-			{% for type in __types %}
-				<option {% if default(type, "") == type %}selected{% endif %}>{{type}}</option>
+			{% for t in __types %}
+				<option {% if default(type, "") == t %}selected{% endif %}>{{t}}</option>
 			{% endfor %}
 		</select>
 	</li>

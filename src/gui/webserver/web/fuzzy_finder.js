@@ -320,6 +320,15 @@ function Typeahead(input_field) {
     document.getElementById("fuzzy_finder_mode").style.color = "blue";
     return true;
   }
+  else if (input_field.id == "text" && input_field.placeholder == "text id") {
+    inps_ = GetAllX("texts", localize);
+    mode_ = "typeahead";
+    console.log("typeahead modus selected.");
+    cur_input_field_ = input_field;
+    document.getElementById("fuzzy_finder_mode").innerHTML = "texts: ";
+    document.getElementById("fuzzy_finder_mode").style.color = "blue";
+    return true;
+  }
   else if (input_field.id == "items" || input_field.placeholder == "item id") {
     inps_ = GetAllX("items", localize);
     mode_ = "typeahead";

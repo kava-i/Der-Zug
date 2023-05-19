@@ -1,6 +1,7 @@
 #include "item.h"
 #include "objects/helper/update.h"
 #include "objects/player.h"
+#include "tools/func.h"
 #include <math.h>
 #include <string>
 
@@ -117,7 +118,7 @@ std::string CItem::Costs() {
   if (updates.size() == 0) 
 	  return "Costs: ---";
   auto lambda = [](const Update& c) -> std::string { 
-    return c.id_ + ": " + std::to_string(c.value_); };
+    return c.id_ + ": " + func::dtos(c.value_); };
 	return "Costs: " + std::accumulate(
 			std::next(updates.begin()), updates.end(), lambda(updates.front()), 
 			[lambda](std::string a, const Update& b) { return a + ", " + lambda(b); }
@@ -163,7 +164,7 @@ void CItem::PrintUseAndDoUpdate(std::string default_use, CPlayer* p) {
   p->appendPrint(txt);
   std::cout << "PrintUseAndDoUpdate: printing use desc" << std::endl;
   // Print default use string or use-description
-  if (use_description_ != nullptr)
+  if (use_description_ == nullptr)
     p->appendDescPrint(p->getWorld()->GetSTDText(default_use));
   else {
 #pragma GCC diagnostic push

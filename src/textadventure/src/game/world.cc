@@ -269,7 +269,7 @@ void CWorld::roomFactory(string sPath, CPlayer* p) {
     std::map<std::string, CPerson*> mapChars = parseRoomChars(j_room, p);
     map<string, CItem*> mapItems = parseRoomItems(j_room, p);
     map<string, CDetail*> mapDetails = parseRoomDetails(j_room, p);
-    std::cout << "Done creating details" << std::endl;
+    std::cout << "Done creating details: " << mapDetails.size() << std::endl;
     m_rooms[j_room["id"]] = new CRoom(sArea, j_room, mapChars, mapItems, mapDetails, p);
     std::cout << "Create room: " << j_room["id"] << std::endl;
   }
@@ -281,15 +281,20 @@ void CWorld::detailFactory() {
     detailFactory(p.path());
 }
 
-void CWorld::detailFactory(std::string sPath) {
+void CWorld::detailFactory(string sPath) {
   //Read json creating all details
   std::ifstream read(sPath);
   nlohmann::json j_details;
   read >> j_details;
   read.close();
 
-  for(auto j_detail: j_details) 
-    m_details[j_detail["id"]] = j_detail;
+  fs::path path = sPath;
+  std::string sArea = path.stem();
+
+  for(auto j_detail: j_details)  {
+		std::cout << "detailFactory, added: " << j_detail["id"] << std::endl;
+    m_details[sArea + "." + j_detail["id"].get<std::string>()] = j_detail;
+	}
 }
 
 map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p) {
@@ -305,10 +310,14 @@ map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p
 
     //Get basic json for construction
     nlohmann::json template_detail_json;
-    if(m_details.count(detail.first) > 0)
+    if(m_details.count(detail.first) > 0) {
       template_detail_json = m_details[detail.first];
-    else
+			std::cout << "Room details: got template" << template_detail_json.dump() << std::endl;
+		}
+    else {
+			std::cout << "Room details: no template from " << detail.first << std::endl;
       template_detail_json = {};
+		}
 
     //Update basic with specific json
     func::updateJson(template_detail_json, detail.second);

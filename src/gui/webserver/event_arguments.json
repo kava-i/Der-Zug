@@ -58,5 +58,6 @@
     "setNewQuest": ["quest"],
     "showitem": ["item"],
     "showperson": ["char"],
-    "startDialogDirekt": ["string"]
+    "startDialogDirekt": ["string"],
+    "printText": ["text"]
 }
