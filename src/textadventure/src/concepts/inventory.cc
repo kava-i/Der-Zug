@@ -8,8 +8,10 @@ std::string CInventory::printInventory(std::string color, int highlight) {
   if (m_inventory.size() == 0)
     return sOutput + "Inventar leer.\n";
 
-  auto lamda1 = [](std::string x, std::vector<CItem*> vec) { return std::to_string(vec.size()) + "x " + x; };
-  auto lamda2 = [](std::string x, std::vector<CItem*> vec) { return std::to_string(vec[0]->getValue()); };
+  auto lamda1 = [](std::string x, std::vector<CItem*> vec) { 
+    return std::to_string(vec.size()) + "x " + x; };
+  auto lamda2 = [](std::string x, std::vector<CItem*> vec) { 
+    return vec[0]->Costs(); };
   sOutput += func::table(m_inventory, lamda1, lamda2, "width:auto;border:1px solid black", highlight); 
   return sOutput;
 }

@@ -1,10 +1,11 @@
 <ul id="useDescription">
-  {% for desc in default(useDescription, [{"speaker":"", "text":"", "logic":"", "updates":"{}", "pre_pEvents":[], "pre_otEvents":[], "post_pEvents":[], "post_otEvents":[]}]) %}
+  {% for desc in default(useDescription, [{"speaker":"", "text":"", "logic":"",
+  "updates":[], "pre_pEvents":[], "pre_otEvents":[], "post_pEvents":[], "post_otEvents":[]}]) %}
     <li id="li_useDescription_{{loop.index}}" custom="list_object">
       <ul id="useDescription_{{loop.index}}">
         <li>
           <label>Speaker:</label>
-          <input id="speaker" placeholder="speaker" value="{{desc.speaker}}">
+          <input id="speaker" placeholder="speaker" value="{{default(desc.speaker, "")}}">
         </li>
         <li>
           <label>Text:</label>
@@ -14,23 +15,14 @@
           <label>Logic:</label>
           <input id="logic" placeholder="logic" value="{{default(desc.logic, "")}}">
         </li>
-        <li id="optional" class="full_length" style="display: none;">
-          <label>Updates:</label>
-          <input id="updates" placeholder="updates" custom="json" 
-             value="{{default(desc.updates, "{}")}}">
-        </li>
 
-        </li>
-        <li id="optional" class="full_length" style="display: none;">
-          <label>Music:</label>
-          <input id="music" placeholder="music" value={{default(desc.music,"")}}>
-        </li>
-
-        </li>
         <li id="optional" class="full_length" style="display: none;">
           <label>Image:</label>
           <input id="image" placeholder="image" value={{default(desc.image,"")}}>
         </li>
+
+					{% set _updates = default(desc.updates, []) %}
+					{% include "web/element_templates/updates" %}
 
 					{% set _id = "pre_pEvents" %}
 					{% set _events = default(desc.pre_pEvents, [""]) %}

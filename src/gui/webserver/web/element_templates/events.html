@@ -1,4 +1,9 @@
-<li id="optional" style="display: none;" custom="list">
+<li 
+  {% if default(_not_optional, false) == false %}
+    id="optional" style="display: none;" 
+  {% endif %}
+  custom="list"
+>
 
 	{% if _id == "pre_pEvents" %}
 		<label style="width:auto;">Pre permanent Events:</label>
@@ -20,8 +25,8 @@
 					readonly
 					onclick="OpenEventDialog(this.value, this);"
 				>
-				<span class="mod_elem" onclick="del_elem('',{{loop.index}},this)">-</span>
-				<span class="mod_elem" onclick="add_elem('',{{loop.index}},this)">+</span>
+				<span class="mod_elem" onclick="del_elem('', {{loop.index}},this)">-</span>
+				<span class="mod_elem" onclick="add_elem('', {{loop.index}},this)">+</span>
 			</li>
 		{% endfor %}
 	</ul>

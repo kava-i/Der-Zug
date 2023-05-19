@@ -130,14 +130,16 @@ nlohmann::json World::GetPage(std::string path, bool only_json) const {
 
   nlohmann::json config;
   func::LoadJsonFromDisc(path_ + "/config/config.json", config);
+  nlohmann::json item_config;
+  func::LoadJsonFromDisc(path_ + "/config/items.json", item_config);
   nlohmann::json short_paths = short_paths_;
   json["header"]["__short_paths"] = short_paths.dump();
   json["header"]["__is_main"] = (path == path_);
   json["header"]["__creator"] = creator_;
   json["header"]["__world_name"] = id_;
-  json["header"]["__categories"] = config["categories"];
-  json["header"]["__kinds"] = config["kinds"];
-  json["header"]["__types"] = config["types"];
+  json["header"]["__categories"] = item_config["categories"];
+  json["header"]["__kinds"] = item_config["kinds"];
+  json["header"]["__types"] = item_config["types"];
   json["header"]["__attribute_categories"] = GetAttributeCategories();
   json["header"]["__attributes"] = GetAttributes();
 	

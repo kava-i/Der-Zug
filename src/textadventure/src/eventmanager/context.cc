@@ -234,6 +234,7 @@ void Context::initializeHanlders() {
   // --- *** TIMEEVENTS *** --- //
   listeners_["t_highness"] = &Context::t_highness;
   listeners_["t_throwEvent"] = &Context::t_throwEvent;
+  listeners_["t_setAttribute"] = &Context::t_setAttribute;
 }
 
 void Context::initializeTemplates() {
@@ -449,6 +450,7 @@ bool Context::throw_event(event e, CPlayer* p) {
 }
 
 void Context::throw_timeEvents(CPlayer* p) {
+  std::cout << "throw_timeEvents" << std::endl;
   //Check if player is currently occupied.
   if (p->getContexts().nonPermeableContextInList() == true)
     return;
@@ -460,12 +462,16 @@ void Context::throw_timeEvents(CPlayer* p) {
   std::deque<CTimeEvent*> sortedEvents = m_timeevents.getSortedCtxList();
   for (size_t i=0; i<sortedEvents.size(); i++) {
     std::chrono::duration<double> diff = end - sortedEvents[i]->getStart();
+    std::cout << "throw_timeEvents, git diff: " << diff.count() << std::endl;
     if (diff.count() >= sortedEvents[i]->getDuration()) {
+      std::cout << "throwing timeEvent " << std::endl;
+      std::cout << "info: " << sortedEvents[i]->getInfo() << std::endl;
+      std::cout << "id: " << sortedEvents[i]->getID() << std::endl;
       std::string str = sortedEvents[i]->getInfo();
       (this->*listeners_[sortedEvents[i]->getID()])(str, p);
       std::cout << "BACKPASS: " << str << std::endl;
       if (str == "delete")
-        m_timeevents.eraseHighest(sortedEvents[i]->getID());
+        m_timeevents.eraseByPointer(sortedEvents[i]);
     }
   }
 }
@@ -1305,7 +1311,7 @@ void Context::h_sell(std::string& sIdentifier, CPlayer* p) {
   }
   else {
     p->appendDescPrint("Du hast " + curItem->name() + " verkauft.\n\n");
-    p->throw_events("recieveMoney " + std::to_string(curItem->getValue()), "h_sell");
+    p->Update(curItem->costs());
     CItem* item = new CItem(curItem->getAttributes(), p);
     partner->getInventory().addItem(item);
     p->getInventory().removeItemByID(curItem->id());
@@ -1321,14 +1327,13 @@ void Context::h_buy(std::string& sIdentifier, CPlayer* p) {
     p->appendErrorPrint("Dieser Gegenstand befindet sich nicht in dem Inventar "
         "des Händlers, du kannst ihn logischerwiese dehalb nicht kaufen!\n");
   else {
-    if(p->getStat("gold") < curItem->getValue()) {
-      p->appendErrorPrint("Du hast nicht genuegend Geld um "
-          + curItem->name() + " zu kaufen");
+    if (p->CompareUpdates(curItem->costs().Reverse())) {
+      p->appendErrorPrint("Costs of item would exeed limits: " + curItem->name());
       return;
     }
 
     p->appendDescPrint("Du hast " + curItem->name() + " gekauft.\n\n");
-    p->setStat("gold", p->getStat("gold") - curItem->getValue());
+    p->Update(curItem->costs().Reverse());
     p->getInventory().addItem(new CItem(curItem->getAttributes(), p));
     partner->getInventory().removeItemByID(curItem->id());
   }
@@ -1584,21 +1589,25 @@ void Context::t_highness(std::string& str, CPlayer* p) {
 }
 
 void Context::t_setAttribute(std::string& str, CPlayer* p) {
+  std::cout << "t_setAttribute " << str << std::endl;
 	// Update attribute
 	h_setAttribute(str, p);
+  std::cout << "t_setAttribute attribute updated " << str << std::endl;
 
 	// Get duration
-  int duration = p->getContext("standard")->getTimeEvents().getContext("t_setAttribute")->getDuration();
+  double duration = p->getContext("standard")->getTimeEvents().getContext("t_setAttribute")->getDurationMin();
   std::vector<std::string> atts = func::split(str, "|");
-	int steps = stoi(atts[4]);
+	int steps = stoi(atts[4])-1;
 	// Delete time event and add new if steps are left
-  p->getContext("standard")->deleteTimeEvent("t_setAttribute");
-	if (steps > 0) {
+  if (steps > 0) {
+    std::cout << "t_setAttribute calling again: " << std::to_string(steps-1)<< std::endl;
 		// Reduce one step, join attributes again and add new time event.
-		atts[4] = std::to_string(steps-1);
+		atts[4] = std::to_string(steps);
 		std::string infos = func::join(atts, "|");
+    std:: cout << infos << ", " << duration << std::endl;
     add_timeEvent("t_setAttribute", "standard", infos, duration);
 	}
+  str = "delete";
 }
 
 void Context::t_throwEvent(std::string& sInfo, CPlayer* p) {

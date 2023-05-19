@@ -17,6 +17,8 @@
 
 namespace func 
 {
+    std::string dtos(double d, int perscision=1);
+
     /**
     * @param[in] str string to be splitet
     * @param[in] delimitter 

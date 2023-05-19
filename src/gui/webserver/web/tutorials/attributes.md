@@ -38,6 +38,17 @@ zeige attribute
 ```
 Werden die Attribute nach den Kategorien sortiert. 
 
+### Limits 
+Außerdem kannst du für jedes Attribut `bounds` (`upper-bound`, `lower-bound`) 
+definieren, limits erfüllen immer die Funktionen:
+- der Wert wird niemals unter, bzw. über das angegebene Limit gesetzt
+- wenn geforderte Attribute mit den aktuellen abgeglichen werden, um eine Aktion
+  zu ermöglichen, wird diese nicht durchgeführt, mit der Meldung, dass ein
+  Attribute unter/ über das angegebene limit gestiegen ist. 
+
+Wenn außerdem `events` angegeben wurden, wird zursätzlich das event
+durchgeführt.
+
 ## *Config*
 
 ### Skillable Categories

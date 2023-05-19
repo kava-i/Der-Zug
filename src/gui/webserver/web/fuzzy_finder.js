@@ -26,8 +26,6 @@ window.onload = function() {
   document.getElementById("fuzzy_finder_elems").innerHTML = "";
   categories_ = document.getElementById("fuzzy_finder_div").getAttribute("__categories");
   categories_ = JSON.parse(categories_);
-  kinds_ = document.getElementById("fuzzy_finder_div").getAttribute("__kinds");
-  kinds_ = JSON.parse(kinds_);
   types_ = document.getElementById("fuzzy_finder_div").getAttribute("__types");
   types_ = JSON.parse(types_);
 

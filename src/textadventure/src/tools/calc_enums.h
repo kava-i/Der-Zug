@@ -43,6 +43,9 @@ namespace calc {
 		{SET, "="}, {ADD, "+"}, {MIN, "-"}, {MULT, "*"}, {DIV, "/"},
 	};
 
+  const std::map<ModType, ModType> MOD_TYPE_R_MAPPING = {
+    {SET, SET}, {ADD, MIN}, {MIN, ADD}, {MULT, DIV}, {DIV, MULT}
+  };
 
 	const std::map<ModType, std::function<void(int& a, const int& b)>> MOD_TYPE_FUNCTION_MAPPING = {
 		{SET, [](int& a, const int& b) { a=b;} },

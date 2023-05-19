@@ -1,5 +1,10 @@
 
-<li id="optional" style="display: none;" custom="list">
+<li 
+  {% if default(_not_optional, false) == false %}
+    id="optional" style="display: none;" 
+  {% endif %}
+  custom="list"
+>
 
 	<label style="width:auto;">Updates:</label>
 	<ul id="updates">
@@ -8,6 +13,9 @@
 				<li custom="get:object">
 					<a class="abstract" onclick="EditItem('updates', this.parentNode)" title='{{update}}'>
 						{{update.id}} {{update.mod_type}} {{update.value}}
+						{% if default(update.attribute, "") != "" %}
+              * {{update.attribute}}
+            {% endif %}
 						{% if default(update.tmp, 0) == 1 %}
 							({{update.steps}} step(s) every {{update.secs}} seconds)
 						{% endif %}

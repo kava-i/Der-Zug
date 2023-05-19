@@ -1,22 +1,34 @@
 {% include "temp_header" %}
 {{ log("rendered header") }}
 
-    <li custom="list">
-     <label title="You may add new categories here.">
-    Categories (for items):
+    <li custom="map">
+      <label 
+        title="You may add new categories here. But only the three defined
+        (equipe, read, and consume) gave a special function."
+      >
+      Categories:
      </label>
      <ul id="categories">
        {% if length(content) == 0 %}
-          <li>
-             <input id="id" placeholder="new category" value="">
+          <li custom="pair">
+             <label>Name:</label>
+             <input placeholder="attribue" value="">
+             <br>
+             <label>Value:</label>
+             <input placeholder="mapping" value="">
              <span class="mod_elem" onclick="del_elem('categories',1)">-</span>
              <span class="mod_elem" onclick="add_elem('categories',1)">+</span>
-          </li>
+           </li>
 
        {% else %}
-         {% for attr in default(content, []) %}
-           <li>
-             <input id="id" placeholder="original" value="{{ attr }}">
+         {% for key, value in default(content, {"":""}) %}
+           <li custom="pair">
+             <label>Name:</label>
+             <input placeholder="attribue" value="{{default(key, "")}}">
+             <br>
+             <label>Value:</label>
+             <input placeholder="mapping" value={{default(value, "")}}>
+             <br>
              <span class="mod_elem" onclick="del_elem('categories',{{loop.index}})">-</span>
              <span class="mod_elem" onclick="add_elem('categories',{{loop.index}})">+</span>
            </li>
@@ -25,6 +37,6 @@
      </ul>
    </li>
 
-   {{ log("rendered categories") }}
+   {{ log("rendered items-categories") }}
 
 {% include "temp_footer" %}

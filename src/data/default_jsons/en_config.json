@@ -68,7 +68,10 @@
     "tech_error": "Sorry, but something went wrong. Maybe try something else.\n",
     "update_stats": "Select number of name of attribute.\n",
     "points_left_a": "You have ",
-    "points_left_b": " points left to distribute.\n"
+    "points_left_b": " points left to distribute.\n",
+    "consumed_item": "Item consumed.\n",
+    "opened_book": "You open the book on the first page.\n",
+    "exceed_limits": "Buying this item would exceed your limits.\n"
   },
   "minds":[],
   "commands":[],
@@ -86,8 +89,5 @@
   "image": {
       "background": "",
       "fight": ""
-  },
-  "categories": ["equipe", "read", "consume", "others"],
-  "kinds": ["weapon", "armor", "drug"],
-  "types": []
+  }
 }

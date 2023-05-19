@@ -202,22 +202,16 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>&
     return "[### end_game ###]";
   }
 
-  //Check whether player is dead
-  if(m_curPlayer->getStat("hp") <= 0) {
-    m_context->throw_event(std::make_pair("reload_player", 
-          m_curPlayer->id()), m_players["programmer"]);
-  }
-
-  //Parse commands
+  // Parse commands
   CParser parser(m_world->getConfig());
   std::vector<event> events = parser.parse(sInput);
 
-  //Check for programmer commands
-  if(m_curPlayer->id() == "_admin") {
+  // Check for programmer commands
+  if (m_curPlayer->id() == "_admin") {
     for(size_t i=0; i<events.size(); i++)
       m_context->throw_event(events[i], m_curPlayer);
   }
-  if(m_context->getPermeable() == false)
+  if (m_context->getPermeable() == false)
     return m_curPlayer->getPrint();
 
   //Throw event of player

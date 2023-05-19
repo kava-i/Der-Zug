@@ -7,6 +7,27 @@ ConfigAttribute::ConfigAttribute(const nlohmann::json& json) {
 	name_ = json.at("name");
 	category_ = json.at("category");
 	default_value_ = json.at("default_value");
+
+  if (json.value("lower_bound_enable", 0) == 1) {
+    lower_bound_ = json.at("lower_bound");
+    lower_events_ = json.value("lower_events", std::vector<std::string>());
+  }
+  else 
+    lower_bound_ = 0xFFFF;
+  if (json.value("upper_bound_enable", 0) == 1) {
+    upper_bound_ = json.at("upper_bound");
+    upper_events_ = json.value("upper_events", std::vector<std::string>());
+  }
+  else 
+    upper_bound_ = 0xFFFF;
+}
+
+bool ConfigAttribute::CheckBounds(int cur) const {
+  if (lower_bound_ != 0xFFFF && cur < lower_bound_)
+    return false;
+  if (upper_bound_ != 0xFFFF && cur > upper_bound_)
+    return false;
+  return true;
 }
 
 AttributeMapping::AttributeMapping(const nlohmann::json& json) {

@@ -13,17 +13,16 @@ class CPlayer;
 
 class CItem : public CObject {
   protected:
-    nlohmann::json m_jAttributes;
-    CText* m_useDescription;             ///< Description when item is used.
-    std::string m_sCategory;        
+    nlohmann::json json_;
+    CText* use_description_;             ///< Description when item is used.
+    std::string category_;        
     std::string kind_;
     std::string type_;
-    std::string m_sFunction;
-    std::string m_sAttack;
-    std::string stats_change_;
-    size_t m_effekt;
-    int m_value;
-    bool m_hidden;
+    std::string attack_;
+    bool hidden_;
+
+    Updates updates_;
+    Updates costs_;
 
     //Book
     size_t m_mark;
@@ -45,35 +44,41 @@ class CItem : public CObject {
     std::string kind();
     std::string type();
     std::string getAttack();
-    std::string getFunction();
-    std::string stats_change();
-    size_t getEffekt();
-    int getValue();
     bool getHidden();
+    const Updates& update();
+    const Updates& costs();
+    CText* use_description();
 
-    //Book
+    // Book
     size_t getMark();
     CText* getPages();
     
     // *** SETTER *** //
     void setCategory(std::string sCategory);
     void setKind(std::string kind);
-    void setFunction(std::string sFunction);
     void setAttack(std::string sAttack);
-    void setEffekt(size_t effekt);
-    void setValue(int value);
     void setHidden(bool hidden); 
     void setMark(size_t mark);
 
     std::string getAllInfos(); 
+    std::string Costs();
     
     static void initializeFunctions();
+    /**
+     * Calls category-function or prints useDescription. 
+     * - `consume`: prints use-desc, applies updates, removes item
+     * - `equipe`: call player equipe function 
+     * - 
+     */
     bool callFunction(CPlayer* p);
 
     // *** FUNCTIONS *** //
     void equipe(CPlayer*);
     void consume(CPlayer*);
     void read(CPlayer*);
+
+    // helper 
+    void PrintUseAndDoUpdate(std::string default_use, CPlayer* p);
 };
 
 #endif

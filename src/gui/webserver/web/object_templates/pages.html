@@ -1,6 +1,6 @@
 <ul id="pages">
   {% for desc in default(pages, [{"speaker":"", "text":"", "logic":"",
-  "updates":{}, "pre_pEvents":[""], "pre_otEvents":[""], "post_pEvents":[""],
+  "updates":[], "pre_pEvents":[""], "pre_otEvents":[""], "post_pEvents":[""],
   "post_otEvents":[""]}]) %}
     <li id="li_pages_{{loop.index}}" custom="list_object">
       <ul id="pages_{{loop.index}}">
@@ -24,13 +24,7 @@
           <label>Logic:</label>
           <input id="logic" placeholder="logic" value="{{default(desc.logic, "")}}">
         </li>
-        <li id="optional" class="full_length" style="display: none;">
-          <label>Updates:</label>
-          <input id="updates" placeholder="updates" custom="json" 
-                                                    value={{default(desc.updates,{})}}>
-        </li>
-        
-        </li>
+
         <li id="optional" class="full_length" style="display: none;">
           <label>Music:</label>
           <input id="music" placeholder="music" value={{default(desc.music,"")}}>
@@ -42,38 +36,25 @@
           <input id="image" placeholder="image" value={{default(desc.image,"")}}>
         </li>
 
-        <li id="optional" style="display: none;" custom="list">
-          <label style="width:auto;">Pre permanent Events:</label>
-          <ul id="pre_pEvents">
-          {% for event in default(desc.pre_pEvents, [""]) %}
-            <li><input placeholder="event" value="{{event}}"></li>
-          {% endfor %}
-          </ul>
-        </li>
-        <li id="optional" style="display: none;" custom="list">
-          <label style="width:auto;">Pre one-time Events:</label>
-          <ul id="pre_otEvents">
-          {% for event in default(desc.pre_otEvents, [""]) %}
-            <li><input placeholder="event" value="{{event}}"></li>
-          {% endfor %}
-          </ul>
-        </li>
-        <li id="optional" style="display: none;" custom="list">
-          <label style="width:auto;">Post permanent Events:</label>
-          <ul id="post_pEvents">
-          {% for event in default(desc.post_pEvents, [""])%}
-            <li><input placeholder="event" value="{{event}}"></li>
-          {% endfor %}
-          </ul>
-        </li>
-        <li id="optional" style="display: none;" custom="list">
-          <label style="width:auto;">Post one-time Events:</label>
-          <ul id="post_otEvents">
-          {% for event in default(desc.post_otEvents, [""]) %}
-            <li><input placeholder="event" value="{{event}}"></li>
-          {% endfor %}
-          </ul>
-        </li>
+					{% set _updates = default(desc.updates, []) %}
+					{% include "web/element_templates/updates" %}
+
+					{% set _id = "pre_pEvents" %}
+					{% set _events = default(desc.pre_pEvents, [""]) %}
+  				{% include "web/element_templates/events" %}
+
+					{% set _id = "pre_otEvents" %}
+					{% set _events = default(desc.pre_otEvents, [""]) %}
+  				{% include "web/element_templates/events" %}
+
+					{% set _id = "post_pEvents" %}
+					{% set _events = default(desc.post_pEvents, [""]) %}
+  				{% include "web/element_templates/events" %}
+
+					{% set _id = "post_otEvents" %}
+					{% set _events = default(desc.post_otEvents, [""]) %}
+  				{% include "web/element_templates/events" %}
+
       </ul>
       <div id="pages_div_text_expand_{{loop.index}}" class="expand">
         <span title="Delete this element." 

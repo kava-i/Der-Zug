@@ -15,10 +15,10 @@ CText::CText(nlohmann::json jAttributes, CPlayer* p) {
 }
 
 std::string CText::print(bool events) {
-    std::string sOutput = "";
-    for(size_t i=0; i<texts_.size(); i++)
-      sOutput += texts_[i]->print(player_, events);
-    return sOutput;
+  std::string sOutput = "";
+  for(size_t i=0; i<texts_.size(); i++)
+    sOutput += texts_[i]->print(player_, events);
+  return sOutput;
 }
 
 std::string CText::reducedPrint(bool events) {
@@ -59,7 +59,9 @@ bool CText::underline(size_t page, std::string str1, std::string str2) {
 }
     
 // ***** ***** COUTPUT ***** ***** //
-COutput::COutput(nlohmann::json jAttributes) : updates_(jAttributes.value("updates", nlohmann::json::array())) {
+COutput::COutput(nlohmann::json jAttributes) 
+  : updates_(jAttributes.value("updates", nlohmann::json::array())) 
+{
   speaker_ = jAttributes.value("speaker", "");
   text_ = jAttributes.value("text", ""); 
 

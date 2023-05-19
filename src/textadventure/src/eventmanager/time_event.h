@@ -25,13 +25,12 @@ private:
 public:
     
     //Constructor
-    CTimeEvent(std::string id, std::string scope, std::string info, double duration)
-    {
-        m_id = id;
-        m_scope = scope;
-        m_info = info;
-        m_start = std::chrono::system_clock::now();
-        m_duration = duration*60;
+    CTimeEvent(std::string id, std::string scope, std::string info, double duration) {
+      m_id = id;
+      m_scope = scope;
+      m_info = info;
+      m_start = std::chrono::system_clock::now();
+      m_duration = duration*60;
     }
 
     // *** getter *** //
@@ -46,6 +45,7 @@ public:
     clock_start getStart()      { return m_start; }
     ///Get duration.
     double getDuration()        { return m_duration; }
+    double getDurationMin()        { return m_duration/60; }
     
 }; 
 

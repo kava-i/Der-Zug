@@ -1,5 +1,12 @@
 #include "func.h"
 #include <fstream>
+#include <iomanip>
+
+std::string func::dtos(double d, int perscision) {
+  std::stringstream stream;
+  stream << std::fixed << std::setprecision(perscision) << d;
+  return stream.str();
+}
 
 /**
 * @param[in] str string to be splitet

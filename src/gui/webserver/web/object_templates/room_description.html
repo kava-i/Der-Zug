@@ -1,6 +1,6 @@
 <ul id="roomDescription">
   {% for desc in default(roomDescription, [{"speaker":"", "text":"", "logic":"",
-  "updates":{}, "pre_pEvents":[""], "pre_otEvents":[""], "post_pEvents":[""],
+  "updates":[], "pre_pEvents":[""], "pre_otEvents":[""], "post_pEvents":[""],
   "post_otEvents":[""]}]) %}
     <li id="li_roomDescription_{{loop.index}}" custom="list_object">
       <ul id="roomDescription_{{loop.index}}">
@@ -16,11 +16,7 @@
           <label>Logic:</label>
           <input id="logic" placeholder="logic" value="{{default(desc.logic, "")}}">
         </li>
-        <li id="optional" class="full_length" style="display: none;">
-          <label>Updates:</label>
-          <input id="updates" placeholder="updates" custom="json" 
-                                value={{default(desc.updates,{})}}>
-        </li>
+
         <li id="optional" class="full_length" style="display: none;">
           <label>Music:</label>
           <input id="music" placeholder="music" value={{default(desc.music,"")}}>
@@ -44,6 +40,9 @@
           {% endfor %}
           </ul>
         </li>
+
+					{% set _updates = default(desc.updates, []) %}
+					{% include "web/element_templates/updates" %}
 
 					{% set _id = "pre_pEvents" %}
 					{% set _events = default(desc.pre_pEvents, [""]) %}

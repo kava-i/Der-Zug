@@ -1,0 +1,15 @@
+{
+  "categories": {
+    "equipe": "Ausrüstung", 
+    "read": "Lesen", 
+    "consume": "Konsum", 
+    "others": "Sonstiges"
+  },
+  "kinds": {
+    "equipe": [ "Kopf", "Linke Hand", "Rechte Hand", "Torso"],
+    "read": ["Buch", "Brief"], 
+    "consume": ["Essen", "Trinken"],
+    "others": []
+  },
+  "types": ["Gut", "Böse"]
+}

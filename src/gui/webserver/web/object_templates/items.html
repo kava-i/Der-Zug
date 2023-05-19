@@ -23,21 +23,41 @@
 
   <li>
 		<label>Category:</label>
-		<select id="category" autocomplete="off"> 
-			{% for category in __categories %}
-				<option {% if default(category, "") == category %}selected{% endif %}>{{category}}</option>
+		<select 
+      id="category" 
+      onchange="ChangeItemKindSelect(event.target.value);"
+      autocomplete="off"
+    > 
+			{% for cat, cat_name in __categories %}
+        <option 
+          value={{cat}}
+          {% if default(category, "") == cat %}selected{% endif %}
+        >
+          {{cat_name}}
+        </option>
 			{% endfor %}
 		</select>
 	</li>
 
+  {{ log("rendered category ") }}
+
   <li>
 		<label>Kind:</label>
-		<select id="kind" autocomplete="off"> 
-			{% for kind in __kinds %}
-				<option {% if default(kind, "") == kind %}selected{% endif %}>{{kind}}</option>
-			{% endfor %}
-		</select>
+    {% for cat, kinds in __kinds %} 
+      <select 
+        from_cat="{{cat}}"
+        id="kind" 
+        {% if cat!=default(category, "") %}hidden{% endif %}
+        autocomplete="off"
+      >
+        {% for k in kinds %}
+          <option {% if default(kind, "") == k %}selected{% endif %}>{{k}}</option>
+        {% endfor %}
+      </select>
+    {% endfor %}
 	</li>
+
+  {{ log("rendered kind ") }}
 
   <li>
 		<label>Type:</label>
@@ -48,6 +68,14 @@
 		</select>
 	</li>
 
+  {{ log("rendering item updates ") }}
+
+  {% set _not_optional = true %}
+  {% set _updates = default(updates, []) %}
+  {% include "web/element_templates/updates" %}
+  {% set _not_optional = false %}
+
+  {{ log("rendered item updates ") }}
 
   <li custom="map" title="Costs can be any and multiple attributes">
 		<label>Costs:</label>
@@ -56,7 +84,12 @@
 			<li custom="pair">
 				<select autocomplete="off"> 
 					{% for attribute_id, attribute_name in __attributes %}
-						<option {% if key == attribute_id %}selected{% endif %}>{{attribute_name}}</option>
+            <option 
+              value={{attribute_id}}
+              {% if key == attribute_id %}selected{% endif %}
+            >
+              {{attribute_name}}
+            </option>
 					{% endfor %}
 				</select>
 				<input 

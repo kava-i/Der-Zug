@@ -337,6 +337,13 @@ public:
 		void PrintSkillableAttributes(int available_points);
 
     /**
+     * Checks if `name` is either mind or attribute and if so, retunrns it's
+     * value.
+     * @param returns value of mind/ attribute or 1
+     */
+    int GetValueFromAttributeOrMin(std::string name);
+
+    /**
     * Print minds of player by using table function.
     */
     void showMinds();
@@ -355,6 +362,7 @@ public:
 
 		void Update(const Updates& updates);
 		void Update(const Updates& updates, std::string& updated_print);
+    bool CompareUpdates(const Updates& updates);
 
 
     // ** Others ** //
