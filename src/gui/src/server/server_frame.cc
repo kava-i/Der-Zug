@@ -27,9 +27,7 @@ ServerFrame::ServerFrame(int textad_port, std::filesystem::path base_path,
 #ifdef _COMPILE_FOR_SERVER_
     , server_(path_to_cert.c_str(), path_to_key.c_str())
 #endif
-{
-  parser_ = std::make_shared<maddy::Parser>();
-}
+{ }
 
 void ServerFrame::Start(int port) {
   std::cout << "Starting on Port: " << port << std::endl;

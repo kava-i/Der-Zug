@@ -215,7 +215,7 @@ void CWorld::configAttributeFactory(const std::string path) {
 		attribute_config_ = AttributeConfig(config);
 	} catch(std::exception& e) {
 		std::string msg = "Failed parsing attribute-config: ";
-		msg + e.what();
+		msg += e.what();
     throw WorldFactoryException(msg);
 	}
 } 

@@ -192,6 +192,5 @@ std::string CPerson::getAllInformation() {
   sOutput += "id: " + id_ + ", name: " + name_ + ", ";
   for(auto it : attributes_)
     sOutput += it.first + ": " + std::to_string(it.second) + ", ";
-  sOutput + ", ";
   return sOutput;
 }

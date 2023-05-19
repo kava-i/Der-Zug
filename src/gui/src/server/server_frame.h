@@ -15,8 +15,6 @@
 #define CPPHTTPLIB_OPENSSL_SUPPORT
 #include <httplib.h>
 
-#include "maddy/parser.h"
-
 #include "nlohmann/json.hpp"
 #include "users/user_manager.h"
 
@@ -216,7 +214,6 @@ class ServerFrame {
 #endif
     mutable std::shared_mutex shared_mtx_user_manager_;
 
-    std::shared_ptr<maddy::Parser> parser_;
     const std::filesystem::path base_path_;
 
     /**
