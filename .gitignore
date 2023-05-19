@@ -10,6 +10,7 @@ src/gui/compile_commands.json
 *EIG.txt
 *dictionary.txt
 *vgcore*
+src/textadventure/logs/*
 src/data/users/*/logs/*
 src/data/users/**
 !src/data/users/fux/files/world1/*
