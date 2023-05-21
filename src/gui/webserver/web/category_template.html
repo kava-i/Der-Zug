@@ -9,14 +9,19 @@
     <link href="/favicon.png" rel="icon" type="image/png"/>
 
     <!-- <link rel="stylesheet", href="bootstrap/css/bootstrap.min.css"> -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link 
+			rel="stylesheet" 
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" 
+			integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" 
+			crossorigin="anonymous"
+		>
     <link href="/web/general.css" rel="stylesheet">
 
+	  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">	
     <script src="/web/general.js"></script>
     <script src="/web/fuzzy_finder.js"></script>
     {% if __is_main %}<script src="/web/run.js"></script>{% endif %}
     <script src="/web/run.js"></script>
-    <script src="https://use.fontawesome.com/releases/v5.15.2/js/all.js" data-auto-replace-svg="nest"></script>
     <script src="https://d3js.org/d3.v4.js"></script>
     <script src="/web/graph.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -64,30 +69,48 @@
 <div class="box_overview center_in_box">
 
   <div style="float: right;">
-    <button id="try_game_btn" class="pure-button" style="width:2rem;height:2rem;"
+    <button 
+			id="try_game_btn" 
+			class="pure-button" 
+			style="width:2rem;height:2rem;"
       title="Try game (closes game if open): Shortcut: 0" 
-      onclick="try_game('{{__creator}}', '{{__world_name}}');">
-      <i class="fas fa-gamepad"></i>
+      onclick="try_game('{{__creator}}', '{{__world_name}}');"
+		>
+      <i class="material-icons">play_arrow</i>
     </button>
   </div>
 
   <div style="float: right;margin-right: 1em;">
-    <button class="pure-button" style="width:2rem;height:2rem;"
-      title="Show graph. Shortcut: 1" onclick="ToggleGraph();">
-      <i class="fas fa-project-diagram"></i>
+    <button 
+			class="pure-button" 
+			style="width:2rem;height:2rem;"
+      title="Show graph. Shortcut: 1" 
+			onclick="ToggleGraph();"
+		>
+      <i class="material-icons">share</i>
     </button>
   </div>
 
   <div style="float: right; margin-right: 1em;">
-    <button class="pure-button" style="width:2rem;height:2rem;"
-      title="Show notes: Shortcut: 2 (toggle markdown-preview: 3)" onclick="ToggleNotes();">
-      <i class="fas fa-sticky-note"></i>
+    <button 
+			class="pure-button" 
+			style="width:2rem;height:2rem;"
+			title="Show notes: Shortcut: 2 (toggle markdown-preview: 3)" 
+			onclick="ToggleNotes();"
+		>
+      <i class="material-icons">note</i>
     </button>
   </div>
 
   <div style="float: right;margin-right: 1em;">
-    <button class="pure-button" style="width:2rem;height:2rem;" title="Show help-page for this category">
-      <a class="fas fa-info-circle" href="/{{name}}.md" target="_blank"></a>
+    <button 
+			class="pure-button" 
+			style="width:2rem;height:2rem;" 
+			title="Show help-page for this category"
+		>
+      <a href="/{{name}}.md" target="_blank">
+				<i class="material-icons">help</i>
+			</a>
     </button>
   </div>
 

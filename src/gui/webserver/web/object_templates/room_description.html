@@ -64,8 +64,13 @@
       <div id="roomDescription_div_text_expand_{{loop.index}}" class="expand">
         <span title="Delete this element." 
           onclick="del_elem('roomDescription',{{loop.index}})">-</span>
-        <span id="roomDescription_text_expand_{{loop.index}}" class="fas fa-caret-down" 
-          title="Expand optional values." onclick="expand('roomDescription',{{loop.index}})"></span>
+        <span 
+					id="roomDescription_text_expand_{{loop.index}}" 
+          title="Expand optional values." 
+					onclick="expand('roomDescription',{{loop.index}})"
+				>
+					<i class="material-icons">arrow_drop_down</i>
+				</span>
         <span title="Add new element here." 
           onclick="add_elem('roomDescription',{{loop.index}})">+</span>
       </div>
