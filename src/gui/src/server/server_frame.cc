@@ -43,9 +43,14 @@ void ServerFrame::Start(int port) {
   // *** Pages *** //
 
   server_.Get("/(.*)/files/(.*)/images/(.*).jpg", [this](const Request& req, Response& resp) {
-      std::filesystem::path path_to_image = base_path_ / req.matches[0].str();
+      std::filesystem::path path_to_image = base_path_ / req.matches[0].str().substr(1);
+      resp.set_content(func::GetMedia(path_to_image), "image/jpeg");
+  });
+  server_.Get("/(.*)/files/(.*)/images/(.*).png", [this](const Request& req, Response& resp) {
+      std::filesystem::path path_to_image = base_path_ / req.matches[0].str().substr(1);
       resp.set_content(func::GetMedia(path_to_image), "image/png");
   });
+
 
   server_.Get("/(.*)/files/(.*)/sounds/(.*).mp3", [this](const Request& req, Response& resp) {
       std::filesystem::path path_to_image = base_path_ / req.matches[0].str();
@@ -575,10 +580,9 @@ void ServerFrame::WriteMedia(const Request& req, Response& resp, std::string med
     return;
   }
 
-  std::cout << "Saving media-file..." << std::endl;
-
   std::filesystem::path path_to_media_loc = base_path_ 
-    / req_data["path"].get<std::string>() / req_data["name"].get<std::string>();
+    / req_data["path"].get<std::string>().substr(1) // remove leading slash ("/")
+		/ req_data["name"].get<std::string>();
   path_to_media_loc.replace_extension(((media_type == "image") ? ".jpg" : ".mp3"));
   func::StoreMedia(path_to_media_loc, file.content);
   user_manager_.worlds()->GetWorldFromUrl(req_data["path"])->LoadWorld();

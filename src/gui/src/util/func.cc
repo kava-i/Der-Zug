@@ -78,6 +78,7 @@ std::string GetPage(std::string path) {
 }
 
 std::string GetMedia(std::string path) {
+	std::cout << "GetMedia: " << path << std::endl;
   std::ifstream f(path, std::ios::in|std::ios::binary|std::ios::ate);    
   if (!f.is_open()) {
     std::cout << "file could not be found!" << std::endl;    
@@ -97,6 +98,7 @@ std::string GetMedia(std::string path) {
 
 void StoreMedia(std::string path, std::string content) {
   try {
+		std::cout << "Saving media-file to: " << path << std::endl;
     std::fstream mediaout(path, std::ios::out | std::ios::binary);
     mediaout.write(content.c_str(), content.size());
     mediaout.close();
