@@ -1,0 +1,11 @@
+{
+    "START": {
+        "id": "START",
+        "text": [
+            {
+                "speaker": "{player}",
+                "text": "Ah, This is very boring. Nobody wants to talk man!"
+            }
+        ]
+    }
+}

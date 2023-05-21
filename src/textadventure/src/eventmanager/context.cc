@@ -603,11 +603,16 @@ void Context::h_killCharacter(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_deleteCharacter(std::string& sIdentifier, CPlayer* p) {
+  if (p->getWorld()->getCharacters().count(sIdentifier) > 0) {
     p->getRoom()->getCharacters().erase(sIdentifier);
     delete p->getWorld()->getCharacter(sIdentifier);
     p->getWorld()->getCharacters().erase(sIdentifier); 
-
-    m_curPermeable=false;
+  }
+  else {
+    std::cout << cRED << "(h_deleteCharacter): Character not found: " 
+      << sIdentifier << cCLEAR << std::endl;
+  }
+  m_curPermeable=false;
 }
 
 void Context::h_addItem(std::string& sIdentifier, CPlayer* p) {
@@ -1223,7 +1228,7 @@ void Context::initializeFightListeners(std::map<std::string, std::string> mapAtt
 
 void Context::h_fight(std::string& sIdentifier, CPlayer* p) {
   std::string newCommand = p->getFight()->FightRound((sIdentifier));
-  if(newCommand != "")    
+  if (newCommand != "")    
     p->throw_events(newCommand, "h_fight");
 }
 

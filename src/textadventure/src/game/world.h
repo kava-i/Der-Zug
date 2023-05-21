@@ -174,6 +174,8 @@ public:
     map<string, CDetail*> parseRoomDetails(nlohmann::json j_room, CPlayer* p);
     void parseRandomItemsToDetail(nlohmann::json& j_detail);
 
+    void TemplateFactory(std::string path, std::map<std::string, nlohmann::json>& template_map);
+
     //Texts
     void textFactory();
     void textFactory(std::string);

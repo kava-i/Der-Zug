@@ -60,7 +60,7 @@
     <ul id="characters">
       {% for char in default(characters, [["", {}]]) %}
         <li custom="list">
-          <input id="id" placeholder="character id" value={{char.0}}>
+          <input id="id" placeholder="character id" localize=false value={{char.0}}>
           <input id="attributes" custom="json" placeholder="custom attributes" value={{char.1}}>
           <span class="mod_elem" onclick="del_elem('characters',{{loop.index}})">-</span>
           <span class="mod_elem" onclick="add_elem('characters',{{loop.index}})">+</span>
@@ -77,7 +77,7 @@
     <ul id="details">
       {% for detail in default(details, [["", {}]]) %}
         <li custom="list">
-          <input id="id" placeholder="detail id" value={{detail.0}}>
+          <input id="id" placeholder="detail id" localize="false" value={{detail.0}}>
           <input id="attribues" custom="json" placeholder="custom attributes" value={{detail.1}}>
           <span class="mod_elem" onclick="del_elem('details',{{loop.index}})">-</span>
           <span class="mod_elem" onclick="add_elem('details',{{loop.index}})">+</span>

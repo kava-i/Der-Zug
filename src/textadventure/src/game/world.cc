@@ -278,23 +278,7 @@ void CWorld::roomFactory(string sPath, CPlayer* p) {
 
 void CWorld::detailFactory() {
   for(auto& p : fs::directory_iterator(m_path_to_world + "details"))
-    detailFactory(p.path());
-}
-
-void CWorld::detailFactory(string sPath) {
-  //Read json creating all details
-  std::ifstream read(sPath);
-  nlohmann::json j_details;
-  read >> j_details;
-  read.close();
-
-  fs::path path = sPath;
-  std::string sArea = path.stem();
-
-  for(auto j_detail: j_details)  {
-		std::cout << "detailFactory, added: " << j_detail["id"] << std::endl;
-    m_details[sArea + "." + j_detail["id"].get<std::string>()] = j_detail;
-	}
+    TemplateFactory(p.path(), m_details);
 }
 
 map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p) {
@@ -309,18 +293,16 @@ map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p
     std::string id = j_room["id"].get<std::string>() + "." + detail.first; 
 
     //Get basic json for construction
-    nlohmann::json template_detail_json;
-    if(m_details.count(detail.first) > 0) {
+    nlohmann::json template_detail_json = {};
+    if (m_details.count(detail.first) > 0)
       template_detail_json = m_details[detail.first];
-			std::cout << "Room details: got template" << template_detail_json.dump() << std::endl;
-		}
-    else {
-			std::cout << "Room details: no template from " << detail.first << std::endl;
-      template_detail_json = {};
-		}
 
     //Update basic with specific json
     func::updateJson(template_detail_json, detail.second);
+
+    if (template_detail_json.count("name") == 0) {
+      throw WorldFactoryException("Detail created without name: " + id);
+    }
 
     //Update id
     auto lambda = [](CDetail* detail) { return detail->name(); };
@@ -444,18 +426,7 @@ map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, CPlayer* p) {
 
 void CWorld::characterFactory() {
   for (auto& p : fs::directory_iterator(m_path_to_world + "characters"))
-    characterFactory(p.path());
-}
-
-void CWorld::characterFactory(std::string sPath) {
-  // Read json creating all characters
-  std::ifstream read(sPath);
-  nlohmann::json j_chars;
-  read >> j_chars;
-  read.close();
-
-  for (auto j_char : j_chars) 
-    m_jCharacters[j_char["id"]] = j_char;
+    TemplateFactory(p.path(), m_jCharacters);
 }
 
 std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room, 
@@ -471,11 +442,9 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room,
     std::string sID = j_room["id"].get<std::string>() + "." + character.first;
 
     // Get basic json for construction.
-    nlohmann::json jBasic;
+    nlohmann::json jBasic = {};
     if (m_jCharacters.count(character.first) > 0)
       jBasic = m_jCharacters[character.first];
-    else
-      jBasic = {};
 
     // Update basic with specific json
     func::updateJson(jBasic, character.second);     
@@ -502,15 +471,15 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room,
       }
     }
     // Pick either a random (default-dialog), or the first (character-dialog).
-    std::cout << "Loading character dialog" << std::endl;
-    std::string dialog_num = (jBasic.contains("defaultDialog")) ? std::to_string(rand() % counter) : "1"; 
-    std::cout << "Got dialog num: " << std::endl;
-    CDialog* newDialog = (dialogs.count(dialog_num) > 0) ? dialogs[dialog_num] : getDialog("defaultDialog");
-    std::cout << "Loaded dialog: " << std::endl;
+    std::string dialog_num = (jBasic.contains("defaultDialog")) 
+      ? std::to_string(rand() % counter) : "1"; 
+    CDialog* newDialog = (dialogs.count(dialog_num) > 0) 
+      ? dialogs[dialog_num] : getDialog("defaultDialog");
 
     // Create items and attacks
     map<std::string, CItem*> items = parseRoomItems(jBasic, p);
-    map<string, CAttack*> attacks = parsePersonAttacks(jBasic.value("attacks", std::vector<std::string>()));
+    map<string, CAttack*> attacks = parsePersonAttacks(jBasic.value("attacks", 
+          std::vector<std::string>()));
     
     // Create text
     CText* text = nullptr;
@@ -651,4 +620,19 @@ void CWorld::textFactory(std::string path) {
     m_jTexts[it.key()] = {area, it.value()["text"]};
 
   std::cout << "Created texts with area id: " << area << std::endl;
+}
+
+
+void CWorld::TemplateFactory(std::string path, 
+    std::map<std::string, nlohmann::json>& template_map) {
+  // Read json with all detail-tempaltes.
+  nlohmann::json json = func::LoadJsonFromDisc(path);
+  // Get sub-category from stem.
+  std::string sub_cat = fs::path(path).stem();
+  // Add template-objects to template-map
+  for(auto j : json)  {
+		std::cout << "detailFactory, added: " << j["id"] << std::endl;
+    std::string id = sub_cat + j["id"].get<std::string>();
+    template_map[id] = j;
+	}
 }

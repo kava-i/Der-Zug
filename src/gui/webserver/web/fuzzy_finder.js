@@ -288,11 +288,24 @@ function NonFuzzyFinderInput(event, all) {
   return false;
 }
 
+function GetLocalized(inp) {
+  if (inp.hasAttribute("localize")) {
+    let localize = inp.getAttribute("localize");
+    if (typeof localize == "boolean")
+      return localize;
+    else 
+      return localize === "true"
+  }
+  return true;
+}
+
 function Typeahead(input_field) {
   // Room type-ahead 
   // - "room": when adding new-player and selecting start-room, 
   // "linked_room id": when adding an exit to a room.
-	localize = (input_field.localize !== undefined) ? input_field.localize : true;
+	localize = GetLocalized(input_field);
+  
+  console.log("Git localize: ", localize, " from ", input_field.getAttribute("localize"));
   if (input_field.id == "room" || input_field.placeholder == "linked_room id") {
     inps_ = GetAllX("rooms", localize);
     mode_ = "typeahead";

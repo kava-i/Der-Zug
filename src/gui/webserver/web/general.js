@@ -5,8 +5,10 @@ var error_codes = {"0":"success", "1":"wrong format", "2":"access denied",
 
 //Close modal, when close-span is clicked (works for both moduls)
 function CloseModul() {
-  document.getElementById("modal_add_elem").style.display = "none";
-  document.getElementById("modal_del_elem").style.display = "none";
+  try {
+    document.getElementById("modal_add_elem").style.display = "none";
+    document.getElementById("modal_del_elem").style.display = "none";
+  } catch(e) {}
 
   // Handle log-modal.
   let log_modal = document.getElementById("modal_log");
