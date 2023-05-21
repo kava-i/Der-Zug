@@ -294,8 +294,13 @@ map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p
 
     //Get basic json for construction
     nlohmann::json template_detail_json = {};
-    if (m_details.count(detail.first) > 0)
+    if (m_details.count(detail.first) > 0) {
+			std::cout << "Found template for: " << detail.first << std::endl;
       template_detail_json = m_details[detail.first];
+		}
+		else {
+			std::cout << "No template found for: " << detail.first << std::endl;
+		}
 
     //Update basic with specific json
     func::updateJson(template_detail_json, detail.second);
@@ -463,8 +468,13 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room,
     // this defaultDialog-type
     std::map<std::string, CDialog*> dialogs;
     std::string dialog_name = jBasic.value("defaultDialog", character.first);
+		if (dialog_name.find(".") != std::string::npos) {
+			dialog_name.replace(dialog_name.find("."), 1, "_");
+		}
     size_t counter = 0;
+		std::cout << "Searching for dialog: " << dialog_name << std::endl;
     for (auto it : m_dialogs) {
+			std::cout << " - " << it.first << std::endl;
       if (it.first.find(dialog_name) != std::string::npos) {
         dialogs[it.first.substr(dialog_name.length()+1)] = it.second;
         counter++;
@@ -631,8 +641,8 @@ void CWorld::TemplateFactory(std::string path,
   std::string sub_cat = fs::path(path).stem();
   // Add template-objects to template-map
   for(auto j : json)  {
-		std::cout << "detailFactory, added: " << j["id"] << std::endl;
-    std::string id = sub_cat + j["id"].get<std::string>();
+    std::string id = sub_cat + "." + j["id"].get<std::string>();
+		std::cout << "detailFactory, added: " << id << std::endl;
     template_map[id] = j;
 	}
 }
