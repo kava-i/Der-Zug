@@ -14,8 +14,8 @@
 
 namespace fs = std::filesystem;
 
-const std::vector<std::string> Worlds::categories_ = {"attacks", "config", "dialogs", 
-  "players", "rooms", "characters", "details", "items", "quests", "texts", "images"};
+const std::vector<std::string> Worlds::categories_ = {"attacks", "config", "dialogs", "players", 
+	"rooms", "characters", "details", "items", "quests", "texts", "images", "sounds"};
 
 Worlds::Worlds(std::string base_path) {
   base_path_ = base_path;
@@ -80,6 +80,7 @@ ErrorCodes Worlds::CreateNewWorld(std::string path, std::string world_id, nlohma
     fs::copy("../../data/default_jsons/test.json", full_path + "/rooms/"); 
     fs::copy("../../data/default_jsons/players.json", full_path + "/players/"); 
     fs::copy("../../data/default_jsons/background.jpg", full_path + "/images/"); 
+    fs::copy("../../data/default_jsons/background.mp3", full_path + "/sounds/"); 
 
     // Create new world.
     std::unique_lock ul(shared_mtx_worlds_);

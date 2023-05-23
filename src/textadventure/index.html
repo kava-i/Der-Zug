@@ -152,7 +152,7 @@ else
 
 
 let clicked = false;
-let aud = new Audio('{{world}}/{{ default(music, "piano") }}.mp3');
+let aud = new Audio('{{world}}/{{ default(music, "background") }}.mp3');
 
 aud.addEventListener('ended', function() {
     this.currentTime = 0;

@@ -81,14 +81,14 @@
   "minds":[],
   "commands":[],
   "music": {
-      "background": "",
+      "background": "background",
       "fight": ""
   },
   "image": {
-      "background": "",
+      "background": "background",
       "fight": ""
   },
 	"multiplayer": {
-		"multiplayer": false;
+		"multiplayer": false
 	}
 }
