@@ -27,7 +27,7 @@
 class SubCategory : public Category {
   public: 
     // constructer/ destructor
-    SubCategory(std::string base_path, std::string path) : Category(base_path, path) {}
+    SubCategory(std::string base_path, std::string path);
     ~SubCategory() {}
 
     /**

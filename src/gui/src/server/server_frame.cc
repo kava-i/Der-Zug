@@ -446,7 +446,7 @@ void ServerFrame::AddElem(const Request& req, Response& resp) {
         world_id, infos);
   }
   // Create new object or (sub-)category.
-  else
+  else 
     error_code = user_manager_.worlds()->UpdateElements(path, name, "add", force, infos);
 
   //Check whether action succeeded

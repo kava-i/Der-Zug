@@ -9,8 +9,21 @@
 
 namespace fs = std::filesystem;
 
+
+SubCategory::SubCategory(std::string base_path, std::string path) : Category(base_path, path) {
+  category_ = name_;
+}
+
 ErrorCodes SubCategory::AddElem(std::string path, std::string name, nlohmann::json infos) {
-  std::string path_to_elem = path_ + "/" + name + ".json";
+	std::cout << "SubCategory::AddElem: " << category_ << std::endl;
+	if (category_ == "dialogs" || category_ == "default_dialogs") {
+		std::cout << "Name: " << name << " '.' at: " << name.find(".") << std::endl;
+		name = name.replace(name.find("."), 1, "_");
+		std::cout << "Updated name: " << name << std::endl;
+		name = name + "_" + infos["num"].get<std::string>();
+		std::cout << "Updated name: " << name << std::endl;
+	}
+	std::string path_to_elem = path_ + "/" + name + ".json";
   std::cout << "SubCategory::AddElem(" << path_to_elem << ")" << std::endl;
   // Check if element already exists.
   if (func::demo_exists(path_to_elem))

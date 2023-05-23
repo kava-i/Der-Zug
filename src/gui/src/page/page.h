@@ -32,6 +32,10 @@ class Page {
     virtual std::string category() const { return ""; }
     std::string name() const;
     std::string notes(std::string path) const;
+		virtual const nlohmann::json& objects() const { 
+			std::cout << "Accessing obj of non-area page"; 
+			throw "Accessing obj of non-area page"; 
+		}
 
     // setter
     void set_notes(std::string path, std::string description);

@@ -76,6 +76,8 @@ class Area : public Page {
      */
     nlohmann::json GetGraph(std::string name);
 
+		const nlohmann::json& objects() const;
+
   private:
     // member variables:
     nlohmann::json objects_;

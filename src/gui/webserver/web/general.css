@@ -72,6 +72,22 @@ body {
   color:white;
 }
 
+.simple-button {
+	padding: 0.4em;
+	border: transparent;
+`	background-color: rgba(0, 0, 0, 0);
+	text-decoration: none;
+}
+
+.simple-button:hover{
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.simple-button:active {
+  background-color: green;
+}
+
 /* ** some button styles **  */
 .pure-button {
     padding: 0.4em;

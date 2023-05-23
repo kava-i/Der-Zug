@@ -45,12 +45,14 @@ window.onload = function() {
   if (document.getElementById("modal_add_elem").style.display == "none")
     return;
   var r_input_pw2 = document.getElementById("name");
-  r_input_pw2.addEventListener("keyup", function(event) {
-    if (event.keyCode === 13) {
-      event.preventDefault();
-      document.getElementById("btn_add_elem").click();
-    }
-  });
+	if (document.getElementById("name").placeholder != "character id") {
+		r_input_pw2.addEventListener("keyup", function(event) {
+			if (event.keyCode === 13) {
+					event.preventDefault();
+					document.getElementById("btn_add_elem").click();
+			}
+		});
+	}
 }
 
 //Open modal to addd new controller, when button is clicked
@@ -100,7 +102,7 @@ function AddElem(elem, force=false) {
   json_request.infos = {};
   // Add values from all inputs
   var inputs = document.getElementById("modal_add_elem").getElementsByTagName("input");
-  for (let i=1; i<inputs.length; i++) {
+  for (let i=0; i<inputs.length; i++) {
     const val = inputs[i].value.replaceAll("/", "_").replaceAll(" ", "-");
     json_request["infos"][inputs[i].id] = val;
   }

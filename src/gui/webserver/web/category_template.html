@@ -69,49 +69,43 @@
 <div class="box_overview center_in_box">
 
   <div style="float: right;">
-    <button 
+    <i 
 			id="try_game_btn" 
-			class="pure-button" 
-			style="width:2rem;height:2rem;"
+			class="simple-button material-icons" 
       title="Try game (closes game if open): Shortcut: 0" 
       onclick="try_game('{{__creator}}', '{{__world_name}}');"
 		>
-      <i class="material-icons">play_arrow</i>
-    </button>
+      play_arrow
+    </i>
   </div>
 
   <div style="float: right;margin-right: 1em;">
-    <button 
-			class="pure-button" 
-			style="width:2rem;height:2rem;"
+    <i 
+			class="simple-button material-icons" 
       title="Show graph. Shortcut: 1" 
 			onclick="ToggleGraph();"
 		>
-      <i class="material-icons">share</i>
-    </button>
+      share
+    </i>
   </div>
 
   <div style="float: right; margin-right: 1em;">
-    <button 
-			class="pure-button" 
-			style="width:2rem;height:2rem;"
+    <i 
+			class="simple-button material-icons" 
 			title="Show notes: Shortcut: 2 (toggle markdown-preview: 3)" 
 			onclick="ToggleNotes();"
 		>
-      <i class="material-icons">note</i>
-    </button>
+      note
+    </i>
   </div>
 
   <div style="float: right;margin-right: 1em;">
-    <button 
-			class="pure-button" 
-			style="width:2rem;height:2rem;" 
+    <i
+			class="simple-button material-icons" 
 			title="Show help-page for this category"
 		>
-      <a href="/{{name}}.md" target="_blank">
-				<i class="material-icons">help</i>
-			</a>
-    </button>
+		<a href="/{{name}}.md" target="_blank">help</a>
+    </i>
   </div>
 
 
@@ -142,9 +136,12 @@
                 <a class="medium" href="{{node.0}}">{{node.1}}</a>
               </td>
               <td>
-                <i class="fas fa-minus button2" 
-                   title="Delete element. Shortcut: Backspace"
-                  onclick="OpenDelElemModal('subcategory', '{{node.1}}');return true">
+                <i 
+									class="simple-button material-icons" 
+                  title="Delete element. Shortcut: Backspace"
+                  onclick="OpenDelElemModal('subcategory', '{{node.1}}');return true"
+								>
+									remove
                 </i>
               </td>
             </tr>
@@ -167,9 +164,9 @@
     <button id="write" class="pure-button" onclick="SetNotes()">Write</button>
   </div>
 
-  <i class="fas fa-plus button" title="Add element. Shortcut: +" 
-    onclick="OpenAddElemModal();return true">
-  </i>
+	<i class="simple-button material-icons" title="Add element. Shortcut: +" onclick="OpenAddElemModal();return true">
+		add
+	</i>
 
 </div>
 
@@ -195,20 +192,46 @@
   <div class="modal-content">
     <span class="close" id="close_modal" onclick="CloseModul()">&times;</span>
     <div class="content_center">
-      <div class="item"><input id="name" placeholder="name"></div>
-      <div class="item"><input id="room" style="display: none;" placeholder="room"></div>
+			{% if name == "dialogs" %}
+				<input id="name" placeholder="character id">
+				<input id="num" type="number" value=1></input>
+			{% else %}
+				<div class="item"><input id="name" placeholder="name"></div>
+				<div class="item"><input id="room" style="display: none;" placeholder="room"></div>
+			{% endif %}
       <div class="item"><p id="add_error" class="user_error"></p></div>
       {% if name == "sounds" or name == "images" %}
         <input type="file" id="media_file">
         <br><br>
         <button class="pure-button" id="btn_add_elem" onclick="AddMedia('{{name}}')">Add</input>
       {% else %}
-      <div><button type="button" class="pure-button" id="btn_add_elem"
-                                 onclick="AddElem('subcategory')">Add</button></div>
-      <div><button type="button" class="pure-button" id="force_add_elem"
-          style="display: none;" onclick="AddElem('subcategory', true)">Force Add</button></div>
-      <div class="item"><button type="button" class="pure-button" id="add_get_log"
-          style="display: none;" onclick="get_log('write')">Show Log</button></div>
+				<div>
+					<button type="button" class="pure-button" id="btn_add_elem" onclick="AddElem('subcategory')">
+						Add
+					</button>
+				</div>
+				<div>
+					<button 
+						type="button" 
+						class="pure-button" 
+						id="force_add_elem"
+						style="display: none;" 
+						onclick="AddElem('subcategory', true)"
+					>
+						Force Add
+					</button>
+				</div>
+				<div class="item">
+					<button 
+						type="button" 
+						class="pure-button" 
+						id="add_get_log" 
+						style="display: none;" 
+						onclick="get_log('write')"
+					>
+						Show Log
+					</button>
+				</div>
       {% endif %}
     </div>
   </div>

@@ -209,6 +209,10 @@ nlohmann::json Area::GetGraph(std::string path) {
   return graph;
 }
 
+const nlohmann::json& Area::objects() const {
+	return objects_;
+}
+
 bool Area::LinkExists(const nlohmann::json& links, std::string source, std::string target) {
   // If no links, the given link does not exist.
   if (links.size() == 0)

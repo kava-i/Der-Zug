@@ -76,7 +76,9 @@ ErrorCodes World::AddElem(std::string path, std::string id, nlohmann::json infos
     return ErrorCodes::PATH_NOT_FOUND;
 
   // Add element. If not successfull or force-write (thus no need to do further checking), return error-code.
+	std::cout << "Adding element: " << id << ", " << infos << std::endl;
   ErrorCodes error_code = paths_.at(path)->AddElem(path, id, infos);
+	std::cout << "Adding element: error-code: " << error_code << std::endl;
   sl.unlock();
   // If successfull and force disabled, make revert, or make changes permanent.
   if (error_code == ErrorCodes::SUCCESS && !force)
@@ -152,6 +154,8 @@ nlohmann::json World::GetPage(std::string path, bool only_json) const {
   json["header"]["_mod_types"] = GetModTypes();
   json["header"]["_colors"] = {"", "black", "green", "red", "white", "yellow", "blue", 
 		"orange", "dark", "whitedark"};
+  json["header"]["_room_char_dialogs"] = GetRoomObjects("characters", "_");
+  json["header"]["_room_chars"] = GetRoomObjects("characters");
 
   nlohmann::json availibe_fields;
   func::LoadJsonFromDisc("handlers.json", availibe_fields);
@@ -341,4 +345,44 @@ std::vector<std::string> World::GetAttributeCategories() const {
 
 std::vector<std::string> World::GetModTypes() const {
 	return {"=", "+", "-", "*", "/"};
+}
+
+std::vector<std::string> World::GetRoomObjects(std::string type) const {
+	std::cout << "GetRoomChars" << std::endl;
+  std::shared_lock sl(shared_mtx_paths_);
+	std::vector<std::string> room_objs;
+	// Iterator over all paths and get rooms
+	for (const auto& it : paths_) {
+		if (it.second->category() == "rooms") {
+			// try to get objects (might failed, since actual objects have the same
+			// category.
+			try {
+				auto rooms = it.second->objects(); 
+				std::cout << "Got rooms: " << rooms.dump() << std::endl;
+				for (const auto& room : rooms.get<std::map<std::string, nlohmann::json>>()) {
+					for (const auto& c : room.second.value(type, std::vector<nlohmann::json>())) {
+						auto character = c.get<std::pair<std::string, nlohmann::json>>();
+						room_objs.push_back(room.first + "." + character.first);
+					}
+				}
+			} 
+			// Only print error, but let function move on since this might be
+			// expected.
+			catch (std::exception& e) {
+				std::cout << "GetRoomChars: Failed getting objects at path " << it.first 
+					<< ". Error: " << e.what() << std::endl;
+			}
+		}
+	}
+	std::cout << "Got " << room_objs.size() << " room objects: " << type << std::endl;
+	return room_objs;
+}
+
+std::vector<std::string> World::GetRoomObjects(std::string type, std::string id_seperator) const {
+	// get room objects of given type
+	auto room_objs = GetRoomObjects(type);
+	// Change id-separator
+	for (auto& it : room_objs) 
+		it.replace(it.find("."), 1, id_seperator);
+	return room_objs;
 }

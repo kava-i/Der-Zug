@@ -110,6 +110,12 @@ class World {
 		std::vector<std::string> GetAttributeCategories() const;
 		std::vector<std::string> GetModTypes() const;
 
+		/**
+		 * This only works for details and characters.
+		 */
+		std::vector<std::string> GetRoomObjects(std::string type) const;
+		std::vector<std::string> GetRoomObjects(std::string type, std::string id_seperator) const;
+
   private:
     // member variables:
     const std::string base_path_;
