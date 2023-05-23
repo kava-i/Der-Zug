@@ -1,5 +1,10 @@
 {
-  "printing":{},
+  "printing":{
+		"desc":"",
+		"story":"",
+		"tech":"",
+		"error":""
+	},
   "appearance": {
       "input-bar": {
           "bottom": "0",

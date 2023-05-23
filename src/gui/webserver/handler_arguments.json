@@ -11,7 +11,6 @@
 	"h_showPersonInfo": [ "char" ],
 	"h_showItemInfo": [ "char" ],
 	"h_changeName": [ "char", "new name" ],
-	"h_setNewAttribute": [ "attribute", "int" ],
 	"h_setNewQuest": [ "quest" ],
 	"h_changeDialog": [ "char", "chars dialog" ],
 	"h_changeRoom": [ "room" ],

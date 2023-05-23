@@ -54,6 +54,7 @@ private:
 public:
 
     CWorld(CPlayer*, std::string path);
+    ~CWorld();
     
     // *** GETTER *** //
 

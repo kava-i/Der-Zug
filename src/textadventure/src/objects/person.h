@@ -23,6 +23,7 @@ class CPerson : public CObject {
     CText* m_roomDescription;           //< Player in room, sometimes as mind.
     CText* m_sShotDescription;          //< Brief description, never as mind.
     nlohmann::json m_deadDescription;   //< Description for when the character is dead.
+		std::string color_;
 
     bool will_faint_; ///< Indicates whether this char will faint or die
     bool fainted_;   ///< 
@@ -74,6 +75,8 @@ class CPerson : public CObject {
 		
     /// return whether character is currently fainted 
 		bool fainted();
+
+		std::string color() const;
 
     ///Return person's attacks.
     attacks& getAttacks();

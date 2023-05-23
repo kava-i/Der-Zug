@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <map>
 #include <string>
 
 namespace Webcmd {
@@ -19,5 +20,17 @@ namespace Webcmd {
   std::string set_color(color cl);
   std::string set_sound(std::string filename);
   std::string set_image(std::string filename);
+
+	const std::map<std::string, std::string> COLOR_MAPPING = {
+		{"black", set_color(BLACK)},
+    {"white", set_color(WHITE)},
+    {"red", set_color(RED)},
+    {"green", set_color(GREEN)},
+    {"yellow", set_color(YELLOW)},
+    {"blue", set_color(BLUE)},
+    {"orange", set_color(ORANGE)},
+    {"dark", set_color(DARK)},
+    {"whitedark", set_color(WHITEDARK)}
+	};
 };
 

@@ -10,11 +10,10 @@
 #include <numeric>
 #include <string>
 
-#define BLACK Webcmd::set_color(Webcmd::color::BLACK)
 #define GREEN Webcmd::set_color(Webcmd::color::GREEN)
 #define RED Webcmd::set_color(Webcmd::color::RED)
 #define BLUE Webcmd::set_color(Webcmd::color::BLUE)
-#define PURPLE Webcmd::set_color(Webcmd::color::PURPLE)
+#define YELLOW Webcmd::set_color(Webcmd::color::YELLOW)
 #define WHITE Webcmd::set_color(Webcmd::color::WHITE)
 #define WHITEDARK Webcmd::set_color(Webcmd::color::WHITEDARK)
 #define cRED "\033[1;31m"
@@ -34,6 +33,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, std::strin
   func::convertToUpper(name_);
   m_sPassword = jAtts["password"];
   m_firstLogin = true; 
+	gameover_ = false;
 
   //Initiazize world
   m_world = new CWorld(this, path);
@@ -41,12 +41,10 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, std::strin
   m_parser = new CParser(m_world->getConfig());
   
   //Extract minds from config
-  std::map<std::string, std::string> colors = {{"blue", BLUE}, 
-    {"green", GREEN}, {"red", RED}};
-  for(auto it : m_world->getConfig()["minds"]) {
+  for (auto it : m_world->getConfig()["minds"]) {
     SMind mind;
     mind.sID = it["id"];
-    mind.color = colors[it["color"]];
+    mind.color = Webcmd::COLOR_MAPPING.at(it.value("color", "white"));
     mind.level = it["level"].get<int>();
     mind.relevance = it["relevance"].get<double>();
     m_minds[it["id"]] = mind;
@@ -108,6 +106,9 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, std::strin
 
 CPlayer::~CPlayer() {
   delete m_world;
+	delete m_parser;
+	if (m_curFight)
+		delete m_curFight;
 } 
 
 // *** GETTER *** // 
@@ -212,6 +213,13 @@ std::map<std::string, std::string> CPlayer::GetCurrentStatus() {
   return status;
 }
 
+bool CPlayer::gameover() const {
+	return gameover_;
+}
+Webconsole* CPlayer::webconsole() const {
+	return _cout;
+}
+
 // *** SETTER *** // 
 
 void CPlayer::setFirstLogin(bool val) { 
@@ -228,6 +236,9 @@ void CPlayer::set_subsitues(std::map<std::string, std::string> subsitutes) {
 
 void CPlayer::set_gramma(std::shared_ptr<CGramma> gramma) {
   _gramma = gramma;
+}
+void CPlayer::set_gameover() {
+	gameover_ = true;
 }
 
 void CPlayer::printText(std::string text) {
@@ -980,6 +991,10 @@ void CPlayer::Update(const Updates& updates, std::string& updated_print) {
 			std::string name = attribute_conf.at(it.id_).name_;
       std::string color = (val_old <= attributes_.at(it.id_)) ? GREEN : RED;
       updated_print += color + name + msg + func::dtos(value) + WHITE + "\n";
+			auto events = attribute_conf.at(it.id_).GetExceedBoundEvents(attributes_.at(it.id_));
+			if (events.size() > 0) {
+    		addPostEvent(events);
+			}
 		}
 		// Temporary update
 		if (it.tmp_) {
@@ -1025,10 +1040,14 @@ void CPlayer::checkCommands() {
 		size_t pos2 = m_sPrint.find("}"); 
 		std::string cmd = m_sPrint.substr(pos+1, pos2-(pos+1));
 		std::string replace = "";
-		if (cmd.find("cname") != std::string::npos && m_curDialogPartner != nullptr)
-			replace = m_curDialogPartner->name();
+		if (cmd.find("CNAME") != std::string::npos && m_curDialogPartner != nullptr)
+			replace = m_curDialogPartner->color() + func::returnToUpper(m_curDialogPartner->name()) + WHITE;
+		else if (cmd.find("cname") != std::string::npos && m_curDialogPartner != nullptr)
+			replace = BLUE + m_curDialogPartner->name() + WHITE;
+		else if (cmd.find("NAME") != std::string::npos)
+			replace = color() + func::returnToUpper(name()) + WHITE;
 		else if (cmd.find("name") != std::string::npos)
-			replace = name();
+			replace = color() + name() + WHITE;
 		m_sPrint = m_sPrint.substr(0, pos) + replace + m_sPrint.substr(pos2+1);
 	}
 

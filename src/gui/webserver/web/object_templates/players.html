@@ -5,9 +5,21 @@
   <li><label>Password:</label><input id="password" value="{{ default(password,
     "") }}"></li> 
   <li><label>room:</label><input id="room" value="{{ default(room, "test") }}"></li> 
-  <li><label>Quests:</label><input id="quests" custom="json"
-                                               value={{default(quests,
-                                                      [])}}></li>
+
+  <li>
+    <label>color:</label>
+		<select id="color" autocomplete="off"> 
+			{% for c in _colors %} 
+				<option {%- if default(color, "white") == c -%}selected{%- endif -%}>{{c}}</option>
+			{% endfor %}
+		</select>
+  </li>
+
+  <li>
+		<label>Quests:</label>
+		<input id="quests" custom="json" value={{default(quests, [])}}>
+	</li>
+
   <!-- Attributes like (hp, money, experience etc. -->
 	<li custom="map">
     <label 

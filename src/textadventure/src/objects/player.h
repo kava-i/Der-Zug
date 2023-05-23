@@ -41,6 +41,7 @@ private:
     bool m_firstLogin;  ///< Indicate whether this is the players first login.
     string m_sPrint;  ///< Text printing after throwing events
     std::map<std::string, std::string> subsitutes_;
+		bool gameover_;
 
     //*** Stagged Events *** //
     std::string m_staged_pre_events;  ///< Events thrown before printing
@@ -130,6 +131,10 @@ public:
     //Get current status
     std::map<std::string, std::string> GetCurrentStatus();
 
+		bool gameover() const;
+
+		Webconsole* webconsole() const;
+
     // *** SETTER *** //
     
     ///Set first login.
@@ -142,6 +147,8 @@ public:
     void set_subsitues(std::map<std::string, std::string> subsitutes);
 
     static void set_gramma(std::shared_ptr<CGramma> gramma);
+
+		void set_gameover();
 
     //No-event type commands
     void printText(std::string text);

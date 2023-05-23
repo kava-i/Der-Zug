@@ -202,6 +202,12 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>&
     return "[### end_game ###]";
   }
 
+	//Check whether player is dead
+  if (m_curPlayer->gameover()) {
+    m_context->throw_event(std::make_pair("reload_player", m_curPlayer->id()), m_players["_admin"]);
+  }
+
+
   // Parse commands
   CParser parser(m_world->getConfig());
   std::vector<event> events = parser.parse(sInput);
@@ -214,7 +220,7 @@ string CGame::play(string sInput, string sPlayerID, std::list<string>&
   if (m_context->getPermeable() == false)
     return m_curPlayer->getPrint();
 
-  //Throw event of player
+  // Throw event of player
   m_curPlayer->throw_events(sInput, "CGame::play");
   return m_curPlayer->getPrint(); 
 }
@@ -224,14 +230,16 @@ bool CGame::reloadPlayer(string sID) {
   if(m_players.count(sID) == 0)
     return false;
 
-  //Delete old player
+	auto cout = m_players[sID]->webconsole();
+  // Delete old player
   delete m_players[sID];
   m_players.erase(sID);
 
-  //Create new player
+  // Create new player
   playerFactory(m_playerJsons[sID]);
   m_curPlayer = m_players[sID];
 
+	cout->write("[reload-page]");
   return true;
 }
 

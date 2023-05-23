@@ -1,6 +1,7 @@
 #include "attributes.h"
 #include "nlohmann/json.hpp"
 #include "tools/calc_enums.h"
+#include "tools/func.h"
 
 ConfigAttribute::ConfigAttribute(const nlohmann::json& json) {
 	id_ = json.at("id");
@@ -28,6 +29,14 @@ bool ConfigAttribute::CheckBounds(int cur) const {
   if (upper_bound_ != 0xFFFF && cur > upper_bound_)
     return false;
   return true;
+}
+
+std::string ConfigAttribute::GetExceedBoundEvents(int cur) const {
+  if (lower_bound_ != 0xFFFF && cur < lower_bound_)
+		return func::join(lower_events_, ";");
+	if (upper_bound_ != 0xFFFF && cur > upper_bound_)
+		return func::join(upper_events_, ";");
+	return "";
 }
 
 AttributeMapping::AttributeMapping(const nlohmann::json& json) {

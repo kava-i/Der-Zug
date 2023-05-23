@@ -1,5 +1,6 @@
 #include "person.h"
 #include "player.h"
+#include "tools/webcmd.h"
 
 
 /**
@@ -14,6 +15,8 @@ CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttac
     : CObject(jAttributes, p, "person") {
   //Set stats.
 	attributes_ = jAttributes.value("attributes", std::map<std::string, int>());
+
+	color_ = Webcmd::COLOR_MAPPING.at(jAttributes.value("color", "white"));
 
   will_faint_ = (bool)jAttributes.value("faint", 0);
 	fainted_ = false;
@@ -66,6 +69,10 @@ bool CPerson::fainted() {
   return fainted_;
 }
 
+std::string CPerson::color() const {
+	return color_;
+
+}
 ///Return person's dialogue.
 CDialog* CPerson::getDialog() { 
   return m_dialog; 

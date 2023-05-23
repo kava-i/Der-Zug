@@ -150,7 +150,8 @@ nlohmann::json World::GetPage(std::string path, bool only_json) const {
   nlohmann::json attributes = GetAttributes();
   json["header"]["_attributes"] = GetAttributes();
   json["header"]["_mod_types"] = GetModTypes();
-  json["header"]["_colors"] = {"", "green", "red", "white"};
+  json["header"]["_colors"] = {"", "black", "green", "red", "white", "yellow", "blue", 
+		"orange", "dark", "whitedark"};
 
   nlohmann::json availibe_fields;
   func::LoadJsonFromDisc("handlers.json", availibe_fields);

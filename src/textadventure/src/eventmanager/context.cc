@@ -125,6 +125,7 @@ void Context::initializeHanlders() {
   listeners_["h_updateListeners"] = &Context::h_updatePlayers;
 
   // ***** WORLD CONTEXT ***** //
+  listeners_["h_printText"] = &Context::h_printText;
   listeners_["h_finishCharacter"] = &Context::h_finishCharacter;
   listeners_["h_killCharacter"] = &Context::h_killCharacter;
   listeners_["h_deleteCharacter"] = &Context::h_deleteCharacter;
@@ -555,6 +556,9 @@ void Context::h_updatePlayers(std::string&, CPlayer*p)
 
 // ***** ***** WORLD CONTEXT ***** ***** //
 
+void Context::h_printText(std::string& sIdentifier, CPlayer* p) {
+	p->printText(sIdentifier);
+}
 void Context::h_finishCharacter(std::string& sIdentifier, CPlayer* p) {
   std::cout << "h_finishCharacter: " << sIdentifier << std::endl;
 
@@ -659,7 +663,9 @@ void Context::h_newFight(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_gameover(std::string&, CPlayer* p) {
-    p->appendStoryPrint("\nDu bist gestorben... \n\n $\n");
+  p->appendPrint("\nGame ended.\n\n Press Enter to continue.\n");
+	p->set_gameover();
+  m_curPermeable=false;
 }
 
 void Context::h_addQuest(std::string& sIdentifier, CPlayer* p) {

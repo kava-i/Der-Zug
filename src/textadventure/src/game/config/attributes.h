@@ -27,6 +27,7 @@ struct ConfigAttribute {
 
   // methods 
   bool CheckBounds(int cur ) const;
+	std::string GetExceedBoundEvents(int cur) const;
 };
 
 struct AttributeMapping {

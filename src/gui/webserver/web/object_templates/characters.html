@@ -17,6 +17,16 @@
     <input id="image" placeholder="image" title="no fileextension!" 
         value="{{ default(image, "") }}">
   </li>
+
+  <li>
+    <label>color:</label>
+		<select id="color" autocomplete="off"> 
+			{% for c in _colors %} 
+				<option {%- if default(color, "white") == c -%}selected{%- endif -%}>{{c}}</option>
+			{% endfor %}
+		</select>
+  </li>
+
   {{ log("rendered name,id, image and music") }}
 
 

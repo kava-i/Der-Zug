@@ -292,6 +292,9 @@ function parse_file(strin,x) {
 
 async function printString(theString)
 {
+	if (theString.indexOf("[reload-page]") != -1) {
+		window.location.reload();
+	}
     if (theString.indexOf("Logged in as") != -1) {
       document.getElementById("btn_play_music").click();
       openFullscreen(document.documentElement);

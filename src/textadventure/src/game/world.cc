@@ -31,6 +31,19 @@ CWorld::CWorld(CPlayer* p, std::string path) {
   configExtractor(p);
 }
 
+CWorld::~CWorld() {
+	for (const auto& it : m_rooms)
+		delete it.second;
+	for (const auto& it : m_characters)
+		delete it.second;
+	for (const auto& it : m_attacks)
+		delete it.second;
+	for (const auto& it : m_quests)
+		delete it.second;
+	for (const auto& it : m_dialogs)
+		delete it.second;
+}
+
 // *** GETTER *** // 
 
 std::string CWorld::getPathToWorld() {
