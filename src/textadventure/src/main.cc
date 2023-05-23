@@ -23,10 +23,10 @@
 
 # define LOGGER "general"
 
-#ifdef _COMPILE_FOR_SERVER_
+#ifdef _HTTPS_
 httplib::SSLServer srv(
-    "/etc/letsencrypt/live/kava-i.de-0001/cert.pem",
-    "/etc/letsencrypt/live/kava-i.de-0001/privkey.pem"
+		std::getenv("CERT_FILE"),
+		std::getenv("CERT_PRIV_KEY")
 ); 
 #else
 httplib::Server srv;
