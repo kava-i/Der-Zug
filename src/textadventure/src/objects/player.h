@@ -88,7 +88,8 @@ public:
     * @param room current room of payer
     * @param newAttacks attacks of player
     */
-    CPlayer(nlohmann::json jAttributes, CRoom* room, attacks newAttacks, std::string path);
+    CPlayer(nlohmann::json jAttributes, CRoom* room, attacks newAttacks, std::string path,
+				const std::map<std::string, ConfigAttribute>& all_attributes);
 
     ~CPlayer();
 

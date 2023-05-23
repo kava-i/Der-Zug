@@ -27,8 +27,10 @@ std::shared_ptr<CGramma> CPlayer::_gramma = nullptr;
 * @param room current room of payer
 * @param newAttacks attacks of player
 */
-CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, std::string path) 
-    : CPerson(jAtts, nullptr, lAttacks, nullptr, this, std::map<std::string, CDialog*>()) {
+CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, std::string path,
+		const std::map<std::string, ConfigAttribute>& all_attributes) 
+    : CPerson(jAtts, nullptr, lAttacks, nullptr, this, std::map<std::string, CDialog*>(), 
+				all_attributes) {
   //Set login data and player information
   func::convertToUpper(name_);
   m_sPassword = jAtts["password"];

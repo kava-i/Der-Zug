@@ -1,4 +1,5 @@
 #include "person.h"
+#include "game/config/attributes.h"
 #include "player.h"
 #include "tools/webcmd.h"
 
@@ -11,10 +12,15 @@
 * param[in] attacks list of attacks
 */
 CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttacks, CText* text, 
-    CPlayer* p, std::map<std::string, CDialog*> dialogs, map_type items) 
+    CPlayer* p, std::map<std::string, CDialog*> dialogs, const std::map<std::string, ConfigAttribute>& all_attributes,
+		t_map_items items) 
     : CObject(jAttributes, p, "person") {
-  //Set stats.
+  // Set stats, then update missing stats with default value
 	attributes_ = jAttributes.value("attributes", std::map<std::string, int>());
+	for (const auto& it : all_attributes) {
+		if (attributes_.count(it.first) == 0)
+			attributes_[it.first] = it.second.default_value_;
+	}
 
 	color_ = Webcmd::COLOR_MAPPING.at(jAttributes.value("color", "white"));
 

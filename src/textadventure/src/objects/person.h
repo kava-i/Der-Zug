@@ -7,6 +7,7 @@
 #include <tuple>
 
 #include "attack.h"
+#include "game/config/attributes.h"
 #include "object.h"
 #include "concepts/inventory.h"
 #include "actions/dialog.h"
@@ -54,9 +55,10 @@ class CPerson : public CObject {
     * param[in] items list of items 
     * param[in] attacks list of attacks
     */
-    typedef std::map<std::string, CItem*> map_type;
+    typedef std::map<std::string, CItem*> t_map_items;
     CPerson(nlohmann::json jAttributes, CDialog* dialog, attacks newAttacks, CText* text, CPlayer* p,
-        std::map<std::string, CDialog*> dialogs, map_type=map_type());
+        std::map<std::string, CDialog*> dialogs, const std::map<std::string, ConfigAttribute>& all_attributes,
+				t_map_items=t_map_items());
 
     // *** GETTER *** // 
 

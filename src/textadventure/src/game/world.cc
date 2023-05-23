@@ -512,13 +512,13 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room,
       text = getRandomDescription(jBasic["defaultDescription"], p);
 
     // Create character and add to maps
-    m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, text, p, dialogs, items);
+    m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, text, p, dialogs, attribute_config_.attributes_, items);
     mapCharacters[jBasic["id"]] = m_characters[jBasic["id"]];
 
     //Add [amount] characters with "id = id + num" if amount is set.
     for(size_t i=2; i<=character.second.value("amount", 0u); i++) {
       jBasic["id"]  =  func::incIDNumber(func::convertToObjectmap(mapCharacters, lambda), sID);
-      m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, text, p, dialogs, items);
+      m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, text, p, dialogs, attribute_config_.attributes_, items);
       mapCharacters[jBasic["id"]] = m_characters[jBasic["id"]];
     }
   }
