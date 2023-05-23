@@ -40,6 +40,7 @@ private:
     std::string m_sPassword;  ///< Password for login
     bool m_firstLogin;  ///< Indicate whether this is the players first login.
     string m_sPrint;  ///< Text printing after throwing events
+		std::string player_description_;
     std::map<std::string, std::string> subsitutes_;
 		bool gameover_;
 
@@ -103,6 +104,8 @@ public:
 
     ///Return current room.
     CRoom* getRoom();
+
+		std::string player_description() const;
 
     ///Return dictionary of player's minds.
     std::map<std::string, SMind>& getMinds();

@@ -4,6 +4,10 @@
   <li><label>Id:</label><input id="id" value="{{ id }}"></li> 
   <li><label>Password:</label><input id="password" value="{{ default(password,
     "") }}"></li> 
+	<li>
+		<label>Description:</label>
+		<textarea id="player_description">{{default(player_description, "")}}</textarea></li>
+	</li>
   <li><label>room:</label><input id="room" value="{{ default(room, "test") }}"></li> 
 
   <li>

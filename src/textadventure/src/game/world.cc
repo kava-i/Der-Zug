@@ -163,6 +163,9 @@ CItem* CWorld::getItem(string sID, CPlayer* p) {
     return nullptr; 
   }
 }
+bool CWorld::muliplayer() const {
+	return muliplayer_;
+}
 
 
 void CWorld::worldFactory(CPlayer* p) {
@@ -218,6 +221,11 @@ void CWorld::configFactory(const std::string path) {
         throw WorldFactoryException("Missing '" + it + "' entry in 'show' entry of config!");
     }
   }
+	// set muliplayer
+	if (m_config.contains("muliplayer"))
+		muliplayer_ = m_config.at("muliplayer").value("muliplayer", false);
+	else 
+		muliplayer_ = false;
 }
 
 void CWorld::configAttributeFactory(const std::string path) {
@@ -308,11 +316,7 @@ map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p
     //Get basic json for construction
     nlohmann::json template_detail_json = {};
     if (m_details.count(detail.first) > 0) {
-			std::cout << "Found template for: " << detail.first << std::endl;
       template_detail_json = m_details[detail.first];
-		}
-		else {
-			std::cout << "No template found for: " << detail.first << std::endl;
 		}
 
     //Update basic with specific json
@@ -485,9 +489,7 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room,
 			dialog_name.replace(dialog_name.find("."), 1, "_");
 		}
     size_t counter = 0;
-		std::cout << "Searching for dialog: " << dialog_name << std::endl;
     for (auto it : m_dialogs) {
-			std::cout << " - " << it.first << std::endl;
       if (it.first.find(dialog_name) != std::string::npos) {
         dialogs[it.first.substr(dialog_name.length()+1)] = it.second;
         counter++;
@@ -655,7 +657,6 @@ void CWorld::TemplateFactory(std::string path,
   // Add template-objects to template-map
   for(auto j : json)  {
     std::string id = sub_cat + "." + j["id"].get<std::string>();
-		std::cout << "detailFactory, added: " << id << std::endl;
     template_map[id] = j;
 	}
 }

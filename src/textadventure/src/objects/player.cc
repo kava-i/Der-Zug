@@ -34,6 +34,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, std::strin
   m_sPassword = jAtts["password"];
   m_firstLogin = true; 
 	gameover_ = false;
+	player_description_ = jAtts.value("player_description", "");
 
   //Initiazize world
   m_world = new CWorld(this, path);
@@ -132,6 +133,9 @@ CRoom* CPlayer::getRoom() {
   return m_room; 
 }
 
+std::string CPlayer::player_description() const {
+	return player_description_;
+}
 std::map<std::string, SMind>& CPlayer::getMinds() { 
   return m_minds; 
 }
@@ -886,9 +890,11 @@ void CPlayer::showMinds() {
 */
 void CPlayer::showStats() {
   m_sPrint += "--- " + name_ + "---\n";
+	if (player_description_ != "")
+		m_sPrint += "<i>" + player_description_ + "</i>\n";
   
   // Get mapping from config.
-  const auto& attribute_conf = m_world->attribute_config().attributes_;
+	const auto& attribute_conf = m_world->attribute_config().attributes_;
   const auto& mapping = m_world->attribute_config().mapping_;
 
   std::map<std::string, std::map<std::string, std::string>> stats;

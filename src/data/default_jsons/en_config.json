@@ -94,5 +94,8 @@
   "image": {
       "background": "",
       "fight": ""
-  }
+  },
+	"multiplayer": {
+		"multiplayer": false;
+	}
 }

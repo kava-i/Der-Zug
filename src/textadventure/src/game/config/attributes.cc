@@ -52,8 +52,6 @@ AttributeMapping::AttributeMapping(const nlohmann::json& json) {
 }
 
 std::optional<std::string> AttributeMapping::check_mapping(int value) const {
-  std::cout << "CHECK MAPPING: " << show_ << " -> " << value << "[" << match_type_ << "]" 
-		<< value_ << std::endl;
 	if (calc::MATCH_TYPE_FUNCTION_MAPPING.at(match_type_)(value, value_))
 		return show_;
 	else 
@@ -65,7 +63,6 @@ AttributeConfig::AttributeConfig(nlohmann::json json) {
 		attributes_[it.at("id")] = ConfigAttribute(it);
 	}
 
-  std::cout << "Parsing mapping..." << std::endl;
 	for (const auto& it : 
       json.at("mapping").get<std::map<std::string, std::vector<nlohmann::json>>>()) {
 		std::vector<AttributeMapping> mapping;

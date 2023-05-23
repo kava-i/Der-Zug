@@ -17,7 +17,7 @@ TEST_CASE("Testadventure is starting", "[startup]") {
   game.SetupGame();
 
   //Check that starting the game returns output.
-  REQUIRE(game.startGame("", params->txtad_player(), nullptr) != "");
+  REQUIRE(game.startGame(params->txtad_player(), nullptr) != "");
 
   //Test basic show functions.
   std::list<std::string> online_players;

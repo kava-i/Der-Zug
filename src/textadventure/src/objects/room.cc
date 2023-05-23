@@ -137,7 +137,7 @@ string CRoom::showCharacters() {
 
   // Get pre and post strings from show map.
   output += gramma_->build(func::to_vector(m_characters, lambda), _show[CHARS][T_S], _show[CHARS][T_E]);
-  if(m_players.size() > 0)
+  if (m_players.size() > 0)
     output += gramma_->build(func::to_vector(m_players), " " + _show[CHARS][T_ADD] + " ", "");
   return output;
 }       

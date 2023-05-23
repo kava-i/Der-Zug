@@ -51,6 +51,7 @@ private:
 		AttributeConfig attribute_config_;
     std::map<std::string, std::string> media_;
     std::string m_path_to_world;
+		bool muliplayer_;
 public:
 
     CWorld(CPlayer*, std::string path);
@@ -118,6 +119,8 @@ public:
     * @return The created item as a pointer.
     */
     CItem* getItem(string sID, CPlayer* p);
+
+		bool muliplayer() const;
 
     // *** FACTORYS *** // 
     typedef map<string, string> objectmap;

@@ -515,14 +515,18 @@ void Context::h_reloadGame(std::string&, CPlayer* p) {
   m_curPermeable = false;
 }
 
-void Context::h_reloadPlayer(std::string& sPlayer, CPlayer*p)
-{
-    p->appendPrint("reloading Player: " + sPlayer + "... \n");
-    if(m_game->reloadPlayer(sPlayer) == false)
-        p->appendPrint("Player does not exist... reloading world failed.\n");
-    else
-        p->appendPrint("Done.\n");
-    m_curPermeable = false;
+void Context::h_reloadPlayer(std::string& sPlayer, CPlayer*p) {
+	p->appendPrint("reloading Player: " + sPlayer + "... \n");
+	std::cout << "CONTEXT: reloading Player: " + sPlayer + "..." << std::endl;
+	if (m_game->reloadPlayer(sPlayer) == false) {
+		p->appendPrint("Player does not exist... reloading world failed.\n");
+		std::cout << "CONTEXT: Player does not exist... reloading world failed." << std::endl;
+	}
+	else {
+		p->appendPrint("Done.\n");
+		std::cout << "CONTEXT: Done." << std::endl;
+	}
+	m_curPermeable = false;
 }
 
 void Context::h_reloadWorlds(std::string&, CPlayer*p)
@@ -962,7 +966,7 @@ void Context::h_startDialog(std::string& sIdentifier, CPlayer* p) {
   //Check if character was found
   if (character != "") 
     p->startDialog(character);  
-  else if (player != "") 
+  else if (player != "" && p->getWorld()->muliplayer()) 
     p->startChat(p->getPlayer(player));
   else
     p->appendErrorPrint("Character not found");

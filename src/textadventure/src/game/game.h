@@ -60,11 +60,11 @@ public:
     void playerFactory(nlohmann::json j_player);
 
     // *** INPUT HANDLERS *** //
-    string startGame(string sInput, string sPasswordID, Webconsole* _cout);
+    string startGame(string player_id, Webconsole* _cout);
     string play(string sInput, string sPlayerID, std::list<string>& onlinePlayers);
 
     // *** FUNCTIONS *** //
-    string checkLogin(string sName, string sPassword, bool login, std::string& id);  
+    string checkLogin(string sName, string sPassword, bool login, std::string& id, std::string char_name);  
     bool reloadPlayer(string sPlayerID);
     bool reloadWorld();
     bool reloadWorld(string sPlayerID);

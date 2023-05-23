@@ -13,7 +13,9 @@ class WebserverGame {
     std::string name_;
     std::string password_;
     std::string id_;
+    std::string char_name_;
     std::string sign_in_up_;
+		bool game_started_;
     Webconsole* cout_;
     std::shared_ptr<CGame> game_;
 
@@ -23,9 +25,11 @@ class WebserverGame {
       name_ = "";
       password_ = "";
       id_ = "";
+      char_name_ = "";
       sign_in_up_ = "";
       cout_ = cout;
       game_ = game;
+			game_started_ = false;
     }
 
     const std::string &GetName() {
@@ -43,7 +47,7 @@ class WebserverGame {
 
     void Login(std::string in) {
       std::cout << "On to getting credentials" << std::endl;
-      if(name_=="") {
+      if (name_ == "") {
         name_ = in ;
         send(" " + in + "\n");
         cout_->write(Webcmd::set_color(Webcmd::color::ORANGE), "Password: ");
@@ -51,23 +55,34 @@ class WebserverGame {
         return;
       }
 
-      if(password_ == "") {
+			if (password_ == "") {
         password_ = in;
         std::string str(in.length(), '*');
         send(" " + str + "\n");
-        std::string out = game_->checkLogin(name_, password_, sign_in_up_ == "l", id_);
+				DoLogin();
+  		}
+			else if (char_name_ == "") {
+        char_name_ = in;
+        send(" " + char_name_ + "\n");
+				DoLogin();
+			}
+    }
+
+		void DoLogin() {
+        std::string out = game_->checkLogin(name_, password_, sign_in_up_ == "l", id_, char_name_);
         send(out);
-        if (id_ == "") {
+        if (id_ == "" && out.find("> Pick character") == std::string::npos) {
           password_ = "";
           name_ = "";
+          char_name_ = "";
         }
-        else {
-          std::string output = game_->startGame(in, id_, cout_);
+        else if (id_ != "") {
+					game_started_ = true;
+          std::string output = game_->startGame(id_, cout_);
           std::cout << "Got output: " << output << std::endl;
           send(output);
         }
-      }
-    }
+		}
 
     void SignInUp(std::string in) {
       if (sign_in_up_ == "") {
@@ -93,7 +108,7 @@ class WebserverGame {
           weak_ptr<void>().lock().get()), WebserverGame*> *ptr, bool& global_shutdown) {
 
       //Check for login/register-phase
-      if (sign_in_up_ == "" || name_ == "" || password_ == "") {
+      if (!game_started_) {
         SignInUp(input);
         return;
       }
