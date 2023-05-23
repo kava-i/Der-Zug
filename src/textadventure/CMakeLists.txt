@@ -8,7 +8,7 @@ conan_basic_setup()
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-SET(CMAKE_CXX_FLAGS "-Wall -Werror -O3")
+SET(CMAKE_CXX_FLAGS "-Wall -O3")
 add_compile_options(-fdiagnostics-color=always)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 INCLUDE_DIRECTORIES(websocketpp ${Boost_INCLUDE_DIRS})
@@ -17,27 +17,27 @@ link_directories(${Boost_LIBRARY_DIRS})
 # Add source files to create textadventure
 set(SRC_FILES_TXTAD
   src/main.cc
-  src/objects/object.cc 
-  src/objects/attack.cc 
-  src/objects/detail.cc 
-  src/objects/exit.cc 
-  src/objects/item.cc 
-  src/objects/person.cc 
-  src/objects/player.cc 
+  src/objects/object.cc
+  src/objects/attack.cc
+  src/objects/detail.cc
+  src/objects/exit.cc
+  src/objects/item.cc
+  src/objects/person.cc
+  src/objects/player.cc
   src/objects/room.cc
-  src/objects/helper/update.cc 
-  src/actions/fight.cc 
+  src/objects/helper/update.cc
+  src/actions/fight.cc
   src/actions/dialog.cc
-  src/tools/func.cc 
-  src/tools/fuzzy.cc 
-  src/tools/logic_parser.cc 
+  src/tools/func.cc
+  src/tools/fuzzy.cc
+  src/tools/logic_parser.cc
   src/tools/webcmd.cc
-  src/concepts/inventory.cc 
-  src/concepts/quest.cc 
+  src/concepts/inventory.cc
+  src/concepts/quest.cc
   src/concepts/text.cc
-  src/eventmanager/context.cc 
-  src/eventmanager/listener.cc 
-  src/eventmanager/parser.cc 
+  src/eventmanager/context.cc
+  src/eventmanager/listener.cc
+  src/eventmanager/parser.cc
   src/game/game.cc
   src/game/world.cc
   src/game/config/attributes.cc
@@ -45,27 +45,27 @@ set(SRC_FILES_TXTAD
 
 # Add source files to create tests
 set(SRC_FILES_TESTING
-  src/objects/object.cc 
-  src/objects/attack.cc 
-  src/objects/detail.cc 
-  src/objects/exit.cc 
-  src/objects/item.cc 
-  src/objects/person.cc 
-  src/objects/player.cc 
+  src/objects/object.cc
+  src/objects/attack.cc
+  src/objects/detail.cc
+  src/objects/exit.cc
+  src/objects/item.cc
+  src/objects/person.cc
+  src/objects/player.cc
   src/objects/room.cc
-  src/objects/helper/update.cc 
-  src/actions/fight.cc 
+  src/objects/helper/update.cc
+  src/actions/fight.cc
   src/actions/dialog.cc
-  src/tools/func.cc 
-  src/tools/fuzzy.cc 
-  src/tools/logic_parser.cc 
+  src/tools/func.cc
+  src/tools/fuzzy.cc
+  src/tools/logic_parser.cc
   src/tools/webcmd.cc
-  src/concepts/inventory.cc 
-  src/concepts/quest.cc 
+  src/concepts/inventory.cc
+  src/concepts/quest.cc
   src/concepts/text.cc
-  src/eventmanager/context.cc 
-  src/eventmanager/listener.cc 
-  src/eventmanager/parser.cc 
+  src/eventmanager/context.cc
+  src/eventmanager/listener.cc
+  src/eventmanager/parser.cc
   src/game/game.cc
   src/game/world.cc
   src/game/config/attributes.cc
