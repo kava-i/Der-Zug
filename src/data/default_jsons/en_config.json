@@ -80,13 +80,6 @@
   },
   "minds":[],
   "commands":[],
-  "new_player":{
-    "name":"The Stranger",
-    "password":"password",
-    "room":"test_test_room",
-    "hp":10,
-    "stength":10
-    },
   "music": {
       "background": "",
       "fight": ""
