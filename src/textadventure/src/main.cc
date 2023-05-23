@@ -4,6 +4,7 @@
 #include "spdlog/sinks/basic_file_sink.h"
 #include "tools/gramma.h"
 #include <JanGeschenk/Webgame.hpp>
+#include <cstdlib>
 #include <exception>
 #include <iostream>
 #include <fstream>
@@ -20,6 +21,7 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "spdlog/sinks/daily_file_sink.h"
 #include <webgame/webgame.h>
+#include <dotenv.h>
 
 # define LOGGER "general"
 
@@ -122,6 +124,8 @@ int GetNewPort(const std::map<std::string, std::shared_ptr<Webgame<WebserverGame
  * main loop
  */
 int main(int x, char **argc) {
+	dotenv::init();
+
   //Initialize contexts
   Context::initializeHanlders();
   Context::initializeTemplates();

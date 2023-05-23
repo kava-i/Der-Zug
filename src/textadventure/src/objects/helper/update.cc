@@ -49,7 +49,6 @@ void Update::ReverseModType() {
 // **** UPDATES **** //
 
 Updates::Updates(const nlohmann::json& json) {
-	std::cout << "Parsing updates: " << json.dump() << std::endl;
 	for (const auto& it : json.get<std::vector<nlohmann::json>>())
 		updates_.push_back(Update(it));
 }

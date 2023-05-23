@@ -76,8 +76,9 @@ set(SRC_FILES_TESTING
 
 
 add_executable(txtadventure ${SRC_FILES_TXTAD})
-add_executable(txtadventure_server EXCLUDE_FROM_ALL ${SRC_FILES_TXTAD})
 add_executable(testing.o ${SRC_FILES_TESTING})
+
+find_package(laserpants_dotenv)
 
 if (WSS)
   message("compiling websocket-server with ssl support...")
@@ -89,14 +90,10 @@ if (HTTPS)
 endif()
 
 
-target_link_libraries(txtadventure PUBLIC ${CONAN_LIBS})
-target_link_libraries(txtadventure_server PUBLIC ${CONAN_LIBS})
+target_link_libraries(txtadventure PUBLIC laserpants::dotenv ${CONAN_LIBS})
 target_link_libraries(testing.o PUBLIC ${CONAN_LIBS})
 
 target_include_directories(txtadventure PUBLIC
-  "src"
-)
-target_include_directories(txtadventure_server PUBLIC
   "src"
 )
 target_include_directories(testing.o PUBLIC
