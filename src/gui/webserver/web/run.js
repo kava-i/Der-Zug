@@ -73,7 +73,12 @@ async function run(creator, world_name) {
     // If Successfully started, redirect to game-page.
     else {
       var hostname = window.location.hostname;
-      window.open("http://" + hostname+ ":" + TEXT_ADVENTURE_PORT + "/" + creator + "/" + world_name);
+			if (hostname.indexOf("fux-1789.org") != -1) {
+      	window.open("https://txtad.fux-1789.org/" + creator + "/" + world_name);
+			}
+			else {
+      	window.open("http://" + hostname+ ":" + TEXT_ADVENTURE_PORT + "/" + creator + "/" + world_name);
+			}
     }
   }
 }
