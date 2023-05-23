@@ -164,7 +164,6 @@ void Context::initializeHanlders() {
 
 
   // ***** STANDARD CONTEXT ***** //
-  listeners_["h_showExits"] = &Context::h_showExits;
   listeners_["h_show"] = &Context::h_show;
   listeners_["h_look"] = &Context::h_look;
   listeners_["h_search"] = &Context::h_search;
@@ -863,11 +862,6 @@ void Context::h_changeRoom(std::string& sIdentifier, CPlayer* p) {
 // ***** ***** STANDARD CONTEXT ***** ***** //
 
 void Context::h_ignore(std::string&, CPlayer*) {}
-
-void Context::h_showExits(std::string& sIdentifier, CPlayer* p) {
-  p->appendDescPrint(p->getRoom()->showExits()+"\n");
-}
-
 
 void Context::h_show(std::string& sIdentifier, CPlayer* p) {
   if(sIdentifier == "exits" || sIdentifier == "ausgänge") {

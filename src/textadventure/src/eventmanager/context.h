@@ -161,7 +161,6 @@ public:
 
     // *** STANDARD CONTEXT *** //
     void h_ignore(std::string&, CPlayer*);
-    void h_showExits(std::string& sIdentifier, CPlayer* p);
     void h_show             (std::string&, CPlayer*);
     void h_look             (std::string&, CPlayer*);
     void h_search           (std::string&, CPlayer*);
