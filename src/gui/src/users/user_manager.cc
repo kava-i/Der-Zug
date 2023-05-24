@@ -221,16 +221,22 @@ nlohmann::json UserManager::GetAllWorlds(std::string username) const {
 
 nlohmann::json UserManager::GetSharedWorlds(std::string username) const {
   nlohmann::json shared_worlds = nlohmann::json::array();
+	std::cout << "Get user locations" << std::endl;
   for(auto it : GetUser(username)->locations()) {
     std::string location = it;
+		std::cout << path_ << location << std::endl;
     if (location.find(username) == 0) 
       continue;
     if (location.find("backups") != std::string::npos) 
       continue;
     std::string user = location.substr(0, location.find("/"));
-    std::string world = location.substr(location.rfind("/")+1);
+    std::string world_id = location.substr(location.rfind("/")+1);
+		nlohmann::json world_infos;
+		func::LoadJsonFromDisc(path_ + "/" + location + "/.data/infos.json", world_infos);
+		std::string world_name = world_infos.value("name", world_id);
+
     if (GetUser(user) != nullptr)
-      shared_worlds.push_back({{"creator", user}, {"id", world}});
+      shared_worlds.push_back({{"creator", user}, {"id", world_id}, {"name", world_name}});
     // TODO (fux): include world name
   }
   return shared_worlds;

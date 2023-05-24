@@ -1,20 +1,4 @@
 //Function to send request, to check whether game is still running
-const TEXT_ADVENTURE_PORT = 4489;
-
-function check_running() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.open("POST", "/api/check_running");
-  xhttp.send(window.location.pathname);
-  
-  xhttp.onload = function(event){
-    document.getElementById("modal_log").style.display = "block";
-    if (xhttp.status == 200)
-      document.getElementById("check_msg").innerHTML = "Game is running as accpected!";
-    else
-      document.getElementById("check_msg").innerHTML = "Game is not running!";
-  }
-}
-
 function get_log(x) {
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", "/api/get_"+x+"_log");
@@ -48,6 +32,8 @@ async function try_game(creator, world_name) {
 }
 
 async function run(creator, world_name) {
+	const TEXT_ADVENTURE_PORT = 4489;
+
   // Check if game is already running.
   const data = new Object({"creator": creator, "world_name": world_name});
   var xhttp = new XMLHttpRequest();

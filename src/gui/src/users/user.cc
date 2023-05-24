@@ -71,6 +71,7 @@ void User::set_password(std::string password) {
 void User::AddLocation(std::string user, std::string world) {
   locations_.push_back(user+"/files/"+world);
   locations_.push_back(user+"/backups/"+world);
+	SafeUser();
 }
 
 // ** Serve and generate pages ** //
@@ -247,39 +248,4 @@ bool User::CheckAccessToLocations(std::string path) {
     }
   }
   return false; 
-}
-
-bool User::CheckGameRunning(std::string path) {
-
-  //Try to extract information (user and world, complete path)
-  std::vector<std::string> vec = func::Split(path, "/");
-  if (vec.size() < 3) return false;
-  std::string user = vec[0];
-  std::string world = vec[2];
-  std::string path_to_txtad = path_+path;
-
-  //Create command
-  std::string command = "./../../textadventure/build/bin/testing.o "
-    "--path ../../data/users/"+user+"/files/"+world+"/";
-
-  //Get players from players.json
-  nlohmann::json players;
-  std::string path_to_players = path_+"/"+user+"/files/"+world
-    +"/players/players.json";
-  if (func::LoadJsonFromDisc(path_to_players, players) == false) {
-    std::cout << "Failed loading players json" << std::endl;
-    return false;
-  }
-  
-  //Run game with every existing player.
-  bool success = true;
-  for (auto it=players.begin(); it!=players.end(); it++) {
-    std::cout << "PLAYER: " << it.value() << std::endl;
-    std::string test_p = command + " -p " + it.key() +
-      " > ../../data/users/"+user+"/logs/"+world+"_write.txt";
-    if (system(test_p.c_str()) != 0) 
-      success = false;
-    std::cout << "Running with player \"" << it.key() << "\": " << success << std::endl;
-  }
-  return success;
 }

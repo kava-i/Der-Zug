@@ -213,23 +213,28 @@ function DelElem(force=false) {
   }
 }
 
-function play_game(creator, world_name, textad_port) {
-  // Check if game is running.
+function play(creator, world_name) {
+	const TEXT_ADVENTURE_PORT = 4489;
+  // Check if game is already running.
   const data = new Object({"creator": creator, "world_name": world_name});
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", "/api/running");
   xhttp.send(JSON.stringify(data));
   xhttp.onload = function(event){
     // Game already running 
-    if (this.status != 200) {
+    if (this.status == 204) {
       notify("Game not running.");
       return;
     }
-    else {
-      // Redirect to game
-      const hostname = window.location.hostname;
-      window.open("http://" + hostname + ":" + textad_port + "/" + creator + "/" + world_name);
-    }
+		else {
+			var hostname = window.location.hostname;
+			if (hostname.indexOf("fux-1789.org") != -1) {
+				window.open("https://txtad.fux-1789.org/" + creator + "/" + world_name);
+			}
+			else {
+				window.open("http://" + hostname+ ":" + TEXT_ADVENTURE_PORT + "/" + creator + "/" + world_name);
+			}
+		}
   }
 }
 
@@ -237,7 +242,6 @@ function request_access(user, world) {
   var json_request = new Object();
   json_request["user"] = user;
   json_request["world"] = world;
-  k
   var xhttp = new XMLHttpRequest();
   xhttp.open("POST", "/api/create_request");
   xhttp.send(JSON.stringify(json_request));

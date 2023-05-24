@@ -123,16 +123,6 @@ class User {
     int DeleteBackup(std::string user, std::string backup);
 
     /**
-     * Tries to run game.
-     * Extracts user and world from path and tries to run game with all existing
-     * players.
-     * @param[in] path (path to extract information from)
-     * @param[in] number (of players to check)
-     * @return boolean indicating success.
-     */
-    bool CheckGameRunning(std::string path);
-
-    /**
      * Adds a new access-request.
      * @param[in] user (user who asks for access)
      * @param[in] world (world to gran access for)

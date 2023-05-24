@@ -142,13 +142,7 @@ class ServerFrame {
      */
     void CreateRequest(const httplib::Request& req, httplib::Response& resp);
 
-    /**
-     * @brief Checks whether game is still running.
-     * @param[in] req (reference to request)
-     * @param[in, out] resp (reference to response)
-     */
-    void CheckRunning(const httplib::Request& req, httplib::Response& resp);
-    
+   
     /**
      * @brief Gets log for given game.
      * @param[in] req (reference to request)

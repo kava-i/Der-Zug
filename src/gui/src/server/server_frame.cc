@@ -114,8 +114,6 @@ void ServerFrame::Start(int port) {
       CreateRequest(req, resp); });
 
   //Running and testing game.
-  server_.Post("/api/check_running", [&](const Request& req, Response& resp) {
-      CheckRunning(req, resp); });
   server_.Post("/api/get_(.*)_log", [&](const Request& req, Response& resp) {
       GetLog(req, resp); });
   server_.Post("/api/start", [&](const Request& req, Response& resp) {
@@ -708,19 +706,6 @@ void ServerFrame::CreateRequest(const Request& req, Response& resp) {
     resp.status = 200;
 }
  
-void ServerFrame::CheckRunning(const Request& req, Response& resp) {
-  //Try to get username from cookie
-  std::string username = CheckLogin(req, resp);
-  if (username == "") return;
-
-  std::shared_lock sl(shared_mtx_user_manager_);
-  bool success = user_manager_.GetUser(username)->CheckGameRunning(req.body);
-  if (success == true) 
-    resp.status = 200;
-  else 
-    resp.status = 401;
-}
-
 void ServerFrame::GetLog(const Request& req, Response& resp) {
   // Try to get username from cookie
   std::string username = CheckLogin(req, resp);
@@ -758,14 +743,10 @@ void ServerFrame::StartGame(const Request& req, Response& resp) {
   std::string world_name = data["world_name"];
   std::filesystem::path path_to_game = base_path_ / creator / "files" / world_name;
 
-  std::cout << "Got: " << creator << ", " << " world: " << world_name << ", Path: " << path_to_game << std::endl;
-    
   // Get world (keep mutex locked to assure, that pointer is not changed. 
-  std::cout << "StartGame: Getting world." << std::endl;
+  std::cout << "StartGame: Getting world: " << path_to_game << std::endl;
   std::shared_lock sl(shared_mtx_user_manager_);
   World* world = user_manager_.worlds()->GetWorld(creator, world_name);
-  std::cout << "worlds exists: " << (world != nullptr) << std::endl;
-  std::cout << "path exists: " << func::demo_exists(path_to_game) << std::endl;
   if (world == nullptr || !func::demo_exists(path_to_game)) {
     resp.status = 401;
     return;
