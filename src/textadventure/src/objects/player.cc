@@ -904,6 +904,10 @@ void CPlayer::showStats() {
     std::string category = attribute_conf.at(it.first).category_;
     std::string name = attribute_conf.at(it.first).name_;
 
+		// Don't print attribute if category starts with underscore 
+		if (category.length() > 0 && category[0] == '_')
+			continue;
+
     if (mapping.count(it.first) > 0) {
       for (const auto& map : mapping.at(it.first)) {
         auto val = map.check_mapping(it.second);
