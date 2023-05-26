@@ -1432,6 +1432,7 @@ void Context::initializeDialogListeners(std::string new_state, CPlayer* p) {
   setAttribute<std::string>("state", new_state); 
   m_eventmanager.clear();
   AddSimpleListener("h_help", "help", 0);
+  AddSimpleListener("h_ignore", "changed_room", 0);
 
   //Add listener for each dialog option.
   std::vector<size_t> activeOptions = p->getDialog()->getState(new_state)
