@@ -85,8 +85,12 @@ public:
     ///Get a character from world.
     CPerson* getCharacter(std::string sID);
 
-    ///Return dictionary if all texts.
+    ///Return dictionary of all texts.
     map<string, nlohmann::json> getTexts(std::string area="");
+		
+    /// Return dictionary of all items.
+    const map<string, nlohmann::json>& items();
+
 
     ///Return dictionary of all attacks in the game.
     map<string, CAttack*>& getAttacks();
@@ -109,7 +113,11 @@ public:
     ///Return a description from world
     CText* getRandomDescription(std::string sID, CPlayer* p);
 
-    CDetail* GetDetail(std::string id, std::string room_id, CPlayer* p);
+		/// Creates a new detail at a given location (room).
+    CDetail* GetNewDetail(std::string id, std::string room_id, CPlayer* p);
+		/// Creates a new char at a given location (room).
+    CPerson* GetNewChar(std::string id, std::string room_id, CPlayer* p);
+
 
     /**
     * Return a item. Look for given item in dictionary of items (jsons) and create item from json.
@@ -160,13 +168,18 @@ public:
 
     //Items
     void itemFactory();
-    void itemFactory(std::string sPath);
     map<string, CItem*> parseRoomItems(nlohmann::json j_room, CPlayer* p);
 
     //Characters
     void characterFactory();
     void characterFactory(std::string sPath);
     std::map<std::string, CPerson*> parseRoomChars(nlohmann::json j_room, CPlayer* p);
+		/**
+		 * Creates char and dialog and items belonging to char.
+		 */
+		CPerson* CreateCharacter(const nlohmann::json& char_json, const std::string& char_id, CPlayer* p);
+
+
 
     //Dialogs
     void dialogFactory(CPlayer* p);
@@ -176,8 +189,21 @@ public:
     void detailFactory();
     void detailFactory(std::string sPath);
     map<string, CDetail*> parseRoomDetails(nlohmann::json j_room, CPlayer* p);
+		/**
+		 * Create details and items belonging to detail
+		 */
+		CDetail* CreateDetail(const nlohmann::json& detail_json, CPlayer* p);
     void parseRandomItemsToDetail(nlohmann::json& j_detail);
 
+
+		// Tempaltes
+		
+		/** 
+		 *  Gets the object-template (item, detail, char), updates the id to include the location_id (room, detail, or
+		 *  char) and adds the extra json passed.
+		 */
+		std::pair<nlohmann::json, std::string> GetUpdatedTemplate(std::string location_id, std::string id, nlohmann::json j,
+				const std::map<std::string, nlohmann::json>& template_map, const map<string, std::string>& existing_objs);
     void TemplateFactory(std::string path, std::map<std::string, nlohmann::json>& template_map);
 
     //Texts

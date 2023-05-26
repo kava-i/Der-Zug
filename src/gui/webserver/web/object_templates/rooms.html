@@ -94,7 +94,7 @@
     <ul id="items">
       {% for item in default(items, [["", {}]]) %}
         <li custom="list">
-          <input placeholder="item id" value={{item.0}}>
+          <input id="id" placeholder="item id" localize="false" value={{item.0}}>
           <input custom="json" placeholder="custom attributes" value={{item.1}}>
           <span class="mod_elem" onclick="del_elem('items',{{loop.index}})">-</span>
           <span class="mod_elem" onclick="add_elem('items',{{loop.index}})">+</span>

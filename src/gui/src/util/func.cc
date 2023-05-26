@@ -28,6 +28,13 @@ std::string ReturnToLower(std::string &str) {
   return str2;
 }
 
+bool EndsWith(const std::string& str, const std::string& substr) {
+	auto pos = str.rfind(substr);
+	if (pos == std::string::npos)
+		return false; 
+	return pos == str.length() - substr.length();
+}
+
 std::vector<std::string> Split(std::string str, std::string delimiter) {
   std::vector<std::string> v_strs;
   size_t pos=0;

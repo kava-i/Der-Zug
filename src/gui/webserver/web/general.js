@@ -226,6 +226,10 @@ function play(creator, world_name) {
       notify("Game not running.");
       return;
     }
+		else if (this.status = 404) {
+      notify("Game server not availible.");
+      return;
+		}
 		else {
 			var hostname = window.location.hostname;
 			if (hostname.indexOf("fux-1789.org") != -1) {

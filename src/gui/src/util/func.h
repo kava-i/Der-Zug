@@ -28,6 +28,11 @@ namespace func
   */
   std::string ReturnToLower(std::string &str);
 
+	/** 
+	 * tests whether string ends with given substr 
+	 */
+	bool EndsWith(const std::string& str, const std::string& substr);
+
   /**
    * @param[in] str string to be splitet
    * @param[in] delimitter 
