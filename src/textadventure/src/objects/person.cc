@@ -139,8 +139,11 @@ void CPerson::setDialog(CDialog* newDialog) {
 void CPerson::setDialog(std::string dialog) {
   if (m_dialogs.count(dialog) > 0)
     m_dialog = m_dialogs[dialog];
-  else
+  else {
     std::cout << "Dialog not found: " << dialog << ".\n";
+		for (const auto& it : m_dialogs) 
+			std::cout << " - " << it.first << std::endl;
+	}
 }
 
 void CPerson::setFainted(bool fainted) {

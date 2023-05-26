@@ -38,6 +38,10 @@ zeige attribute
 ```
 Werden die Attribute nach den Kategorien sortiert. 
 
+*HINWEIS*: Alle Categorien, die mit einem Unterstrich beginnen, werden nicht
+angezeigt, wenn die Spieler:in `zeige attribute` eingibt.
+These can be used to create timer.
+
 ### Limits 
 Außerdem kannst du für jedes Attribut `bounds` (`upper-bound`, `lower-bound`) 
 definieren, limits erfüllen immer die Funktionen:

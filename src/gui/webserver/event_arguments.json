@@ -30,7 +30,7 @@
     "addItem": ["item"],
     "addQuest": ["quest"],
     "addTimeEvent": ["string"],
-    "changeDialog": ["_room_chars", "char_ialog"],
+    "changeDialog": ["_room_chars", "dialog num f.e. 2"],
     "changeImage": ["image"],
     "changeName": ["_room_chars", "string"],
     "changeRoom": ["room"],

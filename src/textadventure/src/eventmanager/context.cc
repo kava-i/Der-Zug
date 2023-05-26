@@ -330,8 +330,13 @@ void Context::initializeTemplates() {
                         {"show",{"h_fight_show"}}}}
                     };
 
-    m_templates["dialog"] = {{"name","dialog"}, {"permeable",false},
-      {"help","dialog.txt"},{"error","Das kann ich beim besten Willen nicht sagen!"}};
+    m_templates["dialog"] = {
+				{"name","dialog"}, 
+				{"permeable",false}, 
+				{"help","dialog.txt"},
+				{"error","Das kann ich beim besten Willen nicht sagen!"},
+				{"listeners",{ {"changed_room", {"h_ignore"}} }}
+		};
 
     m_templates["trade"] = {
                     {"name","trade"}, {"permeable",false}, {"help","trade.txt"}, 
@@ -844,17 +849,26 @@ void Context::h_setNewQuest(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_changeDialog(std::string& sIdentifier, CPlayer* p) {
-  std::vector<std::string> atts = func::split(sIdentifier, "|");
-  if (atts.size() != 2) {
-		std::cout << "Something went worng! Dialog could not be changed.\n";
+  if (sIdentifier.find("|") == std::string::npos) {
+		std::cout << cRED << "h_changeDialog: Arguments to change dialog must be \"char_id|dialog_id\"" 
+			<< cCLEAR << std::endl;
 		return;
   }
-
-  auto lambda = [](CPerson* person) { return person->name(); };
-  std::string str = func::getObjectId(p->getRoom()->getCharacters(), atts[0], 
-      lambda);
-  p->getWorld()->getCharacter(str)->setDialog(atts[1]);
-  
+	std::string char_id = func::split(sIdentifier, "|")[0];
+	std::string dialog_id = func::split(sIdentifier, "|")[1];
+	if (p->getWorld()->getCharacters().count(char_id) > 0)
+  	p->getWorld()->getCharacter(char_id)->setDialog(dialog_id);
+	else {
+		std::cout << "h_changeDialog: char not found by id: " << char_id << ". Testing from getObjectId." 
+			<< std::endl;
+		auto lambda = [](CPerson* person) { return person->name(); };
+		std::string fuzzy_found_id = func::getObjectId(p->getRoom()->getCharacters(), char_id, lambda);
+		if (p->getWorld()->getCharacters().count(fuzzy_found_id) > 0) 
+  		p->getWorld()->getCharacter(fuzzy_found_id)->setDialog(dialog_id);
+		else 
+			std::cout << cRED << "h_changeDialog: char found by fuzzy_found_id: " << fuzzy_found_id
+				<< cCLEAR << std::endl;
+	}
   m_curPermeable = false;
 }
 
@@ -875,7 +889,7 @@ void Context::h_changeRoom(std::string& sIdentifier, CPlayer* p) {
 
 // ***** ***** STANDARD CONTEXT ***** ***** //
 
-void Context::h_ignore(std::string&, CPlayer*) {}
+void Context::h_ignore(std::string&, CPlayer*) { }
 
 void Context::h_show(std::string& sIdentifier, CPlayer* p) {
   if(sIdentifier == "exits" || sIdentifier == "ausgänge") {
