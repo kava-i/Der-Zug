@@ -5,6 +5,7 @@
 #include "fmt/format.h"
 #include "nlohmann/json.hpp"
 #include "nlohmann/json_fwd.hpp"
+#include "objects/item.h"
 #include "objects/player.h"
 #include "game/game.h"
 #include "tools/calc_enums.h"
@@ -154,9 +155,16 @@ void Context::initializeHanlders() {
 
   // Room modifiers
   listeners_["h_addCharToRoom"] = &Context::h_addCharToRoom;
-  listeners_["h_removeCharFromRoom"] = &Context::h_removeCharFromRoom;
   listeners_["h_addDetailToRoom"] = &Context::h_addDetailToRoom;
+  listeners_["h_addItemToRoom"] = &Context::h_addItemToRoom;
+
+  listeners_["h_moveCharToRoom"] = &Context::h_moveCharToRoom;
+  listeners_["h_moveDetailToRoom"] = &Context::h_moveDetailToRoom;
+  listeners_["h_moveItemToRoom"] = &Context::h_moveItemToRoom;
+
+  listeners_["h_removeCharFromRoom"] = &Context::h_removeCharFromRoom;
   listeners_["h_removeDetailFromRoom"] = &Context::h_removeDetailFromRoom;
+  listeners_["h_removeItemFromRoom"] = &Context::h_removeItemFromRoom;
   listeners_["h_removeHandler"] = &Context::h_removeHandler;
 
   listeners_["h_setAttribute"] = &Context::h_setAttribute; 
@@ -285,10 +293,15 @@ void Context::initializeTemplates() {
                         {"startDialogDirekt", {"h_startDialogDirect"}},
                         {"changeImage", {"h_changeImage"}},
                         {"changeSound", {"h_changeSound"}},
-                        {"addCharToRoom", {"h_addCharToRoom"}},
-                        {"removeCharFromRoom", {"h_removeCharFromRoom"}},
+                        {"addCharToRoom",   {"h_addCharToRoom"}},
                         {"addDetailToRoom", {"h_addDetailToRoom"}},
+                        {"addItemToRoom",   {"h_addItemToRoom"}},
+                        {"moveCharToRoom",   {"h_moveCharToRoom"}},
+                        {"moveDetailToRoom", {"h_moveDetailToRoom"}},
+                        {"moveItemToRoom",   {"h_moveItemToRoom"}},
+                        {"removeCharFromRoom",   {"h_removeCharFromRoom"}},
                         {"removeDetailFromRoom", {"h_removeDetailFromRoom"}},
+                        {"removeItemFromRoom",   {"h_removeItemFromRoom"}},
                         {"removeHandler", {"h_removeHandler"}} }}
                     };
 
@@ -562,6 +575,7 @@ void Context::h_updatePlayers(std::string&, CPlayer*p)
 void Context::h_printText(std::string& sIdentifier, CPlayer* p) {
 	p->printText(sIdentifier);
 }
+
 void Context::h_finishCharacter(std::string& sIdentifier, CPlayer* p) {
   std::cout << "h_finishCharacter: " << sIdentifier << std::endl;
 
@@ -1009,55 +1023,205 @@ void Context::h_changeImage(std::string &sIdentifier, CPlayer *p) {
   m_curPermeable = false;
 }
 
-void Context::h_addCharToRoom(std::string &sIdentifier, CPlayer *p) {
-  if (sIdentifier.find("|") == std::string::npos) {
-    std::cout << cRED << "h_addCharToRoom: Character or room missing. seperate with \"|\" " 
-      << " string given: " << sIdentifier << cCLEAR << std::endl;
-    return;
-  }
-  std::string char_id = func::split(sIdentifier, "|")[0];
-  std::string room_id = func::split(sIdentifier, "|")[1];
-  p->getWorld()->getRoom(room_id)->getCharacters()[char_id] = p->getWorld()->getCharacter(char_id);
+void Context::h_moveCharToRoom(std::string &sIdentifier, CPlayer *p) {
+	std::cout << "h_moveCharToRoom: " << sIdentifier << std::endl;
+	std::string msg;
+	std::string char_id;
+	auto [from_room, to_room] = GetRoomsAndObjectID(sIdentifier, msg, char_id, p);
+	if (!from_room)
+		std::cout << cRED << "h_moveCharToRoom failed: " << msg << cCLEAR << std::endl;
+	else if (from_room->getCharacters().count(char_id) == 0) {
+		std::cout << cRED << "h_moveCharToRoom failed: char does not exist: " << char_id << cCLEAR << std::endl;
+	}
+	else if (to_room->getCharacters().count(char_id) > 0) {
+		std::cout << cRED << "h_moveCharToRoom failed: char " << char_id << " already exists in " << to_room->id() << cCLEAR << std::endl;
+	}
+	else {
+		to_room->getCharacters()[char_id] = from_room->getCharacters()[char_id];
+		from_room->getCharacters().erase(char_id);
+	}
   m_curPermeable = false;
 }
 
-void Context::h_removeCharFromRoom(std::string &sIdentifier, CPlayer *p) {
-  try {
-    std::string char_id = sIdentifier;
-    std::string room_id = sIdentifier.substr(0, sIdentifier.rfind("."));
-    p->getWorld()->getRoom(room_id)->getCharacters().erase(char_id);
-    m_curPermeable = false;
-  }
-  catch (std::exception& e) {
-    std::cout << cRED << "h_removeCharFromRoom (" << sIdentifier << ") failed: "
-      << e.what() << cCLEAR << std::endl;
-  }
+void Context::h_moveDetailToRoom(std::string &sIdentifier, CPlayer *p) {
+	std::cout << "h_moveDetailToRoom: " << sIdentifier << std::endl;
+	std::string msg;
+	std::string detail_id;
+	auto [from_room, to_room] = GetRoomsAndObjectID(sIdentifier, msg, detail_id, p);
+	if (!from_room)
+		std::cout << cRED << "h_moveDetailToRoom failed: " << msg << cCLEAR << std::endl;
+	else if (from_room->getDetails().count(detail_id) == 0) {
+		std::cout << cRED << "h_moveDetailToRoom failed: char does not exist: " << detail_id << cCLEAR << std::endl;
+	}
+	else if (to_room->getDetails().count(detail_id) > 0) {
+		std::cout << cRED << "h_moveDetailToRoom failed: char already exists: " << detail_id << cCLEAR << std::endl;
+	}
+	else {
+		to_room->getDetails()[detail_id] = from_room->getDetails()[detail_id];
+		from_room->getDetails().erase(detail_id);
+	}
+  m_curPermeable = false;
+}
+
+void Context::h_moveItemToRoom(std::string &sIdentifier, CPlayer *p) {
+	std::cout << "h_moveItemToRoom: " << sIdentifier << std::endl;
+	std::string msg;
+	std::string item_id;
+	auto [from_room, to_room] = GetRoomsAndObjectID(sIdentifier, msg, item_id, p);
+	if (!from_room)
+		std::cout << cRED << "h_moveItemToRoom failed: " << msg << cCLEAR << std::endl;
+	else if (from_room->getItems().count(item_id) == 0) {
+		std::cout << cRED << "h_moveItemToRoom failed: char does not exist: " << item_id << cCLEAR << std::endl;
+	}
+	else if (to_room->getItems().count(item_id) > 0) {
+		std::cout << cRED << "h_moveItemToRoom failed: char already exists: " << item_id << cCLEAR << std::endl;
+	}
+	else {
+		to_room->getItems()[item_id] = from_room->getItems()[item_id];
+		from_room->getItems().erase(item_id);
+	}
+  m_curPermeable = false;
+}
+
+std::pair<CRoom*, CRoom*> Context::GetRoomsAndObjectID(const std::string& sIdentifier, std::string& msg, 
+			std::string& obj_id, CPlayer* p) {
+	std::cout << "Helper called: RemoveObjectFromRoom: " << sIdentifier << std::endl;
+	std::pair<CRoom*, CRoom*> res = {nullptr, nullptr};
+  if (sIdentifier.find("|") == std::string::npos) {
+		msg = "object to remove or room is missing. Sperate both with \"|\".";
+	}
+	auto parts = func::split(sIdentifier, "|");
+	if (parts.size() < 2) {
+		msg = "identifier is missing some information, must be \"char|room_from|room_to\".";
+	}
+
+	try {
+		obj_id = func::split(sIdentifier, "|")[0];
+		std::string room_from_id = func::split(sIdentifier, "|")[1];
+		std::string room_to_id = func::split(sIdentifier, "|")[2];
+		std::cout << "GetRoomsAndObjectID : got " << obj_id << ", " << room_from_id << ", " << room_to_id << std::endl;
+  	CRoom* from_room = p->getWorld()->getRoom(room_from_id);
+  	CRoom* to_room = p->getWorld()->getRoom(room_to_id);
+		if (!from_room)
+			msg = "room from which to move does not exist: " + room_from_id;
+		else if (!to_room)
+			msg = "room from to to move does not exist: " + room_to_id;
+		else
+			res = {from_room, to_room};
+	} catch (std::exception& e) {
+    msg = e.what();
+	}
+	return res;
+}
+
+void Context::h_addCharToRoom(std::string &sIdentifier, CPlayer *p) {
+	std::cout << "h_addCharToRoom: " << sIdentifier << std::endl;
+	std::string msg;
+	auto [room, char_id] = GetRoomAndObjectID(sIdentifier, msg, p);
+	if (!room)
+		std::cout << cRED << "h_addCharToRoom failed: " << msg << cCLEAR << std::endl;
+	else {
+		auto character = p->getWorld()->GetNewChar(char_id, room->id(), p);
+		if (!character)
+			std::cout << cRED << "h_addCharToRoom failed: detail (template) does not exist: " << char_id << cCLEAR << std::endl;
+		else 
+			room->getCharacters()[character->id()] = character;
+	}
+	m_curPermeable = false;
 }
 
 void Context::h_addDetailToRoom(std::string &sIdentifier, CPlayer *p) {
-  if (sIdentifier.find("|") == std::string::npos) {
-    std::cout << cRED << "h_addCharToRoom: Character or room missing. seperate with \"|\" " 
-      << " string given: " << sIdentifier << cCLEAR << std::endl;
-    return;
-  }
-  std::string detail_id = func::split(sIdentifier, "|")[0];
-  std::string room_id = func::split(sIdentifier, "|")[1];
-  p->getWorld()->getRoom(room_id)->getDetails()[detail_id] = p->getWorld()->GetDetail(detail_id, room_id, p);
+	std::cout << "h_addDetailToRoom: " << sIdentifier << std::endl;
+	std::string msg;
+	auto [room, detail_id] = GetRoomAndObjectID(sIdentifier, msg, p);
+	if (!room)
+		std::cout << cRED << "h_addDetailToRoom failed: " << msg << cCLEAR << std::endl;
+	else {
+		auto detail = p->getWorld()->GetNewDetail(detail_id, room->id(), p);
+		if (!detail)
+			std::cout << cRED << "h_addDetailToRoom failed: detail (template) does not exist: " << detail_id << cCLEAR << std::endl;
+		else 
+			room->getDetails()[detail->id()] = detail;
+	}
   m_curPermeable = false;
 }
 
-void Context::h_removeDetailFromRoom(std::string &sIdentifier, CPlayer *p) {
-  try {
-    std::string detail_id = sIdentifier;
-    std::string room_id = sIdentifier.substr(0, sIdentifier.rfind("."));
-    p->getWorld()->getRoom(room_id)->getDetails().erase(detail_id);
-    m_curPermeable = false;
-  }
-  catch (std::exception& e) {
-    std::cout << cRED << "h_removeDetailFromRoom (" << sIdentifier << ") failed: "
-      << e.what() << cCLEAR << std::endl;
-  }
+void Context::h_addItemToRoom(std::string &sIdentifier, CPlayer *p) {
+	std::cout << "h_addItemToRoom: " << sIdentifier << std::endl;
+	std::string msg;
+	auto [room, item_id] = GetRoomAndObjectID(sIdentifier, msg, p);
+	if (!room)
+		std::cout << cRED << "h_addItemToRoom failed: " << msg << cCLEAR << std::endl;
+	else if (p->getWorld()->items().count(item_id) == 0)
+		std::cout << cRED << "h_addItemToRoom failed: item (template) does not exist: " << item_id << cCLEAR << std::endl;
+	else {
+		auto [item_json, item_room_id] = p->getWorld()->GetUpdatedTemplate(room->id(), item_id, {}, p->getWorld()->items(), {});
+		room->getItems()[item_room_id] = new CItem(item_json, p);
+	}
+  m_curPermeable = false;
 }
+
+// *** remove objects from room  *** //
+void Context::h_removeCharFromRoom(std::string &sIdentifier, CPlayer *p) {
+	std::cout << "h_removeCharFromRoom: " << sIdentifier << std::endl;
+	std::string msg;
+	auto [room, char_id] = GetRoomAndObjectID(sIdentifier, msg, p);
+	if (!room)
+		std::cout << cRED << "h_removeCharFromRoom failed: " << msg << cCLEAR << std::endl;
+	else if (room->getCharacters().count(char_id) == 0)
+		std::cout << cRED << "h_removeCharFromRoom failed: character does not exist. " << char_id << cCLEAR << std::endl;
+	else 
+		room->getCharacters().erase(char_id);
+	m_curPermeable = false;
+}
+
+void Context::h_removeDetailFromRoom(std::string &sIdentifier, CPlayer *p) {
+	std::cout << "h_removeDetailFromRoom: " << sIdentifier << std::endl;
+	std::string msg;
+	auto [room, detail_id] = GetRoomAndObjectID(sIdentifier, msg, p);
+	if (!room)
+		std::cout << cRED << "h_removeDetailFromRoom failed: " << msg << cCLEAR << std::endl;
+	else if (room->getDetails().count(detail_id) == 0)
+		std::cout << cRED << "h_removeDetailFromRoom failed: detail does not exist. " << detail_id << cCLEAR << std::endl;
+	else 
+		room->getDetails().erase(detail_id);
+	m_curPermeable = false;
+}
+
+void Context::h_removeItemFromRoom(std::string &sIdentifier, CPlayer *p) {
+	std::cout << "h_removeItemFromRoom: " << sIdentifier << std::endl;
+	std::string msg;
+	auto [room, item_id] = GetRoomAndObjectID(sIdentifier, msg, p);
+	if (!room)
+		std::cout << cRED << "h_removeDetailFromRoom failed: " << msg << cCLEAR << std::endl;
+	else if (room->getItems().count(item_id) == 0) 
+		std::cout << cRED << "h_removeItemFromRoom failed: item does not exist. " << item_id << cCLEAR << std::endl;
+	else 
+		room->getItems().erase(item_id);
+	m_curPermeable = false;
+}
+
+std::pair<CRoom*, std::string> Context::GetRoomAndObjectID(const std::string& sIdentifier, std::string& msg, CPlayer* p) {
+	std::cout << "Helper called: RemoveObjectFromRoom: " << sIdentifier << std::endl;
+	std::pair<CRoom*, std::string> res = {nullptr, ""};
+  if (sIdentifier.find("|") == std::string::npos) {
+		msg = "object to remove or room is missing. Sperate both with \"|\".";
+	}
+	try {
+		std::string obj_id = func::split(sIdentifier, "|")[0];
+		std::string room_id = func::split(sIdentifier, "|")[1];
+		std::cout << "RemoveObjectFromRoom: got " << obj_id << ", " << room_id << std::endl;
+  	CRoom* room = p->getWorld()->getRoom(room_id);
+		if (!room)
+			msg = "room does not exist: " + room_id;
+		else
+			res = {room, obj_id};
+	} catch (std::exception& e) {
+    msg = e.what();
+	}
+	return res;
+}
+
 
 void Context::h_removeHandler(std::string &sIdentifier, CPlayer *p) {
   // Get attributes and check size.

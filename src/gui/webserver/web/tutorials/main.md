@@ -6,7 +6,7 @@
 execute handlers to "handle" the event in a certain way**
 
 ### Events 
-Events are things that *happen* an ivent might be user input: 
+Events are things that *happen* an event might be user input: 
 ```
 go to kitchen
 ```
@@ -25,3 +25,4 @@ For things to happen when an event is triggered there must be something
 
 There are system listeners 
 
+go to [listeners](/listeners.md) to seem them explained in more detail.

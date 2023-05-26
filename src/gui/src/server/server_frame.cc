@@ -779,11 +779,15 @@ void ServerFrame::CloseGame(const Request& req, Response& resp) {
   httplib::Client cl("localhost", textad_port_);
   cl.set_connection_timeout(2);
   auto response = cl.Get("/api/close/" + creator + "/" + world_name);
-  resp.status = response->status;
+	if (response)
+  	resp.status = response->status;
+	else 
+		resp.status = 409;
 }
 
 
 void ServerFrame::IsGameRunning(const Request& req, Response& resp) {
+	std::cout << "IsGameRunning" << std::endl;
   // Try to get username from cookie
   std::string username = CheckLogin(req, resp);
   if (username == "") return;
@@ -797,7 +801,10 @@ void ServerFrame::IsGameRunning(const Request& req, Response& resp) {
   httplib::Client cl("localhost", textad_port_);
   cl.set_connection_timeout(2);
   auto response = cl.Get("/api/running/" + creator + "/" + world_name);
-  resp.status = response->status;
+	if (response)
+  	resp.status = response->status;
+	else 
+		resp.status = 409;
 }
 
 std::string ServerFrame::CheckLogin(const Request& req, Response& resp) const { 

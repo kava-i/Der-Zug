@@ -45,6 +45,10 @@ async function run(creator, world_name) {
       notify("Game already running.");
       return;
     }
+		else if (this.status = 404) {
+      notify("Game server not availible.");
+      return;
+		}
   }
 
   // If not already running, send request to start game.

@@ -83,7 +83,10 @@
 			{% for key, value in default(costs, {"":0}) %} 
 			<li custom="pair">
 				<select autocomplete="off"> 
+					<option value="">---</option>
+
 					{% for attribute_id, attribute_name in __attributes %}
+
             <option 
               value={{attribute_id}}
               {% if key == attribute_id %}selected{% endif %}

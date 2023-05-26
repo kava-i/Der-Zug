@@ -177,8 +177,8 @@ namespace func
     * @return converted map.
     */
     template<typename T1, typename T2 > 
-    std::map<std::string, std::string> convertToObjectmap(std::map<std::string, 
-        T1> in, T2 lambda) {
+    std::map<std::string, std::string> convertToObjectmap(const std::map<std::string, 
+        T1>& in, T2 lambda) {
       std::map<std::string, std::string> out;
       for(const auto &it : in)
         out[it.first] = lambda(it.second);

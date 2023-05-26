@@ -105,6 +105,10 @@ map<string, nlohmann::json> CWorld::getTexts(std::string area) {
   return texts;
 }
 
+const map<string, nlohmann::json>& CWorld::items() {
+	return m_items;
+}
+
 map<string, CAttack*>& CWorld::getAttacks() { 
   return m_attacks; 
 }
@@ -163,6 +167,7 @@ CItem* CWorld::getItem(string sID, CPlayer* p) {
     return nullptr; 
   }
 }
+
 bool CWorld::muliplayer() const {
 	return muliplayer_;
 }
@@ -308,56 +313,43 @@ map<string, CDetail*> CWorld::parseRoomDetails(nlohmann::json j_room, CPlayer* p
   if (j_room.count("details") == 0)
     return map_details;
 
-  for (auto it : j_room["details"].get<std::vector<nlohmann::json>>()) {
-    //Convert json array to pair and create id by adding the room id.
-    auto detail = it.get<std::pair<std::string, nlohmann::json>>();
-    std::string id = j_room["id"].get<std::string>() + "." + detail.first; 
+  for (auto [detail_id, detail_json] : j_room["details"].get<std::vector<std::pair<std::string, nlohmann::json>>>()) {
+		// Get updated json and add default items
+		auto lambda = [](CDetail* detail) { return detail->name(); };
+		auto detail_obj_map = func::convertToObjectmap(map_details, lambda);
+		auto [full_detail_json, detail_in_location_id] = GetUpdatedTemplate(j_room["id"], detail_id, detail_json, 
+				m_details, detail_obj_map);
+    parseRandomItemsToDetail(full_detail_json);
 
-    //Get basic json for construction
-    nlohmann::json template_detail_json = {};
-    if (m_details.count(detail.first) > 0) {
-      template_detail_json = m_details[detail.first];
-		}
-
-    //Update basic with specific json
-    func::updateJson(template_detail_json, detail.second);
-
-    if (template_detail_json.count("name") == 0) {
-      throw WorldFactoryException("Detail created without name: " + id);
-    }
-
-    //Update id
-    auto lambda = [](CDetail* detail) { return detail->name(); };
-    template_detail_json["id"] = func::incIDNumber(func::convertToObjectmap(map_details,lambda), id);
-
-    //Create items
-    std::cout << template_detail_json["id"] << std::endl;
-    parseRandomItemsToDetail(template_detail_json);
-    map<string, CItem*> mapItems = parseRoomItems(template_detail_json, p);
-
-    //Create detail
-    map_details[template_detail_json["id"]] = new CDetail(template_detail_json, p, mapItems);
+    // Create detail
+    map_details[full_detail_json["id"]] = CreateDetail(full_detail_json, p);
 
     //Add [amount] details with "id = id + num" if amount is set.
-    for (size_t i=2; i<=detail.second.value("amount", 0u); i++) {
-      template_detail_json["id"] = func::incIDNumber(func::convertToObjectmap(map_details, lambda), id);
-      map_details[template_detail_json["id"]] = new CDetail(template_detail_json, p, mapItems);
+    for (size_t i=2; i<=detail_json.value("amount", 0u); i++) {
+      full_detail_json["id"] = func::incIDNumber(func::convertToObjectmap(map_details, lambda), detail_in_location_id);
+      map_details[full_detail_json["id"]] = CreateDetail(full_detail_json, p);
     }
   }
   return map_details;
 }
 
-CDetail* CWorld::GetDetail(std::string id, std::string room_id, CPlayer* p) {
+CDetail* CWorld::CreateDetail(const nlohmann::json& detail_json, CPlayer* p) {
+	// Create items
+	map<string, CItem*> mapItems = parseRoomItems(detail_json, p);
+	return new CDetail(detail_json, p, mapItems);
+}
+
+CDetail* CWorld::GetNewDetail(std::string id, std::string room_id, CPlayer* p) {
+	// TODO add room-id
   // Check that room and detail exists.
   auto room = getRoom(room_id);
   if (m_details.count(id) > 0 && room != nullptr) {
-    nlohmann::json template_detail_json = m_details.at(id);
-    //Update id
-    auto lambda = [](CDetail* detail) { return detail->name(); };
-    template_detail_json["id"] = func::incIDNumber(func::convertToObjectmap(room->getDetails(), lambda), id);
-    parseRandomItemsToDetail(template_detail_json);
-    map<string, CItem*> mapItems = parseRoomItems(template_detail_json, p);
-    return new CDetail(template_detail_json, p, mapItems);
+		// Get updated json 
+		auto lambda = [](CDetail* detail) { return detail->name(); };
+		auto existing_details = func::convertToObjectmap(room->getDetails(), lambda);
+		auto [full_detail_json, detail_in_location_id] = GetUpdatedTemplate(room_id, id, {}, m_details, {});
+    parseRandomItemsToDetail(full_detail_json);
+		return CreateDetail(full_detail_json, p);
   }
   return nullptr;
 }
@@ -393,20 +385,8 @@ void CWorld::parseRandomItemsToDetail(nlohmann::json& j_detail) {
 
 void CWorld::itemFactory() {
   for (auto& p : fs::directory_iterator(m_path_to_world + "items"))
-    itemFactory(p.path());
+    TemplateFactory(p.path(), m_items);
 }
-
-void CWorld::itemFactory(std::string sPath) {
-  //Read json creating all items
-  std::ifstream read(sPath);
-  nlohmann::json j_items;
-  read >> j_items;
-  read.close();
-
-  for (auto j_item: j_items) 
-    m_items[j_item["id"]] = j_item;
-}
-
 
 map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, CPlayer* p) {
   std::cout << "Parsing Items" << std::endl;
@@ -414,35 +394,21 @@ map<string, CItem*> CWorld::parseRoomItems(nlohmann::json j_room, CPlayer* p) {
   if (j_room.count("items") == 0)
     return mapItems;
 
-  for(auto it : j_room.value("items", std::vector<nlohmann::json>())) {
-    // Convert json array to pair and create id
-    auto item = it.get<std::pair<std::string, nlohmann::json>>();
-    std::string sID = j_room["id"].get<std::string>() + "." + item.first; 
-
-    // Get basic json for construction
-    nlohmann::json jBasic;
-    if(m_items.count(item.first) > 0)
-      jBasic = m_items[item.first];
-    else
-      jBasic = {};
-
-    //Update basic with specific json
-    func::updateJson(jBasic, item.second);
-
-    // Update id
-    auto lambda = [](CItem* item) { return item->name(); };
-    jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapItems, lambda), sID);
+  for(auto [item_id, item_json] : j_room.value("items", std::vector<std::pair<std::string, nlohmann::json>>())) {
+		// Get updated json 
+		auto lambda = [](CItem* item) { return item->name(); };
+		auto items_obj_map = func::convertToObjectmap(mapItems, lambda);
+		auto [full_item_json, item_in_location_id] = GetUpdatedTemplate(j_room["id"], item_id, item_json, m_items, items_obj_map);
 
     // Create item
-    mapItems[jBasic["id"]] = new CItem(jBasic, p);
+    mapItems[item_in_location_id] = new CItem(full_item_json, p);
 
     // Add [amount] items with "id = id + num" if amount is set.
-    for (size_t i=2; i<=item.second.value("amount", 0u); i++) {
-      jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapItems, lambda), sID);
-      mapItems[jBasic["id"]] = new CItem(jBasic, p);
+    for (size_t i=2; i<= item_json.value("amount", 0u); i++) {
+      full_item_json["id"] = func::incIDNumber(items_obj_map, item_in_location_id);
+      mapItems[full_item_json["id"]] = new CItem(full_item_json, p);
     }
   }
-  std::cout << "done" << std::endl;
   return mapItems;
 } 
 
@@ -458,71 +424,72 @@ std::map<std::string, CPerson*> CWorld::parseRoomChars(nlohmann::json j_room,
   if (j_room.count("characters") == 0)
     return mapCharacters;
 
-  for (auto it : j_room["characters"].get<vector<nlohmann::json>>()) {
-    // Convert json array to pair and create id
-    auto character = it.get<std::pair<std::string, nlohmann::json>>();
-    std::string sID = j_room["id"].get<std::string>() + "." + character.first;
+  for (auto [char_id, char_json] : j_room["characters"].get<vector<std::pair<std::string, nlohmann::json>>>()) {
+		// Get updated json 
+		auto lambda = [](CPerson* item) { return item->name(); };
+		auto items_obj_map = func::convertToObjectmap(mapCharacters, lambda);
+		auto [full_char_json, char_in_location_id] = GetUpdatedTemplate(j_room["id"], char_id, char_json, m_jCharacters, items_obj_map);
 
-    // Get basic json for construction.
-    nlohmann::json jBasic = {};
-    if (m_jCharacters.count(character.first) > 0)
-      jBasic = m_jCharacters[character.first];
-
-    // Update basic with specific json
-    func::updateJson(jBasic, character.second);     
-
-    if (jBasic.count("name") == 0) {
-      throw WorldFactoryException("Character created without name: " + sID);
-    }
-
-    // Update id
-    auto lambda = [] (CPerson* person) { return person->name(); };
-    jBasic["id"] = func::incIDNumber(func::convertToObjectmap(mapCharacters, lambda), sID);
-
-    // ** Create dialog ** //
     
-    // Load all dialogs of either character, of if defaultDialog is specified of
-    // this defaultDialog-type
-    std::map<std::string, CDialog*> dialogs;
-    std::string dialog_name = jBasic.value("defaultDialog", character.first);
-		if (dialog_name.find(".") != std::string::npos) {
-			dialog_name.replace(dialog_name.find("."), 1, "_");
-		}
-    size_t counter = 0;
-    for (auto it : m_dialogs) {
-      if (it.first.find(dialog_name) != std::string::npos) {
-        dialogs[it.first.substr(dialog_name.length()+1)] = it.second;
-        counter++;
-      }
-    }
-    // Pick either a random (default-dialog), or the first (character-dialog).
-    std::string dialog_num = (jBasic.contains("defaultDialog")) 
-      ? std::to_string(rand() % counter) : "1"; 
-    CDialog* newDialog = (dialogs.count(dialog_num) > 0) 
-      ? dialogs[dialog_num] : getDialog("defaultDialog");
-
-    // Create items and attacks
-    map<std::string, CItem*> items = parseRoomItems(jBasic, p);
-    map<string, CAttack*> attacks = parsePersonAttacks(jBasic.value("attacks", 
-          std::vector<std::string>()));
-    
-    // Create text
-    CText* text = nullptr;
-    if (jBasic.count("defaultDescription") > 0)
-      text = getRandomDescription(jBasic["defaultDescription"], p);
-
     // Create character and add to maps
-    m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, text, p, dialogs, attribute_config_.attributes_, items);
-    mapCharacters[jBasic["id"]] = m_characters[jBasic["id"]];
+    m_characters[full_char_json["id"]] = CreateCharacter(full_char_json, char_id, p);
+    mapCharacters[full_char_json["id"]] = m_characters[full_char_json["id"]];
 
     //Add [amount] characters with "id = id + num" if amount is set.
-    for(size_t i=2; i<=character.second.value("amount", 0u); i++) {
-      jBasic["id"]  =  func::incIDNumber(func::convertToObjectmap(mapCharacters, lambda), sID);
-      m_characters[jBasic["id"]] = new CPerson(jBasic, newDialog, attacks, text, p, dialogs, attribute_config_.attributes_, items);
-      mapCharacters[jBasic["id"]] = m_characters[jBasic["id"]];
+    for(size_t i=2; i<=char_json.value("amount", 0u); i++) {
+      full_char_json["id"]  =  func::incIDNumber(func::convertToObjectmap(mapCharacters, lambda), char_in_location_id);
+      m_characters[full_char_json["id"]] = CreateCharacter(full_char_json, char_id, p);
+      mapCharacters[full_char_json["id"]] = m_characters[full_char_json["id"]];
     }
   }
   return mapCharacters;
+}
+
+CPerson* CWorld::CreateCharacter(const nlohmann::json& char_json, const std::string& char_id, CPlayer* p) {
+  // Create dialog 
+	
+	// Load all dialogs of either character, of if defaultDialog is specified of
+	// this defaultDialog-type
+	std::map<std::string, CDialog*> dialogs;
+	std::string dialog_name = char_json.value("defaultDialog", char_id);
+	if (dialog_name.find(".") != std::string::npos)
+		dialog_name.replace(dialog_name.find("."), 1, "_");
+	size_t counter = 0;
+	for (auto it : m_dialogs) {
+		if (it.first.find(dialog_name) != std::string::npos) {
+			dialogs[it.first.substr(dialog_name.length()+1)] = it.second;
+			counter++;
+		}
+	}
+	// Pick either a random (default-dialog), or the first (character-dialog).
+	std::string dialog_num = (char_json.contains("defaultDialog")) 
+		? std::to_string(rand() % counter) : "1"; 
+	CDialog* newDialog = (dialogs.count(dialog_num) > 0) 
+		? dialogs[dialog_num] : getDialog("defaultDialog");
+
+	// Create items and attacks
+	map<std::string, CItem*> items = parseRoomItems(char_json, p);
+	map<string, CAttack*> attacks = parsePersonAttacks(char_json.value("attacks", std::vector<std::string>()));
+	
+	// Create text
+	CText* text = nullptr;
+	if (char_json.count("defaultDescription") > 0)
+		text = getRandomDescription(char_json["defaultDescription"], p);
+
+	return new CPerson(char_json, newDialog, attacks, text, p, dialogs, attribute_config_.attributes_, items);
+}
+
+CPerson* CWorld::GetNewChar(std::string id, std::string room_id, CPlayer* p) {
+  auto room = getRoom(room_id);
+  if (m_jCharacters.count(id) > 0 && room != nullptr) {
+		// Get updated json
+		auto lambda = [](CPerson* character) { return character->name(); };
+		auto existing_chars = func::convertToObjectmap(room->getCharacters(), lambda);
+		auto [full_char_json, char_in_location_id] = GetUpdatedTemplate(room_id, id, {}, m_jCharacters, {});
+    m_characters[full_char_json["id"]] = CreateCharacter(full_char_json, id, p);
+		return m_characters[full_char_json["id"]];
+	}
+	return nullptr;
 }
 
 void CWorld::attackFactory() {
@@ -660,3 +627,25 @@ void CWorld::TemplateFactory(std::string path,
     template_map[id] = j;
 	}
 }
+
+std::pair<nlohmann::json, std::string> CWorld::GetUpdatedTemplate(std::string location_id, std::string id, nlohmann::json j,
+			const std::map<std::string, nlohmann::json>& template_map, const map<string, std::string>& existing_objs) {
+	std::string in_location_id = location_id + "." + id;
+	
+	// Get basic json for construction
+	nlohmann::json template_item_json = {};
+	if (template_map.count(id) > 0)
+		template_item_json = template_map.at(id);
+
+	// Update basic with specific json
+	func::updateJson(template_item_json, j);
+	if (template_item_json.count("name") == 0)
+		throw WorldFactoryException("Object created without name: " + id);
+	
+	// Update id
+	template_item_json["id"] = func::incIDNumber(existing_objs, in_location_id);
+
+	return {template_item_json, template_item_json["id"]};
+}
+
+

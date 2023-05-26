@@ -305,7 +305,7 @@ function Typeahead(input_field) {
   // "linked_room id": when adding an exit to a room.
 	localize = GetLocalized(input_field);
   
-  console.log("Git localize: ", localize, " from ", input_field.getAttribute("localize"));
+  console.log("Got localize: ", localize, " from ", input_field.getAttribute("localize"));
   if (input_field.id == "room" || input_field.placeholder == "linked_room id") {
     inps_ = GetAllX("rooms", localize);
     mode_ = "typeahead";

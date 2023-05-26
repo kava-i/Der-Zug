@@ -9,6 +9,7 @@
 
 #include "concepts/quest.h"
 #include "listener.h"
+#include "objects/room.h"
 #include "sorted_context.h"
 #include "time_event.h"
 #include "tools/func.h"
@@ -153,10 +154,24 @@ public:
     void h_startDialogDirectB(std::string&, CPlayer*);
     void h_changeSound(std::string&, CPlayer*);
     void h_changeImage(std::string&, CPlayer*);
+
+    void h_moveCharToRoom(std::string&, CPlayer*);
+    void h_moveDetailToRoom(std::string&, CPlayer*);
+    void h_moveItemToRoom(std::string&, CPlayer*);
+
     void h_addCharToRoom(std::string&, CPlayer*);
-    void h_removeCharFromRoom(std::string&, CPlayer*);
     void h_addDetailToRoom(std::string&, CPlayer*);
+    void h_addItemToRoom(std::string&, CPlayer*);
+
+    void h_removeCharFromRoom(std::string&, CPlayer*);
     void h_removeDetailFromRoom(std::string&, CPlayer*);
+    void h_removeItemFromRoom(std::string&, CPlayer*);
+
+		std::pair<CRoom*, std::string> GetRoomAndObjectID(const std::string& sIdentifier, std::string& msg, 
+				CPlayer* p); ///< helper function
+		std::pair<CRoom*, CRoom*> GetRoomsAndObjectID(const std::string& sIdentifier, std::string& msg, 
+				std::string& obj_id, CPlayer* p); ///< helper function
+
     void h_removeHandler(std::string&, CPlayer*);
 
     // *** STANDARD CONTEXT *** //

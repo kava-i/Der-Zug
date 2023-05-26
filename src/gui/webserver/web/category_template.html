@@ -95,7 +95,14 @@
 			class="simple-button material-icons" 
 			title="Show help-page for this category"
 		>
-		<a href="/{{name}}.md" target="_blank">help</a>
+		<a 
+    	{% if __is_main %}
+				href="/main.md"
+			{% else %}
+				href="/{{name}}.md"
+			{% endif %}
+ 				target="_blank"
+			>help</a>
     </i>
   </div>
 

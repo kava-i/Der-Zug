@@ -154,8 +154,9 @@ nlohmann::json World::GetPage(std::string path, bool only_json) const {
   json["header"]["_mod_types"] = GetModTypes();
   json["header"]["_colors"] = {"", "black", "green", "red", "white", "yellow", "blue", 
 		"orange", "dark", "whitedark"};
-  json["header"]["_room_char_dialogs"] = GetRoomObjects("characters", "_");
   json["header"]["_room_chars"] = GetRoomObjects("characters");
+  json["header"]["_room_details"] = GetRoomObjects("details");
+  json["header"]["_room_items"] = GetRoomObjects("items");
 
   nlohmann::json availibe_fields;
   func::LoadJsonFromDisc("handlers.json", availibe_fields);
@@ -353,16 +354,15 @@ std::vector<std::string> World::GetRoomObjects(std::string type) const {
 	std::vector<std::string> room_objs;
 	// Iterator over all paths and get rooms
 	for (const auto& it : paths_) {
-		if (it.second->category() == "rooms") {
+		if (it.second->category() == "rooms" && func::EndsWith(it.first, it.second->name())) {
 			// try to get objects (might failed, since actual objects have the same
 			// category.
 			try {
 				auto rooms = it.second->objects(); 
-				std::cout << "Got rooms: " << rooms.dump() << std::endl;
+				std::cout << it.first << ", " << it.second->name() << " got rooms: " << rooms.dump() << std::endl;
 				for (const auto& room : rooms.get<std::map<std::string, nlohmann::json>>()) {
-					for (const auto& c : room.second.value(type, std::vector<nlohmann::json>())) {
-						auto character = c.get<std::pair<std::string, nlohmann::json>>();
-						room_objs.push_back(room.first + "." + character.first);
+					for (const auto& obj : room.second.value(type, std::vector<std::pair<std::string, nlohmann::json>>())) {
+						room_objs.push_back(it.second->name() + "." + room.first + "." + obj.first);
 					}
 				}
 			} 

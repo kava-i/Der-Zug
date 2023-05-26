@@ -686,7 +686,7 @@ function CreateMatchingInputField(field_type, availibe_value) {
 		el.placeholder = field_type + " id";
 		el.id = field_type;
 		el.name = field_type;
-		el.localize = false;
+		el.setAttribute("localize", "false");
 		if (field_type == "int")
 			el.type = "number";
 		if (availibe_value != undefined)
