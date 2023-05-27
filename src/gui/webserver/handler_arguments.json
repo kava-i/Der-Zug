@@ -12,7 +12,7 @@
 	"h_showItemInfo": [ "char" ],
 	"h_changeName": [ "char", "new name" ],
 	"h_setNewQuest": [ "quest" ],
-	"h_changeDialog": [ "char", "chars dialog" ],
+	"h_changeDialog": [ "_room_chars", "chars dialog" ],
 	"h_changeRoom": [ "room" ],
 	"h_startDialogDirect": [ "char" ],
 	"h_changeSound": [ "sound" ],
