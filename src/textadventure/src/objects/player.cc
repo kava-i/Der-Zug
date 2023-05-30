@@ -67,9 +67,10 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, std::strin
   //Set current room
   m_room = room;
 
-  //Set player's equipment (no equipment at the beginning)
-  m_equipment["weapon"] = NULL;
-  m_equipment["armor"]  = NULL;
+  // Set player's equipment (no equipment at the beginning)
+	for (const auto& kind : m_world->item_config()._kinds.at("equipe")) {
+  	m_equipment[kind] = nullptr;
+	}
   
   //Initialize all rooms as not visited
   for(const auto& it : m_world->getRooms())
@@ -707,7 +708,7 @@ void CPlayer::printEquiped() {
       str = nothing_equiped;
     return str;
   };
-  appendPrint(func::table(m_equipment, getElem, "width:20%"));
+  appendPrint(func::table(m_equipment, getElem, "width:50%"));
 }
 
 /**
@@ -718,7 +719,7 @@ void CPlayer::printEquiped() {
 */
 void CPlayer::equipeItem(CItem* item, string kind_) {
   // If nothing is equipped in this category -> equip.
-  if (m_equipment[kind_] == NULL) {
+  if (m_equipment.at(kind_) == nullptr) {
     appendDescPrint(m_world->GetSTDText("equipped_a") + item->name() 
         + m_world->GetSTDText("equipped_b") + kind_ + m_world->GetSTDText("equipped_c"));
 
@@ -729,14 +730,17 @@ void CPlayer::equipeItem(CItem* item, string kind_) {
       appendDescPrint(m_world->GetSTDText("new_attack") + m_attacks[attack]->getName() + "\n");
     }
     // Do updates
-    Update(item->update());
+		std::string updated;
+    Update(item->update(), updated);
 
     m_equipment[kind_] = item;
-    appendPrint(item->use_description()->print(true));
+		if (item->use_description())
+    	appendPrint(item->use_description()->print(true));
+		appendPrint(updated);
   }
 
   // If this item is already equipped -> print error message.
-  else if (m_equipment[kind_]->id() == item->id())
+  else if (m_equipment.at(kind_)->id() == item->id())
     appendErrorPrint(kind_ + m_world->GetSTDText("already_equipped"));
 
   // If another item is equipped in this category -> add choice-context
@@ -774,8 +778,9 @@ void CPlayer::dequipeItem(string sType) {
     if (m_equipment[sType]->getAttack() != "")
       m_attacks.erase(m_equipment[sType]->getAttack());
     // Remove update 
-    auto updates = m_equipment[sType]->update().Reverse();
-    Update(updates);
+		std::string updated;
+    Update(m_equipment[sType]->update().Reverse(), updated);
+		appendPrint(updated);
 
     m_equipment[sType] = NULL;
   }
@@ -1002,7 +1007,8 @@ void CPlayer::Update(const Updates& updates, std::string& updated_print) {
 			it.ApplyUpdate(attributes_.at(it.id_), value);
 			std::string name = attribute_conf.at(it.id_).name_;
       std::string color = (val_old <= attributes_.at(it.id_)) ? GREEN : RED;
-      updated_print += color + name + msg + func::dtos(value) + WHITE + "\n";
+			if (attribute_conf.at(it.id_).category_.front() != '_')
+      	updated_print += color + name + msg + func::dtos(value) + WHITE + "\n";
 			auto events = attribute_conf.at(it.id_).GetExceedBoundEvents(attributes_.at(it.id_));
 			if (events.size() > 0) {
     		addPostEvent(events);

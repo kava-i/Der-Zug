@@ -98,11 +98,11 @@ void CItem::setMark(size_t mark) {
 // Initialize Functions 
 std::map<std::string, void (CItem::*)(CPlayer* p)> CItem::m_functions= {};
 void CItem::initializeFunctions() {
-  //Consume-functions
+  // Consume-functions
   m_functions["consume"] = &CItem::consume;
-  //Read-functions
+  // Read-functions
   m_functions["read"] = &CItem::read;
-  //Equipe-functions
+  // Equipe-functions
   m_functions["equipe"] = &CItem::equipe;
   m_functions["weapon"] = &CItem::equipe;
 }
@@ -146,7 +146,9 @@ void CItem::consume(CPlayer* p) {
 
 // ***** EQUIPE-FUNCTIONS ***** //
 void CItem::equipe(CPlayer* p) {
+	std::cout << "CItem::equipe" << std::endl;
   p->equipeItem(this, kind_);
+	std::cout << "Done" << std::endl;
 }
 
 // ***** READ-FUNCTIONS ***** //

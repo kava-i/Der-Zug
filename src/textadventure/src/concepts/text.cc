@@ -34,6 +34,7 @@ std::string CText::pagePrint(size_t page) {
     if(texts_[i]->getPage() == page)
       sOutput += texts_[i]->reducedPrint(player_, true);
   }
+	sOutput += "\n" + player_->getWorld()->GetSTDText("read_help");
   return sOutput;
 }
 

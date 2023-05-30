@@ -946,7 +946,7 @@ void Context::h_look(std::string& sIdentifier, CPlayer* p) {
     return;
   }
 
-  //Check whether sWhere matched with detail
+  // Check whether sWhere matched with detail
   CDetail* detail  = p->getRoom()->getDetails()[sDetail];
   if(detail->getLook() == sWhere)
     p->appendDescPrint(p->getRoom()->look(sDetail));
@@ -1561,15 +1561,17 @@ void Context::h_end(string& sMessage, CPlayer* p) {
 
 // ***** ***** CHAT CONTEXT ***** ***** //
 
-void Context::h_next(std::string&, CPlayer* p) {
+void Context::h_next(std::string& sIdentifier, CPlayer* p) {
   std::cout << "h_next\n";
   std::cout << "Item: " << m_jAttributes["item"] << std::endl;
   CItem* item = p->getInventory().getItem_byID(m_jAttributes["item"]);
 
   std::cout << "Mark: " << m_jAttributes["mark"] << std::endl;
   std::cout << "Pages.size(): " << item->getPages()->getNumPages() << std::endl;
-  if(m_jAttributes["mark"] == item->getPages()->getNumPages()-1)
+  if(m_jAttributes["mark"] == item->getPages()->getNumPages()-1) {
     p->appendDescPrint("Das Buch ist zuende.");
+		h_stop(sIdentifier, p);
+	}
   else {
     m_jAttributes["mark"] = m_jAttributes["mark"].get<size_t>()+1;
     p->appendPrint(
@@ -1726,13 +1728,21 @@ void Context::h_select(std::string& sIdentifier, CPlayer* p)
 }
 
 void Context::h_choose_equipe(std::string& sIdentifier, CPlayer* p) {
-  if(sIdentifier == "yes") {
-    p->dequipeItem("weapon");
-    p->equipeItem(p->getInventory().getItem_byID(getAttribute<std::string>("itemID")), "weapon");
-    p->getContexts().erase("equipe");
+  if(sIdentifier == "yes" || sIdentifier == "ja") {
+		auto item = p->getInventory().getItem_byID(getAttribute<std::string>("itemID"));
+		if (item) {
+			p->dequipeItem(item->kind());
+			p->equipeItem(item, item->kind());
+			p->getContexts().erase("equipe");
+		}
+		else {
+    	p->appendTechPrint("Sorry, something went wrong: can't find item with this id. "
+					"try dequiping and then equiping item.");
+    	p->getContexts().erase("equipe");
+		}
   }
 
-  else if(sIdentifier == "no") {
+  else if(sIdentifier == "no" || sIdentifier == "nein") {
     p->appendDescPrint("Du entscheidest dich "
         + p->getInventory().getItem_byID(getAttribute<std::string>("itemID"))->name() 
         + " nicht auszurüsten.\n");

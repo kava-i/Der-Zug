@@ -25,6 +25,7 @@ CWorld::CWorld(CPlayer* p, std::string path) {
   // Load config
   configFactory("config/config.json");
   configAttributeFactory("config/attributes.json");
+  configItemFactory("config/items.json");
 
   worldFactory(p);
   // Extract f.e. media files from config
@@ -56,6 +57,10 @@ nlohmann::json& CWorld::getConfig() {
 
 const AttributeConfig& CWorld::attribute_config() {
 	return attribute_config_;
+}
+
+const ItemConfig& CWorld::item_config() {
+	return item_config_;
 }
 
 std::string CWorld::GetSTDText(std::string key) {
@@ -245,6 +250,20 @@ void CWorld::configAttributeFactory(const std::string path) {
     throw WorldFactoryException(msg);
 	}
 } 
+
+void CWorld::configItemFactory(const std::string path) {
+	try {
+    auto config = func::LoadJsonFromDisc(m_path_to_world + path);
+    if (config == NULL || config.size() == 0)
+      throw WorldFactoryException("Missing item config at " + path);
+		item_config_ = ItemConfig(config);
+
+	} catch (std::exception& e) {
+		std::string msg = "Failed parsing item-config: ";
+		msg += e.what();
+    throw WorldFactoryException(msg);
+	}
+}
 
 void CWorld::configExtractor(CPlayer *p) {
   if (m_config.contains("music")) {

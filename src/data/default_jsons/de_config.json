@@ -75,7 +75,8 @@
     "points_left_b": " Punkte zu vergeben.\n",
     "consumed_item": "Item konsumiert.\n",
     "opened_book": "Du öffnest das Buch auf der ersten Seite.\n",
-    "exceed_limits": "Der Kauf dieses Items würde deine Limits überschreiten.\n"
+    "exceed_limits": "Der Kauf dieses Items würde deine Limits überschreiten.\n",
+    "read_help": "← zurück | end | weiter →"
   },
   "minds":[],
   "commands":[

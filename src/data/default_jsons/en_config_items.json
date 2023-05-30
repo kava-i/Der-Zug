@@ -11,5 +11,12 @@
     "consume": ["Essen", "Trinken"],
     "others": []
   },
-  "types": ["Good", "Bad"]
+  "types": ["Good", "Bad"],
+	"look": [
+		"in",
+		"under",
+		"over",
+		"infront",
+		"behind"
+	]
 }

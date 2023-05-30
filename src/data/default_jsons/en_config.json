@@ -76,7 +76,8 @@
     "points_left_b": " points left to distribute.\n",
     "consumed_item": "Item consumed.\n",
     "opened_book": "You open the book on the first page.\n",
-    "exceed_limits": "Buying this item would exceed your limits.\n"
+    "exceed_limits": "Buying this item would exceed your limits.\n",
+    "read_help": "← previous | end | next →"
   },
   "minds":[],
   "commands":[],
