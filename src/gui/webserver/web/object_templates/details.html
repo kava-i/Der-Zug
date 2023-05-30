@@ -5,7 +5,15 @@
   <!-- Name and ID (default value for non-set-values) -->
   <li><label>Name:</label><input id="name" value="{{ default(name, "") }}">
   <li><label>Id:</label><input id="id" value="{{ default(id, "") }}">
-  <li><label>Look:</label><input id="look" value="{{ default(look, "") }}">
+  <li>
+		<label>Look:</label>
+		<select id="look" value="{{ default(look, "") }}" autocomplete="false">
+			<option selected></option>
+      {% for l in default(__look, []) %}
+				<option {%- if l == default(look, "") -%}selected{%- endif %}>{{l}}</option>
+			{% endfor %}
+		</select>
+	</li>
 
   {{ log("rendered basic attributes") }}
 
@@ -23,7 +31,7 @@
     <ul id="items">
       {% for item in default(items, [["", {}]]) %}
         <li custom="list">
-          <input placeholder="item id" value={{item.0}}>
+          <input placeholder="item id" localize="false" value={{item.0}}>
           <input custom="json" placeholder="custom attributes" value={{item.1}}>
           <span class="mod_elem" onclick="del_elem('items',{{loop.index}})">-</span>
           <span class="mod_elem" onclick="add_elem('items',{{loop.index}})">+</span>

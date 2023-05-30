@@ -144,6 +144,7 @@ nlohmann::json World::GetPage(std::string path, bool only_json) const {
   json["header"]["__categories"] = item_config["categories"];
   json["header"]["__kinds"] = item_config["kinds"];
   json["header"]["__types"] = item_config["types"];
+  json["header"]["__look"] = item_config["look"];
   json["header"]["__attribute_categories"] = GetAttributeCategories();
   json["header"]["__attributes"] = GetAttributes();
   json["header"]["__full_attributes"] = attribute_config["attributes"];

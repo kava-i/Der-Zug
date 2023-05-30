@@ -1,0 +1,34 @@
+{% include "temp_header" %}
+{{ log("rendered header") }}
+
+		<p>This is intended only as a help for you to avoid typos (or in the
+		future: for in-game help). Define where to look: "look <i>under</i> table",
+		"look <i>behind</i> counter"... </p>
+
+    <li custom="list">
+     <label title="Set custom look-commands (no game-functionality).">
+    (Where to) Look (details):
+     </label>
+     <ul id="look">
+       {% if length(content) == 0 %}
+          <li>
+             <input id="id" placeholder="new type" value="">
+             <span class="mod_elem" onclick="del_elem('look',1)">-</span>
+             <span class="mod_elem" onclick="add_elem('look',1)">+</span>
+          </li>
+
+       {% else %}
+         {% for attr in default(content, []) %}
+           <li>
+             <input id="id" placeholder="original" value="{{ attr }}">
+             <span class="mod_elem" onclick="del_elem('look',{{loop.index}})">-</span>
+             <span class="mod_elem" onclick="add_elem('look',{{loop.index}})">+</span>
+           </li>
+         {% endfor %}
+       {% endif %}
+     </ul>
+   </li>
+
+   {{ log("rendered look ") }}
+
+{% include "temp_footer" %}
