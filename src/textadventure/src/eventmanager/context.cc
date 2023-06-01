@@ -6,6 +6,7 @@
 #include "nlohmann/json.hpp"
 #include "nlohmann/json_fwd.hpp"
 #include "objects/item.h"
+#include "objects/person.h"
 #include "objects/player.h"
 #include "game/game.h"
 #include "tools/calc_enums.h"
@@ -168,6 +169,7 @@ void Context::initializeHanlders() {
   listeners_["h_removeHandler"] = &Context::h_removeHandler;
 
   listeners_["h_setAttribute"] = &Context::h_setAttribute; 
+  listeners_["h_setAttributeBound"] = &Context::h_setAttributeBound; 
   listeners_["h_setMind"] = &Context::h_setMind; 
 
 
@@ -196,7 +198,6 @@ void Context::initializeHanlders() {
 
   // *** FIGHT CONTEXT *** //
   listeners_["h_fight"] = &Context::h_fight;
-  listeners_["h_fight_show"] = &Context::h_fight_show;
 
   // *** DIALOG CONTEXT *** //
   listeners_["h_call"] = &Context::h_call;
@@ -238,6 +239,7 @@ void Context::initializeHanlders() {
   listeners_["h_select"] = &Context::h_select;
   listeners_["h_choose_equipe"] = &Context::h_choose_equipe;
   listeners_["h_updateStats"] = &Context::h_updateStats;
+  listeners_["h_levelUp"] = &Context::h_levelUp;
 
   // --- *** TIMEEVENTS *** --- //
   listeners_["t_highness"] = &Context::t_highness;
@@ -283,6 +285,9 @@ void Context::initializeTemplates() {
                         {"changeName",{"h_changeName"}},
                         {"addExit",{"h_addExit"}},
                         {"setAttribute", {"h_setAttribute"}},
+                        {"setAttributeBound", {"h_setAttributeBound"}},
+                        {"updateStats", {"h_updateStats"}},
+                        {"levelUp", {"h_levelUp"}},
                         {"setMind", {"h_setMind"}},
                         {"setNewAttribute", {"h_setNewAttribute"}}, 
                         {"addTimeEvent", {"h_addTimeEvent"}},
@@ -327,7 +332,7 @@ void Context::initializeTemplates() {
     m_templates["fight"] = {
                     {"name","fight"}, {"permeable",false}, {"help","fight.txt"}, 
                     {"listeners",{
-                        {"show",{"h_fight_show"}}}}
+                        {"use_against",{"h_fight"}}, {"h_fight", {"h_fight"}}}}
                     };
 
     m_templates["dialog"] = {
@@ -410,6 +415,7 @@ void Context::AddSimpleListener(std::string handler, std::regex event_type, int 
 void Context::AddSimpleListener(std::string handler, std::vector<std::string> event_type, int priority) {
   // Cannot be deleted, thus, no id, location, location_id and self_delete=false
   // Als permeable always set to -1 -> dont overwrite context/ handler-permeability
+	std::cout << "AddSimpleListener: event_type=" << func::join(event_type, ", ") << std::endl;
   AddListener(new CListener("", handler, "", "", "", "", -1, false, priority, event_type));
 }
 
@@ -587,6 +593,10 @@ void Context::h_finishCharacter(std::string& sIdentifier, CPlayer* p) {
   //Get character
   CPerson* person = p->getWorld()->getCharacter(sIdentifier);
 
+	std::string updates;
+	p->Update(person->updates(), updates);
+	p->appendPrint(updates);
+
   if(person->will_faint() == false) {
     std::cout << "kill character\n";
     p->throw_events("killCharacter " + sIdentifier, "h_finishCharacter");
@@ -603,24 +613,18 @@ void Context::h_finishCharacter(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_killCharacter(std::string& sIdentifier, CPlayer* p) {
-
   //Get character
   CPerson* person = p->getWorld()->getCharacter(sIdentifier);
-
   //Create json for details
-  nlohmann::json jDetail = {
-              {"id", person->id()},  
-              {"name", person->name()}, 
-              {"look", ""}};
+  nlohmann::json jDetail = { {"id", person->id()},  {"name", person->name()}, {"look", ""}};
 
   //Parse details-description
-  if(person->getDeadDescription().size() == 0)
-  {
-      nlohmann::json j = { {"speaker", "PERZEPTION"}, {"text", "Ein totes etwas?"} };
-      jDetail["description"].push_back(j);
+  if(person->getDeadDescription().size() == 0) {
+		nlohmann::json j = { {"speaker", "story"}, {"text", p->getWorld()->GetSTDText("deafult_dead_desc")} };
+		jDetail["description"].push_back(j);
   }
   else
-      jDetail["description"] = person->getDeadDescription();
+    jDetail["description"] = person->getDeadDescription();
 
   // Create new detail and add to room and map of details
   CDetail* detail = new CDetail(jDetail, p, person->getInventory().mapItems());
@@ -676,11 +680,13 @@ void Context::h_endDialog(std::string&, CPlayer* p) {
 void Context::h_newFight(std::string& sIdentifier, CPlayer* p) {
   std::cout << "h_newFight: " << sIdentifier << std::endl;
   auto lambda = [](CPerson* person){return person->name(); };
-  std::string str =func::getObjectId(p->getRoom()->getCharacters(),sIdentifier,lambda);
+  std::string str = func::getObjectId(p->getRoom()->getCharacters(),sIdentifier,lambda);
  
-  if (p->getWorld()->getCharacter(str) != nullptr)
-    p->setFight(new CFight(p, p->getWorld()->getCharacter(str)));
-
+	auto character = p->getWorld()->getCharacter(str);
+	if (character && !character->fainted())
+		p->setFight(new CFight(p, {p->getWorld()->getCharacter(str)}));
+	else
+    p->startDialog(character->id());  
   m_curPermeable=false;
 }
 
@@ -755,10 +761,18 @@ void Context::h_setAttribute(std::string& sIdentifier, CPlayer* p) {
 
 	// Get mod_type and update attribute
 	calc::ModType mod_type = calc::MOD_TYPE_STRING_MAPPING.at(atts[1]);
+	std::string attribute = atts[0];
   int value = stoi(atts[2]);
 	int cur = p->getStat(atts[0]);
 	calc::MOD_TYPE_FUNCTION_MAPPING.at(mod_type)(cur, value);
-	p->setStat(atts[0], cur);
+	p->setStat(attribute, cur);
+
+	// Add events caused by changing attribute
+	auto events = p->getWorld()->attribute_config().attributes_.at(attribute).GetExceedBoundEvents(p->getStat(attribute));
+	if (events.size() > 0) {
+		p->addPostEvent(events);
+	}
+
 
 	// Get msg (set to, increased, decreased) and color and print msgs
   std::string msg = calc::MOD_TYPE_MSG_MAPPING.at(mod_type);
@@ -770,6 +784,19 @@ void Context::h_setAttribute(std::string& sIdentifier, CPlayer* p) {
   if (atts.size() > 3)
     p->appendPrint(Webcmd::set_color(color) + atts[0] + msg 
         + std::to_string(value ) + Webcmd::set_color(Webcmd::color::WHITE) + "\n");
+
+  m_curPermeable = false;
+}
+
+void Context::h_setAttributeBound(std::string& sIdentifier, CPlayer* p) {
+	auto parts = func::split(sIdentifier, "|");
+	if (parts.size() != 4 || !isdigit(parts[2][0])) {
+		std::cout << cRED << "h_setAttributeBound: invalid args, use: \"[attribute-id]|[(int)new-bound|which-bound\"" 
+			<< cCLEAR << std::endl;
+	}
+	else {
+		p->getWorld()->attribute_config_NON_CONST().UpdateBound(parts[0], parts[1], std::stoi(parts[2]), parts[3]=="lower");
+	}
   m_curPermeable = false;
 }
 
@@ -957,18 +984,38 @@ void Context::h_look(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_search(std::string& sIdentifier, CPlayer* p) {
-  auto lambda = [](CDetail* detail) { return detail->name();};
-  std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), sIdentifier, lambda);
+	std::cout << "h_search: " << sIdentifier << std::endl;
+	auto room = p->getRoom();
 
-  // Check whether input is correct/ detail could be found.
+	std::string name = sIdentifier;
+	int pos = -1;
+	if (name.rfind("-") == name.size()-2 && std::isdigit(name.back())) {
+		name = name.substr(0, name.rfind("-"));
+		pos = sIdentifier.back() - '0';
+		std::cout << "Upated name and pos: " << name << ", " << pos << std::endl;
+	}
+
+
+  auto lambda = [](CDetail* detail) { return detail->name();};
+  std::string sDetail = func::getObjectId(room->getDetails(), name, lambda, pos);
+
+
+  // If detail not found, check for fainted character.
   if (sDetail == "") {
-    p->appendErrorPrint("Ich weiß nicht, was du durchsuchen willst.\n");
+		auto lambda = [](CPerson* person) { return person->name();};
+  	std::string char_id = func::getObjectId(room->getCharacters(), name, lambda, pos);
+		std::cout << "h_search: found char: " << char_id << std::endl;
+		if (char_id != "" && room->getCharacters().at(char_id)->fainted()) {
+			p->appendDescPrint(room->LootChar(char_id));
+		}
+		else 
+    	p->appendErrorPrint("Ich weiß nicht, was du durchsuchen willst.\n");
     return;
   }
   // Check whether location is neccessary
-  CDetail* detail  = p->getRoom()->getDetails()[sDetail];
+  CDetail* detail  = room->getDetails()[sDetail];
   if(detail->getLook() == "")
-    p->appendDescPrint(p->getRoom()->look(sDetail));
+    p->appendDescPrint(room->look(sDetail));
   else
     p->appendDescPrint("Ich weiß nicht, wo ich suchen soll. Sag: \"schaue "
         "[in/ unter/ ...] [gegenstand]\"\n");
@@ -1386,7 +1433,7 @@ void Context::h_attack(std::string& sIdentifier, CPlayer* p) {
   auto character = p->getWorld()->getCharacter(character_id);
   // Only start fight. if character is still alive.
   if (!character->fainted()) {
-    p->setFight(new CFight(p, character));
+    p->setFight(new CFight(p, {character}));
     m_curPermeable = false;
   }
 }
@@ -1404,26 +1451,11 @@ void Context::h_try(std::string& sIdentifier, CPlayer* p) {
 
 
 // ***** ***** FIGHT CONTEXT ***** ***** //
-void Context::initializeFightListeners(std::map<std::string, std::string> mapAttacks) {
-  AddSimpleListener("h_fight", mapAttacks, 0);
-}
-
 void Context::h_fight(std::string& sIdentifier, CPlayer* p) {
-  std::string newCommand = p->getFight()->FightRound((sIdentifier));
+  std::string newCommand = p->getFight()->NextTurn((sIdentifier));
   if (newCommand != "")    
     p->throw_events(newCommand, "h_fight");
 }
-
-void Context::h_fight_show(std::string& sIdentifier, CPlayer* p) {
-  if(sIdentifier == "stats")
-    p->appendPrint(p->getFight()->PrintStats(p));
-  else if(sIdentifier == "opponent stats")
-    p->appendPrint(p->getFight()->PrintStats(p->getFight()->getOpponent()));
-  else
-    p->appendPrint("Falsche Eingabe! Versuche es mit \"show stats\" oder \"show"
-        " opponent stats\"\n");
-}
-
 
 // ***** ***** DIALOG CONTEXT ***** *****
 
@@ -1753,26 +1785,56 @@ void Context::h_choose_equipe(std::string& sIdentifier, CPlayer* p) {
     error(p);
 }
 
-void Context::h_updateStats(std::string& sIdentifier, CPlayer* p) {
-  //Get ability (by number or by name/ id).
-  std::string ability="";
-	const auto& skillable = p->getWorld()->attribute_config().skillable_;
-  for(size_t i=0; i<skillable.size(); i++) {
-    if(fuzzy::fuzzy_cmp(func::returnToLower(skillable[i]), sIdentifier) <= 0.2)
-      ability = skillable[i];
-    if(std::isdigit(sIdentifier[0]) && i == stoul(sIdentifier, nullptr, 0)-1)
-      ability = skillable[i];
-  }
-
-  // Update ability.
-  p->setStat(ability, p->getStat(ability)+1);
-  p->appendSuccPrint(ability + " updated by 1\n");
-  int num = getAttribute<int>("numPoints")-1;
-  p->getContexts().erase("updateStats");
-  if (num>0)
-    p->UpdateStats(num);
+void Context::h_levelUp(std::string& identifier, CPlayer* p) {
+	if (identifier.find("|") == std::string::npos) {
+		std::cout << cRED << "h_levelUp: split num-points and update amount with \"|\"" << cCLEAR << std::endl; 
+	}
+	else {
+		std::string num = func::split(identifier, "|")[0];
+		std::string val = func::split(identifier, "|")[1];
+		if (!isdigit(num[0]) || !isdigit(val[0])) {
+			std::cout << cRED << "h_levelUp: num-points and update amount must bin numbers!" << cCLEAR << std::endl; 
+		}
+		else {
+			p->UpdateStats(std::stoi(num), std::stoi(val));
+		}
+	}
+	m_curPermeable = false;
 }
 
+void Context::h_updateStats(std::string& sIdentifier, CPlayer* p) {
+	std::cout << "h_updateStats: " << sIdentifier << std::endl;
+  //Get ability (by number or by name/ id).
+  std::string ability = "";
+	const auto& skillable = p->getWorld()->attribute_config().skillable_;
+	const auto& attributes = p->getWorld()->attribute_config().attributes_;
+  for (size_t i=0; i<skillable.size(); i++) {
+    if (fuzzy::fuzzy_cmp(func::returnToLower(attributes.at(skillable[i]).name_), sIdentifier) <= 0.2)
+      ability = skillable[i];
+    if (std::isdigit(sIdentifier[0]) && i == stoul(sIdentifier, nullptr, 0)-1)
+      ability = skillable[i];
+  }
+	std::cout << "h_updateStats: got ability: " << ability << std::endl;
+
+  // Update ability.
+  int num = getAttribute<int>("numPoints")-1;
+  int val = getAttribute<int>("value");
+  p->setStat(ability, p->getStat(ability) + val);
+	
+	// Add events caused by changing attribute
+	auto events = p->getWorld()->attribute_config().attributes_.at(ability).GetExceedBoundEvents(p->getStat(ability));
+	if (events.size() > 0) {
+		p->addPostEvent(events);
+	}
+
+
+  p->appendSuccPrint(ability + " updated by " + std::to_string(val) + "\n");
+  p->getContexts().erase("updateStats");
+	if (num > 0)
+		p->UpdateStats(num, val);
+	else 
+		p->appendPrint("Done.");
+}
 
 // ----- ***** TIME EVENTS ***** ------ //
 void Context::t_highness(std::string& str, CPlayer* p) {

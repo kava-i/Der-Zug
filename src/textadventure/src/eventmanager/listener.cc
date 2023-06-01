@@ -4,6 +4,7 @@
 #include <set>
 #include <stdexcept>
 #include <string>
+#include <strings.h>
 
 #define cRED "\033[1;31m"
 #define cCLEAR "\033[0m"
@@ -153,10 +154,15 @@ bool CListener::RegexCompare(event& e) {
 }
 
 bool CListener::InVector(event& e) {
+	std::cout << "InVector: " << e.first << std::endl;
   try {
     unsigned int index = std::stoi(e.first);
-    if (index > 0 && index < event_type_array_.size())
+		// allow to be one greater that the size of the last index to allow 1
+		// initialzed player input, while vector is 1 initialzed.
+    if (index > 0 && index <= event_type_array_.size()) {
+			std::cout << "passed on index: " << index << std::endl;
       return true;
+		}
   } catch (...) {}
 
   return func::inArray(event_type_array_, e.first);

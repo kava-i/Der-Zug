@@ -3,6 +3,9 @@
         "skillable": [
             "Eigenschaften"
         ],
+        "fight_infos": [
+            "Base"
+        ],
         "woozy_attributes": [
             "highness",
             "trunkenheit"

@@ -24,7 +24,29 @@
 		</ul>
 	</li>
 
-  {{ log("rendered skillable-categories") }}
+  <li 
+		custom="list"
+		title="Specify which attribute-categories can be skilled by the player (f.e. after a level up)"
+	>
+		<label>Attributes shown in Fight:</label>
+		<ul id="fight_infos">
+			{% for skillable_category in default(content.fight_infos, [""]) %} 
+				<li>
+					<select id="skillable_category" value="{{skillable_category}}" autocomplete="off">
+						{% for attribute_category in __attribute_categories %}
+							<option 
+								{% if attribute_category == skillable_category%}selected{% endif %}
+							>{{attribute_category}}</option>
+						{% endfor %}
+					</select>
+					<span class="mod_elem" onclick="del_elem('fight_infos',{{loop.index}})">-</span>
+					<span class="mod_elem" onclick="add_elem('fight_infos',{{loop.index}})">+</span>
+				</li> 
+				{% endfor %}
+		</ul>
+	</li>
+
+  {{ log("rendered fight_infos-categories") }}
 
 	<li 
 		custom="list"

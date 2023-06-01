@@ -343,7 +343,7 @@ public:
     * Let player know how many learning points player can assign and add choice context.
     * @param numPoints experience points player can assign.
     */
-    void UpdateStats(int numPoints); 
+    void UpdateStats(int numPoints, int value); 
 
 		void PrintSkillableAttributes(int available_points);
 
@@ -374,6 +374,8 @@ public:
 		void Update(const Updates& updates);
 		void Update(const Updates& updates, std::string& updated_print);
     bool CompareUpdates(const Updates& updates);
+		std::string SimpleUpdate(const Updates& updates, std::string& msg, 
+				const std::map<std::string, ConfigAttribute>& conf_attributes, bool player=true);
 
 
     // ** Others ** //

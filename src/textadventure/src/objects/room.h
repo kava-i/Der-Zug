@@ -64,6 +64,7 @@ public:
     string showItems();
     string showDetails();
     string look(std::string sDetail);
+    string LootChar(std::string char_id);
     CItem* getItem(string sPlayerChoice);
 };
     

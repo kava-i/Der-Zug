@@ -68,7 +68,7 @@
     <ul id="attacks">
       {% for key in default(attacks, [""]) %}
         <li>
-          <input placeholder="id" value="{{default(key, "")}}">
+          <input placeholder="attack id" value="{{default(key, "")}}">
           <span class="mod_elem" onclick="del_elem('attacks',{{loop.index}})">-</span>
           <span class="mod_elem" onclick="add_elem('attacks',{{loop.index}})">+</span>
         </li>

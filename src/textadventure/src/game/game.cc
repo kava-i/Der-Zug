@@ -248,12 +248,17 @@ bool CGame::reloadPlayer(string sID) {
     return false;
 	}
 
+	std::cout << 1 << std::endl;
 	auto cout = m_players[sID]->webconsole();
+	std::cout << 2 << std::endl;
   // Delete old player
   delete m_players[sID];
+	std::cout << 3 << std::endl;
   m_players.erase(sID);
+	std::cout << 4 << std::endl;
 
   // If this was base play, create new player right way
+	std::cout << 5 << std::endl;
   playerFactory(m_playerJsons[sID]);
   m_curPlayer = m_players[sID];
 

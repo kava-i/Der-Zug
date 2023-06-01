@@ -22,11 +22,11 @@
 
   {{ log("rendered output") }}
 
-  <li>
-    <label>Power:</label><input id="power" custom="int" value="{{
-    default(power, 0) }}">
-  </li>
+  {% set _not_optional = true %}
+  {% set _updates = default(updates, []) %}
+  {% include "web/element_templates/updates" %}
+  {% set _not_optional = false %}
 
-  {{ log("rendered power") }}
+  {{ log("rendered updates") }}
 
 {% include "temp_footer" %}

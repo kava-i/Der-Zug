@@ -141,6 +141,7 @@ public:
     void h_changeName(std::string&, CPlayer*);
     void h_addExit(std::string&, CPlayer*);
     void h_setAttribute(std::string&, CPlayer*);
+    void h_setAttributeBound(std::string&, CPlayer*);
     void h_setMind(std::string&, CPlayer*);
     void h_setNewAttribute(std::string&, CPlayer*);
     void h_addTimeEvent(std::string&, CPlayer*);
@@ -196,9 +197,7 @@ public:
 
 
     // *** FIGHT CONTEXT *** //
-    void initializeFightListeners(std::map<std::string, std::string> mapAttacks);
     void h_fight(std::string&, CPlayer*);
-    void h_fight_show(std::string&, CPlayer*);
 
     // *** DIALOG CONTEXT *** //
     void initializeDialogListeners(std::string newState, CPlayer* p);
@@ -231,6 +230,7 @@ public:
     void h_select(std::string&, CPlayer*);
     void h_choose_equipe(std::string&, CPlayer*);
     void h_updateStats(std::string&, CPlayer*);
+    void h_levelUp(std::string&, CPlayer*);
 
     // ----- ***** TIME EVENTS ***** ------ //
     void t_highness(std::string&, CPlayer*);

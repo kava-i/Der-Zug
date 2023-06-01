@@ -177,6 +177,20 @@ string CRoom::look(string sDetail) {
   return sOutput;
 }
 
+string CRoom::LootChar(std::string char_id) {
+  auto character = m_characters[char_id];
+  auto lambda = [](CItem* item) { return item->name(); };
+  std::string sOutput = "";
+
+	auto items = character->getInventory().mapItems();
+  sOutput = gramma_->build(func::to_vector(items, lambda), _show[ITEMS][T_S], _show[ITEMS][T_E]);
+
+  // Change from hidden to visible and "empty" detail
+  m_items.insert(items.begin(), items.end());
+  character->getInventory().RemoveAll();
+  return sOutput;
+}
+
 CItem* CRoom::getItem(std::string sPlayerChoice) {
   for (auto it : m_items) {
     if (it.second->getHidden() == true) 

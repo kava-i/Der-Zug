@@ -55,39 +55,38 @@
   {{log("rendered dead_description") }}  
 
   <!-- Attributes like (hp, money, experience etc. -->
-	<li custom="map">
+ 	<li custom="map">
     <label 
 			title="Attributes and status, depending on what is defined in the corresponding config section"
 		>Attributes</label>
 		<ul id="attributes">
-			{% for attribute_id, attribute_name in __attributes %} 
+			{% for attr in __full_attributes %} 
 				<li custom="key_value">
-					<label style="width: 8rem;" >{{attribute_name}}:</label>
+					<label style="width: 8rem;" >{{attr.name}}:</label>
 					<input 
-						id="{{attribute_id}}" class="short" type="number" custom="int"
-						{% if exists("attributes") and existsIn(attributes, attribute_id) %}
+						id="{{attr.id}}" class="short" type="number" custom="int"
+						{% if exists("attributes") and existsIn(attributes, attr.id) %}
 							{% for attribute, value in attributes %}
-								{% if attribute == attribute_id %} 
+								{% if attribute == attr.id %} 
 									value={{value}}
 								{% endif %} 
 							{% endfor %} 
 						{% else %}
-							value=0
+							value={{attr.default_value}}
 						{% endif %}
 						>
 				</li>
 			{% endfor%} 
 		</ul>
 	</li>
-  
+ 
   <!-- Others (default value for non-set-values) -->
   <li>
     <label title="Characters faints, instead to die instantly.">Faint</label>
-    {% if default(faint, 1) == 1) %} 
-    <input id="faint" custom="bool" value="yes">
-    {% else %} 
-    <input id="faint" custom="bool" value="no"> 
-    {% endif %}
+		<input 
+				id="faint" type="checkbox" custom="bool"
+        {% if default(faint, 0) %} checked {% endif %}
+		</input>
   </li>
 
   {{log("rendered attributes") }}  
@@ -98,7 +97,7 @@
     <ul id="items">
       {% for item in default(items, [["", {}]]) %}
         <li custom="list">
-          <input placeholder="item id" value={{item.0}}>
+          <input placeholder="item id" localize="false" value={{item.0}}>
           <input custom="json" placeholder="custom attributes" value={{item.1}}>
           <span class="mod_elem" onclick="del_elem('items',{{loop.index}})">-</span>
           <span class="mod_elem" onclick="add_elem('items',{{loop.index}})">+</span>
@@ -115,7 +114,7 @@
     <ul id="attacks">
       {% for key in default(attacks, [""]) %}
         <li>
-          <input placeholder="id" value="{{default(key, "")}}">
+          <input placeholder="attack id" value="{{default(key, "")}}">
           <span class="mod_elem" onclick="del_elem('attacks',{{loop.index}})">-</span>
           <span class="mod_elem" onclick="add_elem('attacks',{{loop.index}})">+</span>
         </li>
@@ -124,6 +123,11 @@
   </li>
   
   {{log("rendered attacks") }}  
+
+  {% set _not_optional = true %}
+  {% set _updates = default(updates, []) %}
+  {% include "web/element_templates/updates" %}
+  {% set _not_optional = false %}
 
   <!-- Listeners (default value for non-set-values) -->
   {% include "web/element_templates/listeners" %}

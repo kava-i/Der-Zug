@@ -77,6 +77,12 @@
 
   {{ log("rendered item updates ") }}
 
+  <!-- Attacks (default value for non-set-values) -->
+  <li>
+  	<label>New Attack:</label>
+		<input id="attack" placeholder="attack id" value="{{ default(attack, "")}}">
+  </li>
+
   <li custom="map" title="Costs can be any and multiple attributes">
 		<label>Costs:</label>
 		<ul id="costs">

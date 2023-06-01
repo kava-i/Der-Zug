@@ -34,8 +34,8 @@ std::string func::join(const std::vector<std::string>& vec, std::string delimite
 		return "";
 	return std::accumulate(
 			std::next(vec.begin()), vec.end(), vec[0], 
-			[](std::string a, std::string b) {
-					return a + "|" + b;
+			[&](std::string a, std::string b) {
+					return a + delimiter + b;
 			}
 	);
 }

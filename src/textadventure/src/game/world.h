@@ -69,6 +69,7 @@ public:
 
 		///Return AttributeConfig 
 		const AttributeConfig& attribute_config();
+		AttributeConfig& attribute_config_NON_CONST();
 
 		// Return ItemConfig 
 		const ItemConfig& item_config();

@@ -86,6 +86,10 @@ bool CInventory::empty() {
   return empty;
 }
 
+void CInventory::RemoveAll() {
+	m_inventory.clear();
+}
+
 
 std::string CInventory::getItemList() {
   std::string items = "";

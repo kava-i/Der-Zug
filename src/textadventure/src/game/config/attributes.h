@@ -22,12 +22,14 @@ struct ConfigAttribute {
 	int default_value_;
   int lower_bound_;
   std::vector<std::string> lower_events_;
+  std::vector<std::string> lower_opponent_events_;
   int upper_bound_;
   std::vector<std::string> upper_events_;
+  std::vector<std::string> upper_opponent_events_;
 
   // methods 
   bool CheckBounds(int cur ) const;
-	std::string GetExceedBoundEvents(int cur) const;
+	std::string GetExceedBoundEvents(int cur, bool player=true) const;
 };
 
 struct AttributeMapping {
@@ -42,13 +44,22 @@ struct AttributeMapping {
 };
 
 struct AttributeConfig {
+	// constuctors
 	AttributeConfig() {}
 	AttributeConfig(nlohmann::json json);
 
+	// methods
+	std::vector<std::string> SkillableNames(bool to_lower=false) const;
+	void UpdateBound(std::string attribute_id, std::string match_type, int bound, bool lower_bound);
+
+
+	// members
 	std::map<std::string, ConfigAttribute> attributes_;
 	std::map<std::string, std::vector<AttributeMapping>> mapping_;
 	std::vector<std::string> skillable_;
+	std::vector<std::string> fight_infos_;
 	std::vector<std::string> woozy_attributes_;
 	WoozyMethods woozy_method_;
 	bool level_based_;
+
 };

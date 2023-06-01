@@ -1,7 +1,12 @@
 #include "person.h"
 #include "game/config/attributes.h"
 #include "player.h"
+#include "tools/fuzzy.h"
 #include "tools/webcmd.h"
+
+#define GREEN Webcmd::set_color(Webcmd::color::GREEN)
+#define RED Webcmd::set_color(Webcmd::color::RED)
+#define WHITE Webcmd::set_color(Webcmd::color::WHITE)
 
 
 /**
@@ -14,7 +19,7 @@
 CPerson::CPerson(nlohmann::json jAttributes, CDialog* dialogue, attacks newAttacks, CText* text, 
     CPlayer* p, std::map<std::string, CDialog*> dialogs, const std::map<std::string, ConfigAttribute>& all_attributes,
 		t_map_items items) 
-    : CObject(jAttributes, p, "person") {
+    : CObject(jAttributes, p, "person"), updates_(jAttributes.value("updates", nlohmann::json::array())) {
   // Set stats, then update missing stats with default value
 	attributes_ = jAttributes.value("attributes", std::map<std::string, int>());
 	for (const auto& it : all_attributes) {
@@ -96,11 +101,19 @@ CPerson::attacks& CPerson::getAttacks() {
   return m_attacks; 
 }
 
-///Return attacks as a map_type (string)
-std::map<std::string, std::string> CPerson::getAttacks2() {
-  auto lambda = [](CAttack* attack) { return attack->getName(); };
-  return func::convertToObjectmap(m_attacks, lambda);
+std::string CPerson::getAttacksID(std::string name) {
+	std::string id = "";
+	double min = 1;
+	for (const auto& it : m_attacks) {
+		auto res = fuzzy::fuzzy_cmp(it.second->getName(), name);
+		if (res <= 0.2 && res < min) {
+			id = it.first;
+			min = res;
+		}
+	}
+	return id;
 }
+
 
 ///Return person's inventory.
 CInventory& CPerson::getInventory()  {
@@ -122,6 +135,9 @@ nlohmann::json CPerson::getDeadDescription() {
   return m_deadDescription;
 }
 
+const Updates& CPerson::updates() {
+	return updates_;
+}
 
 // *** SETTER *** //
 
@@ -156,30 +172,23 @@ void CPerson::setFainted(bool fainted) {
 * Print all attacks. Attacks are printed in the form: Name \n Strengt\n Description.
 */
 string CPerson::printAttacks() {
-  string sOutput = "Attacks: \n";
-
+  string attacks_print = "Attacks: \n";
   //Iterate over attacks and add to output.
-  for (auto[i, it] = std::tuple{1, m_attacks.begin()};it!=m_attacks.end();i++, it++) {
-    sOutput += std::to_string(i) + ". \"" + it->second->getName() + "\"\n"
-                + "--- Strength: " + std::to_string(it->second->getPower()) + "\n"
-                + "--- " + it->second->getDescription() + "\n";
-  }
-
-  //Return output.
-  return sOutput;
+	for (const auto& it : m_attacks) {
+		attacks_print += "- " + it.second->getName() + ": <i>" + it.second->getDescription() + "</i>\n";
+	}
+  return attacks_print;
 }
 
-string CPerson::printAttacksFight() {
-  std::string sOutput;
-  //Iterate over attacks and add to output.
-  for(auto[i, it] = std::tuple{1, m_attacks.begin()};it!=m_attacks.end();i++, it++) {
-    sOutput += "<span style=\"color: #c39bd3\">"+ std::to_string(i)+". "+it->second->getName() + " </span>"
-      + "[<span style=\"color: #f7dc6f;\">Power: " + std::to_string(it->second->getPower()) 
-      + "</span>]\n" + it->second->getDescription() + "\n\n";
-  }
-
-  //Return output.
-  return sOutput;
+string CPerson::printFightInfos(const AttributeConfig& attribute_conf) const {
+	std::string infos;
+	for (const auto& it : attribute_conf.fight_infos_) {
+		if (attributes_.count(it) > 0) 
+			infos += attribute_conf.attributes_.at(it).name_ + ": " + std::to_string(attributes_.at(it)) + ", ";
+	}
+	if (infos.size() > 2)
+		return infos.substr(0, infos.size()-2);
+	return infos;
 }
 
 string CPerson::getAttack(string sPlayerChoice) {
@@ -209,4 +218,26 @@ std::string CPerson::getAllInformation() {
   for(auto it : attributes_)
     sOutput += it.first + ": " + std::to_string(it.second) + ", ";
   return sOutput;
+}
+
+std::string CPerson::SimpleUpdate(const Updates& updates, std::string& msg, 
+		const std::map<std::string, ConfigAttribute>& conf_attributes, bool player) {
+	std::cout << "SimpleUpdate called from player? " << player << std::endl;
+	std::string rtn_events = "";
+	for (const auto& it : updates.updates()) {
+		auto value = it.value_ * ((attributes_.count(it.attribute_) > 0) ? attributes_.at(it.attribute_) : 1);
+    std::string opt = calc::MOD_TYPE_MSG_MAPPING.at(it.mod_type_);
+		if (attributes_.count(it.id_) > 0) {
+      int val_old = attributes_.at(it.id_);
+			it.ApplyUpdate(attributes_.at(it.id_), value);
+			std::string name = conf_attributes.at(it.id_).name_;
+      std::string color = (val_old <= attributes_.at(it.id_)) ? GREEN : RED;
+			if (conf_attributes.at(it.id_).category_.front() != '_')
+      	msg += color + name + opt + func::dtos(value) + WHITE + "\n";
+			auto events = conf_attributes.at(it.id_).GetExceedBoundEvents(attributes_.at(it.id_), player);
+			if (events.size() > 0)
+				rtn_events += (rtn_events.length() == 0) ? events : ";" + events;
+		}
+	}
+	return rtn_events;
 }

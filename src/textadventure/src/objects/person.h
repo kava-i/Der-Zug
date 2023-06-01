@@ -4,6 +4,7 @@
 #include <iostream>
 #include <queue> 
 #include <map>
+#include <string>
 #include <tuple>
 
 #include "attack.h"
@@ -12,6 +13,7 @@
 #include "concepts/inventory.h"
 #include "actions/dialog.h"
 #include "item.h"
+#include "objects/helper/update.h"
 #include "tools/fuzzy.h"
 #include "tools/webcmd.h"
 
@@ -45,6 +47,8 @@ class CPerson : public CObject {
     
     ///Map dialogs
     std::map<std::string, CDialog*> m_dialogs;
+
+		Updates updates_;
 
   public:
 
@@ -82,7 +86,7 @@ class CPerson : public CObject {
 
     ///Return person's attacks.
     attacks& getAttacks();
-    std::map<std::string, std::string> getAttacks2();
+		std::string getAttacksID(std::string name);
 
     ///Return person's inventory.
     CInventory& getInventory();
@@ -101,6 +105,8 @@ class CPerson : public CObject {
 
     ///Get description of character, when he is dead.
     nlohmann::json getDeadDescription();
+
+		const Updates& updates();
 
 
     // *** SETTER *** //
@@ -124,7 +130,7 @@ class CPerson : public CObject {
     * Print all attacks. Attacks are printed in the form: Name \n Strengt\n Description.
     */
     string printAttacks();
-    string printAttacksFight();
+		string printFightInfos(const AttributeConfig& attribute_conf) const;
     string getAttack(string sPlayerChoice);
 
 
@@ -138,6 +144,12 @@ class CPerson : public CObject {
     bool attributeExists(std::string sAttribute);
 
     std::string getAllInformation();
+
+		/**
+		 * Applies updates, adds to print and returns list of events triggered.
+		 */
+		virtual std::string SimpleUpdate(const Updates& updates, std::string& msg, 
+				const std::map<std::string, ConfigAttribute>& conf_attributes, bool player=false);
 
 
     // *** Functions needed in CPlayer *** //

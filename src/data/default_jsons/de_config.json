@@ -49,7 +49,7 @@
     }
   },
   "translations": {
-    "fight_ended": "Kampf beendet.\n",
+    "default_dead_desc": "Ein totes etwas.",
     "approaching_a": "Du gehst auf ",
     "approaching_b": " zu und räusperst dich...\n",
     "approaching_busy": " ist zur Zeit beschäftigt.\n",
@@ -76,7 +76,11 @@
     "consumed_item": "Item konsumiert.\n",
     "opened_book": "Du öffnest das Buch auf der ersten Seite.\n",
     "exceed_limits": "Der Kauf dieses Items würde deine Limits überschreiten.\n",
-    "read_help": "← zurück | end | weiter →"
+    "read_help": "← zurück | end | weiter →",
+		"fight_help": "schreibe <i>: setze [attacke] gegen [gegner] ein.</i>",
+		"fighting_against": "Du kämpfst gegen: ",
+    "fight_ended": "Kampf beendet.\n",
+
   },
   "minds":[],
   "commands":[
@@ -154,7 +158,18 @@
             "id": "underline",
             "regex": "unterstreiche (.*)",
             "take": 1
-        }
+        },
+				{
+					"id": "fight",
+					"regex": "greife (.*) an",
+					"take": 1
+				},
+				{
+					"id": "use_against",
+					"regex": "setze (.*) gegen (.*) ein",
+					"take": -1
+				}
+
     ],
   "music": {
       "background": "background",

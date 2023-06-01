@@ -26,3 +26,20 @@ For things to happen when an event is triggered there must be something
 There are system listeners 
 
 go to [listeners](/listeners.md) to seem them explained in more detail.
+
+## Some notes on general game mechanics
+
+### Accessing nth person, detail, etc. 
+If there are f.e. multiple details with the same name in one room, are multible
+enemies to aim an attack at in a fight, you may add a number the name to access
+the nth person or detail. (This may not work in all cases, but should in the
+most. Please report an issue if you believe an important case is not handled)
+f.e.: 
+```
+>zeige details
+Hier sind drei Kisten
+>shaue in kiste
+Hier ist nichts zu finden
+>schaue in kiste-2
+Hier ist eine Kassettenplayer
+```

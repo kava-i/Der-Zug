@@ -109,10 +109,16 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, std::strin
 }
 
 CPlayer::~CPlayer() {
+	std::cout << "Deleting player" << std::endl;
   delete m_world;
+	std::cout << "- world deleted " << std::endl;
 	delete m_parser;
-	if (m_curFight)
+	std::cout << "- parser deleted " << std::endl;
+	if (m_curFight) {
 		delete m_curFight;
+		std::cout << "- fight deleted " << std::endl;
+	}
+	std::cout << "Deleting player. Done." << std::endl;
 } 
 
 // *** GETTER *** // 
@@ -411,23 +417,26 @@ void CPlayer::RemoveListenerFromLocation(std::string location, std::string locat
 * @param newFight new fight
 */
 void CPlayer::setFight(CFight* newFight) { 
-    m_curFight = newFight;
+	m_curFight = newFight;
 
-    //Create fight-context and add to context-stack.
-    Context* context = new Context((std::string)"fight");
-    context->initializeFightListeners(getAttacks2());
-    m_contextStack.insert(context, 1, "fight");
+	//Create fight-context and add to context-stack.
+	Context* context = new Context((std::string)"fight");
+	m_contextStack.insert(context, 1, "fight");
 
-    m_curFight->InitializeFight();
+	m_curFight->InitializeFight();
 }
 
 /**
 * Delete the current fight and erase fight-context from context-stack
 */
 void CPlayer::endFight() {
+	if (m_curFight) {
     delete m_curFight;
+		m_curFight = nullptr;
+  	appendPrint(m_world->GetSTDText("fight_ended") + "\n");
+	}
+	if (m_contextStack.getContext("fight"))
     m_contextStack.erase("fight");
-    appendPrint(m_world->GetSTDText("fight_ended"));
 }
 
 // *** Dialog *** //
@@ -847,16 +856,16 @@ void CPlayer::questSolved(std::string sQuestID, std::string step_id) {
 * Let player know how many learning points player can assign and add choice context.
 * @param numPoints experience points player can assign.
 */
-void CPlayer::UpdateStats(int numPoints) {
+void CPlayer::UpdateStats(int num_points, int value) {
   // Create context.
   std::string info_msg = m_world->GetSTDText("update_stats");
   Context* context = new Context((nlohmann::json){{"name", "updateStats"}, {"permeable", false}, 
-      {"numPoints", numPoints}, {"error", info_msg}});
-  context->AddSimpleListener("h_updateStats", m_world->attribute_config().skillable_, 0);
+      {"numPoints", num_points}, {"value", value}, {"error", info_msg}});
+  context->AddSimpleListener("h_updateStats", m_world->attribute_config().SkillableNames(true), 0);
   m_contextStack.insert(context, 1, "updateStats");
 
   //Print attributes and level of each attribute and add choice-context.
-	PrintSkillableAttributes(numPoints);
+	PrintSkillableAttributes(num_points);
 }
 
 int CPlayer::GetValueFromAttributeOrMin(std::string name) {
@@ -872,7 +881,7 @@ int CPlayer::GetValueFromAttributeOrMin(std::string name) {
 void CPlayer::PrintSkillableAttributes(int available_points) {
   //Print attributes and level of each attribute and add choice-context.
   m_sPrint += m_world->GetSTDText("points_left_a") + std::to_string(available_points) 
-    + m_world->GetSTDText("points_left_b");
+    + m_world->GetSTDText("points_left_b") + "\n";
 
 	int counter = 0;
 	const auto& attributes = m_world->attribute_config().attributes_;
@@ -880,7 +889,7 @@ void CPlayer::PrintSkillableAttributes(int available_points) {
     m_sPrint += std::to_string(++counter) + ". " + attributes.at(it).name_ 
 			+ ": " + std::to_string(getStat(it)) + "\n";
 	}
-  m_sPrint += m_world->GetSTDText("update_stats");
+  m_sPrint += m_world->GetSTDText("update_stats") + "\n";
 }
 
 /**
@@ -992,10 +1001,7 @@ void CPlayer::Update(const Updates& updates, std::string& updated_print) {
 	const auto& attribute_conf = m_world->attribute_config().attributes_;
 	for (const auto& it : updates.updates()) {
     // Since GetValueFromAttributeOrMin returns 1 on failure, nothing will change.
-    std::cout << "UPDATE: Calculating value from " << it.value_ << ", " 
-      << it.attribute_ << ", " << GetValueFromAttributeOrMin(it.attribute_) << std::endl;
     double value = it.value_ * GetValueFromAttributeOrMin(it.attribute_);
-    std::cout << "UPDATE: got value: " << value << std::endl;
     std::string msg = calc::MOD_TYPE_MSG_MAPPING.at(it.mod_type_);
 		// Update minds
 		if (m_minds.count(it.id_) > 0) {
@@ -1011,6 +1017,7 @@ void CPlayer::Update(const Updates& updates, std::string& updated_print) {
       	updated_print += color + name + msg + func::dtos(value) + WHITE + "\n";
 			auto events = attribute_conf.at(it.id_).GetExceedBoundEvents(attributes_.at(it.id_));
 			if (events.size() > 0) {
+				std::cout << "Update: Adding post-events: " << events << std::endl;
     		addPostEvent(events);
 			}
 		}
@@ -1044,6 +1051,12 @@ bool CPlayer::CompareUpdates(const Updates& updates) {
 		}
   }
   return false;
+}
+
+std::string CPlayer::SimpleUpdate(const Updates& updates, std::string& msg, 
+		const std::map<std::string, ConfigAttribute>& conf_attributes, bool) {
+	std::cout << "SimpleUpdate called from PLAYER" << std::endl;
+	return CPerson::SimpleUpdate(updates, msg, conf_attributes, true);
 }
 
 

@@ -136,7 +136,7 @@ namespace func
     */
     template<typename T1, typename T2=std::function<std::string(T1)>> 
     std::string getObjectId(std::map<std::string, T1> mapObjects, std::string sName, 
-        T2 getName = [](T1 t) -> std::string { return t; } ) {
+        T2 getName = [](T1 t) -> std::string { return t; }, int take=-1 ) {
       // Check if name is an id and thus can be directly accessed and returned.
       if (mapObjects.count(sName) > 0)
         return sName;
@@ -157,6 +157,11 @@ namespace func
       // If no matches where found, return empty string.
       if (matches.size() == 0)
         return "";
+
+			// If position is specified use position instead of best match.
+			if (take != -1 && take <= matches.size()) {
+				return matches[take-1].first;
+			}
 
       // Find best match.
       size_t pos=0;

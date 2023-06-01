@@ -1,123 +1,120 @@
 #include "fight.h"
+#include "objects/player.h"
+#include "tools/func.h"
+#include <cctype>
 
-CFight::CFight(CPerson* player, CPerson* opponent)
-{
-    m_sName = "Fight";
-    m_sDescription = "Fighting against " + opponent->name();
-    m_player = player;
-    m_opponent = opponent;
+CFight::CFight(CPlayer* player, std::vector<CPerson*> opponents) {
+	m_sName = "Fight";
+	m_sDescription = "Fighting against: ";
+	for (const auto& it : opponents) 
+		m_sDescription += it->name() + ",";
+	m_sDescription.pop_back();
+  player_ = player;
+  opponents_= opponents;
+	cur_ = -1;
 }
 
-CPerson* CFight::getOpponent() { return m_opponent; }
-
-void CFight::InitializeFight()
-{
-    m_player->appendPrint(m_sDescription + createFightingAgainst());
+CPerson* CFight::getOpponent() { 
+	return opponents_.front();
 }
 
-string CFight::FightRound(string sPlayerChoice)
-{
-    string sOutput;
-    //Execute players turn
-    sOutput += Turn(m_player->getAttack(sPlayerChoice), m_player, m_opponent) + "$\n";
-
-    //Check wether opponent is dead
-    if(m_opponent->getStat("hp") <= 0) {
-        sOutput += "Du hast " + m_opponent->name() + " besiegt!\n";
-        m_player->appendPrint(sOutput);
-        int ep = m_opponent->getStat("ep");
-        if(ep != 0) {
-            m_player->appendSuccPrint("+ " + std::to_string(ep) + " EP\n");
-						// TODO (fux) use the new update-field instead old: addEP(ep);
-						// Maybe even move to Context::h_finishCharacter
-        }
-        return "endFight;finishCharacter " + m_opponent->id();
-    }
-    sOutput+=createFightingAgainst();
-
-    //Execute opponents turn
-    string sAttack = pickOpponentAttack();
-    sOutput += Turn(sAttack, m_opponent, m_player) + "$\n";
-
-    //Check wether player is dead
-    if(m_player->getStat("hp") <= 0) {
-        sOutput += "Du wurdest von " + m_opponent->name() + " getötet!\n";
-        m_player->appendPrint(sOutput);
-        return "endFight;gameover";
-    }
-
-    sOutput+=createFightingAgainst();
-    //Update player print
-    m_player->appendPrint(sOutput);
-
-    return "";
+void CFight::InitializeFight() {
+  player_->appendPrint(Print(true));
 }
 
-string CFight::Turn(string selectedAttack, CPerson* attacker, CPerson* defender)
-{
-    //Get selected attack 
-    CAttack* attack = attacker->getAttacks()[selectedAttack];
-
-    //Create output
-    string sOutput; 
-    sOutput += "\n<div style=\"display: flex;justify-content: center;\">";
-    sOutput += attacker->name() + " benutzt " + attack->getName() + "\n";
-    sOutput += attack->getOutput() + "\n";
-
-    int damage = attack->getPower() + attacker->getStat("strength");
-    sOutput += "Angerichteter Schaden: " + std::to_string(damage) + "\n";
-    sOutput += "</div>";
-    defender->setStat("hp", defender->getStat("hp") - damage);
-
-
-    return sOutput;
+std::string CFight::NextTurn(const std::string& inp) {
+	std::string events;
+	std::string msg;
+	int cur_before = cur_;
+	auto attacker = GetAttacker();
+	auto const& [target, attack_id] = GetTargetAndAttack(inp);
+	if (!target) 
+		std::cout << "CFight::NextTurn: failed." << std::endl;
+	else {
+		cur_ = (cur_ == static_cast<int>(opponents_.size()-1)) ? -1 : cur_+1;  // update current
+		CAttack* attack = attacker->getAttacks().at(attack_id);
+		msg += attacker->name() + " " + player_->getWorld()->GetSTDText("uses_attack") + " " + attack->getName() + "\n";
+		events += attacker->SimpleUpdate(attack->player_update(), msg, player_->getWorld()->attribute_config().attributes_);
+		events += target->SimpleUpdate(attack->enemy_update(), msg, player_->getWorld()->attribute_config().attributes_);
+		std::cout << "Got events: " << events << std::endl;
+		msg += "$ ";
+	}
+	// If fight not ended add next round.
+	if (events.find("endFight") == std::string::npos) {
+		if (cur_ == -1) 
+			msg += "\n" + Print(false);
+		else 
+			events += ";h_fight {player}";
+	}
+	else {
+		if (cur_before == -1) {
+			events += ";finishCharacter " + target->id();
+		}
+	}
+	player_->appendPrint(msg);
+	return events;
 }
 
-
-string CFight::PrintStats(CPerson* person,bool printDesc)
-{
-    int hp = person->getStat("hp");
-    int max_hp = person->getStat("max_hp");
-    std::string sOutput = "<div style=\"padding-right: 3rem;\"><span style=\"color:green;padding-right:1rem\">"+person->name()+"</span><div style=\"position:relative;left:0;top:0;display:inline-block;width:10rem;height:1rem;\"><div style=\"height:100%;background-color: #E74C3C;width:"+std::to_string((int)hp*100/max_hp)+"%;\"></div><div style=\"position: absolute;top:0;left:0;right:0;color:white;text-align: center;\">HP:"+std::to_string(hp)+"/"+std::to_string(max_hp)+"</div></div> <span style=\"padding-left: 1rem;color:#2e86c1;\">Strength: " + std::to_string(person->getStat("strength")) + "</span>\n";
-
-    sOutput += "\n";
-    if(printDesc)
-    {
-	    sOutput+=person->getReducedDescription();
-	    sOutput+="\n\n";
-    }
-    else
-        sOutput += person->printAttacksFight();
-
-    sOutput += "</div>";
-    return sOutput;
+CPerson* CFight::GetAttacker() {
+	return (cur_ == -1) ? player_ : opponents_[cur_];
 }
 
-string CFight::createFightingAgainst() 
-{
-    std::string sOutput;
-    sOutput += "\n<div style=\"display: flex;justify-content: center;\">";
-
-    std::string kk = PrintStats(m_player,false);
-    sOutput+=kk;
-    sOutput += "<span style='padding-right: 3rem;'>";
-    for(int i = 0; i <  std::count(kk.begin(), kk.end(), '\n');i++)
-    {
-	    sOutput+="|\n";
-    }
-    sOutput += "</span>";
-    
-    sOutput += PrintStats(m_opponent);
-
-    sOutput += "</div>";
-    
-    return sOutput;
+std::pair<CPerson*, std::string> CFight::GetTargetAndAttack(const std::string& inp) {
+	if (inp == "{player}") {
+		return {player_, pickOpponentAttack()};
+	}
+	if (inp.find("|") == std::string::npos) {
+		std::cout << "CFight::NextTurn: invalid input, seperate like this: \"attack|opponent\";" << std::endl;
+		return {nullptr, ""};
+	}
+	std::string attack_name = func::split(inp, "|")[0];
+	std::string target_name = func::split(inp, "|")[1];
+	std::string attack_id = player_->getAttacksID(attack_name);
+	if (attack_id == "") {
+		std::cout << "CFight::NextTurn: attack not found: " << attack_name << std::endl;
+		return {nullptr, ""};
+	}
+	return {GetTarget(target_name), attack_id};
 }
 
-string CFight::pickOpponentAttack()
-{
+CPerson* CFight::GetTarget(std::string name) {
+	if (name == "{player}") 
+		return player_;
+	if (std::isdigit(name.front())) {
+		int num = std::stoi(name)-1;
+		if (num < opponents_.size())
+			return opponents_[num];
+	}
+	int min = 1;
+	int num = -1;
+	for (int i=0; i<opponents_.size(); i++) {
+		int cur = fuzzy::fuzzy_cmp(opponents_[i]->name(), name);
+    if (cur <= 0.2 && cur < min) {
+			min = cur;
+			num = i;
+		}
+	}
+	if (num != -1)
+		return opponents_[num];
+	return nullptr;
+}
+
+std::string CFight::Print(bool add_help) {
+	// TODO (fux): print attributes selected in config
+	std::string str = player_->getWorld()->GetSTDText("fighting_against") + "\n";
+	for (const auto& it : opponents_) 
+		str += "- " + it->name() + " (" + it->printFightInfos(player_->getWorld()->attribute_config()) + ")\n";
+	str += player_->name() + ": " + player_->printFightInfos(player_->getWorld()->attribute_config());
+	if (add_help) {
+		str += "\n" + player_->printAttacks();
+		str += player_->getWorld()->GetSTDText("fight_help");
+	}
+	str += "\n";
+	return str;
+}
+
+string CFight::pickOpponentAttack() {
    srand(time(NULL));
-   size_t attack = rand() % m_opponent->getAttacks().size() + 1;
-   return m_opponent->getAttack(std::to_string(attack));
+   size_t attack = rand() % GetAttacker()->getAttacks().size() + 1;
+   return GetAttacker()->getAttack(std::to_string(attack));
 }
-

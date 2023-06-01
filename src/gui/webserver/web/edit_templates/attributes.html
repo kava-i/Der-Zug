@@ -87,6 +87,18 @@
   </tr>
 
   <tr>
+    <td><label class="small" title="limit with events executed for Opponents in
+				fight.">Past-Upper Opponent Events: </label></td>
+    <td>
+      {% set _not_optional = true %}
+      {% set _id = "upper_opponent_events" %}
+      {% set _events = default(upper_opponent_events, [""]) %}
+      {% include "web/element_templates/events" %}
+      {% set _not_optional = false %}
+    </td>
+  </tr>
+
+  <tr>
     <td><label class="small" title="lower bound for this attribute">Lower Bound: </label></td>
     <td>
       <input 
@@ -114,6 +126,18 @@
       {% set _not_optional = true %}
       {% set _id = "lower_events" %}
       {% set _events = default(lower_events, [""]) %}
+      {% include "web/element_templates/events" %}
+      {% set _not_optional = false %}
+    </td>
+  </tr>
+
+  <tr>
+    <td><label class="small" title="limit with events executed for Opponents in
+				fight.">Past-Lower Opponent Events: </label></td>
+    <td>
+      {% set _not_optional = true %}
+      {% set _id = "lower_opponent_events" %}
+      {% set _events = default(lower_opponent_events, [""]) %}
       {% include "web/element_templates/events" %}
       {% set _not_optional = false %}
     </td>

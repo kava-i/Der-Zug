@@ -58,7 +58,9 @@ nlohmann::json& CWorld::getConfig() {
 const AttributeConfig& CWorld::attribute_config() {
 	return attribute_config_;
 }
-
+AttributeConfig& CWorld::attribute_config_NON_CONST() {
+	return attribute_config_;
+}
 const ItemConfig& CWorld::item_config() {
 	return item_config_;
 }
@@ -512,28 +514,28 @@ CPerson* CWorld::GetNewChar(std::string id, std::string room_id, CPlayer* p) {
 }
 
 void CWorld::attackFactory() {
+	std::cout << "Parsing attacks" << std::endl;
   for(auto& p : fs::directory_iterator(m_path_to_world + "attacks"))
     attackFactory(p.path());
+	std::cout << "Parsing attacks done" << std::endl;
 }
 
-void CWorld::attackFactory(std::string sPath) {
+void CWorld::attackFactory(std::string path) {
   //Read json creating all rooms
-  std::ifstream read(sPath);
-  nlohmann::json j_attacks;
-  read >> j_attacks;
-  read.close();
+  nlohmann::json json = func::LoadJsonFromDisc(path);
+  std::string sub_cat = fs::path(path).stem();
 
-  for(auto j_attack : j_attacks)
-    m_attacks[j_attack["id"]] = new CAttack(j_attack.value("name", ""), 
-      j_attack.value("description", ""), j_attack.value("output", ""), 
-      j_attack.value("power", 0)
-    );
+  for(const auto& attack : json) {
+		std::string id = sub_cat + "." + attack["id"].get<std::string>();
+    m_attacks[id] = new CAttack(attack.value("name", ""), attack.value("description", ""), 
+				attack.value("output", ""), attack);
+	}
 }
 
 map<string, CAttack*> CWorld::parsePersonAttacks(std::vector<std::string> attack_ids) {
   map<string, CAttack*> mapAttacks;
   for (const auto& attack_id : attack_ids) 
-    mapAttacks[attack_id] = m_attacks[attack_id];
+    mapAttacks[attack_id] = m_attacks.at(attack_id);
   return mapAttacks;
 }
 

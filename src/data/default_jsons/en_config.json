@@ -50,6 +50,7 @@
     }
   },
   "translations": {
+    "default_dead_desc": "A dead something.",
     "fight_ended": "Fight ended.\n",
     "approaching_a": "You approach ",
     "approaching_b": " and clear your throat...\n",
@@ -77,10 +78,18 @@
     "consumed_item": "Item consumed.\n",
     "opened_book": "You open the book on the first page.\n",
     "exceed_limits": "Buying this item would exceed your limits.\n",
-    "read_help": "← previous | end | next →"
+    "read_help": "← previous | end | next →",
+		"fight_help": "type <i>: use [attack] agains [opponent].</i>",
+		"fighting_against": "Fighting against: "
   },
   "minds":[],
-  "commands":[],
+  "commands":[
+			{
+				"id": "use_against",
+				"regex": "use (.*) again (.*)",
+				"take": -1
+			}
+	],
   "music": {
       "background": "background",
       "fight": ""

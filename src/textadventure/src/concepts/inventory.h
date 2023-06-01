@@ -28,6 +28,8 @@ public:
     size_t getNumRomsInColum(size_t collum);
     bool empty();
 
+		void RemoveAll();
+
     std::map<std::string, CItem*> mapItems();
     std::string getItemList();
 };
