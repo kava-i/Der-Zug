@@ -80,7 +80,11 @@
     "exceed_limits": "Buying this item would exceed your limits.\n",
     "read_help": "← previous | end | next →",
 		"fight_help": "type <i>: use [attack] agains [opponent].</i>",
-		"fighting_against": "Fighting against: "
+		"fighting_against": "Fighting against: ",
+    "read_error": "Item cannot be read.\n",
+    "consume_error": "Item cannot be consumed.\n",
+    "equipe_error": "Item cannot be equiped.\n",
+    "item_not_in_inventory": "Item not in inventory! (use 'show inventory' to view all your items.\n"
   },
   "minds":[],
   "commands":[

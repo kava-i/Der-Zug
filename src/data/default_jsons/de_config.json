@@ -80,7 +80,10 @@
 		"fight_help": "schreibe <i>: setze [attacke] gegen [gegner] ein.</i>",
 		"fighting_against": "Du kämpfst gegen: ",
     "fight_ended": "Kampf beendet.\n",
-
+    "read_error": "Gegenstand kann nicht gelesen werden.\n",
+    "consume_error": "Gegenstand kann nicht konsumiert werden.\n",
+    "equipe_error": "Gegenstand kann nicht ausgerüstet werden.\n",
+    "item_not_in_inventory": "Item nicht in deinem Inventar! (Gebe 'zeige Inventar' ein, um all deine Gegenstände zu sehen.\n"
   },
   "minds":[],
   "commands":[
@@ -112,6 +115,11 @@
         {
             "id": "pick",
             "regex": "hebe (.*) auf",
+            "take": 1
+        },        
+				{
+            "id": "use",
+            "regex": "benutze (.*)",
             "take": 1
         },
         {

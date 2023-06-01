@@ -181,9 +181,13 @@ public:
     void h_look             (std::string&, CPlayer*);
     void h_search           (std::string&, CPlayer*);
     void h_take             (std::string&, CPlayer*);
+
     void h_consume          (std::string&, CPlayer*);
     void h_read             (std::string&, CPlayer*);
     void h_equipe           (std::string&, CPlayer*);
+    void h_use 							(std::string&, CPlayer*);
+    void UseItem (std::string& identifier, std::string category, CPlayer* p); ///< helper function
+
     void h_dequipe          (std::string&, CPlayer*);
     void h_examine          (std::string&, CPlayer*);
     void h_goTo             (std::string&, CPlayer*);

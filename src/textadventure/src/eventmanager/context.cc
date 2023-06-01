@@ -179,6 +179,7 @@ void Context::initializeHanlders() {
   listeners_["h_search"] = &Context::h_search;
   listeners_["h_take"] = &Context::h_take;
   listeners_["h_goTo"] = &Context::h_goTo;
+  listeners_["h_use"]  = &Context::h_use;
   listeners_["h_consume"] = &Context::h_consume;
   listeners_["h_read"] = &Context::h_read;
   listeners_["h_equipe"]  = &Context::h_equipe;
@@ -319,6 +320,7 @@ void Context::initializeTemplates() {
                         {"search",{"h_search"}}, // just as look but tries without specifying location
                         {"talk",{"h_startDialog"}}, 
                         {"pick",{"h_take"}}, 
+                        {"use",{"h_use"}}, 
                         {"consume",{"h_consume"}}, 
                         {"read",{"h_read"}}, 
                         {"equipe",{"h_equipe"}}, 
@@ -1311,36 +1313,30 @@ void Context::h_take(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_consume(std::string& sIdentifier, CPlayer* p) {
-  if (p->getInventory().getItem(sIdentifier) != NULL) {
-    if (p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
-      p->appendTechPrint("Dieser Gegenstand kann nicht konsumiert werden.\n");
-  }
-  else {
-    p->appendErrorPrint("Gegenstand nicht in deinem Inventar! "
-          "(benutze \"zeige Inventar\" um deine Items zu sehen.)\n");
-  }
+	UseItem(sIdentifier, "consume", p);
 }
 
 void Context::h_read(std::string& sIdentifier, CPlayer* p) {
-  if (p->getInventory().getItem(sIdentifier) != NULL) {
-    if (p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
-      p->appendTechPrint("Dieser Gegenstand kann nicht gelesen werden.\n");
-  }
-  else {
-    p->appendErrorPrint("Gegenstand nicht in deinem Inventar! "
-        "(benutze \"zeige Inventar\" um alle deine Gegenstande zu sehen.)\n");
-  }
+	UseItem(sIdentifier, "read", p);
 }
 
 void Context::h_equipe(std::string& sIdentifier, CPlayer* p) {
-  if (p->getInventory().getItem(sIdentifier) != NULL) {
-    if (p->getInventory().getItem(sIdentifier)->callFunction(p) == false)
-      p->appendErrorPrint("Dieser Gegenstand kann nicht ausgerüstet werden.\n");
-  }
-  else {
-    p->appendErrorPrint("Gegenstand nicht in deinem Inventar! "
-        "(benutze \"zeige Inventar\" um deine Items zu sehen.)\n");
-  }
+	UseItem(sIdentifier, "equipe", p);
+}
+void Context::h_use(std::string& sIdentifier, CPlayer* p) {
+	UseItem(sIdentifier, "", p);
+}
+
+void Context::UseItem(std::string& identifier, std::string category, CPlayer* p) {
+	auto item = p->getInventory().getItem(identifier);
+	if (!item)
+    p->appendErrorPrint(p->getWorld()->GetSTDText("item_not_in_inventory") + "\n");
+	else {
+		if (category != "" && item->getCategory() != category)
+      p->appendErrorPrint(p->getWorld()->GetSTDText(category  + "_error"));
+		else
+			item->callFunction(p);
+	}
 }
 
 void Context::h_dequipe(std::string& sIdentifier, CPlayer* p) {

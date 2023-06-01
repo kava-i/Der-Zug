@@ -129,11 +129,11 @@ std::string CItem::Costs() {
 
 // Consume function
 bool CItem::callFunction(CPlayer* p) {
-  if (m_functions.count(category_) == 0) {
+	if (m_functions.count(category_) == 0) {
     p->appendPrint(use_description_->print(true));
     return false;
   }
-  else
+	else
     (this->*m_functions[category_])(p);
   return true;
 }
