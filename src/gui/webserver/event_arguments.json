@@ -63,7 +63,7 @@
     "setNewQuest": ["quest"],
     "showitem": ["item"],
     "showperson": ["_room_chars"],
-    "startDialogDirekt": ["string"],
+    "startDialogDirekt": ["_room_chars"],
     "printText": ["text"],
     "opponentDied": []
 }
