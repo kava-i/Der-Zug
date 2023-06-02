@@ -1319,14 +1319,17 @@ void Context::h_use(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::UseItem(std::string& identifier, std::string category, CPlayer* p) {
+	std::cout << "Context::UseItem " << identifier << ", " << category << std::endl;
 	auto item = p->getInventory().getItem(identifier);
 	if (!item)
     p->appendErrorPrint(p->getWorld()->GetSTDText("item_not_in_inventory") + "\n");
 	else {
 		if (category != "" && item->getCategory() != category)
       p->appendErrorPrint(p->getWorld()->GetSTDText(category  + "_error"));
-		else
+		else {
+			std::cout << "Context::UseItem calling item-function." << std::endl;
 			item->callFunction(p);
+		}
 	}
 }
 

@@ -130,7 +130,7 @@ std::string CItem::Costs() {
 // Consume function
 bool CItem::callFunction(CPlayer* p) {
 	if (m_functions.count(category_) == 0) {
-    p->appendPrint(use_description_->print(true));
+  	PrintUseAndDoUpdate("used_item", p);
     return false;
   }
 	else

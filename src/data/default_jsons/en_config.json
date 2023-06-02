@@ -50,6 +50,7 @@
     }
   },
   "translations": {
+    "used_item": "Item kann nicht genutzt werden.",
     "default_dead_desc": "A dead something.",
     "fight_ended": "Fight ended.\n",
     "approaching_a": "You approach ",

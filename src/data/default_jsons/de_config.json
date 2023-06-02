@@ -49,6 +49,7 @@
     }
   },
   "translations": {
+    "used_item": "Item kann nicht genutzt werden.",
     "default_dead_desc": "Ein totes etwas.",
     "approaching_a": "Du gehst auf ",
     "approaching_b": " zu und räusperst dich...\n",
