@@ -48,7 +48,7 @@ std::string CDialog::visited() {
 
 void CDialog::addDialogOption(string sStateID, size_t optID) {
   m_states[sStateID]->getOptions()[m_states[sStateID]->numOptions()+1] = 
-    m_states[sStateID]->getOptions()[-1];
+    m_states[sStateID]->getOptions()[(-1)*optID];
 }
 
 void CDialog::deleteDialogOption(string sStateID, size_t optID) {
@@ -156,13 +156,18 @@ int CDState::numOptions() {
 }
 
 void CDState::executeActions(CPlayer* p) {
+	std::cout << "Executing actions... " << m_sActions << std::endl;
   std::vector<std::string> actions = func::split(m_sActions, ",");
   for(const auto& action : actions) {
+		std::cout << "Executing action: " << action<< std::endl;
     std::vector<std::string> parameters = func::split(action, "|");
-    if(parameters[0] == "addDialogOption") 
+		std::cout << "Got first parameter: " << parameters[0] << std::endl;
+    if(parameters[0] == "addDialogOption")  {
       m_dialog->addDialogOption(parameters[1], std::stoi(parameters[2]));
-    else if(parameters[0] == "deleteDialogOption")
+		}
+    else if(parameters[0] == "deleteDialogOption") {
       m_dialog->deleteDialogOption(parameters[1], std::stoi(parameters[2]));
+		}
     else if(parameters[0] == "changeDialog")
       m_dialog->changeDialog(parameters[1], parameters[2], p);
     else if(parameters[0] == "moveStart")

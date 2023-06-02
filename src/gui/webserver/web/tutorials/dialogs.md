@@ -28,3 +28,11 @@ Im Fall der default Dialoge wird zufällig einer ausgewählt. Bei den
 Charakter-Dialogen wird immer der erste verwendet. Dieser kann dann aber im Lauf
 des Spiels durch den 2., 3., 4., ... ersetzt werden, je nachdem, was die
 Spieler:in für Entscheidungen trifft
+
+## Dialog action
+#### addDialogOption
+f.e. `addDialogOption|START|1` adds the `-1`th option to START. 
+f.e. `addDialogOption|START|2` adds the `-2`th option to START. 
+
+#### deleteDialogOption
+f.e. `deleteDialogOption|START|2` adds the `1`st option of START. 
