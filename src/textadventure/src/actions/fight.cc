@@ -1,13 +1,26 @@
 #include "fight.h"
 #include "objects/player.h"
 #include "tools/func.h"
+#include <algorithm>
 #include <cctype>
 
 CFight::CFight(CPlayer* player, std::vector<CPerson*> opponents) {
 	m_sName = "Fight";
+
+	std::map<std::string, int> names;
+	for (const auto& it : opponents) {
+		std::string name = (names.count(it->name()) > 0) ? it->name() + "-" + std::to_string(names[it->name()]+1) : it->name();
+		opponent_names_[it->id()] = name;
+		names[it->name()]++;
+	}
+
 	m_sDescription = "Fighting against: ";
-	for (const auto& it : opponents) 
-		m_sDescription += it->name() + ",";
+	std::cout << "Starting fight agains: ";
+	for (const auto& it : opponents)  {
+		m_sDescription += it->name() + ", ";
+		std::cout << it->id() << ", " << std::endl;
+	}
+	m_sDescription.pop_back();
 	m_sDescription.pop_back();
   player_ = player;
   opponents_= opponents;
@@ -26,18 +39,28 @@ std::string CFight::NextTurn(const std::string& inp) {
 	std::string events;
 	std::string msg;
 	int cur_before = cur_;
-	auto attacker = GetAttacker();
+	auto [attacker, attacker_name] = GetAttacker();
 	auto const& [target, attack_id] = GetTargetAndAttack(inp);
 	if (!target) 
 		std::cout << "CFight::NextTurn: failed." << std::endl;
 	else {
 		cur_ = (cur_ == static_cast<int>(opponents_.size()-1)) ? -1 : cur_+1;  // update current
 		CAttack* attack = attacker->getAttacks().at(attack_id);
-		msg += attacker->name() + " " + player_->getWorld()->GetSTDText("uses_attack") + " " + attack->getName() + "\n";
+		msg += attacker_name + " " + player_->getWorld()->GetSTDText("uses_attack") + " " + attack->getName() + "\n";
 		events += attacker->SimpleUpdate(attack->player_update(), msg, player_->getWorld()->attribute_config().attributes_);
 		events += target->SimpleUpdate(attack->enemy_update(), msg, player_->getWorld()->attribute_config().attributes_);
 		std::cout << "Got events: " << events << std::endl;
 		msg += "$ ";
+	}
+	// Check whether opponentDied and add endFight if no more opponents
+	if (events.find("opponentDied") != std::string::npos) {
+		if (cur_before == -1) {
+			func::Replace(events, "opponentDied", "finishCharacter " + target->id());
+			RemoveOpponent(target->id());
+			std::cout << "Removed opponent, opponents left: " << opponents_.size() << std::endl;
+			if (opponents_.size() == 0)
+				events += ";endFight";
+		}
 	}
 	// If fight not ended add next round.
 	if (events.find("endFight") == std::string::npos) {
@@ -46,17 +69,14 @@ std::string CFight::NextTurn(const std::string& inp) {
 		else 
 			events += ";h_fight {player}";
 	}
-	else {
-		if (cur_before == -1) {
-			events += ";finishCharacter " + target->id();
-		}
-	}
 	player_->appendPrint(msg);
 	return events;
 }
 
-CPerson* CFight::GetAttacker() {
-	return (cur_ == -1) ? player_ : opponents_[cur_];
+std::pair<CPerson*, std::string> CFight::GetAttacker() {
+	if (cur_ == -1) 
+		return {player_, player_->name()};
+	return {opponents_[cur_], opponent_names_.at(opponents_[cur_]->id())};
 }
 
 std::pair<CPerson*, std::string> CFight::GetTargetAndAttack(const std::string& inp) {
@@ -80,15 +100,23 @@ std::pair<CPerson*, std::string> CFight::GetTargetAndAttack(const std::string& i
 CPerson* CFight::GetTarget(std::string name) {
 	if (name == "{player}") 
 		return player_;
+	// Try by number 
 	if (std::isdigit(name.front())) {
 		int num = std::stoi(name)-1;
 		if (num < opponents_.size())
 			return opponents_[num];
 	}
+	// try by direct match: 
+	for (const auto& it : opponents_) {
+		if (func::returnToLower(opponent_names_.at(it->id())) == name)
+			return it;
+	}
+
+	// Try by fuzzy matching
 	int min = 1;
 	int num = -1;
 	for (int i=0; i<opponents_.size(); i++) {
-		int cur = fuzzy::fuzzy_cmp(opponents_[i]->name(), name);
+		int cur = fuzzy::fuzzy_cmp(opponent_names_.at(opponents_[i]->id()), name);
     if (cur <= 0.2 && cur < min) {
 			min = cur;
 			num = i;
@@ -102,8 +130,10 @@ CPerson* CFight::GetTarget(std::string name) {
 std::string CFight::Print(bool add_help) {
 	// TODO (fux): print attributes selected in config
 	std::string str = player_->getWorld()->GetSTDText("fighting_against") + "\n";
-	for (const auto& it : opponents_) 
-		str += "- " + it->name() + " (" + it->printFightInfos(player_->getWorld()->attribute_config()) + ")\n";
+	for (const auto& it : opponents_) {
+		std::string name = opponent_names_.at(it->id());
+		str += "- " + name + " (" + it->printFightInfos(player_->getWorld()->attribute_config()) + ")\n";
+	}
 	str += player_->name() + ": " + player_->printFightInfos(player_->getWorld()->attribute_config());
 	if (add_help) {
 		str += "\n" + player_->printAttacks();
@@ -115,6 +145,17 @@ std::string CFight::Print(bool add_help) {
 
 string CFight::pickOpponentAttack() {
    srand(time(NULL));
-   size_t attack = rand() % GetAttacker()->getAttacks().size() + 1;
-   return GetAttacker()->getAttack(std::to_string(attack));
+   size_t attack = rand() % GetAttacker().first->getAttacks().size() + 1;
+   return GetAttacker().first->getAttack(std::to_string(attack));
+}
+
+void CFight::RemoveOpponent(std::string id) {
+	auto lambda = [id](CPerson* p) { return p->id() == id; };
+	auto it = std::find_if(opponents_.begin(), opponents_.end(), lambda);
+	if (it != opponents_.end()) {
+		std::cout << "opponent " << id << " removed." << std::endl;
+		opponents_.erase(it);
+	}
+	else 
+		std::cout << "opponent " << id << " not found." << std::endl;
 }

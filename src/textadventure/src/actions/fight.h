@@ -17,6 +17,7 @@ protected:
 
 		CPlayer* player_;
 		std::vector<CPerson*> opponents_;
+		std::map<std::string, std::string> opponent_names_;
 		int cur_;
 
 public:
@@ -38,11 +39,11 @@ private:
 		 * given, always returns the player.
 		 */
 		CPerson* GetTarget(std::string id);
-		CPerson* GetAttacker();
+		std::pair<CPerson*, std::string> GetAttacker();
 
 		std::pair<CPerson*, std::string> GetTargetAndAttack(const std::string& inp);
 		std::string Print(bool add_help);
-
+		void RemoveOpponent(std::string id);
 };
 
 #endif

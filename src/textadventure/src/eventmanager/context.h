@@ -237,6 +237,8 @@ public:
     // ----- ***** TIME EVENTS ***** ------ //
 		void t_setAttribute(std::string& str, CPlayer* p);
     void t_throwEvent(std::string&, CPlayer*);
+
+		std::pair<std::string, int> GetNthObject(std::string);
 };
     
 #endif 

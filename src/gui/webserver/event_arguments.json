@@ -40,7 +40,7 @@
     "endDialog": [],
     "endFight": [],
     "eraseMoney": ["int"],
-    "fight": ["_room_chars"],
+    "fight": ["character names"],
     "finishCharacter": ["_room_chars"],
     "gameover": [],
     "killCharacter": ["_room_chars"],
@@ -64,5 +64,6 @@
     "showitem": ["item"],
     "showperson": ["_room_chars"],
     "startDialogDirekt": ["string"],
-    "printText": ["text"]
+    "printText": ["text"],
+    "opponentDied": []
 }

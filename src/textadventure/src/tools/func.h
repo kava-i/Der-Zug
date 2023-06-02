@@ -26,6 +26,7 @@ namespace func
     */
     std::vector<std::string> split(std::string str, std::string delimiter);
 
+
     /**
 		* Reverses `split()` and joins parts of vector to single string.
 		* - No trailing delimiter 
@@ -35,6 +36,11 @@ namespace func
     * @return vector
     */
 		std::string join(const std::vector<std::string>& vec, std::string delimiter);
+
+		/**
+		 * Replaces `rep` part or string with `by`.
+		 */
+		void Replace(std::string& str, std::string rep, std::string by);
 
     /**
     * @param[in] vec (vector to search string in )

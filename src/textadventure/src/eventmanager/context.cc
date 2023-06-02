@@ -2,6 +2,7 @@
 #include "actions/dialog.h"
 #include "concepts/quest.h"
 #include "eventmanager/listener.h"
+#include "eventmanager/sorted_context.h"
 #include "fmt/format.h"
 #include "nlohmann/json.hpp"
 #include "nlohmann/json_fwd.hpp"
@@ -371,7 +372,7 @@ void Context::initializeTemplates() {
 
     m_templates["room"] = {{"name", "room"}, {"permeable", true,}, {"infos", {}}};
 
-		std::vector<std::string> availible_commands = {"changed_room", "printText", "attribute_set"};
+		std::vector<std::string> availible_commands = {"changed_room", "printText", "attribute_set", "opponentDied"};
     for (const auto& temp : m_templates) {
       if (temp.second.contains("listeners")) {
         for (const auto& listener : temp.second["listeners"].get<std::map<std::string, nlohmann::json>>())
@@ -669,15 +670,23 @@ void Context::h_endDialog(std::string&, CPlayer* p) {
 
 void Context::h_newFight(std::string& sIdentifier, CPlayer* p) {
   std::cout << "h_newFight: " << sIdentifier << std::endl;
-  auto lambda = [](CPerson* person){return person->name(); };
-  std::string str = func::getObjectId(p->getRoom()->getCharacters(),sIdentifier,lambda);
- 
-	auto character = p->getWorld()->getCharacter(str);
-	if (character && !character->fainted())
-		p->setFight(new CFight(p, {p->getWorld()->getCharacter(str)}));
-	else
-    p->startDialog(character->id());  
-  m_curPermeable=false;
+	std::vector<CPerson*> opponents;
+
+	for (const auto& opponent_name : func::split(sIdentifier, ",")) {
+		const auto [name, pos] = GetNthObject(opponent_name); // make sure to also get f.e. zombie-2
+		auto lambda = [](CPerson* person) {return person->name(); };
+		std::string str = func::getObjectId(p->getRoom()->getCharacters(), name, lambda, pos);
+		auto character = p->getWorld()->getCharacter(str);
+		if (character && !character->fainted())
+			opponents.push_back(character);
+		else if (character) {
+    	p->startDialog(character->id());  
+			return;
+		}
+	}
+	if (opponents.size() > 0)
+		p->setFight(new CFight(p, {opponents}));	
+	m_curPermeable=false;
 }
 
 void Context::h_gameover(std::string&, CPlayer* p) {
@@ -978,14 +987,7 @@ void Context::h_search(std::string& sIdentifier, CPlayer* p) {
 	std::cout << "h_search: " << sIdentifier << std::endl;
 	auto room = p->getRoom();
 
-	std::string name = sIdentifier;
-	int pos = -1;
-	if (name.rfind("-") == name.size()-2 && std::isdigit(name.back())) {
-		name = name.substr(0, name.rfind("-"));
-		pos = sIdentifier.back() - '0';
-		std::cout << "Upated name and pos: " << name << ", " << pos << std::endl;
-	}
-
+	const auto [name, pos] = GetNthObject(sIdentifier);
 
   auto lambda = [](CDetail* detail) { return detail->name();};
   std::string sDetail = func::getObjectId(room->getDetails(), name, lambda, pos);
@@ -1854,4 +1856,15 @@ void Context::t_throwEvent(std::string& sInfo, CPlayer* p) {
   std::string str = sInfo;
   p->addPostEvent(str);
   sInfo = "delete";
+}
+
+std::pair<std::string, int> Context::GetNthObject(std::string full_name) {
+	std::string name = full_name;
+	int pos = -1;
+	if (name.rfind("-") == name.size()-2 && std::isdigit(name.back())) {
+		name = name.substr(0, name.rfind("-"));
+		pos = full_name.back() - '0';
+		std::cout << "Upated name and pos: " << name << ", " << pos << std::endl;
+	}
+	return {name, pos};
 }

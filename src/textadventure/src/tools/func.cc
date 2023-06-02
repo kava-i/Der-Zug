@@ -40,6 +40,10 @@ std::string func::join(const std::vector<std::string>& vec, std::string delimite
 	);
 }
 
+void func::Replace(std::string& str, std::string rep, std::string by) {
+	str.replace(str.find(rep), rep.length(), by);
+}
+
 /**
 * @param[in] vec (vector to search string in )
 * @param[in] str (string to search for)
