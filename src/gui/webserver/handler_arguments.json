@@ -12,6 +12,7 @@
 	"h_showItemInfo": [ "char" ],
 	"h_changeName": [ "char", "new name" ],
 	"h_setNewQuest": [ "quest" ],
+  "h_setAttribute": ["_attributes", "_mod_types", "int", "_colors"],
 	"h_changeDialog": [ "_room_chars", "chars dialog" ],
 	"h_changeRoom": [ "room" ],
 	"h_startDialogDirect": [ "char" ],

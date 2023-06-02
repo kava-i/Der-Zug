@@ -254,6 +254,11 @@ void CPlayer::set_gameover() {
 	gameover_ = true;
 }
 
+void CPlayer::SetAttributeAndThrow(std::string attribute_id, int value) {
+  setStat(attribute_id, value);
+	addPostEvent("attribute_set " + attribute_id);
+}
+
 void CPlayer::printText(std::string text) {
 	std::string area = "";
 	if (text.find(".") != std::string::npos) {
@@ -818,12 +823,13 @@ void CPlayer::showQuests(bool solved) {
 * @param sQuestID id to given quest.
 */
 void CPlayer::setNewQuest(std::string quest_id) {
-  int ep=0;
   CQuest* quest = m_world->getQuest(quest_id);
-  appendSuccPrint(quest->setActive(ep, this));
+	std::string output = quest->setActive(this);
+	if (!quest->silent())
+  	appendSuccPrint(output);
   std::cout << "setNewQuest: " << quest->getID() << ", active: " << quest->getOnlineFromBeginning() << std::endl;
   // Create new quest-context with all quest-listeners.
-  if(quest->getOnlineFromBeginning() == false) {
+  if (quest->getOnlineFromBeginning() == false) {
     Context* context = new Context({{"name", quest_id}, {"permeable",true}, {"questID", quest_id}});
     for (auto& listener : quest->listeners()) {
       std::cout << "Adding listener: " << listener->id() << "|" << listener->handler() << std::endl;
@@ -831,9 +837,13 @@ void CPlayer::setNewQuest(std::string quest_id) {
     }
     m_contextStack.insert(context, 3, quest_id);
   }
-  if(quest->getSolved() == true)
+  if (quest->getSolved() == true) {
+		std::string updated;
+		Update(quest->updates(), updated);
+		appendPrint(updated);
+
     m_contextStack.erase(quest_id);
-	// TODO (fux) use the new update-field instead old: addEP(ep);
+	}
 }
 
 /**
@@ -841,12 +851,16 @@ void CPlayer::setNewQuest(std::string quest_id) {
 * @param sQuestID identifier to quest.
 * @param sStepID identifier to quest-step.
 */
-void CPlayer::questSolved(std::string sQuestID, std::string step_id) {
-  int ep = 0;
-  m_world->getQuest(sQuestID)->getSteps()[step_id]->solved(ep, this);
-  if (m_world->getQuest(sQuestID)->getSolved() == true)
-      m_contextStack.erase(sQuestID);
-	// TODO (fux) use the new update-field instead old: addEP(ep);
+void CPlayer::questSolved(std::string quest_id, std::string step_id) {
+	auto quest = m_world->getQuest(quest_id);
+
+  quest->getSteps()[step_id]->solved(this);
+  if (quest->getSolved() == true) {
+		std::string updated;
+		Update(quest->updates(), updated);
+		appendPrint(updated);
+    m_contextStack.erase(quest_id);
+	}
 }
 
 
@@ -940,58 +954,6 @@ void CPlayer::showStats() {
   m_sPrint += func::table(stats, lambda_key, lambda_val, "width:20%");
 }
 
-/**
-* Check given dependencies. Receive a json and check whether this matches player's 
-* minds or stats.
-* @param jDeps json with dependencies
-*/
-bool CPlayer::checkDependencies(nlohmann::json jDeps) {
-  std::map<std::string , std::function<bool(int, int)>> operators;
-  operators["="] = [](int a, int b) { return a=b; };
-  operators[">"] = [](int a, int b) { return a>b; };
-  operators[">="] = [](int a, int b) { return a>=b; };
-  operators["<"] = [](int a, int b) { return a<b; };
-  operators["<="] = [](int a, int b) { return a<=b; };
-  operators["!="] = [](int a, int b) { return a!=b; };
-  operators["&"] = [](int a, int b) { return true; };
-
-  if(jDeps.size() == 0)
-    return true;
-  for(auto it=jDeps.begin(); it!=jDeps.end(); it++) {
-    //Assign value with position 0 = operator
-    std::string sOpt = func::extractLeadingChars(it.value());
-    int value = func::getNumFromBack(it.value());
-
-		// TODO (fux): describe what is happening here :D
-    if(sOpt == "&") {
-      double level = m_minds[it.key()].level + m_minds[it.key()].relevance;
-      for(const auto& mind : m_minds) {
-        if(mind.first != it.key() && mind.second.level + mind.second.relevance > level)
-          return false;
-      }
-			return true;
-    }
-
-    //Check dependency in mind
-    if(m_minds.count(it.key()) > 0) {
-      if(operators[sOpt](m_minds[it.key()].level, value) == false)
-        return false;
-    }
-
-    //Check dependency in stats
-    else if(attributes_.count(it.key()) > 0) {
-      if(operators[sOpt](attributes_[it.key()], value) == false)
-        return false;
-    }
-    else {
-      std::cout << cRED << "Error in document: " << it.key() << cCLEAR << std::endl;
-      return false;
-    }
-  } 
-
-  return true;
-}
-
 void CPlayer::Update(const Updates& updates) {
 	std::string updated_print;
 	Update(updates, updated_print);
@@ -1011,9 +973,10 @@ void CPlayer::Update(const Updates& updates, std::string& updated_print) {
 		else if (attributes_.count(it.id_) > 0) {
       int val_old = attributes_.at(it.id_);
 			it.ApplyUpdate(attributes_.at(it.id_), value);
+			addPostEvent("attribute_set " + it.id_);
 			std::string name = attribute_conf.at(it.id_).name_;
       std::string color = (val_old <= attributes_.at(it.id_)) ? GREEN : RED;
-			if (attribute_conf.at(it.id_).category_.front() != '_')
+			if (!attribute_conf.at(it.id_).Hidden())
       	updated_print += color + name + msg + func::dtos(value) + WHITE + "\n";
 			auto events = attribute_conf.at(it.id_).GetExceedBoundEvents(attributes_.at(it.id_));
 			if (events.size() > 0) {
@@ -1036,16 +999,15 @@ bool CPlayer::CompareUpdates(const Updates& updates) {
     // Since GetValueFromAttributeOrMin returns 1 on failure, nothing will change.
     double value = it.value_ * GetValueFromAttributeOrMin(it.attribute_);
 		// Update minds
-    int cur = 1;
 		if (m_minds.count(it.id_) > 0) {
-      cur = m_minds.at(it.id_).level;
-			it.ApplyUpdate(cur, value);
+      int cur = m_minds.at(it.id_).level;
+			it.ApplyUpdate(cur, value); // only a comy is updated
       if (cur <= 0)
         return true;
 		}
 		else if (attributes_.count(it.id_) > 0) {
-      cur = attributes_.at(it.id_);
-			it.ApplyUpdate(cur, value);
+      int cur = attributes_.at(it.id_);
+			it.ApplyUpdate(cur, value); // only a comy is updated
       if (!attribute_conf.at(it.id_).CheckBounds(cur))
         return true;
 		}

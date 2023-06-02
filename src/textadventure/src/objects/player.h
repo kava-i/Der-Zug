@@ -154,6 +154,11 @@ public:
 
 		void set_gameover();
 
+		/**
+		 * Sets given attribute and throws `attribute_set` event.
+		 */
+		void SetAttributeAndThrow(std::string attribute_id, int value);
+
     //No-event type commands
     void printText(std::string text);
 
@@ -369,8 +374,6 @@ public:
     * minds or stats.
     * @param jDeps json with dependencies
     */
-    bool checkDependencies(nlohmann::json);
-
 		void Update(const Updates& updates);
 		void Update(const Updates& updates, std::string& updated_print);
     bool CompareUpdates(const Updates& updates);

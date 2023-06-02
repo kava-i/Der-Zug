@@ -3,11 +3,35 @@
   {{ log("rendered header") }}
 
   <!-- Name and ID (default value for non-set-values) -->
-  <li><label>Name:</label><input id="name" value="{{ default(name, "") }}">
-  <li><label>Id:</label><input id="id" value="{{ default(id, "") }}">
-  <li><label style="width:auto">Description:</label>
-      <input style="width:40em" id="description" value="{{default(description, "") }}">
-  <li><label>Ep:</label><input id="ep" custom="int" value="{{ default(ep, "0") }}">
+	<li><label>Name:</label><input id="name" value="{{ default(name, "") }}"></li>
+	<li><label>Id:</label><input id="id" value="{{ default(id, "") }}"></li>
+  <li>
+		<label style="width:auto">Description:</label>
+    <input style="width:40em" id="description" value="{{default(description, "") }}">
+	</li>
+
+  <li title="Quest succes-checks will not be done, as long as quest is not set to active.">
+		<label>Online from beginning:</label>
+		<input 
+			id="online" type="checkbox" custom="bool"
+			{%- if default(online, true) -%}checked{%- endif -%}
+		>
+  </li>
+
+  <li title="No success messages will be print if silent set to true">
+		<label>Silent:</label>
+		<input 
+			id="silent" type="checkbox" custom="bool"
+			{%- if default(silent, false) -%}checked{%- endif -%}
+		>
+  </li>
+
+
+  {% set _not_optional = true %}
+  {% set _updates = default(updates, []) %}
+  {% include "web/element_templates/updates" %}
+  {% set _not_optional = false %}
+
   <li><label style="width:auto" title="List of steps, which are active from beginning"
       custom="json">Active from beginning:</label>
         <input id="active_from_beginning" custom="json" style="width:20em;" 
@@ -47,6 +71,7 @@
           <input style="width:20em" id="events" placeholder="events" 
               value="{{default(step.events, "")}}">
           <br>
+
           <label style="width:10em" title="Events/ commands executed before success message."
             >Pre Events</label>
           <input style="width:20em" id="_events" placeholder="pre events" 

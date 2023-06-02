@@ -50,6 +50,9 @@ std::string ConfigAttribute::GetExceedBoundEvents(int cur, bool player) const {
 	}
 	return "";
 }
+bool ConfigAttribute::Hidden() const {
+	return category_.front() == '_';
+}
 
 AttributeMapping::AttributeMapping(const nlohmann::json& json) {
 	show_ = json.at("show");

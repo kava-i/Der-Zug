@@ -1,5 +1,6 @@
 {
     "[end]": ["string"],
+    "attribute_set": ["_attributes"],
     "changed_room": ["room"],
     "reload_game": [],
     "reload_player": ["string"],

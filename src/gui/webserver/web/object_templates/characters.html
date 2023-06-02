@@ -124,11 +124,6 @@
   
   {{log("rendered attacks") }}  
 
-  {% set _not_optional = true %}
-  {% set _updates = default(updates, []) %}
-  {% include "web/element_templates/updates" %}
-  {% set _not_optional = false %}
-
   <!-- Listeners (default value for non-set-values) -->
   {% include "web/element_templates/listeners" %}
 

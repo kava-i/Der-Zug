@@ -6,6 +6,7 @@
 #include <map>
 #include <nlohmann/json.hpp>
 #include <vector>
+#include "objects/helper/update.h"
 #include "tools/webcmd.h"
 
 class CQuestStep;
@@ -17,10 +18,11 @@ private:
     std::string m_sName;
     std::string m_sID;
     std::string m_sDescription;
-    int m_EP;
+		Updates updates_;
     bool m_solved;
     bool m_active;
     bool m_onlineFromBeginning;
+    bool silent_;
     std::vector<std::string> m_first_active_steps;
     std::map<std::string, CQuestStep*> m_questSteps;
     std::vector<CListener*> lisneters_;
@@ -35,16 +37,18 @@ public:
     bool getOnlineFromBeginning();
     std::map<std::string, CQuestStep*> getSteps();
     std::vector<CListener*> listeners();
+		const Updates& updates();
+		bool silent() const;
 
-    //Setter
+    // Setter
     void setSteps(std::map<std::string, CQuestStep*> steps);
     void setListeners(std::vector<CListener*> handlers);
 
-    std::string setActive(int& ep, CPlayer* p);
+    std::string setActive(CPlayer* p);
 
-    //Functions
+    // Functions
     std::string printQuest(bool solved);
-    std::string checkSolved(int& ep);
+    std::string checkSolved();
 };
 
 class CQuestStep
@@ -94,7 +98,7 @@ public:
     void incSucc(int x);
 
     //Functions
-    void solved(int& ep, CPlayer*);
+    void solved(CPlayer*);
     std::string UpdateAttributes(CPlayer* p);
 };
 

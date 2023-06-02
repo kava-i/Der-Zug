@@ -13,6 +13,7 @@
 #include "tools/func.h"
 #include "tools/webcmd.h"
 #include <cstddef>
+#include <exception>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -133,8 +134,6 @@ void Context::initializeHanlders() {
   listeners_["h_deleteCharacter"] = &Context::h_deleteCharacter;
   listeners_["h_addItem"] = &Context::h_addItem;
   listeners_["h_removeItem"] = &Context::h_removeItem;
-  listeners_["h_recieveMoney"] = &Context::h_recieveMoney; 
-  listeners_["h_eraseMoney"] = &Context::h_eraseMoney;
   listeners_["h_newFight"] = &Context::h_newFight;
   listeners_["h_endFight"] = &Context::h_endFight;
   listeners_["h_endDialog"] = &Context::h_endDialog;
@@ -243,7 +242,6 @@ void Context::initializeHanlders() {
   listeners_["h_levelUp"] = &Context::h_levelUp;
 
   // --- *** TIMEEVENTS *** --- //
-  listeners_["t_highness"] = &Context::t_highness;
   listeners_["t_throwEvent"] = &Context::t_throwEvent;
   listeners_["t_setAttribute"] = &Context::t_setAttribute;
 }
@@ -274,8 +272,6 @@ void Context::initializeTemplates() {
                         {"deleteCharacter", {"h_deleteCharacter"}},
                         {"addItem", {"h_addItem"}},
                         {"removeItem", {"h_removeItem"}},
-                        {"recieveMoney", {"h_recieveMoney"}},
-                        {"eraseMoney", {"h_eraseMoney"}},
                         {"fight", {"h_newFight"}},
                         {"endFight",{"h_endFight"}},
                         {"endDialog",{"h_endDialog"}},
@@ -308,6 +304,7 @@ void Context::initializeTemplates() {
                         {"removeCharFromRoom",   {"h_removeCharFromRoom"}},
                         {"removeDetailFromRoom", {"h_removeDetailFromRoom"}},
                         {"removeItemFromRoom",   {"h_removeItemFromRoom"}},
+                        {"attribute_set",{"h_ignore"}}, 
                         {"removeHandler", {"h_removeHandler"}} }}
                     };
 
@@ -328,13 +325,16 @@ void Context::initializeTemplates() {
                         {"show",{"h_ignore"}}, 
                         {"examine",{"h_ignore"}},
                         {"changed_room",{"h_ignore"}},
+                        {"attribute_set",{"h_ignore"}},
                         {"try", {"h_try"}}}},
                     };
 
     m_templates["fight"] = {
                     {"name","fight"}, {"permeable",false}, {"help","fight.txt"}, 
                     {"listeners",{
-                        {"use_against",{"h_fight"}}, {"h_fight", {"h_fight"}}}}
+                        {"use_against",{"h_fight"}}, 
+                        {"attribute_set",{"h_ignore"}}, 
+												{"h_fight", {"h_fight"}}}}
                     };
 
     m_templates["dialog"] = {
@@ -371,7 +371,7 @@ void Context::initializeTemplates() {
 
     m_templates["room"] = {{"name", "room"}, {"permeable", true,}, {"infos", {}}};
 
-		std::vector<std::string> availible_commands = {"changed_room", "printText"};
+		std::vector<std::string> availible_commands = {"changed_room", "printText", "attribute_set"};
     for (const auto& temp : m_templates) {
       if (temp.second.contains("listeners")) {
         for (const auto& listener : temp.second["listeners"].get<std::map<std::string, nlohmann::json>>())
@@ -469,7 +469,7 @@ bool Context::throw_event(event e, CPlayer* p) {
     }
   }   
 
-  if (called == false)
+  if (called == false && !func::inArray({"changed_room", "attribute_set"}, e.first))
     error(p);
       
   return m_curPermeable;
@@ -657,18 +657,6 @@ void Context::h_removeItem(std::string& sIdentifier, CPlayer* p) {
   m_curPermeable=false;
 }
 
-void Context::h_recieveMoney(std::string& sIdentifier, CPlayer* p) {
-  p->setStat("gold", p->getStat("gold") + stoi(sIdentifier));
-  p->appendPrint(Webcmd::set_color(Webcmd::color::GREEN) + "+" + sIdentifier + " Schiling" + Webcmd::set_color(Webcmd::color::WHITE) + "\n");
-  m_curPermeable = false; 
-}
-
-void Context::h_eraseMoney(std::string& sIdentifier, CPlayer* p) {
-  p->setStat("gold", p->getStat("gold") - stoi(sIdentifier));
-  p->appendPrint(Webcmd::set_color(Webcmd::color::RED) + "-" + sIdentifier + " Schiling" + Webcmd::set_color(Webcmd::color::WHITE) + "\n");
-  m_curPermeable = false; 
-}
-
 void Context::h_endFight(std::string&, CPlayer* p) {
   p->endFight();
   m_curPermeable=false;
@@ -767,7 +755,7 @@ void Context::h_setAttribute(std::string& sIdentifier, CPlayer* p) {
   int value = stoi(atts[2]);
 	int cur = p->getStat(atts[0]);
 	calc::MOD_TYPE_FUNCTION_MAPPING.at(mod_type)(cur, value);
-	p->setStat(attribute, cur);
+	p->SetAttributeAndThrow(attribute, cur);
 
 	// Add events caused by changing attribute
 	auto events = p->getWorld()->attribute_config().attributes_.at(attribute).GetExceedBoundEvents(p->getStat(attribute));
@@ -783,7 +771,8 @@ void Context::h_setAttribute(std::string& sIdentifier, CPlayer* p) {
     color = Webcmd::color::GREEN;
   else if (atts.size() > 3 && atts[3] == "red")
     color = Webcmd::color::RED;
-  if (atts.size() > 3)
+	
+  if (atts.size() > 3 && !p->getWorld()->attribute_config().attributes_.at(attribute).Hidden())
     p->appendPrint(Webcmd::set_color(color) + atts[0] + msg 
         + std::to_string(value ) + Webcmd::set_color(Webcmd::color::WHITE) + "\n");
 
@@ -1663,7 +1652,12 @@ void Context::h_react(std::string& sIdentifier, CPlayer* p) {
     std::cout << "h_react Checking: " << it.second->logic() << ": " << m_curEvent.first << "|" << sIdentifier << std::endl;
     p->set_subsitues({{"cmd", m_curEvent.first}, {"input", sIdentifier}});
     LogicParser logic(p->GetCurrentStatus());
-		bool success = logic.Success(it.second->logic());
+		bool success = false;
+		try {
+			success = logic.Success(it.second->logic());
+		} catch(std::exception& e) {
+			std::cout << "h_react logic.Success failed: " << e.what() << std::endl;
+		}
 		std::cout << "h_react room matches input: " << (it.second->logic().find(sIdentifier) != std::string::npos) 
 				<< std::endl;
 		std::cout << "h_react Checking: " << success << std::endl;
@@ -1815,7 +1809,7 @@ void Context::h_updateStats(std::string& sIdentifier, CPlayer* p) {
   // Update ability.
   int num = getAttribute<int>("numPoints")-1;
   int val = getAttribute<int>("value");
-  p->setStat(ability, p->getStat(ability) + val);
+	p->SetAttributeAndThrow(ability, p->getStat(ability) + val);
 	
 	// Add events caused by changing attribute
 	auto events = p->getWorld()->attribute_config().attributes_.at(ability).GetExceedBoundEvents(p->getStat(ability));
@@ -1833,17 +1827,6 @@ void Context::h_updateStats(std::string& sIdentifier, CPlayer* p) {
 }
 
 // ----- ***** TIME EVENTS ***** ------ //
-void Context::t_highness(std::string& str, CPlayer* p) {
-  if(p->getStat("highness")==0)
-    return;
-  p->appendStoryPrint("Time always comes to give you a hand; Things begin to become clearer again. Wozyness decreased by 1.\n");
-  p->setStat("highness", p->getStat("highness")-1);
-
-  p->getContext("standard")->deleteTimeEvent("t_highness");
-  if (p->getStat("highness") > 0)
-    add_timeEvent("t_highness", "standard", "", 0.2);
-}
-
 void Context::t_setAttribute(std::string& str, CPlayer* p) {
   std::cout << "t_setAttribute " << str << std::endl;
 	// Update attribute

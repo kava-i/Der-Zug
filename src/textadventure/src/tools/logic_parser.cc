@@ -75,6 +75,8 @@ bool LogicParser::Calc(std::string str1, std::string opt, std::string str2) {
     str2 = substitue_[str2];
 	}
 
+	std::cout << "LogicParser: After subsituting: " << str1 << ", " << opt << ", " << str2  << std::endl;
+
   //Calculate value.
   bool result = true;
   if (opt == "=") 

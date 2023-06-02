@@ -30,6 +30,7 @@ struct ConfigAttribute {
   // methods 
   bool CheckBounds(int cur ) const;
 	std::string GetExceedBoundEvents(int cur, bool player=true) const;
+	bool Hidden() const;
 };
 
 struct AttributeMapping {

@@ -129,8 +129,6 @@ public:
     void h_deleteCharacter(std::string&, CPlayer*);
     void h_addItem(std::string&, CPlayer*);
     void h_removeItem(std::string&, CPlayer*);
-    void h_recieveMoney(std::string&, CPlayer*);
-    void h_eraseMoney(std::string&, CPlayer*);
     void h_newFight(std::string&, CPlayer*);
     void h_endFight(std::string&, CPlayer*);
     void h_endDialog(std::string&, CPlayer*);
@@ -237,7 +235,6 @@ public:
     void h_levelUp(std::string&, CPlayer*);
 
     // ----- ***** TIME EVENTS ***** ------ //
-    void t_highness(std::string&, CPlayer*);
 		void t_setAttribute(std::string& str, CPlayer* p);
     void t_throwEvent(std::string&, CPlayer*);
 };

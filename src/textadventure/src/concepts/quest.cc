@@ -1,15 +1,16 @@
 #include "quest.h"
 #include "eventmanager/listener.h"
+#include "objects/helper/update.h"
 #include "objects/player.h"
 
-CQuest::CQuest(nlohmann::json jAttributes) {
+CQuest::CQuest(nlohmann::json jAttributes) : updates_(jAttributes.value("updates", nlohmann::json::array())) {
   m_sName = jAttributes.value("name", "");
   m_sID = jAttributes.value("id", "");
   m_sDescription = jAttributes.value("description", "");
-  m_EP = jAttributes.value("ep", 5);
   m_solved=false;
   m_active=false;
-  m_onlineFromBeginning = jAttributes.value("online", "true") == "true";
+  m_onlineFromBeginning = jAttributes.value("online", 1) == 1;
+  silent_ = jAttributes.value("silent", 0) == 1;
   m_first_active_steps = jAttributes.value("active_from_beginning", std::vector<std::string>());
 }
 
@@ -35,6 +36,13 @@ std::vector<CListener*> CQuest::listeners() {
   return lisneters_;
 }
 
+const Updates& CQuest::updates() {
+	return updates_;
+}
+bool CQuest::silent() const {
+	return silent_;
+}
+
 
 // *** SETTER *** //
 void CQuest::setSteps(std::map<std::string, CQuestStep*> steps) {
@@ -48,7 +56,7 @@ void CQuest::setListeners(std::vector<CListener*> listeners) {
 
 // *** FUNCTIONS *** //
 
-std::string CQuest::setActive(int& ep, CPlayer* p) {
+std::string CQuest::setActive(CPlayer* p) {
   m_active = true;
   for (auto step : m_first_active_steps)
     m_questSteps[step]->setActive(true, p);
@@ -58,13 +66,12 @@ std::string CQuest::setActive(int& ep, CPlayer* p) {
   for (auto it : m_questSteps) {
     if (it.second->getSolved() == true) {
       sOutput += it.second->getName() + " Erfolgreich!\n";
-      
       //Set all linked steps to active (might trigger success-messages or events)
       for (auto step : it.second->getLinkedSteps())
         m_questSteps[step]->setActive(true, p);
     }
   }
-  sOutput += checkSolved(ep);
+  sOutput += checkSolved();
   return sOutput;
 }
 
@@ -95,21 +102,18 @@ std::string CQuest::printQuest(bool solved) {
   return sOutput;    
 }
 
-std::string CQuest::checkSolved(int& ep) {
+std::string CQuest::checkSolved() {
   //Do nothing if not all steps are fullfilled.
   for (auto it : m_questSteps) {
     if (it.second->getSolved() == false)
       return "";
   }
 
-  m_solved=true;
+  m_solved = true;
 
-  //If quest is solved and active print success-message and increase ep
-  if (m_active == true) {
-    ep = m_EP;
-    return "Quest " + m_sName + " abgeschlossen! + " + std::to_string(m_EP) 
-      + " EP\n";
-  }
+  //If quest is solved and active print success-message 
+  if (m_active == true)
+    return "Quest " + m_sName + " abgeschlossen!";
   return "";
 }
 
@@ -187,13 +191,15 @@ void CQuestStep::setActive(bool active, CPlayer* p) {
   //If solved, generate output and add events.
   if(m_solved==true) {
 
-    //Add events and print success-message
+    //Add events and print success-message (if quest not silent)
     if(m_preEvents != "") 
 			p->addPostEvent(m_preEvents);
-    p->appendSuccPrint(m_sName + " Erfolgreich\n");
+		if (!m_quest->silent())
+    	p->appendSuccPrint(m_sName + " Erfolgreich\n");
     if(m_events != "") 
 			p->addPostEvent(m_events);
-    p->appendPrint(UpdateAttributes(p));
+		if (!m_quest->silent())
+    	p->appendPrint(UpdateAttributes(p));
 
     //Check if player command shall not be executed.
     if(m_info.count("break") > 0)
@@ -207,8 +213,8 @@ void CQuestStep::incSucc(int x) {
   m_curSucc += x;
 }
 
-void CQuestStep::solved(int& ep, CPlayer* p) {
-  if(m_succ != m_curSucc)
+void CQuestStep::solved(CPlayer* p) {
+  if (m_succ != m_curSucc)
     return;
 
   m_solved = true;
@@ -216,9 +222,11 @@ void CQuestStep::solved(int& ep, CPlayer* p) {
   //If step was solved, print success-message and add events.
   if (m_active == true) {
     p->addPostEvent(m_preEvents);
-    p->appendSuccPrint(m_sName + " Erfolgreich\n");
+		if (!m_quest->silent())
+    	p->appendSuccPrint(m_sName + " Erfolgreich\n");
     p->addPostEvent(m_events);
-    p->appendPrint(UpdateAttributes(p));
+		if (!m_quest->silent())
+    	p->appendPrint(UpdateAttributes(p));
   }
 
   //Set all linked steps to active (this might trigger success-messages or events)
@@ -226,8 +234,8 @@ void CQuestStep::solved(int& ep, CPlayer* p) {
     m_quest->getSteps()[step]->setActive(true, p);
 
   //If quest is solved, print alltogether success-message
-  std::string sOutput = m_quest->checkSolved(ep);
-  if (sOutput != "")
+  std::string sOutput = m_quest->checkSolved();
+  if (sOutput != "" && !m_quest->silent())
     p->appendSuccPrint(sOutput);
 
   //Check if player command shall not be executed.
