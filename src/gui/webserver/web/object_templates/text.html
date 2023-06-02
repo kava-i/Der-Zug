@@ -29,6 +29,7 @@
           <input id="image" placeholder="image" value={{default(desc.image,"")}}>
         </li>
 
+					{% set _id = "updates" %}
 					{% set _updates = default(desc.updates, []) %}
 					{% include "web/element_templates/updates" %}
 

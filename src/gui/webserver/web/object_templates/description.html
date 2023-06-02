@@ -30,6 +30,7 @@
           <input id="logic" placeholder="logic" value="{{default(desc.logic, "")}}">
         </li>
 
+					{% set _id = "updates" %}
 					{% set _updates = default(desc.updates, []) %}
 					{% include "web/element_templates/updates" %}
 

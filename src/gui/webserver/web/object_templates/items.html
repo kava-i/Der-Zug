@@ -71,6 +71,7 @@
   {{ log("rendering item updates ") }}
 
   {% set _not_optional = true %}
+	{% set _id = "updates" %}
   {% set _updates = default(updates, []) %}
   {% include "web/element_templates/updates" %}
   {% set _not_optional = false %}
