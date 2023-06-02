@@ -45,32 +45,37 @@ async function run(creator, world_name) {
       notify("Game already running.");
       return;
     }
-		else if (this.status = 404) {
+		else if (this.status == 404) {
       notify("Game server not availible.");
       return;
 		}
-  }
+		else if (this.status == 204) {
+			// If not already running, send request to start game.
+			var xhttp = new XMLHttpRequest();
+			xhttp.open("POST", "/api/start");
+			xhttp.send(JSON.stringify(data));
 
-  // If not already running, send request to start game.
-  var xhttp = new XMLHttpRequest();
-  xhttp.open("POST", "/api/start");
-  xhttp.send(JSON.stringify(data));
-
-  //Redirect to game
-  xhttp.onload = function(event){
-    if (this.status != 200)
-      notify("Unkown problem starting game: " + this.status);
-    // If Successfully started, redirect to game-page.
-    else {
-      var hostname = window.location.hostname;
-			if (hostname.indexOf("fux-1789.org") != -1) {
-      	window.open("https://txtad.fux-1789.org/" + creator + "/" + world_name);
+			//Redirect to game
+			xhttp.onload = function(event){
+				if (this.status != 200)
+					notify("Unkown problem starting game: " + this.status);
+				// If Successfully started, redirect to game-page.
+				else {
+					var hostname = window.location.hostname;
+					if (hostname.indexOf("fux-1789.org") != -1) {
+						window.open("https://txtad.fux-1789.org/" + creator + "/" + world_name);
+					}
+					else {
+						window.open("http://" + hostname+ ":" + TEXT_ADVENTURE_PORT + "/" + creator + "/" + world_name);
+					}
+				}
 			}
-			else {
-      	window.open("http://" + hostname+ ":" + TEXT_ADVENTURE_PORT + "/" + creator + "/" + world_name);
-			}
-    }
-  }
+  	}
+		else {
+      notify("Unkown problem, we're sorry");
+      return;
+		}
+	}
 }
 
 async function end(creator, world_name, silent=false) {

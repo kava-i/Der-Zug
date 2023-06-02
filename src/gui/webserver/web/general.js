@@ -226,11 +226,11 @@ function play(creator, world_name) {
       notify("Game not running.");
       return;
     }
-		else if (this.status = 404) {
+		else if (this.status == 404) {
       notify("Game server not availible.");
       return;
 		}
-		else {
+		else if (this.status == 200) {
 			var hostname = window.location.hostname;
 			if (hostname.indexOf("fux-1789.org") != -1) {
 				window.open("https://txtad.fux-1789.org/" + creator + "/" + world_name);
@@ -238,6 +238,10 @@ function play(creator, world_name) {
 			else {
 				window.open("http://" + hostname+ ":" + TEXT_ADVENTURE_PORT + "/" + creator + "/" + world_name);
 			}
+		}
+		else {
+      notify("Unkown problem, we're sorry");
+      return;
 		}
   }
 }
