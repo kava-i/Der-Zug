@@ -1035,8 +1035,9 @@ void CPlayer::checkCommands() {
 		std::string replace = "";
 		if (cmd.find("CNAME") != std::string::npos && m_curDialogPartner != nullptr)
 			replace = m_curDialogPartner->color() + func::returnToUpper(m_curDialogPartner->name()) + WHITE;
-		else if (cmd.find("cname") != std::string::npos && m_curDialogPartner != nullptr)
-			replace = BLUE + m_curDialogPartner->name() + WHITE;
+		else if (cmd.find("cname") != std::string::npos && m_curDialogPartner != nullptr) {
+			replace = m_curDialogPartner->color() + m_curDialogPartner->name() + WHITE;
+		}
 		else if (cmd.find("NAME") != std::string::npos)
 			replace = color() + func::returnToUpper(name()) + WHITE;
 		else if (cmd.find("name") != std::string::npos)
