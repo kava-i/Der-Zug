@@ -187,8 +187,10 @@ std::map<std::string, CPlayer*>& CPlayer::getMapOFOnlinePlayers() {
 
 std::map<std::string, std::string> CPlayer::GetCurrentStatus() {
   // Setup basic elements
-  std::map<std::string, std::string> status = {{"room", (std::string)m_room
-    ->id()}, {"inventory", (std::string)m_inventory.getItemList()}};
+  std::map<std::string, std::string> status = {
+		{"room", (std::string)m_room ->id()}, 
+		{"last_room", (m_lastRoom) ? m_lastRoom->id() : "---"}, 
+		{"inventory", (std::string)m_inventory.getItemList()}};
 
   // Add extra substitutes
   status.insert(subsitutes_.begin(), subsitutes_.end());
