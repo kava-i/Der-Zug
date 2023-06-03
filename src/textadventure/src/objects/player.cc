@@ -66,6 +66,7 @@ CPlayer::CPlayer(nlohmann::json jAtts, CRoom* room, attacks lAttacks, std::strin
 
   //Set current room
   m_room = room;
+	m_lastRoom = nullptr;
 
   // Set player's equipment (no equipment at the beginning)
 	for (const auto& kind : m_world->item_config()._kinds.at("equipe")) {
