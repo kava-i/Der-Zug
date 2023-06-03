@@ -89,6 +89,9 @@ bool LogicParser::Calc(std::string str1, std::string opt, std::string str2) {
     result = std::stoi(str1) < std::stoi(str2);
   else if(opt == ":") {
     auto vec = Split(str1, ";");
+		std::cout << "LP: Checking against inventory: " << str2 << std::endl;
+		for (const auto& it : vec) 
+			std::cout << "LP: - " << it << std::endl;
     result = std::find(vec.begin(), vec.end(), str2) != vec.end();
   }
   else
