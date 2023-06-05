@@ -22,7 +22,7 @@
           value="{{default(opt.id,"0")}}">
           <input id="text" placeholder="text" value="{{default(opt.text, "")}}">
           <input id="to" placeholder="linked step" value="{{default(opt.to, "")}}">
-          <input id="logic" placeholder="logic" value="{{default(opt.logic, "") }}">
+          <input id="logic" placeholder="logic" value="{{default(opt.logic, "") }}" onclick="OpenLogicDialog(this);">
           <span class="mod_elem" onclick="del_elem('options',{{loop.index}})">-</span>
           <span class="mod_elem" onclick="add_elem('options',{{loop.index}})">+</span>
         </li>

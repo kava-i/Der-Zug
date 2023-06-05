@@ -64,8 +64,11 @@
           <br>
           <label style="width:10em" title="Here you can set (if you are not using a 
                       custom function anyway), what is needed succeed step.">Logic</label>
-          <input style="width:20em" id="logic" placeholder="logic", 
-              value="{{default(step.logic,"")}}">
+          <input 
+						style="width:20em" id="logic" placeholder="logic", 
+						value="{{default(step.logic,"")}}" 
+						onclick="OpenLogicDialog(this);"
+					>
           <br>
           <label style="width:10em" title="Events/ commands executed after success message."
                   >Post Events</label>

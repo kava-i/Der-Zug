@@ -43,6 +43,58 @@
       <br><br>
     </dialog>
 
+		<dialog id="logic_dialog" class="event_dialog">
+			<div class="edit_content">
+				<h4>Logic</h4>
+				<br>
+				<input class="long_inp" id="logic_builder">
+				<br>
+				<table>
+					<tr>
+						<td>
+							<select id="logic_type" onchange="SetupLogicDialog();" autocomplete="off">
+								<option value="attribute">Attribute</option>
+								<option value="room">Room</option>
+								<option value="last_room">Last Room</option>
+								<option value="item">in inventory: item</option>
+								<option value="room_item">in inventory: room-item</option>
+							</select>
+						</td>
+						<td>
+							<select id="logic_substitute" autocomplete="off">
+								{% for attribute_id, attribute_name in _attributes %} 
+									<option value={{attribute_id}}>{{attribute_name}}</option>
+								{% endfor %} 
+							</select>
+						</td>
+						<td>
+							<select id="logic_operand" autocomplete="off">
+								<option value="=">Equals</option>
+								<option value="<">Smaller</option>
+								<option value=">">Greater</option>
+								<option value="~">Fuzzy</option>
+								<option value=":">Contains</option>
+							</select>
+						</td>
+						<td>
+							<select id="sel_logic_value" style="display: none;"autocomplete="off"></select>
+						</td>
+						<td><a class="link" onclick="AddToLogic()">apply</a></td>
+					</tr>
+					<tr>
+						<td></td> <td></td> <td></td>
+						<td><input id="str_logic_value" style="display: none;"></input></td>
+					</tr>
+					<tr>
+						<td></td> <td></td> <td></td>
+						<td><input id="num_logic_value" type="number"></input></td>
+					</tr>
+				</table>
+			</div>
+      <button class="pure-button" onclick="SaveLogic()">Save</button>
+      <button class="pure-button" onclick="CloseDialog('logic_dialog');">Omit</button><br>
+      <br><br>
+    </dialog>
 
     <button id="write" class="pure-button" 
         onclick="OpenWriteModal('{{default(name, id)}}')">Write</button>

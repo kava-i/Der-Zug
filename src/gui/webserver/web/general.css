@@ -224,6 +224,12 @@ body {
   text-decoration: none;
 }
 
+.link {
+  cursor: pointer;
+  color: #007bff;
+  text-decoration: underline;
+}
+
 /* ** show controllers ** */    
 .controlers table{    
     margin-left: auto; 

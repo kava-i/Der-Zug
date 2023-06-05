@@ -27,7 +27,7 @@
 
         <li id="optional" class="full_length" style="display: none;">
           <label>Logic:</label>
-          <input id="logic" placeholder="logic" value="{{default(desc.logic, "")}}">
+          <input id="logic" placeholder="logic" value="{{default(desc.logic, "")}}" onclick="OpenLogicDialog(this);">
         </li>
 
 					{% set _id = "updates" %}

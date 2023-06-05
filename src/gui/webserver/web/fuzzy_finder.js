@@ -306,7 +306,7 @@ function Typeahead(input_field) {
 	localize = GetLocalized(input_field);
   
   console.log("Got localize: ", localize, " from ", input_field.getAttribute("localize"));
-  if (input_field.id == "room" || input_field.placeholder == "linked_room id") {
+  if (input_field.id == "room" || input_field.placeholder == "linked_room id" || input_field.placeholder == "Room Id") {
     inps_ = GetAllX("rooms", localize);
     mode_ = "typeahead";
     console.log("typeahead modus selected.");

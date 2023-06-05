@@ -660,23 +660,7 @@ function CreateMatchingInputField(field_type, availibe_value) {
 		el.name = field_type;
 		el.id = field_type;
 		el.localize = false;
-
-		if (Array.isArray(options)) {
-			options.forEach(opt => {
-				var option = document.createElement("option");
-				option.value = opt; 
-				option.text = opt;
-				el.add(option); 
-			});
-		}
-		else {
-			for (const [key, value] of Object.entries(options)) {
-				var option = document.createElement("option");
-				option.value = key;
-				option.text = value;
-				el.add(option); 
-			}
-		}
+		AddOptionsFromAvailibleObjects(el, field_type)
 		if (availibe_value != undefined)
 			el.value = availibe_value;
 		return el;
@@ -803,3 +787,105 @@ function ChangeItemKindSelect(category) {
   }
 }
 
+function OpenLogicDialog(elem) {
+	document.getElementById("logic_builder").value = elem.value;
+	let dialog = document.getElementById("logic_dialog");
+	dialog.cur_elem = elem;
+	dialog.showModal();
+}
+
+function SetupLogicDialog() {
+	const mapping = {
+		"attribute": {"subsitute": "_attributes", "inp": "int", "operands": ["=", ">", "<"]},
+		"room": {"subsitute": "room", "inp": "Room Id", "operands": ["=", "~"]},
+		"last_room": {"subsitute": "last_room", "inp": "Room Id", "operands": ["=", "~"]},
+		"item": {"subsitute": "inventory", "inp": "item id", "operands": [":"]},
+		"room_item": {"subsitute": "inventory", "inp": "_room_items", "operands": [":"]},
+	}
+	const use_mapping = mapping[document.getElementById("logic_type").value];
+
+	// set subsitute
+	let logic_substitute = document.getElementById("logic_substitute");
+	RemoveAllSelectOptions(logic_substitute);
+	if (use_mapping.subsitute[0] == "_") {
+		AddOptionsFromAvailibleObjects(logic_substitute, use_mapping.inp);
+	}
+	else {
+		logic_substitute.add(new Option(use_mapping.subsitute,use_mapping.subsitute), undefined);
+	}
+
+	// set operand 
+	let logic_operand = document.getElementById("logic_operand");
+	for (let i=0; i<logic_operand.options.length; i++) {
+		if (use_mapping.operands.indexOf(logic_operand.options[i].value) != -1) 
+			logic_operand.options[i].disabled = false;
+		else 
+			logic_operand.options[i].disabled = true;
+	}
+
+	// set input 
+	let inp_num = document.getElementById("num_logic_value");
+	let inp_str = document.getElementById("str_logic_value");
+	let inp_sel = document.getElementById("sel_logic_value");
+	inp_num.style.display = "none";
+	inp_str.style.display = "none";
+	inp_sel.style.display = "none";
+	if (use_mapping.inp == "int") {
+		inp_num.style.display = "block";
+	}
+	else if (use_mapping.inp[0] == "_") {
+		inp_sel.style.display = "block";
+		RemoveAllSelectOptions(inp_sel);
+		AddOptionsFromAvailibleObjects(inp_sel, use_mapping.inp);
+	}
+	else {
+		inp_str.style.display = "block";
+		inp_str.placeholder = use_mapping.inp;
+		inp_str.setAttribute("localize", "false");
+	}
+}
+
+function AddToLogic() {
+	let str = document.getElementById("logic_substitute").value;
+	str += document.getElementById("logic_operand").value;
+	if (document.getElementById("sel_logic_value").style.display != "none")
+		str += document.getElementById("sel_logic_value").value;
+	else if (document.getElementById("str_logic_value").style.display != "none")
+		str += document.getElementById("str_logic_value").value;
+	else if (document.getElementById("num_logic_value").style.display != "none")
+		str += document.getElementById("num_logic_value").value;
+
+	document.getElementById("logic_builder").value += str;
+}
+
+function SaveLogic() {
+	let dialog = document.getElementById("logic_dialog");
+	dialog.cur_elem.value = document.getElementById("logic_builder").value;
+	dialog.close();
+}
+
+function AddOptionsFromAvailibleObjects(select, type) {
+	const options = GetAvailibleObjects(type);
+	if (Array.isArray(options)) {
+		options.forEach(opt => {
+			var option = document.createElement("option");
+			option.value = opt; 
+			option.text = opt;
+			select.add(option); 
+		});
+	}
+	else {
+		for (const [key, value] of Object.entries(options)) {
+			var option = document.createElement("option");
+			option.value = key;
+			option.text = value;
+			select.add(option); 
+		}
+	}
+}
+
+function RemoveAllSelectOptions(select) {
+	while (select.options.length > 0) {
+		select.remove(0);
+	}
+}
