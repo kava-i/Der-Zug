@@ -796,11 +796,12 @@ function OpenLogicDialog(elem) {
 
 function SetupLogicDialog() {
 	const mapping = {
-		"attribute": {"subsitute": "_attributes", "inp": "int", "operands": ["=", ">", "<"]},
-		"room": {"subsitute": "room", "inp": "Room Id", "operands": ["=", "~"]},
-		"last_room": {"subsitute": "last_room", "inp": "Room Id", "operands": ["=", "~"]},
-		"item": {"subsitute": "inventory", "inp": "item id", "operands": [":"]},
-		"room_item": {"subsitute": "inventory", "inp": "_room_items", "operands": [":"]},
+		"attribute": {"subsitute": "_attributes", "operands": ["=", ">", "<"], "inp": "int"},
+		"room": {"subsitute": "room", "operands": ["=", "~"], "inp": "Room Id"},
+		"last_room": {"subsitute": "last_room", "operands": ["=", "~"], "inp": "Room Id"},
+		"visited_rooms": {"subsitute": "visited_rooms", "operands": [":"], "inp": "Room Id"},
+		"item": {"subsitute": "inventory", "operands": [":"], "inp": "item id"},
+		"room_item": {"subsitute": "inventory", "operands": [":"], "inp": "_room_items"},
 	}
 	const use_mapping = mapping[document.getElementById("logic_type").value];
 
@@ -861,8 +862,8 @@ function AddToLogic(func) {
 
 	let cur = document.getElementById("logic_builder").value;
 	if (func != "+" && cur != "") {
-		cur = "(" + cur + ")";
-		str = "(" + str + ")";
+		cur = "(" + cur.trim() + ")";
+		str = "(" + str.trim() + ")";
 	}
 	if (func == "+")
 		func = " ";
