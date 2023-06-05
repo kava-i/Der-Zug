@@ -48,6 +48,7 @@
 				<h4>Logic</h4>
 				<br>
 				<input class="long_inp" id="logic_builder">
+				<a class="link" onclick="ClearLogic()">clear</a></td>
 				<br>
 				<table>
 					<tr>
@@ -79,15 +80,17 @@
 						<td>
 							<select id="sel_logic_value" style="display: none;"autocomplete="off"></select>
 						</td>
-						<td><a class="link" onclick="AddToLogic()">apply</a></td>
+						<td><a class="link" onclick="AddToLogic('+')">add raw</a></td>
 					</tr>
 					<tr>
 						<td></td> <td></td> <td></td>
 						<td><input id="str_logic_value" style="display: none;"></input></td>
+						<td><a class="link" onclick="AddToLogic('&&')">add as AND</a></td>
 					</tr>
 					<tr>
 						<td></td> <td></td> <td></td>
 						<td><input id="num_logic_value" type="number"></input></td>
+						<td><a class="link" onclick="AddToLogic('||')">add as OR</a></td>
 					</tr>
 				</table>
 			</div>

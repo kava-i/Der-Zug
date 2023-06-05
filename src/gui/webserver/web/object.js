@@ -808,7 +808,7 @@ function SetupLogicDialog() {
 	let logic_substitute = document.getElementById("logic_substitute");
 	RemoveAllSelectOptions(logic_substitute);
 	if (use_mapping.subsitute[0] == "_") {
-		AddOptionsFromAvailibleObjects(logic_substitute, use_mapping.inp);
+		AddOptionsFromAvailibleObjects(logic_substitute, use_mapping.subsitute);
 	}
 	else {
 		logic_substitute.add(new Option(use_mapping.subsitute,use_mapping.subsitute), undefined);
@@ -845,7 +845,11 @@ function SetupLogicDialog() {
 	}
 }
 
-function AddToLogic() {
+function ClearLogic() {
+	document.getElementById("logic_builder").value = "";
+}
+
+function AddToLogic(func) {
 	let str = document.getElementById("logic_substitute").value;
 	str += document.getElementById("logic_operand").value;
 	if (document.getElementById("sel_logic_value").style.display != "none")
@@ -855,7 +859,15 @@ function AddToLogic() {
 	else if (document.getElementById("num_logic_value").style.display != "none")
 		str += document.getElementById("num_logic_value").value;
 
-	document.getElementById("logic_builder").value += str;
+	let cur = document.getElementById("logic_builder").value;
+	if (func != "+" && cur != "") {
+		cur = "(" + cur + ")";
+		str = "(" + str + ")";
+	}
+	if (func == "+")
+		func = " ";
+
+	document.getElementById("logic_builder").value = str + func + cur;
 }
 
 function SaveLogic() {
@@ -866,6 +878,7 @@ function SaveLogic() {
 
 function AddOptionsFromAvailibleObjects(select, type) {
 	const options = GetAvailibleObjects(type);
+	console.log("Got option for", type, options);
 	if (Array.isArray(options)) {
 		options.forEach(opt => {
 			var option = document.createElement("option");
