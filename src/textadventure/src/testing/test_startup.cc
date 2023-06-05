@@ -11,6 +11,9 @@
 TEST_CASE("Testadventure is starting", "[startup]") {
   
   TestParameters* params = TestParameters::getInstance();
+	std::cout << "PLAYER: " << params->txtad_player() << std::endl;
+	if (params->txtad_player() == "")
+		return;
 
   //Create game and all worlds.
   CGame game(params->txtad_path());

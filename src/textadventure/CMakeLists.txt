@@ -72,6 +72,7 @@ set(SRC_FILES_TESTING
 
   src/testing/main.cc
   src/testing/test_startup.cc
+  src/testing/test_logic_parser.cc
 )
 
 

@@ -27,6 +27,10 @@ There are system listeners
 
 go to [listeners](/listeners.md) to seem them explained in more detail.
 
+## Logic: 
+To see a few tested examples for how to use the `logic` field (texts,
+quest-steps), see: [logic](/logic.md) 
+
 ## Some notes on general game mechanics
 
 ### Accessing nth person, detail, etc. 

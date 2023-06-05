@@ -16,20 +16,20 @@ bool LogicParser::Success(std::string input) {
 
   DeleteNonsense(input);
   
-  //Check if elementery form but in brackets
+  // Check if elementery form but in brackets
   if (input.front() == '(' && MatchingBracket(input) == input.length()-1) {
       //&& NumFind(input, " | ") < 1 && MatchingBracket(input, " & ") < 1) {
     input.erase(0, 1);
     input.pop_back();
   }
 
-  //Check if already elementary form
+  // Check if already elementary form
   if (input.find("(") == std::string::npos) {
     auto vec = MatchingBracketAtOperator(input);
     return Calc(vec[0], vec[1], vec[2]);
   }
 
-  //Recursively create elementary form
+  // Recursively create elementary form
   auto vec = GetBetween(input);
   if (vec[0].find("(") == std::string::npos && vec[2].find("(") 
       == std::string::npos)
@@ -51,7 +51,7 @@ bool LogicParser::Calc(std::string str1, std::string opt, std::string str2) {
   }
   //Check if or ("&") is included in second string.
   if (str2.find("&") != std::string::npos) {
-    return Calc(str1, opt, str2.substr(0, str2.find("&"))) ||
+    return Calc(str1, opt, str2.substr(0, str2.find("&"))) &&
       Calc(str1, opt, str2.substr(str2.find("&")+1));
   }
 
@@ -131,7 +131,7 @@ std::vector<std::string> LogicParser::GetBetween(std::string input) {
     return MatchingBracketAtOperator(input);
   else {
     pos = MatchingBracket(input);
-    std::string str = input.substr(pos+4);
+    std::string str = input.substr(pos+3);
     return {input.substr(1, pos-1), input.substr(pos + 2, 1), str};
   }
 }
