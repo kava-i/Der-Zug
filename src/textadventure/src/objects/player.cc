@@ -191,7 +191,8 @@ std::map<std::string, std::string> CPlayer::GetCurrentStatus() {
   std::map<std::string, std::string> status = {
 		{"room", (std::string)m_room ->id()}, 
 		{"last_room", (m_lastRoom) ? m_lastRoom->id() : "---"}, 
-		{"inventory", (std::string)m_inventory.getItemList()}};
+		{"inventory", (std::string)m_inventory.getItemList()}
+	};
 
   // Add extra substitutes
   status.insert(subsitutes_.begin(), subsitutes_.end());
@@ -223,9 +224,16 @@ std::map<std::string, std::string> CPlayer::GetCurrentStatus() {
   std::map<std::string, std::string> minds = func::convertToObjectmap(m_minds, lambda2);
   status.insert(minds.begin(), minds.end());
 
-  auto lambda3 = [](bool visited) { return std::to_string(visited); };
-  std::map<std::string, std::string> visited_rooms = func::convertToObjectmap(m_vistited, lambda3);
-  status.insert(visited_rooms.begin(), visited_rooms.end());
+	// Add visited rooms
+	std::string visited_rooms = "";
+	for (const auto& it : m_vistited) {
+		if (it.second)
+			visited_rooms += ";";
+	}
+	if (visited_rooms != "")
+		visited_rooms.pop_back();
+	status["visited_rooms"] = visited_rooms;
+
   return status;
 }
 

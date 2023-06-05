@@ -152,7 +152,7 @@ bool COutput::checkDependencies(std::string& mind_success, CPlayer* p) {
 
   // Check dependencies
   LogicParser logic(p->GetCurrentStatus());
-  if(logic.Success(logic_) == false)
+  if (logic.Success(logic_) == false)
     return false;
   
   /*

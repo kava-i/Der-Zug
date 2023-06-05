@@ -64,4 +64,8 @@ TEST_CASE("Testadventure is starting", "[logic_parser]") {
 	// More Tests
 	REQUIRE(logic.Success("(lp=0)&&((ep<20)||(ep>24))"));
 	REQUIRE(!logic.Success("(lp=0)&&((ep<20)||(ep>25))"));
+	REQUIRE(logic.Success("(inventory=test.trank)||((room=test.room1)&&(ep=25))"));
+	REQUIRE(logic.Success("(inventory=test.waffe)||((room=test.room1)&&(!ep=21))"));
+	REQUIRE(logic.Success("(lp<13)&&(last_room=test.trank"));
+
 }
