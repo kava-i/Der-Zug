@@ -94,7 +94,8 @@ size_t COutput::getPage() {
 std::string COutput::print(CPlayer* p, bool events) {
   // Update speacker
   std::string speaker = speaker_;
-  if(speaker_ != "" && speaker_ != "indent" && std::islower(speaker_[0]))
+  if (speaker_ != "" && speaker_ != "indent" && std::islower(speaker_[0]) 
+			&& p->getWorld()->getConfig()["printing"].contains(speaker_))
     speaker = p->getWorld()->getConfig()["printing"][speaker_];
 
   // Variables
@@ -110,8 +111,9 @@ std::string COutput::print(CPlayer* p, bool events) {
 	updates_.Clear();
 
   // Add events to players staged events
-  if(events == true)
+  if(events == true) {
     addEvents(p);  
+	}
 
   // Create output:
   std::string music = p->getContextMusic(music_);

@@ -1347,8 +1347,9 @@ void Context::h_examine(std::string &sIdentifier, CPlayer*p) {
   // Check for detail
   auto lambda1 = [](CDetail* detail) { return detail->name(); };
   std::string sObject = func::getObjectId(p->getRoom()->getDetails(), sIdentifier, lambda1);
-  if (sObject != "")
+  if (sObject != "") {
     p->appendPrint(p->getRoom()->getDetails()[sObject]->text());
+	}
 
   auto lambda2 = [](CItem* item) { return item->name(); };
   sObject = func::getObjectId(p->getRoom()->getItems(), sIdentifier, lambda2);
