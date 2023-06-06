@@ -6,6 +6,7 @@
 #include <exception>
 #include <fstream>
 #include <ostream>
+#include <string>
 
 namespace fs = std::filesystem;
 
@@ -18,8 +19,11 @@ ErrorCodes SubCategory::AddElem(std::string path, std::string name, nlohmann::js
 	std::cout << "SubCategory::AddElem: " << category_ << std::endl;
 	if (category_ == "dialogs" || category_ == "default_dialogs") {
 		std::cout << "Name: " << name << " '.' at: " << name.find(".") << std::endl;
-		name = name.replace(name.find("."), 1, "_");
-		std::cout << "Updated name: " << name << std::endl;
+		// Also allow without area-id, for default-dialogs.
+		if (name.find(".") != std::string::npos) {
+			name = name.replace(name.find("."), 1, "_");
+			std::cout << "Updated name: " << name << std::endl;
+		}
 		name = name + "_" + infos["num"].get<std::string>();
 		std::cout << "Updated name: " << name << std::endl;
 	}

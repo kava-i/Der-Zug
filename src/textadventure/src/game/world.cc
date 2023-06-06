@@ -473,6 +473,7 @@ CPerson* CWorld::CreateCharacter(const nlohmann::json& char_json, const std::str
 	// this defaultDialog-type
 	std::map<std::string, CDialog*> dialogs;
 	std::string dialog_name = char_json.value("defaultDialog", char_id);
+	std::cout << "Got dialog name: " << dialog_name << std::endl;
 	if (dialog_name.find(".") != std::string::npos)
 		dialog_name.replace(dialog_name.find("."), 1, "_");
 	size_t counter = 0;
@@ -482,9 +483,14 @@ CPerson* CWorld::CreateCharacter(const nlohmann::json& char_json, const std::str
 			counter++;
 		}
 	}
+	std::cout << "got " << dialogs.size() << " dialogs: " << std::endl;
+	for (const auto& it : dialogs) 
+		std::cout << "- " << it.first << std::endl;
+
 	// Pick either a random (default-dialog), or the first (character-dialog).
 	std::string dialog_num = (char_json.contains("defaultDialog")) 
-		? std::to_string(rand() % counter) : "1"; 
+		? std::to_string(rand() % counter + 1) : "1"; 
+	std::cout << "Got num: " << dialog_num << std::endl;
 	CDialog* newDialog = (dialogs.count(dialog_num) > 0) 
 		? dialogs[dialog_num] : getDialog("defaultDialog");
 

@@ -19,10 +19,24 @@ nummeriert sein. Z.B.
 - default_mosters_2
 - default_mosters_3
 
+*HINWEIS*: über den fuzzy-finder sind die character-ids vorgegeben. Du kannst
+aber dennoch einen *beliebigen* Namen eingeben und Enter drücken um ihn zu
+übernehmen, ohne dass du einen der Vorschläge übernimmst. (Du muss noch einen
+zusätzlichen Buchstaben angeben (z.B. "monsterr" um "monster" zu erhalten),
+damit der letzte Buchstabe nicht "verschluckt" wird.
+Es kann sein, dass du zuerst die Zahl erhöhen musst, weil bei der Auswahl des
+Chracters sofort der "Add"-Button getriggert wird.
+
 Oder wenn es z.B. einen Charakter namens `anna` gibt: 
-- anna_1 
-- anna_2
+- quest_anna_1 
+- quest_anna_2
 - ...
+
+*HINWEIS*: über den fuzzy-finder sind die character-ids mit Punkten ('.') nicht
+mit Unterstrich getrennt. Das ist aber kein Problem: der Punkt wird automatisch
+durch einen Unterstrich ersetzt. 
+Es kann sein, dass du zuerst die Zahl erhöhen musst, weil bei der Auswahl des
+Chracters sofort der "Add"-Button getriggert wird.
 
 Im Fall der default Dialoge wird zufällig einer ausgewählt. Bei den
 Charakter-Dialogen wird immer der erste verwendet. Dieser kann dann aber im Lauf
