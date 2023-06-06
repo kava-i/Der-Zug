@@ -1047,12 +1047,12 @@ void CPlayer::checkCommands() {
 		if (cmd.find("CNAME") != std::string::npos && m_curDialogPartner != nullptr)
 			replace = m_curDialogPartner->color() + func::returnToUpper(m_curDialogPartner->name()) + WHITE;
 		else if (cmd.find("cname") != std::string::npos && m_curDialogPartner != nullptr) {
-			replace = m_curDialogPartner->color() + m_curDialogPartner->name() + WHITE;
+			replace = m_curDialogPartner->color() + m_curDialogPartner->name() + WHITEDARK;
 		}
 		else if (cmd.find("NAME") != std::string::npos)
 			replace = color() + func::returnToUpper(name()) + WHITE;
 		else if (cmd.find("name") != std::string::npos)
-			replace = color() + name() + WHITE;
+			replace = color() + name() + WHITEDARK;
 		m_sPrint = m_sPrint.substr(0, pos) + replace + m_sPrint.substr(pos2+1);
 	}
 
@@ -1144,6 +1144,7 @@ std::string CPlayer::getContextMusic(std::string new_music) {
     music = m_world->media("music/background");
 
   if (music != "" && music != cur_music_) {
+    std::cout << "Updated music to: " << music << std::endl; 
     cur_music_ = music;
     return Webcmd::set_sound(music) + " ";
   }
