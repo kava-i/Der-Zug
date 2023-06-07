@@ -76,6 +76,7 @@ public:
 		// Return ItemConfig 
 		const ItemConfig& item_config();
 		const HelpConfig& help_config();
+		HelpConfig& help_config_NON_CONST();
 
     std::string GetSTDText(std::string txt);
 

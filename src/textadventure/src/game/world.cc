@@ -68,6 +68,9 @@ const ItemConfig& CWorld::item_config() {
 const HelpConfig& CWorld::help_config() {
 	return help_config_;
 }
+HelpConfig& CWorld::help_config_NON_CONST() {
+	return help_config_;
+}
 
 std::string CWorld::GetSTDText(std::string key) {
   // If text not given in config, print `key` only.

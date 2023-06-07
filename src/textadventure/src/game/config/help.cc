@@ -28,8 +28,10 @@ const std::vector<HelpEntry>& HelpConfig::GetHelp(const std::string& context) co
 void HelpConfig::UpdateActive(const std::string& context, const std::string& id, bool active) {
 	if (help_.count(context) > 0) {
 		for (auto& it : help_.at(context)) {
-			if (it.id_ == id) 
+			if (it.id_ == id) {
+				std::cout << "Set " << context << "-" << id << " to: " << active << std::endl;
 				it.active_ = active;
+			}
 		}
 	}
 	else {

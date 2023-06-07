@@ -153,6 +153,7 @@ public:
     void h_startDialogDirectB(std::string&, CPlayer*);
     void h_changeSound(std::string&, CPlayer*);
     void h_changeImage(std::string&, CPlayer*);
+    void h_setHelp(std::string&, CPlayer*);
 
     void h_moveCharToRoom(std::string&, CPlayer*);
     void h_moveDetailToRoom(std::string&, CPlayer*);

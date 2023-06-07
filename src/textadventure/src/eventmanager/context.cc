@@ -154,6 +154,7 @@ void Context::initializeHanlders() {
   listeners_["h_startDialogDirect"] = &Context::h_startDialogDirectB;
   listeners_["h_changeSound"] = &Context::h_changeSound;
   listeners_["h_changeImage"] = &Context::h_changeImage;
+  listeners_["h_setHelp"] = &Context::h_setHelp;
 
   // Room modifiers
   listeners_["h_addCharToRoom"] = &Context::h_addCharToRoom;
@@ -294,6 +295,7 @@ void Context::initializeTemplates() {
                         {"startDialogDirekt", {"h_startDialogDirect"}},
                         {"changeImage", {"h_changeImage"}},
                         {"changeSound", {"h_changeSound"}},
+                        {"setHelp", {"h_setHelp"}},
                         {"addCharToRoom",   {"h_addCharToRoom"}},
                         {"addDetailToRoom", {"h_addDetailToRoom"}},
                         {"addItemToRoom",   {"h_addItemToRoom"}},
@@ -1070,6 +1072,20 @@ void Context::h_changeSound(std::string &sIdentifier, CPlayer *p) {
   // Change overall music, if no seperator.
   p->set_music(sIdentifier);
   p->updateMedia();
+  m_curPermeable = false;
+}
+
+void Context::h_setHelp(std::string &sIdentifier, CPlayer *p) {
+	auto parts = func::split(sIdentifier, "|");
+	if (parts.size() < 3) {
+		std::cout << cRED << "MIssing parts, seperate, \"context|id|active\"" << std::endl;
+	}
+	else {
+		std::string context = parts[0];
+		std::string id = parts[1];
+		bool active = parts[2] == "1";
+		p->getWorld()->help_config_NON_CONST().UpdateActive(context, id, active);
+	}
   m_curPermeable = false;
 }
 
