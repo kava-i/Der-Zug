@@ -169,7 +169,7 @@ namespace func
         return "";
 
 			// If position is specified use position instead of best match.
-			if (take != -1 && take <= matches.size()) {
+			if (take > -1 && static_cast<size_t>(take) <= matches.size()) {
 				return matches[take-1].first;
 			}
 

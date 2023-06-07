@@ -103,7 +103,7 @@ CPerson* CFight::GetTarget(std::string name) {
 	// Try by number 
 	if (std::isdigit(name.front())) {
 		int num = std::stoi(name)-1;
-		if (num < opponents_.size())
+		if (static_cast<size_t>(num) < opponents_.size())
 			return opponents_[num];
 	}
 	// try by direct match: 
@@ -115,7 +115,7 @@ CPerson* CFight::GetTarget(std::string name) {
 	// Try by fuzzy matching
 	int min = 1;
 	int num = -1;
-	for (int i=0; i<opponents_.size(); i++) {
+	for (size_t i=0; i<opponents_.size(); i++) {
 		int cur = fuzzy::fuzzy_cmp(opponent_names_.at(opponents_[i]->id()), name);
     if (cur <= 0.2 && cur < min) {
 			min = cur;
