@@ -12,6 +12,7 @@
 #include "game/game.h"
 #include "tools/calc_enums.h"
 #include "tools/func.h"
+#include "tools/fuzzy.h"
 #include "tools/webcmd.h"
 #include <cstddef>
 #include <exception>
@@ -189,9 +190,6 @@ void Context::initializeHanlders() {
   listeners_["h_ignore"] = &Context::h_ignore;
   listeners_["h_try"] = &Context::h_try;
 
-  //m_handlers["h_firstZombieAttack"] = &Context::h_firstZombieAttack;
-  listeners_["h_moveToHospital"] = &Context::h_moveToHospital;
-  listeners_["h_exitTrainstation"] = &Context::h_exitTrainstation;
   listeners_["h_thieve"] = &Context::h_thieve;
   listeners_["h_attack"] = &Context::h_attack;
 
@@ -509,8 +507,8 @@ void Context::error(CPlayer* p) {
   if (m_permeable == false && m_sError != "")
     p->appendErrorPrint(m_sError + " " + m_curEvent.first);
   else if (m_permeable == false) {
-    p->appendTechPrint("Falsche Eingabe, gebe \"help\" ein, falls du nicht "
-        "weiter weißt. (" + m_sName + ")");
+    p->appendTechPrint("Falsche Eingabe. Gebe \"help\" ein, falls du nicht "
+        "weiter weißt.");
   }
 }
 
@@ -524,14 +522,17 @@ void Context::error_delete(CPlayer* p) {
 // ***** ***** ***** HANDLER ***** ***** ***** //
 
 void Context::h_help(std::string &sIdentifier, CPlayer* p) {
-  if(m_sHelp != "") {
-    std::ifstream read("factory/help/"+m_sHelp);
-    std::string str((std::istreambuf_iterator<char>(read)),
-                std::istreambuf_iterator<char>());
-    p->appendPrint("\n<b>Help: </b>\n" + str);
-  }
-  else if(m_permeable == false)
-    p->appendTechPrint("No help for this context, sorry.\n");
+	std::cout << "h_help for " << m_sName << std::endl;
+	try {
+		std::string help;
+		for (const auto& it : p->getWorld()->help_config().GetHelp(m_sName)) {
+			if (it.active_)
+				help += "- " + it.text_ + "\n";
+		}
+		p->appendPrint("\n<b>Help: </b>" + m_sName + "\n" + help);
+	} catch (std::exception& e) {
+		std::cout << "h_help: (" << m_sName << "): " << e.what() << std::endl;
+	}
 }
 
 // ***** ***** GAME CONTEXT ***** ***** //
@@ -701,8 +702,9 @@ void Context::h_addQuest(std::string& sIdentifier, CPlayer* p) {
 }
 
 void Context::h_showPersonInfo(std::string& sIdentifier, CPlayer* p) {
+	const auto [name, pos] = GetNthObject(sIdentifier);
   auto lambda = [](CPerson* person) { return person->name();};
-  std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda);
+  std::string character = func::getObjectId(p->getRoom()->getCharacters(), name, lambda, pos);
   if (character != "")
     p->appendPrint(p->getWorld()->getCharacter(character)->getAllInformation());
   else
@@ -919,36 +921,34 @@ void Context::h_changeRoom(std::string& sIdentifier, CPlayer* p) {
 void Context::h_ignore(std::string&, CPlayer*) { }
 
 void Context::h_show(std::string& sIdentifier, CPlayer* p) {
-  if(sIdentifier == "exits" || sIdentifier == "ausgänge") {
-    std::cout << "Calling: " << " show exits!" << std::endl;
+
+  if (fuzzy::cmp(sIdentifier, "exits") || fuzzy::cmp(sIdentifier, "ausgänge"))
     p->appendDescPrint(p->getRoom()->showExits()+"\n");
-  }
-  else if(sIdentifier == "visited" || sIdentifier == "besuchte räume")
+  else if (fuzzy::cmp(sIdentifier, "visited") || fuzzy::cmp(sIdentifier, "besuchte räume"))
     p->showVisited();
-  else if(sIdentifier == "people" || sIdentifier == "personen") {
+  else if (fuzzy::cmp(sIdentifier, "people") || fuzzy::cmp(sIdentifier, "personen"))
     p->appendDescPrint(p->getRoom()->showCharacters() + "\n"); 
-  }
-  else if(sIdentifier == "room")
+  else if(fuzzy::cmp(sIdentifier, "room") || fuzzy::cmp(sIdentifier, "raum") )
     p->appendPrint(p->getRoom()->showDescription(p->getWorld()->getCharacters()));
-  else if(sIdentifier == "items" || sIdentifier == "gegenstände")
+  else if(fuzzy::cmp(sIdentifier, "items") || fuzzy::cmp(sIdentifier, "gegenstände"))
     p->appendDescPrint(p->getRoom()->showItems() + "\n");
-  else if(sIdentifier == "details" || sIdentifier == "mobiliar")
+  else if(fuzzy::cmp(sIdentifier, "details") || fuzzy::cmp(sIdentifier, "mobiliar"))
     p->appendDescPrint(p->getRoom()->showDetails() + "\n");
-  else if(sIdentifier == "inventory" || sIdentifier == "inventar")
+  else if(fuzzy::cmp(sIdentifier, "inventory") || fuzzy::cmp(sIdentifier, "inventar"))
     p->appendPrint(p->getInventory().printInventory());
-  else if(sIdentifier == "equiped" || sIdentifier == "ausrüstung")
+  else if(fuzzy::cmp(sIdentifier, "equiped") || fuzzy::cmp(sIdentifier, "ausrüstung"))
     p->printEquiped();
-  else if(sIdentifier == "quests")
+  else if(fuzzy::cmp(sIdentifier, "quests"))
     p->showQuests(false);
-  else if(sIdentifier == "solved quests" || sIdentifier == "gelöste quests")
+  else if(fuzzy::cmp(sIdentifier, "solved quests") || fuzzy::cmp(sIdentifier, "gelöste quests"))
     p->showQuests(true);
-  else if(sIdentifier == "stats" || sIdentifier == "attribute")
+  else if(fuzzy::cmp(sIdentifier, "stats") || fuzzy::cmp(sIdentifier, "attribute"))
     p->showStats();
-  else if(sIdentifier == "mind")
+  else if(fuzzy::cmp(sIdentifier, "mind"))
     p->showMinds();
-  else if(sIdentifier == "attacks" || sIdentifier == "attacken")
+  else if(fuzzy::cmp(sIdentifier, "attacks") || fuzzy::cmp(sIdentifier, "attacken"))
     p->appendPrint(p->printAttacks());
-  else if(sIdentifier == "all" || sIdentifier == "alles")
+  else if(fuzzy::cmp(sIdentifier, "all") || fuzzy::cmp(sIdentifier, "alles"))
     p->appendDescPrint(p->getRoom()->showAll());
   else
     p->appendErrorPrint("Unbekannte \"Zeige-Funktion\"\n"); 
@@ -956,16 +956,18 @@ void Context::h_show(std::string& sIdentifier, CPlayer* p) {
 
 void Context::h_look(std::string& sIdentifier, CPlayer* p) {
   // Extract details (sWhat) and where to look (sWhere) from identifier
-  size_t pos = sIdentifier.find(" ");
-  if (pos == std::string::npos) {
+  size_t sep = sIdentifier.find(" ");
+  if (sep == std::string::npos) {
     p->appendErrorPrint("Ich weiß nicht, was du durchsuchen willst.\n");
     return;
   }
-  
-  std::string sWhere = sIdentifier.substr(0, pos);
-  std::string sWhat = sIdentifier.substr(pos+1);
+  std::string sWhere = sIdentifier.substr(0, sep);
+  std::string sWhat = sIdentifier.substr(sep+1);
+
+	// Get Name of detail 
+	const auto [name, pos] = GetNthObject(sWhat);
   auto lambda = [](CDetail* detail) { return detail->name();};
-  std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), sWhat, lambda);
+  std::string sDetail = func::getObjectId(p->getRoom()->getDetails(), name, lambda, pos);
 
   // Check whether input is correct/ detail could be found.
   if (sDetail == "") {
@@ -987,8 +989,8 @@ void Context::h_search(std::string& sIdentifier, CPlayer* p) {
 	std::cout << "h_search: " << sIdentifier << std::endl;
 	auto room = p->getRoom();
 
+	// Get name by fuzzy search
 	const auto [name, pos] = GetNthObject(sIdentifier);
-
   auto lambda = [](CDetail* detail) { return detail->name();};
   std::string sDetail = func::getObjectId(room->getDetails(), name, lambda, pos);
 
@@ -1010,8 +1012,7 @@ void Context::h_search(std::string& sIdentifier, CPlayer* p) {
   if(detail->getLook() == "")
     p->appendDescPrint(room->look(sDetail));
   else
-    p->appendDescPrint("Ich weiß nicht, wo ich suchen soll. Sag: \"schaue "
-        "[in/ unter/ ...] [gegenstand]\"\n");
+    p->appendDescPrint("Ich weiß nicht, wo ich suchen soll. Sag: \"schaue [in/ unter/ ...] [gegenstand]\"\n");
 }
 
 void Context::h_goTo(std::string& sIdentifier, CPlayer* p) {
@@ -1020,8 +1021,11 @@ void Context::h_goTo(std::string& sIdentifier, CPlayer* p) {
 
 void Context::h_startDialog(std::string& sIdentifier, CPlayer* p) {
   //Get selected character
+	// TODO add accessing nth character
+	const auto [name, pos] = GetNthObject(sIdentifier);
   auto lambda1 = [](CPerson* person) { return person->name(); };
-  std::string character = func::getObjectId(p->getRoom()->getCharacters(), sIdentifier, lambda1);
+  std::string character = func::getObjectId(p->getRoom()->getCharacters(), name, lambda1, pos);
+
   auto lambda2 = [](CPlayer* player) { return player->name(); };
   std::string player = func::getObjectId(p->getMapOFOnlinePlayers(), sIdentifier, lambda2);
 
@@ -1374,31 +1378,6 @@ void Context::h_test(std::string& sIdentifier, CPlayer* p) {
 
 
 // **** SPECIAL HANDLER ***** //
-
-void Context::h_moveToHospital(std::string& sIdentifier, CPlayer* p) {
-  //Get selected room
-  auto lambda = [](CExit* exit) { return exit->prep() + "_" + exit->name();};
-  if (p->getRoom()->id().find("zug.compartment") == std::string::npos 
-      || func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lambda) != "zug.trainCorridor")
-    return;
-
-  p->changeRoom(p->getWorld()->getRoom("hospital.foyer"));
-  m_block = true;
-  m_curPermeable=false;
-}
-
-void Context::h_exitTrainstation(std::string& sIdentifier, CPlayer* p)
-{
-    std::cout << "h_exitTrainstation, " << sIdentifier << std::endl;
-
-    auto lambda= [](CExit* exit) { return exit->prep() + " " + exit->name(); };
-    if(p->getRoom()->id() != "trainstation.eingangshalle" || func::getObjectId(p->getRoom()->getExtits(), sIdentifier, lambda) != "trainstation.ausgang")
-        return;
-
-    p->appendStoryPrint("Du drehst dich zum dem großen, offen stehenden Eingangstor der Bahnhofshalle. Und kurz kommt dir der Gedanke doch den Zug nicht zu nehmen, doch alles beim Alten zu belassen. Doch etwas sagt dir, dass es einen guten Grund gab das nicht zu tun, einen guten Grund nach Moskau zu fahren. Und auch, wenn du ihn gerade nicht mehr erkennst. Vielleicht ist gerade das der beste Grund: rausfinden, was dich dazu getrieben hat, diesen termin in Moskau zu vereinbaren.\n Du guckst dich wieder in der Halle um, und überlegst, wo du anfängst zu suchen.\n");
-    
-    m_block=true;
-}
 
 void Context::h_thieve(std::string& sIdentifier, CPlayer* p) {
   if (m_jAttributes["infos"].count("h_thieve") > 0) {

@@ -193,11 +193,6 @@ public:
     void h_try(std::string&, CPlayer*);                 ///< PRogrammer function for testing
     void h_test(std::string&, CPlayer*);
 
-    //Rooms
-    void h_moveToHospital    (std::string&, CPlayer*);
-    void h_exitTrainstation  (std::string&, CPlayer*);
-
-
     // *** FIGHT CONTEXT *** //
     void h_fight(std::string&, CPlayer*);
 

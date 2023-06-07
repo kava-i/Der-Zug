@@ -13,6 +13,7 @@
 
 #include "eventmanager/context.h"
 #include "game/config/attributes.h"
+#include "game/config/help.h"
 #include "game/config/item_config.h"
 #include "objects/room.h"
 #include "objects/detail.h"
@@ -51,6 +52,7 @@ private:
     nlohmann::json m_config;
 		AttributeConfig attribute_config_;
 		ItemConfig item_config_;
+		HelpConfig help_config_;
     std::map<std::string, std::string> media_;
     std::string m_path_to_world;
 		bool muliplayer_;
@@ -73,6 +75,7 @@ public:
 
 		// Return ItemConfig 
 		const ItemConfig& item_config();
+		const HelpConfig& help_config();
 
     std::string GetSTDText(std::string txt);
 
@@ -158,6 +161,12 @@ public:
 		 * @param[in] path
 		 */
     void configItemFactory(const std::string path);
+
+		/**
+		 * Reads help-config
+		 * @param[in] path
+		 */
+    void configHelpFactory(const std::string path);
 
 
     /** 

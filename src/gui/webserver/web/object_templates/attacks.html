@@ -30,4 +30,10 @@
 
   {{ log("rendered updates") }}
 
+  {% set _not_optional = true %}
+	{% set _id = "player_updates" %}
+  {% set _updates = default(player_updates, []) %}
+  {% include "web/element_templates/updates" %}
+  {% set _not_optional = false %}
+
 {% include "temp_footer" %}

@@ -1,0 +1,43 @@
+{
+    "standard": [
+        {
+            "active": 1,
+            "id": "show_room",
+            "txt": "Gebe <i>zeige [personen|ausg\u00e4nge|gegenst\u00e4nde|details]</i> ein, um dir verschiedene objecte im Raum anzeigen zu lassen."
+        },
+        {
+            "active": 1,
+            "id": "show_char",
+            "txt": "Gebe <i>zeige [inventar|attribute]</i> ein, um dir verschiedene Information \u00fcber deinen Character anzeigen zu lassen"
+        },
+        {
+            "active": 1,
+            "id": "go",
+            "txt": "Gebe <i>gehe [ausgang]</i> ein, um den Raum zu wechseln."
+        },
+        {
+            "active": 1,
+            "id": "talk",
+            "txt": "Gebe <i>spreache [person] an</i> ein, um einen Dialog zu starten"
+        },
+        {
+            "active": 1,
+            "id": "pick",
+            "txt": "Gebe <i>hebe [gegenstand] auf</i> ein, um einen Gegenstand aufzuheben"
+        },
+        {
+            "id": "examine",
+            "txt": "Gebe <i>betrachte [person|detail|gegenstand]</i> ein, um verschiedene Objekte um Raum n\u00e4her zu begutachten."
+        },
+        {
+            "id": "detail",
+            "txt": "Gebe <i>untersuche [detail]</i> oder <i>schaue [in, unter, ../] [detail]</i> ein, um ein Detail auf weitere Gegenst\u00e4nde zu untersuchen."
+        },
+        {
+            "active": 1,
+            "id": "fight",
+            "txt": "Gebe <i>greife [person] an</i> ein, um eine Person anzugreifen."
+        }
+    ]
+
+}

@@ -41,6 +41,7 @@ set(SRC_FILES_TXTAD
   src/game/game.cc
   src/game/world.cc
   src/game/config/attributes.cc
+  src/game/config/help.cc
 )
 
 # Add source files to create tests
@@ -69,6 +70,7 @@ set(SRC_FILES_TESTING
   src/game/game.cc
   src/game/world.cc
   src/game/config/attributes.cc
+  src/game/config/help.cc
 
   src/testing/main.cc
   src/testing/test_startup.cc

@@ -182,8 +182,9 @@ string CGame::startGame(string player_id, Webconsole* _cout) {
   return m_players[player_id]->getPrint();
 }
 
-string CGame::play(string sInput, string sPlayerID, std::list<string>& 
-    onlinePlayers) {
+string CGame::play(string sInput, string sPlayerID, std::list<string>& onlinePlayers) {
+	// Trim whitespaces and convert to lowercase.
+	sInput = func::Trim(sInput);
   func::convertToLower(sInput);    
 
   //Create map of online player's

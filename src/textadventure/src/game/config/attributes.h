@@ -62,5 +62,4 @@ struct AttributeConfig {
 	std::vector<std::string> woozy_attributes_;
 	WoozyMethods woozy_method_;
 	bool level_based_;
-
 };

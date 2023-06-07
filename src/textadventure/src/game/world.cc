@@ -26,6 +26,7 @@ CWorld::CWorld(CPlayer* p, std::string path) {
   configFactory("config/config.json");
   configAttributeFactory("config/attributes.json");
   configItemFactory("config/items.json");
+  configHelpFactory("config/help.json");
 
   worldFactory(p);
   // Extract f.e. media files from config
@@ -63,6 +64,9 @@ AttributeConfig& CWorld::attribute_config_NON_CONST() {
 }
 const ItemConfig& CWorld::item_config() {
 	return item_config_;
+}
+const HelpConfig& CWorld::help_config() {
+	return help_config_;
 }
 
 std::string CWorld::GetSTDText(std::string key) {
@@ -262,6 +266,20 @@ void CWorld::configItemFactory(const std::string path) {
 
 	} catch (std::exception& e) {
 		std::string msg = "Failed parsing item-config: ";
+		msg += e.what();
+    throw WorldFactoryException(msg);
+	}
+}
+
+void CWorld::configHelpFactory(const std::string path) {
+	try {
+    auto config = func::LoadJsonFromDisc(m_path_to_world + path);
+    if (config == NULL || config.size() == 0)
+      throw WorldFactoryException("Missing help-config at " + path);
+		help_config_ = HelpConfig(config);
+
+	} catch (std::exception& e) {
+		std::string msg = "Failed parsing help-config: ";
 		msg += e.what();
     throw WorldFactoryException(msg);
 	}

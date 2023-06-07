@@ -12,7 +12,7 @@
 class CParser
 {
 private:
-    nlohmann::json m_commands;
+	std::vector<nlohmann::json> m_commands;
 public:
     CParser(nlohmann::json commands);
     typedef std::pair<std::string, std::string> event;

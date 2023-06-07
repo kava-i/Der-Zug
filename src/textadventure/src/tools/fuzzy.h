@@ -27,6 +27,8 @@ namespace fuzzy
     * @return bool 
     */
     double fuzzy_cmp(std::string sWord1, std::string sWord2);
+
+		bool cmp(const std::string& w1, const std::string& w2);
     
     /**
     * @param[in, out] str string to be modified

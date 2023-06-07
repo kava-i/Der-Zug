@@ -105,6 +105,10 @@ double fuzzy_cmp(std::string sWord1, std::string sWord2)
   return static_cast<double>(distance)/ len2;
 }
 
+bool cmp(const std::string& w1, const std::string& w2) {
+	return fuzzy_cmp(w1, w2) <= 0.2;
+}
+
 /**
 * @param[in, out] str string to be modified
 */

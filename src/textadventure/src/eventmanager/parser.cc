@@ -1,8 +1,7 @@
 #include "parser.h"
 
-CParser::CParser(nlohmann::json commands)
-{
-    m_commands = commands;
+CParser::CParser(nlohmann::json config) {
+  m_commands = config["commands"];
 }
 
 std::vector<CParser::event> CParser::parse(std::string sInput)
@@ -14,7 +13,7 @@ std::vector<CParser::event> CParser::parse(std::string sInput)
     {
         //"translate" command set in config file 
         bool in_command=false;
-        for(auto it : m_commands["commands"]) {
+        for(auto it : m_commands) {
             std::smatch m;
             if(std::regex_match(command, m, (std::regex)it["regex"])) {
                 in_command=true;

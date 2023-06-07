@@ -76,6 +76,10 @@ namespace func
     */
     std::string returnToUpper(std::string str);
 
+		/**
+		 * Trims leading and trailing whitespaces
+		 */
+		std::string Trim(const std::string& str);
 
     /**
     * Convert a string to number. Starts from the back, stops at first non-digit character 

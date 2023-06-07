@@ -671,6 +671,8 @@ void ServerFrame::GetEditTemplate(const Request& req, Response& resp, std::strin
   inja::Template events = env.parse_template("web/element_templates/events.html");
   env.include_template("web/element_templates/events", events);
 
+	if (edit_template == "player_updates" || edit_template == "attack_dependencies") 
+		edit_template = "updates";
   std::string path = "web/edit_templates/" + edit_template + ".html";
   std::cout << "ServerFrame::GetEditTemplate: laoding template at: " << path << std::endl;
   try {
