@@ -186,7 +186,7 @@ std::map<std::string, CPlayer*>& CPlayer::getMapOFOnlinePlayers() {
   return m_players;
 }
 
-std::map<std::string, std::string> CPlayer::GetCurrentStatus() {
+std::map<std::string, std::string> CPlayer::GetCurrentStatus(std::map<std::string, std::string> new_subsitutes) {
   // Setup basic elements
   std::map<std::string, std::string> status = {
 		{"room", (std::string)m_room ->id()}, 
@@ -195,7 +195,7 @@ std::map<std::string, std::string> CPlayer::GetCurrentStatus() {
 	};
 
   // Add extra substitutes
-  status.insert(subsitutes_.begin(), subsitutes_.end());
+  status.insert(new_subsitutes.begin(), new_subsitutes.end());
 
   // Get highest mind
   int max = 0;
@@ -234,6 +234,9 @@ std::map<std::string, std::string> CPlayer::GetCurrentStatus() {
 		visited_rooms.pop_back();
 	status["visited_rooms"] = visited_rooms;
 
+	// Add vistied dialog states
+	status["visited_dialog_states"] = func::join(vistited_dialog_states_, ";");
+
   return status;
 }
 
@@ -254,8 +257,8 @@ void CPlayer::setPrint(string newPrint) {
   m_sPrint = newPrint; 
 }
 
-void CPlayer::set_subsitues(std::map<std::string, std::string> subsitutes) {
-  subsitutes_ = subsitutes;
+void CPlayer::add_vistidted_dialog_states(std::string dialog_state_id) {
+	vistited_dialog_states_.insert(dialog_state_id);
 }
 
 void CPlayer::set_gramma(std::shared_ptr<CGramma> gramma) {
@@ -455,6 +458,11 @@ void CPlayer::endFight() {
     m_contextStack.erase("fight");
 }
 
+void CPlayer::endDialog() {
+	if (m_contextStack.getContext("dialog"))
+  	m_contextStack.erase("dialog");
+}
+
 // *** Dialog *** //
 
 
@@ -477,9 +485,7 @@ void CPlayer::startDialog(string sCharacter, CDialog* dialog) {
   context->initializeDialogListeners("START", this);
   m_contextStack.insert(context, 1, "dialog");
 
-  std::string newCommand = m_dialog->getState("START")->callState(this);
-  if(newCommand != "")
-    throw_events(newCommand, "CPlayer::startDialog");
+	m_dialog->CallState("START", this);
 }
 
 /**

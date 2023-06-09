@@ -667,7 +667,7 @@ void Context::h_endFight(std::string&, CPlayer* p) {
 }
 
 void Context::h_endDialog(std::string&, CPlayer* p) {
-  p->getContexts().erase("dialog");
+	p->endDialog();
   m_curPermeable=false;
 }
 
@@ -1453,8 +1453,13 @@ void Context::initializeDialogListeners(std::string new_state, CPlayer* p) {
   AddSimpleListener("h_ignore", "changed_room", 0);
 
   //Add listener for each dialog option.
-  std::vector<size_t> activeOptions = p->getDialog()->getState(new_state)
-    ->getActiveOptions(p);
+	auto state = p->getDialog()->getState(new_state);
+	// Stop if state does not exist.
+	if (!state) {
+		p->endDialog();
+		return;
+	}
+	std::vector<size_t> activeOptions = state->getActiveOptions(p);
   std::map<size_t, size_t> mapOtptions;
   size_t counter = 1;
   for(auto opt : activeOptions) {
@@ -1464,7 +1469,6 @@ void Context::initializeDialogListeners(std::string new_state, CPlayer* p) {
   }
   setAttribute<std::map<size_t, size_t>>("mapOptions", mapOtptions);
 
-  CDState* state = p->getDialog()->getState(new_state);
   media_["music"] = (state->music() != "") ? state->music() : p->getCurDialogPartner()->music();
   media_["image"] = (state->image() != "") ? state->image() : p->getCurDialogPartner()->image();
   p->updateMedia();
@@ -1474,12 +1478,22 @@ void Context::h_call(std::string& sIdentifier, CPlayer* p) {
   size_t option = getAttribute<std::map<size_t, size_t>>("mapOptions")[stoi(sIdentifier)];
 
   std::string cur_state = getAttribute<std::string>("state");
-  std::string next_state = p->getDialog()->getState(cur_state)
-    ->getNextState(std::to_string(option), p);
+	std::string next_state;
+	if (auto cur = p->getDialog()->getState(cur_state))
+  	next_state = cur->getNextState(std::to_string(option), p);
+	else {
+		p->endDialog();
+		return;
+	}
   CDState* state = p->getDialog()->getState(next_state);
+	// Stop if state does not exist.
+	if (!state) {
+		p->endDialog();
+		return;
+	}
  
   // Change sound to room-sound or to player sound, if changed.
-  media_["music"] = (state->music() != "") ? state->music() : p->getCurDialogPartner()->music();
+	media_["music"] = (state->music() != "") ? state->music() : p->getCurDialogPartner()->music();
   media_["image"] = (state->image() != "") ? state->image() : p->getCurDialogPartner()->image();
   p->updateMedia();
 
@@ -1487,9 +1501,7 @@ void Context::h_call(std::string& sIdentifier, CPlayer* p) {
     p->startTrade(getAttribute<std::string>("partner"));
   else {
     initializeDialogListeners(next_state, p);
-    std::string newCommand = p->getDialog()->getState(next_state)->callState(p);
-    if(newCommand != "")
-      p->throw_events(newCommand, "h_call");
+		p->getDialog()->CallState(next_state, p);
   }
 }
 
@@ -1651,8 +1663,7 @@ void Context::h_react(std::string& sIdentifier, CPlayer* p) {
 
   for (auto it : quest->getSteps()) {
     std::cout << "h_react Checking: " << it.second->logic() << ": " << m_curEvent.first << "|" << sIdentifier << std::endl;
-    p->set_subsitues({{"cmd", m_curEvent.first}, {"input", sIdentifier}});
-    LogicParser logic(p->GetCurrentStatus());
+    LogicParser logic(p->GetCurrentStatus({{"cmd", m_curEvent.first}, {"input", sIdentifier}}));
 		bool success = false;
 		try {
 			success = logic.Success(it.second->logic());

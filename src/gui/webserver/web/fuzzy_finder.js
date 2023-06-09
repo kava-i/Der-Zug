@@ -361,6 +361,15 @@ function Typeahead(input_field) {
     document.getElementById("fuzzy_finder_mode").style.color = "blue";
     return true;
   }
+  else if (input_field.id == "items" || input_field.placeholder == "state id") {
+    inps_ = GetAllX("dialogs", localize);
+    mode_ = "typeahead";
+    console.log("typeahead modus selected.");
+    cur_input_field_ = input_field;
+    document.getElementById("fuzzy_finder_mode").innerHTML = "dialogs: ";
+    document.getElementById("fuzzy_finder_mode").style.color = "blue";
+    return true;
+  }
 	else if (window.location.pathname.indexOf("/items/") > 0) {
 		if (input_field.id == "category") {
 			inps_ = categories_;

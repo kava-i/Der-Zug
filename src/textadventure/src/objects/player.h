@@ -41,7 +41,6 @@ private:
     bool m_firstLogin;  ///< Indicate whether this is the players first login.
     string m_sPrint;  ///< Text printing after throwing events
 		std::string player_description_;
-    std::map<std::string, std::string> subsitutes_;
 		bool gameover_;
 
     //*** Stagged Events *** //
@@ -72,6 +71,7 @@ private:
     // *** Others *** //
     map<string, CPlayer*> m_players;  ///< List of all online players in game
     std::map<std::string, bool> m_vistited;  ///< List of all visited rooms
+    std::set<std::string> vistited_dialog_states_;  ///< List of all visited dialog-states
     CContextStack<Context> m_contextStack;  ///< List of all current contexts
     Webconsole* _cout;  ///< Pointer to the console
 
@@ -133,7 +133,7 @@ public:
     std::map<std::string, CPlayer*>& getMapOFOnlinePlayers();
 
     //Get current status
-    std::map<std::string, std::string> GetCurrentStatus();
+    std::map<std::string, std::string> GetCurrentStatus(std::map<std::string, std::string> subsitutes = {});
 
 		bool gameover() const;
 
@@ -147,8 +147,8 @@ public:
     ///Set new output for player.
     void setPrint(string newPrint);
 
-    ///Set extra substitues
-    void set_subsitues(std::map<std::string, std::string> subsitutes);
+		/// Add vistied dialog-state
+    void add_vistidted_dialog_states(std::string dialog_state_id);
 
     static void set_gramma(std::shared_ptr<CGramma> gramma);
 
@@ -217,6 +217,7 @@ public:
     * Delete the current fight and erase fight-context from context-stack
     */
     void endFight();
+    void endDialog();
 
 
     // ** Dialog + Chat + Read ** //

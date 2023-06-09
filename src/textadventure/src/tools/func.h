@@ -27,17 +27,7 @@ namespace func
     std::vector<std::string> split(std::string str, std::string delimiter);
 
 
-    /**
-		* Reverses `split()` and joins parts of vector to single string.
-		* - No trailing delimiter 
-		* - handles empty vector
-    * @param[in] str string to be splitet
-    * @param[in] delimitter 
-    * @return vector
-    */
-		std::string join(const std::vector<std::string>& vec, std::string delimiter);
-
-		/**
+ 		/**
 		 * Replaces `rep` part or string with `by`.
 		 */
 		void Replace(std::string& str, std::string rep, std::string by);
@@ -183,6 +173,27 @@ namespace func
       }
       return matches[pos].first;
     }
+
+   /**
+		* Reverses `split()` and joins parts of vector to single string.
+		* - No trailing delimiter 
+		* - handles empty vector
+    * @param[in] str string to be splitet
+    * @param[in] delimitter 
+    * @return vector
+    */
+		template<typename T>
+		std::string join(const T& vec, std::string delimiter) {
+			if (vec.size() == 0) 
+				return "";
+			return std::accumulate(
+					std::next(vec.begin()), vec.end(), *vec.begin(), 
+					[&](std::string a, std::string b) {
+							return a + delimiter + b;
+					}
+			);
+		}
+
 
     /**
     * Convert a map of objects to a map containing the id of the object as key 

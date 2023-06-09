@@ -1,6 +1,7 @@
 #include "dialog.h"
 #include "objects/player.h"
 #include "tools/logic_parser.h"
+#include <stdexcept>
 #include <string>
 
 // ***** ***** CDialog ***** *****
@@ -45,6 +46,20 @@ std::string CDialog::visited() {
   return str.substr(0, str.length()-1);
 }
 
+
+// Calls state and returns potential events.
+void CDialog::CallState(const std::string& state_id, CPlayer* p) {
+	std::cout << "CDIalog::CallState: " << state_id << std::endl;
+	std::string new_events;
+	p->add_vistidted_dialog_states(m_sName + "." + state_id);
+	if (m_states.count(state_id) > 0) 
+		new_events = m_states.at(state_id)->callState(p);
+	else {
+		std::cout << "Unkown dialog-state: " << m_sName << "." << state_id << std::endl;
+		new_events = "endDialog";
+	}
+	p->throw_events(new_events, "dialog-callstate");
+}
 
 void CDialog::addDialogOption(string sStateID, size_t optID) {
   m_states[sStateID]->getOptions()[m_states[sStateID]->numOptions()+1] = 
@@ -123,9 +138,6 @@ std::map<string, string (CDState::*)(CPlayer* p)> CDState::m_functions = {};
 void CDState::initializeFunctions() {
   m_functions["standard"]     = &CDState::standard;
   m_functions["toeten"]       = &CDState::toeten;
-  m_functions["keinTicket"]   = &CDState::keinTicket;
-  m_functions["strangeGuy1"]  = &CDState::strangeGuy1;
-  m_functions["strangeGuy2"]  = &CDState::strangeGuy2;
 }
 
 string CDState::callState(CPlayer* p) {
@@ -134,7 +146,6 @@ string CDState::callState(CPlayer* p) {
 }
 
 string CDState::getNextState(string sPlayerChoice, CPlayer* p) {
-  p->set_subsitues({{"visited", m_dialog->visited()}});
   LogicParser logic(p->GetCurrentStatus());
   if(numOptions() < stoi(sPlayerChoice))
     return "";
@@ -177,7 +188,6 @@ void CDState::executeActions(CPlayer* p) {
 
 // *** FUNCTION POINTER *** //
 string CDState::standard(CPlayer* p) {
-  p->set_subsitues({{"visited", m_dialog->visited()}});
   string sOutput = m_text->print();
 
   std::vector<size_t> activeOptions = getActiveOptions(p);
@@ -205,7 +215,6 @@ string CDState::standard(CPlayer* p) {
 std::vector<size_t> CDState::getActiveOptions(CPlayer* p) {
   std::vector<size_t> activeOptions;
   size_t numOpts = numOptions();
-  p->set_subsitues({{"visited", m_dialog->visited()}});
   LogicParser logic(p->GetCurrentStatus());
   for(size_t i=1; i<numOpts+1; i++) {
     if(logic.Success(m_options[i].logic_) == true)
@@ -220,24 +229,4 @@ string CDState::toeten(CPlayer* p) {
   string sOutput=standard(p);
   m_sEvents += ";killCharacter " + p->getCurDialogPartner()->id();
   return sOutput; 
-}
-
-string CDState::keinTicket(CPlayer* p) {
-  string sOutput=standard(p);
-  if(p->getStat("gold") < 10)
-    p->setNewQuest("geld_fuer_ticket");
-  return sOutput;
-}
-
-string CDState::strangeGuy1(CPlayer* p) {
-  string sOutput = standard(p);
-  if(p->getWorld()->getQuest("komische_gruppe")->getActive() == false)
-    p->setNewQuest("komische_gruppe");
-  return sOutput;
-}
-
-string CDState::strangeGuy2(CPlayer* p) {
-  string sOutput = standard(p);
-  p->questSolved("komische_gruppe", "hilfe");
-  return sOutput;
 }

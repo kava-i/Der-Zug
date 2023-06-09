@@ -23,6 +23,9 @@ private:
     std::map<std::string, CDState*> m_states;
     std::string music_;
     std::string image_;
+		
+		// Returns vistited states
+    std::string visited();
 
 public:
     CDialog() {}
@@ -43,13 +46,10 @@ public:
     ///Setter for dialog states.
     void setStates(std::map<std::string, CDState*> states);
 
-
     // *** various functions *** //
-    
-    std::string visited();
-
-    ///Function changing the text of a state.
-    void changeStateText(string sStateID, size_t text);
+		
+		// Calls state and returns potential events.
+		void CallState(const std::string& state_id, CPlayer* p);
 
     //Function adding a new dialog option to a given state.
     void addDialogOption(string sStateID, size_t optID);
@@ -95,6 +95,11 @@ private:
     //Static map f all state-functions
     static std::map<string, string (CDState::*)(CPlayer*)> m_functions;
 
+		// methods
+
+    string toeten(CPlayer*);
+    string standard(CPlayer*);
+
 public:
     CDState(nlohmann::json jAtts, dialogoptions states, CDialog* dia, CPlayer* p);
 
@@ -108,21 +113,14 @@ public:
     // *** SETTER *** //
     void set_music(std::string file_name);
 
-    static void initializeFunctions();
     string callState(CPlayer*);
+
+    static void initializeFunctions();
     string getNextState(string sPlayerChoice, CPlayer* p);
     void executeActions(CPlayer* P);
 
-
-    // *** functions *** //
-    string toeten(CPlayer*);
-    string standard(CPlayer*);
-    string keinTicket(CPlayer*);
-    string strangeGuy1(CPlayer*); 
-    string strangeGuy2(CPlayer*); 
-
-
-    std::vector<size_t> getActiveOptions(CPlayer*);
+		// helpers
     int numOptions();
+    std::vector<size_t> getActiveOptions(CPlayer*);
 };
 #endif 

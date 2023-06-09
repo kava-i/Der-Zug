@@ -802,6 +802,7 @@ function SetupLogicDialog() {
 		"visited_rooms": {"subsitute": "visited_rooms", "operands": [":"], "inp": "Room Id"},
 		"item": {"subsitute": "inventory", "operands": [":"], "inp": "item id"},
 		"room_item": {"subsitute": "inventory", "operands": [":"], "inp": "_room_items"},
+		"visited_dialog_states": {"subsitute": "visited_dialog_states", "operands": [":"], "inp": "state id"},
 	}
 	const use_mapping = mapping[document.getElementById("logic_type").value];
 
@@ -818,8 +819,10 @@ function SetupLogicDialog() {
 	// set operand 
 	let logic_operand = document.getElementById("logic_operand");
 	for (let i=0; i<logic_operand.options.length; i++) {
-		if (use_mapping.operands.indexOf(logic_operand.options[i].value) != -1) 
+		if (use_mapping.operands.indexOf(logic_operand.options[i].value) != -1) {
 			logic_operand.options[i].disabled = false;
+			logic_operand.options[i].selected = true;
+		}
 		else 
 			logic_operand.options[i].disabled = true;
 	}
@@ -868,12 +871,12 @@ function AddToLogic(func) {
 	if (func == "+")
 		func = " ";
 
-	document.getElementById("logic_builder").value = str + func + cur;
+	document.getElementById("logic_builder").value = str + func + cur.trim();
 }
 
 function SaveLogic() {
 	let dialog = document.getElementById("logic_dialog");
-	dialog.cur_elem.value = document.getElementById("logic_builder").value;
+	dialog.cur_elem.value = document.getElementById("logic_builder").value.trim();
 	dialog.close();
 }
 
