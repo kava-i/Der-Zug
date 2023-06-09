@@ -177,6 +177,7 @@ class World {
     ErrorCodes RevertIfGameNotRunning(std::string path, std::string id, std::string action);
 
     void RefreshWorld();
+		void RemoveFromPath(std::string path);
 };
 
 #endif

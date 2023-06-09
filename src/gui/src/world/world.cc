@@ -9,6 +9,7 @@
 #include <exception>
 #include <filesystem>
 #include <iostream>
+#include <map>
 #include <mutex>
 #include <ostream>
 #include <set>
@@ -106,13 +107,16 @@ ErrorCodes World::DelElem(std::string path, std::string id, bool force) {
   
   // If path not found, try again with calling element directly (skip
   // sub-category).
+	std::string id_path = path + "/" + id;
   if (error_code == ErrorCodes::PATH_NOT_FOUND) {
-    if (paths_.contains(path + "/" + id))
-      error_code = paths_.at(path + "/" + id)->DelElem(path, id);
+    if (paths_.contains(id_path))
+      error_code = paths_.at(id_path)->DelElem(path, id);
   }
 
   // Refresh world and return error-code.
-  RefreshWorld(); 
+	if (error_code == ErrorCodes::SUCCESS)
+		RemoveFromPath(id_path);
+	RefreshWorld(); 
   return error_code;
 }
 
@@ -386,4 +390,12 @@ std::vector<std::string> World::GetRoomObjects(std::string type, std::string id_
 	for (auto& it : room_objs) 
 		it.replace(it.find("."), 1, id_seperator);
 	return room_objs;
+}
+
+void World::RemoveFromPath(std::string path) {
+	// Delete actual element.
+	if (paths_.contains(path))
+		paths_.erase(path);
+	// delete all sub-elements
+	std::erase_if(paths_, [path](auto& elem) { return elem.first.find(path) == 0; });
 }

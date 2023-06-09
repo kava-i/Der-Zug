@@ -65,5 +65,6 @@
     "showperson": ["_room_chars"],
     "startDialogDirekt": ["_room_chars"],
     "printText": ["text"],
+    "setHelp": ["context", "help id", "bool"],
     "opponentDied": []
 }
