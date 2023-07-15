@@ -29,6 +29,9 @@ CItem::CItem(nlohmann::json basic_json, CPlayer* p)
   attack_ = basic_json.value("attack", "");
   hidden_ = basic_json.value("hidden", false);
 
+	use_counter_ = basic_json.value("use_counter", 1);
+	cur_use_counter_ = use_counter_;
+
   //Set extra variables for books
   m_mark = 0;
   m_pages = new CText(json_.value("pages", nlohmann::json()), p);
@@ -141,7 +144,12 @@ bool CItem::callFunction(CPlayer* p) {
 // ***** CONSUME FUNCTIONS ***** //
 void CItem::consume(CPlayer* p) {
   PrintUseAndDoUpdate("consumed_item", p);
-  p->getInventory().removeItemByID(id_);
+	cur_use_counter_--;
+	p->getInventory().removeItemByID(id_);
+	if (cur_use_counter_ > 0) {
+		name_ += " (" + std::to_string(cur_use_counter_) + "/" + std::to_string(use_counter_) + ")";
+		p->getInventory().addItem(this);
+	}
 }
 
 // ***** EQUIPE-FUNCTIONS ***** //

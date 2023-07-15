@@ -68,6 +68,11 @@
 		</select>
 	</li>
 
+  <li>
+		<label>Use Counter:</label>
+		<input id="use_counter" value="{{ default(use_counter, 1)}}" custom="int" type="number">
+  </li>
+
   {{ log("rendering item updates ") }}
 
   {% set _not_optional = true %}

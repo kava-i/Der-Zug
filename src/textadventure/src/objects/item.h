@@ -24,7 +24,10 @@ class CItem : public CObject {
     Updates updates_;
     Updates costs_;
 
-    //Book
+		int use_counter_;
+		int cur_use_counter_;
+
+    // Book
     size_t m_mark;
     CText* m_pages;
 
